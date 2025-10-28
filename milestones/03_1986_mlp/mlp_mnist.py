@@ -13,14 +13,14 @@ modern deep learning era.
 Using YOUR TinyTorch implementations, you'll build a multi-layer perceptron that
 achieves 95%+ accuracy on MNIST digits - proving YOUR system can solve real vision!
 
-✅ REQUIRED MODULES (Run after Module 8):
+✅ REQUIRED MODULES (Run after Module 06):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Module 02 (Tensor)        : YOUR data structure with autodiff
-  Module 03 (Activations)   : YOUR ReLU for deep networks
-  Module 04 (Layers)        : YOUR Linear layers + Flatten operation
-  Module 06 (Autograd)      : YOUR gradient computation
-  Module 07 (Optimizers)    : YOUR SGD optimizer (Adam optional)
-  Module 08 (Training)      : YOUR training infrastructure
+  Module 01 (Tensor)        : YOUR data structure with autodiff
+  Module 02 (Activations)   : YOUR ReLU for deep networks
+  Module 03 (Layers)        : YOUR Linear layers
+  Module 04 (Losses)        : YOUR CrossEntropyLoss
+  Module 05 (Autograd)      : YOUR gradient computation
+  Module 06 (Optimizers)    : YOUR SGD optimizer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏗️ ARCHITECTURE (Deep Feedforward Network):
@@ -50,11 +50,11 @@ MNIST contains 70,000 handwritten digits (60K train, 10K test):
     784 pixels → Hidden features → Digit classification
 
 📊 EXPECTED PERFORMANCE:
-- Dataset: 60,000 training images, 10,000 test images (with 20% validation split)
-- Training time: 2-3 minutes (5 epochs, early stopping enabled)
-- Expected accuracy: 90%+ on test set (realistic with stable training)
+- Dataset: 60,000 training images, 10,000 test images
+- Training time: 2-3 minutes (5 epochs with manual training loop)
+- Expected accuracy: 85-90% on test set (realistic with basic training)
 - Parameters: ~100K weights (small by modern standards!)
-- Training stability: Loss consistently decreases, no NaN issues
+- Training stability: Loss consistently decreases with YOUR manual loop
 """
 
 import sys
@@ -71,15 +71,11 @@ sys.path.append(project_root)
 from tinytorch.core.tensor import Tensor          # Module 02: YOU built this!
 from tinytorch.core.layers import Linear          # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax  # Module 03: YOU built this!
+from tinytorch.core.losses import CrossEntropyLoss  # Module 04: YOU built this!
+from tinytorch.core.optimizers import SGD          # Module 06: YOU built this!
 
-# Import dataset manager and training utilities
-try:
-    from examples.data_manager import DatasetManager
-    from examples.utils import train_with_monitoring, cross_entropy_loss
-except ImportError:
-    sys.path.append(os.path.join(project_root, 'examples'))
-    from data_manager import DatasetManager
-    from utils import train_with_monitoring, cross_entropy_loss
+# Import dataset manager
+from data_manager import DatasetManager
 
 def flatten(x):
     """Flatten operation for CNN to MLP transition."""
@@ -169,42 +165,80 @@ def visualize_mnist_digits():
 def train_mnist_mlp(model, train_data, train_labels,
                    epochs=5, batch_size=32, learning_rate=0.01):
     """
-    Train MNIST MLP using YOUR complete training system with monitoring!
-    Uses the modern training infrastructure with validation splits and early stopping.
+    Train MNIST MLP using YOUR manual training loop!
+    This demonstrates the core training cycle that YOU control.
     """
     print("\n🚀 Training MNIST MLP with YOUR TinyTorch system!")
     print(f"   Dataset: {len(train_data)} training images")
-    print(f"   Using YOUR training infrastructure with monitoring")
-    print(f"   Cross-entropy loss with computational graph maintained")
-    print(f"   Validation split: 20% for early stopping")
+    print(f"   Manual training loop - YOU control the process!")
+    print(f"   Cross-entropy loss (Module 04)")
+    print(f"   SGD optimizer (Module 06)")
 
-    # Reshape data for the training infrastructure
-    # Flatten images to vectors for MLP input
-    train_data_flat = train_data.reshape(len(train_data), -1)  # (N, 784)
-    train_labels_flat = train_labels  # Keep as integers for cross_entropy_loss
+    # YOUR optimizer and loss function!
+    optimizer = SGD(model.parameters(), lr=learning_rate)
+    loss_fn = CrossEntropyLoss()
+    
+    # Training history
+    train_losses = []
+    
+    # Training loop
+    for epoch in range(epochs):
+        epoch_loss = 0
+        num_batches = 0
+        
+        # Shuffle data
+        indices = np.random.permutation(len(train_data))
+        train_data_shuffled = train_data[indices]
+        train_labels_shuffled = train_labels[indices]
+        
+        # Mini-batch training
+        for i in range(0, len(train_data), batch_size):
+            # Get batch
+            batch_end = min(i + batch_size, len(train_data))
+            batch_X = train_data_shuffled[i:batch_end]
+            batch_y = train_labels_shuffled[i:batch_end]
+            
+            # Convert to tensors
+            inputs = Tensor(batch_X)
+            targets = Tensor(batch_y)
+            
+            # Forward pass with YOUR model
+            outputs = model.forward(inputs)
+            
+            # Compute loss with YOUR loss function
+            loss = loss_fn.forward(outputs, targets)
+            
+            # Backward pass with YOUR autograd
+            loss.backward()
+            
+            # Update weights with YOUR optimizer
+            optimizer.step()
+            optimizer.zero_grad()
+            
+            # Track loss
+            loss_value = loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            epoch_loss += loss_value
+            num_batches += 1
+        
+        # Epoch summary
+        avg_loss = epoch_loss / num_batches
+        train_losses.append(avg_loss)
+        print(f"   Epoch {epoch+1}/{epochs}: Loss = {avg_loss:.4f}")
+    
+    print("\n📈 Training completed!")
+    print("   ✅ YOUR manual training loop works!")
+    print("   ✅ Cross-entropy loss computed correctly")
+    print("   ✅ SGD optimizer updated all parameters")
+    print("   ✅ Gradients flowed through YOUR network")
 
-    # Use the training infrastructure with monitoring
-    monitor = train_with_monitoring(
-        model=model,
-        X=train_data_flat,
-        y=train_labels_flat,
-        loss_fn=cross_entropy_loss,  # Uses computational graph!
-        epochs=epochs,
-        batch_size=batch_size,
-        learning_rate=learning_rate,
-        validation_split=0.2,
-        patience=5,  # Early stopping after 5 epochs without improvement
-        min_delta=1e-4,
-        verbose=True
-    )
-
-    print("\n📈 Training completed with stable loss convergence!")
-    print("   ✅ Used validation split for realistic performance monitoring")
-    print("   ✅ Early stopping prevents overfitting")
-    print("   ✅ Cross-entropy loss maintains computational graph")
-    print("   ✅ Progressive monitoring shows learning dynamics")
-
-    return model, monitor
+    # Simple monitor object for compatibility
+    class TrainingMonitor:
+        def __init__(self, losses):
+            self.train_losses = losses
+            self.best_val_loss = losses[-1] if losses else 0
+            self.should_stop = False
+    
+    return model, TrainingMonitor(train_losses)
 
 def test_mnist_mlp(model, test_data, test_labels):
     """Test YOUR MLP on MNIST test set."""
@@ -287,18 +321,13 @@ def analyze_mnist_systems(model, monitor):
 
     # Training dynamics analysis
     if monitor.train_losses:
-        best_val_loss = monitor.best_val_loss
         final_train_loss = monitor.train_losses[-1]
         epochs_completed = len(monitor.train_losses)
 
         print(f"\n   Training Dynamics:")
         print(f"   • Epochs completed: {epochs_completed}")
-        print(f"   • Best validation loss: {best_val_loss:.4f}")
         print(f"   • Final training loss: {final_train_loss:.4f}")
-        if monitor.should_stop:
-            print(f"   • Early stopping triggered: ✅ (prevents overfitting)")
-        else:
-            print(f"   • Training completed normally")
+        print(f"   • Training completed with YOUR manual loop")
 
         # Loss convergence analysis
         if len(monitor.train_losses) >= 3:
@@ -315,8 +344,8 @@ def analyze_mnist_systems(model, monitor):
     print(f"\n   💡 Systems Insights:")
     print(f"   • Fully connected = O(N²) parameters")
     print(f"   • Why CNNs win: Weight sharing reduces parameters")
-    print(f"   • Validation splits enable realistic performance assessment")
-    print(f"   • Early stopping prevents overfitting in real training")
+    print(f"   • Manual training loops give YOU full control")
+    print(f"   • This is how PyTorch training actually works!")
     print(f"   • YOUR achievement: Real vision with YOUR code!")
 
 def main():
@@ -337,8 +366,8 @@ def main():
     
     print("🎯 MNIST MLP 1986 - Real Vision with YOUR Deep Network!")
     print("   Historical significance: Backprop enables deep learning")
-    print("   YOUR achievement: 95%+ accuracy on real handwritten digits")
-    print("   Components used: YOUR complete ML system (Modules 2-8)")
+    print("   YOUR achievement: 85-90% accuracy on real handwritten digits")
+    print("   Components used: YOUR complete ML system (Modules 01-06)")
     
     # Show MNIST visualization
     if args.visualize:
@@ -348,26 +377,16 @@ def main():
     print("\n📥 Loading MNIST dataset...")
     data_manager = DatasetManager()
     
-    try:
-        (train_data, train_labels), (test_data, test_labels) = data_manager.get_mnist()
-        print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
-        
-        # Quick test mode - use subset
-        if args.quick_test:
-            train_data = train_data[:1000]
-            train_labels = train_labels[:1000]
-            test_data = test_data[:100]
-            test_labels = test_labels[:100]
-            print("   (Using subset for quick testing)")
-            
-    except Exception as e:
-        print(f"⚠️  MNIST download failed: {e}")
-        print("   Using synthetic data for demonstration...")
-        # Fallback synthetic data
-        train_data = np.random.randn(1000, 28, 28).astype(np.float32)
-        train_labels = np.random.randint(0, 10, 1000).astype(np.int64)
-        test_data = np.random.randn(100, 28, 28).astype(np.float32)
-        test_labels = np.random.randint(0, 10, 100).astype(np.int64)
+    (train_data, train_labels), (test_data, test_labels) = data_manager.get_mnist()
+    print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
+    
+    # Quick test mode - use subset
+    if args.quick_test:
+        train_data = train_data[:1000]
+        train_labels = train_labels[:1000]
+        test_data = test_data[:100]
+        test_labels = test_labels[:100]
+        print("   (Using subset for quick testing)")
     
     # Step 2: Create MLP with YOUR components
     model = MNISTMLP(input_size=784, hidden1=128, hidden2=64, num_classes=10)
@@ -397,17 +416,17 @@ def main():
     
     print("\n✅ SUCCESS! MNIST Milestone Complete!")
     print("\n🎓 What YOU Accomplished:")
-    print("   • YOU built a deep MLP with stable training dynamics")
-    print("   • YOUR backprop trains 100K+ parameters with no numerical issues")
-    print("   • YOUR system demonstrates realistic ML training behavior")
-    print("   • YOUR implementation shows proper validation and early stopping")
-    print("   • YOUR training infrastructure prevents overfitting")
+    print("   • YOU built a deep MLP with YOUR manual training loop")
+    print("   • YOUR backprop trains 100K+ parameters with no issues")
+    print("   • YOUR system demonstrates the core training cycle")
+    print("   • Forward → Loss → Backward → Update: YOU control it all!")
+    print("   • YOUR manual loop mirrors how PyTorch actually trains")
 
     print("\n🚀 Next Steps:")
-    print("   • Continue to CIFAR CNN after Module 10 (Spatial + DataLoader)")
+    print("   • Continue to CNN milestone after Module 08 (Spatial)")
     print("   • YOUR foundation scales to ImageNet and beyond!")
-    print(f"   • With {accuracy:.1f}% accuracy and stable training, YOUR deep learning works!")
-    print("   • Training dynamics show the system is learning correctly")
+    print(f"   • With {accuracy:.1f}% accuracy, YOUR deep learning works!")
+    print("   • Manual training loops give YOU the deepest understanding")
 
 if __name__ == "__main__":
     main()

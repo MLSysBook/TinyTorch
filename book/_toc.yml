@@ -42,15 +42,16 @@ parts:
     title: "05. Autograd"
   - file: chapters/06-optimizers
     title: "06. Optimizers"
-  - file: chapters/07-training
-    title: "07. Training"
-  - file: chapters/08-spatial
-    title: "08. Spatial"
 
-- caption: 🏗️ Neural Architectures
+- caption: 🖼️ Vision & Data
   chapters:
-  - file: chapters/09-dataloader
-    title: "09. DataLoader"
+  - file: chapters/08-dataloader
+    title: "08. DataLoader"
+  - file: chapters/09-spatial
+    title: "09. Spatial"
+
+- caption: 🗣️ Language & Attention
+  chapters:
   - file: chapters/10-tokenization
     title: "10. Tokenization"
   - file: chapters/11-embeddings
@@ -60,18 +61,20 @@ parts:
   - file: chapters/13-transformers
     title: "13. Transformers"
 
-- caption: ⚡ Performance Optimization
+- caption: 🎓 Advanced Topics
   chapters:
-  - file: chapters/14-profiling
-    title: "14. Profiling"
-  - file: chapters/15-acceleration
-    title: "15. Acceleration"
-  - file: chapters/16-quantization
-    title: "16. Quantization"
-  - file: chapters/17-compression
-    title: "17. Compression"
-  - file: chapters/18-caching
-    title: "18. KV Caching"
+  - file: chapters/07-training
+    title: "07. Training Abstractions ⭐ Optional"
+  - file: chapters/14-kvcaching
+    title: "14. KV Caching"
+  - file: chapters/15-profiling
+    title: "15. Profiling"
+  - file: chapters/16-acceleration
+    title: "16. Acceleration"
+  - file: chapters/17-quantization
+    title: "17. Quantization"
+  - file: chapters/18-compression
+    title: "18. Compression"
   - file: chapters/19-benchmarking
     title: "19. Benchmarking"
 

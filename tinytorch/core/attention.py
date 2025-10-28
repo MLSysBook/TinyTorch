@@ -225,11 +225,20 @@ class MultiHeadAttention:
         V_heads = V.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
 
         # Step 4: Rearrange dims to (batch, heads, seq, head_dim) for parallel processing
-        # We need to transpose dims 1 and 2, but Tensor.transpose() only swaps last two dims
-        # So we manually transpose using NumPy, but preserve requires_grad
-        Q_heads = Tensor(np.transpose(Q_heads.data, (0, 2, 1, 3)), requires_grad=Q_heads.requires_grad)
-        K_heads = Tensor(np.transpose(K_heads.data, (0, 2, 1, 3)), requires_grad=K_heads.requires_grad)
-        V_heads = Tensor(np.transpose(V_heads.data, (0, 2, 1, 3)), requires_grad=V_heads.requires_grad)
+        # We need to permute axes (0, 2, 1, 3) to move heads before sequence
+        # This must preserve the computation graph for autograd!
+        from tinytorch.core.autograd import PermuteBackward
+        
+        def permute_axes(tensor, axes):
+            """Helper to permute axes while preserving gradient tracking."""
+            result = Tensor(np.transpose(tensor.data, axes), requires_grad=tensor.requires_grad)
+            if tensor.requires_grad:
+                result._grad_fn = PermuteBackward(tensor, axes)
+            return result
+        
+        Q_heads = permute_axes(Q_heads, (0, 2, 1, 3))
+        K_heads = permute_axes(K_heads, (0, 2, 1, 3))
+        V_heads = permute_axes(V_heads, (0, 2, 1, 3))
         
         # Step 5: Process ALL heads in parallel (NO loops!)
         # Reshape to combine batch and head dims: (batch, heads, seq, head_dim) → (batch*heads, seq, head_dim)
@@ -260,7 +269,7 @@ class MultiHeadAttention:
         attn_output = attn_output.reshape(batch_size, self.num_heads, seq_len, self.head_dim)
         
         # Step 7: Transpose back: (batch, heads, seq, head_dim) → (batch, seq, heads, head_dim)
-        attn_output = Tensor(np.transpose(attn_output.data, (0, 2, 1, 3)), requires_grad=attn_output.requires_grad)
+        attn_output = permute_axes(attn_output, (0, 2, 1, 3))
         
         # Step 8: Merge heads: (batch, seq, heads, head_dim) → (batch, seq, embed_dim)
         output = attn_output.reshape(batch_size, seq_len, self.embed_dim)

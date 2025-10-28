@@ -90,11 +90,7 @@ from tinytorch.core.optimizers import Adam            # Module 07: YOU built thi
 from tinytorch.core.dataloader import DataLoader, Dataset  # Module 10: YOU built this!
 
 # Import dataset manager
-try:
-    from examples.data_manager import DatasetManager
-except ImportError:
-    sys.path.append(os.path.join(project_root, 'examples'))
-    from data_manager import DatasetManager
+from data_manager import DatasetManager
 
 class CIFARDataset(Dataset):
     """Custom CIFAR-10 Dataset using YOUR Dataset interface from Module 10!"""
@@ -414,24 +410,15 @@ def main():
     print("\n📥 Loading CIFAR-10 dataset...")
     data_manager = DatasetManager()
     
-    try:
-        (train_data, train_labels), (test_data, test_labels) = data_manager.get_cifar10()
-        print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
-        
-        if args.quick_test:
-            train_data = train_data[:1000]
-            train_labels = train_labels[:1000]
-            test_data = test_data[:500]
-            test_labels = test_labels[:500]
-            print("   (Using subset for quick testing)")
-            
-    except Exception as e:
-        print(f"⚠️  CIFAR-10 download failed: {e}")
-        print("   Using synthetic data for architecture testing...")
-        train_data = np.random.randn(100, 3, 32, 32).astype(np.float32)
-        train_labels = np.random.randint(0, 10, 100).astype(np.int64)
-        test_data = np.random.randn(20, 3, 32, 32).astype(np.float32)
-        test_labels = np.random.randint(0, 10, 20).astype(np.int64)
+    (train_data, train_labels), (test_data, test_labels) = data_manager.get_cifar10()
+    print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
+    
+    if args.quick_test:
+        train_data = train_data[:1000]
+        train_labels = train_labels[:1000]
+        test_data = test_data[:500]
+        test_labels = test_labels[:500]
+        print("   (Using subset for quick testing)")
     
     # Step 2: Create Datasets and DataLoaders using YOUR Module 10!
     print("\n📦 Creating YOUR Dataset and DataLoader (Module 10)...")
