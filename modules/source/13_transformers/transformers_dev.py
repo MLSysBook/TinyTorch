@@ -446,6 +446,10 @@ class LayerNorm:
         return output
         ### END SOLUTION
 
+    def __call__(self, x):
+        """Allows the layer norm to be called like a function."""
+        return self.forward(x)
+
     def parameters(self):
         """Return learnable parameters."""
         return [self.gamma, self.beta]
@@ -641,6 +645,10 @@ class MLP:
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the MLP to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -878,6 +886,10 @@ class TransformerBlock:
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x, mask=None):
+        """Allows the transformer block to be called like a function."""
+        return self.forward(x, mask)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -1192,6 +1204,10 @@ class GPT:
 
         return logits
         ### END SOLUTION
+
+    def __call__(self, tokens):
+        """Allows the GPT model to be called like a function."""
+        return self.forward(tokens)
 
     def _create_causal_mask(self, seq_len):
         """Create causal mask to prevent attending to future positions."""

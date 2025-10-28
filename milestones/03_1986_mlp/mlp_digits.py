@@ -154,7 +154,7 @@ def load_digit_dataset():
 def evaluate_accuracy(model, images, labels):
     """Compute classification accuracy."""
     # Forward pass
-    logits = model.forward(images)
+    logits = model(images)
     
     # Get predictions (argmax)
     predictions = np.argmax(logits.data, axis=1)
@@ -208,7 +208,7 @@ def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
         
         for epoch in range(epochs):
             for batch_images, batch_labels in train_loader:
-                logits = model.forward(batch_images)
+                logits = model(batch_images)
                 loss = loss_fn(logits, batch_labels)
                 loss.backward()
                 optimizer.step()
@@ -367,7 +367,7 @@ def train_mlp():
         
         for batch_images, batch_labels in train_loader:
             # Forward pass
-            logits = model.forward(batch_images)
+            logits = model(batch_images)
             loss = loss_fn(logits, batch_labels)
             
             # Backward pass

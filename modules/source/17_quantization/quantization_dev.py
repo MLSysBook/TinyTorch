@@ -831,6 +831,10 @@ class QuantizedLinear:
         return result
         ### END SOLUTION
 
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the quantized linear layer to be called like a function."""
+        return self.forward(x)
+
     def parameters(self) -> List[Tensor]:
         """Return quantized parameters."""
         params = [self.q_weight]

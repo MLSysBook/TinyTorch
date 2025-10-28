@@ -241,7 +241,7 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
                 break
             
             # Forward pass with YOUR CNN
-            outputs = model.forward(batch_data)  # YOUR spatial features!
+            outputs = model(batch_data)  # YOUR spatial features!
             
             # Manual cross-entropy loss
             batch_size = len(batch_labels.data)
@@ -301,7 +301,7 @@ def test_cifar_cnn(model, test_loader, class_names):
         if batch_idx >= 20:  # Demo mode - limit batches
             break
         
-        outputs = model.forward(batch_data)
+        outputs = model(batch_data)
 
         outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
         predictions = np.argmax(outputs_np, axis=1)
@@ -447,7 +447,7 @@ def main():
 
         # Test with single sample from minimal DataLoader
         for batch_data, batch_labels in mini_loader:
-            test_output = model.forward(batch_data)
+            test_output = model(batch_data)
             print(f"✅ Forward pass successful! Shape: {test_output.data.shape}")
             print("✅ YOUR CNN + DataLoader work together!")
             break
