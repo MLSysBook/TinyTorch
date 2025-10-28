@@ -354,9 +354,10 @@ def train_tinystories_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             epoch_loss += loss_value
             batch_count += 1
             
-            # Progress
-            if (batch_idx + 1) % 20 == 0:
-                console.print(f"    Batch {batch_idx+1}: Loss = [cyan]{loss_value:.4f}[/cyan]")
+            # Progress - show output frequently so user sees continuous training
+            if batch_idx == 0 or (batch_idx + 1) % 10 == 0 or (batch_idx + 1) % 50 == 0:
+                avg_loss = epoch_loss / batch_count
+                console.print(f"    Batch {batch_idx+1}/500 | Loss: {loss_value:.4f} | Avg: {avg_loss:.4f}")
         
         # Epoch summary
         avg_loss = epoch_loss / max(1, batch_count)
