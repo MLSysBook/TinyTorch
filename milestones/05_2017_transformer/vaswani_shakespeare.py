@@ -69,10 +69,10 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
 
 📊 EXPECTED PERFORMANCE:
 - Dataset: ~1MB Shakespeare corpus (40,000 lines)
-- Training time: 5-10 minutes (demonstration mode)
+- Training time: 45-60 minutes (proper training)
 - Vocabulary: ~65 unique characters
-- Expected: Coherent (if not perfect) Shakespeare-style text
-- Parameters: ~500K (small by modern standards!)
+- Expected: Good Shakespeare-style text with proper structure
+- Parameters: ~2.5M (balanced for character-level tasks)
 """
 
 import sys
@@ -295,16 +295,18 @@ def visualize_transformer():
     print("="*70)
 
 
-def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.001):
+def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.0003):
     """Train TinyGPT using YOUR complete training system with DataLoader!"""
     console.print("\n[bold]🚀 Training Shakespeare TinyGPT with YOUR TinyTorch![/bold]")
     console.print(f"  Dataset: [cyan]{len(train_loader.dataset):,}[/cyan] character sequences")
     console.print(f"  Batch size: [cyan]{train_loader.batch_size}[/cyan]")
+    console.print(f"  Learning rate: [cyan]{learning_rate}[/cyan] (3e-4, standard for transformers)")
     console.print(f"  YOUR DataLoader (Module 08) handles batching!")
     console.print(f"  YOUR Adam optimizer (Module 08)")
     console.print(f"  YOUR CrossEntropyLoss (Module 04) with autograd!")
     
     # YOUR optimizer and loss function
+    # Using 3e-4 learning rate (standard for transformers, per Vaswani et al. 2017 / GPT-2)
     optimizer = Adam(model.parameters(), lr=learning_rate)
     loss_fn = CrossEntropyLoss()  # YOUR loss function with autograd!
     
@@ -315,7 +317,7 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
         
         # Use YOUR DataLoader to iterate through batches!
         for batch_idx, (batch_input, batch_target) in enumerate(train_loader):
-            if batch_idx >= 100:  # Demo mode - limit batches
+            if batch_idx >= 500:  # Training mode - process more batches
                 break
             
             if batch_idx == 0:
@@ -449,17 +451,17 @@ def main():
     parser = argparse.ArgumentParser(description='Shakespeare Transformer 2017')
     parser.add_argument('--test-only', action='store_true',
                        help='Test architecture only')
-    parser.add_argument('--epochs', type=int, default=5,
-                       help='Training epochs (demo mode)')
+    parser.add_argument('--epochs', type=int, default=20,
+                       help='Training epochs')
     parser.add_argument('--batch-size', type=int, default=32,
                        help='Batch size')
-    parser.add_argument('--seq-length', type=int, default=64,
+    parser.add_argument('--seq-length', type=int, default=128,
                        help='Sequence length')
-    parser.add_argument('--embed-dim', type=int, default=128,
+    parser.add_argument('--embed-dim', type=int, default=256,
                        help='Embedding dimension')
-    parser.add_argument('--num-layers', type=int, default=4,
+    parser.add_argument('--num-layers', type=int, default=6,
                        help='Number of transformer layers')
-    parser.add_argument('--num-heads', type=int, default=4,
+    parser.add_argument('--num-heads', type=int, default=8,
                        help='Number of attention heads')
     parser.add_argument('--visualize', action='store_true', default=True,
                        help='Show transformer visualization')
