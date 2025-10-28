@@ -449,6 +449,100 @@ class MulBackward(Function):
 
 # %% [markdown]
 """
+### SubBackward - Gradient Rules for Subtraction
+
+Subtraction is mathematically simple but important for operations like normalization.
+
+**Mathematical Principle:**
+```
+If z = a - b, then:
+∂z/∂a = 1
+∂z/∂b = -1
+```
+
+**Key Insight:** Gradient flows forward to the first operand, but **negated** to the second.
+This is crucial for operations like `x - mean` in LayerNorm.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "sub-backward", "solution": true}
+#| export
+class SubBackward(Function):
+    """
+    Gradient computation for tensor subtraction.
+    
+    **Mathematical Rule:** If z = a - b, then ∂z/∂a = 1 and ∂z/∂b = -1
+    """
+
+    def apply(self, grad_output):
+        """
+        Compute gradients for subtraction.
+        
+        Returns:
+            Tuple of (grad_a, grad_b) where grad_b is negated
+        """
+        a, b = self.saved_tensors
+        grad_a = grad_b = None
+
+        if isinstance(a, Tensor) and a.requires_grad:
+            grad_a = grad_output  # ∂(a-b)/∂a = 1
+
+        if isinstance(b, Tensor) and b.requires_grad:
+            grad_b = -grad_output  # ∂(a-b)/∂b = -1 (note the negative!)
+
+        return grad_a, grad_b
+
+# %% [markdown]
+"""
+### DivBackward - Gradient Rules for Division
+
+Division requires the quotient rule from calculus.
+
+**Mathematical Principle:**
+```
+If z = a / b, then:
+∂z/∂a = 1/b
+∂z/∂b = -a/b²
+```
+
+**Quotient Rule:** For z = f/g, dz = (g·df - f·dg)/g²
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "div-backward", "solution": true}
+#| export
+class DivBackward(Function):
+    """
+    Gradient computation for tensor division.
+    
+    **Mathematical Rule:** If z = a / b, then:
+    - ∂z/∂a = 1/b
+    - ∂z/∂b = -a/b²
+    """
+
+    def apply(self, grad_output):
+        """
+        Compute gradients for division using quotient rule.
+        
+        Returns:
+            Tuple of (grad_a, grad_b)
+        """
+        a, b = self.saved_tensors
+        grad_a = grad_b = None
+
+        if isinstance(a, Tensor) and a.requires_grad:
+            # ∂(a/b)/∂a = 1/b
+            if isinstance(b, Tensor):
+                grad_a = grad_output / b.data
+            else:
+                grad_a = grad_output / b
+
+        if isinstance(b, Tensor) and b.requires_grad:
+            # ∂(a/b)/∂b = -a/b²
+            grad_b = -grad_output * a.data / (b.data ** 2)
+
+        return grad_a, grad_b
+
+# %% [markdown]
+"""
 ### MatmulBackward - Gradient Rules for Matrix Multiplication
 
 Matrix multiplication has more complex gradient rules based on matrix calculus.
@@ -872,7 +966,9 @@ def enable_autograd():
 
     # Store original operations
     _original_add = Tensor.__add__
+    _original_sub = Tensor.__sub__
     _original_mul = Tensor.__mul__
+    _original_div = Tensor.__truediv__
     _original_matmul = Tensor.matmul if hasattr(Tensor, 'matmul') else None
 
     # Enhanced operations that track gradients
@@ -937,6 +1033,48 @@ def enable_autograd():
         if self.requires_grad or other.requires_grad:
             result.requires_grad = True
             result._grad_fn = MatmulBackward(self, other)
+
+        return result
+
+    def tracked_sub(self, other):
+        """
+        Subtraction with gradient tracking.
+        
+        Enhances the original __sub__ method to build computation graphs
+        when requires_grad=True for any input.
+        """
+        # Convert scalar to Tensor if needed
+        if not isinstance(other, Tensor):
+            other = Tensor(other)
+
+        # Call original operation
+        result = _original_sub(self, other)
+
+        # Track gradient if needed
+        if self.requires_grad or other.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = SubBackward(self, other)
+
+        return result
+
+    def tracked_div(self, other):
+        """
+        Division with gradient tracking.
+        
+        Enhances the original __truediv__ method to build computation graphs
+        when requires_grad=True for any input.
+        """
+        # Convert scalar to Tensor if needed
+        if not isinstance(other, Tensor):
+            other = Tensor(other)
+
+        # Call original operation
+        result = _original_div(self, other)
+
+        # Track gradient if needed
+        if self.requires_grad or other.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = DivBackward(self, other)
 
         return result
 
@@ -1028,7 +1166,9 @@ def enable_autograd():
 
     # Install enhanced operations
     Tensor.__add__ = tracked_add
+    Tensor.__sub__ = tracked_sub
     Tensor.__mul__ = tracked_mul
+    Tensor.__truediv__ = tracked_div
     Tensor.matmul = tracked_matmul
     Tensor.sum = sum_op
     Tensor.backward = backward
