@@ -18,6 +18,7 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
   Module 03 (Activations)  : YOUR ReLU in feed-forward networks
   Module 04 (Layers)       : YOUR Linear layers
   Module 08 (Optimizers)   : YOUR Adam optimizer
+  Module 10 (Tokenization) : YOUR CharTokenizer for text→numbers
   Module 11 (Embeddings)   : YOUR token & positional embeddings
   Module 12 (Attention)    : YOUR multi-head self-attention
   Module 13 (Transformers) : YOUR LayerNorm + TransformerBlock
@@ -97,9 +98,10 @@ from tinytorch.core.layers import Linear                    # Module 04: YOU bui
 from tinytorch.core.activations import ReLU, Softmax        # Module 03: YOU built this!
 from tinytorch.core.optimizers import Adam                  # Module 08: YOU built this!
 from tinytorch.core.losses import CrossEntropyLoss          # Module 04: YOU built this!
+from tinytorch.text.tokenization import CharTokenizer       # Module 10: YOU built this!
+from tinytorch.text.embeddings import Embedding, PositionalEncoding   # Module 11: YOU built this!
 from tinytorch.core.attention import MultiHeadAttention     # Module 12: YOU built this!
 from tinytorch.models.transformer import LayerNorm, TransformerBlock  # Module 13: YOU built this!
-from tinytorch.text.embeddings import Embedding, PositionalEncoding   # Module 11: YOU built this!
 from tinytorch.data.loader import DataLoader, Dataset   # Module 08: YOU built this!
 
 # Import dataset manager
@@ -108,7 +110,8 @@ from data_manager import DatasetManager
 
 class ShakespeareDataset(Dataset):
     """
-    Character-level Shakespeare dataset using YOUR Dataset interface!
+    Character-level Shakespeare dataset using YOUR Dataset interface (Module 08)
+    and YOUR CharTokenizer (Module 10)!
     
     Tokenizes text into characters and creates sequences for language modeling.
     """
@@ -121,14 +124,13 @@ class ShakespeareDataset(Dataset):
             text: Raw Shakespeare text
             seq_length: Length of input sequences
         """
-        # Build character vocabulary
-        self.chars = sorted(list(set(text)))
-        self.vocab_size = len(self.chars)
-        self.char_to_idx = {ch: i for i, ch in enumerate(self.chars)}
-        self.idx_to_char = {i: ch for i, ch in enumerate(self.chars)}
+        # Use YOUR CharTokenizer from Module 10!
+        self.tokenizer = CharTokenizer()
+        self.tokenizer.build_vocab([text])  # Build vocabulary from Shakespeare corpus
+        self.vocab_size = self.tokenizer.vocab_size
         
-        # Convert text to indices
-        self.data = [self.char_to_idx[ch] for ch in text]
+        # Convert text to indices using YOUR tokenizer!
+        self.data = self.tokenizer.encode(text)
         self.seq_length = seq_length
         
         # Calculate number of sequences
@@ -148,8 +150,8 @@ class ShakespeareDataset(Dataset):
         return self.num_sequences
     
     def decode(self, indices):
-        """Convert indices back to text."""
-        return ''.join([self.idx_to_char[int(idx)] for idx in indices])
+        """Convert indices back to text using YOUR tokenizer!"""
+        return self.tokenizer.decode(indices)
 
 
 class TinyGPT:
@@ -474,7 +476,7 @@ def main():
         "[bold cyan]Shakespeare Transformer - Text Generation with YOUR Attention![/bold cyan]\n\n"
         "[yellow]Historical significance:[/yellow] Attention revolutionized sequence modeling\n"
         "[green]YOUR achievement:[/green] Generate Shakespeare-style text\n"
-        "[cyan]Components used:[/cyan] YOUR complete transformer system (Modules 2-13)",
+        "[cyan]Components used:[/cyan] YOUR complete NLP pipeline (Modules 2, 3, 4, 8, 10, 11, 12, 13)",
         title="🎯 Milestone 05: Transformer Era (2017)",
         border_style="cyan",
         box=box.DOUBLE
