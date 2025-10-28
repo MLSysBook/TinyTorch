@@ -209,6 +209,61 @@ def test_regression_dropout_uses_tensor_ops():
     print("✅ Dropout Tensor operations regression test passed")
 
 
+def test_regression_transpose_has_backward():
+    """
+    Regression test for Issue #8: Transpose had no backward pass.
+    
+    Bug: Tensor.transpose() not patched by Module 05, no gradient flow.
+    Fix: Added TransposeBackward class and patched transpose in Module 05.
+    Commit: Module 05 fixes (TransposeBackward)
+    """
+    print("Testing regression: transpose backward...")
+    
+    K = Tensor(np.random.randn(2, 4, 8, 64), requires_grad=True)
+    K_T = K.transpose()
+    
+    # Bug: K_T._grad_fn would be None
+    # Fix: K_T._grad_fn is TransposeBackward instance
+    assert hasattr(K_T, '_grad_fn'), "Transpose should have _grad_fn"
+    assert K_T._grad_fn is not None, "Transpose _grad_fn should not be None"
+    
+    # Verify backward pass (attention pattern: Q @ K.T)
+    Q = Tensor(np.random.randn(2, 4, 8, 64), requires_grad=True)
+    scores = Q.matmul(K_T)
+    scores.backward(np.ones_like(scores.data))
+    
+    assert K.grad is not None, "Gradient should flow back through transpose"
+    assert K.grad.shape == K.shape, f"K.grad shape {K.grad.shape} should match K shape {K.shape}"
+    
+    print("✅ Transpose backward regression test passed")
+
+
+def test_regression_matmul_backward_uses_matmul():
+    """
+    Regression test for Issue #9: MatmulBackward used np.dot for gradients.
+    
+    Bug: MatmulBackward used np.dot which doesn't handle batched 3D+ tensors.
+    Fix: Changed to np.matmul and np.swapaxes in Module 05.
+    Commit: Module 05 fixes (MatmulBackward batched)
+    """
+    print("Testing regression: MatmulBackward batched operations...")
+    
+    # Batched 3D matmul
+    a = Tensor(np.random.randn(2, 4, 8), requires_grad=True)
+    b = Tensor(np.random.randn(2, 8, 4), requires_grad=True)
+    c = a.matmul(b)
+    
+    # Backward pass
+    c.backward(np.ones_like(c.data))
+    
+    # Bug: Would crash with "shapes not aligned" or produce wrong shapes
+    # Fix: Gradients have correct shapes
+    assert a.grad is not None and a.grad.shape == (2, 4, 8), f"a.grad shape: {a.grad.shape}"
+    assert b.grad is not None and b.grad.shape == (2, 8, 4), f"b.grad shape: {b.grad.shape}"
+    
+    print("✅ MatmulBackward batched operations regression test passed")
+
+
 def run_all_tests():
     """Run all regression tests for gradient flow fixes."""
     print("\n" + "="*70)
@@ -223,6 +278,8 @@ def run_all_tests():
         test_regression_layernorm_gradient_flow,
         test_regression_embedding_requires_grad,
         test_regression_dropout_uses_tensor_ops,
+        test_regression_transpose_has_backward,
+        test_regression_matmul_backward_uses_matmul,
     ]
     
     passed = 0
