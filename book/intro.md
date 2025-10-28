@@ -31,11 +31,17 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 
 **Core Learning Approach**: Build → Profile → Optimize. You'll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.
 
-## The ML Evolution Story You'll Experience
+## Three-Tier Learning Pathway
 
-Journey through 40+ years of ML breakthroughs by building each era yourself: **1980s neural foundations** → **1990s backpropagation** → **2012 CNN revolution** → **2017 transformer unification** → **2024 production optimization**. Each module teaches both the breakthrough AND the systems engineering that made it possible.
+TinyTorch organizes learning through **three pedagogically-motivated tiers** that follow ML history:
 
-**📖 See [Complete ML Evolution Timeline](chapters/00-introduction.html#the-ml-evolution-story-youll-experience)** for the full historical context and technical progression.
+**🏗️ Foundation Tier (Modules 01-07)**: Build mathematical infrastructure - tensors, autograd, optimizers
+**🧠 Intelligence Tier (Modules 08-13)**: Implement modern AI - CNNs for vision, transformers for language
+**⚡ Optimization Tier (Modules 14-20)**: Deploy production systems - profiling, quantization, acceleration
+
+Each tier builds complete, working systems with clear career connections and practical skills.
+
+**📖 See [Complete Three-Tier Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, time estimates, and learning outcomes.
 
 ## 🏆 Prove Your Mastery Through History
 
@@ -167,7 +173,7 @@ You master modern LLM optimizations
 
 ## How to Choose Your Learning Path
 
-**Two Learning Approaches**: You can either **build it yourself** (work through student notebooks and implement from scratch) or **learn by reading** (study the solution notebooks to understand how ML systems work). Both approaches use the same **Build → Profile → Optimize** methodology at different scales.
+**Three Learning Approaches**: You can **build complete tiers** (implement all 20 modules), **focus on specific tiers** (target your skill gaps), or **explore selectively** (study key concepts). Each tier builds complete, working systems.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 3rem 0;">
 
@@ -201,7 +207,7 @@ You master modern LLM optimizations
 
 ## Getting Started
 
-Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Complete Course Structure](chapters/00-introduction.html)** for detailed module descriptions.
+Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown and learning outcomes.
 
 **Additional Resources**:
 - **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 21 capability checkpoints
