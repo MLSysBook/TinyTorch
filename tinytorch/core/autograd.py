@@ -15,8 +15,9 @@
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['Function', 'AddBackward', 'MulBackward', 'SubBackward', 'DivBackward', 'MatmulBackward', 'SumBackward',
-           'ReLUBackward', 'SigmoidBackward', 'MSEBackward', 'BCEBackward', 'CrossEntropyBackward', 'enable_autograd']
+__all__ = ['Function', 'AddBackward', 'MulBackward', 'SubBackward', 'DivBackward', 'MatmulBackward', 'TransposeBackward',
+           'SumBackward', 'ReLUBackward', 'SigmoidBackward', 'MSEBackward', 'BCEBackward', 'CrossEntropyBackward',
+           'enable_autograd']
 
 # %% ../../modules/source/05_autograd/autograd_dev.ipynb 1
 import numpy as np
@@ -251,21 +252,95 @@ class MatmulBackward(Function):
         **Mathematical Foundation:**
         - ∂(A@B)/∂A = grad_output @ B.T
         - ∂(A@B)/∂B = A.T @ grad_output
+        
+        **Batched Operation:** For 3D+ tensors, we transpose only the last two
+        dimensions using np.swapaxes, preserving batch dimensions.
         """
         a, b = self.saved_tensors
         grad_a = grad_b = None
 
         # Gradient for first input: grad_output @ b.T
         if isinstance(a, Tensor) and a.requires_grad:
-            grad_a = np.dot(grad_output, b.data.T)
+            # For batched tensors, transpose only last two dims
+            if b.data.ndim >= 2:
+                b_T = np.swapaxes(b.data, -2, -1)
+            else:
+                b_T = b.data.T
+            grad_a = np.matmul(grad_output, b_T)
 
         # Gradient for second input: a.T @ grad_output
         if isinstance(b, Tensor) and b.requires_grad:
-            grad_b = np.dot(a.data.T, grad_output)
+            # For batched tensors, transpose only last two dims
+            if a.data.ndim >= 2:
+                a_T = np.swapaxes(a.data, -2, -1)
+            else:
+                a_T = a.data.T
+            grad_b = np.matmul(a_T, grad_output)
 
         return grad_a, grad_b
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 19
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 18
+class TransposeBackward(Function):
+    """
+    Gradient computation for transpose operation.
+    
+    **Mathematical Rule:** If Y = X.T, then:
+    - ∂Y/∂X = grad_Y.T
+    
+    **Key Insight:** The gradient of transpose is just transpose the gradient!
+    This is because transpose is a linear operation that just rearranges elements.
+    
+    **Applications:** Used in attention (K.T for scores), weight gradients (W.T),
+    and any operation that needs to swap matrix dimensions.
+    """
+
+    def __init__(self, tensor, dim0, dim1):
+        """
+        Args:
+            tensor: Input tensor
+            dim0: First dimension to swap (None for default)
+            dim1: Second dimension to swap (None for default)
+        """
+        super().__init__(tensor)
+        self.dim0 = dim0
+        self.dim1 = dim1
+
+    def apply(self, grad_output):
+        """
+        Compute gradient for transpose.
+        
+        Args:
+            grad_output: Gradient flowing backward from output
+            
+        Returns:
+            Tuple with single gradient for input tensor
+            
+        **Mathematical Foundation:**
+        - ∂(X.T)/∂X = grad_output.T
+        - Just transpose the gradient back!
+        """
+        x, = self.saved_tensors
+        grad_x = None
+
+        if isinstance(x, Tensor) and x.requires_grad:
+            # Transpose gradient using the same dims
+            if self.dim0 is None and self.dim1 is None:
+                # Default: transpose last two dimensions
+                if grad_output.ndim < 2:
+                    grad_x = grad_output.copy()
+                else:
+                    axes = list(range(grad_output.ndim))
+                    axes[-2], axes[-1] = axes[-1], axes[-2]
+                    grad_x = np.transpose(grad_output, axes)
+            else:
+                # Specific dimensions: swap them back
+                axes = list(range(grad_output.ndim))
+                axes[self.dim0], axes[self.dim1] = axes[self.dim1], axes[self.dim0]
+                grad_x = np.transpose(grad_output, axes)
+
+        return (grad_x,)
+
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 20
 class SumBackward(Function):
     """
     Gradient computation for tensor sum.
@@ -299,7 +374,7 @@ class SumBackward(Function):
             return np.ones_like(tensor.data) * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 24
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 25
 class ReLUBackward(Function):
     """
     Gradient computation for ReLU activation.
@@ -322,7 +397,7 @@ class ReLUBackward(Function):
             return grad_output * relu_grad,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 25
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 26
 class SigmoidBackward(Function):
     """
     Gradient computation for sigmoid activation.
@@ -352,7 +427,7 @@ class SigmoidBackward(Function):
             return grad_output * sigmoid_grad,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 26
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 27
 class MSEBackward(Function):
     """
     Gradient computation for Mean Squared Error Loss.
@@ -378,7 +453,7 @@ class MSEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 27
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 28
 class BCEBackward(Function):
     """
     Gradient computation for Binary Cross-Entropy Loss.
@@ -408,7 +483,7 @@ class BCEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 28
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 29
 class CrossEntropyBackward(Function):
     """
     Gradient computation for Cross-Entropy Loss.
@@ -453,7 +528,7 @@ class CrossEntropyBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 29
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 30
 def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.
@@ -494,6 +569,7 @@ def enable_autograd():
     _original_mul = Tensor.__mul__
     _original_div = Tensor.__truediv__
     _original_matmul = Tensor.matmul if hasattr(Tensor, 'matmul') else None
+    _original_transpose = Tensor.transpose if hasattr(Tensor, 'transpose') else None
 
     # Enhanced operations that track gradients
     def tracked_add(self, other):
@@ -557,6 +633,34 @@ def enable_autograd():
         if self.requires_grad or other.requires_grad:
             result.requires_grad = True
             result._grad_fn = MatmulBackward(self, other)
+
+        return result
+
+    def tracked_transpose(self, dim0=None, dim1=None):
+        """
+        Transpose with gradient tracking.
+        
+        Enhances the original transpose method to build computation graphs
+        when requires_grad=True for the input.
+        """
+        if _original_transpose:
+            result = _original_transpose(self, dim0, dim1)
+        else:
+            # Fallback if transpose doesn't exist
+            if dim0 is None and dim1 is None:
+                axes = list(range(len(self.shape)))
+                if len(axes) >= 2:
+                    axes[-2], axes[-1] = axes[-1], axes[-2]
+                result = Tensor(np.transpose(self.data, axes))
+            else:
+                axes = list(range(len(self.shape)))
+                axes[dim0], axes[dim1] = axes[dim1], axes[dim0]
+                result = Tensor(np.transpose(self.data, axes))
+
+        # Track gradient if needed
+        if self.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = TransposeBackward(self, dim0, dim1)
 
         return result
 
@@ -694,6 +798,7 @@ def enable_autograd():
     Tensor.__mul__ = tracked_mul
     Tensor.__truediv__ = tracked_div
     Tensor.matmul = tracked_matmul
+    Tensor.transpose = tracked_transpose
     Tensor.sum = sum_op
     Tensor.backward = backward
     Tensor.zero_grad = zero_grad
