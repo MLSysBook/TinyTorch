@@ -86,12 +86,15 @@ class LayerNorm:
         mean = x.mean(axis=-1, keepdims=True)
 
         # Compute variance: E[(x - μ)²]
-        diff = Tensor(x.data - mean.data)
-        variance = Tensor((diff.data ** 2).mean(axis=-1, keepdims=True))
+        # Use Tensor operations to preserve computation graph!
+        diff = x - mean
+        variance = (diff * diff).mean(axis=-1, keepdims=True)
 
-        # Normalize
-        std = Tensor(np.sqrt(variance.data + self.eps))
-        normalized = Tensor((x.data - mean.data) / std.data)
+        # Normalize - use Tensor operations to preserve gradients!
+        # Add eps as a Tensor for proper gradient flow
+        eps_tensor = Tensor(np.array(self.eps), requires_grad=False)
+        std = Tensor(np.sqrt(variance.data + self.eps), requires_grad=variance.requires_grad)
+        normalized = (x - mean) / std
 
         # Apply learnable transformation
         output = normalized * self.gamma + self.beta
