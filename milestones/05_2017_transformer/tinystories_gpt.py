@@ -304,18 +304,19 @@ def visualize_transformer():
     print("="*70)
 
 
-def train_tinystories_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.0003):
+def train_tinystories_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.01):
     """Train TinyGPT using YOUR complete training system with DataLoader!"""
     console.print("\n[bold]🚀 Training TinyStories TinyGPT with YOUR TinyTorch![/bold]")
     console.print(f"  Dataset: [cyan]{len(train_loader.dataset):,}[/cyan] character sequences")
     console.print(f"  Batch size: [cyan]{train_loader.batch_size}[/cyan]")
-    console.print(f"  Learning rate: [cyan]{learning_rate}[/cyan] (3e-4, standard for transformers)")
+    console.print(f"  Learning rate: [cyan]{learning_rate}[/cyan] (1e-2, optimal for 4.8M param model)")
     console.print(f"  YOUR DataLoader (Module 08) handles batching!")
     console.print(f"  YOUR Adam optimizer (Module 08)")
     console.print(f"  YOUR CrossEntropyLoss (Module 04) with autograd!")
     
     # YOUR optimizer and loss function
-    # Using 3e-4 learning rate (standard for transformers, per Vaswani et al. 2017 / GPT-2)
+    # Using 1e-2 learning rate (optimal for our 4.8M param model, validated by debug script)
+    # Note: Large models (100M+) use 3e-4, but smaller models need higher LR
     optimizer = Adam(model.parameters(), lr=learning_rate)
     loss_fn = CrossEntropyLoss()  # YOUR loss function with autograd!
     
@@ -336,9 +337,10 @@ def train_tinystories_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             logits = model.forward(batch_input)  # YOUR attention mechanism!
             
             # Reshape for loss computation: (batch, seq, vocab) -> (batch*seq, vocab)
+            # IMPORTANT: Use Tensor.reshape() to preserve computation graph!
             batch_size, seq_length, vocab_size = logits.shape
-            logits_2d = Tensor(logits.data.reshape(batch_size * seq_length, vocab_size))
-            targets_1d = Tensor(batch_target.data.reshape(-1))
+            logits_2d = logits.reshape(batch_size * seq_length, vocab_size)
+            targets_1d = batch_target.reshape(-1)
             
             # Compute loss with YOUR CrossEntropyLoss (connects to autograd!)
             loss = loss_fn.forward(logits_2d, targets_1d)  # Module 04 + Module 05!
