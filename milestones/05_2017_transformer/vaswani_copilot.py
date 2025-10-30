@@ -135,7 +135,7 @@ def create_tokenizer(texts: List[str]) -> CharTokenizer:
 def train_codebot(
     model: GPT,
     optimizer: Adam,
-    tokenizer: SimpleTokenizer,
+    tokenizer: CharTokenizer,
     train_patterns: List[str],
     max_steps: int = 5000,
     seq_length: int = 128,
@@ -244,7 +244,7 @@ def train_codebot(
 
 def complete_code(
     model: GPT,
-    tokenizer: SimpleTokenizer,
+    tokenizer: CharTokenizer,
     partial_code: str,
     max_gen_length: int = 50,
 ) -> str:
@@ -288,7 +288,7 @@ def complete_code(
 # Demo Modes
 # ============================================================================
 
-def demo_mode(model: GPT, tokenizer: SimpleTokenizer):
+def demo_mode(model: GPT, tokenizer: CharTokenizer):
     """Show 5 demo completions."""
     
     print("\n" + "="*70)
@@ -333,7 +333,7 @@ def demo_mode(model: GPT, tokenizer: SimpleTokenizer):
     print()
 
 
-def interactive_mode(model: GPT, tokenizer: SimpleTokenizer):
+def interactive_mode(model: GPT, tokenizer: CharTokenizer):
     """Let student try CodeBot."""
     
     print("\n" + "="*70)
@@ -414,7 +414,7 @@ def main():
     
     # Create tokenizer
     all_patterns = train_patterns + test_patterns
-    tokenizer = SimpleTokenizer(all_patterns)
+    tokenizer = create_tokenizer(all_patterns)
     
     # Model config (based on proven sweep results)
     config = {
