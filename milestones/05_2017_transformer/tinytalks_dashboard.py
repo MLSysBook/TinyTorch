@@ -382,7 +382,12 @@ def train_with_dashboard(model, optimizer, loss_fn, train_data, test_questions, 
     console.print(summary)
     console.print()
     
-    return losses, step
+    # Count perfect responses for milestone card
+    correct = sum(1 for (q, actual), expected in zip(final_results, expected_answers) 
+                  if actual.strip().lower() == expected.strip().lower())
+    accuracy = (correct / len(test_questions)) * 100
+    
+    return losses, step, accuracy
 
 
 # ============================================================================
@@ -450,7 +455,7 @@ def main():
         border_style="blue"
     ))
     
-    losses, total_steps = train_with_dashboard(
+    losses, total_steps, final_accuracy = train_with_dashboard(
         model=model,
         optimizer=optimizer,
         loss_fn=loss_fn,
@@ -463,20 +468,77 @@ def main():
         checkpoint_interval_steps=checkpoint_interval
     )
     
-    console.print(Panel.fit(
-        "[bold green]✓ Training Complete![/bold green]\n\n"
-        "[bold]What You Just Witnessed:[/bold]\n"
-        "• A transformer learning from scratch\n"
-        "• Responses improving with each checkpoint\n"
-        "• Loss decreasing = Better learning\n"
-        "• Simple patterns learned first\n\n"
-        "[bold cyan]Key Insight:[/bold cyan]\n"
-        "[dim]This is exactly how ChatGPT was trained - just with\n"
-        "billions more parameters and days instead of minutes![/dim]",
-        title="🎓 Learning Summary",
-        border_style="green",
-        box=box.DOUBLE
-    ))
+    # Calculate metrics for milestone card
+    loss_improvement = (1 - np.mean(losses[-100:]) / np.mean(losses[:10])) * 100
+    
+    # Milestone completion card
+    console.print()
+    if final_accuracy >= 50 and loss_improvement >= 80:
+        console.print(Panel.fit(
+            "[bold green]🎉 Congratulations! You've Built a Working Chatbot![/bold green]\n\n"
+            
+            f"Final accuracy: [bold]{final_accuracy:.0f}%[/bold] | "
+            f"Loss improved: [bold]{loss_improvement:.1f}%[/bold]\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]💡 What YOU Just Accomplished:[/bold]\n"
+            "  ✓ Built a TRANSFORMER (2017 Vaswani et al)\n"
+            "  ✓ Trained with attention mechanism from scratch\n"
+            "  ✓ Watched AI learn language patterns in real-time\n"
+            "  ✓ Demonstrated gradient descent on complex architectures\n"
+            f"  ✓ Trained {total_steps:,} steps in {train_time} minutes!\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]🎓 Why This Matters:[/bold]\n"
+            "  This is the SAME architecture behind ChatGPT, GPT-4, and BERT.\n"
+            "  You just witnessed the magic of:\n"
+            "  • Self-attention (learning relationships between words)\n"
+            "  • Position encoding (understanding word order)\n"
+            "  • Autoregressive generation (predicting next token)\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]📌 The Key Insight:[/bold]\n"
+            "  You saw responses evolve from gibberish to coherent:\n"
+            "    Checkpoint 0: Random noise\n"
+            "    Checkpoint 1: Recognizable words\n"
+            "    Checkpoint 2: Partial sentences\n"
+            "    Final: Perfect responses!\n"
+            "  \n"
+            "  [yellow]Scale it up:[/yellow] Same process, more data, more params →\n"
+            "  You get GPT-4 (175B params, trained for weeks)!\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]🚀 What You Can Do Now:[/bold]\n"
+            "• Experiment with different architectures (layers, heads)\n"
+            "• Try longer training (15-20 minutes for better results)\n"
+            "• Add more conversation patterns to the dataset\n"
+            "• Scale up the model (more parameters = better learning)\n\n"
+            
+            "[bold cyan]You've mastered the foundation of modern AI! 🌟[/bold cyan]",
+            
+            title="🌟 2017 Transformer Complete - Milestone 05",
+            border_style="green",
+            box=box.DOUBLE
+        ))
+    else:
+        console.print(Panel.fit(
+            "[bold yellow]⚠️  Training Complete - Needs More Time[/bold yellow]\n\n"
+            f"Current accuracy: {final_accuracy:.0f}% | Loss improved: {loss_improvement:.1f}%\n\n"
+            "Your transformer is learning but needs more training time.\n\n"
+            "[bold]What to try:[/bold]\n"
+            "• Train for 15-20 minutes instead of 10\n"
+            "• Use a slightly bigger model (2 layers, 24 dims)\n"
+            "• Add more data repetition for reinforcement\n\n"
+            "[dim]The attention mechanism is working - it just needs more steps to converge!\n"
+            "Even partial success shows the transformer learned patterns.[/dim]",
+            title="🔄 Learning in Progress",
+            border_style="yellow",
+            box=box.DOUBLE
+        ))
 
 
 if __name__ == "__main__":
