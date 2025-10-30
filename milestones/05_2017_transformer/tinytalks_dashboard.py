@@ -442,8 +442,8 @@ def main():
     loss_fn = CrossEntropyLoss()
     
     # Train with dashboard
-    train_time = 10  # 10 minutes
-    checkpoint_interval = 1500  # Every ~2 minutes
+    train_time = 15  # 15 minutes for better results
+    checkpoint_interval = 2000  # Every ~2.5 minutes
     
     console.print(Panel.fit(
         f"[bold]Model:[/bold] {num_params:,} parameters (ultra-tiny!)\n"
