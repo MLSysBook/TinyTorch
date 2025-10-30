@@ -152,8 +152,16 @@ def train_codebot(
     print(f"Training for ~{max_steps:,} steps (estimated 2 minutes)")
     print()
     
-    # Encode patterns
-    train_tokens = [tokenizer.encode(pattern, max_len=seq_length) for pattern in train_patterns]
+    # Encode and pad patterns
+    train_tokens = []
+    for pattern in train_patterns:
+        tokens = tokenizer.encode(pattern)
+        # Truncate or pad to seq_length
+        if len(tokens) > seq_length:
+            tokens = tokens[:seq_length]
+        else:
+            tokens = tokens + [0] * (seq_length - len(tokens))  # Pad with 0
+        train_tokens.append(tokens)
     
     # Loss function
     loss_fn = CrossEntropyLoss()
@@ -271,14 +279,14 @@ def complete_code(
         next_logits = logits.data[0, -1, :]
         next_token = int(np.argmax(next_logits))
         
-        # Stop at EOS or padding
-        if next_token == tokenizer.eos_idx or next_token == tokenizer.pad_idx:
+        # Stop at padding (0) or if we've generated enough
+        if next_token == 0:
             break
         
         tokens.append(next_token)
     
     # Decode
-    completed = tokenizer.decode(tokens, stop_at_eos=True)
+    completed = tokenizer.decode(tokens)
     
     # Return just the generated part
     return completed[len(partial_code):]
