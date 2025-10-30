@@ -15,6 +15,12 @@
 #| default_exp text.tokenization
 #| export
 
+import numpy as np
+from typing import List, Dict, Tuple, Optional, Set
+import json
+import re
+from collections import defaultdict, Counter
+
 # %% [markdown]
 """
 # Module 10: Tokenization - Converting Text to Numbers
