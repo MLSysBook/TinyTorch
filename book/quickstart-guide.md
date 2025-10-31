@@ -16,7 +16,7 @@ Let's make sure you're ready to build ML systems:
 
 ```bash
 # Clone and install
-git clone https://github.com/veekaybee/tinytorch.git
+git clone https://github.com/MLSysBook/TinyTorch.git
 cd tinytorch
 pip install -e .
 ```
