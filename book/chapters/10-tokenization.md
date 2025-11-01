@@ -53,13 +53,13 @@ Open the tokenization module and begin implementing your text processing pipelin
 
 ```python
 # Navigate to the module
-cd modules/11_tokenization
+cd modules/10_tokenization
 
 # Open the development notebook
-tito module view 11_tokenization
+tito module view 10_tokenization
 
 # Complete the module
-tito module complete 11_tokenization
+tito module complete 10_tokenization
 ```
 
 ## Next Steps
