@@ -373,7 +373,8 @@ class TinyGPT:
             total += param.data.size
         return total
     
-    def generate(self, tokenizer, prompt="Q:", max_new_tokens=100, temperature=1.0):
+    def generate(self, tokenizer, prompt="Q:", max_new_tokens=100, temperature=1.0, 
+                 return_stats=False):
         """
         Generate text autoregressively.
         
@@ -382,14 +383,19 @@ class TinyGPT:
             prompt: Starting text
             max_new_tokens: How many characters to generate
             temperature: Sampling temperature (higher = more random)
+            return_stats: If True, return (text, stats_dict) tuple
         
         Returns:
-            Generated text string
+            Generated text string, or (text, stats) if return_stats=True
         """
         from tinytorch.core.tensor import Tensor
         
+        # Start timing
+        start_time = time.time()
+        
         # Encode prompt
         indices = tokenizer.encode(prompt)
+        initial_len = len(indices)
         
         # Generate tokens one at a time
         for _ in range(max_new_tokens):
@@ -419,19 +425,46 @@ class TinyGPT:
             if len(indices) > 3 and tokenizer.decode(indices[-3:]) == "\n\nQ":
                 break
         
-        return tokenizer.decode(indices)
+        # Calculate statistics
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        tokens_generated = len(indices) - initial_len
+        tokens_per_sec = tokens_generated / elapsed_time if elapsed_time > 0 else 0
+        
+        generated_text = tokenizer.decode(indices)
+        
+        if return_stats:
+            stats = {
+                'tokens_generated': tokens_generated,
+                'time_sec': elapsed_time,
+                'tokens_per_sec': tokens_per_sec,
+                'total_tokens': len(indices)
+            }
+            return generated_text, stats
+        
+        return generated_text
 
 
 def test_model_predictions(model, dataset, test_prompts=None):
-    """Test model on specific prompts and show predictions"""
+    """Test model on specific prompts and show predictions with performance"""
     if test_prompts is None:
         test_prompts = ["Q: Hello!", "Q: What is your name?", "Q: Hi!"]
     
     console.print("\n[bold yellow]🧪 Testing Live Predictions:[/bold yellow]")
+    
+    total_speed = 0
+    count = 0
+    
     for prompt in test_prompts:
         try:
             full_prompt = prompt + "\nA:"
-            response = model.generate(dataset.tokenizer, prompt=full_prompt, max_new_tokens=30, temperature=0.5)
+            response, stats = model.generate(
+                dataset.tokenizer, 
+                prompt=full_prompt, 
+                max_new_tokens=30, 
+                temperature=0.5,
+                return_stats=True
+            )
             
             # Extract just the answer
             if "\nA:" in response:
@@ -440,9 +473,17 @@ def test_model_predictions(model, dataset, test_prompts=None):
                 answer = response[len(full_prompt):].strip()
             
             console.print(f"  {prompt}")
-            console.print(f"  [cyan]A: {answer}[/cyan]")  # Show "A:" to make it clear
+            console.print(f"  [cyan]A: {answer}[/cyan]")
+            console.print(f"  [dim]⚡ {stats['tokens_per_sec']:.1f} tok/s[/dim]")
+            
+            total_speed += stats['tokens_per_sec']
+            count += 1
         except Exception as e:
             console.print(f"  {prompt} → [red]Error: {str(e)[:50]}[/red]")
+    
+    if count > 0:
+        avg_speed = total_speed / count
+        console.print(f"\n  [dim]Average generation speed: {avg_speed:.1f} tokens/sec[/dim]")
 
 
 def train_tinytalks_gpt(model, dataset, optimizer, criterion, epochs=20, batch_size=32, 
@@ -569,10 +610,11 @@ def train_tinytalks_gpt(model, dataset, optimizer, criterion, epochs=20, batch_s
 
 def demo_questions(model, tokenizer):
     """
-    Demonstrate the model answering questions.
+    Demonstrate the model answering questions with performance metrics.
     
     Shows how well the model learned from TinyTalks by asking
     various questions from different difficulty levels.
+    Also displays generation performance metrics.
     """
     console.print("\n" + "=" * 70)
     console.print("[bold cyan]🤖 TinyBot Demo: Ask Me Questions![/bold cyan]")
@@ -588,11 +630,20 @@ def demo_questions(model, tokenizer):
         "Q: What do you use a pen for?",
     ]
     
+    # Track performance across all questions
+    all_stats = []
+    
     for question in test_questions:
         console.print(f"\n[yellow]{question}[/yellow]")
         
-        # Generate answer
-        response = model.generate(tokenizer, prompt=question + "\nA:", max_new_tokens=50, temperature=0.8)
+        # Generate answer with statistics
+        response, stats = model.generate(
+            tokenizer, 
+            prompt=question + "\nA:", 
+            max_new_tokens=50, 
+            temperature=0.8,
+            return_stats=True
+        )
         
         # Extract just the answer part
         if "\nA:" in response:
@@ -600,8 +651,43 @@ def demo_questions(model, tokenizer):
             console.print(f"[green]A: {answer}[/green]")
         else:
             console.print(f"[dim]{response}[/dim]")
+        
+        # Display performance metrics
+        console.print(
+            f"[dim]⚡ {stats['tokens_per_sec']:.1f} tok/s | "
+            f"📊 {stats['tokens_generated']} tokens | "
+            f"⏱️  {stats['time_sec']:.3f}s[/dim]"
+        )
+        
+        all_stats.append(stats)
     
     console.print("\n" + "=" * 70)
+    
+    # Display performance summary
+    if all_stats:
+        avg_tokens_per_sec = np.mean([s['tokens_per_sec'] for s in all_stats])
+        avg_time = np.mean([s['time_sec'] for s in all_stats])
+        total_tokens = sum([s['tokens_generated'] for s in all_stats])
+        total_time = sum([s['time_sec'] for s in all_stats])
+        
+        perf_table = Table(title="⚡ Generation Performance Summary", box=box.ROUNDED)
+        perf_table.add_column("Metric", style="cyan")
+        perf_table.add_column("Value", style="green", justify="right")
+        
+        perf_table.add_row("Average Speed", f"{avg_tokens_per_sec:.1f} tokens/sec")
+        perf_table.add_row("Average Time/Question", f"{avg_time:.3f} seconds")
+        perf_table.add_row("Total Tokens Generated", f"{total_tokens} tokens")
+        perf_table.add_row("Total Generation Time", f"{total_time:.2f} seconds")
+        perf_table.add_row("Questions Answered", f"{len(test_questions)}")
+        
+        console.print(perf_table)
+        console.print()
+        
+        # Educational note about performance
+        console.print("[dim]💡 Note: In Module 14 (KV Caching), you'll learn how to make this 10-15x faster![/dim]")
+        console.print("[dim]   Current: ~{:.0f} tok/s → With KV Cache: ~{:.0f} tok/s 🚀[/dim]".format(
+            avg_tokens_per_sec, avg_tokens_per_sec * 12
+        ))
 
 
 def main():
