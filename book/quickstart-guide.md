@@ -7,30 +7,44 @@
 
 **Purpose**: Get hands-on experience building ML systems in 15 minutes. Complete setup verification and build your first neural network component from scratch.
 
-## ⚡ 2-Minute Setup Verification
+## ⚡ 2-Minute Setup
 
-Let's make sure you're ready to build ML systems:
+Let's get you ready to build ML systems:
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
-<h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 1: Install & Verify</h4>
+<h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 1: One-Command Setup</h4>
 
 ```bash
-# Clone and install
-git clone https://github.com/veekaybee/tinytorch.git
-cd tinytorch
-pip install -e .
+# Clone repository
+git clone https://github.com/mlsysbook/TinyTorch.git
+cd TinyTorch
+
+# Automated setup (handles everything!)
+./setup-environment.sh
+
+# Activate environment
+source activate.sh
 ```
 
-**Expected output:** A working TinyTorch development environment ready for hands-on building.
+**What this does:**
+- ✅ Creates optimized virtual environment (arm64 on Apple Silicon)
+- ✅ Installs all dependencies (NumPy, Jupyter, Rich, PyTorch for validation)
+- ✅ Configures TinyTorch in development mode
+- ✅ Verifies installation
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete setup verification and troubleshooting.
+**📖 See [Essential Commands](tito-essentials.html)** for detailed workflow and troubleshooting.
 
 </div>
 
 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e; margin: 1.5rem 0;">
-<h4 style="margin: 0 0 1rem 0; color: #15803d;">Step 2: Verify Your Starting Point</h4>
+<h4 style="margin: 0 0 1rem 0; color: #15803d;">Step 2: Verify Setup</h4>
 
-Confirm you're ready to begin building ML systems from scratch. Your development environment should be configured and ready for hands-on implementation.
+```bash
+# Run system diagnostics
+tito system doctor
+```
+
+You should see all green checkmarks! This confirms your environment is ready for hands-on ML systems building.
 
 **📖 See [Essential Commands](tito-essentials.html)** for verification commands and troubleshooting.
 
