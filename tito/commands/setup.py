@@ -143,7 +143,7 @@ class SetupCommand(BaseCommand):
         """Create a virtual environment for TinyTorch development."""
         self.console.print("🐍 Setting up virtual environment...")
         
-        venv_path = self.config.project_root / "tinytorch-env"
+        venv_path = self.config.project_root / ".venv"
         
         if venv_path.exists():
             if not Confirm.ask(f"Virtual environment already exists at {venv_path}. Recreate?"):
@@ -153,10 +153,38 @@ class SetupCommand(BaseCommand):
             shutil.rmtree(venv_path)
         
         try:
-            # Create virtual environment
-            result = subprocess.run([
-                sys.executable, "-m", "venv", str(venv_path)
-            ], capture_output=True, text=True)
+            # Detect Apple Silicon and force arm64 if needed
+            arch = platform.machine()
+            python_exe = sys.executable
+            
+            if platform.system() == "Darwin" and arch == "x86_64":
+                # Check if we're on Apple Silicon but running Rosetta
+                import subprocess as sp
+                try:
+                    # Check actual hardware
+                    hw_check = sp.run(
+                        ["sysctl", "-n", "machdep.cpu.brand_string"],
+                        capture_output=True, text=True
+                    )
+                    if "Apple" in hw_check.stdout:
+                        self.console.print("[yellow]⚠️  Detected Apple Silicon but Python is running in Rosetta (x86_64)[/yellow]")
+                        self.console.print("[cyan]🔧 Creating arm64 native environment for better performance...[/cyan]")
+                        # Force arm64 Python
+                        python_exe = f"arch -arm64 {python_exe}"
+                except:
+                    pass
+            
+            # Create virtual environment (potentially with arch prefix)
+            if "arch -arm64" in python_exe:
+                result = subprocess.run(
+                    f'{python_exe} -m venv {venv_path}',
+                    shell=True,
+                    capture_output=True, text=True
+                )
+            else:
+                result = subprocess.run([
+                    python_exe, "-m", "venv", str(venv_path)
+                ], capture_output=True, text=True)
             
             if result.returncode != 0:
                 self.console.print(f"[red]Failed to create virtual environment: {result.stderr}[/red]")
@@ -164,8 +192,16 @@ class SetupCommand(BaseCommand):
             
             self.console.print(f"✅ Virtual environment created at {venv_path}")
             
-            # Create activation script
-            self.create_activation_script(venv_path)
+            # Verify architecture
+            venv_python = venv_path / "bin" / "python3"
+            if venv_python.exists():
+                arch_check = subprocess.run(
+                    [str(venv_python), "-c", "import platform; print(platform.machine())"],
+                    capture_output=True, text=True
+                )
+                if arch_check.returncode == 0:
+                    venv_arch = arch_check.stdout.strip()
+                    self.console.print(f"📐 Virtual environment architecture: {venv_arch}")
             
             return True
             
@@ -173,35 +209,6 @@ class SetupCommand(BaseCommand):
             self.console.print(f"[red]Error creating virtual environment: {e}[/red]")
             return False
     
-    def create_activation_script(self, venv_path: Path) -> None:
-        """Create a convenient activation script."""
-        script_path = self.config.project_root / "activate-tinytorch.sh"
-        
-        script_content = f"""#!/bin/bash
-# TinyTorch Development Environment Activation Script
-
-echo "🔥 Activating TinyTorch development environment..."
-
-# Activate virtual environment
-source {venv_path}/bin/activate
-
-# Set environment variables
-export TINYTORCH_DEV=1
-export PYTHONPATH="${{PYTHONPATH}}:{self.config.project_root}"
-
-echo "✅ TinyTorch environment activated!"
-echo "💡 Try: tito 01 (to start with tensors)"
-echo "🔄 To deactivate: deactivate"
-"""
-        
-        with open(script_path, 'w') as f:
-            f.write(script_content)
-        
-        # Make executable
-        os.chmod(script_path, 0o755)
-        
-        self.console.print(f"✅ Activation script created: {script_path}")
-        self.console.print("💡 Use: source activate-tinytorch.sh")
     
     def create_user_profile(self) -> Dict[str, Any]:
         """Create user profile for development tracking."""
@@ -308,21 +315,28 @@ echo "🔄 To deactivate: deactivate"
         success_text.append(f"💻 Platform: {profile['platform']}\n", style="dim")
         success_text.append(f"🐍 Python: {profile['python_version']}\n\n", style="dim")
         
-        success_text.append("🚀 Ready to start building ML systems!\n\n", style="bold cyan")
-        success_text.append("Next steps:\n", style="bold")
-        success_text.append("  1. ", style="dim")
-        success_text.append("tito 01", style="bold green")
-        success_text.append(" - Start with tensors (the foundation)\n", style="dim")
-        success_text.append("  2. ", style="dim")
-        success_text.append("tito 02", style="bold green") 
-        success_text.append(" - Add activation functions\n", style="dim")
-        success_text.append("  3. ", style="dim")
-        success_text.append("tito 03", style="bold green")
-        success_text.append(" - Build neural network layers\n", style="dim")
+        success_text.append("🔥 Activate your environment:\n\n", style="bold yellow")
+        success_text.append("  source .venv/bin/activate", style="bold cyan")
+        success_text.append("  # On Windows: .venv\\Scripts\\activate\n\n", style="dim")
+        
+        success_text.append("🚀 Start building ML systems:\n\n", style="bold green")
+        success_text.append("  tito module view 01_tensor", style="bold green")
+        success_text.append("  # Begin with tensor foundations\n\n", style="dim")
+        
+        success_text.append("💡 Essential commands:\n", style="bold")
+        success_text.append("  • ", style="dim")
+        success_text.append("tito system doctor", style="green")
+        success_text.append(" - Verify setup\n", style="dim")
+        success_text.append("  • ", style="dim")
+        success_text.append("tito module test 01_tensor", style="green")
+        success_text.append(" - Run tests\n", style="dim")
+        success_text.append("  • ", style="dim")
+        success_text.append("tito checkpoint status", style="green")
+        success_text.append(" - Track progress\n", style="dim")
         
         self.console.print(Panel(
             success_text,
-            title="🔥 TinyTorch Setup Complete!",
+            title="🔥 Tiny🔥Torch Setup Complete!",
             border_style="green"
         ))
     

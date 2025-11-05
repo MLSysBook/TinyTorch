@@ -113,21 +113,28 @@ TinyTorch/
 ## Quick Start
 
 ```bash
-# Clone and setup
+# Clone repository
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e .
 
-# Start learning
-cd modules/source/01_tensor
-jupyter lab tensor_dev.py
+# One-command setup (handles Apple Silicon, dependencies, everything)
+./setup-environment.sh
 
-# Track progress
-tito checkpoint status
+# Activate environment
+source activate.sh
+
+# Verify setup
+tito system doctor
+
+# Start building
+tito module view 01_tensor
 ```
+
+**That's it!** The setup script handles:
+- ✅ Virtual environment creation (arm64 on Apple Silicon)
+- ✅ All dependencies (NumPy, Jupyter, Rich, etc.)
+- ✅ TinyTorch package installation in development mode
+- ✅ Architecture detection and optimization
 
 ## Learning Journey
 
