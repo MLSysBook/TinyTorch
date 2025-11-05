@@ -89,6 +89,10 @@ class DigitMLP:
                       (hidden_size * num_classes + num_classes)
         console.print(f"  ✓ Total parameters: {total_params:,}\n")
     
+    def __call__(self, x):
+        """Make the model callable."""
+        return self.forward(x)
+    
     def forward(self, x):
         """Forward pass through the network."""
         # Flatten if needed (8×8 → 64)
