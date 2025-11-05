@@ -9,12 +9,13 @@
 
 TinyTorch is a comprehensive educational ML framework designed for a Machine Learning Systems course. Students build every component from scratch, progressing from basic tensors through modern transformer architectures.
 
-### Current Status: **Core Complete, Advanced Modules Pending**
+### Current Status: **Core Complete, Optimization Modules In Progress**
 
-- **13/19 modules** fully implemented and exported ✅
+- **14/19 modules** fully implemented and exported ✅
 - **All 5 historical milestones** functional and tested ✅
-- **Transformer module** recently fixed with complete gradient flow ✅
-- **6 advanced modules** ready for implementation (14-19)
+- **Transformer module** with complete gradient flow ✅
+- **KV Caching module** with 10-15x speedup ✅ NEW!
+- **5 advanced modules** ready for implementation (15-19)
 
 ---
 
@@ -39,17 +40,17 @@ These modules are complete, tested, and exported to `tinytorch/`:
 | 11 | **Embeddings** | `tinytorch/text/embeddings.py` | ✅ Complete | 1,397 |
 | 12 | **Attention** | `tinytorch/core/attention.py` | ✅ Complete | 1,142 |
 | 13 | **Transformers** | `tinytorch/models/transformer.py` | ✅ Complete | 1,726 |
+| 14 | **KV Caching** | `tinytorch/generation/kv_cache.py` | ✅ Complete | 805 |
 
-**Total:** 17,450 lines of educational ML code
+**Total:** 18,255+ lines of educational ML code (including tests)
 
-### 🔧 Ready for Implementation (Modules 14-19)
+### 🔧 Ready for Implementation (Modules 15-19)
 
 These modules have source files created but need export:
 
 | Module | Name | Purpose | Priority |
 |--------|------|---------|----------|
-| 14 | **KV Caching** | 10x faster autoregressive generation | 🔴 High |
-| 15 | **Profiling** | Performance measurement tools | 🟡 Medium |
+| 15 | **Profiling** | Performance measurement tools | 🔴 High |
 | 16 | **Acceleration** | Optimization techniques | 🟡 Medium |
 | 17 | **Quantization** | Model compression (INT8/FP16) | 🟡 Medium |
 | 18 | **Compression** | Pruning and distillation | 🟢 Low |
