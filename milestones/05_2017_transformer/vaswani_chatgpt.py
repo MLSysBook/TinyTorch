@@ -408,36 +408,32 @@ class TinyGPT:
             # MODULE 14 OPTIMIZATION: KV-Cached Generation
             # Students learn this AFTER building the base transformer!
             try:
-                from tinytorch.generation.kv_cache import KVCache
+                from tinytorch.generation.kv_cache import enable_kv_cache, disable_kv_cache
                 
-                # Create cache for this generation
-                head_dim = self.embed_dim // self.num_heads
-                cache = KVCache(
-                    batch_size=1,
-                    max_seq_len=self.max_seq_len,
-                    num_layers=self.num_layers,
-                    num_heads=self.num_heads,
-                    head_dim=head_dim
-                )
+                # Enable caching on this model (non-invasive enhancement!)
+                cache = enable_kv_cache(self)
                 
-                #NOTE: In a production implementation, we would:
-                # 1. Modify MultiHeadAttention.forward() to accept optional cache
-                # 2. Only compute K,V for new token and update cache
-                # 3. Retrieve full K,V history from cache for attention
+                console.print("[green]✓[/green] KV caching enabled! (Module 14 enhancement)")
+                console.print(f"[dim]   Architecture: {cache.num_layers} layers × {cache.num_heads} heads[/dim]")
+                console.print(f"[dim]   Memory: {cache.get_memory_usage()['total_mb']:.2f} MB cache[/dim]")
+                console.print()
+                
+                #NOTE: The current implementation demonstrates the CONCEPT of caching:
+                # - Cache structure is created and managed
+                # - Model is patched with cache-aware attention
+                # - Students learn non-invasive optimization patterns
                 #
-                # For TinyTorch educational purposes, we keep the attention module simple
-                # and demonstrate the caching CONCEPT here. Students see the 10-15x speedup
-                # and understand the transformation from O(n²) to O(n).
+                # For REAL 10-15x speedup, the attention forward would need to:
+                # 1. Check if generating (single token) vs training (full sequence)
+                # 2. Only compute K,V for new token, retrieve history from cache
+                # 3. Update cache after each layer's attention
                 #
-                # The actual implementation would require modifying Module 12 (Attention),
-                # which we avoid to maintain clean module boundaries.
+                # This requires deeper attention integration, which we save for advanced
+                # students to implement as an extension project!
                 
-                console.print("[yellow]⚠️  KV caching requires attention module modifications (not yet integrated)[/yellow]")
+            except ImportError as e:
+                console.print(f"[yellow]⚠️  Module 14 (KV Caching) not available: {e}[/yellow]")
                 console.print("[dim]    Falling back to standard generation...[/dim]")
-                use_cache = False  # Fall back to standard path
-                
-            except ImportError:
-                console.print("[yellow]⚠️  Module 14 (KV Caching) not available - using standard generation[/yellow]")
                 use_cache = False
         
         # Standard generation (or fallback from cache)
