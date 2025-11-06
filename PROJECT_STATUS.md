@@ -11,18 +11,19 @@ TinyTorch is a comprehensive educational ML framework designed for a Machine Lea
 
 ### Current Status: **Core Complete, Optimization Modules In Progress**
 
-- **15/19 modules** fully implemented and exported ✅
+- **16/19 modules** fully implemented and exported ✅
 - **All 5 historical milestones** functional and tested ✅
 - **Transformer module** with complete gradient flow ✅
 - **KV Caching module** with 10-15x speedup ✅
-- **Profiling module** with scientific performance measurement ✅ NEW!
-- **4 advanced modules** ready for implementation (16-19)
+- **Profiling module** with scientific performance measurement ✅
+- **Quantization module** with INT8 compression ✅ NEW!
+- **3 advanced modules** ready for implementation (16, 18-19)
 
 ---
 
 ## 📊 Module Implementation Status
 
-### ✅ Fully Implemented (Modules 01-15)
+### ✅ Fully Implemented (Modules 01-17)
 
 These modules are complete, tested, and exported to `tinytorch/`:
 
@@ -43,19 +44,19 @@ These modules are complete, tested, and exported to `tinytorch/`:
 | 13 | **Transformers** | `tinytorch/models/transformer.py` | ✅ Complete | 1,726 |
 | 14 | **KV Caching** | `tinytorch/generation/kv_cache.py` | ✅ Complete | 805 |
 | 15 | **Profiling** | `tinytorch/profiling/profiler.py` | ✅ Complete | 155 |
+| 17 | **Quantization** | `tinytorch/optimization/quantization.py` | ✅ Complete | 289 |
 
-**Total:** 18,410+ lines of educational ML code (including tests)
+**Total:** 18,699+ lines of educational ML code (including tests)
 
-### 🔧 Ready for Implementation (Modules 16-19)
+### 🔧 Ready for Implementation (Modules 16, 18-19)
 
 These modules have source files created but need export:
 
 | Module | Name | Purpose | Priority |
 |--------|------|---------|----------|
-| 16 | **Acceleration** | Optimization techniques | 🔴 High |
-| 17 | **Quantization** | Model compression (INT8/FP16) | 🟡 Medium |
-| 18 | **Compression** | Pruning and distillation | 🟢 Low |
-| 19 | **Benchmarking** | Fair performance comparison | 🟢 Low |
+| 16 | **Acceleration** | Vectorization and fusion | 🔴 High |
+| 18 | **Compression** | Pruning and distillation | 🟡 Medium |
+| 19 | **Benchmarking** | Fair performance comparison | 🟡 Medium |
 
 ### 📚 Capstone (Module 20)
 
