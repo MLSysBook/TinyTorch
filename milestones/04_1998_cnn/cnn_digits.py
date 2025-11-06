@@ -129,6 +129,10 @@ class SimpleCNN:
         
         self.params = [self.conv1.weight, self.conv1.bias, self.fc.weight, self.fc.bias]
     
+    def __call__(self, x):
+        """Make the model callable."""
+        return self.forward(x)
+    
     def forward(self, x):
         # Conv + ReLU + Pool
         out = self.conv1.forward(x)

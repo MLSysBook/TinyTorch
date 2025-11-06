@@ -259,7 +259,7 @@ Then: seq_pos += 1 (advance to position 3)
 This design enables **O(1) updates** - just write to the next position!
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "kvcache-class", "solution": true}
 #| export
 class KVCache:
     """
@@ -298,113 +298,192 @@ class KVCache:
     - Memory: O(num_layers × batch × heads × max_seq × head_dim)
     """
     
-    def __init__(self, batch_size: int, max_seq_len: int, num_layers: int, 
+    def __init__(self, batch_size: int, max_seq_len: int, num_layers: int,
                  num_heads: int, head_dim: int):
         """
         Initialize KV cache for efficient generation.
-        
+
+        TODO: Set up pre-allocated cache storage for all transformer layers
+
+        APPROACH:
+        1. Store configuration parameters (batch_size, max_seq_len, etc.)
+        2. Initialize sequence position counter to 0
+        3. Create empty list for cache storage
+        4. For each layer, pre-allocate zero-filled key and value caches
+        5. Store each layer's (key_cache, value_cache) tuple in the list
+
         Args:
             batch_size: Number of sequences to generate simultaneously
             max_seq_len: Maximum sequence length to support
             num_layers: Number of transformer layers
             num_heads: Number of attention heads per layer
             head_dim: Dimension of each attention head
+
+        EXAMPLE:
+        >>> cache = KVCache(batch_size=2, max_seq_len=128, num_layers=4,
+        ...                 num_heads=8, head_dim=64)
+        >>> cache.seq_pos  # 0 (no tokens cached yet)
+        >>> len(cache.caches)  # 4 (one per layer)
+        >>> cache.caches[0][0].shape  # (2, 8, 128, 64) - key cache for layer 0
+
+        HINTS:
+        - Cache shape: (batch_size, num_heads, max_seq_len, head_dim)
+        - Use Tensor(np.zeros(...)) to create cache tensors
+        - Store caches as list of tuples: [(key_0, val_0), (key_1, val_1), ...]
+        - Pre-allocation avoids dynamic resizing overhead during generation
         """
+        ### BEGIN SOLUTION
         self.batch_size = batch_size
         self.max_seq_len = max_seq_len
         self.num_layers = num_layers
         self.num_heads = num_heads
         self.head_dim = head_dim
-        
+
         # Current sequence position (how many tokens are cached)
         self.seq_pos = 0
-        
+
         # Cache storage: list of (key_cache, value_cache) tuples per layer
         self.caches = []
-        
+
         for layer_idx in range(num_layers):
             # Pre-allocate cache tensors with maximum size
             # Shape: (batch_size, num_heads, max_seq_len, head_dim)
             key_cache = Tensor(np.zeros((batch_size, num_heads, max_seq_len, head_dim)))
             value_cache = Tensor(np.zeros((batch_size, num_heads, max_seq_len, head_dim)))
-            
+
             self.caches.append((key_cache, value_cache))
+        ### END SOLUTION
     
     def update(self, layer_idx: int, key: Tensor, value: Tensor) -> None:
         """
         Update cache with new key-value pairs for given layer.
-        
-        This is the core caching operation - efficiently append new K,V 
+
+        TODO: Efficiently append new K,V to cache without data copying
+
+        APPROACH:
+        1. Validate layer_idx is in range [0, num_layers-1]
+        2. Validate seq_pos hasn't exceeded max_seq_len
+        3. Retrieve the (key_cache, value_cache) tuple for this layer
+        4. Write new key to position seq_pos in key_cache using indexed assignment
+        5. Write new value to position seq_pos in value_cache using indexed assignment
+        6. Note: seq_pos is advanced externally via advance() after all layers
+
+        This is the core caching operation - efficiently append new K,V
         to the cache without recomputation. This operation is O(1) because
         it's just an indexed assignment.
-        
-        IMPORTANT: KV caching is designed for INFERENCE (generation) only, 
+
+        IMPORTANT: KV caching is designed for INFERENCE (generation) only,
         not training. During generation, gradients are not computed. If you
         need gradients, don't use caching (use standard forward pass instead).
-        
+
         Args:
             layer_idx: Which transformer layer (0 to num_layers-1)
             key: New key tensor, shape (batch_size, num_heads, 1, head_dim)
             value: New value tensor, shape (batch_size, num_heads, 1, head_dim)
-        
+
+        EXAMPLE:
+        >>> cache = KVCache(batch_size=1, max_seq_len=10, num_layers=2,
+        ...                 num_heads=4, head_dim=64)
+        >>> new_k = Tensor(np.random.randn(1, 4, 1, 64))
+        >>> new_v = Tensor(np.random.randn(1, 4, 1, 64))
+        >>> cache.update(layer_idx=0, key=new_k, value=new_v)
+        >>> cache.seq_pos  # Still 0 (update doesn't advance position)
+        >>> cache.advance()
+        >>> cache.seq_pos  # Now 1
+
+        HINTS:
+        - Use slicing: cache[:, :, seq_pos:seq_pos+1, :] to write to position
+        - Use .data for direct NumPy access (no gradient tracking needed)
+        - Raise ValueError with helpful messages for invalid inputs
+        - This is an in-place operation (modifies cache, returns None)
+
         Raises:
             ValueError: If layer_idx is out of range or sequence is full
         """
+        ### BEGIN SOLUTION
         if layer_idx >= self.num_layers:
             raise ValueError(f"Layer index {layer_idx} >= num_layers {self.num_layers}")
-        
+
         if self.seq_pos >= self.max_seq_len:
             raise ValueError(f"Sequence position {self.seq_pos} >= max_seq_len {self.max_seq_len}")
-        
+
         # Get cache for this layer
         key_cache, value_cache = self.caches[layer_idx]
-        
+
         # Update cache at current position (efficient O(1) write)
         # Note: We use .data here because caching is inference-only (no gradients needed)
         # This avoids gradient tracking overhead during generation
         key_cache.data[:, :, self.seq_pos:self.seq_pos+1, :] = key.data
         value_cache.data[:, :, self.seq_pos:self.seq_pos+1, :] = value.data
-        
+
         # Note: seq_pos is advanced externally via advance() after all layers process
+        ### END SOLUTION
     
     def get(self, layer_idx: int) -> Tuple[Tensor, Tensor]:
         """
         Retrieve cached key-value pairs for attention computation.
-        
+
+        TODO: Return only the valid cached portion for this layer
+
+        APPROACH:
+        1. Validate layer_idx is in range
+        2. Retrieve the (key_cache, value_cache) tuple for this layer
+        3. Calculate valid_len = seq_pos (number of tokens currently cached)
+        4. Slice key_cache to get [:, :, :valid_len, :] (only filled portion)
+        5. Slice value_cache to get [:, :, :valid_len, :] (only filled portion)
+        6. Wrap sliced data in new Tensor objects and return
+
         Returns only the valid portion of the cache (up to current seq_pos).
         This is O(1) because we're just slicing NumPy arrays (view, not copy).
-        
+
         IMPORTANT: Returns Tensors without gradient tracking since caching
         is inference-only. The returned tensors can be used in attention
         computation but won't propagate gradients backward.
-        
+
         Args:
             layer_idx: Which transformer layer to get cache for
-        
+
         Returns:
             (cached_keys, cached_values): Tensors shaped for attention
             Keys: (batch_size, num_heads, seq_pos, head_dim)
             Values: (batch_size, num_heads, seq_pos, head_dim)
-        
+
+        EXAMPLE:
+        >>> cache = KVCache(batch_size=1, max_seq_len=100, num_layers=2,
+        ...                 num_heads=4, head_dim=64)
+        >>> # After processing 3 tokens
+        >>> cache.seq_pos = 3
+        >>> cached_k, cached_v = cache.get(layer_idx=0)
+        >>> cached_k.shape  # (1, 4, 3, 64) - only first 3 positions
+        >>> cached_v.shape  # (1, 4, 3, 64)
+
+        HINTS:
+        - valid_len = self.seq_pos (how many tokens have been cached so far)
+        - Use slicing: cache.data[:, :, :valid_len, :] to get valid portion
+        - Wrap result in Tensor() for consistency with TinyTorch API
+        - If seq_pos=0, returns empty cache (shape with 0 in sequence dimension)
+
         Raises:
             ValueError: If layer_idx is out of range
         """
+        ### BEGIN SOLUTION
         if layer_idx >= self.num_layers:
             raise ValueError(f"Layer index {layer_idx} >= num_layers {self.num_layers}")
-        
+
         # Get cache for this layer
         key_cache, value_cache = self.caches[layer_idx]
-        
+
         # Return only the valid portion (up to current sequence position)
         # seq_pos tracks where to write next, so we have seq_pos valid tokens
         valid_len = self.seq_pos
-        
+
         # Note: Creating new Tensors from .data (no gradient tracking)
         # This is correct for inference-only caching
         cached_keys = Tensor(key_cache.data[:, :, :valid_len, :])
         cached_values = Tensor(value_cache.data[:, :, :valid_len, :])
-        
+
         return cached_keys, cached_values
+        ### END SOLUTION
     
     def advance(self) -> None:
         """
@@ -463,82 +542,80 @@ Let's test that our cache correctly stores and retrieves key-value pairs across 
 **This is a unit test** - it tests the KVCache class in isolation with simulated attention keys and values.
 """
 
-# %%
-print("### 🧪 Unit Test: KVCache Implementation")
-print()
+# %% nbgrader={"grade": true, "grade_id": "test-kvcache", "locked": true, "points": 10}
+def test_unit_kvcache():
+    """🔬 Unit Test: KVCache Implementation"""
+    print("🔬 Unit Test: KVCache Implementation...")
 
-# Test parameters (small transformer for testing)
-batch_size, max_seq_len = 2, 8
-num_layers, num_heads, head_dim = 3, 4, 16
+    # Test parameters (small transformer for testing)
+    batch_size, max_seq_len = 2, 8
+    num_layers, num_heads, head_dim = 3, 4, 16
 
-# Create cache
-cache = KVCache(batch_size, max_seq_len, num_layers, num_heads, head_dim)
+    # Create cache
+    cache = KVCache(batch_size, max_seq_len, num_layers, num_heads, head_dim)
 
-# Test 1: Initial state
-assert cache.seq_pos == 0, "Cache should start at position 0"
-mem_usage = cache.get_memory_usage()
-assert mem_usage['total_mb'] > 0, "Cache should have non-zero memory usage"
-print(f"🔬 Cache initialized: {mem_usage['total_mb']:.2f} MB")
-print(f"✅ Initial state correct")
+    # Test 1: Initial state
+    assert cache.seq_pos == 0, "Cache should start at position 0"
+    mem_usage = cache.get_memory_usage()
+    assert mem_usage['total_mb'] > 0, "Cache should have non-zero memory usage"
+    print(f"   Cache initialized: {mem_usage['total_mb']:.2f} MB")
 
-# Test 2: Single token update and retrieval
-key1 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
-value1 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    # Test 2: Single token update and retrieval
+    key1 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    value1 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
 
-# Update layer 0 with first token
-cache.update(0, key1, value1)
+    # Update layer 0 with first token
+    cache.update(0, key1, value1)
 
-# Before advance, get() should return empty (seq_pos=0)
-cached_k, cached_v = cache.get(0)
-assert cached_k.shape == (batch_size, num_heads, 0, head_dim), "Before advance, cache should be empty"
+    # Before advance, get() should return empty (seq_pos=0)
+    cached_k, cached_v = cache.get(0)
+    assert cached_k.shape == (batch_size, num_heads, 0, head_dim), "Before advance, cache should be empty"
 
-# Advance position
-cache.advance()
+    # Advance position
+    cache.advance()
 
-# Now cache should have 1 token
-cached_k, cached_v = cache.get(0)
-assert cached_k.shape == (batch_size, num_heads, 1, head_dim), f"Expected shape (2,4,1,16), got {cached_k.shape}"
-assert cached_v.shape == (batch_size, num_heads, 1, head_dim), f"Expected shape (2,4,1,16), got {cached_v.shape}"
-print(f"✅ Single token caching works")
+    # Now cache should have 1 token
+    cached_k, cached_v = cache.get(0)
+    assert cached_k.shape == (batch_size, num_heads, 1, head_dim), f"Expected shape (2,4,1,16), got {cached_k.shape}"
+    assert cached_v.shape == (batch_size, num_heads, 1, head_dim), f"Expected shape (2,4,1,16), got {cached_v.shape}"
 
-# Test 3: Multi-token sequence
-key2 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
-value2 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
-cache.update(0, key2, value2)
-cache.advance()
+    # Test 3: Multi-token sequence
+    key2 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    value2 = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    cache.update(0, key2, value2)
+    cache.advance()
 
-cached_k, cached_v = cache.get(0)
-assert cached_k.shape == (batch_size, num_heads, 2, head_dim), "Should have 2 tokens cached"
-assert cached_v.shape == (batch_size, num_heads, 2, head_dim), "Should have 2 tokens cached"
-print(f"✅ Multi-token sequence caching works")
+    cached_k, cached_v = cache.get(0)
+    assert cached_k.shape == (batch_size, num_heads, 2, head_dim), "Should have 2 tokens cached"
+    assert cached_v.shape == (batch_size, num_heads, 2, head_dim), "Should have 2 tokens cached"
 
-# Test 4: Multiple layers
-cache.reset()
-key_test = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
-value_test = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    # Test 4: Multiple layers
+    cache.reset()
+    key_test = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+    value_test = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
 
-# Update all layers with same token
-cache.update(0, key_test, value_test)  # Layer 0
-cache.update(1, key_test, value_test)  # Layer 1
-cache.update(2, key_test, value_test)  # Layer 2
-cache.advance()
+    # Update all layers with same token
+    cache.update(0, key_test, value_test)  # Layer 0
+    cache.update(1, key_test, value_test)  # Layer 1
+    cache.update(2, key_test, value_test)  # Layer 2
+    cache.advance()
 
-# Each layer should have the cached token
-for layer_idx in range(num_layers):
-    cached_k, cached_v = cache.get(layer_idx)
-    assert cached_k.shape[2] == 1, f"Layer {layer_idx} should have 1 token"
-print(f"✅ Multi-layer caching works")
+    # Each layer should have the cached token
+    for layer_idx in range(num_layers):
+        cached_k, cached_v = cache.get(layer_idx)
+        assert cached_k.shape[2] == 1, f"Layer {layer_idx} should have 1 token"
 
-# Test 5: Reset functionality
-cache.reset()
-assert cache.seq_pos == 0, "Reset should clear sequence position"
-cached_k, cached_v = cache.get(0)
-assert cached_k.shape == (batch_size, num_heads, 0, head_dim), "Reset should clear cache"
-print(f"✅ Cache reset works")
+    # Test 5: Reset functionality
+    cache.reset()
+    assert cache.seq_pos == 0, "Reset should clear sequence position"
+    cached_k, cached_v = cache.get(0)
+    assert cached_k.shape == (batch_size, num_heads, 0, head_dim), "Reset should clear cache"
 
-print()
-print("📈 Progress: KVCache implementation ✓")
-print()
+    print("✅ KVCache implementation works correctly!")
+
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_kvcache()
 
 # %% [markdown]
 """
@@ -643,54 +720,55 @@ Let's verify that we can create caches for realistic model configurations.
 **This is a unit test** - it tests the cache creation and memory calculation for different model sizes.
 """
 
-# %%
-print("### 🧪 Unit Test: Cache Enablement for Different Models")
-print()
+# %% nbgrader={"grade": true, "grade_id": "test-cache-enablement", "locked": true, "points": 10}
+def test_unit_cache_enablement():
+    """🔬 Unit Test: Cache Enablement for Different Models"""
+    print("🔬 Unit Test: Cache Enablement for Different Models...")
 
-# Test 1: Small model (fast generation)
-print("🔬 Test 1: Small Model (Tiny Transformer)")
-cache_small = enable_kv_cache(
-    batch_size=1,
-    max_seq_len=64,
-    num_layers=2,
-    num_heads=4,
-    head_dim=32
-)
-mem_small = cache_small.get_memory_usage()
-assert mem_small['total_mb'] < 1.0, "Small model should use < 1 MB"
-print(f"✅ Small model cache: {mem_small['total_mb']:.3f} MB")
-print()
+    # Test 1: Small model (fast generation)
+    print("   Test 1: Small Model (Tiny Transformer)")
+    cache_small = KVCache(
+        batch_size=1,
+        max_seq_len=64,
+        num_layers=2,
+        num_heads=4,
+        head_dim=32
+    )
+    mem_small = cache_small.get_memory_usage()
+    assert mem_small['total_mb'] < 1.0, "Small model should use < 1 MB"
+    print(f"   Small model cache: {mem_small['total_mb']:.3f} MB")
 
-# Test 2: Medium model (balanced performance)
-print("🔬 Test 2: Medium Model (Standard Transformer)")
-cache_medium = enable_kv_cache(
-    batch_size=1,
-    max_seq_len=128,
-    num_layers=4,
-    num_heads=8,
-    head_dim=64
-)
-mem_medium = cache_medium.get_memory_usage()
-assert 1.0 < mem_medium['total_mb'] < 10.0, "Medium model should use 1-10 MB"
-print(f"✅ Medium model cache: {mem_medium['total_mb']:.3f} MB")
-print()
+    # Test 2: Medium model (balanced performance)
+    print("   Test 2: Medium Model (Standard Transformer)")
+    cache_medium = KVCache(
+        batch_size=1,
+        max_seq_len=128,
+        num_layers=4,
+        num_heads=8,
+        head_dim=64
+    )
+    mem_medium = cache_medium.get_memory_usage()
+    assert 1.0 < mem_medium['total_mb'] < 10.0, "Medium model should use 1-10 MB"
+    print(f"   Medium model cache: {mem_medium['total_mb']:.3f} MB")
 
-# Test 3: Batch inference (multiple sequences)
-print("🔬 Test 3: Batch Inference (4 sequences)")
-cache_batch = enable_kv_cache(
-    batch_size=4,  # Generate 4 sequences in parallel
-    max_seq_len=64,
-    num_layers=2,
-    num_heads=4,
-    head_dim=32
-)
-mem_batch = cache_batch.get_memory_usage()
-assert mem_batch['total_mb'] > mem_small['total_mb'], "Batch cache should be larger"
-print(f"✅ Batch cache: {mem_batch['total_mb']:.3f} MB (4x batch size)")
-print()
+    # Test 3: Batch inference (multiple sequences)
+    print("   Test 3: Batch Inference (4 sequences)")
+    cache_batch = KVCache(
+        batch_size=4,  # Generate 4 sequences in parallel
+        max_seq_len=64,
+        num_layers=2,
+        num_heads=4,
+        head_dim=32
+    )
+    mem_batch = cache_batch.get_memory_usage()
+    assert mem_batch['total_mb'] > mem_small['total_mb'], "Batch cache should be larger"
+    print(f"   Batch cache: {mem_batch['total_mb']:.3f} MB (4x batch size)")
 
-print("📈 Progress: Cache enablement ✓")
-print()
+    print("✅ Cache enablement works correctly!")
+
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_cache_enablement()
 
 # %% [markdown]
 """
@@ -783,55 +861,61 @@ We'll create `enable_kv_cache(model)` that:
 This is **non-invasive enhancement** - a critical ML systems pattern!
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "enable-kv-cache", "solution": true}
 #| export
 def enable_kv_cache(model):
     """
     Enable KV caching for a transformer model WITHOUT modifying Module 12/13 code.
-    
+
+    TODO: Create cache and non-invasively patch attention layers
+
+    APPROACH:
+    1. Validate model has required attributes (embed_dim, num_layers, num_heads, max_seq_len, blocks)
+    2. Calculate head_dim from embed_dim and num_heads
+    3. Create KVCache instance sized for this model's architecture
+    4. Store cache on model as model._kv_cache and set model._cache_enabled flag
+    5. For each transformer block, wrap its attention forward method with caching logic
+    6. Print confirmation message with cache statistics
+    7. Return the cache object
+
     This function demonstrates **non-invasive optimization** - adding capabilities
     to existing systems without breaking them. Similar to how Module 05 (Autograd)
     uses enable_autograd() to add gradient tracking to Tensors.
-    
+
     Args:
         model: A GPT-style transformer model with:
                - model.embed_dim (int)
-               - model.num_layers (int)  
+               - model.num_layers (int)
                - model.num_heads (int)
                - model.max_seq_len (int)
                - model.blocks (list of TransformerBlock objects)
-    
+
     Returns:
         cache: KVCache object for this model
-    
-    How It Works:
-        1. Creates KVCache sized for the model
-        2. Patches each TransformerBlock's attention to use cache
-        3. Cache is automatically updated during forward passes
-        4. Original model code unchanged (Modules 12-13 untouched!)
-    
-    Example:
-        ```python
-        from tinytorch.models.transformer import GPT
-        
-        # Build model (Module 13)
-        model = GPT(vocab_size=100, embed_dim=128, num_layers=4, num_heads=4)
-        
-        # Add caching (Module 14 - no modification to Module 13!)
-        cache = enable_kv_cache(model)
-        
-        # Generate with cache
-        for token in range(max_tokens):
-            logits = model.forward(new_token)  # Cache updated automatically!
-            cache.advance()  # Move to next position
-        ```
-    
+
+    EXAMPLE:
+    >>> from tinytorch.models.transformer import GPT
+    >>> model = GPT(vocab_size=100, embed_dim=128, num_layers=4, num_heads=4)
+    >>> cache = enable_kv_cache(model)
+    >>> hasattr(model, '_kv_cache')  # True
+    >>> model._cache_enabled  # True
+    >>> cache.num_layers  # 4 (matches model)
+
+    HINTS:
+    - Use hasattr() to validate model attributes exist
+    - head_dim = model.embed_dim // model.num_heads
+    - Store cache on model with model._kv_cache = cache
+    - Set flag with model._cache_enabled = True
+    - Save original forward with block._original_attention_forward
+    - Use a factory function to create patched forwards (closure captures layer_idx)
+
     Pedagogical Note:
         This teaches students that optimizations can be LAYERED on top of
         working systems. Module 14 doesn't break Modules 12-13; it enhances them!
     """
+    ### BEGIN SOLUTION
     import types
-    
+
     # Validate model has required attributes
     required_attrs = ['embed_dim', 'num_layers', 'num_heads', 'max_seq_len', 'blocks']
     for attr in required_attrs:
@@ -840,14 +924,14 @@ def enable_kv_cache(model):
                 f"Model missing '{attr}' - enable_kv_cache() requires a GPT-style model "
                 f"with {', '.join(required_attrs)}"
             )
-    
+
     # Calculate head dimension
     head_dim = model.embed_dim // model.num_heads
     if model.embed_dim % model.num_heads != 0:
         raise ValueError(
             f"embed_dim ({model.embed_dim}) must be divisible by num_heads ({model.num_heads})"
         )
-    
+
     # Create cache for this model
     cache = KVCache(
         batch_size=1,  # Default to single sequence; can be reset for batch inference
@@ -856,29 +940,29 @@ def enable_kv_cache(model):
         num_heads=model.num_heads,
         head_dim=head_dim
     )
-    
+
     # Store cache on model for easy access
     model._kv_cache = cache
     model._cache_enabled = True
-    
+
     # Patch each transformer block's attention
     for layer_idx, block in enumerate(model.blocks):
         # Store original attention forward method
         if not hasattr(block, '_original_attention_forward'):
             block._original_attention_forward = block.attention.forward
-        
+
         # Create cached version
         def make_cached_forward(layer_idx, original_forward):
             """Factory to create cached forward with correct layer_idx closure"""
             def cached_forward(x):
                 """
                 Cached attention forward pass.
-                
+
                 EDUCATIONAL NOTE: In a production implementation, this would:
                 1. Check if we're generating (single new token) vs training (full sequence)
                 2. For generation: only compute K,V for new token, retrieve history from cache
                 3. For training: use original uncached path
-                
+
                 For TinyTorch simplicity, we demonstrate the concept without full implementation.
                 The cache is created and tracked, showing students the architecture pattern.
                 """
@@ -886,12 +970,12 @@ def enable_kv_cache(model):
                 # In generation: this is where we'd use cache
                 # For now, pass through to original to maintain correctness
                 return original_forward(x)
-            
+
             return cached_forward
-        
+
         # Patch this block's attention
         block.attention.forward = make_cached_forward(layer_idx, block._original_attention_forward)
-    
+
     print(f"⚡ KV Cache enabled for model!")
     print(f"   Architecture: {model.num_layers} layers × {model.num_heads} heads × {head_dim}D")
     print(f"   Memory: {cache.get_memory_usage()['total_mb']:.2f} MB")
@@ -899,8 +983,9 @@ def enable_kv_cache(model):
     print()
     print(f"💡 To disable: call disable_kv_cache(model)")
     print()
-    
+
     return cache
+    ### END SOLUTION
 
 
 #| export  
@@ -944,65 +1029,143 @@ Let's verify that `enable_kv_cache()` works without breaking the model!
 **This is an integration test** - it tests Module 14 enhancing Modules 12-13 without modification.
 """
 
+# %% nbgrader={"grade": true, "grade_id": "test-noninvasive", "locked": true, "points": 10}
+def test_unit_noninvasive_integration():
+    """🔬 Unit Test: Non-Invasive Cache Integration"""
+    print("🔬 Unit Test: Non-Invasive Cache Integration...")
+
+    # Create a mock transformer-like object for testing
+    class MockTransformerBlock:
+        def __init__(self):
+            self.attention = self
+
+        def forward(self, x):
+            # Simple pass-through for testing
+            return x
+
+    class MockGPT:
+        def __init__(self):
+            self.vocab_size = 100
+            self.embed_dim = 128
+            self.num_layers = 4
+            self.num_heads = 4
+            self.max_seq_len = 64
+            self.blocks = [MockTransformerBlock() for _ in range(self.num_layers)]
+
+    # Test 1: Enable caching
+    model = MockGPT()
+    print("   Test 1: Enable caching on model")
+    cache = enable_kv_cache(model)
+    assert hasattr(model, '_kv_cache'), "Model should have _kv_cache attribute"
+    assert hasattr(model, '_cache_enabled'), "Model should have _cache_enabled flag"
+    assert model._cache_enabled == True, "Cache should be enabled"
+    assert cache is model._kv_cache, "Returned cache should match model._kv_cache"
+
+    # Test 2: Attention forward still works
+    print("   Test 2: Attention forward pass still works")
+    test_input = Tensor(np.random.randn(1, 10, 128))
+    for block in model.blocks:
+        output = block.attention.forward(test_input)
+        assert output.shape == test_input.shape, "Forward pass should preserve shape"
+
+    # Test 3: Disable caching
+    print("   Test 3: Disable caching")
+    disable_kv_cache(model)
+    assert model._cache_enabled == False, "Cache should be disabled"
+    assert not hasattr(model, '_kv_cache'), "Cache object should be removed"
+
+    # Test 4: Can re-enable
+    print("   Test 4: Re-enable caching")
+    cache2 = enable_kv_cache(model)
+    assert model._cache_enabled == True, "Cache should be re-enabled"
+
+    print("✅ Non-invasive cache integration works correctly!")
+
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_noninvasive_integration()
+
+
+# %% [markdown]
+"""
+## 🧪 Module Integration Test
+
+Final validation that everything works together correctly before module completion.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 20}
+def test_module():
+    """
+    Comprehensive test of entire KV Caching module functionality.
+
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
+    print("=" * 50)
+    print()
+
+    # Run all unit tests
+    print("Running unit tests...")
+    test_unit_kvcache()
+    print()
+    test_unit_cache_enablement()
+    print()
+    test_unit_noninvasive_integration()
+    print()
+
+    print("Running integration scenarios...")
+    print()
+
+    # Integration Test: Complete KV Cache Workflow
+    print("🔬 Integration Test: Complete KV Cache Workflow...")
+    batch_size, max_seq_len = 1, 128
+    num_layers, num_heads, head_dim = 4, 8, 64
+
+    cache = KVCache(batch_size, max_seq_len, num_layers, num_heads, head_dim)
+
+    # Simulate generation loop (processing multiple tokens)
+    for _ in range(5):
+        for layer_idx in range(num_layers):
+            # Simulate new key-value pairs
+            new_key = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+            new_value = Tensor(np.random.randn(batch_size, num_heads, 1, head_dim))
+
+            # Update cache
+            cache.update(layer_idx, new_key, new_value)
+
+        # Advance position after all layers processed
+        cache.advance()
+
+    # Verify cache state
+    assert cache.seq_pos == 5, f"Expected seq_pos=5, got {cache.seq_pos}"
+
+    # Verify retrieval
+    for layer_idx in range(num_layers):
+        cached_k, cached_v = cache.get(layer_idx)
+        assert cached_k.shape == (batch_size, num_heads, 5, head_dim)
+        assert cached_v.shape == (batch_size, num_heads, 5, head_dim)
+
+    print("✅ Complete KV cache workflow validated!")
+    print()
+
+    # Integration Test: Memory Tracking
+    print("🔬 Integration Test: Memory Tracking...")
+    mem_info = cache.get_memory_usage()
+    assert mem_info['total_mb'] > 0
+    assert mem_info['cache_tensors'] == num_layers * 2
+    print(f"✅ Memory tracking: {mem_info['total_mb']:.2f} MB for {mem_info['cache_tensors']} tensors")
+    print()
+
+    print("=" * 50)
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 14")
+
 # %%
-print("### 🧪 Unit Test: Non-Invasive Cache Integration")
-print()
-
-# Create a mock transformer-like object for testing
-class MockTransformerBlock:
-    def __init__(self):
-        self.attention = self
-    
-    def forward(self, x):
-        # Simple pass-through for testing
-        return x
-
-class MockGPT:
-    def __init__(self):
-        self.vocab_size = 100
-        self.embed_dim = 128
-        self.num_layers = 4
-        self.num_heads = 4
-        self.max_seq_len = 64
-        self.blocks = [MockTransformerBlock() for _ in range(self.num_layers)]
-
-# Test 1: Enable caching
-model = MockGPT()
-print("🔬 Test 1: Enable caching on model")
-cache = enable_kv_cache(model)
-assert hasattr(model, '_kv_cache'), "Model should have _kv_cache attribute"
-assert hasattr(model, '_cache_enabled'), "Model should have _cache_enabled flag"
-assert model._cache_enabled == True, "Cache should be enabled"
-assert cache is model._kv_cache, "Returned cache should match model._kv_cache"
-print("✅ Caching enabled successfully")
-print()
-
-# Test 2: Attention forward still works
-print("🔬 Test 2: Attention forward pass still works")
-test_input = Tensor(np.random.randn(1, 10, 128))
-for block in model.blocks:
-    output = block.attention.forward(test_input)
-    assert output.shape == test_input.shape, "Forward pass should preserve shape"
-print("✅ Forward pass works with caching enabled")
-print()
-
-# Test 3: Disable caching
-print("🔬 Test 3: Disable caching")
-disable_kv_cache(model)
-assert model._cache_enabled == False, "Cache should be disabled"
-assert not hasattr(model, '_kv_cache'), "Cache object should be removed"
-print("✅ Caching disabled successfully")
-print()
-
-# Test 4: Can re-enable
-print("🔬 Test 4: Re-enable caching")
-cache2 = enable_kv_cache(model)
-assert model._cache_enabled == True, "Cache should be re-enabled"
-print("✅ Can enable → disable → enable")
-print()
-
-print("📈 Progress: Non-invasive cache integration ✓")
-print()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]
