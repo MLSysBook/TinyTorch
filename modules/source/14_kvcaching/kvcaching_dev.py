@@ -954,23 +954,23 @@ def enable_kv_cache(model):
         # Create cached version
         def make_cached_forward(layer_idx, original_forward):
             """Factory to create cached forward with correct layer_idx closure"""
-            def cached_forward(x):
+            def cached_forward(x, mask=None):
                 """
                 Cached attention forward pass.
-
+                
                 EDUCATIONAL NOTE: In a production implementation, this would:
                 1. Check if we're generating (single new token) vs training (full sequence)
                 2. For generation: only compute K,V for new token, retrieve history from cache
                 3. For training: use original uncached path
-
+                
                 For TinyTorch simplicity, we demonstrate the concept without full implementation.
                 The cache is created and tracked, showing students the architecture pattern.
                 """
                 # In training: use original path (no caching during backprop!)
                 # In generation: this is where we'd use cache
                 # For now, pass through to original to maintain correctness
-                return original_forward(x)
-
+                return original_forward(x, mask)
+            
             return cached_forward
 
         # Patch this block's attention
