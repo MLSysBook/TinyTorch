@@ -19,11 +19,11 @@
 """
 # Module 16: Acceleration - Making Models Run Faster
 
-Welcome to Module 16! You're about to master the art of neural network acceleration through vectorization, kernel fusion, and mixed precision training.
+Welcome to Module 16! You're about to master the art of neural network acceleration through vectorization and kernel fusion.
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Complete training pipeline with profiling capabilities
-**You'll Build**: Acceleration techniques including vectorization, operation fusion, and mixed precision
+**You'll Build**: Acceleration techniques including vectorization and operation fusion
 **You'll Enable**: Production-ready optimization for real-world deployment
 
 **Connection Map**:
@@ -36,9 +36,8 @@ Profiling (Module 15) → Acceleration (Module 16) → Quantization (Module 17)
 By the end of this module, you will:
 1. Implement vectorized operations for maximum throughput
 2. Create fused operations to reduce memory bandwidth
-3. Build mixed precision training for memory efficiency
-4. Understand the relationship between compute and memory bandwidth
-5. Analyze acceleration trade-offs in production systems
+3. Understand the relationship between compute and memory bandwidth
+4. Analyze acceleration trade-offs in production systems
 
 Let's optimize for speed!
 
@@ -49,13 +48,13 @@ Let's optimize for speed!
 
 ```python
 # How to use this module:
-from tinytorch.optimization.acceleration import vectorized_matmul, fused_gelu, MixedPrecisionTrainer
+from tinytorch.optimization.acceleration import vectorized_matmul, fused_gelu
 ```
 
 **Why this matters:**
 - **Learning:** Complete acceleration system in one focused module for deep understanding
 - **Production:** Proper organization like PyTorch's torch.amp and torch.jit with optimization components
-- **Consistency:** All acceleration operations and mixed precision training in optimization.acceleration
+- **Consistency:** All acceleration operations and optimization components in optimization.acceleration
 - **Integration:** Works seamlessly with profiling for complete performance optimization
 """
 
@@ -119,7 +118,6 @@ Performance    │   Compute Bound Region
 
 Real-world performance wins:
 - **2-5× speedup** from vectorization
-- **30-50% memory reduction** from mixed precision
 - **2-3× throughput** from kernel fusion
 - **10× scaling improvement** for large models
 """
@@ -570,455 +568,7 @@ test_unit_fusion_speedup()
 
 # %% [markdown]
 """
-## 4. Integration - Mixed Precision Training: Memory and Speed
-
-### The Mixed Precision Revolution
-
-Modern GPUs (like V100, A100) have specialized **Tensor Cores** that can perform FP16 operations much faster than FP32:
-
-```
-Performance Comparison (Theoretical Peak):
-┌─────────────────┬────────────────┬────────────────┐
-│   Precision     │   V100 TFLOPS  │   A100 TFLOPS  │
-├─────────────────┼────────────────┼────────────────┤
-│   FP32 (float)  │      15.7      │      19.5      │
-│   FP16 (half)   │     125.0      │     312.0      │
-│   Speedup       │      8×        │      16×       │
-└─────────────────┴────────────────┴────────────────┘
-```
-
-### The Challenge: FP16 Precision Limitations
-
-FP16 has a much smaller range than FP32:
-
-```
-FP32 (32-bit):                    FP16 (16-bit):
-┌─────────────────────────────┐   ┌───────────────┐
-│ Sign │ 8-bit │   23-bit     │   │Sign│5-bit│10-bit│
-│  bit │ Exp   │  Mantissa    │   │bit │ Exp │Mant. │
-└─────────────────────────────┘   └───────────────┘
-Range: ±3.4 × 10³⁸              Range: ±6.5 × 10⁴
-Precision: ~7 decimal digits     Precision: ~3 decimal digits
-
-Problem: Small gradients (< 6e-5) become ZERO in FP16!
-```
-
-### The Solution: Automatic Loss Scaling
-
-```
-Training Step Without Scaling:       Training Step With Scaling:
-
-Loss = 0.0001                       Loss = 0.0001
-    ↓                                   ↓
-Gradients = 0.00001                 Scale × 1024
-    ↓                                   ↓
-Convert to FP16                     Loss = 0.1024
-    ↓                                   ↓
-Gradients = 0.0 (UNDERFLOW!)        Gradients = 0.01024
-    ↓                                   ↓
-No learning!                        Convert to FP16: 0.01024 ✓
-                                        ↓
-                                    Unscale: 0.01024 / 1024 = 0.00001
-                                        ↓
-                                    Successful learning!
-```
-
-### Mixed Precision Memory Benefits
-
-```
-Model Component Breakdown:
-┌─────────────────┬─────────────┬─────────────┬─────────────┐
-│   Component     │ FP32 Memory │ FP16 Memory │   Savings   │
-├─────────────────┼─────────────┼─────────────┼─────────────┤
-│ Parameters      │    4N       │     4N      │     0%      │
-│ Gradients       │    4N       │     2N      │    50%      │
-│ Activations     │    4A       │     2A      │    50%      │
-│ Optimizer State │    8N       │     8N      │     0%      │
-├─────────────────┼─────────────┼─────────────┼─────────────┤
-│ Total Typical   │   ~20N      │    ~16N     │    20%      │
-│ Activation-Heavy│   ~40N      │    ~24N     │    40%      │
-└─────────────────┴─────────────┴─────────────┴─────────────┘
-
-N = parameter count, A = activation memory
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "mixed-precision-trainer", "solution": true}
-#| export
-class MixedPrecisionTrainer:
-    """
-    Mixed precision trainer with automatic loss scaling.
-
-    Implements the same pattern as PyTorch's Automatic Mixed Precision (AMP):
-    1. Forward pass in FP16 for speed and memory efficiency
-    2. Loss scaling to prevent gradient underflow
-    3. Gradient computation and unscaling
-    4. Parameter updates in FP32 for numerical stability
-
-    The key insight: keep different parts of training in optimal precision.
-    """
-
-    def __init__(self, model, optimizer, loss_scale: float = 1024.0, max_loss_scale: float = 65536.0):
-        """
-        Initialize mixed precision training infrastructure.
-
-        TODO: Set up automatic loss scaling and overflow detection
-
-        APPROACH:
-        1. Store model and optimizer references
-        2. Initialize dynamic loss scaling parameters
-        3. Set up overflow detection and scale adjustment logic
-
-        Args:
-            model: Neural network model
-            optimizer: Parameter optimizer (SGD, Adam, etc.)
-            loss_scale: Initial scaling factor for gradients
-            max_loss_scale: Maximum allowed loss scale
-
-        LOSS SCALING STRATEGY:
-        - Start with reasonable scale (1024)
-        - Increase gradually if no overflow (better precision)
-        - Decrease immediately on overflow (stability)
-        - This balances numerical precision with training stability
-
-        HINTS:
-        - Track consecutive successful steps for scale increases
-        - Use exponential backoff on overflow detection
-        - Keep scale within reasonable bounds [1, 65536]
-        """
-        ### BEGIN SOLUTION
-        self.model = model
-        self.optimizer = optimizer
-
-        # Loss scaling parameters
-        self.loss_scale = loss_scale
-        self.max_loss_scale = max_loss_scale
-        self.min_loss_scale = 1.0
-
-        # Dynamic scaling parameters
-        self.scale_growth_factor = 2.0      # Multiply by 2 when increasing
-        self.scale_backoff_factor = 0.5     # Divide by 2 when decreasing
-        self.growth_interval = 2000         # Steps between scale increases
-        self.steps_since_last_scale_update = 0
-
-        # Overflow tracking
-        self.overflow_detected = False
-        ### END SOLUTION
-
-    def scale_loss(self, loss: Tensor) -> Tensor:
-        """
-        Scale loss to prevent gradient underflow in FP16.
-
-        The fundamental challenge: FP16 can only represent values ≥ 6e-5.
-        Small gradients (common in deep networks) become zero without scaling.
-
-        TODO: Apply loss scaling for mixed precision stability
-
-        APPROACH:
-        1. Multiply loss by current scale factor
-        2. This amplifies gradients proportionally
-        3. Return scaled loss for backward pass
-
-        MATHEMATICAL INSIGHT:
-        If loss = 1e-6 and scale = 1024:
-        scaled_loss = 1e-6 × 1024 = 1.024e-3
-
-        After backward pass:
-        scaled_gradients = 1.024e-3 × dloss/dparam = 1024 × gradients
-
-        These larger gradients survive FP16 conversion!
-
-        EXAMPLE:
-        >>> trainer = MixedPrecisionTrainer(model, optimizer)
-        >>> loss = Tensor([0.0001])  # Small loss
-        >>> scaled = trainer.scale_loss(loss)
-        >>> print(scaled.data)  # [0.1024] (0.0001 × 1024)
-        """
-        ### BEGIN SOLUTION
-        # Scale the loss to amplify gradients
-        # This prevents gradient underflow in FP16 arithmetic
-        scaled_data = loss.data * self.loss_scale
-        return Tensor(scaled_data)
-        ### END SOLUTION
-
-    def unscale_gradients(self, parameters: List[Tensor]) -> bool:
-        """
-        Unscale gradients and detect overflow from FP16 conversion.
-
-        After backward pass on scaled loss, gradients are scaled too.
-        We must unscale them AND check for overflow/underflow.
-
-        TODO: Implement gradient unscaling with overflow detection
-
-        APPROACH:
-        1. Divide all gradients by loss scale (restore original magnitude)
-        2. Check for inf/nan values (indicates FP16 overflow)
-        3. Return True if gradients are valid, False if overflow detected
-
-        OVERFLOW DETECTION:
-        inf/nan in gradients indicates:
-        - Gradient magnitude too large for FP16
-        - Numerical instability in computation
-        - Loss scale too aggressive
-
-        When overflow occurs:
-        - Skip parameter update (unstable gradients)
-        - Reduce loss scale for next iteration
-        - Continue training with lower scale
-
-        HINTS:
-        - Use np.isfinite() to detect inf/nan efficiently
-        - Process all parameters even if overflow found
-        - Set self.overflow_detected flag for scale adjustment
-        """
-        ### BEGIN SOLUTION
-        self.overflow_detected = False
-
-        # Unscale all gradients and check for overflow
-        for param in parameters:
-            if param.grad is not None:
-                # Unscale gradients to original magnitude
-                param.grad.data = param.grad.data / self.loss_scale
-
-                # Check for overflow/underflow (inf/nan values)
-                if not np.all(np.isfinite(param.grad.data)):
-                    self.overflow_detected = True
-                    # Continue processing to unscale all gradients
-
-        return not self.overflow_detected
-        ### END SOLUTION
-
-    def update_loss_scale(self):
-        """
-        Dynamically adjust loss scale based on training stability.
-
-        Implements the "Goldilocks" principle for loss scaling:
-        - Too low: precision loss from small gradients
-        - Too high: overflow and instability
-        - Just right: maximum precision without overflow
-
-        TODO: Implement adaptive loss scale adjustment
-
-        APPROACH:
-        1. If overflow detected: reduce scale immediately (stability)
-        2. If no overflow for many steps: increase scale (precision)
-        3. Keep scale within reasonable bounds
-
-        SCALING STRATEGY:
-        - Aggressive reduction on overflow (×0.5)
-        - Conservative growth during stability (×2 every 2000 steps)
-        - This favors stability over maximum precision
-
-        WHY THIS WORKS:
-        - Most training is stable (gradual scale increase)
-        - Occasional instability (rapid scale decrease)
-        - Converges to optimal scale for current training phase
-        """
-        ### BEGIN SOLUTION
-        if self.overflow_detected:
-            # Immediately reduce scale on overflow
-            self.loss_scale = max(
-                self.min_loss_scale,
-                self.loss_scale * self.scale_backoff_factor
-            )
-            self.steps_since_last_scale_update = 0
-        else:
-            # Gradually increase scale if stable
-            self.steps_since_last_scale_update += 1
-            if self.steps_since_last_scale_update >= self.growth_interval:
-                self.loss_scale = min(
-                    self.max_loss_scale,
-                    self.loss_scale * self.scale_growth_factor
-                )
-                self.steps_since_last_scale_update = 0
-        ### END SOLUTION
-
-    def train_step(self, batch: Tuple[Tensor, Tensor]) -> Dict[str, float]:
-        """
-        Execute complete mixed precision training step.
-
-        Orchestrates the entire mixed precision training process:
-        1. Forward pass (FP16 in real implementation)
-        2. Loss computation and scaling
-        3. Backward pass on scaled loss
-        4. Gradient unscaling and overflow detection
-        5. Conditional parameter update
-        6. Loss scale adjustment
-
-        TODO: Implement end-to-end mixed precision training step
-
-        APPROACH:
-        1. Clear gradients from previous step
-        2. Forward pass through model
-        3. Compute and scale loss
-        4. Backward pass to compute scaled gradients
-        5. Unscale gradients and check for overflow
-        6. Update parameters only if no overflow
-        7. Adjust loss scale based on stability
-
-        CRITICAL INSIGHT:
-        Skip parameter updates on overflow! Unstable gradients
-        would move parameters in wrong direction.
-
-        RETURN FORMAT:
-        Dictionary with training metrics:
-        - loss: unscaled loss value
-        - loss_scale: current scaling factor
-        - overflow: whether overflow occurred
-        - gradients_valid: whether update was applied
-
-        HINTS:
-        - Use self.optimizer.zero_grad() to clear gradients
-        - Get parameters with gradients for unscaling
-        - Only call optimizer.step() if gradients are valid
-        """
-        ### BEGIN SOLUTION
-        inputs, targets = batch
-
-        # Clear gradients from previous step
-        self.optimizer.zero_grad()
-
-        # Forward pass (would use FP16 autocast in real implementation)
-        # For simulation, we work in FP32 but apply scaling principles
-        outputs = self.model(inputs)
-
-        # Compute loss (unscaled)
-        loss = self._compute_loss(outputs, targets)
-
-        # Scale loss for mixed precision
-        scaled_loss = self.scale_loss(loss)
-
-        # Backward pass on scaled loss
-        scaled_loss.backward()
-
-        # Get all parameters with gradients
-        parameters = [p for p in self.model.parameters() if p.grad is not None]
-
-        # Unscale gradients and detect overflow
-        gradients_valid = self.unscale_gradients(parameters)
-
-        # Update parameters only if no overflow
-        if gradients_valid:
-            self.optimizer.step()
-
-        # Adjust loss scale based on stability
-        self.update_loss_scale()
-
-        # Return training metrics
-        return {
-            'loss': loss.data.item() if hasattr(loss.data, 'item') else float(loss.data),
-            'loss_scale': self.loss_scale,
-            'overflow': self.overflow_detected,
-            'gradients_valid': gradients_valid
-        }
-        ### END SOLUTION
-
-    def _compute_loss(self, outputs: Tensor, targets: Tensor) -> Tensor:
-        """Simple MSE loss for demonstration purposes."""
-        diff = Tensor(outputs.data - targets.data)
-        return Tensor(np.mean(diff.data**2))
-
-# %% nbgrader={"grade": true, "grade_id": "test-mixed-precision", "locked": true, "points": 15}
-def test_unit_mixed_precision():
-    """🔬 Test mixed precision training components comprehensively."""
-    print("🔬 Unit Test: Mixed Precision Training...")
-
-    # Create mock model and optimizer for testing
-    class MockModel:
-        def __init__(self):
-            self.weight = Tensor(np.random.randn(10, 5).astype(np.float32))
-            self.weight.grad = None
-
-        def __call__(self, x):
-            return x.matmul(self.weight)
-
-        def parameters(self):
-            return [self.weight]
-
-    class MockOptimizer:
-        def __init__(self, params):
-            self.params = params
-            self.updates_applied = 0
-
-        def zero_grad(self):
-            for p in self.params:
-                p.grad = None
-
-        def step(self):
-            for p in self.params:
-                if p.grad is not None:
-                    p.data = p.data - 0.01 * p.grad.data
-                    self.updates_applied += 1
-
-    # Initialize mixed precision trainer
-    model = MockModel()
-    optimizer = MockOptimizer(model.parameters())
-    trainer = MixedPrecisionTrainer(model, optimizer, loss_scale=1024.0)
-
-    # Test 1: Loss scaling
-    print("   Testing loss scaling...")
-    loss = Tensor([0.001])
-    scaled_loss = trainer.scale_loss(loss)
-    expected_scaled = 0.001 * 1024.0
-    assert np.isclose(scaled_loss.data[0], expected_scaled), \
-        f"Loss scaling failed: expected {expected_scaled}, got {scaled_loss.data[0]}"
-
-    # Test 2: Gradient unscaling (normal case)
-    print("   Testing gradient unscaling...")
-    model.weight.grad = Tensor(np.full((10, 5), 1024.0))  # Simulate scaled gradients
-    valid = trainer.unscale_gradients([model.weight])
-    assert valid, "Should detect valid gradients"
-    assert np.allclose(model.weight.grad.data, 1.0), "Gradient unscaling failed"
-
-    # Test 3: Overflow detection
-    print("   Testing overflow detection...")
-    model.weight.grad = Tensor(np.full((10, 5), np.inf))  # Simulate overflow
-    valid = trainer.unscale_gradients([model.weight])
-    assert not valid, "Should detect overflow"
-    assert trainer.overflow_detected, "Overflow flag not set"
-
-    # Test 4: Loss scale adjustment after overflow
-    print("   Testing loss scale adjustment...")
-    initial_scale = trainer.loss_scale
-    trainer.update_loss_scale()  # Should reduce scale due to overflow
-    assert trainer.loss_scale < initial_scale, \
-        f"Scale should decrease after overflow: {initial_scale} → {trainer.loss_scale}"
-
-    # Test 5: Loss scale increase during stability
-    print("   Testing loss scale increase...")
-    trainer.overflow_detected = False
-    trainer.steps_since_last_scale_update = 2000  # Simulate stable training
-    scale_before = trainer.loss_scale
-    trainer.update_loss_scale()
-    assert trainer.loss_scale > scale_before, "Scale should increase during stability"
-
-    # Test 6: End-to-end training step
-    print("   Testing complete training step...")
-    inputs = Tensor(np.random.randn(8, 10).astype(np.float32))
-    targets = Tensor(np.random.randn(8, 5).astype(np.float32))
-
-    initial_updates = optimizer.updates_applied
-    metrics = trainer.train_step((inputs, targets))
-
-    # Verify metrics structure
-    required_keys = ['loss', 'loss_scale', 'overflow', 'gradients_valid']
-    for key in required_keys:
-        assert key in metrics, f"Missing metric: {key}"
-
-    # Verify loss is reasonable
-    assert isinstance(metrics['loss'], (int, float)), "Loss should be numeric"
-    assert metrics['loss'] >= 0, "Loss should be non-negative"
-
-    # Verify loss scale is positive
-    assert metrics['loss_scale'] > 0, "Loss scale should be positive"
-
-    print("✅ Mixed precision training works correctly!")
-
-test_unit_mixed_precision()
-
-# %% [markdown]
-"""
-## 5. Systems Analysis - Performance Scaling Patterns
+## 4. Systems Analysis - Performance Scaling Patterns
 
 Let's analyze how our acceleration techniques perform across different scenarios and understand their scaling characteristics.
 """
@@ -1165,99 +715,9 @@ def analyze_arithmetic_intensity():
 
 analyze_arithmetic_intensity()
 
-# %% nbgrader={"grade": false, "grade_id": "analyze-mixed-precision-benefits", "solution": true}
-def analyze_mixed_precision_benefits():
-    """📊 Quantify mixed precision memory and performance benefits."""
-    print("📊 Analyzing mixed precision benefits across model sizes...")
-
-    # Define representative model configurations
-    model_configs = [
-        ("Tiny CNN", {"params": 50_000, "activations": 100_000}),
-        ("Small BERT", {"params": 10_000_000, "activations": 5_000_000}),
-        ("Medium GPT", {"params": 100_000_000, "activations": 50_000_000}),
-        ("Large Transformer", {"params": 1_000_000_000, "activations": 500_000_000}),
-    ]
-
-    print("\n🧮 Mixed Precision Memory Analysis:")
-    print("┌─────────────────┬─────────────┬─────────────┬─────────────┬─────────────┐")
-    print("│ Model Type      │ Parameters  │ FP32 Memory │ FP16 Memory │ Savings     │")
-    print("│                 │             │ (GB)        │ (GB)        │ (%)         │")
-    print("├─────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤")
-
-    for name, config in model_configs:
-        param_count = config["params"]
-        activation_count = config["activations"]
-
-        # Memory calculation (bytes)
-        # Parameters: always FP32 for stability
-        param_memory = param_count * 4
-
-        # FP32 training memory
-        fp32_activations = activation_count * 4
-        fp32_gradients = param_count * 4
-        fp32_optimizer = param_count * 8  # Adam: momentum + velocity
-        fp32_total = param_memory + fp32_activations + fp32_gradients + fp32_optimizer
-
-        # Mixed precision memory
-        fp16_activations = activation_count * 2  # FP16 activations
-        fp16_gradients = param_count * 2  # FP16 gradients during backward
-        mixed_total = param_memory + fp16_activations + fp16_gradients + fp32_optimizer
-
-        # Calculate savings
-        savings_gb = (fp32_total - mixed_total) / 1e9
-        savings_pct = (fp32_total - mixed_total) / fp32_total * 100
-
-        print(f"│ {name:14s}  │ {param_count:10,d}  │ {fp32_total/1e9:9.1f}   │ {mixed_total/1e9:9.1f}   │ {savings_pct:9.1f}   │")
-
-    print("└─────────────────┴─────────────┴─────────────┴─────────────┴─────────────┘")
-
-    # Performance simulation
-    print(f"\n⚡ Mixed Precision Performance Simulation:")
-
-    # Simulate different batch sizes to show memory pressure
-    batch_sizes = [8, 16, 32, 64]
-    hidden_size = 1024
-    seq_length = 512
-
-    print("┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐")
-    print("│ Batch Size  │ FP32 Mem    │ FP16 Mem    │ Throughput  │ Efficiency  │")
-    print("│             │ (GB)        │ (GB)        │ Gain        │ Gain        │")
-    print("├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤")
-
-    for batch_size in batch_sizes:
-        # Memory for activations (dominant for large models)
-        elements = batch_size * seq_length * hidden_size
-
-        fp32_mem = elements * 4 / 1e9  # 4 bytes per FP32
-        fp16_mem = elements * 2 / 1e9  # 2 bytes per FP16
-
-        # Simulate throughput gains (based on Tensor Core speedups)
-        # Real speedups depend on hardware and operation mix
-        throughput_gain = 1.4  # Conservative estimate for mixed workloads
-
-        # Memory efficiency enables larger batch sizes
-        max_fp32_batch = 32  # Assume memory limit
-        max_fp16_batch = 64   # Double capacity with FP16
-
-        efficiency_gain = max_fp16_batch / max_fp32_batch if batch_size <= max_fp32_batch else "OOM"
-        efficiency_str = f"{efficiency_gain:.1f}×" if isinstance(efficiency_gain, float) else efficiency_gain
-
-        print(f"│ {batch_size:10d}  │ {fp32_mem:9.2f}   │ {fp16_mem:9.2f}   │ {throughput_gain:9.1f}×  │ {efficiency_str:9s}   │")
-
-    print("└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘")
-
-    print(f"\n💡 Mixed Precision Key Benefits:")
-    print(f"   🎯 Memory: 20-40% reduction enables larger models/batches")
-    print(f"   ⚡ Speed: 1.3-2× throughput on modern hardware (V100+)")
-    print(f"   📈 Scale: Essential for billion-parameter models")
-    print(f"   ⚠️  Complexity: Requires careful loss scaling and overflow handling")
-    print("🚀 Mixed precision is crucial for competitive ML training")
-
-analyze_mixed_precision_benefits()
-
 # %% [markdown]
 """
-## 6. Optimization Insights - Production Acceleration Strategy
+## 5. Optimization Insights - Production Acceleration Strategy
 
 Understanding when and how to apply different acceleration techniques in real-world scenarios.
 """
@@ -1322,13 +782,6 @@ def analyze_acceleration_decision_framework():
             "stability_risk": "low",
             "hardware_dependency": "medium"
         },
-        "Mixed Precision": {
-            "implementation_cost": "high",
-            "memory_benefit": "high",
-            "latency_benefit": "high",
-            "stability_risk": "medium",
-            "hardware_dependency": "high"
-        },
         "Graph Optimization": {
             "implementation_cost": "very_high",
             "memory_benefit": "medium",
@@ -1346,7 +799,7 @@ def analyze_acceleration_decision_framework():
     for workload_name, workload_chars in workloads:
         recommendations = []
 
-        for technique_name in ["Vectorization", "Kernel Fusion", "Mixed Precision", "Graph Optimization"]:
+        for technique_name in ["Vectorization", "Kernel Fusion", "Graph Optimization"]:
             tech_chars = techniques[technique_name]
             score = 0
 
@@ -1409,7 +862,6 @@ def analyze_acceleration_decision_framework():
     print(f"      • Moderate complexity")
     print(f"      • Significant wins on element-wise ops")
     print(f"   ")
-    print(f"   📊 Phase 3 (Large models): Mixed Precision")
     print(f"      • Essential for large model training")
     print(f"      • Requires careful validation")
     print(f"      • Hardware-dependent benefits")
@@ -1430,7 +882,7 @@ analyze_acceleration_decision_framework()
 
 # %% [markdown]
 """
-## 7. Module Integration Test
+## 6. Module Integration Test
 
 Final validation that all acceleration components work together correctly.
 """
@@ -1443,7 +895,6 @@ def test_module():
     This final test ensures:
     - All acceleration techniques work correctly
     - Performance improvements are measurable
-    - Mixed precision training is stable
     - Components integrate seamlessly
     - Module is ready for production use
     """
@@ -1455,7 +906,6 @@ def test_module():
     test_unit_vectorized_matmul()
     test_unit_fused_gelu()
     test_unit_fusion_speedup()
-    test_unit_mixed_precision()
 
     print("\nRunning integration scenarios...")
 
@@ -1471,7 +921,7 @@ def test_module():
     weight = Tensor(np.random.randn(hidden_dim, hidden_dim).astype(np.float32))
     print(f"   Input tensor: {x.shape}, Weight tensor: {weight.shape}")
 
-    # Test complete pipeline: reshape → matmul → activation → mixed precision
+    # Test complete pipeline: reshape → matmul → activation
     print("   Testing vectorized operations...")
 
     # Reshape for matrix multiplication (flatten batch and sequence)
@@ -1492,10 +942,6 @@ def test_module():
     final_output = Tensor(activated.data.reshape(batch_size, seq_len, hidden_dim))
     assert final_output.shape == x.shape
     print(f"   ✅ Output reshape: {activated.shape} → {final_output.shape}")
-
-    print("   Testing mixed precision training integration...")
-
-    # Create complete model for mixed precision testing
     class TransformerBlock:
         def __init__(self, hidden_dim):
             self.hidden_dim = hidden_dim
@@ -1539,7 +985,6 @@ def test_module():
     # Initialize model and optimizer
     model = TransformerBlock(hidden_dim)
     optimizer = SimpleOptimizer(model.parameters())
-    trainer = MixedPrecisionTrainer(model, optimizer, loss_scale=512.0)
 
     print(f"   Model parameters: {len(model.parameters())}")
     print(f"   Initial loss scale: {trainer.loss_scale}")
@@ -1594,17 +1039,6 @@ def test_module():
 
     print("   Testing memory efficiency...")
 
-    # Verify mixed precision reduces memory usage conceptually
-    param_count = sum(p.data.size for p in model.parameters())
-    activation_count = batch_size * seq_len * hidden_dim
-
-    fp32_memory = (param_count + activation_count) * 4  # 4 bytes per FP32
-    mixed_memory = param_count * 4 + activation_count * 2  # FP32 params + FP16 activations
-    memory_savings = (fp32_memory - mixed_memory) / fp32_memory * 100
-
-    print(f"   Memory analysis: {memory_savings:.1f}% savings from mixed precision")
-    assert memory_savings > 0, "Mixed precision should reduce memory usage"
-
     print("✅ End-to-end acceleration pipeline works!")
 
     print("\n" + "=" * 50)
@@ -1639,21 +1073,7 @@ Your fused_gelu combines 7 operations into a single expression.
 - Memory bandwidth reduction: _____%
 - Why is this critical for transformer inference? _____
 
-### Question 3: Mixed Precision Memory Calculation
-Your MixedPrecisionTrainer uses FP16 activations, FP32 parameters.
-For a 100M parameter model with 50M activation elements:
-- FP32 memory: (100M + 50M) × 4 bytes = _____ MB
-- Mixed precision memory: 100M × 4 + 50M × 2 = _____ MB
-- Memory reduction: _____%
-
-### Question 4: Loss Scaling Strategy
-Your trainer starts with loss_scale=1024, grows by 2×, shrinks by 0.5×.
-- Minimum FP16 representable value: ~6e-5
-- Without scaling, gradients < _____ become zero
-- With 1024× scaling, gradients down to _____ are preserved
-- Why increase scale gradually but decrease immediately? _____
-
-### Question 5: Production Optimization Strategy
+### Question 4: Production Optimization Strategy
 Based on your decision framework analysis:
 For edge deployment (memory critical, stability required, hardware diverse):
 - Priority 1 technique: _____ (low risk, universal)
@@ -1671,7 +1091,6 @@ Congratulations! You've mastered the fundamental techniques for accelerating neu
 ### Key Accomplishments
 - Built **vectorized operations** leveraging SIMD and optimized BLAS for 2-5× speedups
 - Implemented **kernel fusion** reducing memory bandwidth by 60-80% for element-wise operations
-- Created **mixed precision training** with automatic loss scaling for 20-40% memory savings
 - Analyzed **arithmetic intensity patterns** and their impact on the roofline model
 - Developed **production decision framework** for systematic optimization
 - All tests pass ✅ (validated by `test_module()`)
@@ -1680,7 +1099,6 @@ Congratulations! You've mastered the fundamental techniques for accelerating neu
 - **Roofline Model**: Operations with high arithmetic intensity (FLOPs/byte) scale better
 - **Memory Bandwidth**: Often the limiting factor for modern accelerators
 - **Kernel Fusion**: Critical for memory-bound workloads, reduces intermediate storage overhead
-- **Mixed Precision**: Essential for large model training, requires careful gradient scaling
 - **Optimization Strategy**: Start simple (vectorization), add complexity as needed
 
 ### Production Impact
