@@ -11,17 +11,18 @@ TinyTorch is a comprehensive educational ML framework designed for a Machine Lea
 
 ### Current Status: **Core Complete, Optimization Modules In Progress**
 
-- **14/19 modules** fully implemented and exported ✅
+- **15/19 modules** fully implemented and exported ✅
 - **All 5 historical milestones** functional and tested ✅
 - **Transformer module** with complete gradient flow ✅
-- **KV Caching module** with 10-15x speedup ✅ NEW!
-- **5 advanced modules** ready for implementation (15-19)
+- **KV Caching module** with 10-15x speedup ✅
+- **Profiling module** with scientific performance measurement ✅ NEW!
+- **4 advanced modules** ready for implementation (16-19)
 
 ---
 
 ## 📊 Module Implementation Status
 
-### ✅ Fully Implemented (Modules 01-13)
+### ✅ Fully Implemented (Modules 01-15)
 
 These modules are complete, tested, and exported to `tinytorch/`:
 
@@ -41,17 +42,17 @@ These modules are complete, tested, and exported to `tinytorch/`:
 | 12 | **Attention** | `tinytorch/core/attention.py` | ✅ Complete | 1,142 |
 | 13 | **Transformers** | `tinytorch/models/transformer.py` | ✅ Complete | 1,726 |
 | 14 | **KV Caching** | `tinytorch/generation/kv_cache.py` | ✅ Complete | 805 |
+| 15 | **Profiling** | `tinytorch/profiling/profiler.py` | ✅ Complete | 155 |
 
-**Total:** 18,255+ lines of educational ML code (including tests)
+**Total:** 18,410+ lines of educational ML code (including tests)
 
-### 🔧 Ready for Implementation (Modules 15-19)
+### 🔧 Ready for Implementation (Modules 16-19)
 
 These modules have source files created but need export:
 
 | Module | Name | Purpose | Priority |
 |--------|------|---------|----------|
-| 15 | **Profiling** | Performance measurement tools | 🔴 High |
-| 16 | **Acceleration** | Optimization techniques | 🟡 Medium |
+| 16 | **Acceleration** | Optimization techniques | 🔴 High |
 | 17 | **Quantization** | Model compression (INT8/FP16) | 🟡 Medium |
 | 18 | **Compression** | Pruning and distillation | 🟢 Low |
 | 19 | **Benchmarking** | Fair performance comparison | 🟢 Low |
