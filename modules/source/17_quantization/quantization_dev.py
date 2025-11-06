@@ -13,7 +13,6 @@
 # ---
 
 #| default_exp optimization.quantization
-#| export
 
 # %% [markdown]
 """
@@ -63,9 +62,9 @@ from tinytorch.optimization.quantization import quantize_int8, QuantizedLinear, 
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
+#| export
 import numpy as np
 import time
-import matplotlib.pyplot as plt
 from typing import Tuple, Dict, List, Optional
 import warnings
 
@@ -727,7 +726,6 @@ Regular Linear Layer:           QuantizedLinear Layer:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "quantized_linear", "solution": true}
-#| export
 class QuantizedLinear:
     """Quantized version of Linear layer using INT8 arithmetic."""
 
@@ -2119,6 +2117,106 @@ if __name__ == "__main__":
     print("🚀 Running Quantization module...")
     test_module()
     print("✅ Module validation complete!")
+
+# %% [markdown]
+"""
+## 🏁 Consolidated Quantization Classes for Export
+
+Now that we've implemented all quantization components, let's create consolidated classes
+for export to the tinytorch package. This allows milestones to use the complete quantization system.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "quantization_export", "solution": false}
+#| export
+class QuantizationComplete:
+    """
+    Complete quantization system for milestone use.
+    
+    Provides INT8 quantization with calibration for 4× memory reduction.
+    """
+    
+    @staticmethod
+    def quantize_tensor(tensor: Tensor) -> Tuple[Tensor, float, int]:
+        """Quantize FP32 tensor to INT8."""
+        data = tensor.data
+        min_val = float(np.min(data))
+        max_val = float(np.max(data))
+        
+        if abs(max_val - min_val) < 1e-8:
+            return Tensor(np.zeros_like(data, dtype=np.int8)), 1.0, 0
+        
+        scale = (max_val - min_val) / 255.0
+        zero_point = int(np.round(-128 - min_val / scale))
+        zero_point = int(np.clip(zero_point, -128, 127))
+        
+        quantized_data = np.round(data / scale + zero_point)
+        quantized_data = np.clip(quantized_data, -128, 127).astype(np.int8)
+        
+        return Tensor(quantized_data), scale, zero_point
+    
+    @staticmethod
+    def dequantize_tensor(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
+        """Dequantize INT8 tensor back to FP32."""
+        dequantized_data = (q_tensor.data.astype(np.float32) - zero_point) * scale
+        return Tensor(dequantized_data)
+    
+    @staticmethod
+    def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> Dict[str, any]:
+        """
+        Quantize all Linear layers in a model.
+        
+        Returns dictionary with quantization info and memory savings.
+        """
+        quantized_layers = {}
+        original_size = 0
+        quantized_size = 0
+        
+        # Iterate through model parameters
+        if hasattr(model, 'parameters'):
+            for i, param in enumerate(model.parameters()):
+                param_size = param.data.nbytes
+                original_size += param_size
+                
+                # Quantize parameter
+                q_param, scale, zp = QuantizationComplete.quantize_tensor(param)
+                quantized_size += q_param.data.nbytes
+                
+                quantized_layers[f'param_{i}'] = {
+                    'quantized': q_param,
+                    'scale': scale,
+                    'zero_point': zp,
+                    'original_shape': param.data.shape
+                }
+        
+        return {
+            'quantized_layers': quantized_layers,
+            'original_size_mb': original_size / (1024 * 1024),
+            'quantized_size_mb': quantized_size / (1024 * 1024),
+            'compression_ratio': original_size / quantized_size if quantized_size > 0 else 1.0
+        }
+    
+    @staticmethod
+    def compare_models(original_model, quantized_info: Dict) -> Dict[str, float]:
+        """Compare memory usage between original and quantized models."""
+        return {
+            'original_mb': quantized_info['original_size_mb'],
+            'quantized_mb': quantized_info['quantized_size_mb'],
+            'compression_ratio': quantized_info['compression_ratio'],
+            'memory_saved_mb': quantized_info['original_size_mb'] - quantized_info['quantized_size_mb']
+        }
+
+# Convenience functions for backward compatibility
+def quantize_int8(tensor: Tensor) -> Tuple[Tensor, float, int]:
+    """Quantize FP32 tensor to INT8."""
+    return QuantizationComplete.quantize_tensor(tensor)
+
+def dequantize_int8(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
+    """Dequantize INT8 tensor back to FP32."""
+    return QuantizationComplete.dequantize_tensor(q_tensor, scale, zero_point)
+
+def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> Dict[str, any]:
+    """Quantize entire model to INT8."""
+    return QuantizationComplete.quantize_model(model, calibration_data)
 
 # %% [markdown]
 """
