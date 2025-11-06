@@ -411,25 +411,25 @@ class TinyGPT:
                 from tinytorch.generation.kv_cache import enable_kv_cache, disable_kv_cache
                 
                 # Enable caching on this model (non-invasive enhancement!)
-                cache = enable_kv_cache(self)
+                # If already enabled, just reset it; otherwise enable fresh
+                if hasattr(self, '_cache_enabled') and self._cache_enabled:
+                    cache = self._kv_cache
+                    cache.reset()
+                else:
+                    cache = enable_kv_cache(self)
                 
                 console.print("[green]✓[/green] KV caching enabled! (Module 14 enhancement)")
                 console.print(f"[dim]   Architecture: {cache.num_layers} layers × {cache.num_heads} heads[/dim]")
                 console.print(f"[dim]   Memory: {cache.get_memory_usage()['total_mb']:.2f} MB cache[/dim]")
                 console.print()
                 
-                #NOTE: The current implementation demonstrates the CONCEPT of caching:
-                # - Cache structure is created and managed
-                # - Model is patched with cache-aware attention
-                # - Students learn non-invasive optimization patterns
-                #
-                # For REAL 10-15x speedup, the attention forward would need to:
-                # 1. Check if generating (single token) vs training (full sequence)
-                # 2. Only compute K,V for new token, retrieve history from cache
-                # 3. Update cache after each layer's attention
-                #
-                # This requires deeper attention integration, which we save for advanced
-                # students to implement as an extension project!
+                # Initialize cache with prompt
+                # Process prompt tokens one by one to populate cache
+                for i in range(len(indices)):
+                    token_input = Tensor(np.array([[indices[i]]]))
+                    _ = self.forward(token_input)  # Populates cache as side effect
+                    if hasattr(self, '_kv_cache'):
+                        self._kv_cache.advance()
                 
             except ImportError as e:
                 console.print(f"[yellow]⚠️  Module 14 (KV Caching) not available: {e}[/yellow]")
@@ -438,12 +438,17 @@ class TinyGPT:
         
         # Standard generation (or fallback from cache)
         # Generate tokens one at a time
-        for _ in range(max_new_tokens):
-            # Get last max_seq_len tokens (context window)
-            context = indices[-self.max_seq_len:]
-            
-            # Prepare input: (1, seq_len)
-            x_input = Tensor(np.array([context]))
+        for step in range(max_new_tokens):
+            if use_cache and hasattr(self, '_cache_enabled') and self._cache_enabled:
+                # CACHED GENERATION: Only process new token
+                # Get just the last token (cache handles history)
+                new_token = indices[-1:]
+                x_input = Tensor(np.array([new_token]))
+            else:
+                # STANDARD GENERATION: Process full context
+                # Get last max_seq_len tokens (context window)
+                context = indices[-self.max_seq_len:]
+                x_input = Tensor(np.array([context]))
             
             # Forward pass
             logits = self.forward(x_input)
@@ -460,6 +465,10 @@ class TinyGPT:
             
             # Append to sequence
             indices.append(next_idx)
+            
+            # Advance cache position if using cache
+            if use_cache and hasattr(self, '_kv_cache'):
+                self._kv_cache.advance()
             
             # Stop if we generate newline after "A:"
             if len(indices) > 3 and tokenizer.decode(indices[-3:]) == "\n\nQ":
