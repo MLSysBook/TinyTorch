@@ -41,8 +41,9 @@ from .commands.grade import GradeCommand
 from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
-from .commands.leaderboard import LeaderboardCommand
+from .commands.community import CommunityCommand
 from .commands.olympics import OlympicsCommand
+from .commands.submit import SubmitCommand
 from .commands.setup import SetupCommand
 
 # Configure logging
@@ -74,8 +75,9 @@ class TinyTorchCLI:
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
             'milestone': MilestoneCommand,
-            'leaderboard': LeaderboardCommand,
+            'community': CommunityCommand,
             'olympics': OlympicsCommand,
+            'submit': SubmitCommand,
             # Convenience commands
             'notebooks': NotebooksCommand,
             'export': ExportCommand,
@@ -100,8 +102,9 @@ Command Groups:
   nbgrader     Assignment management and auto-grading commands
   checkpoint   Track ML systems engineering progress through checkpoints
   milestone    Epic capability achievements and ML systems mastery
-  leaderboard  Join the inclusive community, share progress, celebrate achievements
+  community    Join the community, share progress, celebrate achievements together
   olympics     Special competition events with focused challenges and recognition
+  submit       Validate and submit TinyMLPerf competition entry
 
 Convenience Commands:
   export      Export modules to package (quick shortcut)
@@ -219,8 +222,9 @@ Examples:
                     "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
                     "  [bold green]checkpoint[/bold green]   - Track ML systems engineering progress\n"
                     "  [bold magenta]milestone[/bold magenta]    - Epic capability achievements and ML mastery\n"
-                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Join the inclusive community, share progress\n"
-                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Special competition events and recognition\n\n"
+                    "  [bold bright_blue]community[/bold bright_blue]   - Join the community, share progress together\n"
+                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Special competition events and recognition\n"
+                    "  [bold bright_green]submit[/bold bright_green]       - Submit TinyMLPerf competition entry\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
                     "  [bold green]export[/bold green]      - Export modules to package\n"
                     "  [bold green]test[/bold green]        - Run tests\n"
