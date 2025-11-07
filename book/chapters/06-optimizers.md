@@ -8,18 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Module: Optimizers
+# 06. Optimizers
 
-```{div} badges
-⭐⭐⭐⭐ | ⏱️ 6-8 hours
-```
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
 
-
-## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐ Expert
-- **Time Estimate**: 6-8 hours
-- **Prerequisites**: Tensor, Autograd modules
-- **Next Steps**: Training, MLOps modules
+## Overview
 
 Build intelligent optimization algorithms that enable effective neural network training. This module implements the learning algorithms that power modern AI—from basic gradient descent to advanced adaptive methods that make training large-scale models possible.
 

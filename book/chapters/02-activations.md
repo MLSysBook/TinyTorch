@@ -8,20 +8,13 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Module: Activations
+# 02. Activations
 
-```{div} badges
-⭐⭐ | ⏱️ 3-4 hours
-```
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐ (2/4) | Time: 3-4 hours
 
+## Overview
 
-## 📊 Module Info
-- **Difficulty**: ⭐⭐ Intermediate
-- **Time Estimate**: 3-4 hours
-- **Prerequisites**: Tensor module
-- **Next Steps**: Layers module
-
-Welcome to the **Activations** module! This is where you'll implement the mathematical functions that give neural networks their power to learn complex patterns. Without activation functions, neural networks would just be linear transformations—with them, you unlock the ability to learn any function.
+Implement the mathematical functions that give neural networks their power to learn complex patterns. Without activation functions, neural networks would just be linear transformations—with them, you unlock the ability to learn any function.
 
 ## 🎯 Learning Objectives
 
