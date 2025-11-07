@@ -155,7 +155,7 @@ from contextlib import contextmanager
 import warnings
 
 # Import Profiler from Module 15 for measurement reuse
-from tinytorch.profiling.profiler import ProfilerComplete
+from tinytorch.profiling.profiler import Profiler
 
 # %% [markdown]
 """
@@ -165,18 +165,18 @@ We'll build a comprehensive benchmarking system that handles statistical analysi
 
 The architecture follows a hierarchical design:
 ```
-ProfilerComplete (Module 15) ← Base measurement tools
+Profiler (Module 15) ← Base measurement tools
        ↓
 BenchmarkResult ← Statistical container for measurements
        ↓
-Benchmark ← Uses ProfilerComplete + adds multi-model comparison
+Benchmark ← Uses Profiler + adds multi-model comparison
        ↓
 BenchmarkSuite ← Multi-metric comprehensive evaluation
        ↓
 TinyMLPerf ← Standardized industry-style benchmarks
 ```
 
-**Key Architectural Decision**: The `Benchmark` class reuses `ProfilerComplete` from Module 15 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
+**Key Architectural Decision**: The `Benchmark` class reuses `Profiler` from Module 15 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
 
 Each level adds capability while maintaining statistical rigor at the foundation.
 """
@@ -521,8 +521,8 @@ class Benchmark:
         self.measurement_runs = measurement_runs
         self.results = {}
         
-        # Use ProfilerComplete from Module 15 for measurements
-        self.profiler = ProfilerComplete()
+        # Use Profiler from Module 15 for measurements
+        self.profiler = Profiler()
 
         # System information for metadata
         self.system_info = {
@@ -534,7 +534,7 @@ class Benchmark:
         }
 
     def run_latency_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
-        """Benchmark model inference latency using ProfilerComplete."""
+        """Benchmark model inference latency using Profiler."""
         results = {}
 
         for i, model in enumerate(self.models):
@@ -548,7 +548,7 @@ class Benchmark:
                 # Fallback for simple models
                 input_tensor = np.random.randn(*input_shape).astype(np.float32)
 
-            # Use ProfilerComplete to measure latency with proper warmup and iterations
+            # Use Profiler to measure latency with proper warmup and iterations
             try:
                 latency_ms = self.profiler.measure_latency(
                     model, 
@@ -557,7 +557,7 @@ class Benchmark:
                     iterations=self.measurement_runs
                 )
                 
-                # ProfilerComplete returns single median value
+                # Profiler returns single median value
                 # For BenchmarkResult, we need multiple measurements
                 # Run additional measurements for statistical analysis
                 latencies = []
@@ -628,7 +628,7 @@ class Benchmark:
         return results
 
     def run_memory_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
-        """Benchmark model memory usage using ProfilerComplete."""
+        """Benchmark model memory usage using Profiler."""
         results = {}
 
         for i, model in enumerate(self.models):
@@ -637,7 +637,7 @@ class Benchmark:
 
             for run in range(self.measurement_runs):
                 try:
-                    # Use ProfilerComplete to measure memory
+                    # Use Profiler to measure memory
                     memory_stats = self.profiler.measure_memory(model, input_shape)
                     # Use peak_memory_mb as the primary metric
                     memory_used = memory_stats['peak_memory_mb']
