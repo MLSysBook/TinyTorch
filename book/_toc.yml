@@ -47,7 +47,7 @@ parts:
   - file: chapters/08-dataloader
     title: "08. DataLoader"
   - file: chapters/09-spatial
-    title: "09. Spatial"
+    title: "09. Spatial (CNNs)"
   - file: chapters/10-tokenization
     title: "10. Tokenization"
   - file: chapters/11-embeddings
@@ -75,7 +75,7 @@ parts:
 - caption: 🏅 Capstone Project
   chapters:
   - file: chapters/20-capstone
-    title: "20. AI Olympics"
+    title: "20. MLPerfEdu Competition"
 
 - caption: 🌍 Community
   chapters:
