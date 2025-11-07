@@ -8,18 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Module: Layers
+# 03. Layers
 
-```{div} badges
-⭐⭐ | ⏱️ 4-5 hours
-```
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
 
-
-## 📊 Module Info
-- **Difficulty**: ⭐⭐ Intermediate
-- **Time Estimate**: 4-5 hours
-- **Prerequisites**: Tensor, Activations modules
-- **Next Steps**: Networks module
+## Overview
 
 Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.
 

@@ -8,18 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Module: Autograd
+# 05. Autograd
 
-```{div} badges
-⭐⭐⭐⭐ | ⏱️ 8-10 hours
-```
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
 
-
-## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐ Advanced
-- **Time Estimate**: 6-8 hours
-- **Prerequisites**: Tensor, Activations, Layers modules
-- **Next Steps**: Training, Optimizers modules
+## Overview
 
 Build the automatic differentiation engine that makes neural network training possible. This module implements the mathematical foundation that enables backpropagation—transforming TinyTorch from a static computation library into a dynamic, trainable ML framework.
 

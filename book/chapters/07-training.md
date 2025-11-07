@@ -8,18 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Module: Training
+# 07. Training
 
-```{div} badges
-⭐⭐⭐⭐ | ⏱️ 8-10 hours
-```
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 8-10 hours
 
-
-## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐ Expert
-- **Time Estimate**: 8-10 hours
-- **Prerequisites**: Tensor, Activations, Layers, Networks, DataLoader, Autograd, Optimizers modules
-- **Next Steps**: Compression, Kernels, Benchmarking, MLOps modules
+## Overview
 
 Build the complete training pipeline that brings all TinyTorch components together. This capstone module orchestrates data loading, model forward passes, loss computation, backpropagation, and optimization into the end-to-end training workflows that power modern AI systems.
 
