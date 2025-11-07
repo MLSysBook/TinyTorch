@@ -1,360 +1,422 @@
 ---
 title: "Training"
-description: "Neural network training loops, loss functions, and metrics"
-difficulty: "⭐⭐⭐⭐"
-time_estimate: "8-10 hours"
-prerequisites: []
-next_steps: []
-learning_objectives: []
+description: "Complete training loops with validation, checkpointing, and metrics"
+module_number: 7
+tier: "foundation"
+difficulty: "intermediate"
+time_estimate: "4-5 hours"
+prerequisites: ["01-06"]
+next_module: "08. DataLoader"
+learning_objectives:
+  - "Understand training loops as orchestrated sequences of forward pass, loss, backward pass, and optimization"
+  - "Implement complete training workflows with validation and progress tracking"
+  - "Build checkpointing systems for model saving and recovery"
+  - "Recognize training dynamics: overfitting, convergence, and learning curves"
+  - "Analyze training efficiency and debugging strategies for failed training"
 ---
 
-# Module: Training
+# 07. Training
 
-```{div} badges
-⭐⭐⭐⭐ | ⏱️ 8-10 hours
-```
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 2rem; font-weight: 600;">
+Foundation Tier | Module 07 of 20
+</div>
 
+**Build end-to-end training loops that tie all components together.**
 
-## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐ Expert
-- **Time Estimate**: 8-10 hours
-- **Prerequisites**: Tensor, Activations, Layers, Networks, DataLoader, Autograd, Optimizers modules
-- **Next Steps**: Compression, Kernels, Benchmarking, MLOps modules
+Difficulty: Intermediate | Time: 4-5 hours | Prerequisites: Modules 01-06
 
-Build the complete training pipeline that brings all TinyTorch components together. This capstone module orchestrates data loading, model forward passes, loss computation, backpropagation, and optimization into the end-to-end training workflows that power modern AI systems.
+---
 
-## 🎯 Learning Objectives
+## What You'll Build
 
-By the end of this module, you will be able to:
+Training loops orchestrate all components (models, losses, optimizers, data) into a cohesive system that improves models through iterative learning.
 
-- **Design complete training architectures**: Orchestrate all ML components into cohesive training systems
-- **Implement essential loss functions**: Build MSE, CrossEntropy, and BinaryCrossEntropy from mathematical foundations
-- **Create evaluation frameworks**: Develop metrics systems for classification, regression, and model performance assessment
-- **Build production training loops**: Implement robust training workflows with validation, logging, and progress tracking
-- **Master training dynamics**: Understand convergence, overfitting, generalization, and optimization in real scenarios
+By the end of this module, you'll have implemented:
 
-## 🧠 Build → Use → Optimize
+- **Training Loop** - Iterate over data, compute loss, backpropagate, update parameters
+- **Validation** - Evaluate model performance on held-out data
+- **Checkpointing** - Save and load model state for recovery
+- **Metrics Tracking** - Monitor loss, accuracy, and learning curves
 
-This module follows TinyTorch's **Build → Use → Optimize** framework:
-
-1. **Build**: Implement loss functions, evaluation metrics, and complete training orchestration systems
-2. **Use**: Train end-to-end neural networks on real datasets with full pipeline automation
-3. **Optimize**: Analyze training dynamics, debug convergence issues, and optimize training performance for production
-
-## 🎯 NEW: Model Checkpointing & Evaluation Tools
-
-### Complete Training with Checkpointing
-This module now includes production features for our north star goal:
+### Example Usage
 
 ```python
-from tinytorch.core.training import Trainer, CrossEntropyLoss, Accuracy
-from tinytorch.core.training import evaluate_model, plot_training_history
+from tinytorch.training import Trainer
+from tinytorch.nn import MLP
+from tinytorch.optim import Adam
 
-# Train with automatic model checkpointing
-trainer = Trainer(model, CrossEntropyLoss(), Adam(lr=0.001), [Accuracy()])
-history = trainer.fit(
-    train_loader,
-    val_dataloader=test_loader,
-    epochs=30,
-    save_best=True,                    # ✅ NEW: Saves best model automatically
-    checkpoint_path='best_model.pkl',  # ✅ NEW: Checkpoint location
-    early_stopping_patience=5          # ✅ NEW: Stop if no improvement
-)
+# Setup
+model = MLP([784, 128, 10])
+optimizer = Adam(model.parameters(), lr=0.001)
 
-# Load best model after training
-trainer.load_checkpoint('best_model.pkl')
-print(f"✅ Restored best model from epoch {trainer.current_epoch}")
-
-# Evaluate with comprehensive metrics
-results = evaluate_model(model, test_loader)
-print(f"Test Accuracy: {results['accuracy']:.2%}")
-print(f"Confusion Matrix:\n{results['confusion_matrix']}")
-
-# Visualize training progress
-plot_training_history(history)  # Shows loss and accuracy curves
-```
-
-### What's New in This Module
-- ✅ **`save_checkpoint()`/`load_checkpoint()`**: Save and restore model state during training
-- ✅ **`save_best=True`**: Automatically saves model with best validation performance
-- ✅ **`early_stopping_patience`**: Stop training when validation loss stops improving
-- ✅ **`evaluate_model()`**: Comprehensive model evaluation with confusion matrix
-- ✅ **`plot_training_history()`**: Visualize training and validation curves
-- ✅ **`compute_confusion_matrix()`**: Analyze classification errors by class
-
-## 📚 What You'll Build
-
-### Complete Training Pipeline
-```python
-# End-to-end training system
-from tinytorch.core.training import Trainer
-from tinytorch.core.losses import CrossEntropyLoss
-from tinytorch.core.metrics import Accuracy
-
-# Define complete model architecture
-model = Sequential([
-    Dense(784, 128), ReLU(),
-    Dense(128, 64), ReLU(),
-    Dense(64, 10), Softmax()
-])
-
-# Configure training components
-optimizer = Adam(model.parameters(), learning_rate=0.001)
-loss_fn = CrossEntropyLoss()
-metrics = [Accuracy()]
-
-# Create and configure trainer
+# Create trainer
 trainer = Trainer(
     model=model,
-    optimizer=optimizer, 
-    loss_fn=loss_fn,
-    metrics=metrics
+    optimizer=optimizer,
+    loss_fn=CrossEntropyLoss()
 )
 
-# Train with comprehensive monitoring
+# Train for 10 epochs
 history = trainer.fit(
-    train_dataloader=train_loader,
-    val_dataloader=val_loader,
-    epochs=50,
-    verbose=True
+    train_loader=train_loader,
+    val_loader=val_loader,
+    epochs=10,
+    save_best=True
 )
+
+# Training automatically:
+# - Iterates over batches
+# - Computes forward pass and loss
+# - Runs backward pass
+# - Updates parameters
+# - Tracks metrics
+# - Saves checkpoints
 ```
 
-### Loss Function Library
-```python
-# Regression loss for continuous targets
-mse_loss = MeanSquaredError()
-regression_loss = mse_loss(predictions, continuous_targets)
+---
 
-# Multi-class classification loss
-ce_loss = CrossEntropyLoss()
-classification_loss = ce_loss(logits, class_indices)
+## Learning Pattern: Build → Use → Understand
 
-# Binary classification loss
-bce_loss = BinaryCrossEntropyLoss()
-binary_loss = bce_loss(sigmoid_outputs, binary_labels)
+### 1. Build
+Implement training loops with proper gradient management, validation evaluation, and checkpointing logic.
 
-# All losses support batch processing and gradient computation
-loss.backward()  # Automatic differentiation integration
-```
+### 2. Use
+Train neural networks on real datasets, observing convergence behavior and model improvement over epochs.
 
-### Evaluation Metrics System
-```python
-# Classification performance measurement
-accuracy = Accuracy()
-acc_score = accuracy(predictions, true_labels)  # Returns 0.0 to 1.0
+### 3. Understand
+Grasp training dynamics (overfitting, underfitting), debugging strategies (gradient magnitudes, loss curves), and best practices (early stopping, learning rate schedules).
 
-# Regression error measurement  
-mae = MeanAbsoluteError()
-error = mae(predictions, targets)
+---
 
-# Extensible metric framework
-class CustomMetric:
-    def __call__(self, y_pred, y_true):
-        # Implement custom evaluation logic
-        return custom_score
+## Learning Objectives
 
-metrics = [Accuracy(), CustomMetric()]
-trainer = Trainer(model, optimizer, loss_fn, metrics)
-```
+By completing this module, you will:
 
-### Real-World Training Workflows
-```python
-# Train on CIFAR-10 with full pipeline
-from tinytorch.core.dataloader import CIFAR10Dataset, DataLoader
+1. **Systems Understanding**: Recognize training as an iterative optimization process that balances computational efficiency with model improvement
 
-# Load and prepare data
-train_dataset = CIFAR10Dataset("data/cifar10/", train=True, download=True)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
+2. **Core Implementation**: Build complete training loops with batching, validation, checkpointing, and metric tracking
 
-# Configure CNN for computer vision
-cnn_model = Sequential([
-    Conv2D(3, 16, kernel_size=3), ReLU(),
-    MaxPool2D(kernel_size=2),
-    Conv2D(16, 32, kernel_size=3), ReLU(),
-    Flatten(),
-    Dense(32 * 13 * 13, 128), ReLU(),
-    Dense(128, 10)
-])
+3. **Pattern Recognition**: Understand the train/val split pattern, epoch/batch iteration structure, and checkpoint saving strategies
 
-# Train with monitoring and validation
-trainer = Trainer(cnn_model, Adam(cnn_model.parameters()), CrossEntropyLoss(), [Accuracy()])
-history = trainer.fit(train_loader, val_loader, epochs=100)
+4. **Framework Connection**: See how your Trainer mirrors PyTorch's training scripts and TensorFlow's `model.fit()`
 
-# Analyze training results
-print(f"Final train accuracy: {history['train_accuracy'][-1]:.4f}")
-print(f"Final val accuracy: {history['val_accuracy'][-1]:.4f}")
-```
+5. **Performance Trade-offs**: Analyze batch size impact (larger = faster but more memory), validation frequency (more frequent = better monitoring but slower), and checkpoint storage
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
-Ensure you have completed the entire TinyTorch foundation:
+## Why This Matters
+
+### Production Context
+
+Training loops are where ML engineering meets reality:
+
+- **Computer Vision**: Train ResNets for days on ImageNet (1.2M images, 1000 classes)
+- **NLP**: Pre-train BERT for weeks on massive text corpora
+- **Recommendation**: Train embeddings on billions of user-item interactions
+- **Robotics**: Train RL policies over millions of simulation episodes
+
+Efficient, robust training loops are critical infrastructure. A bug can waste days of GPU time.
+
+### Systems Reality Check
+
+**Performance Note**: Training is I/O bound (data loading) or compute bound (forward/backward). Profiling reveals bottlenecks. GPU utilization below 80% often indicates data loading issues.
+
+**Memory Note**: Batch size is constrained by GPU memory. A 1GB model with batch size 32 might require 8GB GPU memory (model + activations + gradients + optimizer state).
+
+---
+
+## Implementation Guide
+
+### Prerequisites Check
 
 ```bash
-# Activate TinyTorch environment
-source bin/activate-tinytorch.sh
-
-# Verify all prerequisite modules (this is the capstone!)
-tito test --module tensor
-tito test --module activations  
-tito test --module layers
-tito test --module networks
-tito test --module dataloader
-tito test --module autograd
-tito test --module optimizers
+tito test 01 02 03 04 05 06
 ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/source/10_training/training_dev.py`
-2. **Implement loss functions**: Build MSE, CrossEntropy, and BinaryCrossEntropy with proper gradients
-3. **Create metrics system**: Develop Accuracy and extensible evaluation framework
-4. **Build Trainer class**: Orchestrate training loop with validation and monitoring
-5. **Test end-to-end training**: Apply complete pipeline to real datasets and problems
-6. **Export and verify**: `tito export --module training && tito test --module training`
-
-## 🧪 Testing Your Implementation
-
-### Comprehensive Test Suite
-Run the full test suite to verify complete training system functionality:
 
 ```bash
-# TinyTorch CLI (recommended)
-tito test --module training
-
-# Direct pytest execution
-python -m pytest tests/ -k training -v
+cd modules/source/07_training/
+jupyter lab training_dev.py
 ```
 
-### Test Coverage Areas
-- ✅ **Loss Function Implementation**: Verify mathematical correctness and gradient computation
-- ✅ **Metrics System**: Test accuracy calculation and extensible framework
-- ✅ **Training Loop Orchestration**: Ensure proper coordination of all components
-- ✅ **End-to-End Training**: Verify complete workflows on real datasets
-- ✅ **Convergence Analysis**: Test training dynamics and optimization behavior
+### Step-by-Step Build
 
-### Inline Testing & Training Analysis
-The module includes comprehensive training validation and convergence monitoring:
+#### Step 1: Basic Training Loop
+
+Core training iteration:
+
 ```python
-# Example inline test output
-🔬 Unit Test: CrossEntropy loss function...
-✅ Mathematical correctness verified
-✅ Gradient computation working
-✅ Batch processing supported
-📈 Progress: Loss Functions ✓
-
-# Training monitoring
-🔬 Unit Test: Complete training pipeline...
-✅ Trainer orchestrates all components correctly
-✅ Training loop converges on test problem
-✅ Validation monitoring working
-📈 Progress: End-to-End Training ✓
-
-# Real dataset training
-📊 Training on CIFAR-10 subset...
-Epoch 1/10: train_loss=2.345, train_acc=0.234, val_loss=2.123, val_acc=0.278
-Epoch 5/10: train_loss=1.456, train_acc=0.567, val_loss=1.543, val_acc=0.523
-✅ Model converging successfully
+def train_epoch(model, dataloader, optimizer, loss_fn):
+    """Train for one epoch"""
+    total_loss = 0.0
+    
+    for batch_x, batch_y in dataloader:
+        # Forward pass
+        predictions = model.forward(batch_x)
+        loss = loss_fn.forward(predictions, batch_y)
+        
+        # Backward pass
+        loss.backward()
+        
+        # Update parameters
+        optimizer.step()
+        optimizer.zero_grad()
+        
+        total_loss += loss.data
+    
+    avg_loss = total_loss / len(dataloader)
+    return avg_loss
 ```
 
-### Manual Testing Examples
-```python
-from training_dev import Trainer, CrossEntropyLoss, Accuracy
-from networks_dev import Sequential
-from layers_dev import Dense
-from activations_dev import ReLU, Softmax
-from optimizers_dev import Adam
+**Pattern**: Forward → Loss → Backward → Update. This is the heartbeat of training.
 
-# Test complete training on synthetic data
-model = Sequential([Dense(4, 8), ReLU(), Dense(8, 3), Softmax()])
-optimizer = Adam(model.parameters(), learning_rate=0.01)
+#### Step 2: Validation Loop
+
+Evaluate without gradients:
+
+```python
+def validate(model, dataloader, loss_fn):
+    """Evaluate model on validation data"""
+    total_loss = 0.0
+    correct = 0
+    total = 0
+    
+    for batch_x, batch_y in dataloader:
+        # Forward pass only (no backward)
+        predictions = model.forward(batch_x)
+        loss = loss_fn.forward(predictions, batch_y)
+        
+        # Compute accuracy
+        pred_labels = np.argmax(predictions.data, axis=1)
+        correct += np.sum(pred_labels == batch_y.data)
+        total += len(batch_y.data)
+        
+        total_loss += loss.data
+    
+    avg_loss = total_loss / len(dataloader)
+    accuracy = correct / total
+    return avg_loss, accuracy
+```
+
+**Key difference**: No backward pass, no parameter updates. Validation measures generalization to unseen data.
+
+#### Step 3: Complete Trainer
+
+Orchestrate training:
+
+```python
+class Trainer:
+    def __init__(self, model, optimizer, loss_fn):
+        self.model = model
+        self.optimizer = optimizer
+        self.loss_fn = loss_fn
+        self.history = {'train_loss': [], 'val_loss': [], 'val_acc': []}
+    
+    def fit(self, train_loader, val_loader, epochs=10, save_best=True):
+        """Complete training workflow"""
+        best_val_loss = float('inf')
+        
+        for epoch in range(epochs):
+            # Training
+            train_loss = self.train_epoch(train_loader)
+            
+            # Validation
+            val_loss, val_acc = self.validate(val_loader)
+            
+            # Track metrics
+            self.history['train_loss'].append(train_loss)
+            self.history['val_loss'].append(val_loss)
+            self.history['val_acc'].append(val_acc)
+            
+            # Print progress
+            print(f"Epoch {epoch+1}/{epochs} - "
+                  f"train_loss: {train_loss:.4f} - "
+                  f"val_loss: {val_loss:.4f} - "
+                  f"val_acc: {val_acc:.4f}")
+            
+            # Save best model
+            if save_best and val_loss < best_val_loss:
+                best_val_loss = val_loss
+                self.save_checkpoint(f'best_model.pkl')
+        
+        return self.history
+```
+
+**Design pattern**: Separate train/validate logic, track history, save checkpoints. Production-grade training.
+
+#### Step 4: Checkpointing
+
+Save and restore model state:
+
+```python
+def save_checkpoint(self, filepath):
+    """Save model parameters"""
+    state = {
+        'parameters': [p.data for p in self.model.parameters()],
+        'optimizer_state': self.optimizer.state_dict() if hasattr(self.optimizer, 'state_dict') else None
+    }
+    with open(filepath, 'wb') as f:
+        pickle.dump(state, f)
+
+def load_checkpoint(self, filepath):
+    """Restore model parameters"""
+    with open(filepath, 'rb') as f:
+        state = pickle.load(f)
+    for p, data in zip(self.model.parameters(), state['parameters']):
+        p.data = data
+```
+
+**Why checkpointing matters**: Training can crash (OOM, power loss). Checkpoints enable recovery. Also used for model deployment.
+
+---
+
+## Testing Your Implementation
+
+### Inline Tests
+
+```python
+# Test training step
+model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
+optimizer = Adam(model.parameters(), lr=0.01)
 loss_fn = CrossEntropyLoss()
-metrics = [Accuracy()]
 
-trainer = Trainer(model, optimizer, loss_fn, metrics)
+# Create fake batch
+batch_x = Tensor(np.random.randn(8, 10))
+batch_y = Tensor(np.random.randint(0, 2, 8))
 
-# Create simple dataset
-from dataloader_dev import SimpleDataset, DataLoader
-train_dataset = SimpleDataset(size=1000, num_features=4, num_classes=3)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+# Training step
+predictions = model.forward(batch_x)
+loss_before = loss_fn.forward(predictions, batch_y).data
 
-# Train and monitor
-history = trainer.fit(train_loader, epochs=20, verbose=True)
-print(f"Training completed. Final accuracy: {history['train_accuracy'][-1]:.4f}")
+loss = loss_fn.forward(predictions, batch_y)
+loss.backward()
+optimizer.step()
+
+# Loss should decrease
+predictions_after = model.forward(batch_x)
+loss_after = loss_fn.forward(predictions_after, batch_y).data
+assert loss_after < loss_before
+print("✓ Training step working")
 ```
 
-## 🎯 Key Concepts
+### Module Export & Validation
 
-### Real-World Applications
-- **Production ML Systems**: Companies like Netflix, Google use similar training pipelines for recommendation and search systems
-- **Research Workflows**: Academic researchers use training frameworks like this for experimental model development
-- **MLOps Platforms**: Production training systems extend these patterns with distributed computing and monitoring
-- **Edge AI Training**: Federated learning systems use similar orchestration patterns across distributed devices
-
-### Training System Architecture
-- **Loss Functions**: Mathematical objectives that define what the model should learn
-- **Metrics**: Human-interpretable measures of model performance for monitoring and decision-making
-- **Training Loop**: Orchestration pattern that coordinates data loading, forward passes, backward passes, and optimization
-- **Validation Strategy**: Techniques for monitoring generalization and preventing overfitting
-
-### Machine Learning Engineering
-- **Training Dynamics**: Understanding convergence, overfitting, underfitting, and optimization landscapes
-- **Hyperparameter Tuning**: Systematic approaches to learning rate, batch size, and architecture selection
-- **Debugging Training**: Common failure modes and diagnostic techniques for training issues
-- **Production Considerations**: Scalability, monitoring, reproducibility, and deployment readiness
-
-### Systems Integration Patterns
-- **Component Orchestration**: How to coordinate multiple ML components into cohesive systems
-- **Error Handling**: Robust handling of training failures, data issues, and convergence problems
-- **Monitoring and Logging**: Tracking training progress, performance metrics, and system health
-- **Extensibility**: Design patterns that enable easy addition of new losses, metrics, and training strategies
-
-## 🎉 Ready to Build?
-
-You're about to complete the TinyTorch framework by building the training system that brings everything together! This is where all your hard work on tensors, layers, networks, data loading, gradients, and optimization culminates in a complete ML system.
-
-Training is the heart of machine learning—it's where models learn from data and become intelligent. You're building the same patterns used to train GPT, train computer vision models, and power production AI systems. Take your time, understand how all the pieces fit together, and enjoy creating something truly powerful!
-
- 
-
-
-Choose your preferred way to engage with this module:
-
-````{grid} 1 2 3 3
-
-```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/11_training/training_dev.ipynb
-:class-header: bg-light
-
-Run this module interactively in your browser. No installation required!
+```bash
+tito export 07
+tito test 07
 ```
 
-```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/11_training/training_dev.ipynb
-:class-header: bg-light
-
-Use Google Colab for GPU access and cloud compute power.
+**Expected output**:
 ```
-
-```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/11_training/training_dev.py
-:class-header: bg-light
-
-Browse the Python source code and understand the implementation.
-```
-
-````
-
-```{admonition} 💾 Save Your Progress
-:class: tip
-**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
-
+✓ All tests passed! [15/15]
+✓ Module 07 complete!
 ```
 
 ---
 
-<div class="prev-next-area">
-<a class="left-prev" href="../chapters/10_autograd.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/12_training.html" title="next page">Next Module →</a>
-</div>
+## Where This Code Lives
+
+Training ties everything together:
+
+```python
+# Complete TinyTorch training pipeline
+from tinytorch.training import Trainer
+from tinytorch.nn import MLP
+from tinytorch.optim import Adam
+from tinytorch.core.losses import CrossEntropyLoss
+from tinytorch.data import DataLoader
+
+# Everything you built comes together here:
+model = MLP([784, 128, 10])  # Module 03: Layers
+optimizer = Adam(model.parameters())  # Module 06: Optimizers
+loss_fn = CrossEntropyLoss()  # Module 04: Losses
+train_loader = DataLoader(...)  # Module 08: DataLoader
+
+trainer = Trainer(model, optimizer, loss_fn)
+history = trainer.fit(train_loader, val_loader, epochs=10)
+```
+
+**Package structure**:
+```
+tinytorch/
+├── training/
+│   ├── trainer.py  ← YOUR training loop
+├── optim/
+│   ├── optimizers.py
+├── core/
+│   ├── losses.py
+```
+
+---
+
+## Systems Thinking Questions
+
+1. **Batch Size Trade-off**: Larger batches are more efficient (better GPU utilization) but use more memory. How would you choose batch size for a given GPU? What about distributed training across multiple GPUs?
+
+2. **Validation Frequency**: Validating every epoch is expensive for large datasets. When would you validate less frequently (every N epochs)? What information do you lose?
+
+3. **Overfitting Detection**: Training loss decreases but validation loss increases. What does this mean? How would you address it (regularization, dropout, early stopping)?
+
+4. **Learning Rate Scheduling**: Why do practitioners decay learning rate during training? When should you reduce it (fixed schedule vs validation plateau)?
+
+5. **Checkpoint Strategy**: Saving every epoch uses disk space. Save only best model? Last N epochs? What if validation loss is noisy?
+
+---
+
+## Real-World Connections
+
+### Industry Training Workflows
+
+- **ImageNet Classification**: Train for 90 epochs, reduce LR at epochs 30/60/90
+- **BERT Pre-training**: Train for 1M steps, checkpoint every 10K steps, ~1 week on 64 TPUs
+- **GPT-3**: Train for 300B tokens, checkpoint frequently due to long training time
+- **Recommendation Systems**: Online training - update models continuously as new data arrives
+
+### Production Challenges
+
+- **GPU OOM**: Batch size too large, reduce or use gradient accumulation
+- **Loss Spikes**: Learning rate too high or bad batch, reduce LR
+- **Slow Convergence**: Learning rate too low or poor initialization
+- **NaN Loss**: Exploding gradients, use gradient clipping
+
+---
+
+## Foundation Tier Complete!
+
+**Congratulations!** You've built the entire mathematical engine of machine learning. You now have:
+
+- ✅ Tensors and operations
+- ✅ Activation functions
+- ✅ Neural network layers
+- ✅ Loss functions
+- ✅ Automatic differentiation
+- ✅ Optimizers
+- ✅ Complete training loops
+
+### Unlock Your First Milestone
+
+You can now run the **1957: Rosenblatt's Perceptron** milestone:
+
+```bash
+python milestones/01_1957_perceptron/perceptron_digits.py
+```
+
+This uses YOUR implementations to recreate the first trainable neural network!
+
+---
+
+## What's Next?
+
+**You're ready for Intelligence Tier!** Now you'll build systems that process real data—vision and language.
+
+**Module 08: DataLoader** - Build efficient data pipelines for loading and preprocessing datasets
+
+[Continue to Module 08: DataLoader →](08-dataloader.html)
+
+---
+
+**Need Help?**
+- [Ask in GitHub Discussions](https://github.com/mlsysbook/TinyTorch/discussions)
+- [View Training API Reference](../appendices/api-reference.html#training)
+- [Report Issues](https://github.com/mlsysbook/TinyTorch/issues)
