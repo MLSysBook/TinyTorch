@@ -1,377 +1,274 @@
 ---
 title: "Optimizers"
-description: "Gradient-based optimization algorithms (SGD, Momentum, Adam)"
-module_number: 6
-tier: "foundation"
-difficulty: "intermediate"
-time_estimate: "4-5 hours"
-prerequisites: ["01. Tensor", "05. Autograd"]
-next_module: "07. Training"
-learning_objectives:
-  - "Understand gradient descent as iterative parameter updates guided by loss gradients"
-  - "Implement SGD with momentum and Adam with adaptive learning rates"
-  - "Build learning rate schedulers for training stability and convergence"
-  - "Recognize optimizer design patterns from PyTorch and TensorFlow"
-  - "Analyze memory usage and convergence behavior of different optimizers"
+description: "Gradient-based parameter optimization algorithms"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "6-8 hours"
+prerequisites: []
+next_steps: []
+learning_objectives: []
 ---
 
-# 06. Optimizers
+# Module: Optimizers
 
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 2rem; font-weight: 600;">
-Foundation Tier | Module 06 of 20
-</div>
-
-**Build algorithms that use gradients to train neural networks.**
-
-Difficulty: Intermediate | Time: 4-5 hours | Prerequisites: Modules 01, 05
-
----
-
-## What You'll Build
-
-Optimizers are algorithms that update model parameters using gradients. They're the "learning" in machine learning—the mechanism that improves models over time.
-
-By the end of this module, you'll have implemented three essential optimizers:
-
-- **SGD** (Stochastic Gradient Descent) - The foundation of neural network training
-- **SGD with Momentum** - Accelerated convergence with velocity accumulation
-- **Adam** (Adaptive Moment Estimation) - Adaptive learning rates per parameter
-
-### Example Usage
-
-```python
-from tinytorch.optim import SGD, Momentum, Adam
-from tinytorch.nn import MLP
-
-# Create model
-model = MLP([784, 128, 10])
-
-# Create optimizer
-optimizer = Adam(model.parameters(), lr=0.001)
-
-# Training loop
-for batch in dataloader:
-    # Forward pass
-    predictions = model.forward(batch_x)
-    loss = loss_fn.forward(predictions, batch_y)
-    
-    # Backward pass
-    loss.backward()
-    
-    # Update parameters
-    optimizer.step()
-    optimizer.zero_grad()
+```{div} badges
+⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```
 
----
 
-## Learning Pattern: Build → Use → Understand
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐⭐ Expert
+- **Time Estimate**: 6-8 hours
+- **Prerequisites**: Tensor, Autograd modules
+- **Next Steps**: Training, MLOps modules
 
-### 1. Build
-Implement gradient descent, momentum, and Adam optimizers following their mathematical update rules.
+Build intelligent optimization algorithms that enable effective neural network training. This module implements the learning algorithms that power modern AI—from basic gradient descent to advanced adaptive methods that make training large-scale models possible.
 
-### 2. Use
-Apply optimizers to train neural networks, observing convergence behavior and training dynamics.
+## 🎯 Learning Objectives
 
-### 3. Understand
-Grasp why different optimizers converge at different rates, how adaptive learning rates help, and when to use each optimizer.
+By the end of this module, you will be able to:
 
----
+- **Master gradient-based optimization theory**: Understand how gradients guide parameter updates and the mathematical foundations of learning
+- **Implement core optimization algorithms**: Build SGD, momentum, and Adam optimizers from mathematical first principles
+- **Design learning rate strategies**: Create scheduling systems that balance convergence speed with training stability
+- **Apply optimization in practice**: Use optimizers effectively in complete training workflows with real neural networks
+- **Analyze optimization dynamics**: Compare algorithm behavior, convergence patterns, and performance characteristics
 
-## Learning Objectives
+## 🧠 Build → Use → Optimize
 
-By completing this module, you will:
+This module follows TinyTorch's **Build → Use → Optimize** framework:
 
-1. **Systems Understanding**: Recognize optimizers as iterative algorithms that navigate loss landscapes using gradient information
+1. **Build**: Implement gradient descent, SGD with momentum, Adam optimizer, and learning rate scheduling from mathematical foundations
+2. **Use**: Apply optimization algorithms to train neural networks and solve real optimization problems
+3. **Optimize**: Analyze convergence behavior, compare algorithm performance, and tune hyperparameters for optimal training
 
-2. **Core Implementation**: Build SGD, Momentum, and Adam with proper parameter update logic and state management
+## 📚 What You'll Build
 
-3. **Pattern Recognition**: Understand the progression from SGD → Momentum (add velocity) → Adam (add adaptive learning rates)
+### Core Optimization Algorithms
+```python
+# Gradient descent foundation
+def gradient_descent_step(parameter, learning_rate):
+    parameter.data = parameter.data - learning_rate * parameter.grad.data
 
-4. **Framework Connection**: See how your optimizers mirror PyTorch's `torch.optim.SGD` and `torch.optim.Adam`
+# SGD with momentum for accelerated convergence
+sgd = SGD(parameters=[w1, w2, bias], learning_rate=0.01, momentum=0.9)
+sgd.zero_grad()  # Clear previous gradients
+loss.backward()  # Compute new gradients
+sgd.step()       # Update parameters
 
-5. **Performance Trade-offs**: Analyze memory overhead (Adam uses 2x parameter memory for momentum/velocity) and convergence speed
+# Adam optimizer with adaptive learning rates
+adam = Adam(parameters=[w1, w2, bias], learning_rate=0.001, beta1=0.9, beta2=0.999)
+adam.zero_grad()
+loss.backward()
+adam.step()      # Adaptive updates per parameter
+```
 
----
+### Learning Rate Scheduling Systems
+```python
+# Strategic learning rate adjustment
+scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
 
-## Why This Matters
+# Training loop with scheduling
+for epoch in range(num_epochs):
+    for batch in dataloader:
+        optimizer.zero_grad()
+        loss = criterion(model(batch.inputs), batch.targets)
+        loss.backward()
+        optimizer.step()
+    
+    scheduler.step()  # Adjust learning rate each epoch
+    print(f"Epoch {epoch}, LR: {scheduler.get_last_lr()}")
+```
 
-### Production Context
+### Complete Training Integration
+```python
+# Modern training workflow
+model = Sequential([Dense(784, 128), ReLU(), Dense(128, 10)])
+optimizer = Adam(model.parameters(), learning_rate=0.001)
+scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
 
-Every trained model uses an optimizer:
+# Training loop with optimization
+for epoch in range(num_epochs):
+    for batch_inputs, batch_targets in dataloader:
+        # Forward pass
+        predictions = model(batch_inputs)
+        loss = criterion(predictions, batch_targets)
+        
+        # Optimization step
+        optimizer.zero_grad()  # Clear gradients
+        loss.backward()        # Compute gradients
+        optimizer.step()       # Update parameters
+    
+    scheduler.step()  # Adjust learning rate
+```
 
-- **Computer Vision**: SGD with momentum is standard for training CNNs (ResNet, YOLO)
-- **NLP**: Adam is preferred for transformers (BERT, GPT) due to adaptive learning rates
-- **Reinforcement Learning**: Adam with gradient clipping for policy optimization
-- **Recommendation Systems**: Adam for faster convergence on large datasets
+### Optimization Algorithm Implementations
+- **Gradient Descent**: Basic parameter update rule using gradients
+- **SGD with Momentum**: Velocity accumulation for smoother convergence
+- **Adam Optimizer**: Adaptive learning rates with bias correction
+- **Learning Rate Scheduling**: Strategic adjustment during training
 
-Choosing the right optimizer and learning rate can be the difference between convergence and failure.
+## 🚀 Getting Started
 
-### Systems Reality Check
-
-**Performance Note**: SGD is O(n) for n parameters (just one update per parameter). Adam is also O(n) but requires 2x memory to store momentum and velocity states.
-
-**Memory Note**: Adam stores first and second moments for each parameter. For GPT-3 (175B parameters × 4 bytes each), Adam requires 700GB additional memory just for optimizer state!
-
----
-
-## Implementation Guide
-
-### Prerequisites Check
+### Prerequisites
+Ensure you understand the mathematical foundations:
 
 ```bash
-tito test 01 05
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
+
+# Verify prerequisite modules
+tito test --module tensor
+tito test --module autograd
 ```
 
 ### Development Workflow
+1. **Open the development file**: `modules/source/09_optimizers/optimizers_dev.py`
+2. **Implement gradient descent**: Start with basic parameter update mechanics
+3. **Build SGD with momentum**: Add velocity accumulation for acceleration
+4. **Create Adam optimizer**: Implement adaptive learning rates with moment estimation
+5. **Add learning rate scheduling**: Build strategic learning rate adjustment systems
+6. **Export and verify**: `tito export --module optimizers && tito test --module optimizers`
+
+## 🧪 Testing Your Implementation
+
+### Comprehensive Test Suite
+Run the full test suite to verify optimization algorithm correctness:
 
 ```bash
-cd modules/source/06_optimizers/
-jupyter lab optimizers_dev.py
+# TinyTorch CLI (recommended)
+tito test --module optimizers
+
+# Direct pytest execution
+python -m pytest tests/ -k optimizers -v
 ```
 
-### Step-by-Step Build
+### Test Coverage Areas
+- ✅ **Algorithm Implementation**: Verify SGD, momentum, and Adam compute correct parameter updates
+- ✅ **Mathematical Correctness**: Test against analytical solutions for convex optimization
+- ✅ **State Management**: Ensure proper momentum and moment estimation tracking
+- ✅ **Learning Rate Scheduling**: Verify step decay and scheduling functionality
+- ✅ **Training Integration**: Test optimizers in complete neural network training workflows
 
-#### Step 1: Stochastic Gradient Descent (SGD)
-
-The foundation of optimization:
-
+### Inline Testing & Convergence Analysis
+The module includes comprehensive mathematical validation and convergence visualization:
 ```python
-class SGD:
-    def __init__(self, parameters, lr=0.01):
-        """
-        SGD: θ = θ - lr * ∇L
-        
-        Args:
-            parameters: List of Tensors to optimize
-            lr: Learning rate (step size)
-        """
-        self.parameters = parameters
-        self.lr = lr
-    
-    def step(self):
-        """Update parameters using gradients"""
-        for param in self.parameters:
-            if param.grad is not None:
-                param.data -= self.lr * param.grad.data
-    
-    def zero_grad(self):
-        """Clear accumulated gradients"""
-        for param in self.parameters:
-            if param.grad is not None:
-                param.grad = None
+# Example inline test output
+🔬 Unit Test: SGD with momentum...
+✅ Parameter updates follow momentum equations
+✅ Velocity accumulation works correctly
+✅ Convergence achieved on test function
+📈 Progress: SGD with Momentum ✓
+
+# Optimization analysis
+🔬 Unit Test: Adam optimizer...
+✅ First moment estimation (m_t) computed correctly
+✅ Second moment estimation (v_t) computed correctly  
+✅ Bias correction applied properly
+✅ Adaptive learning rates working
+📈 Progress: Adam Optimizer ✓
 ```
 
-**Key insight**: SGD moves parameters in the direction that reduces loss (negative gradient direction).
-
-**Learning rate**: Too large causes divergence, too small is slow. Typical range: 0.1 to 0.0001.
-
-#### Step 2: SGD with Momentum
-
-Accelerate optimization using velocity:
-
+### Manual Testing Examples
 ```python
-class Momentum:
-    def __init__(self, parameters, lr=0.01, momentum=0.9):
-        """
-        Momentum: v = β*v + ∇L, θ = θ - lr*v
-        
-        Args:
-            momentum: Velocity decay factor (typically 0.9)
-        """
-        self.parameters = parameters
-        self.lr = lr
-        self.momentum = momentum
-        self.velocities = [np.zeros_like(p.data) for p in parameters]
-    
-    def step(self):
-        """Update with momentum"""
-        for param, velocity in zip(self.parameters, self.velocities):
-            if param.grad is not None:
-                # Update velocity
-                velocity[:] = (self.momentum * velocity + 
-                              param.grad.data)
-                # Update parameter
-                param.data -= self.lr * velocity
+from optimizers_dev import SGD, Adam, StepLR
+from autograd_dev import Variable
+
+# Test SGD on simple quadratic function
+x = Variable(10.0, requires_grad=True)
+sgd = SGD([x], learning_rate=0.1, momentum=0.9)
+
+for step in range(100):
+    sgd.zero_grad()
+    loss = x**2  # Minimize f(x) = x²
+    loss.backward()
+    sgd.step()
+    if step % 10 == 0:
+        print(f"Step {step}: x = {x.data:.4f}, loss = {loss.data:.4f}")
+
+# Test Adam convergence
+x = Variable([2.0, -3.0], requires_grad=True)
+adam = Adam([x], learning_rate=0.01)
+
+for step in range(50):
+    adam.zero_grad()
+    loss = (x[0]**2 + x[1]**2).sum()  # Minimize ||x||²
+    loss.backward()
+    adam.step()
+    if step % 10 == 0:
+        print(f"Step {step}: x = {x.data}, loss = {loss.data:.6f}")
 ```
 
-**Why momentum helps**: Accumulates gradients over time, smoothing noisy updates and accelerating convergence in consistent directions.
+## 🎯 Key Concepts
 
-**Physics analogy**: Like a ball rolling downhill, building momentum in steep directions.
+### Real-World Applications
+- **Large Language Models**: GPT, BERT training relies on Adam optimization for stable convergence
+- **Computer Vision**: ResNet, Vision Transformer training uses SGD with momentum for best final performance
+- **Recommendation Systems**: Online learning systems use adaptive optimizers for continuous model updates
+- **Reinforcement Learning**: Policy gradient methods depend on careful optimizer choice and learning rate tuning
 
-#### Step 3: Adam (Adaptive Moment Estimation)
+### Mathematical Foundations
+- **Gradient Descent**: θ_{t+1} = θ_t - α∇L(θ_t) where α is learning rate and ∇L is loss gradient
+- **Momentum**: v_{t+1} = βv_t + ∇L(θ_t), θ_{t+1} = θ_t - αv_{t+1} for accelerated convergence
+- **Adam**: Combines momentum with adaptive learning rates using first and second moment estimates
+- **Learning Rate Scheduling**: Strategic decay schedules balance exploration and exploitation
 
-Adaptive per-parameter learning rates:
+### Optimization Theory
+- **Convex Optimization**: Guarantees global minimum for convex loss functions
+- **Non-convex Optimization**: Neural networks have complex loss landscapes with local minima
+- **Convergence Analysis**: Understanding when and why optimization algorithms reach good solutions
+- **Hyperparameter Sensitivity**: Learning rate is often the most critical hyperparameter
 
-```python
-class Adam:
-    def __init__(self, parameters, lr=0.001, betas=(0.9, 0.999), eps=1e-8):
-        """
-        Adam: Combines momentum + RMSprop
-        
-        Args:
-            betas: (β1, β2) for momentum and RMSprop
-            eps: Small constant for numerical stability
-        """
-        self.parameters = parameters
-        self.lr = lr
-        self.beta1, self.beta2 = betas
-        self.eps = eps
-        
-        # State for each parameter
-        self.m = [np.zeros_like(p.data) for p in parameters]  # First moment
-        self.v = [np.zeros_like(p.data) for p in parameters]  # Second moment
-        self.t = 0  # Timestep
-    
-    def step(self):
-        """Adam update with bias correction"""
-        self.t += 1
-        
-        for param, m_t, v_t in zip(self.parameters, self.m, self.v):
-            if param.grad is not None:
-                g = param.grad.data
-                
-                # Update biased moments
-                m_t[:] = self.beta1 * m_t + (1 - self.beta1) * g
-                v_t[:] = self.beta2 * v_t + (1 - self.beta2) * (g ** 2)
-                
-                # Bias correction
-                m_hat = m_t / (1 - self.beta1 ** self.t)
-                v_hat = v_t / (1 - self.beta2 ** self.t)
-                
-                # Update parameter
-                param.data -= self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
+### Performance Characteristics
+- **SGD**: Memory efficient, works well with large batches, good final performance
+- **Adam**: Fast initial convergence, works with small batches, requires more memory
+- **Learning Rate Schedules**: Often crucial for achieving best performance
+- **Algorithm Selection**: Problem-dependent choice based on data, model, and computational constraints
+
+## 🎉 Ready to Build?
+
+You're about to implement the algorithms that power all of modern AI! From the neural networks that recognize your voice to the language models that write code, they all depend on the optimization algorithms you're building.
+
+Understanding these algorithms from first principles—implementing momentum physics and adaptive learning rates yourself—will give you deep insight into why some training works and some doesn't. Take your time with the mathematics, test thoroughly, and enjoy building the intelligence behind intelligent systems!
+
+
+
+
+Choose your preferred way to engage with this module:
+
+````{grid} 1 2 3 3
+
+```{grid-item-card} 🚀 Launch Binder
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/10_optimizers/optimizers_dev.ipynb
+:class-header: bg-light
+
+Run this module interactively in your browser. No installation required!
 ```
 
-**Key innovation**: Adapts learning rate per parameter based on gradient history. Parameters with large gradients get smaller effective learning rates.
+```{grid-item-card} ⚡ Open in Colab  
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/10_optimizers/optimizers_dev.ipynb
+:class-header: bg-light
 
-**Why transformers use Adam**: Sparse gradients (many zeros) benefit from adaptive rates. Adam handles varying gradient scales across parameters.
-
----
-
-## Testing Your Implementation
-
-### Inline Tests
-
-```python
-# Test SGD update
-params = [Tensor([1.0, 2.0], requires_grad=True)]
-params[0].grad = Tensor([0.1, 0.2])
-sgd = SGD(params, lr=0.1)
-sgd.step()
-assert abs(params[0].data[0] - 0.99) < 1e-6  # 1.0 - 0.1*0.1
-print("✓ SGD working")
-
-# Test Momentum
-params = [Tensor([1.0], requires_grad=True)]
-params[0].grad = Tensor([1.0])
-momentum = Momentum(params, lr=0.1, momentum=0.9)
-momentum.step()  # First step
-params[0].grad = Tensor([1.0])
-momentum.step()  # Second step accumulates
-print("✓ Momentum working")
-
-# Test Adam
-params = [Tensor([1.0], requires_grad=True)]
-params[0].grad = Tensor([1.0])
-adam = Adam(params, lr=0.001)
-adam.step()
-assert params[0].data[0] < 1.0  # Should decrease
-print("✓ Adam working")
+Use Google Colab for GPU access and cloud compute power.
 ```
 
-### Module Export & Validation
+```{grid-item-card} 📖 View Source
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/10_optimizers/optimizers_dev.py
+:class-header: bg-light
 
-```bash
-tito export 06
-tito test 06
+Browse the Python source code and understand the implementation.
 ```
 
-**Expected output**:
-```
-✓ All tests passed! [18/18]
-✓ Module 06 complete!
+````
+
+```{admonition} 💾 Save Your Progress
+:class: tip
+**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
+
 ```
 
 ---
 
-## Where This Code Lives
-
-Optimizers drive all training:
-
-```python
-from tinytorch.optim import Adam
-from tinytorch.nn import MLP
-from tinytorch.core.losses import CrossEntropyLoss
-
-# Complete training setup
-model = MLP([784, 128, 10])
-optimizer = Adam(model.parameters(), lr=0.001)
-loss_fn = CrossEntropyLoss()
-
-# Training loop
-for epoch in range(10):
-    for batch_x, batch_y in dataloader:
-        predictions = model.forward(batch_x)
-        loss = loss_fn.forward(predictions, batch_y)
-        loss.backward()
-        optimizer.step()
-        optimizer.zero_grad()
-```
-
-**Package structure**:
-```
-tinytorch/
-├── optim/
-│   ├── optimizers.py  ← YOUR implementations
-├── core/
-│   ├── autograd.py  (computes gradients)
-```
-
----
-
-## Systems Thinking Questions
-
-1. **Learning Rate Impact**: What happens if learning rate is too large? Too small? How would you detect each case during training?
-
-2. **Momentum Trade-off**: Momentum accelerates convergence but can overshoot minima. When would you use lower momentum (< 0.9)? Higher momentum (> 0.9)?
-
-3. **Adam Memory Cost**: Adam stores two states per parameter (m, v). For GPT-3 with 175B parameters, how much additional memory does Adam require? Is this significant?
-
-4. **Optimizer Selection**: SGD generalizes better than Adam on some vision tasks. Why might adaptive learning rates hurt generalization? When would you choose SGD over Adam?
-
-5. **Learning Rate Scheduling**: Why do practitioners decay learning rate during training (e.g., reduce by 10x at epochs 30, 60, 90)? What problem does this solve?
-
----
-
-## Real-World Connections
-
-### Industry Applications
-
-- **ResNet Training**: SGD with momentum (0.9), learning rate 0.1 → 0.01 → 0.001
-- **BERT Pre-training**: Adam with lr=1e-4, β1=0.9, β2=0.999
-- **GPT-3 Training**: Adam with gradient clipping (norm < 1.0)
-- **Stable Diffusion**: AdamW (Adam + weight decay) with lr=1e-4
-
-### Optimization Challenges
-
-- **Saddle Points**: Momentum helps escape flat regions
-- **Gradient Noise**: Batch size affects gradient variance; larger batches → more stable
-- **Exploding Gradients**: Adam's adaptive rates provide robustness
-
----
-
-## What's Next?
-
-**Excellent progress!** You've built the algorithms that enable learning. Now you'll tie everything together into a complete training loop.
-
-**Module 07: Training** - Build end-to-end training loops with data loading, validation, and checkpointing
-
-[Continue to Module 07: Training →](07-training.html)
-
----
-
-**Need Help?**
-- [Ask in GitHub Discussions](https://github.com/mlsysbook/TinyTorch/discussions)
-- [View Optimizers API Reference](../appendices/api-reference.html#optimizers)
-- [Report Issues](https://github.com/mlsysbook/TinyTorch/issues)
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/09_dataloader.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/11_optimizers.html" title="next page">Next Module →</a>
+</div>
