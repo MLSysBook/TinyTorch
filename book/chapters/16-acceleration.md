@@ -15,7 +15,7 @@ learning_objectives:
 
 # 16. Acceleration
 
-**⚡ PERFORMANCE TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
+**⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
 
 ## Overview
 

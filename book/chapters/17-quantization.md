@@ -15,7 +15,7 @@ learning_objectives:
 
 # 17. Quantization
 
-**⚡ PERFORMANCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
+**⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
 ## Overview
 
