@@ -17,29 +17,38 @@
 
 # %% [markdown]
 """
-# Module 19: Benchmarking - Fair Performance Comparison Systems
+# Module 19: Benchmarking - TorchPerf Olympics Preparation
 
-Welcome to the final implementation module! Today you'll build a comprehensive benchmarking system that can fairly compare different ML approaches across multiple dimensions.
+Welcome to the final implementation module! You've learned individual optimization techniques in Modules 14-18. Now you'll build the benchmarking infrastructure that powers **TorchPerf Olympics** - the capstone competition framework.
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Complete ML framework with profiling, acceleration, quantization, and compression
-**You'll Build**: Professional benchmarking suite with statistical rigor and automated reporting
-**You'll Enable**: Data-driven optimization decisions and performance regression detection
+**You'll Build**: TorchPerf benchmarking system for fair model comparison and capstone submission
+**You'll Enable**: Systematic optimization combination and competitive performance evaluation
 
 **Connection Map**:
 ```
-Profiling (Module 15) → Benchmarking (Module 19) → Systems Capstone (Milestone 5)
-(measurement)          (comparison)               (optimization)
+Individual Optimizations (M14-18) → Benchmarking (M19) → TorchPerf Olympics (Capstone)
+(techniques)                        (evaluation)         (competition)
 ```
+
+## 🏅 TorchPerf Olympics: The Capstone Framework
+
+The TorchPerf Olympics is your capstone competition! Choose your event:
+- 🏃 **Latency Sprint**: Minimize inference time (fastest model wins)
+- 🏋️ **Memory Challenge**: Minimize model size (smallest footprint wins)  
+- 🎯 **Accuracy Contest**: Maximize accuracy within constraints
+- 🏋️‍♂️ **All-Around**: Best balanced performance across all metrics
+- 🚀 **Extreme Push**: Most aggressive optimization while staying viable
 
 ## Learning Objectives
 By the end of this module, you will:
-1. Implement comprehensive benchmarking infrastructure with statistical analysis
-2. Build automated comparison systems across accuracy, latency, memory, and energy
-3. Create professional reporting with visualization and recommendations
-4. Integrate TinyMLPerf-style standardized benchmarks for reproducible results
+1. Implement professional benchmarking infrastructure with statistical rigor
+2. Learn to combine optimization techniques strategically (order matters!)
+3. Build the TorchPerf class - your standardized capstone submission framework
+4. Understand ablation studies and systematic performance evaluation
 
-Let's build the foundation for data-driven ML systems optimization!
+🔥 Carry the torch. Optimize the model. Win the gold! 🏅
 """
 
 # %% [markdown]
@@ -51,14 +60,19 @@ Let's build the foundation for data-driven ML systems optimization!
 
 ```python
 # How to use this module:
-from tinytorch.benchmarking.benchmark import Benchmark, BenchmarkSuite, TinyMLPerf
+from tinytorch.benchmarking.benchmark import Benchmark, OlympicEvent
+
+# For capstone submission:
+benchmark = Benchmark([baseline_model, optimized_model],
+                     [{"name": "baseline"}, {"name": "optimized"}])
+results = benchmark.run_latency_benchmark()
 ```
 
 **Why this matters:**
 - **Learning:** Complete benchmarking ecosystem in one focused module for rigorous evaluation
-- **Production:** Proper organization like MLPerf and TensorBoard profiling with all analysis tools together
+- **TorchPerf Olympics:** The Benchmark class provides the standardized framework for capstone submissions
 - **Consistency:** All benchmarking operations and reporting in benchmarking.benchmark
-- **Integration:** Works seamlessly with optimization modules for complete systems evaluation
+- **Integration:** Works seamlessly with optimization modules (M14-18) for complete systems evaluation
 """
 
 # %% [markdown]
@@ -156,6 +170,23 @@ import warnings
 
 # Import Profiler from Module 15 for measurement reuse
 from tinytorch.profiling.profiler import Profiler
+
+# %%
+#| export
+from enum import Enum
+
+class OlympicEvent(Enum):
+    """
+    TorchPerf Olympics event categories.
+    
+    Each event optimizes for different objectives with specific constraints.
+    Students choose their event and compete for medals!
+    """
+    LATENCY_SPRINT = "latency_sprint"      # Minimize latency (accuracy >= 85%)
+    MEMORY_CHALLENGE = "memory_challenge"   # Minimize memory (accuracy >= 85%)
+    ACCURACY_CONTEST = "accuracy_contest"   # Maximize accuracy (latency < 100ms, memory < 10MB)
+    ALL_AROUND = "all_around"               # Best balanced score across all metrics
+    EXTREME_PUSH = "extreme_push"           # Most aggressive optimization (accuracy >= 80%)
 
 # %% [markdown]
 """
@@ -1907,539 +1938,99 @@ test_unit_optimization_comparison()
 
 # %% [markdown]
 """
-# 5. Systems Analysis - Performance Engineering Insights
+## 4.5 Combination Strategies - Preparing for TorchPerf Olympics
 
-Let's analyze how our benchmarking system behaves under different conditions and reveal insights about measurement accuracy, system variability, and scalability patterns.
+You've learned individual optimizations (M14-18). Now it's time to combine them strategically! The order and parameters matter significantly for final performance.
 
-This analysis section demonstrates a key principle: **benchmark the benchmarking system itself**. Understanding how your measurement tools behave is crucial for interpreting results correctly.
+### Why Combination Order Matters
 
-## Why Analyze Measurement Systems?
+Consider these two strategies:
+- **Strategy A**: Quantize INT8 → Prune 70% → Fuse kernels
+- **Strategy B**: Prune 70% → Quantize INT8 → Fuse kernels
 
-Consider two scenarios:
-- **Scenario A**: Your measurements show Model B is 10% faster than Model A
-- **Scenario B**: Your measurements show Model B is 10% faster, but measurement uncertainty is ±15%
+Strategy A might preserve more accuracy because quantization happens first (on the full network), while Strategy B might be faster because pruning reduces what needs to be quantized. The "best" depends on your Olympic event!
 
-In Scenario A, you might deploy Model B. In Scenario B, the difference isn't statistically significant - you can't trust the comparison.
+### Ablation Studies: Understanding Individual Contributions
 
-Professional benchmarking requires understanding and quantifying measurement uncertainty.
+Professional ML engineers use **ablation studies** to understand what each optimization contributes:
+
+```
+Baseline:           Accuracy: 89%, Latency: 45ms, Memory: 12MB
++ Quantization:     Accuracy: 88%, Latency: 30ms, Memory: 3MB   (Δ: -1%, -33%, -75%)
++ Pruning:          Accuracy: 87%, Latency: 22ms, Memory: 2MB   (Δ: -1%, -27%, -33%)
++ Kernel Fusion:    Accuracy: 87%, Latency: 18ms, Memory: 2MB   (Δ: 0%, -18%, 0%)
+
+Conclusion: Quantization provides biggest memory reduction, fusion provides latency boost
+```
+
+This systematic analysis tells you what to prioritize for each Olympic event!
+
+### Olympic Event Strategies
+
+**🏃 Latency Sprint**: Minimize inference time
+- Priority: Kernel fusion > KV caching > Quantization > Pruning
+- Risk: Aggressive optimizations may hurt accuracy
+- Tip: Start with proven speed techniques, then add memory techniques if needed
+
+**🏋️ Memory Challenge**: Minimize model footprint
+- Priority: Quantization > Pruning > Compression
+- Risk: Model quality degradation
+- Tip: Quantize first (4x memory reduction), then prune to meet target
+
+**🎯 Accuracy Contest**: Maximize accuracy within constraints
+- Priority: Minimal optimizations, careful tuning
+- Risk: Not enough optimization to meet constraints
+- Tip: Use high-bit quantization (8-bit), light pruning (30-50%)
+
+**🏋️‍♂️ All-Around**: Best balanced performance
+- Priority: Balanced application of all techniques
+- Risk: Jack of all trades, master of none
+- Tip: Use moderate settings for each technique (INT8, 60% pruning, selective fusion)
+
+**🚀 Extreme Push**: Most aggressive optimization
+- Priority: Maximum of everything
+- Risk: Significant accuracy loss
+- Tip: Start with 4-bit quantization + 90% pruning, verify accuracy threshold
+
+### Example: Combining for All-Around Event
+
+```python
+from tinytorch.optimization.quantization import quantize_model
+from tinytorch.optimization.compression import magnitude_prune
+from tinytorch.generation.kv_cache import enable_kv_cache
+
+# Load baseline
+baseline_model = load_baseline("cifar10_cnn")
+
+# Apply balanced optimization strategy
+optimized = baseline_model
+
+# Step 1: Quantize to INT8 (moderate precision)
+optimized = quantize_model(optimized, bits=8)
+
+# Step 2: Prune 60% (moderate sparsity)
+optimized = magnitude_prune(optimized, sparsity=0.6)
+
+# Step 3: Enable KV cache for transformers (if applicable)
+if hasattr(optimized, 'transformer_blocks'):
+    enable_kv_cache(optimized)
+
+# Benchmark using TorchPerf
+from tinytorch.benchmarking.benchmark import Benchmark, OlympicEvent
+
+benchmark = Benchmark([baseline_model, optimized], 
+                     [{"name": "baseline"}, {"name": "optimized"}])
+
+results = benchmark.run_latency_benchmark()
+# Compare and iterate!
+```
+
+The key: **Start with one technique, measure impact, add next technique, repeat!**
 """
 
 # %% [markdown]
 """
-## Measurement Variance Analysis
-
-Understanding measurement variance is fundamental to statistical significance. This analysis reveals how sample size affects measurement reliability and helps determine optimal benchmark configurations.
-
-### Statistical Significance in Practice
-
-When you measure a model's latency multiple times, you get a distribution of values. The key insight: **more measurements reduce uncertainty about the true mean, but with diminishing returns**.
-
-```
-Measurement Variance Relationship:
-Standard Error = σ / √n
-
-Where:
-- σ = underlying measurement noise
-- n = number of samples
-- Standard Error = uncertainty in the estimated mean
-
-Doubling samples reduces uncertainty by √2 ≈ 1.41x
-10x samples reduces uncertainty by √10 ≈ 3.16x
-```
-
-### Variance Sources in ML Benchmarking
-
-**System-Level Variance**:
-- CPU frequency scaling (thermal throttling)
-- Background processes (OS scheduling)
-- Memory pressure (garbage collection)
-- Network traffic (for distributed models)
-
-**Algorithm-Level Variance**:
-- Input-dependent computation paths
-- Random initialization effects
-- Numerical precision variations
-
-**Measurement-Level Variance**:
-- Timer resolution and overhead
-- Function call overhead
-- Memory allocation patterns
-
-This analysis quantifies these effects and determines optimal measurement protocols.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "analyze-measurement-variance", "solution": true}
-def analyze_measurement_variance():
-    """📊 Analyze how measurement variance affects benchmark reliability."""
-    print("📊 Analyzing measurement variance and statistical significance...")
-
-    # Create a simple test model for consistent analysis
-    class TestModel:
-        def __init__(self, base_latency=0.001):
-            self.base_latency = base_latency
-            self.name = "test_model"
-
-        def forward(self, x):
-            # Add realistic variance sources
-            system_noise = np.random.normal(0, 0.0001)  # System noise
-            thermal_variance = np.random.normal(0, 0.00005)  # CPU frequency variation
-            time.sleep(max(0, self.base_latency + system_noise + thermal_variance))
-            return x
-
-    model = TestModel()
-
-    # Test different numbers of measurement runs
-    run_counts = [3, 5, 10, 20, 50, 100]
-    variance_results = []
-
-    for num_runs in run_counts:
-        benchmark = Benchmark([model], [{"data": "test"}],
-                            warmup_runs=2, measurement_runs=num_runs)
-
-        # Run multiple benchmark sessions to see variance between sessions
-        session_means = []
-        session_stds = []
-
-        for session in range(5):  # 5 different benchmark sessions
-            results = benchmark.run_latency_benchmark()
-            result = list(results.values())[0]
-            session_means.append(result.mean)
-            session_stds.append(result.std)
-
-        # Calculate variance across sessions
-        mean_of_means = np.mean(session_means)
-        std_of_means = np.std(session_means)
-        mean_of_stds = np.mean(session_stds)
-
-        variance_results.append({
-            'num_runs': num_runs,
-            'mean_latency': mean_of_means,
-            'std_between_sessions': std_of_means,
-            'mean_std_within_session': mean_of_stds,
-            'coefficient_of_variation': std_of_means / mean_of_means if mean_of_means > 0 else 0
-        })
-
-    # Plot results
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-
-    # Plot 1: Standard deviation vs number of runs
-    num_runs_list = [r['num_runs'] for r in variance_results]
-    between_session_std = [r['std_between_sessions'] * 1000 for r in variance_results]  # Convert to ms
-    within_session_std = [r['mean_std_within_session'] * 1000 for r in variance_results]
-
-    ax1.plot(num_runs_list, between_session_std, 'o-', label='Between Sessions', linewidth=2)
-    ax1.plot(num_runs_list, within_session_std, 's-', label='Within Session', linewidth=2)
-    ax1.set_xlabel('Number of Measurement Runs')
-    ax1.set_ylabel('Standard Deviation (ms)')
-    ax1.set_title('Measurement Variance vs Sample Size')
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-    ax1.set_xscale('log')
-
-    # Plot 2: Coefficient of variation
-    cv_values = [r['coefficient_of_variation'] * 100 for r in variance_results]
-    ax2.plot(num_runs_list, cv_values, 'o-', color='red', linewidth=2)
-    ax2.set_xlabel('Number of Measurement Runs')
-    ax2.set_ylabel('Coefficient of Variation (%)')
-    ax2.set_title('Measurement Reliability vs Sample Size')
-    ax2.grid(True, alpha=0.3)
-    ax2.set_xscale('log')
-
-    plt.tight_layout()
-    plt.show()
-
-    # Key insights
-    print("\n💡 Measurement Variance Analysis:")
-    print(f"With 10 runs: CV = {variance_results[2]['coefficient_of_variation']:.1%}")
-    print(f"With 50 runs: CV = {variance_results[4]['coefficient_of_variation']:.1%}")
-    print(f"With 100 runs: CV = {variance_results[5]['coefficient_of_variation']:.1%}")
-
-    if variance_results[4]['coefficient_of_variation'] < 0.05:
-        print("🚀 50+ runs provide stable measurements (CV < 5%)")
-    else:
-        print("⚠️  High variance detected - consider longer warmup or controlled environment")
-
-analyze_measurement_variance()
-
-# %% [markdown]
-"""
-## Benchmark Scaling Analysis
-
-Understanding how benchmark overhead scales with model complexity helps optimize measurement protocols and interpret results correctly.
-
-### Why Benchmark Overhead Matters
-
-Every measurement tool adds overhead. For benchmarking to be meaningful, this overhead must be:
-1. **Consistent**: Same overhead across different models
-2. **Minimal**: Small compared to what you're measuring
-3. **Predictable**: Understood so you can account for it
-
-### Overhead Analysis Framework
-
-```
-Total Measured Time = True Model Time + Benchmark Overhead
-
-Benchmark Overhead includes:
-├── Framework setup (model loading, input preparation)
-├── Timing infrastructure (context managers, precision counters)
-├── Result collection (statistics, metadata gathering)
-└── System interactions (memory allocation, Python overhead)
-```
-
-### Scaling Behavior Patterns
-
-**Good Scaling**: Overhead decreases as percentage of total time
-- Simple models: 20% overhead (still usable)
-- Complex models: 2% overhead (negligible)
-
-**Bad Scaling**: Overhead increases with model complexity
-- Indicates benchmark framework bottlenecks
-- Makes results unreliable for optimization decisions
-
-**Optimal Configuration**: Overhead < 5% for target model complexity range
-
-This analysis identifies the optimal benchmark configuration for different model types and deployment scenarios.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "analyze-scaling-behavior", "solution": true}
-def analyze_scaling_behavior():
-    """📊 Analyze how benchmark overhead scales with model and input complexity."""
-    print("📊 Analyzing benchmark overhead and scaling behavior...")
-
-    # Create models with different computational complexity
-    class ScalingTestModel:
-        def __init__(self, complexity_factor, name):
-            self.complexity_factor = complexity_factor
-            self.name = name
-
-        def forward(self, x):
-            # Simulate computational work proportional to complexity
-            base_time = 0.001  # 1ms base
-            compute_time = base_time * self.complexity_factor
-
-            # Simulate actual computation with matrix operations
-            if hasattr(x, 'shape'):
-                size = np.prod(x.shape)
-            else:
-                size = len(x) if hasattr(x, '__len__') else 100
-
-            # Simulate memory allocation and computation
-            temp_data = np.random.randn(int(size * self.complexity_factor))
-            _ = np.sum(temp_data * temp_data)  # Some computation
-
-            time.sleep(compute_time)
-            return x
-
-    # Models with different complexity
-    models = [
-        ScalingTestModel(1, "simple_model"),
-        ScalingTestModel(5, "medium_model"),
-        ScalingTestModel(20, "complex_model"),
-        ScalingTestModel(100, "very_complex_model")
-    ]
-
-    # Test different input sizes
-    input_sizes = [(1, 28, 28), (1, 64, 64), (1, 128, 128), (1, 256, 256)]
-
-    scaling_results = []
-
-    for input_shape in input_sizes:
-        print(f"Testing input shape: {input_shape}")
-
-        for model in models:
-            # Measure pure model time (without benchmark overhead)
-            dummy_input = np.random.randn(*input_shape).astype(np.float32)
-
-            pure_times = []
-            for _ in range(10):
-                with precise_timer() as timer:
-                    model.forward(dummy_input)
-                pure_times.append(timer.elapsed * 1000)
-
-            pure_mean = np.mean(pure_times)
-
-            # Measure with benchmark framework
-            benchmark = Benchmark([model], [{"data": "test"}],
-                                warmup_runs=3, measurement_runs=10)
-
-            bench_results = benchmark.run_latency_benchmark(input_shape)
-            bench_mean = list(bench_results.values())[0].mean
-
-            # Calculate overhead
-            overhead_ms = bench_mean - pure_mean
-            overhead_percent = (overhead_ms / pure_mean) * 100 if pure_mean > 0 else 0
-
-            scaling_results.append({
-                'input_size': np.prod(input_shape),
-                'model_complexity': model.complexity_factor,
-                'model_name': model.name,
-                'pure_latency_ms': pure_mean,
-                'benchmark_latency_ms': bench_mean,
-                'overhead_ms': overhead_ms,
-                'overhead_percent': overhead_percent
-            })
-
-    # Create DataFrame for analysis
-    df = pd.DataFrame(scaling_results)
-
-    # Plot results
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-
-    # Plot 1: Overhead vs model complexity
-    for input_size in [784, 4096, 16384, 65536]:  # Representative sizes
-        subset = df[df['input_size'] == input_size]
-        if not subset.empty:
-            ax1.plot(subset['model_complexity'], subset['overhead_percent'],
-                    'o-', label=f'Input size: {input_size}', linewidth=2)
-
-    ax1.set_xlabel('Model Complexity Factor')
-    ax1.set_ylabel('Benchmark Overhead (%)')
-    ax1.set_title('Benchmark Overhead vs Model Complexity')
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-    ax1.set_xscale('log')
-
-    # Plot 2: Absolute overhead vs input size
-    for complexity in [1, 5, 20, 100]:
-        subset = df[df['model_complexity'] == complexity]
-        if not subset.empty:
-            ax2.plot(subset['input_size'], subset['overhead_ms'],
-                    'o-', label=f'Complexity: {complexity}x', linewidth=2)
-
-    ax2.set_xlabel('Input Size (elements)')
-    ax2.set_ylabel('Benchmark Overhead (ms)')
-    ax2.set_title('Benchmark Overhead vs Input Size')
-    ax2.legend()
-    ax2.grid(True, alpha=0.3)
-    ax2.set_xscale('log')
-
-    plt.tight_layout()
-    plt.show()
-
-    # Analysis insights
-    print("\n💡 Scaling Behavior Analysis:")
-
-    # Find overhead patterns
-    high_complexity_overhead = df[df['model_complexity'] >= 20]['overhead_percent'].mean()
-    low_complexity_overhead = df[df['model_complexity'] <= 5]['overhead_percent'].mean()
-
-    print(f"Low complexity models: {low_complexity_overhead:.1f}% overhead")
-    print(f"High complexity models: {high_complexity_overhead:.1f}% overhead")
-
-    if high_complexity_overhead < 5:
-        print("🚀 Benchmark overhead is negligible for complex models")
-    elif low_complexity_overhead > 20:
-        print("⚠️  High overhead for simple models - consider optimization")
-    else:
-        print("✅ Benchmark scaling is appropriate for intended use cases")
-
-analyze_scaling_behavior()
-
-# %% [markdown]
-"""
-# 6. Optimization Insights - Trade-offs and Production Patterns
-
-Understanding the real-world implications of benchmarking decisions and how to optimize the measurement process itself for different use cases.
-
-This section addresses a meta-question: **How do you optimize the optimization process?** Different use cases need different measurement trade-offs.
-
-## Benchmarking Configuration Optimization
-
-Professional ML teams face a fundamental trade-off in benchmarking:
-- **More accurate measurements** require more time and resources
-- **Faster measurements** enable more iteration but with less precision
-- **Different development phases** need different measurement fidelity
-
-The goal: Find the minimum measurement overhead that provides sufficient confidence for decision-making.
-"""
-
-# %% [markdown]
-"""
-## Optimal Benchmark Configuration Analysis
-
-This analysis helps determine the right benchmark configuration for different development scenarios. It's a practical application of statistics to engineering workflow optimization.
-
-### The Measurement Fidelity Spectrum
-
-```
-Development Phase        Accuracy Need    Speed Need    Optimal Config
-─────────────────────────────────────────────────────────────────────
-Rapid prototyping        Low              High          Fast (5 runs)
-Feature development      Medium           Medium        Standard (20 runs)
-Performance optimization High             Low           Accurate (50 runs)
-Production validation    Very High        Very Low      Research (100+ runs)
-Regression testing       Medium           High          Automated (15 runs)
-```
-
-### Multi-Objective Optimization for Benchmarking
-
-We optimize across three competing objectives:
-1. **Accuracy**: How close to the true performance value
-2. **Precision**: How consistent are repeated measurements
-3. **Speed**: How quickly we get results
-
-```
-Benchmark Configuration Optimization:
-minimize: w₁×(accuracy_error) + w₂×(precision_error) + w₃×(time_cost)
-subject to: measurement_runs ≥ min_statistical_power
-           total_time ≤ max_allowed_time
-
-Where weights w₁, w₂, w₃ depend on use case
-```
-
-This analysis empirically determines optimal configurations for different scenarios.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "benchmark-optimization", "solution": true}
-def optimize_benchmark_configuration():
-    """📊 Find optimal benchmark configuration for different accuracy vs speed needs."""
-    print("📊 Optimizing benchmark configuration for different use cases...")
-
-    # Test model for configuration optimization
-    class ConfigTestModel:
-        def __init__(self):
-            self.name = "config_test_model"
-
-        def forward(self, x):
-            # Consistent baseline with small variance
-            time.sleep(0.002 + np.random.normal(0, 0.0001))
-            return x
-
-    model = ConfigTestModel()
-
-    # Test different configuration combinations
-    configurations = [
-        {'warmup': 1, 'runs': 5, 'name': 'fast'},
-        {'warmup': 3, 'runs': 10, 'name': 'standard'},
-        {'warmup': 5, 'runs': 20, 'name': 'accurate'},
-        {'warmup': 10, 'runs': 50, 'name': 'precise'},
-        {'warmup': 15, 'runs': 100, 'name': 'research'}
-    ]
-
-    config_results = []
-
-    # Ground truth: run very long benchmark to get "true" value
-    true_benchmark = Benchmark([model], [{"data": "test"}],
-                              warmup_runs=20, measurement_runs=200)
-    true_results = true_benchmark.run_latency_benchmark()
-    true_latency = list(true_results.values())[0].mean
-
-    print(f"Ground truth latency: {true_latency:.4f}s")
-
-    for config in configurations:
-        print(f"\nTesting {config['name']} configuration...")
-
-        # Run multiple trials with this configuration
-        trial_results = []
-        total_time_spent = []
-
-        for trial in range(8):  # 8 trials per configuration
-            start_time = time.time()
-
-            benchmark = Benchmark([model], [{"data": "test"}],
-                                warmup_runs=config['warmup'],
-                                measurement_runs=config['runs'])
-
-            results = benchmark.run_latency_benchmark()
-            measured_latency = list(results.values())[0].mean
-
-            end_time = time.time()
-
-            trial_results.append(measured_latency)
-            total_time_spent.append(end_time - start_time)
-
-        # Calculate accuracy and efficiency metrics
-        trial_mean = np.mean(trial_results)
-        trial_std = np.std(trial_results)
-        accuracy_error = abs(trial_mean - true_latency) / true_latency * 100
-        precision_cv = trial_std / trial_mean * 100 if trial_mean > 0 else 0
-        avg_benchmark_time = np.mean(total_time_spent)
-
-        config_results.append({
-            'name': config['name'],
-            'warmup_runs': config['warmup'],
-            'measurement_runs': config['runs'],
-            'total_runs': config['warmup'] + config['runs'],
-            'accuracy_error_percent': accuracy_error,
-            'precision_cv_percent': precision_cv,
-            'benchmark_time_s': avg_benchmark_time,
-            'efficiency_score': 100 / (accuracy_error + precision_cv + avg_benchmark_time * 10)  # Combined score
-        })
-
-    # Create comparison DataFrame
-    df = pd.DataFrame(config_results)
-
-    # Visualize trade-offs
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
-
-    # Plot 1: Accuracy vs Speed
-    ax1.scatter(df['benchmark_time_s'], df['accuracy_error_percent'],
-               s=100, alpha=0.7, c=df['total_runs'], cmap='viridis')
-    for i, name in enumerate(df['name']):
-        ax1.annotate(name, (df['benchmark_time_s'].iloc[i], df['accuracy_error_percent'].iloc[i]),
-                    xytext=(5, 5), textcoords='offset points')
-    ax1.set_xlabel('Benchmark Time (seconds)')
-    ax1.set_ylabel('Accuracy Error (%)')
-    ax1.set_title('Accuracy vs Speed Trade-off')
-    ax1.grid(True, alpha=0.3)
-
-    # Plot 2: Precision vs Speed
-    ax2.scatter(df['benchmark_time_s'], df['precision_cv_percent'],
-               s=100, alpha=0.7, c=df['total_runs'], cmap='viridis')
-    for i, name in enumerate(df['name']):
-        ax2.annotate(name, (df['benchmark_time_s'].iloc[i], df['precision_cv_percent'].iloc[i]),
-                    xytext=(5, 5), textcoords='offset points')
-    ax2.set_xlabel('Benchmark Time (seconds)')
-    ax2.set_ylabel('Precision CV (%)')
-    ax2.set_title('Precision vs Speed Trade-off')
-    ax2.grid(True, alpha=0.3)
-
-    # Plot 3: Efficiency comparison
-    ax3.bar(df['name'], df['efficiency_score'], alpha=0.7)
-    ax3.set_ylabel('Efficiency Score (higher = better)')
-    ax3.set_title('Overall Benchmark Efficiency')
-    ax3.tick_params(axis='x', rotation=45)
-
-    # Plot 4: Configuration breakdown
-    width = 0.35
-    x = np.arange(len(df))
-    ax4.bar(x - width/2, df['warmup_runs'], width, label='Warmup Runs', alpha=0.7)
-    ax4.bar(x + width/2, df['measurement_runs'], width, label='Measurement Runs', alpha=0.7)
-    ax4.set_xlabel('Configuration')
-    ax4.set_ylabel('Number of Runs')
-    ax4.set_title('Configuration Breakdown')
-    ax4.set_xticks(x)
-    ax4.set_xticklabels(df['name'])
-    ax4.legend()
-
-    plt.tight_layout()
-    plt.show()
-
-    # Generate recommendations
-    print("\n💡 Benchmark Configuration Recommendations:")
-
-    # Find best configurations for different use cases
-    best_fast = df.loc[df['benchmark_time_s'].idxmin()]
-    best_accurate = df.loc[df['accuracy_error_percent'].idxmin()]
-    best_precise = df.loc[df['precision_cv_percent'].idxmin()]
-    best_balanced = df.loc[df['efficiency_score'].idxmax()]
-
-    print(f"🚀 Fastest: {best_fast['name']} - {best_fast['benchmark_time_s']:.1f}s, {best_fast['accuracy_error_percent']:.1f}% error")
-    print(f"🎯 Most Accurate: {best_accurate['name']} - {best_accurate['accuracy_error_percent']:.1f}% error")
-    print(f"📊 Most Precise: {best_precise['name']} - {best_precise['precision_cv_percent']:.1f}% CV")
-    print(f"⚖️  Best Balanced: {best_balanced['name']} - efficiency score {best_balanced['efficiency_score']:.1f}")
-
-    print("\n🎯 Use Case Recommendations:")
-    print("- Development/debugging: Use 'fast' config for quick feedback")
-    print("- CI/CD pipelines: Use 'standard' config for reasonable accuracy/speed balance")
-    print("- Performance optimization: Use 'accurate' config for reliable comparisons")
-    print("- Research papers: Use 'precise' or 'research' config for publication-quality results")
-
-optimize_benchmark_configuration()
-
-# %% [markdown]
-"""
-# 7. Module Integration Test
+# 5. Module Integration Test
 
 Final validation that our complete benchmarking system works correctly and integrates properly with all TinyTorch components.
 
