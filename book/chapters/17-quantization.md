@@ -1,54 +1,113 @@
+---
+title: "Quantization - Reduced Precision for Efficiency"
+description: "INT8 quantization, calibration, and mixed-precision strategies"
+difficulty: 3
+time_estimate: "5-6 hours"
+prerequisites: ["Acceleration"]
+next_steps: ["Compression"]
+learning_objectives:
+  - "Implement INT8 quantization for weights and activations"
+  - "Design calibration strategies to minimize accuracy loss"
+  - "Apply mixed-precision training and inference patterns"
+  - "Understand quantization-aware training vs post-training quantization"
+  - "Measure memory and speed improvements from reduced precision"
+---
+
 # 17. Quantization
 
-## Reducing Model Size Without Losing Accuracy
+**⚡ PERFORMANCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
-Quantization is a critical technique for deploying ML models in production, especially on edge devices. In this module, you'll learn how to reduce model size and increase inference speed by converting floating-point weights to lower precision formats.
+## Overview
 
-### What You'll Build
+Reduce model precision from FP32 to INT8 for 4× memory reduction and 2-4× inference speedup. This module implements quantization, calibration, and mixed-precision strategies used in production deployment.
 
-- **INT8 Quantization**: Convert 32-bit floats to 8-bit integers
-- **Quantization-Aware Training**: Train models that quantize well
-- **Dynamic Quantization**: Quantize activations at runtime
-- **Static Quantization**: Pre-compute quantization parameters
+## Learning Objectives
 
-### Why This Matters
+By completing this module, you will be able to:
 
-Modern ML models are often too large for deployment:
-- GPT models can be hundreds of gigabytes
-- Mobile devices have limited memory
-- Edge computing requires efficient models
-- Quantization can reduce model size by 75% with minimal accuracy loss
+1. **Implement INT8 quantization** for model weights and activations with scale/zero-point parameters
+2. **Design calibration strategies** using representative data to minimize accuracy degradation
+3. **Apply mixed-precision training** (FP16/FP32) for faster training with maintained accuracy
+4. **Understand quantization-aware training** vs post-training quantization trade-offs
+5. **Measure memory and speed improvements** while tracking accuracy impact
 
-### Learning Objectives
+## Why This Matters
 
-By the end of this module, you will:
-- Understand the trade-offs between model size and accuracy
-- Implement INT8 quantization from scratch
-- Build quantization-aware training pipelines
-- Measure the impact on model performance
+### Production Context
 
-### Prerequisites
+Quantization is mandatory for edge deployment:
 
-Before starting this module, you should have completed:
-- Module 02: Tensor (for basic operations)
-- Module 04: Layers (for model structure)
-- Module 08: Training (for fine-tuning quantized models)
+- **TensorFlow Lite** uses INT8 quantization for mobile deployment; 4× smaller models
+- **ONNX Runtime** supports INT8 inference; 2-4× faster on CPUs
+- **Apple Core ML** quantizes models for iPhone Neural Engine; enables on-device ML
+- **Google Edge TPU** requires INT8; optimized hardware for quantized operations
 
-### Real-World Applications
+### Historical Context
 
-Quantization is used everywhere in production ML:
-- **Mobile Apps**: TensorFlow Lite uses INT8 for on-device inference
-- **Edge Devices**: Raspberry Pi and Arduino deployment
-- **Cloud Inference**: Reducing serving costs at scale
-- **Neural Processors**: Apple Neural Engine, Google Edge TPU
+- **Pre-2017**: FP32 standard; quantization for special cases only
+- **2017-2019**: INT8 post-training quantization; TensorFlow Lite adoption
+- **2019-2021**: Quantization-aware training; maintains accuracy better
+- **2021+**: INT4, mixed-precision, dynamic quantization; aggressive compression
 
-### Coming Up Next
+Quantization enables deployment where FP32 models wouldn't fit or run fast enough.
 
-After mastering quantization, you'll explore:
-- Module 18: Compression - Further model size reduction techniques
-- Module 19: Caching - Optimizing inference latency
-- Module 20: Benchmarking - Measuring the impact of optimizations
+## Implementation Guide
+
+### Core Components
+
+**Symmetric INT8 Quantization**
+```
+Quantization: x_int8 = round(x_fp32 / scale)
+Dequantization: x_fp32 = x_int8 * scale
+
+where scale = max(|x|) / 127
+```
+
+**Asymmetric Quantization (with zero-point)**
+```
+Quantization: x_int8 = round(x_fp32 / scale) + zero_point
+Dequantization: x_fp32 = (x_int8 - zero_point) * scale
+```
+
+**Calibration**: Use representative data to find optimal scale/zero-point parameters
+
+## Testing
+
+```bash
+tito export 17_quantization
+tito test 17_quantization
+```
+
+## Where This Code Lives
+
+```
+tinytorch/
+├── quantization/
+│   └── quantize.py
+└── __init__.py
+```
+
+## Systems Thinking Questions
+
+1. **Accuracy vs Efficiency**: INT8 loses precision. When is <1% accuracy drop acceptable? When must you use QAT?
+
+2. **Per-Tensor vs Per-Channel**: Per-channel quantization preserves accuracy better but increases complexity. When is it worth it?
+
+3. **Quantized Operations**: INT8 matmul is faster, but quantize/dequantize adds overhead. When does quantization win overall?
+
+## Real-World Connections
+
+**Mobile Deployment**: TensorFlow Lite, Core ML use INT8 for on-device inference
+**Cloud Serving**: ONNX Runtime, TensorRT use INT8 for cost-effective serving
+**Edge AI**: INT8 required for Coral Edge TPU, Jetson Nano deployment
+
+## What's Next?
+
+In **Module 18: Compression**, you'll combine quantization with pruning:
+- Remove unimportant weights (pruning)
+- Quantize remaining weights (INT8)
+- Achieve 10-50× compression with minimal accuracy loss
 
 ---
 
-*This module is currently under development. The implementation will cover practical quantization techniques used in production ML systems.*
+**Ready to quantize models?** Open `modules/source/17_quantization/quantization_dev.py` and start implementing.
