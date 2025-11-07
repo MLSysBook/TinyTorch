@@ -6,27 +6,29 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
-- caption: 🚀 Getting Started
+- caption: Getting Started
   chapters:
   - file: quickstart-guide
     title: "Quick Start Guide"
   - file: usage-paths/classroom-use
     title: "For Instructors"
 
-- caption: 🛠️ Using TinyTorch  
+- caption: Using TinyTorch  
   chapters:
   - file: tito-essentials
     title: "Essential Commands"
   - file: learning-progress
     title: "Track Your Progress"
 
-- caption: 🧭 Course Orientation
+- caption: Course Orientation
   chapters:
   - file: chapters/00-introduction
     title: "Introduction"
 
-- caption: 🏗️ Foundation Tier (01-07)
+- caption: "FOUNDATION: Build the Engine (01-07)"
   chapters:
+  - file: chapters/tier-1-foundation
+    title: "Tier 1 Overview"
   - file: chapters/01-tensor
     title: "01. Tensor"
   - file: chapters/02-activations
@@ -42,8 +44,10 @@ parts:
   - file: chapters/07-training
     title: "07. Training"
 
-- caption: 🧠 Intelligence Tier (08-13)
+- caption: "INTELLIGENCE: Vision & Language (08-13)"
   chapters:
+  - file: chapters/tier-2-intelligence
+    title: "Tier 2 Overview"
   - file: chapters/08-dataloader
     title: "08. DataLoader"
   - file: chapters/09-spatial
@@ -57,8 +61,10 @@ parts:
   - file: chapters/13-transformers
     title: "13. Transformers"
 
-- caption: ⚡ Optimization Tier (14-19)
+- caption: "PERFORMANCE: Deploy at Scale (14-19)"
   chapters:
+  - file: chapters/tier-3-performance
+    title: "Tier 3 Overview"
   - file: chapters/14-kvcaching
     title: "14. KV Caching"
   - file: chapters/15-profiling
@@ -72,17 +78,19 @@ parts:
   - file: chapters/19-benchmarking
     title: "19. Benchmarking"
 
-- caption: 🏅 Capstone Project
+- caption: Capstone
   chapters:
   - file: chapters/20-capstone
-    title: "20. AI Olympics"
+    title: "20. TinyMLPerf Competition"
 
-- caption: 🌍 Community
+- caption: Community
   chapters:
   - file: community
     title: "Ecosystem"
+  - file: leaderboard
+    title: "Leaderboard"
 
-- caption: 🛠️ Resources & Tools
+- caption: Resources & Tools
   chapters:
   - file: checkpoint-system
     title: "Progress Tracking"
