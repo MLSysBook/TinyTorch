@@ -22,7 +22,6 @@ from .core.console import get_console, print_banner, print_error, print_ascii_lo
 from .core.exceptions import TinyTorchCLIError
 from rich.panel import Panel
 from .commands.base import BaseCommand
-from .commands.notebooks import NotebooksCommand
 from .commands.info import InfoCommand
 from .commands.test import TestCommand
 from .commands.doctor import DoctorCommand
@@ -32,7 +31,6 @@ from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
 from .commands.status import StatusCommand
 from .commands.system import SystemCommand
-from .commands.module_workflow import ModuleWorkflowCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
@@ -66,24 +64,26 @@ class TinyTorchCLI:
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
         self.commands: Dict[str, Type[BaseCommand]] = {
-            # Essential commands
+            # Core workflow (what students actually use)
             'setup': SetupCommand,
-            # Hierarchical command groups only
-            'system': SystemCommand,
-            'module': ModuleWorkflowCommand,
-            'package': PackageCommand,
-            'nbgrader': NBGraderCommand,
-            'checkpoint': CheckpointCommand,
-            'milestone': MilestoneCommand,
-            'community': CommunityCommand,
-            'olympics': OlympicsCommand,
-            'submit': SubmitCommand,
-            # Convenience commands
-            'notebooks': NotebooksCommand,
             'export': ExportCommand,
             'test': TestCommand,
-            'book': BookCommand,
+            'submit': SubmitCommand,
+            # Community features
+            'community': CommunityCommand,
+            # System management
+            'system': SystemCommand,
+            'package': PackageCommand,
+            # Assessment tools
+            'nbgrader': NBGraderCommand,
             'grade': GradeCommand,
+            # Progress tracking
+            'checkpoint': CheckpointCommand,
+            'milestone': MilestoneCommand,
+            # Special events
+            'olympics': OlympicsCommand,
+            # Utilities
+            'book': BookCommand,
             'demo': DemoCommand,
             'logo': LogoCommand,
         }
@@ -95,33 +95,47 @@ class TinyTorchCLI:
             description="TinyTorch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
-Command Groups:
-  system       System environment and configuration commands
-  module       Module development and management commands  
-  package      Package management and nbdev integration commands
-  nbgrader     Assignment management and auto-grading commands
-  checkpoint   Track ML systems engineering progress through checkpoints
-  milestone    Epic capability achievements and ML systems mastery
-  community    Join the community, share progress, celebrate achievements together
-  olympics     Special competition events with focused challenges and recognition
-  submit       Validate and submit TinyMLPerf competition entry
+Core Workflow (what you'll use daily):
+  setup        First-time environment setup
+  export       Export module code to tinytorch package
+  test         Run module tests
+  submit       Submit TinyMLPerf competition entry (Module 20)
 
-Convenience Commands:
-  export      Export modules to package (quick shortcut)
-  test        Run tests (quick shortcut)
-  book        Build and manage Jupyter Book
-  grade       Simplified grading interface (wraps NBGrader)
-  demo        Run AI capability demos (show what your framework can do!)
+Community Features:
+  community    Join community, share progress, celebrate achievements
 
-Examples:
-  tito setup                    First-time environment setup
-  tito module start 01          Start Module 01 (tensors)
-  tito module complete 01       Complete Module 01 (test + export)
-  tito module resume 02         Resume working on Module 02
-  tito module status            View your learning progress
-  tito system info              Show system information
-  tito checkpoint timeline      Visual progress timeline
-  tito book build               Build the Jupyter Book locally
+System Tools:
+  system       System environment and configuration
+  package      Package management and nbdev integration
+  checkpoint   Track your learning progress
+  milestone    Epic capability achievements
+
+Assessment:
+  nbgrader     Assignment management and auto-grading
+  grade        Simplified grading interface
+
+Special Events:
+  olympics     Competition events and recognition
+
+Utilities:
+  book         Build and manage Jupyter Book
+  demo         Run AI capability demos
+  logo         Learn about TinyTorch philosophy
+
+Daily Workflow:
+  # 1. Edit code in your IDE
+  cd modules/source/05_autograd/
+  # Edit autograd_dev.py...
+  
+  # 2. Export and test
+  tito export 05
+  tito test 05
+  
+  # 3. Repeat for next module!
+
+Competition Workflow (Module 20):
+  # Edit Module 20, run cells → submission.json
+  tito submit submission.json
             """
         )
         
@@ -211,37 +225,38 @@ Examples:
                 # Show ASCII logo first
                 print_ascii_logo()
                 
-                # Show enhanced help with command groups
+                # Show enhanced help with simplified structure
                 self.console.print(Panel(
-                    "[bold]Essential Commands:[/bold]\n"
-                    "  [bold cyan]setup[/bold cyan]        - First-time environment setup\n\n"
-                    "[bold]Command Groups:[/bold]\n"
-                    "  [bold green]system[/bold green]       - System environment and configuration\n"
-                    "  [bold green]module[/bold green]       - Module development and management\n"
-                    "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
-                    "  [bold green]checkpoint[/bold green]   - Track ML systems engineering progress\n"
-                    "  [bold magenta]milestone[/bold magenta]    - Epic capability achievements and ML mastery\n"
-                    "  [bold bright_blue]community[/bold bright_blue]   - Join the community, share progress together\n"
-                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Special competition events and recognition\n"
-                    "  [bold bright_green]submit[/bold bright_green]       - Submit TinyMLPerf competition entry\n\n"
-                    "[bold]Convenience Commands:[/bold]\n"
-                    "  [bold green]export[/bold green]      - Export modules to package\n"
-                    "  [bold green]test[/bold green]        - Run tests\n"
-                    "  [bold green]book[/bold green]        - Build and manage Jupyter Book\n"
-                    "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
-                    "[bold]Quick Start:[/bold]\n"
-                    "  [dim]tito setup[/dim]                    - First-time environment setup\n"
-                    "  [dim]tito module start 01[/dim]          - Start building tensors (first time)\n"
-                    "  [dim]tito module complete 01[/dim]       - Complete Module 01 (test + export)\n"
-                    "  [dim]tito module start 02[/dim]          - Begin activation functions\n"
-                    "  [dim]tito module status[/dim]            - View your progress\n"
+                    "[bold bright_cyan]Core Workflow (Daily Use):[/bold bright_cyan]\n"
+                    "  [bold green]setup[/bold green]        - First-time environment setup\n"
+                    "  [bold green]export[/bold green]       - Export module code to package\n"
+                    "  [bold green]test[/bold green]         - Run module tests\n"
+                    "  [bold green]submit[/bold green]       - Submit competition entry (Module 20)\n\n"
+                    "[bold bright_blue]Community:[/bold bright_blue]\n"
+                    "  [bold bright_blue]community[/bold bright_blue]   - Join, share progress, celebrate together\n\n"
+                    "[bold yellow]Progress & Achievements:[/bold yellow]\n"
+                    "  [bold yellow]checkpoint[/bold yellow]  - Track your learning progress\n"
+                    "  [bold yellow]milestone[/bold yellow]   - Epic capability achievements\n\n"
+                    "[bold magenta]Tools & Utilities:[/bold magenta]\n"
+                    "  [bold magenta]system[/bold magenta]      - System tools\n"
+                    "  [bold magenta]package[/bold magenta]     - Package management\n"
+                    "  [bold magenta]book[/bold magenta]        - Build documentation\n"
+                    "  [bold magenta]demo[/bold magenta]        - Show capabilities\n\n"
+                    "[bold bright_green]📚 Quick Start:[/bold bright_green]\n"
+                    "  [dim]# 1. Setup (one time)[/dim]\n"
+                    "  [cyan]tito setup[/cyan]\n\n"
+                    "  [dim]# 2. Daily workflow (edit → export → test)[/dim]\n"
+                    "  [dim]# Edit modules/source/05_autograd/autograd_dev.py[/dim]\n"
+                    "  [cyan]tito export 05[/cyan]\n"
+                    "  [cyan]tito test 05[/cyan]\n\n"
+                    "  [dim]# 3. Competition (Module 20)[/dim]\n"
+                    "  [dim]# Edit Module 20, run cells → submission.json[/dim]\n"
+                    "  [cyan]tito submit submission.json[/cyan]\n\n"
                     "[bold]Get Help:[/bold]\n"
-                    "  [dim]tito system[/dim]                   - Show system subcommands\n"
-                    "  [dim]tito module[/dim]                   - Show module subcommands\n"
-                    "  [dim]tito package[/dim]                  - Show package subcommands\n"
-                    "  [dim]tito --help[/dim]                   - Show full help",
-                    title="Welcome to TinyTorch!",
+                    "  [dim]tito --help[/dim]     - Show all commands\n"
+                    "  [dim]tito community[/dim]  - Community subcommands\n"
+                    "  [dim]tito system[/dim]     - System subcommands",
+                    title="🔥 Welcome to TinyTorch!",
                     border_style="bright_green"
                 ))
                 return 0
