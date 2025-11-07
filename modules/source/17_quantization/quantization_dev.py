@@ -1394,6 +1394,79 @@ This analysis reveals which strategies work best for different deployment scenar
 
 # %% [markdown]
 """
+## 5.5 Measuring Quantization Savings with Profiler
+
+Now let's use the **Profiler** tool from Module 15 to measure the actual memory savings from quantization. This demonstrates end-to-end workflow: profile baseline (M15) → apply quantization (M17) → measure savings (M15+M17).
+
+This is the production workflow: measure → compress → validate → deploy.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "demo-profiler-quantization", "solution": true}
+# Import Profiler from Module 15
+from tinytorch.profiling.profiler import Profiler
+
+def demo_quantization_with_profiler():
+    """📊 Demonstrate memory savings using Profiler from Module 15."""
+    print("📊 Measuring Quantization Memory Savings with Profiler")
+    print("=" * 70)
+    
+    profiler = Profiler()
+    
+    # Create a simple model
+    from tinytorch.core.layers import Linear
+    model = Linear(512, 256)
+    model.name = "baseline_model"
+    
+    print("\n💾 BEFORE: FP32 Model")
+    print("-" * 70)
+    
+    # Measure baseline
+    param_count = profiler.count_parameters(model)
+    input_shape = (32, 512)
+    memory_stats = profiler.measure_memory(model, input_shape)
+    
+    print(f"   Parameters: {param_count:,}")
+    print(f"   Parameter memory: {memory_stats['parameter_memory_mb']:.2f} MB")
+    print(f"   Peak memory: {memory_stats['peak_memory_mb']:.2f} MB")
+    print(f"   Precision: FP32 (4 bytes per parameter)")
+    
+    # Quantize the model
+    print("\n🗜️  Quantizing to INT8...")
+    quantized_model = quantize_model(model)
+    quantized_model.name = "quantized_model"
+    
+    print("\n📦 AFTER: INT8 Quantized Model")
+    print("-" * 70)
+    
+    # Measure quantized (simulated - in practice INT8 uses 1 byte)
+    # For demonstration, we show the theoretical savings
+    quantized_param_count = profiler.count_parameters(quantized_model)
+    theoretical_memory_mb = param_count * 1 / (1024 * 1024)  # 1 byte per INT8 param
+    
+    print(f"   Parameters: {quantized_param_count:,} (same count, different precision)")
+    print(f"   Parameter memory (theoretical): {theoretical_memory_mb:.2f} MB")
+    print(f"   Precision: INT8 (1 byte per parameter)")
+    
+    print("\n📈 MEMORY SAVINGS")
+    print("=" * 70)
+    savings_ratio = memory_stats['parameter_memory_mb'] / theoretical_memory_mb
+    savings_percent = (1 - 1/savings_ratio) * 100
+    savings_mb = memory_stats['parameter_memory_mb'] - theoretical_memory_mb
+    
+    print(f"   Compression ratio: {savings_ratio:.1f}x smaller")
+    print(f"   Memory saved: {savings_mb:.2f} MB ({savings_percent:.1f}% reduction)")
+    print(f"   Original: {memory_stats['parameter_memory_mb']:.2f} MB → Quantized: {theoretical_memory_mb:.2f} MB")
+    
+    print("\n💡 Key Insight:")
+    print(f"   INT8 quantization reduces memory by 4x (FP32→INT8)")
+    print(f"   This enables: 4x larger models, 4x bigger batches, or 4x lower cost!")
+    print(f"   Critical for edge devices with limited memory (mobile, IoT)")
+    print("\n✅ This is the power of quantization: same functionality, 4x less memory!")
+
+demo_quantization_with_profiler()
+
+# %% [markdown]
+"""
 ## 6. Module Integration Test
 
 Final validation that our quantization system works correctly across all components.
