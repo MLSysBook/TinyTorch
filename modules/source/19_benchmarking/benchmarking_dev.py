@@ -154,6 +154,9 @@ import platform
 from contextlib import contextmanager
 import warnings
 
+# Import Profiler from Module 15 for measurement reuse
+from tinytorch.profiling.profiler import ProfilerComplete
+
 # %% [markdown]
 """
 # 3. Implementation - Building Professional Benchmarking Infrastructure
@@ -162,14 +165,18 @@ We'll build a comprehensive benchmarking system that handles statistical analysi
 
 The architecture follows a hierarchical design:
 ```
+ProfilerComplete (Module 15) ← Base measurement tools
+       ↓
 BenchmarkResult ← Statistical container for measurements
        ↓
-Benchmark ← Single-metric evaluation (latency, accuracy, memory)
+Benchmark ← Uses ProfilerComplete + adds multi-model comparison
        ↓
 BenchmarkSuite ← Multi-metric comprehensive evaluation
        ↓
 TinyMLPerf ← Standardized industry-style benchmarks
 ```
+
+**Key Architectural Decision**: The `Benchmark` class reuses `ProfilerComplete` from Module 15 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
 
 Each level adds capability while maintaining statistical rigor at the foundation.
 """
@@ -513,6 +520,9 @@ class Benchmark:
         self.warmup_runs = warmup_runs
         self.measurement_runs = measurement_runs
         self.results = {}
+        
+        # Use ProfilerComplete from Module 15 for measurements
+        self.profiler = ProfilerComplete()
 
         # System information for metadata
         self.system_info = {
@@ -524,50 +534,56 @@ class Benchmark:
         }
 
     def run_latency_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
-        """Benchmark model inference latency."""
+        """Benchmark model inference latency using ProfilerComplete."""
         results = {}
 
         for i, model in enumerate(self.models):
             model_name = getattr(model, 'name', f'model_{i}')
-            latencies = []
-
-            # Create dummy input for timing
+            
+            # Create input tensor for profiling
             try:
-                dummy_input = np.random.randn(*input_shape).astype(np.float32)
+                from tinytorch.core.tensor import Tensor
+                input_tensor = Tensor(np.random.randn(*input_shape).astype(np.float32))
             except:
-                # Fallback for models expecting different input types
-                dummy_input = [1, 2, 3, 4, 5]  # Simple sequence
+                # Fallback for simple models
+                input_tensor = np.random.randn(*input_shape).astype(np.float32)
 
-            # Warmup runs
-            for _ in range(self.warmup_runs):
-                try:
-                    if hasattr(model, 'forward'):
-                        model.forward(dummy_input)
-                    elif hasattr(model, 'predict'):
-                        model.predict(dummy_input)
-                    elif callable(model):
-                        model(dummy_input)
-                except:
-                    pass  # Skip if model doesn't support this input
-
-            # Measurement runs
-            for _ in range(self.measurement_runs):
-                with precise_timer() as timer:
-                    try:
-                        if hasattr(model, 'forward'):
-                            model.forward(dummy_input)
-                        elif hasattr(model, 'predict'):
-                            model.predict(dummy_input)
-                        elif callable(model):
-                            model(dummy_input)
-                        else:
-                            # Simulate inference time
-                            time.sleep(0.001)
-                    except:
-                        # Fallback: simulate timing
-                        time.sleep(0.001 + np.random.normal(0, 0.0001))
-
-                latencies.append(timer.elapsed * 1000)  # Convert to milliseconds
+            # Use ProfilerComplete to measure latency with proper warmup and iterations
+            try:
+                latency_ms = self.profiler.measure_latency(
+                    model, 
+                    input_tensor,
+                    warmup=self.warmup_runs,
+                    iterations=self.measurement_runs
+                )
+                
+                # ProfilerComplete returns single median value
+                # For BenchmarkResult, we need multiple measurements
+                # Run additional measurements for statistical analysis
+                latencies = []
+                for _ in range(self.measurement_runs):
+                    single_latency = self.profiler.measure_latency(
+                        model, input_tensor, warmup=0, iterations=1
+                    )
+                    latencies.append(single_latency)
+                
+            except:
+                # Fallback: use precise_timer for models that don't support profiler
+                latencies = []
+                for _ in range(self.measurement_runs):
+                    with precise_timer() as timer:
+                        try:
+                            if hasattr(model, 'forward'):
+                                model.forward(input_tensor)
+                            elif hasattr(model, 'predict'):
+                                model.predict(input_tensor)
+                            elif callable(model):
+                                model(input_tensor)
+                            else:
+                                time.sleep(0.001)
+                        except:
+                            time.sleep(0.001 + np.random.normal(0, 0.0001))
+                    latencies.append(timer.elapsed * 1000)
 
             results[model_name] = BenchmarkResult(
                 f"{model_name}_latency_ms",
@@ -612,7 +628,7 @@ class Benchmark:
         return results
 
     def run_memory_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
-        """Benchmark model memory usage."""
+        """Benchmark model memory usage using ProfilerComplete."""
         results = {}
 
         for i, model in enumerate(self.models):
@@ -620,35 +636,37 @@ class Benchmark:
             memory_usages = []
 
             for run in range(self.measurement_runs):
-                # Measure memory before and after model execution
-                process = psutil.Process()
-                memory_before = process.memory_info().rss / (1024**2)  # MB
-
                 try:
-                    dummy_input = np.random.randn(*input_shape).astype(np.float32)
-                    if hasattr(model, 'forward'):
-                        model.forward(dummy_input)
-                    elif hasattr(model, 'predict'):
-                        model.predict(dummy_input)
-                    elif callable(model):
-                        model(dummy_input)
+                    # Use ProfilerComplete to measure memory
+                    memory_stats = self.profiler.measure_memory(model, input_shape)
+                    # Use peak_memory_mb as the primary metric
+                    memory_used = memory_stats['peak_memory_mb']
                 except:
-                    pass
+                    # Fallback: measure with psutil
+                    process = psutil.Process()
+                    memory_before = process.memory_info().rss / (1024**2)  # MB
 
-                memory_after = process.memory_info().rss / (1024**2)  # MB
-                memory_used = max(0, memory_after - memory_before)
+                    try:
+                        dummy_input = np.random.randn(*input_shape).astype(np.float32)
+                        if hasattr(model, 'forward'):
+                            model.forward(dummy_input)
+                        elif hasattr(model, 'predict'):
+                            model.predict(dummy_input)
+                        elif callable(model):
+                            model(dummy_input)
+                    except:
+                        pass
 
-                # If no significant memory change detected, simulate based on model complexity
-                if memory_used < 1.0:
-                    # Estimate based on model parameters (if available)
-                    if hasattr(model, 'parameters'):
+                    memory_after = process.memory_info().rss / (1024**2)  # MB
+                    memory_used = max(0, memory_after - memory_before)
+
+                    # If no significant memory change detected, estimate from parameters
+                    if memory_used < 1.0:
                         try:
-                            param_count = sum(p.size for p in model.parameters() if hasattr(p, 'size'))
-                            memory_used = param_count * 4 / (1024**2)  # 4 bytes per float32 parameter
+                            param_count = self.profiler.count_parameters(model)
+                            memory_used = param_count * 4 / (1024**2)  # 4 bytes per float32
                         except:
-                            memory_used = 10 + np.random.normal(0, 2)  # Fallback estimate
-                    else:
-                        memory_used = 8 + np.random.normal(0, 1)  # Default estimate
+                            memory_used = 8 + np.random.normal(0, 1)  # Default estimate
 
                 memory_usages.append(max(0, memory_used))
 
