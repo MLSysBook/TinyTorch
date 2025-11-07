@@ -75,7 +75,7 @@ parts:
 - caption: 🏅 Capstone Project
   chapters:
   - file: chapters/20-capstone
-    title: "20. MLPerfEdu Competition"
+    title: "20. MLPerf® Edu Competition"
 
 - caption: 🌍 Community
   chapters:

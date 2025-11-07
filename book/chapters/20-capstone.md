@@ -1,5 +1,5 @@
 ---
-title: "MLPerfEdu Competition - Your Capstone Challenge"
+title: "MLPerf® Edu Competition - Your Capstone Challenge"
 description: "Apply all optimizations in a standardized MLPerf-inspired educational competition"
 difficulty: 5
 time_estimate: "10-20 hours"
@@ -13,7 +13,7 @@ learning_objectives:
   - "Compete fairly across different hardware platforms"
 ---
 
-# 20. MLPerfEdu Competition
+# 20. MLPerf® Edu Competition
 
 **🏆 CAPSTONE** | Difficulty: ⭐⭐⭐⭐⭐ (5/5 - Ninja Level) | Time: 10-20 hours
 
