@@ -1,19 +1,19 @@
 ---
-title: "TinyMLPerf Competition - Your Capstone Challenge"
-description: "Apply all optimizations in a standardized MLPerf-inspired competition"
+title: "MLPerfEdu Competition - Your Capstone Challenge"
+description: "Apply all optimizations in a standardized MLPerf-inspired educational competition"
 difficulty: 5
 time_estimate: "10-20 hours"
 prerequisites: ["All modules 01-19"]
 next_steps: []
 learning_objectives:
-  - "Apply all Performance Tier optimizations to a standardized benchmark"
+  - "Apply all Optimization Tier techniques to a standardized benchmark"
   - "Implement either Closed Division (optimize given model) or Open Division (innovate architecture)"
   - "Generate validated submission with normalized metrics"
   - "Demonstrate complete ML systems engineering skills"
   - "Compete fairly across different hardware platforms"
 ---
 
-# 20. TinyMLPerf Competition
+# 20. MLPerfEdu Competition
 
 **🏆 CAPSTONE** | Difficulty: ⭐⭐⭐⭐⭐ (5/5 - Ninja Level) | Time: 10-20 hours
 
