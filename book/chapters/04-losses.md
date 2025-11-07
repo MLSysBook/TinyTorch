@@ -1,263 +1,348 @@
 ---
-title: "Dense Networks"
-description: "Multi-layer dense (fully connected) neural networks and MLPs"
-difficulty: "⭐⭐⭐"
-time_estimate: "5-6 hours"
-prerequisites: []
-next_steps: []
-learning_objectives: []
+title: "Loss Functions"
+description: "Neural network loss functions (MSE, Cross-Entropy, Binary Cross-Entropy)"
+module_number: 4
+tier: "foundation"
+difficulty: "intermediate"
+time_estimate: "3-4 hours"
+prerequisites: ["01. Tensor", "02. Activations", "03. Layers"]
+next_module: "05. Autograd"
+learning_objectives:
+  - "Understand loss functions as objectives that measure model performance"
+  - "Implement MSE for regression and Cross-Entropy for classification"
+  - "Recognize numerical stability requirements in loss computation"
+  - "Connect loss function choice to problem type and output distributions"
+  - "Analyze gradient behavior and its impact on learning dynamics"
 ---
 
-# Module: Networks
+# 04. Losses
 
-```{div} badges
-⭐⭐⭐ | ⏱️ 5-6 hours
-```
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 2rem; font-weight: 600;">
+Foundation Tier | Module 04 of 20
+</div>
 
+**Implement objective functions that measure model performance.**
 
-## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐ Advanced
-- **Time Estimate**: 5-7 hours
-- **Prerequisites**: Tensor, Activations, Layers modules
-- **Next Steps**: CNN, Training modules
+Difficulty: Intermediate | Time: 3-4 hours | Prerequisites: Modules 01-03
 
-Compose layers into complete neural network architectures with powerful visualizations. This module teaches you that neural networks are function composition at scale—taking simple building blocks and combining them into systems capable of learning complex patterns and making intelligent decisions.
+---
 
-## 🎯 Learning Objectives
+## What You'll Build
 
-By the end of this module, you will be able to:
+Loss functions quantify how wrong a model's predictions are. They're the objective we minimize during training—the compass that guides learning.
 
-- **Master function composition**: Understand how networks are built as `f(x) = layer_n(...layer_2(layer_1(x)))`
-- **Design neural architectures**: Build MLPs, classifiers, and regressors from compositional principles
-- **Visualize network behavior**: Use advanced plotting to understand data flow and architectural decisions
-- **Analyze architectural trade-offs**: Compare depth vs width, activation choices, and design patterns
-- **Apply networks to real tasks**: Create appropriate architectures for classification and regression problems
+By the end of this module, you'll have implemented three essential loss functions:
 
-## 🧠 Build → Use → Optimize
+- **MSE (Mean Squared Error)** - For regression problems
+- **Cross-Entropy Loss** - For multi-class classification
+- **Binary Cross-Entropy** - For binary classification
 
-This module follows TinyTorch's **Build → Use → Optimize** framework:
+### Example Usage
 
-1. **Build**: Compose layers into complete network architectures using function composition principles
-2. **Use**: Apply networks to classification and regression tasks, visualizing behavior and data flow
-3. **Optimize**: Analyze architectural choices, compare design patterns, and understand performance trade-offs
-
-## 📚 What You'll Build
-
-### Sequential Network Architecture
 ```python
-# Function composition in action
-network = Sequential([
-    Dense(784, 128),    # Input transformation
-    ReLU(),             # Nonlinearity
-    Dense(128, 64),     # Feature compression
-    ReLU(),             # More nonlinearity
-    Dense(64, 10),      # Classification head
-    Sigmoid()           # Probability outputs
-])
+from tinytorch.core.losses import MSE, CrossEntropyLoss, BCELoss
+from tinytorch.core.tensor import Tensor
 
-# Single forward pass processes entire batch
-x = Tensor([[...]])  # Input batch
-predictions = network(x)  # End-to-end inference
+# MSE for regression
+mse = MSE()
+predictions = Tensor([2.5, 3.1, 4.2])
+targets = Tensor([2.0, 3.0, 4.0])
+loss = mse.forward(predictions, targets)  # Scalar
+
+# Cross-Entropy for classification
+ce = CrossEntropyLoss()
+logits = Tensor([[2.0, 1.0, 0.1]])  # Unnormalized scores
+targets = Tensor([0])  # Class index
+loss = ce.forward(logits, targets)
+
+# Binary Cross-Entropy
+bce = BCELoss()
+predictions = Tensor([0.7, 0.3, 0.9])  # Probabilities [0,1]
+targets = Tensor([1.0, 0.0, 1.0])
+loss = bce.forward(predictions, targets)
 ```
 
-### Specialized Network Builders
-```python
-# MLP for multi-class classification
-classifier = create_mlp(
-    input_size=784,           # Flattened 28x28 images
-    hidden_sizes=[256, 128],  # Two hidden layers
-    output_size=10,           # 10 digit classes
-    activation=ReLU,          # Hidden layer activation
-    output_activation=Sigmoid  # Probability outputs
-)
+---
 
-# Regression network for continuous prediction
-regressor = create_regression_network(
-    input_size=13,       # Housing features
-    hidden_sizes=[64, 32], # Progressive compression
-    output_size=1        # Single price prediction
-)
+## Learning Pattern: Build → Use → Understand
 
-# Binary classification with appropriate architecture
-binary_classifier = create_classification_network(
-    input_size=100,
-    num_classes=2,
-    architecture='deep'  # Optimized for binary tasks
-)
-```
+### 1. Build
+Implement three loss functions with numerical stability handling for exponentials and logarithms.
 
-### Advanced Network Analysis
-```python
-# Comprehensive architecture visualization
-visualize_network_architecture(network)
-# Shows: layer types, connections, parameter counts, data flow
+### 2. Use
+Apply losses to real prediction scenarios, understanding when each loss is appropriate for different problem types.
 
-# Behavior analysis with real data
-analyze_network_behavior(network, sample_data)
-# Shows: activation patterns, layer statistics, transformation analysis
+### 3. Understand
+Grasp how loss function choice affects gradient behavior and learning dynamics, and why numerical stability is critical.
 
-# Architectural comparison
-compare_networks([shallow_net, deep_net, wide_net])
-# Shows: performance characteristics, complexity trade-offs
-```
+---
 
-## 🚀 Getting Started
+## Learning Objectives
 
-### Prerequisites
-Ensure you have mastered the foundational building blocks:
+By completing this module, you will:
+
+1. **Systems Understanding**: Recognize loss functions as differentiable objectives that bridge model predictions and training dynamics
+
+2. **Core Implementation**: Build numerically stable implementations of MSE, Cross-Entropy, and Binary Cross-Entropy
+
+3. **Pattern Recognition**: Understand the connection between problem type (regression vs classification) and appropriate loss function
+
+4. **Framework Connection**: See how your losses mirror PyTorch's `nn.MSELoss()`, `nn.CrossEntropyLoss()`, and `nn.BCELoss()`
+
+5. **Performance Trade-offs**: Analyze gradient magnitude and how loss function choice affects training speed and stability
+
+---
+
+## Why This Matters
+
+### Production Context
+
+Loss functions are fundamental to every ML application:
+
+- **Computer Vision**: Cross-Entropy for image classification (ImageNet, COCO)
+- **NLP**: Cross-Entropy for language modeling (GPT, BERT use it for next-token prediction)
+- **Regression**: MSE for price prediction, demand forecasting, time series
+- **Ranking**: Binary Cross-Entropy for click prediction, recommendation systems
+
+The loss function defines what "good" means for your model. Choose wrong, train poorly.
+
+### Systems Reality Check
+
+**Performance Note**: Loss computation is O(n) for n predictions, but gradient computation through loss can be expensive. Cross-Entropy with Softmax has numerical stability tricks that matter.
+
+**Memory Note**: Loss is a scalar, but its gradient must flow back through all predictions. This gradient tensor has the same shape as predictions.
+
+---
+
+## Implementation Guide
+
+### Prerequisites Check
 
 ```bash
-# Activate TinyTorch environment
-source bin/activate-tinytorch.sh
-
-# Verify all prerequisite modules
-tito test --module tensor
-tito test --module activations
-tito test --module layers
+tito test 01 02 03
 ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/source/05_networks/networks_dev.py`
-2. **Implement Sequential class**: Build the composition framework for chaining layers
-3. **Create network builders**: Implement MLPs and specialized architectures
-4. **Add visualization tools**: Build plotting functions for network analysis
-5. **Test with real scenarios**: Apply networks to classification and regression tasks
-6. **Export and verify**: `tito export --module networks && tito test --module networks`
-
-## 🧪 Testing Your Implementation
-
-### Comprehensive Test Suite
-Run the full test suite to verify architectural correctness:
 
 ```bash
-# TinyTorch CLI (recommended)
-tito test --module networks
-
-# Direct pytest execution
-python -m pytest tests/ -k networks -v
+cd modules/source/04_losses/
+jupyter lab losses_dev.py
 ```
 
-### Test Coverage Areas
-- ✅ **Sequential Composition**: Verify layers chain correctly with proper data flow
-- ✅ **Network Builders**: Test MLP and specialized network creation functions
-- ✅ **Shape Consistency**: Ensure networks handle various input shapes and batch sizes
-- ✅ **Visualization Functions**: Verify plotting and analysis tools work correctly
-- ✅ **Real-world Applications**: Test networks on classification and regression tasks
+### Step-by-Step Build
 
-### Inline Testing & Visualization
-The module includes comprehensive educational feedback and visual analysis:
+#### Step 1: Mean Squared Error (MSE)
+
+For regression tasks:
+
 ```python
-# Example inline test output
-🔬 Unit Test: Sequential network composition...
-✅ Layers chain correctly with proper data flow
-✅ Forward pass produces expected output shapes
-✅ Network handles batch processing correctly
-📈 Progress: Sequential Networks ✓
-
-# Visualization feedback
-📊 Generating network architecture visualization...
-📈 Showing data flow through 3-layer MLP
-📊 Layer analysis: 784→128→64→10 parameter flow
+class MSE:
+    def forward(self, predictions, targets):
+        """
+        MSE Loss: mean((y_pred - y_true)^2)
+        
+        Args:
+            predictions: Tensor of shape (N,) or (N, D)
+            targets: Tensor of same shape as predictions
+        
+        Returns:
+            Scalar loss
+        """
+        diff = predictions - targets
+        squared = diff ** 2
+        return squared.mean()
 ```
 
-### Manual Testing Examples
+**Why squared error**: Penalizes large errors more than small ones. Differentiable everywhere (unlike absolute error).
+
+**Use case**: Predicting continuous values (house prices, temperatures, stock prices).
+
+#### Step 2: Cross-Entropy Loss
+
+For multi-class classification:
+
 ```python
-from tinytorch.core.tensor import Tensor
-from networks_dev import Sequential, create_mlp
-from layers_dev import Dense
-from activations_dev import ReLU, Sigmoid
-
-# Test network composition
-network = Sequential([
-    Dense(10, 5),
-    ReLU(),
-    Dense(5, 2),
-    Sigmoid()
-])
-
-# Forward pass
-x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]])
-output = network(x)
-print(f"Network output: {output.data}, Shape: {output.shape}")
-
-# Test MLP builder
-mlp = create_mlp(input_size=4, hidden_sizes=[8, 4], output_size=2)
-test_input = Tensor([[1.0, 2.0, 3.0, 4.0]])
-prediction = mlp(test_input)
-print(f"MLP prediction: {prediction.data}")
+class CrossEntropyLoss:
+    def forward(self, logits, targets):
+        """
+        Cross-Entropy: -log(softmax(logits)[targets])
+        
+        Args:
+            logits: Tensor of shape (N, C) - unnormalized scores
+            targets: Tensor of shape (N,) - class indices
+        
+        Returns:
+            Scalar loss
+        """
+        # Numerical stability: subtract max before exp
+        shifted_logits = logits - logits.max(axis=1, keepdims=True)
+        
+        # Compute log softmax
+        log_sum_exp = np.log(np.sum(np.exp(shifted_logits.data), axis=1, keepdims=True))
+        log_softmax = shifted_logits.data - log_sum_exp
+        
+        # Select log probabilities of correct classes
+        batch_size = logits.shape[0]
+        log_probs = log_softmax[np.arange(batch_size), targets.data.astype(int)]
+        
+        # Negative log likelihood
+        return Tensor(-np.mean(log_probs))
 ```
 
-## 🎯 Key Concepts
+**Critical stability trick**: Subtract max before exponentiating prevents overflow. Log-sum-exp trick is standard in production frameworks.
 
-### Real-World Applications
-- **Image Classification**: ResNet and VGG architectures use sequential composition of convolutional and dense layers
-- **Natural Language Processing**: Transformer architectures compose attention layers with feed-forward networks
-- **Recommendation Systems**: Deep collaborative filtering uses MLPs to learn user-item interactions
-- **Autonomous Systems**: Neural networks in self-driving cars compose perception, planning, and control layers
+**Use case**: Multi-class classification (ImageNet 1000 classes, CIFAR-10, MNIST digits).
 
-### Function Composition Theory
-- **Mathematical Foundation**: Networks implement nested function composition `f_n(f_{n-1}(...f_1(x)))`
-- **Universal Approximation**: MLPs with sufficient width can approximate any continuous function
-- **Depth vs Width Trade-offs**: Deep networks learn hierarchical features, wide networks increase expressivity
-- **Architectural Inductive Biases**: Network structure encodes assumptions about the problem domain
+#### Step 3: Binary Cross-Entropy (BCE)
 
-### Visualization and Analysis
-- **Architecture Visualization**: Understand network structure through visual representation
-- **Data Flow Analysis**: Track how information transforms through each layer
-- **Activation Pattern Analysis**: Visualize what each layer learns to represent
-- **Comparative Analysis**: Understand trade-offs between different architectural choices
+For binary classification:
 
-### Design Patterns and Best Practices
-- **Progressive Dimensionality**: Common pattern of gradually reducing dimensions toward output
-- **Activation Placement**: Standard practice of activation after each linear transformation
-- **Output Layer Design**: Task-specific final layers (sigmoid for binary, softmax for multi-class)
-- **Network Depth Guidelines**: Balance between expressivity and training difficulty
-
-## 🎉 Ready to Build?
-
-You're about to master the art of neural architecture design! This is where the magic happens—taking simple mathematical building blocks and composing them into systems capable of recognizing images, understanding language, and making intelligent decisions.
-
-Every breakthrough in AI, from AlexNet to GPT, started with someone thoughtfully composing layers into powerful architectures. You're about to learn those same composition principles and build networks that can solve real problems!
-
- 
-
-
-Choose your preferred way to engage with this module:
-
-````{grid} 1 2 3 3
-
-```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/05_dense/dense_dev.ipynb
-:class-header: bg-light
-
-Run this module interactively in your browser. No installation required!
+```python
+class BCELoss:
+    def forward(self, predictions, targets):
+        """
+        Binary Cross-Entropy: -[t*log(p) + (1-t)*log(1-p)]
+        
+        Args:
+            predictions: Tensor of shape (N,) - probabilities in [0,1]
+            targets: Tensor of shape (N,) - binary labels {0,1}
+        
+        Returns:
+            Scalar loss
+        """
+        # Clip to prevent log(0)
+        eps = 1e-7
+        p = np.clip(predictions.data, eps, 1 - eps)
+        
+        # Binary cross-entropy
+        bce = -(targets.data * np.log(p) + (1 - targets.data) * np.log(1 - p))
+        
+        return Tensor(np.mean(bce))
 ```
 
-```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/05_dense/dense_dev.ipynb
-:class-header: bg-light
+**Numerical stability**: Clipping prevents `log(0) = -inf`. Essential for stability.
 
-Use Google Colab for GPU access and cloud compute power.
+**Use case**: Binary decisions (spam detection, click prediction, medical diagnosis).
+
+---
+
+## Testing Your Implementation
+
+### Inline Tests
+
+```python
+# Test MSE
+mse = MSE()
+preds = Tensor([1.0, 2.0, 3.0])
+targets = Tensor([1.0, 2.0, 3.0])
+loss = mse.forward(preds, targets)
+assert abs(loss.data) < 1e-6  # Perfect prediction = 0 loss
+print("✓ MSE working")
+
+# Test Cross-Entropy
+ce = CrossEntropyLoss()
+logits = Tensor([[10.0, 0.0, 0.0]])  # High confidence class 0
+targets = Tensor([0])
+loss = ce.forward(logits, targets)
+assert loss.data < 0.1  # Low loss for correct prediction
+print("✓ Cross-Entropy working")
+
+# Test BCE
+bce = BCELoss()
+preds = Tensor([0.9, 0.1])  # High confidence
+targets = Tensor([1.0, 0.0])
+loss = bce.forward(preds, targets)
+assert loss.data < 0.2
+print("✓ BCE working")
 ```
 
-```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/05_dense/dense_dev.py
-:class-header: bg-light
+### Module Export & Validation
 
-Browse the Python source code and understand the implementation.
+```bash
+tito export 04
+tito test 04
 ```
 
-````
-
-```{admonition} 💾 Save Your Progress
-:class: tip
-**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
-
+**Expected output**:
+```
+✓ All tests passed! [15/15]
+✓ Module 04 complete!
 ```
 
 ---
 
-<div class="prev-next-area">
-<a class="left-prev" href="../chapters/04_layers.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/06_spatial.html" title="next page">Next Module →</a>
-</div>
+## Where This Code Lives
+
+Your losses drive training:
+
+```python
+from tinytorch.core.losses import CrossEntropyLoss
+from tinytorch.core.layers import Sequential, Linear
+from tinytorch.core.activations import ReLU
+
+# Training setup
+model = Sequential([Linear(784, 128), ReLU(), Linear(128, 10)])
+loss_fn = CrossEntropyLoss()
+
+# Training loop
+predictions = model.forward(batch_x)
+loss = loss_fn.forward(predictions, batch_y)
+# Later: loss.backward() to compute gradients
+```
+
+**Package structure**:
+```
+tinytorch/
+├── core/
+│   ├── losses.py  ← YOUR implementations
+│   ├── layers.py
+│   ├── autograd.py  (uses losses)
+```
+
+---
+
+## Systems Thinking Questions
+
+1. **Gradient Behavior**: MSE gives gradients proportional to error magnitude. Cross-Entropy gives gradients proportional to prediction confidence. How does this affect learning dynamics?
+
+2. **Numerical Stability**: Why must Cross-Entropy subtract max before exponentiation? What happens if you don't? Try it.
+
+3. **Loss Scaling**: A batch with 32 samples computes mean loss over 32 examples. How does batch size affect gradient magnitude? Should learning rate scale with batch size?
+
+4. **Problem Mismatch**: What happens if you use MSE for classification? Or Cross-Entropy for regression? Why do these fail?
+
+5. **Framework Comparison**: PyTorch's `CrossEntropyLoss` combines Softmax + log + NLL in one operation. Why is this more efficient than computing separately?
+
+---
+
+## Real-World Connections
+
+### Industry Applications
+
+- **ImageNet Classification**: Cross-Entropy loss to classify 1000 object categories
+- **GPT Language Modeling**: Cross-Entropy to predict next token from 50K vocabulary
+- **Click Prediction**: Binary Cross-Entropy for ad click probability
+- **Demand Forecasting**: MSE to predict sales quantities
+
+### Training Dynamics
+
+- **Loss Plateaus**: Cross-Entropy can saturate (near-zero gradients) when model is very confident
+- **Loss Spikes**: Numerical instability in exponentials causes training to diverge
+- **Gradient Clipping**: Large loss values can cause exploding gradients
+
+---
+
+## What's Next?
+
+**Excellent work!** You can now measure model performance. Next, you'll implement automatic differentiation—the engine that computes gradients for these losses.
+
+**Module 05: Autograd** - Build computational graphs and automatic differentiation for efficient gradient computation
+
+[Continue to Module 05: Autograd →](05-autograd.html)
+
+---
+
+**Need Help?**
+- [Ask in GitHub Discussions](https://github.com/mlsysbook/TinyTorch/discussions)
+- [View Losses API Reference](../appendices/api-reference.html#losses)
+- [Report Issues](https://github.com/mlsysbook/TinyTorch/issues)
