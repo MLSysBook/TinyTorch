@@ -42,7 +42,7 @@ parts:
   - file: chapters/07-training
     title: "07. Training"
 
-- caption: 🧠 Intelligence Tier (08-13)
+- caption: 🧠 Intelligence Tier (08-14)
   chapters:
   - file: chapters/08-dataloader
     title: "08. DataLoader"
@@ -56,11 +56,11 @@ parts:
     title: "12. Attention"
   - file: chapters/13-transformers
     title: "13. Transformers"
-
-- caption: ⚡ Optimization Tier (14-19)
-  chapters:
   - file: chapters/14-kvcaching
     title: "14. KV Caching"
+
+- caption: ⚡ Optimization Tier (15-19)
+  chapters:
   - file: chapters/15-profiling
     title: "15. Profiling"
   - file: chapters/16-acceleration
