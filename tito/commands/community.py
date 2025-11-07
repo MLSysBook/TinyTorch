@@ -69,31 +69,32 @@ class CommunityCommand(BaseCommand):
             help='Update existing registration'
         )
         
-        # Submit command
-        submit_parser = subparsers.add_parser(
-            'submit',
-            help='Submit your results (baseline or improvements welcome!)'
+        # Share command (renamed from submit to avoid confusion with tito submit)
+        share_parser = subparsers.add_parser(
+            'share',
+            help='Share your progress with the community (baseline or improvements welcome!)',
+            aliases=['submit']  # Keep 'submit' as alias for backward compatibility
         )
-        submit_parser.add_argument(
+        share_parser.add_argument(
             '--task',
             default='cifar10',
             choices=['cifar10', 'mnist', 'tinygpt'],
-            help='Task to submit results for (default: cifar10)'
+            help='Task to share results for (default: cifar10)'
         )
-        submit_parser.add_argument(
+        share_parser.add_argument(
             '--accuracy',
             type=float,
             help='Accuracy achieved (any level welcome!)'
         )
-        submit_parser.add_argument(
+        share_parser.add_argument(
             '--model',
             help='Model description (e.g., "CNN-3-layer", "Custom-Architecture")'
         )
-        submit_parser.add_argument(
+        share_parser.add_argument(
             '--notes',
             help='Optional notes about your approach, learnings, challenges'
         )
-        submit_parser.add_argument(
+        share_parser.add_argument(
             '--checkpoint',
             help='Which TinyTorch checkpoint you completed (e.g., "05", "10", "15")'
         )
@@ -169,8 +170,8 @@ class CommunityCommand(BaseCommand):
         
         if command in ['join', 'register']:
             return self._register_user(args)
-        elif command == 'submit':
-            return self._submit_results(args)
+        elif command in ['share', 'submit']:  # 'submit' kept as alias
+            return self._share_results(args)
         elif command == 'view':
             return self._view_leaderboard(args)
         elif command == 'profile':
@@ -198,16 +199,16 @@ class CommunityCommand(BaseCommand):
                 "",
                 "[bold]Available Commands:[/bold]",
                 "  [green]join[/green]      - Join our welcoming community (free, inclusive)",
-                "  [green]submit[/green]    - Share your progress (any level welcome!)",
+                "  [green]share[/green]     - Share your progress (any level welcome!)",
                 "  [green]view[/green]      - See everyone's journey together",
                 "  [green]profile[/green]   - Your personal achievement story",
                 "  [green]progress[/green]  - Track your module completion journey",
                 "  [green]status[/green]    - Quick stats and encouragement",
                 "  [green]help[/green]      - Learn about the community system",
                 "",
-                "[dim]💡 Tip: Start with 'tito leaderboard join' to join the community![/dim]",
+                "[dim]💡 Tip: Start with 'tito community join' to join the community![/dim]",
             ),
-            title="Community Leaderboard",
+            title="TinyTorch Community",
             border_style="bright_green",
             padding=(1, 2)
         ))
@@ -558,13 +559,13 @@ class CommunityCommand(BaseCommand):
                 "[bold bright_blue]🚀 Your Next Steps:[/bold bright_blue]",
                 f"1. [green]{next_step}[/green]",
                 "2. [blue]Train your first model and share results[/blue]",
-                "3. [yellow]Connect with peers: tito leaderboard view[/yellow]",
+                "3. [yellow]Connect with peers: tito community view[/yellow]",
                 "",
                 "[bold bright_blue]🤝 Community Features Unlocked:[/bold bright_blue]",
-                "• [green]Submit results: tito leaderboard submit[/green]",
-                "• [blue]View global progress: tito leaderboard view[/blue]",
-                "• [yellow]Track your journey: tito leaderboard profile[/yellow]",
-                "• [magenta]Get encouragement: tito leaderboard status[/magenta]",
+                "• [green]Submit results: tito community share[/green]",
+                "• [blue]View global progress: tito community view[/blue]",
+                "• [yellow]Track your journey: tito community profile[/yellow]",
+                "• [magenta]Get encouragement: tito community status[/magenta]",
                 "",
                 "[dim]💝 Remember: Every step forward is celebrated here![/dim]",
             ),
@@ -590,14 +591,14 @@ class CommunityCommand(BaseCommand):
             padding=(1, 1)
         ))
     
-    def _submit_results(self, args: Namespace) -> int:
-        """Submit results with encouraging experience."""
+    def _share_results(self, args: Namespace) -> int:
+        """Share progress results with the community (encouraging experience)."""
         # Check registration
         profile = self._load_user_profile()
         if not profile:
             self.console.print(Panel(
                 "[yellow]Please join our community first![/yellow]\n\n"
-                "Run: [bold]tito leaderboard join[/bold]",
+                "Run: [bold]tito community join[/bold]",
                 title="📝 Community Membership Required",
                 border_style="yellow"
             ))
@@ -699,9 +700,9 @@ class CommunityCommand(BaseCommand):
                 celebration_message["encouragement"],
                 "",
                 "[bold bright_blue]🔍 Next:[/bold bright_blue]",
-                "• View community: [dim]tito leaderboard view[/dim]",
-                "• See your profile: [dim]tito leaderboard profile[/dim]",
-                "• Try improving: [dim]tito leaderboard submit[/dim]",
+                "• View community: [dim]tito community view[/dim]",
+                "• See your profile: [dim]tito community profile[/dim]",
+                "• Try improving: [dim]tito community share[/dim]",
             ),
             title=celebration_message["panel_title"],
             border_style=celebration_message["border_style"],
@@ -732,7 +733,7 @@ class CommunityCommand(BaseCommand):
         if not profile:
             self.console.print(Panel(
                 "[yellow]Please join our community first to see your profile![/yellow]\n\n"
-                "Run: [bold]tito leaderboard join[/bold]",
+                "Run: [bold]tito community join[/bold]",
                 title="📝 Community Membership Required",
                 border_style="yellow"
             ))
@@ -748,7 +749,7 @@ class CommunityCommand(BaseCommand):
         if not profile:
             self.console.print(Panel(
                 "[yellow]Please join our community first![/yellow]\n\n"
-                "Run: [bold]tito leaderboard join[/bold]",
+                "Run: [bold]tito community join[/bold]",
                 title="📝 Community Membership Required",
                 border_style="yellow"
             ))
@@ -762,13 +763,13 @@ class CommunityCommand(BaseCommand):
         # Encouraging status message
         if total_submissions == 0:
             status_message = "[bold bright_blue]🚀 Ready for your first submission![/bold bright_blue]"
-            next_step = "Train any model and submit with: [green]tito leaderboard submit[/green]"
+            next_step = "Train any model and submit with: [green]tito community share[/green]"
         else:
             status_message = f"[bold bright_green]🌟 {total_submissions} submission{'s' if total_submissions != 1 else ''} made![/bold bright_green]"
             if best_cifar10 > 0:
                 next_step = f"Best CIFAR-10: {best_cifar10:.1f}% - Keep improving! 🚀"
             else:
-                next_step = "Try CIFAR-10 next: [green]tito leaderboard submit --task cifar10[/green]"
+                next_step = "Try CIFAR-10 next: [green]tito community share --task cifar10[/green]"
         
         self.console.print(Panel(
             Group(
@@ -795,7 +796,7 @@ class CommunityCommand(BaseCommand):
         if not profile:
             self.console.print(Panel(
                 "[yellow]Please join our community first to see your progress![/yellow]\n\n"
-                "Run: [bold]tito leaderboard join[/bold]",
+                "Run: [bold]tito community join[/bold]",
                 title="📝 Community Membership Required",
                 border_style="yellow"
             ))
@@ -864,8 +865,8 @@ class CommunityCommand(BaseCommand):
         self.console.print(Panel(
             f"[bold cyan]🎯 Quick Actions[/bold cyan]\n\n" +
             (f"[green]Continue Learning:[/green]\n[dim]  tito module view {next_module}[/dim]\n\n" if next_module else "") +
-            f"[yellow]Submit Results:[/yellow]\n[dim]  tito leaderboard submit --task mnist --accuracy XX.X[/dim]\n\n"
-            f"[blue]View Community:[/blue]\n[dim]  tito leaderboard view[/dim]\n\n"
+            f"[yellow]Submit Results:[/yellow]\n[dim]  tito community share --task mnist --accuracy XX.X[/dim]\n\n"
+            f"[blue]View Community:[/blue]\n[dim]  tito community view[/dim]\n\n"
             f"[magenta]Track Progress:[/magenta]\n[dim]  tito checkpoint status[/dim]",
             title="🚀 Next Steps",
             border_style="bright_blue"
@@ -902,10 +903,10 @@ class CommunityCommand(BaseCommand):
                 "• [magenta]Learn together[/magenta] - Community success > individual ranking",
                 "",
                 "[bold bright_blue]🎯 Getting started:[/bold bright_blue]",
-                "1. [dim]tito leaderboard join[/dim] - Join our welcoming community",
+                "1. [dim]tito community join[/dim] - Join our welcoming community",
                 "2. Train any model using your TinyTorch implementations",
-                "3. [dim]tito leaderboard submit --accuracy 25.3[/dim] - Share your results",
-                "4. [dim]tito leaderboard view[/dim] - See the community progress",
+                "3. [dim]tito community share --accuracy 25.3[/dim] - Share your results",
+                "4. [dim]tito community view[/dim] - See the community progress",
                 "",
                 "[bold bright_green]💝 Remember: This is about learning, growing, and supporting each other![/bold bright_green]",
             ),
@@ -1080,8 +1081,8 @@ class CommunityCommand(BaseCommand):
                 "• [blue]All achievers[/blue]: Every percentage point represents real learning",
                 "• [yellow]Recent submissions[/yellow]: Fresh progress and new insights",
                 "",
-                "[dim]💡 See your progress: tito leaderboard profile[/dim]",
-                "[dim]🚀 Submit improvements: tito leaderboard submit[/dim]",
+                "[dim]💡 See your progress: tito community profile[/dim]",
+                "[dim]🚀 Submit improvements: tito community share[/dim]",
             ),
             title="Community Insights",
             border_style="bright_blue",
@@ -1140,7 +1141,7 @@ class CommunityCommand(BaseCommand):
             self.console.print(Panel(
                 "[yellow]No recent submissions![/yellow]\n\n"
                 "Be the first to share recent progress:\n"
-                "[bold]tito leaderboard submit[/bold]",
+                "[bold]tito community share[/bold]",
                 title="🔥 Recent Activity",
                 border_style="yellow"
             ))
@@ -1371,7 +1372,7 @@ class CommunityCommand(BaseCommand):
         # Submission-based suggestions
         if total_submissions == 0:
             suggestions.append("[yellow]Make your first submission:[/yellow] Any accuracy level welcome!")
-            suggestions.append("[dim]  tito leaderboard submit --task mnist --accuracy XX.X[/dim]")
+            suggestions.append("[dim]  tito community share --task mnist --accuracy XX.X[/dim]")
         elif best_accuracy >= 75:
             suggestions.append("[blue]Help others in the community:[/blue] Share your insights!")
         elif best_accuracy >= 50:
@@ -1395,7 +1396,7 @@ class CommunityCommand(BaseCommand):
                 f"  • Connect with other ML learners\n"
                 f"  • Celebrate achievements together\n\n"
                 f"[bold cyan]Ready to join?[/bold cyan]\n"
-                f"[dim]  tito leaderboard join[/dim]",
+                f"[dim]  tito community join[/dim]",
                 title="🎆 Join the Community",
                 border_style="bright_green"
             ))
@@ -1567,8 +1568,8 @@ class CommunityCommand(BaseCommand):
             (f"[bold yellow]🎯 Next Adventure:[/bold yellow] {next_module}\n" if next_module else 
              f"[bold green]🏆 All modules completed! You're an ML Systems Engineer![/bold green]\n") +
             f"\n[bold cyan]View your journey:[/bold cyan]\n"
-            f"[dim]  tito leaderboard profile --detailed[/dim]\n"
-            f"[dim]  tito leaderboard status[/dim]",
+            f"[dim]  tito community profile --detailed[/dim]\n"
+            f"[dim]  tito community status[/dim]",
             title=f"🎆 {username}'s Achievement",
             border_style="bright_green"
         ))
@@ -1580,7 +1581,7 @@ class CommunityCommand(BaseCommand):
                 f"[bold cyan]🔓 Unlocked Submissions:[/bold cyan]\n\n" +
                 "\n".join(f"  • [green]{task.upper()}[/green]" for task in eligible_submissions) +
                 f"\n\n[yellow]Ready to submit your results?[/yellow]\n"
-                f"[dim]  tito leaderboard submit --task cifar10 --accuracy XX.X[/dim]",
+                f"[dim]  tito community share --task cifar10 --accuracy XX.X[/dim]",
                 title="🏅 New Opportunities",
                 border_style="bright_cyan"
             ))
