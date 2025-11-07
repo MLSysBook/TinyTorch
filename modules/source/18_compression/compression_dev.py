@@ -873,6 +873,18 @@ class KnowledgeDistillation:
         2. Set temperature for softening probability distributions
         3. Set alpha for balancing hard vs soft targets
 
+        EXAMPLE:
+        >>> teacher = Sequential(Linear(100, 200), Linear(200, 50))
+        >>> student = Sequential(Linear(100, 50))
+        >>> kd = KnowledgeDistillation(teacher, student, temperature=4.0, alpha=0.8)
+        >>> print(f"Temperature: {kd.temperature}, Alpha: {kd.alpha}")
+        Temperature: 4.0, Alpha: 0.8
+
+        HINTS:
+        - Simply assign the parameters to instance variables
+        - Temperature typically ranges from 3-5 for effective softening
+        - Alpha of 0.7 means 70% soft targets, 30% hard targets
+
         Args:
             teacher_model: Large, pre-trained model
             student_model: Smaller model to train
@@ -1153,6 +1165,85 @@ Understanding the real-world implications of compression choices and how to desi
 
 The fundamental challenge in model compression is balancing three competing objectives: model size, inference speed, and prediction accuracy.
 """
+
+# %% [markdown]
+"""
+## 8.5 Measuring Compression Impact with Profiler
+
+Now let's use the **Profiler** tool from Module 15 to measure the actual parameter reduction from pruning. This demonstrates the complete workflow: profile baseline (M15) → apply compression (M18) → measure impact (M15+M18).
+
+This is the production workflow: measure → prune → validate → deploy.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "demo-profiler-compression", "solution": true}
+# Import Profiler from Module 15
+from tinytorch.profiling.profiler import Profiler
+
+def demo_compression_with_profiler():
+    """📊 Demonstrate parameter reduction using Profiler from Module 15."""
+    print("📊 Measuring Compression Impact with Profiler")
+    print("=" * 70)
+    
+    profiler = Profiler()
+    
+    # Create a simple model
+    from tinytorch.core.layers import Linear
+    model = Linear(512, 256)
+    model.name = "baseline_model"
+    
+    print("\n🏋️  BEFORE: Dense Model")
+    print("-" * 70)
+    
+    # Measure baseline
+    param_count_before = profiler.count_parameters(model)
+    sparsity_before = measure_sparsity(model)
+    input_shape = (32, 512)
+    memory_before = profiler.measure_memory(model, input_shape)
+    
+    print(f"   Parameters: {param_count_before:,}")
+    print(f"   Sparsity: {sparsity_before*100:.1f}% (zeros)")
+    print(f"   Memory: {memory_before['parameter_memory_mb']:.2f} MB")
+    print(f"   Active parameters: {int(param_count_before * (1 - sparsity_before)):,}")
+    
+    # Apply magnitude pruning
+    target_sparsity = 0.7  # Remove 70% of parameters
+    print(f"\n✂️  Applying {target_sparsity*100:.0f}% Magnitude Pruning...")
+    pruned_model = magnitude_prune(model, sparsity=target_sparsity)
+    pruned_model.name = "pruned_model"
+    
+    print("\n🪶 AFTER: Pruned Model")
+    print("-" * 70)
+    
+    # Measure after pruning
+    param_count_after = profiler.count_parameters(pruned_model)
+    sparsity_after = measure_sparsity(pruned_model)
+    memory_after = profiler.measure_memory(pruned_model, input_shape)
+    
+    print(f"   Parameters: {param_count_after:,} (same, but many are zero)")
+    print(f"   Sparsity: {sparsity_after*100:.1f}% (zeros)")
+    print(f"   Memory: {memory_after['parameter_memory_mb']:.2f} MB (same storage)")
+    print(f"   Active parameters: {int(param_count_after * (1 - sparsity_after)):,}")
+    
+    print("\n📈 COMPRESSION RESULTS")
+    print("=" * 70)
+    sparsity_gain = (sparsity_after - sparsity_before) * 100
+    active_before = int(param_count_before * (1 - sparsity_before))
+    active_after = int(param_count_after * (1 - sparsity_after))
+    reduction_ratio = active_before / active_after if active_after > 0 else 1
+    params_removed = active_before - active_after
+    
+    print(f"   Sparsity increased: {sparsity_before*100:.1f}% → {sparsity_after*100:.1f}%")
+    print(f"   Active params reduced: {active_before:,} → {active_after:,}")
+    print(f"   Parameters removed: {params_removed:,} ({sparsity_gain:.1f}% of total)")
+    print(f"   Compression ratio: {reduction_ratio:.1f}x fewer active parameters")
+    
+    print("\n💡 Key Insight:")
+    print(f"   Magnitude pruning removes {sparsity_gain:.0f}% of parameters")
+    print(f"   With sparse storage formats, this means {reduction_ratio:.1f}x less memory!")
+    print(f"   Critical for: edge devices, mobile apps, energy efficiency")
+    print("\n✅ This is the power of compression: remove what doesn't matter!")
+
+demo_compression_with_profiler()
 
 # %% [markdown]
 """
