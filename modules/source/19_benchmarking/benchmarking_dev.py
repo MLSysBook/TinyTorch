@@ -1938,6 +1938,91 @@ test_unit_optimization_comparison()
 
 # %% [markdown]
 """
+## 4.4 MLPerf Principles - Industry-Standard Benchmarking
+
+Before we dive into optimization strategies, let's learn from **MLPerf** - the industry-standard ML benchmarking framework. Understanding MLPerf principles will ground your capstone competition in professional ML systems evaluation.
+
+### What is MLPerf?
+
+MLPerf is the industry-standard benchmark suite for measuring ML system performance. Think of it as the "Olympics" of ML systems, but with rigorous scientific methodology:
+
+- **Created by:** MLCommons (Google, NVIDIA, Intel, universities)
+- **Used by:** All major ML hardware/software companies
+- **Purpose:** Fair, reproducible comparison of ML systems
+- **Impact:** Drives billions in hardware/software decisions
+
+### Core MLPerf Principles
+
+**1. Reproducibility**
+- Exact hardware specifications reported
+- Software versions documented
+- Random seeds controlled
+- Multiple runs required for statistical validity
+
+**2. Standardization**
+- Fixed model architectures (everyone runs the same models)
+- Fixed datasets (same training/test data)
+- Fixed quality targets (must achieve X% accuracy)
+- Fair comparison (apples-to-apples)
+
+**3. Divisions for Different Goals**
+
+MLPerf has TWO main divisions:
+
+**🔒 Closed Division** (Strict Rules):
+- Use provided model architectures exactly
+- Use provided datasets exactly
+- Can optimize: training algorithms, hardware, software stack
+- **Goal:** Fair comparison of SYSTEMS (not algorithms)
+- Example: "Which GPU trains ResNet-50 fastest?"
+
+**🔓 Open Division** (Flexible Rules):
+- Modify model architectures
+- Use different datasets
+- Novel algorithms allowed
+- **Goal:** Show innovation and new approaches
+- Example: "New pruning technique achieves 10x speedup!"
+
+**Why Two Divisions?**
+- Closed: Answers "What's the best hardware/software for X?"
+- Open: Answers "What's the best algorithm/innovation for Y?"
+
+### MLPerf Inference Benchmarks
+
+MLPerf Inference (what we care about) measures:
+- **Latency:** Single-stream inference time
+- **Throughput:** Offline batch processing speed
+- **Accuracy:** Must meet quality targets
+- **Power:** Energy efficiency (advanced)
+
+Common scenarios:
+- **Server:** Datacenter deployment (high throughput)
+- **Edge:** On-device inference (low latency, low power)
+- **Mobile:** Smartphone deployment (tiny models)
+
+### TinyMLPerf - MLPerf for Tiny Systems
+
+TinyMLPerf is MLPerf for embedded/edge devices:
+- Models <1MB
+- Latency <100ms
+- Power <10mW
+- Real deployment constraints
+
+**This is what inspires your capstone!**
+
+### Key Takeaways for Your Competition
+
+1. **Reproducibility Matters:** Document everything
+2. **Fair Comparison:** Same baseline for everyone
+3. **Multiple Metrics:** Not just accuracy - latency, memory, energy
+4. **Real Constraints:** Optimize for actual deployment scenarios
+5. **Closed vs Open:** Understand the rules of your competition
+
+**In Module 20**, you'll participate in **TinyMLPerf-style competition** following these principles!
+"""
+
+# %% [markdown]
+"""
 ## 4.5 Combination Strategies - Preparing for TorchPerf Olympics
 
 You've learned individual optimizations (M14-18). Now it's time to combine them strategically! The order and parameters matter significantly for final performance.
