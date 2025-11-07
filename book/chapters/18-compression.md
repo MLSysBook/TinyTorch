@@ -15,7 +15,7 @@ learning_objectives:
 
 # 18. Compression
 
-**⚡ PERFORMANCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
+**⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
 ## Overview
 
