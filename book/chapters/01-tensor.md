@@ -17,13 +17,9 @@ learning_objectives:
 
 # 01. Tensor
 
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; display: inline-block; margin-bottom: 2rem; font-weight: 600;">
-Foundation Tier | Module 01 of 20
-</div>
+**🏗️ FOUNDATION TIER** | Difficulty: ⭐ (1/4) | Time: 4-6 hours
 
 **Build N-dimensional arrays from scratch - the foundation of all ML computations.**
-
-Difficulty: Beginner | Time: 4-6 hours | Prerequisites: Environment Setup
 
 ---
 
