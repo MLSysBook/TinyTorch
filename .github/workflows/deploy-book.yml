@@ -53,7 +53,8 @@ jobs:
     - name: Build Jupyter Book
       run: |
         cd book
-        jupyter-book build .
+        jupyter-book clean . || true
+        jupyter-book build . --all
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
