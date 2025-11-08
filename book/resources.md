@@ -8,10 +8,10 @@
 While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
 
 **TinyTorch Learning Resources:**
-- **[Track Your Progress →](learning-progress.html)** - Monitor capability development and learning progression
-- **[Progress Tracking →](checkpoint-system.html)** - Technical details on capability testing
-- **[Testing Guide →](testing-framework.html)** - Comprehensive testing methodology
-- **[Achievement Showcase →](leaderboard.html)** - Portfolio development and career readiness
+- **📖 See [Track Your Progress](learning-progress.html)** for monitoring capability development and learning progression
+- **📖 See [Progress Tracking](checkpoint-system.html)** for technical details on capability testing
+- **📖 See [Testing Guide](testing-framework.html)** for comprehensive testing methodology
+- **📖 See [Achievement Showcase](leaderboard.html)** for portfolio development and career readiness
 
 ---
 
@@ -96,9 +96,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 **📖 See [Essential Commands](tito-essentials.html)** for complete TITO command reference.
 
 **Your Next Steps:**
-1. **[Quick Start Guide →](quickstart-guide.html)** - 15-minute hands-on experience
-2. **[Track Your Progress →](learning-progress.html)** - Understand capability development
-3. **[Course Introduction →](chapters/00-introduction.html)** - Deep dive into course philosophy
+1. **📖 See [Quick Start Guide](quickstart-guide.html)** for 15-minute hands-on experience
+2. **📖 See [Track Your Progress](learning-progress.html)** for understanding capability development
+3. **📖 See [Course Introduction](chapters/00-introduction.html)** for deep dive into course philosophy
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h4 style="margin: 0 0 1rem 0; color: #495057;">🎯 Transform from Framework User to Systems Engineer</h4>

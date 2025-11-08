@@ -18,8 +18,21 @@
 __all__ = ['Tokenizer', 'CharTokenizer', 'BPETokenizer']
 
 # %% ../../modules/source/10_tokenization/tokenization_dev.ipynb 0
-#| default_exp text.tokenization
-#| export
+import numpy as np
+from typing import List, Dict, Tuple, Optional, Set
+import json
+import re
+from collections import defaultdict, Counter
+
+# %% ../../modules/source/10_tokenization/tokenization_dev.ipynb 3
+import numpy as np
+from typing import List, Dict, Tuple, Optional, Set
+import json
+import re
+from collections import defaultdict, Counter
+
+# Import only Module 01 (Tensor) - this module has minimal dependencies
+from ..core.tensor import Tensor
 
 # %% ../../modules/source/10_tokenization/tokenization_dev.ipynb 8
 class Tokenizer:

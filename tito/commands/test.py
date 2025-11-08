@@ -259,12 +259,22 @@ class TestCommand(BaseCommand):
         """Run inline tests using the module's standardized testing framework."""
         inline_tests = []
         
+        # Set up environment to include current directory in PYTHONPATH
+        import os
+        env = os.environ.copy()
+        project_root = Path.cwd()
+        if 'PYTHONPATH' in env:
+            env['PYTHONPATH'] = f"{project_root}:{env['PYTHONPATH']}"
+        else:
+            env['PYTHONPATH'] = str(project_root)
+        
         try:
             result = subprocess.run(
                 [sys.executable, str(dev_file)],
                 capture_output=True,
                 text=True,
-                timeout=60  # 1 minute timeout
+                timeout=60,  # 1 minute timeout
+                env=env
             )
             
             output = result.stdout

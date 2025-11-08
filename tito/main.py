@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Dict, Type, Optional, List
 
 from .core.config import CLIConfig
+from .core.virtual_env_manager import get_venv_path
 from .core.console import get_console, print_banner, print_error, print_ascii_logo
 from .core.exceptions import TinyTorchCLIError
 from rich.panel import Panel
@@ -159,7 +160,7 @@ Examples:
     
     def validate_environment(self) -> bool:
         """Validate the environment and show issues if any."""
-        issues = self.config.validate()
+        issues = self.config.validate(get_venv_path())
         
         if issues:
             print_error(

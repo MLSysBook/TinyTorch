@@ -1,0 +1,141 @@
+2961f55 Add work completion summary for user review
+78dc030 Add comprehensive user feedback and review document
+c0d3595 Update TOC with tier overview pages and improved structure
+d9e33b2 Add Intelligence and Performance Tier overview pages
+27458d3 Update Module 07 Training - Complete Foundation Tier
+7dfab41 Update Module 06 Optimizers with professional template
+fdc8e3b Update Module 05 Autograd with professional template
+a1d60ef Fix Module 04 content - change from Networks to Losses
+ece7552 Update Module 03 Layers with professional template
+84f280d Update Module 02 Activations with professional template
+b9b525f Add website content improvements implementation guide
+3003108 Remove tito module and tito notebooks commands from CLI
+c8fb034 Fix duplicate submit commands by renaming community submit to share
+8e99df1 Add tito submit command and rename leaderboard to community
+863cde8 Add validation and normalized scoring to Module 20 competition submissions
+26fafbc Add normalized scoring to Module 19 for fair competition comparison
+7c41e2d Add MLPerf methodology to Module 19 and rebrand Module 20 as TinyMLPerf
+4a9919e Refactor Module 19 to TorchPerf Olympics framework
+80601c0 Add Profiler demo to Module 18 Compression
+6118f1e Add Profiler demo to Module 17 Quantization
+4ef3cb9 Rename ProfilerComplete to Profiler for cleaner API
+96d0fc5 Refactor Module 19 Benchmark to use ProfilerComplete from Module 15
+f670260 Fix Module 16 test to remove mixed precision trainer references
+9ad19a1 Streamline Module 18 Compression (Option 2: Moderate cleanup)
+ac75584 Streamline Module 17 Quantization by removing analysis functions
+1d663bb Remove mixed precision content from Module 16 Acceleration
+190dd29 Update project status: Module 17 Quantization complete
+e7b1337 Module 17: Export QuantizationComplete for INT8 quantization
+0fd500b Format matrix diagram in acceleration module for better readability
+8013f5d Add Module 14-15 connection section to profiling documentation
+1aea3ec Update project status: Module 15 Profiling complete
+6ae3505 Module 15: Export ProfilerComplete and create KV cache profiling demo
+45fd873 Add comprehensive documentation for KV cache path selection
+13c894f Implement REAL KV caching with 6x speedup
+fff23ef Fix enable_kv_cache to handle mask parameter and add integration test
+7b057a9 Add jupytext to requirements and export Module 14
+515384f Complete Module 14 KV caching implementation
+50176f7 Implement non-invasive KV cache integration (enable_kv_cache)
+adbc96a Add KV caching support to chatbot milestone
+d9e9e6b Consolidate environment setup to ONE canonical path
+98f0c96 Update PROJECT_STATUS: Module 14 complete (74% total progress)
+8111807 Add comprehensive integration tests for Module 14 KV Caching
+4de0d66 Document KV caching as inference-only (no gradient flow concerns)
+351fb09 Implement Module 14: KV Caching for 10-15x generation speedup
+8e1537c Document performance metrics implementation and project status
+1fe1fae Add performance metrics to transformer chatbot demo
+1340bca Fix direnv configuration to use root-level venv
+838c141 Modernize requirements to 2025 latest versions
+aa36fef Remove non-Vaswani transformer examples
+a49d4c3 docs(workflow): Clarify TinyTorch development workflow
+9c31772 Add Peacock flame theme settings for TinyTorch workspace
+73e04f2 Clean up repository by removing unnecessary documentation
+8ae4869 feat(milestone05): Update dashboard to 15-minute training for better learning
+15d3ed5 Merge transformer-training into dev
+330e173 feat(milestone05): Add celebration milestone card to TinyTalks dashboard
+3e63a03 docs(milestone05): Add visual preview of TinyTalks dashboard
+a281b67 feat(milestone05): Add rich CLI dashboard for TinyTalks training
+e005c39 docs(milestone05): Add comprehensive TinyTalks documentation
+ae3c9e5 feat(milestone05): Add TinyTalks chatbot with interactive learning dashboard
+c69b3f3 docs(milestone05): Add comprehensive 5-minute training analysis
+aac9994 feat(milestone05): Add 5-min training benchmark with 97.8% loss improvement
+e0b8ed4 feat(milestone05): Add progressive transformer validation suite
+afc1553 feat(milestone05): Add Level 1 transformer memorization test
+0555d8b fix(copilot): Fix CharTokenizer API usage in copilot milestone
+bcc51a4 test(transformers): Add training validation test file
+4cc492c test(transformers): Add comprehensive training validation suite
+88fae96 fix(tokenization): Add missing imports to tokenization module
+1cb6ed4 feat(autograd): Fix gradient flow through all transformer components
+ca93669 feat(milestones): Add monitored training script with early stopping
+c9ee345 Merge branch 'transformer-training' into dev
+9a5147e chore: Remove temporary documentation and planning files
+174ba7c fix(milestones): Use model.forward() instead of model() for TinyGPT training
+ff13efb docs(book): Update introduction, TOC, and learning progress from dev branch
+1a638c2 Merge dev into transformer-training: Add TinyTalks dataset, diagnostic tests, and training improvements
+5bc3537 feat(website): Restructure TOC with pedagogically-sound three-tier learning pathway
+a348acf fix(package): Add PyTorch-style __call__ methods to exported modules
+ee12c77 feat: Add PyTorch-style __call__ methods and update milestone syntax
+ee47236 feat(milestones): Add TinyTalks diagnostic features for systematic testing
+8338733 fix(milestones): Improve tinystories_gpt.py training output frequency
+c88da0b test(milestones): Add diagnostic script for TinyTalks learning verification
+c8b700e feat(milestones): Add tinytalks_gpt.py - Transformer training on TinyTalks dataset
+c647171 feat(datasets): Add TinyTalks v1.0 - Educational Q&A dataset for transformer training
+10b1d04 docs: Add comprehensive training fix documentation
+f37f1dc fix: Critical bug - preserve computation graph in training loop
+829a70f feat: Add TinyStories training as easier alternative to Shakespeare
+228b579 fix: Correct TransformerBlock parameter - pass mlp_ratio not hidden_dim
+d5161e7 test: Add simple pattern learning tests for transformer
+70b447a fix: Add missing typing imports to Module 10 tokenization
+69d5621 refactor: Use CharTokenizer from Module 10 instead of manual tokenization
+6e28844 fix: Update transformer config to industry best practices
+b3b8194 test: Add comprehensive transformer learning verification
+fad3f7c chore: Remove temporary documentation files from tests/
+c0b4f22 docs: Add gradient flow test suite summary
+fc4cb76 test: Add comprehensive NLP component gradient flow tests
+c97ba79 docs: Add comprehensive gradient flow fixes documentation
+df43b8a chore: Remove temporary debug test files
+6cb37bc fix(autograd): Complete transformer gradient flow - ALL PARAMETERS NOW WORK!
+578b6d7 fix(autograd): Add SoftmaxBackward and patch Softmax.forward()
+ff8702e fix(autograd): Add EmbeddingBackward and ReshapeBackward
+471d2af docs: Add comprehensive gradient flow fix summary
+6733f2d test: Move gradient flow tests to proper locations
+4c93844 fix(module-05): Add TransposeBackward and fix MatmulBackward for batched ops
+c7af13d fix(milestones): Fix milestone scripts and transformer setup
+a832851 fix(module-13): Rewrite LayerNorm to use Tensor operations
+4a5c15c fix(module-12): Rewrite attention to use batched Tensor operations
+8cff435 fix(module-11): Fix Embedding and PositionalEncoding gradient flow
+fcecbe5 fix(module-05): Add SubBackward and DivBackward for autograd
+8c1be08 fix(module-03): Rewrite Dropout to use Tensor operations
+baf5727 fix(module-02): Rewrite Softmax to use Tensor operations
+db1f0a2 fix(module-01): Fix batched matmul and transpose grad preservation
+86f20a3 🎨 Add Rich CLI formatting to transformer milestone 05
+1bfb1cb ✅ Complete transformer module fixes and milestone 05
+8546e3e 🤖 Fix transformer module exports and milestone 05 imports
+645ef47 ✨ Add Shakespeare dataset to DatasetManager
+f02fe68 🔄 Rename milestone 06: mlperf → scaling (2020 GPT-3 era)
+c4d5e4e 🏗️ Restructure milestones with decade-based naming
+0ae627d Clean root directory: remove debug scripts, status files, and redundant docs
+f1ae172 🧹 Remove book/_build/ artifacts from git tracking
+59bbf7f 🧹 Remove git-rewrite temporary files
+f9449ee Merge remote dev branch with local website updates
+9982d7c 🧹 Clean up book files
+019c8ba 🧹 Clean up git-rewrite temporary files
+68ac62f 📚 Update website navigation and content
+2d4294a Add activity badges to README
+b8f7ee2 Add activity badges to README
+ea53d00 Fix modules 10-13 tests and add CLAUDE.md
+791b09a Fix modules 10-13 tests and add CLAUDE.md
+0ad52f8 refactor: Update transformers module and milestone compatibility
+6603e00 refactor: Update transformers module and milestone compatibility
+ed52d8a refactor: Update attention module to match tokenization style
+77e2e7f refactor: Update attention module to match tokenization style
+3a1b08f Merge remote-tracking branch 'origin/dev' into dev
+4d70e30 refactor: Update embeddings module to match tokenization style
+daaf507 Update work in progress status in README
+1bddedf Add .cursor/ and .claude/ to .gitignore and remove from tracking
+805608e fix: Adjust ASCII diagram spacing for consistent alignment
+c43c5d8 docs: Improve tokenization module with enhanced ASCII diagrams
+6efe112 refactor: Standardize imports across modules 10-17 to match 01-09
+9bb506a Merge pull request #7 from Zappandy/feature/dynamic-venv-config
+7f5d591 fixed default venv value in config for validation
+e96d821 Feat(env) dynamic virtual env support for advanced users

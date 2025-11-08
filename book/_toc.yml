@@ -25,67 +25,62 @@ parts:
   - file: chapters/00-introduction
     title: "Introduction"
 
-- caption: 🧱 Building Blocks
+- caption: 🏗️ Foundation Tier (01-07)
   chapters:
-  - file: chapters/02-tensor
+  - file: chapters/01-tensor
     title: "01. Tensor"
-  - file: chapters/03-activations
+  - file: chapters/02-activations
     title: "02. Activations"
-  - file: chapters/04-layers
+  - file: chapters/03-layers
     title: "03. Layers"
-  - file: chapters/05-dense
+  - file: chapters/04-losses
     title: "04. Losses"
-
-- caption: 🧠 Learning Systems
-  chapters:
-  - file: chapters/09-autograd
+  - file: chapters/05-autograd
     title: "05. Autograd"
-  - file: chapters/10-optimizers
+  - file: chapters/06-optimizers
     title: "06. Optimizers"
-  - file: chapters/11-training
+  - file: chapters/07-training
     title: "07. Training"
-  - file: chapters/06-spatial
-    title: "08. Spatial"
 
-- caption: 🏗️ Neural Architectures
+- caption: 🧠 Intelligence Tier (08-14)
   chapters:
   - file: chapters/08-dataloader
-    title: "09. DataLoader"
-  - file: chapters/11-tokenization
+    title: "08. DataLoader"
+  - file: chapters/09-spatial
+    title: "09. Spatial (CNNs)"
+  - file: chapters/10-tokenization
     title: "10. Tokenization"
-  - file: chapters/12-embeddings
+  - file: chapters/11-embeddings
     title: "11. Embeddings"
-  - file: chapters/07-attention
+  - file: chapters/12-attention
     title: "12. Attention"
-  - file: chapters/16-tinygpt
+  - file: chapters/13-transformers
     title: "13. Transformers"
+  - file: chapters/14-kvcaching
+    title: "14. KV Caching"
 
-- caption: ⚡ Performance Optimization
+- caption: ⚡ Optimization Tier (15-19)
   chapters:
   - file: chapters/15-profiling
-    title: "14. Profiling"
-  - file: chapters/13-kernels
-    title: "15. Acceleration"
+    title: "15. Profiling"
+  - file: chapters/16-acceleration
+    title: "16. Acceleration"
   - file: chapters/17-quantization
-    title: "16. Quantization"
-  - file: chapters/12-compression
-    title: "17. Compression"
-  - file: chapters/19-caching
-    title: "18. KV Caching"
-  - file: chapters/14-benchmarking
+    title: "17. Quantization"
+  - file: chapters/18-compression
+    title: "18. Compression"
+  - file: chapters/19-benchmarking
     title: "19. Benchmarking"
 
-- caption: 🏆 Historical Milestones
+- caption: 🏅 Capstone Project
   chapters:
-  - file: chapters/milestones-overview
-    title: "Journey Through ML History"
+  - file: chapters/20-capstone
+    title: "20. MLPerf® Edu Competition"
 
-- caption: 🏅 Community & Competition
+- caption: 🌍 Community
   chapters:
-  - file: leaderboard
-    title: "Leaderboard"
-  - file: competitions
-    title: "Competitions"
+  - file: community
+    title: "Ecosystem"
 
 - caption: 🛠️ Resources & Tools
   chapters:

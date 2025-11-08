@@ -91,7 +91,7 @@ tito checkpoint test 13  # "Can I build attention mechanisms?"
 tito checkpoint validate --from 00 --to 15
 ```
 
-**[See Complete Checkpoint System Documentation →](checkpoint-system.html)**
+**📖 See [Complete Checkpoint System Documentation](checkpoint-system.html)** for technical implementation details.
 
 **Key Capability Categories:**
 - **Foundation (00-03)**: Building blocks of neural networks
@@ -374,9 +374,9 @@ tito checkpoint status
 ```
 
 **Testing Integration with Your Learning Path:**
-- **[Track Your Progress →](learning-progress.html)** - See how testing fits into capability development
-- **[Track Capabilities →](checkpoint-system.html)** - Use automated testing for progress validation
-- **[Showcase Achievements →](leaderboard.html)** - Testing validates the skills you can claim
+- **📖 See [Track Your Progress](learning-progress.html)** for how testing fits into capability development
+- **📖 See [Track Capabilities](checkpoint-system.html)** for automated testing and progress validation
+- **📖 See [Showcase Achievements](leaderboard.html)** for how testing validates the skills you can claim
 
 <div style="background: #e3f2fd; border: 2px solid #1976d2; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h4 style="margin: 0 0 1rem 0; color: #1565c0;">🎯 Testing Excellence = ML Systems Mastery</h4>
