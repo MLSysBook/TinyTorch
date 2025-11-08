@@ -2,7 +2,7 @@
 
 Welcome to TinyTorch! You're about to build an ML framework from scratch and understand ML systems engineering.
 
-## 🚀 Getting Started (5 minutes)
+## 🚀 Getting Started (2 minutes)
 
 ### 1️⃣ **Setup Your Environment**
 ```bash
@@ -10,18 +10,23 @@ Welcome to TinyTorch! You're about to build an ML framework from scratch and und
 git clone https://github.com/MLSysBook/TinyTorch.git
 cd TinyTorch
 
-# Create virtual environment (MANDATORY)
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# One-command setup (handles everything!)
+./setup-environment.sh
 
-# Install dependencies
-pip install -r requirements.txt
+# Activate environment
+source activate.sh
 
 # Verify setup
 tito system doctor
 ```
 
 ✅ **You should see all green checkmarks!**
+
+**What the setup script does:**
+- Creates virtual environment (optimized for your system)
+- Installs all dependencies (NumPy, Jupyter, Rich, etc.)
+- Configures TinyTorch for development
+- Handles Apple Silicon architecture automatically
 
 ### 2️⃣ **Start Your First Module**
 ```bash

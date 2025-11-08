@@ -304,7 +304,17 @@ class Tensor:
 
         # Reshape the data (NumPy handles the memory layout efficiently)
         reshaped_data = np.reshape(self.data, new_shape)
-        return Tensor(reshaped_data)
+        
+        # Create output tensor preserving gradient tracking
+        result = Tensor(reshaped_data, requires_grad=self.requires_grad)
+        
+        # Set up backward function for autograd
+        if self.requires_grad:
+            from tinytorch.core.autograd import ReshapeBackward
+            result._grad_fn = ReshapeBackward()
+            result._grad_fn.saved_tensors = (self,)
+        
+        return result
         ### END SOLUTION
 
     def transpose(self, dim0=None, dim1=None):

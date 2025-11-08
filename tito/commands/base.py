@@ -5,9 +5,11 @@ Base command class for TinyTorch CLI.
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser, Namespace
 from typing import Optional
+from pathlib import Path
 import logging
 
 from ..core.config import CLIConfig
+from ..core.virtual_env_manager import get_venv_path
 from ..core.console import get_console
 from ..core.exceptions import TinyTorchCLIError
 
@@ -26,6 +28,11 @@ class BaseCommand(ABC):
     def name(self) -> str:
         """Return the command name."""
         pass
+
+    @property
+    def venv_path(self) -> Path:
+        """Return the command name."""
+        return get_venv_path()
     
     @property
     @abstractmethod

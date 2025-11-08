@@ -69,7 +69,7 @@ def create_model():
         
         def forward(self, x):
             # Forward pass using YOUR implementations
-            x = self.layer1(x)        # Module 04: YOUR Linear.forward()!
+            x = self.layer1(x)        # Module 04: YOUR Linear()!
             x = self.activation(x)    # Module 03: YOUR ReLU activation!
             x = self.layer2(x)        # Module 04: YOUR final transformation!
             return x
@@ -91,7 +91,7 @@ def train_model(model, data_loader):
         
         for batch_data, batch_labels in data_loader:  # Module XX: YOUR DataLoader!
             # Forward pass with YOUR components
-            outputs = model.forward(batch_data)         # YOUR model architecture!
+            outputs = model(batch_data)         # YOUR model architecture!
             loss = loss_fn(outputs, batch_labels)       # YOUR loss computation!
             
             # Backward pass with YOUR autograd
@@ -115,7 +115,7 @@ def analyze_performance(model):
     
     # Test forward pass
     test_input = Tensor(np.random.randn(batch_size, input_size))  # YOUR Tensor!
-    output = model.forward(test_input)                            # YOUR architecture!
+    output = model(test_input)                            # YOUR architecture!
     
     current, peak = tracemalloc.get_traced_memory()
     print(f"   Memory usage: {peak / 1024 / 1024:.2f} MB peak")
