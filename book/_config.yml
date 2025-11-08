@@ -22,6 +22,7 @@ execute:
 exclude_patterns:
   - _build
   - .venv
+  - appendices
   - "**/.venv/**"
   - "**/__pycache__/**"
   - "**/.DS_Store"
