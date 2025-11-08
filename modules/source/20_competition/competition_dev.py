@@ -18,52 +18,53 @@
 """
 # Module 20: TinyMLPerf Competition - Your Capstone Challenge
 
-Welcome to the capstone! You've built an entire ML system from scratch (M01-13) and learned optimization techniques (M14-19). Now it's time to compete and show what you can do! 🏅
+Welcome to the capstone! You've built an entire ML system (M01-13) and learned optimization techniques (M14-19). Now compete in **TinyMLPerf** - a competition inspired by industry-standard MLPerf benchmarking!
 
-## 🔗 Your Journey
+## 🔗 Prerequisites & Progress
+**You've Built**: Complete ML framework with all optimization techniques
+**You've Learned**: MLPerf principles and benchmarking methodology (Module 19)
+**You'll Do**: Compete in TinyMLPerf following Closed Division rules
+**You'll Produce**: Standardized TinyMLPerf submission
+
+**The Journey So Far**:
 ```
 Modules 01-13: Build ML System (tensors → transformers)
 Modules 14-18: Learn Optimization Techniques  
-Module 19:     Learn Benchmarking
+Module 19:     Learn MLPerf-Style Benchmarking
 Module 20:     Compete in TinyMLPerf! 🏅
 ```
 
-## 🏅 TinyMLPerf: Two Ways to Compete
+## 🏅 TinyMLPerf: MLPerf for Educational Systems
 
-Inspired by industry-standard MLPerf (which you learned about in Module 19), TinyMLPerf offers **two competition tracks**:
+TinyMLPerf follows MLPerf principles adapted for educational ML systems:
 
-### 🔒 Closed Division - "Optimization Challenge"
-**What you do:**
-- Start with provided baseline model (everyone gets the same)
-- Apply optimization techniques from Modules 14-18
-- Compete on: Who optimizes best?
+**Closed Division Rules (What You'll Do):**
+- ✅ Use provided baseline models (fair comparison)
+- ✅ Use provided test datasets (standardized evaluation)
+- ✅ Apply optimization techniques from Modules 14-18
+- ✅ Report all metrics (accuracy, latency, memory)
+- ✅ Document your optimization strategy
 
-**Best for:** Most students - clear rules, fair comparison
-**Focus:** Your optimization skills
+**Why Closed Division?**
+- Fair apples-to-apples comparison
+- Tests your optimization skills (not model design)
+- Mirrors real-world MLPerf Inference competitions
+- Professionally credible methodology
 
-### 🔓 Open Division - "Innovation Challenge"  
-**What you do:**
-- Modify anything! Improve your implementations from M01-19
-- Design better architectures
-- Novel approaches encouraged
+**Competition Categories:**
+- 🏃 Latency Sprint: Minimize inference time
+- 🏋️ Memory Challenge: Minimize model footprint
+- 🎯 Accuracy Contest: Maximize accuracy within constraints
+- 🏋️‍♂️ All-Around: Best balanced performance
+- 🚀 Extreme Push: Most aggressive optimization
 
-**Best for:** Advanced students who want more creative freedom
-**Focus:** Your systems innovations
+This module provides:
+1. **Validation**: Verify your TinyTorch installation
+2. **Baseline**: Official reference performance
+3. **Worked Example**: Complete optimization workflow
+4. **Competition Template**: Your submission workspace
 
-## Competition Categories (Both Divisions)
-- 🏃 **Latency Sprint**: Fastest inference
-- 🏋️ **Memory Challenge**: Smallest model
-- 🎯 **Accuracy Contest**: Best accuracy within constraints
-- 🏋️‍♂️ **All-Around**: Best balanced performance
-- 🚀 **Extreme Push**: Most aggressive optimization
-
-## What This Module Provides
-1. **Validation**: Check your TinyTorch works
-2. **Baseline**: Starting point for Closed Division
-3. **Examples**: See both tracks in action
-4. **Template**: Your competition workspace
-
-Pick your track, optimize, and compete! 🔥
+🔥 Let's compete following professional MLPerf methodology! 🏅
 """
 
 # %% [markdown]
@@ -90,36 +91,47 @@ from tinytorch.competition.submit import load_baseline_model, generate_submissio
 
 # %% [markdown]
 """
-# 1. Pick Your Track & Validate
+# 1. TinyMLPerf Rules & System Validation
 
-Before competing, choose your track and make sure your TinyTorch installation works!
+Before competing, let's understand TinyMLPerf rules and validate your environment. Following MLPerf methodology (learned in Module 19) ensures fair competition and reproducible results.
 
-## Two Tracks, Two Styles
+## TinyMLPerf Closed Division Rules
 
-### 🔒 Closed Division - "The Optimization Challenge"
-- Everyone starts with the same baseline model
-- Apply techniques from Modules 14-18 (quantization, pruning, etc.)
-- Fair comparison: who optimizes best?
-- **Choose this if:** You want clear rules and direct competition
+**You learned in Module 19 that MLPerf Closed Division requires:**
+1. **Fixed Models**: Use provided baseline architectures
+2. **Fixed Datasets**: Use provided test data
+3. **Fair Comparison**: Same starting point for everyone
+4. **Reproducibility**: Document all optimizations
+5. **Multiple Metrics**: Report accuracy, latency, memory
 
-### 🔓 Open Division - "The Innovation Challenge"
-- Modify anything! Improve YOUR TinyTorch implementations
-- Better Conv2d? Faster matmul? Novel architecture? All allowed!
-- Compete on innovation and creativity
-- **Choose this if:** You want freedom to explore and innovate
+**In TinyMLPerf Closed Division, you CAN:**
+- ✅ Apply quantization (Module 17)
+- ✅ Apply pruning/compression (Module 18)
+- ✅ Enable KV caching for transformers (Module 14)
+- ✅ Combine techniques in any order
+- ✅ Tune hyperparameters
 
-**Can I do both?** Absolutely! Submit to both tracks.
+**In TinyMLPerf Closed Division, you CANNOT:**
+- ❌ Change baseline model architecture
+- ❌ Train on different data
+- ❌ Use external pretrained weights
+- ❌ Modify test dataset
 
-**Which is "better"?** Neither - they test different skills:
-- Closed = Optimization mastery
-- Open = Systems innovation
+**Why these rules?**
+- Tests your OPTIMIZATION skills (not model design)
+- Fair apples-to-apples comparison
+- Mirrors professional MLPerf competitions
+- Results are meaningful and reproducible
 
-## Quick Validation
+## System Validation
 
-Before competing, let's verify everything works:
-- ✅ All modules imported successfully
-- ✅ Optimization techniques available
-- ✅ Benchmarking tools ready
+Let's verify your TinyTorch installation works correctly before competing. MLPerf requires documenting your environment, so validation ensures reproducibility.
+
+**Validation checks:**
+- ✅ All 19 modules imported successfully
+- ✅ Core operations work (tensor, autograd, layers)
+- ✅ Optimization techniques available (M14-18)
+- ✅ Benchmarking tools functional (M19)
 """
 
 # %%
@@ -129,8 +141,6 @@ import json
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
-from tinytorch.benchmarking.benchmark import Benchmark, calculate_normalized_scores
-from tinytorch.profiling.profiler import Profiler
 
 def validate_installation() -> Dict[str, bool]:
     """
@@ -215,19 +225,24 @@ def validate_installation() -> Dict[str, bool]:
 
 # %% [markdown]
 """
-# 2. The Baseline (For Closed Division)
+# 2. TinyMLPerf Baseline - Official Reference Performance
 
-If you're competing in **Closed Division**, everyone starts with this baseline model. If you're in **Open Division**, you can skip this or use it as a reference!
+Following MLPerf Closed Division rules, everyone starts with the SAME baseline model. This ensures fair comparison - we're measuring your optimization skills, not model design.
 
-## Baseline Model: Simple CNN on CIFAR-10
+## What is a TinyMLPerf Baseline?
 
-We provide a simple CNN as the starting point for Closed Division:
-- **Architecture:** Conv → Pool → Conv → Pool → FC → FC
-- **Dataset:** CIFAR-10 (standardized test set)
-- **Metrics:** Accuracy, latency, memory (we'll measure together)
+In MLPerf competitions, the baseline is the official reference implementation:
+- **Fixed Architecture:** Provided CNN (everyone uses the same)
+- **Fixed Dataset:** CIFAR-10 test set (standardized evaluation)
+- **Measured Metrics:** Accuracy, latency, memory (reproducible)
+- **Your Goal:** Beat baseline using optimization techniques from M14-18
 
-**Closed Division:** Optimize THIS model using M14-18 techniques
-**Open Division:** Build/modify whatever you want!
+**This is MLPerf Closed Division:**
+- Everyone starts here ← Fair comparison
+- Apply YOUR optimizations ← Your skill
+- Measure improvement ← Objective scoring
+
+We provide a simple CNN on CIFAR-10 as the TinyMLPerf baseline. This gives everyone the same starting point.
 
 ### Baseline Components
 
@@ -392,35 +407,38 @@ def generate_baseline(model_name: str = "cifar10_cnn", quick: bool = True) -> Di
 
 # %% [markdown]
 """
-# 3. Complete Example - See Both Tracks in Action
+# 3. TinyMLPerf Closed Division Workflow - Complete Example
 
-Let's see complete examples for BOTH competition tracks!
+Let's see a complete TinyMLPerf submission following Closed Division rules. This example demonstrates the professional MLPerf methodology you learned in Module 19.
 
-## Example 1: Closed Division - Optimization Master
+**TinyMLPerf Closed Division Workflow:**
+1. **Load Official Baseline** (MLPerf requirement)
+2. **Apply Optimizations** (Modules 14-18 techniques)
+3. **Benchmark Systematically** (Module 19 tools)
+4. **Generate Submission** (MLPerf-compliant format)
+5. **Document Strategy** (Reproducibility requirement)
 
-**Goal:** Compete in All-Around category using provided baseline
+This is your template - study it, then implement your own optimization strategy!
 
-**Strategy:**
-1. Load baseline CNN
-2. Apply quantization (INT8) → 4x memory reduction
-3. Apply pruning (60%) → Speed boost
-4. Benchmark and submit
+## Example Strategy: All-Around Category
 
-**Why this order?** Quantize first preserves more accuracy than pruning first.
+For this worked example, we'll compete in the **All-Around** category (best balanced performance across all metrics).
 
-## Example 2: Open Division - Innovation Master
+**Our Optimization Strategy:**
+- **Step 1:** Quantization (INT8) → 4x memory reduction
+- **Step 2:** Magnitude Pruning (60%) → Faster inference
+- **Step 3:** Systematic Benchmarking → Measure impact
 
-**Goal:** Beat everyone with a novel approach
+**Why this order?**
+- Quantize FIRST: Preserves more accuracy than pruning first
+- Prune SECOND: Reduces what needs to be quantized
+- Benchmark: Following MLPerf measurement methodology
 
-**Strategy:**
-1. Improve YOUR Conv2d implementation (faster algorithm)
-2. OR design a better architecture (MobileNet-style)
-3. OR novel quantization (mixed precision per layer)
-4. Benchmark and submit
-
-**Freedom:** Modify anything in your TinyTorch implementation!
-
-Let's see the Closed Division example in detail below:
+**This follows MLPerf Closed Division rules:**
+- ✅ Uses provided baseline CNN
+- ✅ Applies optimization techniques (not architecture changes)
+- ✅ Documents strategy clearly
+- ✅ Reports all required metrics
 """
 
 # %%
@@ -531,81 +549,86 @@ def worked_example_optimization():
 
 # %% [markdown]
 """
-# 4. Your Turn - Pick Your Track!
+# 4. Your TinyMLPerf Submission Template
 
-Now it's time to compete! Choose your track and implement your strategy.
+Now it's your turn! Below is your TinyMLPerf Closed Division submission template. Following MLPerf methodology ensures your results are reproducible and fairly comparable.
 
-## Choose Your Track
+## TinyMLPerf Closed Division Submission Process
 
-### 🔒 Closed Division Template
-**If you choose Closed Division:**
-1. Pick a category (Latency Sprint, Memory Challenge, etc.)
-2. Design your optimization strategy
-3. Implement in `optimize_for_competition()` below
-4. Use techniques from Modules 14-18 only
-5. Generate submission
-
-**Good for:** Clear path, fair comparison, most students
-
-### 🔓 Open Division Template  
-**If you choose Open Division:**
-1. Pick a category
-2. Modify YOUR TinyTorch implementations (go edit earlier modules!)
-3. OR design novel architectures
-4. Re-export with `tito export` and benchmark
-5. Generate submission
-
-**Good for:** Creative freedom, systems innovation, advanced students
-
-## Competition Categories (Pick ONE)
-- 🏃 **Latency Sprint:** Fastest inference
-- 🏋️ **Memory Challenge:** Smallest model
-- 🎯 **Accuracy Contest:** Best accuracy within constraints
+**Step 1: Choose Your Category**
+Pick ONE category to optimize for:
+- 🏃 **Latency Sprint:** Minimize inference time
+- 🏋️ **Memory Challenge:** Minimize model footprint
+- 🎯 **Accuracy Contest:** Maximize accuracy within constraints
 - 🏋️‍♂️ **All-Around:** Best balanced performance
 - 🚀 **Extreme Push:** Most aggressive optimization
 
-## Template Below
+**Step 2: Design Your Optimization Strategy**
+- Review Module 19, Section 4.5 for combination strategies
+- Consider optimization order (quantize→prune vs prune→quantize)
+- Plan ablation study to understand each technique's impact
+- Document your reasoning (MLPerf reproducibility requirement)
 
-Use the `optimize_for_competition()` function to implement your strategy:
-- **Closed Division:** Apply M14-18 techniques
-- **Open Division:** Do whatever you want, document it!
+**Step 3: Implement in Template**
+- Write optimization code in `optimize_for_competition()`
+- Apply techniques from Modules 14-18
+- Follow TinyMLPerf Closed Division rules (no architecture changes!)
+
+**Step 4: Benchmark Systematically**
+- Use Module 19 benchmarking tools
+- Measure all required metrics (accuracy, latency, memory)
+- Run multiple times for statistical validity (MLPerf requirement)
+
+**Step 5: Generate MLPerf-Compliant Submission**
+- Run `generate_submission()` to create `submission.json`
+- Includes baseline comparison (MLPerf requirement)
+- Documents optimization strategy (reproducibility)
+- Ready for TinyMLPerf leaderboard upload
+
+## Submission Guidelines (MLPerf Inspired)
+
+- ✅ **Start with baseline:** Load provided CNN (don't modify architecture)
+- ✅ **Apply optimizations:** Use M14-18 techniques only
+- ✅ **Measure fairly:** Same hardware, same test data
+- ✅ **Document everything:** Strategy writeup required
+- ✅ **Report all metrics:** Accuracy, latency, memory (not just best one!)
+
+**Remember:** TinyMLPerf Closed Division tests your OPTIMIZATION skills, not model design. Work within the rules! 🏅
 """
 
 # %%
 #| export
-def optimize_for_competition(baseline_model, event: str = "all_around", division: str = "closed"):
+def optimize_for_competition(baseline_model, event: str = "all_around"):
     """
     🏅 YOUR COMPETITION ENTRY - IMPLEMENT YOUR STRATEGY HERE!
     
+    This is where you apply optimization techniques from Modules 14-18.
+    
+    Available techniques:
+    - Module 14: KV Caching (for transformers) - enable_kv_cache()
+    - Module 16: Acceleration (vectorization, fusion)
+    - Module 17: Quantization (INT8, INT4) - quantize_model()
+    - Module 18: Compression (pruning) - magnitude_prune()
+    
     Args:
-        baseline_model: Starting model (use for Closed, optional for Open)
-        event: Category you're competing in
+        baseline_model: The unoptimized model
+        event: Which Olympic event you're competing in
             - "latency_sprint": Minimize latency
             - "memory_challenge": Minimize memory
             - "accuracy_contest": Maximize accuracy
             - "all_around": Best balance
             - "extreme_push": Most aggressive
-        division: "closed" or "open" - which track you chose
     
     Returns:
         Your optimized model
     
-    🔒 CLOSED DIVISION Example:
+    Example:
         from tinytorch.optimization.quantization import quantize_model
         from tinytorch.optimization.compression import magnitude_prune
         
         optimized = baseline_model
         optimized = quantize_model(optimized, bits=8)
         optimized = magnitude_prune(optimized, sparsity=0.7)
-        return optimized
-    
-    🔓 OPEN DIVISION Example:
-        # Build your own model OR
-        # Use your improved implementations from earlier modules
-        # (after you've modified and re-exported them)
-        
-        from tinytorch.models import YourCustomArchitecture
-        optimized = YourCustomArchitecture()
         return optimized
     """
     
@@ -651,201 +674,74 @@ def optimize_for_competition(baseline_model, event: str = "all_around", division
     
     return optimized_model
 
-#| export
-def validate_submission(submission: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Validate competition submission with sanity checks.
-    
-    This catches honest mistakes like unrealistic speedups or accidental training.
-    Honor code system - we trust but verify basic reasonableness.
-    
-    Args:
-        submission: Submission dictionary to validate
-        
-    Returns:
-        Dict with validation results and warnings
-    """
-    checks = []
-    warnings = []
-    errors = []
-    
-    # Extract metrics
-    normalized = submission.get("normalized_scores", {})
-    speedup = normalized.get("speedup", 1.0)
-    compression = normalized.get("compression_ratio", 1.0)
-    accuracy_delta = normalized.get("accuracy_delta", 0.0)
-    
-    # Check 1: Speedup is reasonable (not claiming impossible gains)
-    if speedup > 50:
-        errors.append(f"❌ Speedup {speedup:.1f}x seems unrealistic (>50x)")
-    elif speedup > 20:
-        warnings.append(f"⚠️  Speedup {speedup:.1f}x is very high - please verify measurements")
-    else:
-        checks.append(f"✅ Speedup {speedup:.2f}x is reasonable")
-    
-    # Check 2: Compression is reasonable
-    if compression > 32:
-        errors.append(f"❌ Compression {compression:.1f}x seems unrealistic (>32x)")
-    elif compression > 16:
-        warnings.append(f"⚠️  Compression {compression:.1f}x is very high - please verify")
-    else:
-        checks.append(f"✅ Compression {compression:.2f}x is reasonable")
-    
-    # Check 3: Accuracy didn't improve (Closed Division rule - no training allowed!)
-    division = submission.get("division", "closed")
-    if division == "closed" and accuracy_delta > 1.0:
-        errors.append(f"❌ Accuracy improved by {accuracy_delta:.1f}pp - did you accidentally train the model?")
-    elif accuracy_delta > 0.5:
-        warnings.append(f"⚠️  Accuracy improved by {accuracy_delta:.1f}pp - verify no training occurred")
-    else:
-        checks.append(f"✅ Accuracy change {accuracy_delta:+.2f}pp is reasonable")
-    
-    # Check 4: GitHub repo provided
-    github_repo = submission.get("github_repo", "")
-    if not github_repo or github_repo == "":
-        warnings.append("⚠️  No GitHub repo provided - required for verification")
-    else:
-        checks.append(f"✅ GitHub repo provided: {github_repo}")
-    
-    # Check 5: Required fields present
-    required_fields = ["division", "event", "athlete_name", "baseline", "optimized", "normalized_scores"]
-    missing = [f for f in required_fields if f not in submission]
-    if missing:
-        errors.append(f"❌ Missing required fields: {', '.join(missing)}")
-    else:
-        checks.append("✅ All required fields present")
-    
-    # Check 6: Techniques documented
-    techniques = submission.get("techniques_applied", [])
-    if not techniques or "TODO" in str(techniques):
-        warnings.append("⚠️  No optimization techniques listed")
-    else:
-        checks.append(f"✅ Techniques documented: {', '.join(techniques[:3])}...")
-    
-    return {
-        "valid": len(errors) == 0,
-        "checks": checks,
-        "warnings": warnings,
-        "errors": errors
-    }
-
-#| export
 def generate_submission(baseline_model, optimized_model, 
-                       division: str = "closed",
                        event: str = "all_around",
                        athlete_name: str = "YourName",
-                       github_repo: str = "",
                        techniques: List[str] = None) -> Dict[str, Any]:
     """
-    Generate standardized TinyMLPerf competition submission with normalized scoring.
+    Generate standardized competition submission.
     
     Args:
         baseline_model: Original unoptimized model
         optimized_model: Your optimized model
-        division: "closed" or "open"
-        event: Competition category (latency_sprint, memory_challenge, all_around, etc.)
-        athlete_name: Your name for submission
-        github_repo: GitHub repository URL for code verification
-        techniques: List of optimization techniques applied
+        event: Olympic event name
+        athlete_name: Your name for leaderboard
+        techniques: List of techniques applied
     
     Returns:
         Submission dictionary (will be saved as JSON)
     """
-    print("📤 Generating TinyMLPerf Competition Submission...")
+    print("📤 Generating Competition Submission...")
     print("=" * 70)
     
     # Get baseline metrics
     baseline_metrics = generate_baseline(quick=True)
     
-    # Benchmark optimized model
+    # For demonstration, estimate optimized metrics
+    # In real competition, this would benchmark the actual optimized model
     print("🔬 Benchmarking optimized model...")
     
-    # Use Profiler and Benchmark from Module 19
-    profiler = Profiler()
-    
-    # For demonstration, we'll use placeholder metrics
-    # In real competition, students would measure their actual optimized model
+    # Placeholder: Students' actual optimizations would be measured here
     optimized_metrics = {
-        "model": getattr(optimized_model, 'name', 'Optimized_Model'),
-        "accuracy": 84.0,  # Would be measured with actual test set
-        "latency_ms": 28.0,  # Would be measured with profiler
-        "memory_mb": 4.0,  # Would be measured with profiler
-        "parameters": 2000000,  # Would be counted
+        "model": "Your_Optimized_Model",
+        "accuracy": 84.0,  # Measured
+        "latency_ms": 28.0,  # Measured
+        "memory_mb": 4.0,  # Measured
+        "parameters": 2000000,  # Measured
     }
     
-    # Calculate normalized scores using Module 19's function
-    baseline_for_norm = {
-        "latency": baseline_metrics["latency_ms"],
-        "memory": baseline_metrics["memory_mb"],
-        "accuracy": baseline_metrics["accuracy"]
+    # Calculate improvements
+    improvements = {
+        "accuracy_change": optimized_metrics["accuracy"] - baseline_metrics["accuracy"],
+        "latency_speedup": baseline_metrics["latency_ms"] / optimized_metrics["latency_ms"],
+        "memory_reduction": baseline_metrics["memory_mb"] / optimized_metrics["memory_mb"],
     }
     
-    optimized_for_norm = {
-        "latency": optimized_metrics["latency_ms"],
-        "memory": optimized_metrics["memory_mb"],
-        "accuracy": optimized_metrics["accuracy"]
-    }
-    
-    normalized_scores = calculate_normalized_scores(baseline_for_norm, optimized_for_norm)
-    
-    # Create submission with all required fields
+    # Create submission
     submission = {
-        "division": division,
         "event": event,
         "athlete_name": athlete_name,
-        "github_repo": github_repo,
         "baseline": baseline_metrics,
         "optimized": optimized_metrics,
-        "normalized_scores": {
-            "speedup": normalized_scores["speedup"],
-            "compression_ratio": normalized_scores["compression_ratio"],
-            "accuracy_delta": normalized_scores["accuracy_delta"],
-            "efficiency_score": normalized_scores["efficiency_score"]
-        },
-        "techniques_applied": techniques or ["TODO: Document your optimization techniques"],
+        "improvements": improvements,
+        "techniques_applied": techniques or ["TODO: List your techniques"],
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "tinytorch_version": "0.1.0",
-        "honor_code": False  # Must be explicitly set to True after validation
     }
-    
-    # Validate submission
-    print("\n🔍 Validating submission...")
-    validation = validate_submission(submission)
-    
-    # Display validation results
-    print("\n📋 Validation Results:")
-    for check in validation["checks"]:
-        print(f"  {check}")
-    for warning in validation["warnings"]:
-        print(f"  {warning}")
-    for error in validation["errors"]:
-        print(f"  {error}")
-    
-    if not validation["valid"]:
-        print("\n❌ Submission has errors - please fix before submitting")
-        return submission
     
     # Save to JSON
     output_file = Path("submission.json")
     with open(output_file, "w") as f:
         json.dump(submission, f, indent=2)
     
-    print(f"\n✅ Submission saved to: {output_file}")
+    print(f"✅ Submission saved to: {output_file}")
     print()
-    print("📊 Your Normalized Scores (MLPerf-style):")
-    print(f"  Division:        {division.upper()}")
-    print(f"  Event:           {event.replace('_', ' ').title()}")
-    print(f"  Speedup:         {normalized_scores['speedup']:.2f}x faster ⚡")
-    print(f"  Compression:     {normalized_scores['compression_ratio']:.2f}x smaller 💾")
-    print(f"  Accuracy:        {optimized_metrics['accuracy']:.1f}% (Δ {normalized_scores['accuracy_delta']:+.2f}pp)")
-    print(f"  Efficiency:      {normalized_scores['efficiency_score']:.2f}")
+    print("📊 Your Results:")
+    print(f"  Event:           {event}")
+    print(f"  Accuracy:        {optimized_metrics['accuracy']:.1f}% (Δ {improvements['accuracy_change']:+.1f}pp)")
+    print(f"  Latency:         {optimized_metrics['latency_ms']:.1f}ms ({improvements['latency_speedup']:.2f}x faster)")
+    print(f"  Memory:          {optimized_metrics['memory_mb']:.2f}MB ({improvements['memory_reduction']:.2f}x smaller)")
     print()
-    print("📤 Next Steps:")
-    print("  1. Verify all metrics are correct")
-    print("  2. Push your code to GitHub (if not done)")
-    print("  3. Run: tito submit submission.json")
-    print("     (This will validate and prepare final submission)")
-    print()
+    print("📤 Upload submission.json to TorchPerf Olympics platform!")
     print("=" * 70)
     
     return submission
