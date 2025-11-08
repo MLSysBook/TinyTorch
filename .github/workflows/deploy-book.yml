@@ -47,20 +47,13 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install jupyter-book jupytext pytest
+        pip install jupyter-book
         pip install -r book/requirements.txt
-        pip install -r requirements.txt  # Install main project dependencies
-        pip install -e .  # Install tito CLI
         
-    - name: Generate content and build book
+    - name: Build Jupyter Book
       run: |
-        # Create and activate virtual environment for tito
-        python -m venv .venv
-        source .venv/bin/activate
-        pip install -r requirements.txt  # Install all dependencies including rich
-        pip install -e .  # Install tito CLI in virtual environment
-        # Use tito to generate content and build book
-        python -m tito.main book build
+        cd book
+        jupyter-book build .
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3

@@ -150,34 +150,23 @@ class BookCommand(BaseCommand):
             os.chdir("..")
 
     def _generate_all(self) -> int:
-        """Convert READMEs to Jupyter Book chapters."""
+        """Verify that all book chapters exist."""
         console = self.console
-        console.print("🔄 Converting module READMEs to Jupyter Book chapters...")
+        console.print("📝 Verifying book chapters...")
         
-        # Step 1: Convert READMEs to chapters
-        console.print("📝 Step 1: Converting READMEs to chapters...")
-        try:
-            os.chdir("book")
-            result = subprocess.run([
-                "python3", "convert_readmes.py"
-            ], capture_output=True, text=True)
-            
-            if result.returncode == 0:
-                console.print("  ✅ All READMEs converted to chapters")
-                # Show summary from the output
-                for line in result.stdout.split('\n'):
-                    if "✅ Created" in line or "🎉 Converted" in line:
-                        console.print(f"   {line.strip()}")
-            else:
-                console.print(f"  ❌ Failed to convert READMEs: {result.stderr}")
-                return 1
-        except Exception as e:
-            console.print(f"[red]❌ Error converting READMEs: {e}[/red]")
+        # Check that the chapters directory exists
+        chapters_dir = Path("book/chapters")
+        if not chapters_dir.exists():
+            console.print("[red]❌ book/chapters directory not found[/red]")
             return 1
-        finally:
-            os.chdir("..")
         
-        console.print("✅ Chapters generated successfully")
+        # Count markdown files in chapters directory
+        chapter_files = list(chapters_dir.glob("*.md"))
+        if chapter_files:
+            console.print(f"✅ Found {len(chapter_files)} chapter files")
+        else:
+            console.print("[yellow]⚠️  No chapter files found in book/chapters/[/yellow]")
+        
         return 0
 
     def _build_book(self, args: Namespace) -> int:
