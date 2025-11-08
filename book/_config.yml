@@ -18,6 +18,14 @@ execute:
   allow_errors: true
   timeout: 300
 
+# Exclude patterns - don't scan these directories/files
+exclude_patterns:
+  - _build
+  - .venv
+  - "**/.venv/**"
+  - "**/__pycache__/**"
+  - "**/.DS_Store"
+
 # GitHub repository configuration for GitHub Pages
 repository:
   url: https://github.com/mlsysbook/TinyTorch
