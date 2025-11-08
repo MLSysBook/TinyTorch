@@ -55,149 +55,176 @@ from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinu
 - **Integration:** Works seamlessly with tokenizers for complete text processing pipeline
 """
 
-# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
-"""
-## 1. Essential Imports and Setup
-
-Setting up our embedding toolkit with tensor operations and mathematical functions.
-"""
-
+# %%
 #| default_exp text.embeddings
-#| export
 
+# %%
+#| export
 import numpy as np
 import math
 from typing import List, Optional, Tuple
 
-# Core tensor operations - our foundation
-### BEGIN SOLUTION
-# For this educational implementation, we'll create a simple Tensor class
-# In practice, this would import from tinytorch.core.tensor
-
-class Tensor:
-    """Educational tensor for embeddings module."""
-
-    def __init__(self, data, requires_grad=False):
-        self.data = np.array(data)
-        self.shape = self.data.shape
-        self.requires_grad = requires_grad
-        self.grad = None
-
-    def __repr__(self):
-        return f"Tensor({self.data})"
-
-    def __getitem__(self, idx):
-        return Tensor(self.data[idx])
-
-    def __add__(self, other):
-        if isinstance(other, Tensor):
-            return Tensor(self.data + other.data)
-        return Tensor(self.data + other)
-
-    def size(self, dim=None):
-        if dim is None:
-            return self.shape
-        return self.shape[dim]
-
-    def reshape(self, *shape):
-        return Tensor(self.data.reshape(shape))
-
-    def expand(self, *shape):
-        return Tensor(np.broadcast_to(self.data, shape))
-
-    def parameters(self):
-        return [self] if self.requires_grad else []
-
-# Simple Linear layer for this module
-class Linear:
-    """Educational linear layer."""
-
-    def __init__(self, in_features, out_features, bias=True):
-        # Xavier initialization
-        limit = math.sqrt(6.0 / (in_features + out_features))
-        self.weight = Tensor(
-            np.random.uniform(-limit, limit, (in_features, out_features)),
-            requires_grad=True
-        )
-        self.bias = Tensor(np.zeros(out_features), requires_grad=True) if bias else None
-
-    def forward(self, x):
-        result = Tensor(np.dot(x.data, self.weight.data))
-        if self.bias is not None:
-            result = result + self.bias
-        return result
-
-    def parameters(self):
-        params = [self.weight]
-        if self.bias is not None:
-            params.append(self.bias)
-        return params
-### END SOLUTION
+# Import from previous modules - following dependency chain
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
-## 2. Understanding Token Embeddings - From Discrete to Dense
+## 1. Introduction - Why Embeddings?
 
-Before we implement embeddings, let's understand what problem they solve and how the lookup process works.
+Neural networks operate on dense vectors, but language consists of discrete tokens. Embeddings are the crucial bridge that converts discrete tokens into continuous, learnable vector representations that capture semantic meaning.
 
-### The Fundamental Challenge
+### The Token-to-Vector Challenge
 
-When dealing with text, we start with discrete symbols (words, characters, tokens) but neural networks need continuous numbers. Embeddings bridge this gap by creating a learned mapping from discrete tokens to dense vector representations.
-
-### Token-to-Vector Transformation Visualization
+Consider the tokens from our tokenizer: [1, 42, 7] - how do we turn these discrete indices into meaningful vectors that capture semantic relationships?
 
 ```
-Traditional One-Hot Encoding (Sparse):
-Token "cat" (index 42) → [0, 0, ..., 1, ..., 0]  (50,000 elements, mostly zeros)
-                           position 42
-
-Modern Embedding Lookup (Dense):
-Token "cat" (index 42) → [0.1, -0.3, 0.7, 0.2, ...]  (512 dense, meaningful values)
+┌─────────────────────────────────────────────────────────────────┐
+│  EMBEDDING PIPELINE: Discrete Tokens → Dense Vectors            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Input (Token IDs):     [1, 42, 7]                              │
+│           │                                                     │
+│           ├─ Step 1: Lookup in embedding table                  │
+│           │         Each ID → vector of learned features        │
+│           │                                                     │
+│           ├─ Step 2: Add positional information                 │
+│           │         Same word at different positions → different│
+│           │                                                     │
+│           ├─ Step 3: Create position-aware representations      │
+│           │         Ready for attention mechanisms              │
+│           │                                                     │
+│           └─ Step 4: Enable semantic understanding              │
+│                     Similar words → similar vectors             │
+│                                                                 │
+│  Output (Dense Vectors): [[0.1, 0.4, ...], [0.7, -0.2, ...]]    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### How Embedding Lookup Works
+### The Four-Layer Embedding System
 
-```
-Embedding Table (vocab_size × embed_dim):
-    Token ID    Embedding Vector
-    ┌─────┐    ┌─────────────────────────┐
- 0  │  0  │ →  │ [0.2, -0.1,  0.3, ...] │  "the"
- 1  │  1  │ →  │ [0.1,  0.4, -0.2, ...] │  "cat"
- 2  │  2  │ →  │ [-0.3, 0.1,  0.5, ...] │  "sat"
-... │ ... │    │        ...              │   ...
-42  │ 42 │ →  │ [0.7, -0.2,  0.1, ...] │  "dog"
-... │ ... │    │        ...              │   ...
-    └─────┘    └─────────────────────────┘
+Modern embedding systems combine multiple components:
 
-Lookup Process:
-Input tokens: [1, 2, 42] → Output: Matrix (3 × embed_dim)
-Row 0: embedding[1]  → [0.1,  0.4, -0.2, ...]  "cat"
-Row 1: embedding[2]  → [-0.3, 0.1,  0.5, ...]  "sat"
-Row 2: embedding[42] → [0.7, -0.2,  0.1, ...]  "dog"
-```
+**1. Token embeddings** - Learn semantic representations for each vocabulary token
+**2. Positional encoding** - Add information about position in sequence
+**3. Optional scaling** - Normalize embedding magnitudes (Transformer convention)
+**4. Integration** - Combine everything into position-aware representations
 
-### Why Embeddings Are Powerful
+### Why This Matters
 
-1. **Dense Representation**: Every dimension can contribute meaningful information
-2. **Learnable**: Vectors adjust during training to capture semantic relationships
-3. **Efficient**: O(1) lookup time regardless of vocabulary size
-4. **Semantic**: Similar words learn similar vector representations
-
-### Memory Implications
-
-For a vocabulary of 50,000 tokens with 512-dimensional embeddings:
-- **Storage**: 50,000 × 512 × 4 bytes = ~100MB (in FP32)
-- **Scaling**: Memory grows linearly with vocab_size × embed_dim
-- **Trade-off**: Larger embeddings capture more nuance but require more memory
-
-This is why embedding tables often dominate memory usage in large language models!
+The choice of embedding strategy dramatically affects:
+- **Semantic understanding** - How well the model captures word meaning
+- **Memory requirements** - Embedding tables can be gigabytes in size
+- **Position awareness** - Whether the model understands word order
+- **Extrapolation** - How well the model handles longer sequences than training
 """
 
 # %% [markdown]
 """
-## 3. Implementing Token Embeddings
+## 2. Foundations - Embedding Strategies
 
-Now let's build the core embedding layer that performs efficient token-to-vector lookups.
+Different embedding approaches make different trade-offs between memory, semantic understanding, and computational efficiency.
+
+### Token Embedding Lookup Process
+
+**Approach**: Each token ID maps to a learned dense vector
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ TOKEN EMBEDDING LOOKUP PROCESS                               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Step 1: Build Embedding Table (vocab_size × embed_dim)      │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Token ID  │  Embedding Vector (learned features)       │  │
+│  ├────────────────────────────────────────────────────────┤  │
+│  │    0      │  [0.2, -0.1,  0.3, 0.8, ...]  (<UNK>)      │  │
+│  │    1      │  [0.1,  0.4, -0.2, 0.6, ...]  ("the")      │  │
+│  │   42      │  [0.7, -0.2,  0.1, 0.4, ...]  ("cat")      │  │
+│  │    7      │  [-0.3, 0.1,  0.5, 0.2, ...]  ("sat")      │  │
+│  │   ...     │             ...                            │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Step 2: Lookup Process (O(1) per token)                     │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Input: Token IDs [1, 42, 7]                           │  │
+│  │                                                        │  │
+│  │   ID 1  → embedding[1]  → [0.1,  0.4, -0.2, ...]       │  │
+│  │   ID 42 → embedding[42] → [0.7, -0.2,  0.1, ...]       │  │
+│  │   ID 7  → embedding[7]  → [-0.3, 0.1,  0.5, ...]       │  │
+│  │                                                        │  │
+│  │  Output: Matrix (3 × embed_dim)                        │  │
+│  │  [[0.1,  0.4, -0.2, ...],                              │  │
+│  │   [0.7, -0.2,  0.1, ...],                              │  │
+│  │   [-0.3, 0.1,  0.5, ...]]                              │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Step 3: Training Updates Embeddings                         │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Gradients flow back to embedding table                │  │
+│  │                                                        │  │
+│  │  Similar words learn similar vectors:                  │  │
+│  │  "cat" and "dog" → closer in embedding space           │  │
+│  │  "the" and "a"   → closer in embedding space           │  │
+│  │  "sat" and "run" → farther in embedding space          │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Pros**:
+- Dense representation (every dimension meaningful)
+- Learnable (captures semantic relationships through training)
+- Efficient lookup (O(1) time complexity)
+- Scales to large vocabularies
+
+**Cons**:
+- Memory intensive (vocab_size × embed_dim parameters)
+- Requires training to develop semantic relationships
+- Fixed vocabulary (new tokens need special handling)
+
+### Positional Encoding Strategies
+
+Since embeddings by themselves have no notion of order, we need positional information:
+
+```
+Position-Aware Embeddings = Token Embeddings + Positional Encoding
+
+Learned Approach:     Fixed Mathematical Approach:
+Position 0 → [learned]     Position 0 → [sin/cos pattern]
+Position 1 → [learned]     Position 1 → [sin/cos pattern]
+Position 2 → [learned]     Position 2 → [sin/cos pattern]
+...                        ...
+```
+
+**Learned Positional Encoding**:
+- Trainable position embeddings
+- Can learn task-specific patterns
+- Limited to maximum training sequence length
+
+**Sinusoidal Positional Encoding**:
+- Mathematical sine/cosine patterns
+- No additional parameters
+- Can extrapolate to longer sequences
+
+### Strategy Comparison
+
+```
+Text: "cat sat on mat" → Token IDs: [42, 7, 15, 99]
+
+Token Embeddings:    [vec_42, vec_7, vec_15, vec_99]  # Same vectors anywhere
+Position-Aware:      [vec_42+pos_0, vec_7+pos_1, vec_15+pos_2, vec_99+pos_3]
+                      ↑ Now "cat" at position 0 ≠ "cat" at position 1
+```
+
+The combination enables transformers to understand both meaning and order!
+"""
+
+# %% [markdown]
+"""
+## 3. Implementation - Building Embedding Systems
+
+Let's implement embedding systems from basic token lookup to sophisticated position-aware representations. We'll start with the core embedding layer and work up to complete systems.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "embedding-class", "solution": true}
@@ -271,7 +298,19 @@ class Embedding:
         # This is equivalent to one-hot multiplication but much more efficient
         embedded = self.weight.data[indices.data.astype(int)]
 
-        return Tensor(embedded)
+        # Create result tensor
+        result = Tensor(embedded, requires_grad=self.weight.requires_grad)
+        
+        # Attach gradient function (students learned this in Module 05!)
+        if self.weight.requires_grad:
+            from tinytorch.core.autograd import EmbeddingBackward
+            result._grad_fn = EmbeddingBackward(self.weight, indices)
+
+        return result
+
+    def __call__(self, indices: Tensor) -> Tensor:
+        """Allows the embedding to be called like a function."""
+        return self.forward(indices)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -320,79 +359,36 @@ test_unit_embedding()
 
 # %% [markdown]
 """
-## 4. Understanding Positional Encoding - Teaching Models About Order
+### Learned Positional Encoding
 
-Sequences have inherent order, but embeddings by themselves are orderless. We need to explicitly encode positional information so the model understands that "cat chased dog" is different from "dog chased cat".
-
-### Why Position Matters in Sequences
-
-Unlike images where spatial relationships are built into the 2D structure, text sequences need explicit position encoding:
+Trainable position embeddings that can learn position-specific patterns. This approach treats each position as a learnable parameter, similar to token embeddings.
 
 ```
-Word Order Changes Meaning:
-"The cat chased the dog" ≠ "The dog chased the cat"
-"Not good" ≠ "Good not"
-"She told him" ≠ "Him told she"
+Learned Position Embedding Process:
+
+Step 1: Initialize Position Embedding Table
+┌───────────────────────────────────────────────────────────────┐
+│ Position  │  Learnable Vector (trainable parameters)          │
+├───────────────────────────────────────────────────────────────┤
+│    0      │ [0.1, -0.2,  0.4, ...]  ← learns "start" patterns │
+│    1      │ [0.3,  0.1, -0.1, ...]  ← learns "second" patterns│
+│    2      │ [-0.1, 0.5,  0.2, ...]  ← learns "third" patterns │
+│   ...     │        ...                                        │
+│  511      │ [0.4, -0.3,  0.1, ...]  ← learns "late" patterns  │
+└───────────────────────────────────────────────────────────────┘
+
+Step 2: Add to Token Embeddings
+Input: ["The", "cat", "sat"] → Token IDs: [1, 42, 7]
+
+Token embeddings:     Position embeddings:     Combined:
+[1]  → [0.1, 0.4, ...] + [0.1, -0.2, ...] = [0.2, 0.2, ...]
+[42] → [0.7, -0.2, ...] + [0.3, 0.1, ...] = [1.0, -0.1, ...]
+[7]  → [-0.3, 0.1, ...] + [-0.1, 0.5, ...] = [-0.4, 0.6, ...]
+
+Result: Position-aware embeddings that can learn task-specific patterns!
 ```
 
-### Two Approaches to Position Encoding
-
-```
-1. Learned Positional Embeddings:
-   ┌─────────────────────────────────────┐
-   │ Position  │  Learned Vector        │
-   ├─────────────────────────────────────┤
-   │    0      │ [0.1, -0.2, 0.4, ...]  │  (trained)
-   │    1      │ [0.3,  0.1, -0.1, ...] │  (trained)
-   │    2      │ [-0.1, 0.5, 0.2, ...]  │  (trained)
-   │   ...     │        ...              │
-   │   511     │ [0.4, -0.3, 0.1, ...]  │  (trained)
-   └─────────────────────────────────────┘
-   ✓ Can learn task-specific patterns
-   ✗ Fixed maximum sequence length
-   ✗ Requires additional parameters
-
-2. Sinusoidal Position Encodings:
-   ┌─────────────────────────────────────┐
-   │ Position  │  Mathematical Pattern   │
-   ├─────────────────────────────────────┤
-   │    0      │ [0.0,  1.0, 0.0, ...]   │  (computed)
-   │    1      │ [sin1, cos1, sin2, ...] │  (computed)
-   │    2      │ [sin2, cos2, sin4, ...] │  (computed)
-   │   ...     │        ...              │
-   │   N       │ [sinN, cosN, sin2N,...] │  (computed)
-   └─────────────────────────────────────┘
-   ✓ No additional parameters
-   ✓ Can extrapolate to longer sequences
-   ✗ Cannot adapt to specific patterns
-```
-
-### How Positional Information Gets Added
-
-```
-Token Embeddings + Positional Encodings = Position-Aware Representations
-
-Input Sequence: ["The", "cat", "sat"]
-Token IDs:      [  1,    42,    7 ]
-
-Step 1: Token Embeddings
-[1] → [0.1, 0.4, -0.2, ...]
-[42]→ [0.7, -0.2, 0.1, ...]
-[7] → [-0.3, 0.1, 0.5, ...]
-
-Step 2: Position Encodings
-pos 0 → [0.0, 1.0, 0.0, ...]
-pos 1 → [0.8, 0.6, 0.1, ...]
-pos 2 → [0.9, -0.4, 0.2, ...]
-
-Step 3: Addition (element-wise)
-Result:
-[0.1+0.0, 0.4+1.0, -0.2+0.0, ...] = [0.1, 1.4, -0.2, ...]  "The" at position 0
-[0.7+0.8, -0.2+0.6, 0.1+0.1, ...] = [1.5, 0.4, 0.2, ...]   "cat" at position 1
-[-0.3+0.9, 0.1-0.4, 0.5+0.2, ...] = [0.6, -0.3, 0.7, ...]  "sat" at position 2
-```
-
-This way, the same word gets different representations based on its position in the sentence!
+**Why learned positions work**: The model can discover that certain positions have special meaning (like sentence beginnings, question words, etc.) and learn specific representations for those patterns.
 """
 
 # %% [markdown]
@@ -478,16 +474,23 @@ class PositionalEncoding:
                 f"Embedding dimension mismatch: expected {self.embed_dim}, got {embed_dim}"
             )
 
-        # Get position embeddings for this sequence length
-        pos_embeddings = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
+        # Get position embeddings for this sequence length (slice using .data for efficiency)
+        pos_embeddings_data = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
 
         # Broadcast to match batch dimension: (1, seq_len, embed_dim)
-        pos_embeddings = pos_embeddings[np.newaxis, :, :]
+        pos_embeddings_data = pos_embeddings_data[np.newaxis, :, :]
+        
+        # Wrap in Tensor to preserve requires_grad
+        pos_embeddings = Tensor(pos_embeddings_data, requires_grad=self.position_embeddings.requires_grad)
 
-        # Add positional information to input embeddings
-        result = x.data + pos_embeddings
+        # Add positional information using Tensor operation to preserve gradients!
+        result = x + pos_embeddings
 
-        return Tensor(result)
+        return result
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the positional encoding to be called like a function."""
+        return self.forward(x)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -542,62 +545,65 @@ test_unit_positional_encoding()
 
 # %% [markdown]
 """
-## 6. Understanding Sinusoidal Position Encodings
+### Sinusoidal Positional Encoding
 
-Now let's explore the elegant mathematical approach to position encoding used in the original Transformer paper. Instead of learning position patterns, we'll use trigonometric functions to create unique, continuous position signatures.
-
-### The Mathematical Intuition
-
-Sinusoidal encodings use sine and cosine functions at different frequencies to create unique position signatures:
+Mathematical position encoding that creates unique signatures for each position using trigonometric functions. This approach requires no additional parameters and can extrapolate to sequences longer than seen during training.
 
 ```
-PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     # Even dimensions
-PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     # Odd dimensions
+┌───────────────────────────────────────────────────────────────────────────┐
+│ SINUSOIDAL POSITION ENCODING: Mathematical Position Signatures            │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ MATHEMATICAL FORMULA:                                                     │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ PE(pos, 2i)   = sin(pos / 10000^(2i/embed_dim))  # Even dims │          │
+│ │ PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))  # Odd dims  │          │
+│ │                                                              │          │
+│ │ Where:                                                       │          │
+│ │   pos = position in sequence (0, 1, 2, ...)                  │          │
+│ │   i = dimension pair index (0, 1, 2, ...)                    │          │
+│ │   10000 = base frequency (creates different wavelengths)     │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ FREQUENCY PATTERN ACROSS DIMENSIONS:                                      │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Dimension:  0     1     2     3     4     5     6     7      │          │
+│ │ Frequency:  High  High  Med   Med   Low   Low   VLow  VLow   │          │
+│ │ Function:   sin   cos   sin   cos   sin   cos   sin   cos    │          │
+│ │                                                              │          │
+│ │ pos=0:    [0.00, 1.00, 0.00, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
+│ │ pos=1:    [0.84, 0.54, 0.01, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
+│ │ pos=2:    [0.91,-0.42, 0.02, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
+│ │ pos=3:    [0.14,-0.99, 0.03, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
+│ │                                                              │          │
+│ │ Each position gets a unique mathematical "fingerprint"!      │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ WHY THIS WORKS:                                                           │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Wave Pattern Visualization:                                  │          │
+│ │                                                              │          │
+│ │ Dim 0: ∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿  (rapid oscillation)              │          │
+│ │ Dim 2: ∿---∿---∿---∿---∿---∿  (medium frequency)             │          │
+│ │ Dim 4: ∿-----∿-----∿-----∿--  (low frequency)                │          │
+│ │ Dim 6: ∿----------∿----------  (very slow changes)           │          │
+│ │                                                              │          │
+│ │ • High frequency dims change rapidly between positions       │          │
+│ │ • Low frequency dims change slowly                           │          │
+│ │ • Combination creates unique signature for each position     │          │
+│ │ • Similar positions have similar (but distinct) encodings    │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ KEY ADVANTAGES:                                                           │
+│ • Zero parameters (no memory overhead)                                    │
+│ • Infinite sequence length (can extrapolate)                              │
+│ • Smooth transitions (nearby positions are similar)                       │
+│ • Mathematical elegance (interpretable patterns)                          │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Why This Works - Frequency Visualization
-
-```
-Position Encoding Pattern (embed_dim=8, showing 4 positions):
-
-Dimension:  0     1     2     3     4     5     6     7
-Frequency:  High  High  Med   Med   Low   Low   VLow  VLow
-Function:   sin   cos   sin   cos   sin   cos   sin   cos
-
-pos=0:    [0.00, 1.00, 0.00, 1.00, 0.00, 1.00, 0.00, 1.00]
-pos=1:    [0.84, 0.54, 0.01, 1.00, 0.00, 1.00, 0.00, 1.00]
-pos=2:    [0.91, -0.42, 0.02, 1.00, 0.00, 1.00, 0.00, 1.00]
-pos=3:    [0.14, -0.99, 0.03, 1.00, 0.00, 1.00, 0.00, 1.00]
-
-Notice how:
-- High frequency dimensions (0,1) change quickly between positions
-- Low frequency dimensions (6,7) change slowly
-- Each position gets a unique "fingerprint"
-```
-
-### Visual Pattern of Sinusoidal Encodings
-
-```
-Frequency Spectrum Across Dimensions:
-High Freq ← - - - - - - - - - - - - - - - - - - - - - → Low Freq
-Dim:  0   1   2   3   4   5   6   7   8   9  ...  510 511
-
-Wave Pattern for Position Progression:
-Dim 0: ∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿  (rapid oscillation)
-Dim 2: ∿---∿---∿---∿---∿---∿  (medium frequency)
-Dim 4: ∿-----∿-----∿-----∿--  (low frequency)
-Dim 6: ∿----------∿----------  (very slow changes)
-
-This creates a unique "barcode" for each position!
-```
-
-### Advantages of Sinusoidal Encodings
-
-1. **No Parameters**: Zero additional memory overhead
-2. **Extrapolation**: Can handle sequences longer than training data
-3. **Unique Signatures**: Each position gets a distinct encoding
-4. **Smooth Transitions**: Similar positions have similar encodings
-5. **Mathematical Elegance**: Clean, interpretable patterns
+**Why transformers use this**: The mathematical structure allows the model to learn relative positions (how far apart tokens are) through simple vector operations, which is crucial for attention mechanisms!
 """
 
 # %% [markdown]
@@ -714,50 +720,87 @@ test_unit_sinusoidal_embeddings()
 
 # %% [markdown]
 """
-## 8. Building the Complete Embedding System
+## 4. Integration - Bringing It Together
 
-Now let's integrate everything into a production-ready embedding system that handles both token and positional embeddings, supports multiple encoding types, and manages the full embedding pipeline used in modern NLP models.
-
-### Complete Embedding Pipeline Visualization
+Now let's build the complete embedding system that combines token and positional embeddings into a production-ready component used in modern transformers and language models.
 
 ```
-Complete Embedding System Architecture:
+Complete Embedding Pipeline:
 
-Input: Token IDs [1, 42, 7, 99]
-         ↓
-    ┌─────────────────────┐
-    │   Token Embedding   │  vocab_size × embed_dim table
-    │   Lookup Table      │
-    └─────────────────────┘
-         ↓
-    Token Vectors (4 × embed_dim)
-    [0.1, 0.4, -0.2, ...]  ← token 1
-    [0.7, -0.2, 0.1, ...]  ← token 42
-    [-0.3, 0.1, 0.5, ...]  ← token 7
-    [0.9, -0.1, 0.3, ...]  ← token 99
-         ↓
-    ┌─────────────────────┐
-    │ Positional Encoding │  Choose: Learned, Sinusoidal, or None
-    │  (Add position info) │
-    └─────────────────────┘
-         ↓
-    Position-Aware Embeddings (4 × embed_dim)
-    [0.1+pos0, 0.4+pos0, ...]  ← token 1 at position 0
-    [0.7+pos1, -0.2+pos1, ...] ← token 42 at position 1
-    [-0.3+pos2, 0.1+pos2, ...] ← token 7 at position 2
-    [0.9+pos3, -0.1+pos3, ...] ← token 99 at position 3
-         ↓
-    Optional: Scale by √embed_dim (Transformer convention)
-         ↓
-    Ready for Attention Mechanisms!
+1. Token Lookup → 2. Position Encoding → 3. Combination → 4. Ready for Attention
+     ↓                     ↓                   ↓                  ↓
+  sparse IDs         position info       dense vectors      context-aware
+```
+"""
+
+# %% [markdown]
+"""
+### Complete Embedding System Architecture
+
+The production embedding layer that powers modern transformers combines multiple components into an efficient, flexible pipeline.
+
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│ COMPLETE EMBEDDING SYSTEM: Token + Position → Attention-Ready             │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ INPUT: Token IDs [1, 42, 7, 99]                                           │
+│         │                                                                 │
+│         ├─ STEP 1: TOKEN EMBEDDING LOOKUP                                 │
+│         │  ┌─────────────────────────────────────────────────────────┐    │
+│         │  │   Token Embedding Table (vocab_size × embed_dim)        │    │
+│         │  │                                                         │    │
+│         │  │   ID 1  → [0.1,  0.4, -0.2, ...]  (semantic features)   │    │
+│         │  │   ID 42 → [0.7, -0.2,  0.1, ...]  (learned meaning)     │    │
+│         │  │   ID 7  → [-0.3, 0.1,  0.5, ...]  (dense vector)        │    │
+│         │  │   ID 99 → [0.9, -0.1,  0.3, ...]  (context-free)        │    │
+│         │  └─────────────────────────────────────────────────────────┘    │
+│         │                                                                 │
+│         ├─ STEP 2: POSITIONAL ENCODING (Choose Strategy)                  │
+│         │  ┌─────────────────────────────────────────────────────────┐    │
+│         │  │ Strategy A: Learned PE                                  │    │
+│         │  │   pos 0 → [trainable vector] (learns patterns)          │    │
+│         │  │   pos 1 → [trainable vector] (task-specific)            │    │
+│         │  │   pos 2 → [trainable vector] (fixed max length)         │    │
+│         │  │                                                         │    │
+│         │  │ Strategy B: Sinusoidal PE                               │    │
+│         │  │   pos 0 → [sin/cos pattern] (mathematical)              │    │
+│         │  │   pos 1 → [sin/cos pattern] (no parameters)             │    │
+│         │  │   pos 2 → [sin/cos pattern] (infinite length)           │    │
+│         │  │                                                         │    │
+│         │  │ Strategy C: No PE                                       │    │
+│         │  │   positions ignored (order-agnostic)                    │    │
+│         │  └─────────────────────────────────────────────────────────┘    │
+│         │                                                                 │
+│         ├─ STEP 3: ELEMENT-WISE ADDITION                                  │
+│         │  ┌─────────────────────────────────────────────────────────┐    │
+│         │  │ Token + Position = Position-Aware Representation        │    │
+│         │  │                                                         │    │
+│         │  │ [0.1, 0.4, -0.2] + [pos0] = [0.1+p0, 0.4+p0, ...]       │    │
+│         │  │ [0.7, -0.2, 0.1] + [pos1] = [0.7+p1, -0.2+p1, ...]      │    │
+│         │  │ [-0.3, 0.1, 0.5] + [pos2] = [-0.3+p2, 0.1+p2, ...]      │    │
+│         │  │ [0.9, -0.1, 0.3] + [pos3] = [0.9+p3, -0.1+p3, ...]      │    │
+│         │  └─────────────────────────────────────────────────────────┘    │
+│         │                                                                 │
+│         ├─ STEP 4: OPTIONAL SCALING (Transformer Convention)              │
+│         │  ┌─────────────────────────────────────────────────────────┐    │
+│         │  │ Scale by √embed_dim for gradient stability              │    │
+│         │  │ Helps balance token and position magnitudes             │    │
+│         │  └─────────────────────────────────────────────────────────┘    │
+│         │                                                                 │
+│         └─ OUTPUT: Position-Aware Dense Vectors                           │
+│            Ready for attention mechanisms and transformers!               │
+│                                                                           │
+│ INTEGRATION FEATURES:                                                     │
+│ • Flexible position encoding (learned/sinusoidal/none)                    │
+│ • Efficient batch processing with variable sequence lengths               │
+│ • Memory optimization (shared position encodings)                         │
+│ • Production patterns (matches PyTorch/HuggingFace)                       │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Integration Features
-
-- **Flexible Position Encoding**: Support learned, sinusoidal, or no positional encoding
-- **Batch Processing**: Handle variable-length sequences with padding
-- **Memory Efficiency**: Reuse position encodings across batches
-- **Production Ready**: Matches PyTorch patterns and conventions
+**Why this architecture works**: By separating token semantics from positional information, the model can learn meaning and order independently, then combine them optimally for the specific task.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "complete-system", "solution": true}
@@ -879,6 +922,10 @@ class EmbeddingLayer:
 
         return output
 
+    def __call__(self, tokens: Tensor) -> Tensor:
+        """Allows the embedding layer to be called like a function."""
+        return self.forward(tokens)
+
     def parameters(self) -> List[Tensor]:
         """Return all trainable parameters."""
         params = self.token_embedding.parameters()
@@ -972,44 +1019,14 @@ test_unit_complete_embedding_system()
 
 # %% [markdown]
 """
-## 9. Systems Analysis - Embedding Memory and Performance
+## 5. Systems Analysis - Embedding Trade-offs
 
-Understanding the systems implications of embedding layers is crucial for building scalable NLP models. Let's analyze memory usage, lookup performance, and trade-offs between different approaches.
-
-### Memory Usage Analysis
-
-```
-Embedding Memory Scaling:
-Vocabulary Size vs Memory Usage (embed_dim=512, FP32):
-
- 10K vocab: 10,000 × 512 × 4 bytes = 20 MB
- 50K vocab: 50,000 × 512 × 4 bytes = 100 MB
-100K vocab: 100,000 × 512 × 4 bytes = 200 MB
-  1M vocab: 1,000,000 × 512 × 4 bytes = 2 GB
-
-GPT-3 Scale: 50,257 × 12,288 × 4 bytes ≈ 2.4 GB just for embeddings!
-
-Memory Formula: vocab_size × embed_dim × 4 bytes (FP32)
-```
-
-### Performance Characteristics
-
-```
-Embedding Lookup Performance:
-- Time Complexity: O(1) per token (hash table lookup)
-- Memory Access: Random access pattern
-- Bottleneck: Memory bandwidth, not computation
-- Batching: Improves throughput via vectorization
-
-Cache Efficiency:
-Repeated tokens → Cache hits → Faster access
-Diverse vocab → Cache misses → Slower access
-```
+Understanding the performance implications of different embedding strategies is crucial for building efficient NLP systems that scale to production workloads.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "memory-analysis", "solution": true}
-def analyze_embedding_memory():
-    """📊 Analyze embedding memory requirements and scaling behavior."""
+def analyze_embedding_memory_scaling():
+    """📊 Compare embedding memory requirements across different model scales."""
     print("📊 Analyzing Embedding Memory Requirements...")
 
     # Vocabulary and embedding dimension scenarios
@@ -1051,11 +1068,11 @@ def analyze_embedding_memory():
     print("• Learned PE adds memory but may improve task-specific performance")
     print("• Sinusoidal PE saves memory and allows longer sequences")
 
-analyze_embedding_memory()
+analyze_embedding_memory_scaling()
 
 # %% nbgrader={"grade": false, "grade_id": "lookup-performance", "solution": true}
-def analyze_lookup_performance():
-    """📊 Analyze embedding lookup performance characteristics."""
+def analyze_embedding_performance():
+    """📊 Compare embedding lookup performance across different configurations."""
     print("\n📊 Analyzing Embedding Lookup Performance...")
 
     import time
@@ -1104,11 +1121,11 @@ def analyze_lookup_performance():
     print("• Memory bandwidth becomes bottleneck for large embedding dimensions")
     print("• Cache locality important for repeated token patterns")
 
-analyze_lookup_performance()
+analyze_embedding_performance()
 
 # %% nbgrader={"grade": false, "grade_id": "position-encoding-comparison", "solution": true}
-def analyze_positional_encoding_trade_offs():
-    """📊 Compare learned vs sinusoidal positional encodings."""
+def analyze_positional_encoding_strategies():
+    """📊 Compare different positional encoding approaches and trade-offs."""
     print("\n📊 Analyzing Positional Encoding Trade-offs...")
 
     max_seq_len = 512
@@ -1175,13 +1192,13 @@ def analyze_positional_encoding_trade_offs():
     print(f"  - Cannot adapt to task-specific position patterns")
     print(f"  - May be suboptimal for highly position-dependent tasks")
 
-analyze_positional_encoding_trade_offs()
+analyze_positional_encoding_strategies()
 
 # %% [markdown]
 """
-## 10. Module Integration Test
+## 6. Module Integration Test
 
-Final validation that our complete embedding system works correctly and integrates with the TinyTorch ecosystem.
+Let's test our complete embedding system to ensure everything works together correctly.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "module-test", "locked": true, "points": 20}

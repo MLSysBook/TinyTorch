@@ -1,10 +1,14 @@
 #!/bin/bash
 # Tiny🔥Torch Environment Activation & Setup
 
+# Allow users to pass a path to existing virtual env
+VENV_PATH=${1:-".venv"}
+export VENV_PATH
+
 # Check if virtual environment exists, create if not
-if [ ! -d ".venv" ]; then
+if [ ! -d "$VENV_PATH" ]; then
     echo "🆕 First time setup - creating environment..."
-    python3 -m venv .venv || {
+    python3 -m venv "$VENV_PATH" || {
         echo "❌ Failed to create virtual environment"
         exit 1
     }
@@ -17,7 +21,7 @@ if [ ! -d ".venv" ]; then
 fi
 
 echo "🔥 Activating Tiny🔥Torch environment..."
-source .venv/bin/activate
+source "$VENV_PATH/bin/activate"
 
 # Create tito alias for convenience
 alias tito="python3 bin/tito"

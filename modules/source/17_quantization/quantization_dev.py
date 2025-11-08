@@ -13,7 +13,6 @@
 # ---
 
 #| default_exp optimization.quantization
-#| export
 
 # %% [markdown]
 """
@@ -63,67 +62,16 @@ from tinytorch.optimization.quantization import quantize_int8, QuantizedLinear, 
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
+#| export
 import numpy as np
 import time
-import matplotlib.pyplot as plt
 from typing import Tuple, Dict, List, Optional
 import warnings
 
-# Smart import system for development and production compatibility
-import sys
-import os
-
 # Import dependencies from other modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-from layers_dev import Linear, Sequential
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-from activations_dev import ReLU
-
-# Note: Keeping development fallback for reference
-if False:  # Disabled development fallback
-    # Development: Import from local module files
-    try:
-        # Try to find the current directory
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-    except NameError:
-        # Fallback when __file__ is not available (e.g., in exec context)
-        current_dir = os.getcwd()
-
-    # Import Tensor from Module 01
-    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
-    sys.path.insert(0, tensor_module_path)
-    try:
-        from tensor_dev import Tensor
-    finally:
-        sys.path.pop(0)
-
-    # Import from Module 03 layers
-    layers_module_path = os.path.join(current_dir, '..', '03_layers')
-    sys.path.insert(0, layers_module_path)
-    try:
-        from layers_dev import Linear, Sequential
-    finally:
-        sys.path.pop(0)
-
-    # Import from Module 02 activations
-    activations_module_path = os.path.join(current_dir, '..', '02_activations')
-    sys.path.insert(0, activations_module_path)
-    try:
-        from activations_dev import ReLU
-    finally:
-        sys.path.pop(0)
-
-    # Create dummy profiler if needed
-    class Profiler:
-        """Dummy profiler class for development."""
-        def count_parameters(self, model):
-            return 0
-        def measure_memory(self, model, input_shape):
-            return {"total": 0}
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.activations import ReLU
 
 print("✅ Quantization module imports complete")
 
@@ -570,90 +518,6 @@ test_unit_dequantize_int8()
 
 # %% [markdown]
 """
-## Quantization Quality - Understanding the Impact
-
-### Why Distribution Matters
-
-Different types of data quantize differently. Let's understand how various weight distributions affect quantization quality.
-
-```
-Quantization Quality Factors:
-
-┌─────────────────┬─────────────────┬─────────────────┐
-│   Distribution  │   Scale Usage   │   Error Level   │
-├─────────────────┼─────────────────┼─────────────────┤
-│ Uniform         │ ████████████████ │      Low       │
-│ Normal          │ ██████████████   │    Medium      │
-│ With Outliers   │ ████             │     High       │
-│ Sparse (zeros)  │ ████             │     High       │
-└─────────────────┴─────────────────┴─────────────────┘
-```
-
-### The Scale Utilization Problem
-
-```
-Good Quantization (Uniform):     Bad Quantization (Outliers):
-
-Values: [-1.0 ... +1.0]          Values: [-10.0, -0.1...+0.1, +10.0]
-   ↓                                 ↓
-INT8: -128 ......... +127         INT8: -128 ... 0 ... +127
-       ↑ ↑ ↑ ↑ ↑ ↑ ↑                  ↑           ↑
-    All levels used               Most levels wasted!
-
-Scale: 0.0078 (good precision)    Scale: 0.078 (poor precision)
-Error: ~0.004                     Error: ~0.04 (10× worse!)
-```
-
-**Key Insight:** Outliers waste quantization levels and hurt precision for normal values.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "analyze_quantization_error", "solution": true}
-def analyze_quantization_error():
-    """📊 Analyze quantization error across different distributions."""
-    print("📊 Analyzing Quantization Error Across Distributions...")
-
-    distributions = {
-        'uniform': np.random.uniform(-1, 1, (1000,)),
-        'normal': np.random.normal(0, 0.5, (1000,)),
-        'outliers': np.concatenate([np.random.normal(0, 0.1, (900,)),
-                                   np.random.uniform(-2, 2, (100,))]),
-        'sparse': np.random.choice([0, 0, 0, 1], size=(1000,)) * np.random.normal(0, 1, (1000,))
-    }
-
-    results = {}
-
-    for name, data in distributions.items():
-        # Quantize and measure error
-        original = Tensor(data)
-        q_tensor, scale, zero_point = quantize_int8(original)
-        restored = dequantize_int8(q_tensor, scale, zero_point)
-
-        # Calculate metrics
-        mse = np.mean((original.data - restored.data) ** 2)
-        max_error = np.max(np.abs(original.data - restored.data))
-
-        results[name] = {
-            'mse': mse,
-            'max_error': max_error,
-            'scale': scale,
-            'range_ratio': (np.max(data) - np.min(data)) / scale if scale > 0 else 0
-        }
-
-        print(f"{name:8}: MSE={mse:.6f}, Max Error={max_error:.4f}, Scale={scale:.4f}")
-
-    print("\n💡 Insights:")
-    print("- Uniform: Low error, good scale utilization")
-    print("- Normal: Higher error at distribution tails")
-    print("- Outliers: Poor quantization due to extreme values")
-    print("- Sparse: Wasted quantization levels on zeros")
-
-    return results
-
-# Analyze quantization quality
-error_analysis = analyze_quantization_error()
-
-# %% [markdown]
-"""
 ## QuantizedLinear - The Heart of Efficient Networks
 
 ### Why We Need Quantized Layers
@@ -778,7 +642,6 @@ Regular Linear Layer:           QuantizedLinear Layer:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "quantized_linear", "solution": true}
-#| export
 class QuantizedLinear:
     """Quantized version of Linear layer using INT8 arithmetic."""
 
@@ -881,6 +744,10 @@ class QuantizedLinear:
 
         return result
         ### END SOLUTION
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the quantized linear layer to be called like a function."""
+        return self.forward(x)
 
     def parameters(self) -> List[Tensor]:
         """Return quantized parameters."""
@@ -1361,408 +1228,7 @@ test_unit_compare_model_sizes()
 
 # %% [markdown]
 """
-## 5. Systems Analysis - Real-World Performance Impact
-
-### Understanding Production Trade-offs
-
-Quantization isn't just about smaller models - it's about enabling entirely new deployment scenarios. Let's measure the real impact across different model scales.
-
-```
-Production Deployment Scenarios:
-
-┌──────────────────┬──────────────────┬──────────────────┬──────────────────┐
-│  Deployment      │   Memory Limit   │   Speed Needs    │ Quantization Fit │
-├──────────────────┼──────────────────┼──────────────────┼──────────────────┤
-│ Mobile Phone     │ 100-500MB        │ <100ms latency   │ ✅ Essential     │
-│ Edge Device      │ 50-200MB         │ Real-time        │ ✅ Critical      │
-│ Cloud GPU        │ 16-80GB          │ High throughput  │ 🤔 Optional      │
-│ Embedded MCU     │ 1-10MB           │ Ultra-low power  │ ✅ Mandatory     │
-└──────────────────┴──────────────────┴──────────────────┴──────────────────┘
-```
-
-### The Performance Testing Framework
-
-We'll measure quantization impact across three critical dimensions:
-
-```
-Performance Analysis Framework:
-
-1. Memory Efficiency                2. Inference Speed               3. Accuracy Preservation
-┌─────────────────────┐            ┌─────────────────────┐          ┌─────────────────────┐
-│ • Model size (MB)   │            │ • Forward pass time │          │ • MSE vs original   │
-│ • Compression ratio │            │ • Throughput (fps)  │          │ • Relative error    │
-│ • Memory bandwidth  │            │ • Latency (ms)      │          │ • Distribution      │
-└─────────────────────┘            └─────────────────────┘          └─────────────────────┘
-```
-
-### Expected Results Preview
-
-```
-Typical Quantization Results:
-
-Model Size:     Small (1-10MB)      Medium (10-100MB)     Large (100MB+)
-               ┌─────────────────┐  ┌─────────────────┐   ┌─────────────────┐
-Compression:   │ 3.8× reduction  │  │ 3.9× reduction  │   │ 4.0× reduction  │
-Speed:         │ 1.2× faster    │  │ 2.1× faster    │   │ 3.2× faster     │
-Accuracy:      │ 0.1% loss      │  │ 0.3% loss      │   │ 0.5% loss       │
-               └─────────────────┘  └─────────────────┘   └─────────────────┘
-
-Key Insight: Larger models benefit more from quantization!
-```
-
-Let's run comprehensive tests to validate these expectations and understand the underlying patterns.
-"""
-
-# %% [markdown]
-"""
-### Performance Analysis - Real-World Benchmarking
-
-This comprehensive analysis measures quantization impact across the three critical dimensions: memory, speed, and accuracy.
-
-```
-Performance Testing Strategy:
-
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                           Test Model Configurations                           │
-├────────────────────────────┬────────────────────────────┬────────────────────────────┤
-│      Model Type        │     Architecture       │      Use Case         │
-├────────────────────────────┼────────────────────────────┼────────────────────────────┤
-│ Small MLP            │ 64 → 32 → 10         │ Edge Device          │
-│ Medium MLP           │ 512 → 256 → 128 → 10 │ Mobile App           │
-│ Large MLP            │ 2048 → 1024 → 512 → 10│ Server Deployment    │
-└────────────────────────────┴────────────────────────────┴────────────────────────────┘
-```
-
-**Performance Measurement Pipeline:**
-```
-For Each Model Configuration:
-
-  Create Original Model    Create Quantized Model     Comparative Analysis
-         │                        │                        │
-         ▼                        ▼                        ▼
-  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-  │ Initialize weights  │  │ Copy weights      │  │ Memory analysis   │
-  │ Random test data   │  │ Apply quantization│  │ Speed benchmarks  │
-  │ Forward pass       │  │ Calibrate layers  │  │ Accuracy testing  │
-  │ Timing measurements│  │ Forward pass      │  │ Trade-off analysis│
-  └─────────────────┘  └─────────────────┘  └─────────────────┘
-```
-
-**Expected Performance Patterns:**
-```
-Model Scaling Effects:
-
-   Memory Usage               Inference Speed              Accuracy Loss
-        │                           │                           │
-        ▼                           ▼                           ▼
-
-4× │ ############### FP32     3× │                   INT8   1% │ ####
-    │                          │ ############### FP32        │
-3× │                       2× │                       0.5% │ ##
-    │ ######### INT8           │ ########### INT8             │
-2× │                       1× │                       0.1% │ #
-    │                          │ #######                      │
-1× │                          │                           0% └────────────────────────────────────────────────────
-    └────────────────────────────────────────────────────    └────────────────────────────────────────────────────    Small   Medium   Large
-    Small   Medium   Large    Small   Medium   Large
-
-Key Insight: Larger models benefit more from quantization!
-```
-
-**Real-World Impact Translation:**
-- **Memory savings** → More models fit on device, lower cloud costs
-- **Speed improvements** → Better user experience, real-time applications
-- **Accuracy preservation** → Maintains model quality, no retraining needed
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "analyze_quantization_performance", "solution": true}
-def analyze_quantization_performance():
-    """📊 Comprehensive analysis of quantization benefits and trade-offs."""
-    print("📊 Analyzing Quantization Performance Across Model Sizes...")
-
-    # Test different model configurations
-    configs = [
-        {'name': 'Small MLP', 'layers': [64, 32, 10], 'batch_size': 32},
-        {'name': 'Medium MLP', 'layers': [512, 256, 128, 10], 'batch_size': 64},
-        {'name': 'Large MLP', 'layers': [2048, 1024, 512, 10], 'batch_size': 128},
-    ]
-
-    results = []
-
-    for config in configs:
-        print(f"\n🔍 Testing {config['name']}...")
-
-        # Create original model
-        layers = []
-        for i in range(len(config['layers']) - 1):
-            layers.append(Linear(config['layers'][i], config['layers'][i+1]))
-            if i < len(config['layers']) - 2:  # Add ReLU except for last layer
-                layers.append(ReLU())
-
-        original_model = Sequential(*layers)
-
-        # Initialize weights
-        for layer in original_model.layers:
-            if isinstance(layer, Linear):
-                layer.weight = Tensor(np.random.randn(*layer.weight.shape) * 0.1)
-                layer.bias = Tensor(np.random.randn(*layer.bias.shape) * 0.01)
-
-        # Create quantized copy
-        quantized_model = Sequential(*layers)
-        for i, layer in enumerate(original_model.layers):
-            if isinstance(layer, Linear):
-                quantized_model.layers[i].weight = Tensor(layer.weight.data.copy())
-                quantized_model.layers[i].bias = Tensor(layer.bias.data.copy())
-
-        # Generate calibration data
-        input_size = config['layers'][0]
-        calibration_data = [Tensor(np.random.randn(1, input_size)) for _ in range(10)]
-
-        # Quantize model
-        quantize_model(quantized_model, calibration_data)
-
-        # Measure performance
-        test_input = Tensor(np.random.randn(config['batch_size'], input_size))
-
-        # Time original model
-        start_time = time.time()
-        for _ in range(10):
-            original_output = original_model.forward(test_input)
-        original_time = (time.time() - start_time) / 10
-
-        # Time quantized model
-        start_time = time.time()
-        for _ in range(10):
-            quantized_output = quantized_model.forward(test_input)
-        quantized_time = (time.time() - start_time) / 10
-
-        # Calculate accuracy preservation (using MSE as proxy)
-        mse = np.mean((original_output.data - quantized_output.data) ** 2)
-        relative_error = np.sqrt(mse) / (np.std(original_output.data) + 1e-8)
-
-        # Memory comparison
-        memory_comparison = compare_model_sizes(original_model, quantized_model)
-
-        result = {
-            'name': config['name'],
-            'original_time': original_time * 1000,  # Convert to ms
-            'quantized_time': quantized_time * 1000,
-            'speedup': original_time / quantized_time if quantized_time > 0 else 1.0,
-            'compression_ratio': memory_comparison['compression_ratio'],
-            'relative_error': relative_error,
-            'memory_saved_mb': memory_comparison['memory_saved_mb']
-        }
-
-        results.append(result)
-
-        print(f"  Speedup: {result['speedup']:.1f}×")
-        print(f"  Compression: {result['compression_ratio']:.1f}×")
-        print(f"  Error: {result['relative_error']:.1%}")
-        print(f"  Memory saved: {result['memory_saved_mb']:.1f}MB")
-
-    # Summary analysis
-    print(f"\n📈 QUANTIZATION PERFORMANCE SUMMARY")
-    print("=" * 50)
-
-    avg_speedup = np.mean([r['speedup'] for r in results])
-    avg_compression = np.mean([r['compression_ratio'] for r in results])
-    avg_error = np.mean([r['relative_error'] for r in results])
-    total_memory_saved = sum([r['memory_saved_mb'] for r in results])
-
-    print(f"Average speedup: {avg_speedup:.1f}×")
-    print(f"Average compression: {avg_compression:.1f}×")
-    print(f"Average relative error: {avg_error:.1%}")
-    print(f"Total memory saved: {total_memory_saved:.1f}MB")
-
-    print(f"\n💡 Key Insights:")
-    print(f"- Quantization achieves ~{avg_compression:.0f}× memory reduction")
-    print(f"- Typical speedup: {avg_speedup:.1f}× (varies by hardware)")
-    print(f"- Accuracy loss: <{avg_error:.1%} for well-calibrated models")
-    print(f"- Best for: Memory-constrained deployment")
-
-    return results
-
-# Run comprehensive performance analysis
-performance_results = analyze_quantization_performance()
-
-# %% [markdown]
-"""
-## Quantization Error Visualization - Seeing the Impact
-
-### Understanding Distribution Effects
-
-Different weight distributions quantize with varying quality. Let's visualize this to understand when quantization works well and when it struggles.
-
-```
-Visualization Strategy:
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     Weight Distribution Analysis                            │
-├─────────────────────┬─────────────────────┬─────────────────────────────────┤
-│  Distribution Type  │  Expected Quality   │         Key Challenge            │
-├─────────────────────┼─────────────────────┼─────────────────────────────────┤
-│ Normal (Gaussian)   │ Good                │ Tail values may be clipped      │
-│ Uniform             │ Excellent           │ Perfect scale utilization       │
-│ Sparse (many zeros) │ Poor                │ Wasted quantization levels      │
-│ Heavy-tailed        │ Very Poor           │ Outliers dominate scale         │
-└─────────────────────┴─────────────────────┴─────────────────────────────────┘
-```
-
-### Quantization Quality Patterns
-
-```
-Ideal Quantization:                 Problematic Quantization:
-
-Original: [████████████████████]     Original: [██    ████    ██]
-              ↓                                   ↓
-Quantized: [████████████████████]     Quantized: [██....████....██]
-          Perfect reconstruction              Lost precision
-
-Scale efficiently used             Scale poorly used
-Low quantization error             High quantization error
-```
-
-**What We'll Visualize:**
-- **Before/After histograms** - See how distributions change
-- **Error metrics** - Quantify the precision loss
-- **Scale utilization** - Understand efficiency
-- **Real examples** - Connect to practical scenarios
-
-This visualization will help you understand which types of neural network weights quantize well and which need special handling.
-"""
-
-# %% [markdown]
-"""
-### Quantization Effects Visualization - Understanding Distribution Impact
-
-This visualization reveals how different weight distributions respond to quantization, helping you understand when quantization works well and when it struggles.
-
-```
-Visualization Strategy:
-
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                        Distribution Analysis Grid                            │
-├─────────────────────┬─────────────────────┬─────────────────────┬─────────────────────┤
-│    Normal (Good)    │   Uniform (Best)    │   Sparse (Bad)     │ Heavy-Tailed (Worst)│
-├─────────────────────┼─────────────────────┼─────────────────────┼─────────────────────┤
-│       /\          │  ┌──────────┐   │  |     |  |     │       /\            │
-│      /  \         │  │          │   │  |     |  |     │      /  \  /\       │
-│     /    \        │  │  Flat    │   │  ||||  |  ||||  │     /    \/  \      │
-│    /      \       │  │          │   │  zeros    sparse │    /          \     │
-│   /        \      │  └──────────┘   │  values         │   /     huge    \    │
-│  /          \     │                  │                 │  /     outliers   \   │
-├─────────────────────┼─────────────────────┼─────────────────────┼─────────────────────┤
-│ MSE: 0.001        │ MSE: 0.0001       │ MSE: 0.01        │ MSE: 0.1            │
-│ Scale Usage: 80%  │ Scale Usage: 100% │ Scale Usage: 10% │ Scale Usage: 5%     │
-└─────────────────────┴─────────────────────┴─────────────────────┴─────────────────────┘
-```
-
-**Visual Comparison Strategy:**
-```
-For Each Distribution Type:
-  │
-  ├── Generate sample weights (1000 values)
-  │
-  ├── Quantize to INT8
-  │
-  ├── Dequantize back to FP32
-  │
-  ├── Plot overlaid histograms:
-  │   ├── Original distribution (blue)
-  │   └── Quantized distribution (red)
-  │
-  └── Calculate and display error metrics:
-      ├── Mean Squared Error (MSE)
-      ├── Scale utilization efficiency
-      └── Quantization scale value
-```
-
-**Key Insights You'll Discover:**
-
-**1. Normal Distribution (Most Common):**
-   - Smooth bell curve preserved reasonably well
-   - Tail values may be clipped slightly
-   - Good compromise for most neural networks
-
-**2. Uniform Distribution (Ideal Case):**
-   - Perfect scale utilization
-   - Minimal quantization error
-   - Best-case scenario for quantization
-
-**3. Sparse Distribution (Problematic):**
-   - Many zeros waste quantization levels
-   - Poor precision for non-zero values
-   - Common in pruned networks
-
-**4. Heavy-Tailed Distribution (Worst Case):**
-   - Outliers dominate scale calculation
-   - Most values squeezed into narrow range
-   - Requires special handling (clipping, per-channel)
-
-**Practical Implications:**
-- **Model design:** Prefer batch normalization to reduce outliers
-- **Training:** Techniques to encourage uniform weight distributions
-- **Deployment:** Advanced quantization for sparse/heavy-tailed weights
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "visualize_quantization_effects", "solution": true}
-def visualize_quantization_effects():
-    """📊 Visualize the effects of quantization on weight distributions."""
-    print("📊 Visualizing Quantization Effects on Weight Distributions...")
-
-    # Create sample weight tensors with different characteristics
-    weight_types = {
-        'Normal': np.random.normal(0, 0.1, (1000,)),
-        'Uniform': np.random.uniform(-0.2, 0.2, (1000,)),
-        'Sparse': np.random.choice([0, 0, 0, 1], (1000,)) * np.random.normal(0, 0.15, (1000,)),
-        'Heavy-tailed': np.concatenate([
-            np.random.normal(0, 0.05, (800,)),
-            np.random.uniform(-0.5, 0.5, (200,))
-        ])
-    }
-
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-    axes = axes.flatten()
-
-    for idx, (name, weights) in enumerate(weight_types.items()):
-        # Original weights
-        original_tensor = Tensor(weights)
-
-        # Quantize and dequantize
-        q_tensor, scale, zero_point = quantize_int8(original_tensor)
-        restored_tensor = dequantize_int8(q_tensor, scale, zero_point)
-
-        # Plot histograms
-        ax = axes[idx]
-        ax.hist(weights, bins=50, alpha=0.6, label='Original', density=True)
-        ax.hist(restored_tensor.data, bins=50, alpha=0.6, label='Quantized', density=True)
-        ax.set_title(f'{name} Weights\nScale: {scale:.4f}')
-        ax.set_xlabel('Weight Value')
-        ax.set_ylabel('Density')
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        # Calculate and display error metrics
-        mse = np.mean((weights - restored_tensor.data) ** 2)
-        ax.text(0.02, 0.98, f'MSE: {mse:.6f}', transform=ax.transAxes,
-                verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
-    plt.tight_layout()
-    plt.savefig('/tmp/claude/quantization_effects.png', dpi=100, bbox_inches='tight')
-    plt.show()
-
-    print("💡 Observations:")
-    print("- Normal: Smooth quantization, good preservation")
-    print("- Uniform: Excellent quantization, full range utilized")
-    print("- Sparse: Many wasted quantization levels on zeros")
-    print("- Heavy-tailed: Outliers dominate scale, poor precision for small weights")
-
-# Visualize quantization effects
-visualize_quantization_effects()
-
-# %% [markdown]
-"""
-## 6. Optimization Insights - Production Quantization Strategies
+## 5. Optimization Insights - Production Quantization Strategies
 
 ### Beyond Basic Quantization
 
@@ -1926,116 +1392,82 @@ Comparative Testing Protocol:
 This analysis reveals which strategies work best for different deployment scenarios and accuracy requirements.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "analyze_quantization_strategies", "solution": true}
-def analyze_quantization_strategies():
-    """📊 Compare different quantization strategies and their trade-offs."""
-    print("📊 Analyzing Advanced Quantization Strategies...")
+# %% [markdown]
+"""
+## 5.5 Measuring Quantization Savings with Profiler
 
-    # Create test model and data
-    model = Sequential(Linear(128, 64), ReLU(), Linear(64, 10))
-    model.layers[0].weight = Tensor(np.random.randn(128, 64) * 0.1)
-    model.layers[0].bias = Tensor(np.random.randn(64) * 0.01)
-    model.layers[2].weight = Tensor(np.random.randn(64, 10) * 0.1)
-    model.layers[2].bias = Tensor(np.random.randn(10) * 0.01)
+Now let's use the **Profiler** tool from Module 15 to measure the actual memory savings from quantization. This demonstrates end-to-end workflow: profile baseline (M15) → apply quantization (M17) → measure savings (M15+M17).
 
-    test_input = Tensor(np.random.randn(32, 128))
-    original_output = model.forward(test_input)
+This is the production workflow: measure → compress → validate → deploy.
+"""
 
-    strategies = {}
+# %% nbgrader={"grade": false, "grade_id": "demo-profiler-quantization", "solution": true}
+# Import Profiler from Module 15
+from tinytorch.profiling.profiler import Profiler
 
-    # Strategy 1: Per-tensor quantization (what we implemented)
-    print("\n🔍 Strategy 1: Per-Tensor Quantization")
-    model_copy = Sequential(Linear(128, 64), ReLU(), Linear(64, 10))
-    for i, layer in enumerate(model.layers):
-        if isinstance(layer, Linear):
-            model_copy.layers[i].weight = Tensor(layer.weight.data.copy())
-            model_copy.layers[i].bias = Tensor(layer.bias.data.copy())
+def demo_quantization_with_profiler():
+    """📊 Demonstrate memory savings using Profiler from Module 15."""
+    print("📊 Measuring Quantization Memory Savings with Profiler")
+    print("=" * 70)
+    
+    profiler = Profiler()
+    
+    # Create a simple model
+    from tinytorch.core.layers import Linear
+    model = Linear(512, 256)
+    model.name = "baseline_model"
+    
+    print("\n💾 BEFORE: FP32 Model")
+    print("-" * 70)
+    
+    # Measure baseline
+    param_count = profiler.count_parameters(model)
+    input_shape = (32, 512)
+    memory_stats = profiler.measure_memory(model, input_shape)
+    
+    print(f"   Parameters: {param_count:,}")
+    print(f"   Parameter memory: {memory_stats['parameter_memory_mb']:.2f} MB")
+    print(f"   Peak memory: {memory_stats['peak_memory_mb']:.2f} MB")
+    print(f"   Precision: FP32 (4 bytes per parameter)")
+    
+    # Quantize the model
+    print("\n🗜️  Quantizing to INT8...")
+    quantized_model = quantize_model(model)
+    quantized_model.name = "quantized_model"
+    
+    print("\n📦 AFTER: INT8 Quantized Model")
+    print("-" * 70)
+    
+    # Measure quantized (simulated - in practice INT8 uses 1 byte)
+    # For demonstration, we show the theoretical savings
+    quantized_param_count = profiler.count_parameters(quantized_model)
+    theoretical_memory_mb = param_count * 1 / (1024 * 1024)  # 1 byte per INT8 param
+    
+    print(f"   Parameters: {quantized_param_count:,} (same count, different precision)")
+    print(f"   Parameter memory (theoretical): {theoretical_memory_mb:.2f} MB")
+    print(f"   Precision: INT8 (1 byte per parameter)")
+    
+    print("\n📈 MEMORY SAVINGS")
+    print("=" * 70)
+    savings_ratio = memory_stats['parameter_memory_mb'] / theoretical_memory_mb
+    savings_percent = (1 - 1/savings_ratio) * 100
+    savings_mb = memory_stats['parameter_memory_mb'] - theoretical_memory_mb
+    
+    print(f"   Compression ratio: {savings_ratio:.1f}x smaller")
+    print(f"   Memory saved: {savings_mb:.2f} MB ({savings_percent:.1f}% reduction)")
+    print(f"   Original: {memory_stats['parameter_memory_mb']:.2f} MB → Quantized: {theoretical_memory_mb:.2f} MB")
+    
+    print("\n💡 Key Insight:")
+    print(f"   INT8 quantization reduces memory by 4x (FP32→INT8)")
+    print(f"   This enables: 4x larger models, 4x bigger batches, or 4x lower cost!")
+    print(f"   Critical for edge devices with limited memory (mobile, IoT)")
+    print("\n✅ This is the power of quantization: same functionality, 4x less memory!")
 
-    quantize_model(model_copy)
-    output1 = model_copy.forward(test_input)
-    error1 = np.mean((original_output.data - output1.data) ** 2)
-    strategies['per_tensor'] = {'mse': error1, 'description': 'Single scale per tensor'}
-    print(f"  MSE: {error1:.6f}")
-
-    # Strategy 2: Per-channel quantization simulation
-    print("\n🔍 Strategy 2: Per-Channel Quantization (simulated)")
-    # Simulate by quantizing each output channel separately
-    def per_channel_quantize(tensor):
-        """Simulate per-channel quantization for 2D weight matrices."""
-        if len(tensor.shape) < 2:
-            return quantize_int8(tensor)
-
-        quantized_data = np.zeros_like(tensor.data, dtype=np.int8)
-        scales = []
-        zero_points = []
-
-        for i in range(tensor.shape[1]):  # Per output channel
-            channel_tensor = Tensor(tensor.data[:, i:i+1])
-            q_channel, scale, zp = quantize_int8(channel_tensor)
-            quantized_data[:, i] = q_channel.data.flatten()
-            scales.append(scale)
-            zero_points.append(zp)
-
-        return Tensor(quantized_data), scales, zero_points
-
-    # Apply per-channel quantization to weights
-    total_error = 0
-    for layer in model.layers:
-        if isinstance(layer, Linear):
-            q_weight, scales, zps = per_channel_quantize(layer.weight)
-            # Simulate dequantization and error
-            for i in range(layer.weight.shape[1]):
-                original_channel = layer.weight.data[:, i]
-                restored_channel = scales[i] * q_weight.data[:, i] + zps[i] * scales[i]
-                total_error += np.mean((original_channel - restored_channel) ** 2)
-
-    strategies['per_channel'] = {'mse': total_error, 'description': 'Scale per output channel'}
-    print(f"  MSE: {total_error:.6f}")
-
-    # Strategy 3: Mixed precision simulation
-    print("\n🔍 Strategy 3: Mixed Precision")
-    # Keep sensitive layers in FP32, quantize others
-    sensitive_layers = [0]  # First layer often most sensitive
-    mixed_error = 0
-
-    for i, layer in enumerate(model.layers):
-        if isinstance(layer, Linear):
-            if i in sensitive_layers:
-                # Keep in FP32 (no quantization error)
-                pass
-            else:
-                # Quantize layer
-                q_weight, scale, zp = quantize_int8(layer.weight)
-                restored = dequantize_int8(q_weight, scale, zp)
-                mixed_error += np.mean((layer.weight.data - restored.data) ** 2)
-
-    strategies['mixed_precision'] = {'mse': mixed_error, 'description': 'FP32 sensitive + INT8 others'}
-    print(f"  MSE: {mixed_error:.6f}")
-
-    # Compare strategies
-    print(f"\n📊 QUANTIZATION STRATEGY COMPARISON")
-    print("=" * 60)
-    for name, info in strategies.items():
-        print(f"{name:15}: MSE={info['mse']:.6f} | {info['description']}")
-
-    # Find best strategy
-    best_strategy = min(strategies.items(), key=lambda x: x[1]['mse'])
-    print(f"\n🏆 Best Strategy: {best_strategy[0]} (MSE: {best_strategy[1]['mse']:.6f})")
-
-    print(f"\n💡 Production Insights:")
-    print("- Per-channel: Better accuracy, more complex implementation")
-    print("- Mixed precision: Optimal accuracy/efficiency trade-off")
-    print("- Per-tensor: Simplest, good for most applications")
-    print("- Hardware support varies: INT8 GEMM, per-channel scales")
-
-    return strategies
-
-# Analyze quantization strategies
-strategy_analysis = analyze_quantization_strategies()
+demo_quantization_with_profiler()
 
 # %% [markdown]
 """
-## 7. Module Integration Test
+## 6. Module Integration Test
 
 Final validation that our quantization system works correctly across all components.
 """
@@ -2166,6 +1598,106 @@ if __name__ == "__main__":
     print("🚀 Running Quantization module...")
     test_module()
     print("✅ Module validation complete!")
+
+# %% [markdown]
+"""
+## 🏁 Consolidated Quantization Classes for Export
+
+Now that we've implemented all quantization components, let's create consolidated classes
+for export to the tinytorch package. This allows milestones to use the complete quantization system.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "quantization_export", "solution": false}
+#| export
+class QuantizationComplete:
+    """
+    Complete quantization system for milestone use.
+    
+    Provides INT8 quantization with calibration for 4× memory reduction.
+    """
+    
+    @staticmethod
+    def quantize_tensor(tensor: Tensor) -> Tuple[Tensor, float, int]:
+        """Quantize FP32 tensor to INT8."""
+        data = tensor.data
+        min_val = float(np.min(data))
+        max_val = float(np.max(data))
+        
+        if abs(max_val - min_val) < 1e-8:
+            return Tensor(np.zeros_like(data, dtype=np.int8)), 1.0, 0
+        
+        scale = (max_val - min_val) / 255.0
+        zero_point = int(np.round(-128 - min_val / scale))
+        zero_point = int(np.clip(zero_point, -128, 127))
+        
+        quantized_data = np.round(data / scale + zero_point)
+        quantized_data = np.clip(quantized_data, -128, 127).astype(np.int8)
+        
+        return Tensor(quantized_data), scale, zero_point
+    
+    @staticmethod
+    def dequantize_tensor(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
+        """Dequantize INT8 tensor back to FP32."""
+        dequantized_data = (q_tensor.data.astype(np.float32) - zero_point) * scale
+        return Tensor(dequantized_data)
+    
+    @staticmethod
+    def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> Dict[str, any]:
+        """
+        Quantize all Linear layers in a model.
+        
+        Returns dictionary with quantization info and memory savings.
+        """
+        quantized_layers = {}
+        original_size = 0
+        quantized_size = 0
+        
+        # Iterate through model parameters
+        if hasattr(model, 'parameters'):
+            for i, param in enumerate(model.parameters()):
+                param_size = param.data.nbytes
+                original_size += param_size
+                
+                # Quantize parameter
+                q_param, scale, zp = QuantizationComplete.quantize_tensor(param)
+                quantized_size += q_param.data.nbytes
+                
+                quantized_layers[f'param_{i}'] = {
+                    'quantized': q_param,
+                    'scale': scale,
+                    'zero_point': zp,
+                    'original_shape': param.data.shape
+                }
+        
+        return {
+            'quantized_layers': quantized_layers,
+            'original_size_mb': original_size / (1024 * 1024),
+            'quantized_size_mb': quantized_size / (1024 * 1024),
+            'compression_ratio': original_size / quantized_size if quantized_size > 0 else 1.0
+        }
+    
+    @staticmethod
+    def compare_models(original_model, quantized_info: Dict) -> Dict[str, float]:
+        """Compare memory usage between original and quantized models."""
+        return {
+            'original_mb': quantized_info['original_size_mb'],
+            'quantized_mb': quantized_info['quantized_size_mb'],
+            'compression_ratio': quantized_info['compression_ratio'],
+            'memory_saved_mb': quantized_info['original_size_mb'] - quantized_info['quantized_size_mb']
+        }
+
+# Convenience functions for backward compatibility
+def quantize_int8(tensor: Tensor) -> Tuple[Tensor, float, int]:
+    """Quantize FP32 tensor to INT8."""
+    return QuantizationComplete.quantize_tensor(tensor)
+
+def dequantize_int8(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
+    """Dequantize INT8 tensor back to FP32."""
+    return QuantizationComplete.dequantize_tensor(q_tensor, scale, zero_point)
+
+def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> Dict[str, any]:
+    """Quantize entire model to INT8."""
+    return QuantizationComplete.quantize_model(model, calibration_data)
 
 # %% [markdown]
 """

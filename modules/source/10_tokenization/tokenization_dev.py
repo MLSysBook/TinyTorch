@@ -15,6 +15,12 @@
 #| default_exp text.tokenization
 #| export
 
+import numpy as np
+from typing import List, Dict, Tuple, Optional, Set
+import json
+import re
+from collections import defaultdict, Counter
+
 # %% [markdown]
 """
 # Module 10: Tokenization - Converting Text to Numbers
@@ -62,6 +68,7 @@ from tinytorch.text.tokenization import Tokenizer, CharTokenizer, BPETokenizer
 """
 
 # %%
+#| export
 import numpy as np
 from typing import List, Dict, Tuple, Optional, Set
 import json
@@ -69,10 +76,7 @@ import re
 from collections import defaultdict, Counter
 
 # Import only Module 01 (Tensor) - this module has minimal dependencies
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
@@ -82,23 +86,40 @@ Neural networks operate on numbers, but humans communicate with text. Tokenizati
 
 ### The Text-to-Numbers Challenge
 
-Consider the sentence: "Hello, world!"
+Consider the sentence: "Hello, world!" - how do we turn this into numbers a neural network can process?
 
 ```
-Human Text:     "Hello, world!"
-                      ↓
-               [Tokenization]
-                      ↓
-Numerical IDs:  [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33]
+┌─────────────────────────────────────────────────────────────────┐
+│  TOKENIZATION PIPELINE: Text → Numbers                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Input (Human Text):     "Hello, world!"                        │
+│           │                                                     │
+│           ├─ Step 1: Split into tokens                          │
+│           │         ['H','e','l','l','o',',', ...']             │
+│           │                                                     │
+│           ├─ Step 2: Map to vocabulary IDs                      │
+│           │         [72, 101, 108, 108, 111, ...]               │
+│           │                                                     │
+│           ├─ Step 3: Handle unknowns                            │
+│           │         Unknown chars → special <UNK> token         │
+│           │                                                     │
+│           └─ Step 4: Enable decoding                            │
+│                     IDs → original text                         │
+│                                                                 │
+│  Output (Token IDs):  [72, 101, 108, 108, 111, 44, 32, ...]     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### The Four-Step Process
 
-How do we represent this for a neural network? We need to:
-1. **Split text into tokens** - meaningful units like words, subwords, or characters
-2. **Map tokens to integers** - create a vocabulary that assigns unique IDs
-3. **Handle unknown text** - deal with words not seen during training
-4. **Enable reconstruction** - convert numbers back to readable text
+How do we represent text for a neural network? We need a systematic pipeline:
+
+**1. Split text into tokens** - Break text into meaningful units (words, subwords, or characters)
+**2. Map tokens to integers** - Create a vocabulary that assigns each token a unique ID
+**3. Handle unknown text** - Deal gracefully with tokens not seen during training
+**4. Enable reconstruction** - Convert numbers back to readable text for interpretation
 
 ### Why This Matters
 
@@ -119,15 +140,59 @@ Different tokenization approaches make different trade-offs between vocabulary s
 **Approach**: Each character gets its own token
 
 ```
-Text: "Hello world"
-       ↓
-Tokens: ['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']
-       ↓
-IDs:    [8, 5, 12, 12, 15, 0, 23, 15, 18, 12, 4]
+┌──────────────────────────────────────────────────────────────┐
+│ CHARACTER TOKENIZATION PROCESS                               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Step 1: Build Vocabulary from Unique Characters             │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Corpus: ["hello", "world"]                             │  │
+│  │                ↓                                       │  │
+│  │ Unique chars: ['h', 'e', 'l', 'o', 'w', 'r', 'd']      │  │
+│  │                ↓                                       │  │
+│  │ Vocabulary:  ['<UNK>','h','e','l','o','w','r','d']     │  │
+│  │ IDs:            0      1   2   3   4   5   6   7       │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Step 2: Encode Text Character by Character                  │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Text: "hello"                                         │  │
+│  │                                                        │  │
+│  │   'h' → 1    (lookup in vocabulary)                    │  │
+│  │   'e' → 2                                              │  │
+│  │   'l' → 3                                              │  │
+│  │   'l' → 3                                              │  │
+│  │   'o' → 4                                              │  │
+│  │                                                        │  │
+│  │  Result: [1, 2, 3, 3, 4]                               │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Step 3: Decode by Reversing ID Lookup                       │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  IDs: [1, 2, 3, 3, 4]                                  │  │
+│  │                                                        │  │
+│  │   1 → 'h'    (reverse lookup)                          │  │
+│  │   2 → 'e'                                              │  │
+│  │   3 → 'l'                                              │  │
+│  │   3 → 'l'                                              │  │
+│  │   4 → 'o'                                              │  |
+│  │                                                        │  │
+│  │  Result: "hello"                                       │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-**Pros**: Small vocabulary (~100), handles any text, no unknown tokens
-**Cons**: Long sequences (1 char = 1 token), limited semantic understanding
+**Pros**: 
+- Small vocabulary (~100 chars)
+- Handles any text perfectly
+- No unknown tokens (every character can be mapped)
+- Simple implementation
+
+**Cons**: 
+- Long sequences (1 character = 1 token)
+- Limited semantic understanding (no word boundaries)
+- More compute (longer sequences to process)
 
 ### Word-Level Tokenization
 **Approach**: Each word gets its own token
@@ -480,38 +545,84 @@ Character tokenization provides a simple, robust foundation for text processing.
 """
 ### Byte Pair Encoding (BPE) Tokenizer
 
-BPE is the secret sauce behind modern language models. It learns to merge frequent character pairs, creating subword units that balance vocabulary size with sequence length.
+BPE is the secret sauce behind modern language models (GPT, BERT, etc.). It learns to merge frequent character pairs, creating subword units that balance vocabulary size with sequence length.
 
 ```
-BPE Training Process:
-
-Step 1: Start with character vocabulary
-Text: ["hello", "hello", "help"]
-Initial tokens: [['h','e','l','l','o</w>'], ['h','e','l','l','o</w>'], ['h','e','l','p</w>']]
-
-Step 2: Count character pairs
-('h','e'): 3 times  ← Most frequent!
-('e','l'): 3 times
-('l','l'): 2 times
-('l','o'): 2 times
-('l','p'): 1 time
-
-Step 3: Merge most frequent pair
-Merge ('h','e') → 'he'
-Tokens: [['he','l','l','o</w>'], ['he','l','l','o</w>'], ['he','l','p</w>']]
-Vocab: ['h','e','l','o','p','</w>','he']  ← New token added
-
-Step 4: Repeat until target vocabulary size
-Next merge: ('l','l') → 'll'
-Tokens: [['he','ll','o</w>'], ['he','ll','o</w>'], ['he','l','p</w>']]
-Vocab: ['h','e','l','o','p','</w>','he','ll']  ← Growing vocabulary
-
-Final result:
-Text "hello" → ['he', 'll', 'o</w>'] → 3 tokens (vs 5 characters)
-Text "help"  → ['he', 'l', 'p</w>']  → 3 tokens (vs 4 characters)
+┌───────────────────────────────────────────────────────────────────────────┐
+│ BPE TRAINING ALGORITHM: Learning Subword Units                            │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ STEP 1: Initialize with Character Vocabulary                              │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Training Data: ["hello", "hello", "help"]                    │          │
+│ │                                                              │          │
+│ │ Initial Tokens (with end-of-word markers):                   │          │
+│ │   ['h','e','l','l','o</w>']    (hello)                       │          │
+│ │   ['h','e','l','l','o</w>']    (hello)                       │          │
+│ │   ['h','e','l','p</w>']        (help)                        │          │
+│ │                                                              │          │
+│ │ Starting Vocab: ['h', 'e', 'l', 'o', 'p', '</w>']            │          │
+│ │                   ↑ All unique characters                    │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ STEP 2: Count All Adjacent Pairs                                          │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Pair Frequency Analysis:                                     │          │
+│ │                                                              │          │
+│ │   ('h', 'e'): ██████  3 occurrences  ← MOST FREQUENT!        │          │
+│ │   ('e', 'l'): ██████  3 occurrences                          │          │
+│ │   ('l', 'l'): ████    2 occurrences                          │          │
+│ │   ('l', 'o'): ████    2 occurrences                          │          │
+│ │   ('o', '<'): ████    2 occurrences                          │          │
+│ │   ('l', 'p'): ██      1 occurrence                           │          │
+│ │   ('p', '<'): ██      1 occurrence                           │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ STEP 3: Merge Most Frequent Pair                                          │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Merge Operation: ('h', 'e') → 'he'                           │          │
+│ │                                                              │          │
+│ │ BEFORE:                          AFTER:                      │          │
+│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']       │          │
+│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']       │          │
+│ │   ['h','e','l','p</w>']      →  ['he','l','p</w>']           │          │
+│ │                                                              │          │
+│ │ Updated Vocab: ['h','e','l','o','p','</w>', 'he']            │          │
+│ │                                              ↑ NEW TOKEN!    │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ STEP 4: Repeat Until Target Vocab Size Reached                            │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Iteration 2: Next most frequent is ('l', 'l')                │          │
+│ │ Merge ('l','l') → 'll'                                       │          │
+│ │                                                              │          │
+│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']          │          │
+│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']          │          │
+│ │   ['he','l','p</w>']         →  ['he','l','p</w>']           │          │
+│ │                                                              │          │
+│ │ Updated Vocab: ['h','e','l','o','p','</w>','he','ll']        │          │
+│ │                                                  ↑ NEW!      │          │
+│ │                                                              │          │
+│ │ Continue merging until vocab_size target...                  │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+│ FINAL RESULTS:                                                            │
+│ ┌──────────────────────────────────────────────────────────────┐          │
+│ │ Trained BPE can now encode efficiently:                      │          │
+│ │                                                              │          │
+│ │ "hello" → ['he', 'll', 'o</w>']  = 3 tokens (vs 5 chars)     │          │
+│ │ "help"  → ['he', 'l', 'p</w>']   = 3 tokens (vs 4 chars)     │          │
+│ │                                                              │          │
+│ │  Key Insights: BPE automatically discovers:                  │          │
+│ │    - Common prefixes ('he')                                  │          │
+│ │    - Morphological patterns ('ll')                           │          │
+│ │    - Natural word boundaries (</w>)                          │          │
+│ └──────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
-BPE discovers natural word boundaries and common patterns automatically!
+**Why BPE Works**: By starting with characters and iteratively merging frequent pairs, BPE discovers the natural statistical patterns in language. Common words become single tokens, rare words split into recognizable subword pieces!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "bpe-tokenizer", "solution": true}
@@ -1083,11 +1194,57 @@ ChatGPT:     ~100K tokens with extended vocabulary
 
 **Memory implications for embedding tables**:
 ```
-Tokenizer     Vocab Size   Embed Dim   Parameters    Memory (fp32)
-Character           100        512        51K           204 KB
-BPE-1K            1,000        512       512K           2.0 MB
-BPE-50K          50,000        512      25.6M         102.4 MB
-Word-100K       100,000        512      51.2M         204.8 MB
+┌─────────────────────────────────────────────────────────────────────┐
+│ EMBEDDING TABLE MEMORY: Vocabulary Size × Embedding Dimension       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│ CHARACTER TOKENIZER (Vocab: 100)                                    │
+│ ┌────────────────────────────┐                                      │
+│ │  100 × 512 = 51,200 params │     Memory: 204 KB                   │
+│ │  ████                      │     ↑ Tiny embedding table!          │
+│ └────────────────────────────┘                                      │
+│                                                                     │
+│ BPE-SMALL (Vocab: 1,000)                                            │
+│ ┌────────────────────────────┐                                      │
+│ │  1K × 512 = 512K params    │     Memory: 2.0 MB                   │
+│ │  ██████████                │     ↑ Still manageable               │
+│ └────────────────────────────┘                                      │
+│                                                                     │
+│ BPE-LARGE (Vocab: 50,000) ← MOST PRODUCTION MODELS                  │
+│ ┌────────────────────────────────────────────────────────┐          │
+│ │  50K × 512 = 25.6M params                              │          │
+│ │  ████████████████████████████████████████████████      │          │
+│ │                                                        │          │
+│ │  Memory: 102.4 MB (fp32)                               │          │
+│ │          51.2 MB (fp16)    ← Half precision saves 50%  │          │
+│ │          25.6 MB (int8)    ← Quantization saves 75%    │          │
+│ └────────────────────────────────────────────────────────┘          │
+│                                                                     │
+│ WORD-LEVEL (Vocab: 100,000)                                         │
+│ ┌────────────────────────────────────────────────────────┐          │
+│ │  100K × 512 = 51.2M params                             │          │
+│ │  ████████████████████████████████████████████████████  │          │
+│ │                                                        │          │
+│ │  Memory: 204.8 MB (fp32)  ← Often too large!           │          │
+│ │          102.4 MB (fp16)                               │          │
+│ └────────────────────────────────────────────────────────┘          │
+│                                                                     │
+│  Key Trade-off:                                                     │
+│    Larger vocab → Shorter sequences → Less compute                  │
+│    BUT larger vocab → More embedding memory → Harder to train       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+Real-World Production Examples:
+┌─────────────┬──────────────┬───────────────┬──────────────────┐
+│   Model     │  Vocab Size  │  Embed Dim    │  Embed Memory    │
+├─────────────┼──────────────┼───────────────┼──────────────────┤
+│  GPT-2      │    50,257    │     1,600     │     321 MB       │
+│  GPT-3      │    50,257    │    12,288     │     2.4 GB       │
+│  BERT       │    30,522    │       768     │      94 MB       │
+│  T5         │    32,128    │       512     │      66 MB       │
+│  LLaMA-7B   │    32,000    │     4,096     │     524 MB       │
+└─────────────┴──────────────┴───────────────┴──────────────────┘
 ```
 """
 

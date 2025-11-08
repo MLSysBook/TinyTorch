@@ -3,7 +3,6 @@ Info command for TinyTorch CLI: shows system information and course navigation.
 """
 
 from argparse import ArgumentParser, Namespace
-from pathlib import Path
 import sys
 import os
 from rich.console import Console
@@ -39,8 +38,7 @@ class InfoCommand(BaseCommand):
         info_text.append(f"Working Directory: {os.getcwd()}\n", style="cyan")
         
         # Virtual environment check
-        venv_path = Path(".venv")
-        venv_exists = venv_path.exists()
+        venv_exists = self.venv_path.exists()
         in_venv = (
             os.environ.get('VIRTUAL_ENV') is not None or
             (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix) or
