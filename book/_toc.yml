@@ -46,7 +46,7 @@ parts:
   chapters:
   - file: chapters/08-dataloader
     title: "08. DataLoader"
-  - file: chapters/09-spatial
+  - file: chapters/09-convolutional-networks
     title: "09. Convolutional Networks"
   - file: chapters/10-tokenization
     title: "10. Tokenization"
