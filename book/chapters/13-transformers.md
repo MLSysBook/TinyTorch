@@ -465,7 +465,7 @@ This module implements patterns from:
 
 ## What's Next?
 
-In **Module 14: KV Caching** (Performance Tier), you'll optimize transformers for production:
+In **Module 15: Memoization** (Optimization Tier), you'll optimize transformers for production:
 
 - Cache key and value matrices to avoid recomputation
 - Reduce inference latency by 10-100× for long sequences

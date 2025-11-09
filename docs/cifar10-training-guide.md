@@ -6,9 +6,9 @@ This guide walks you through training a CNN on CIFAR-10 using your TinyTorch imp
 ## Prerequisites
 Complete these modules first:
 - ✅ Module 08: DataLoader (for CIFAR-10 loading)
-- ✅ Module 11: Training (for model checkpointing)
-- ✅ Module 06: Spatial (for CNN layers)
-- ✅ Module 10: Optimizers (for Adam optimizer)
+- ✅ Module 07: Training (for model checkpointing)
+- ✅ Module 09: Convolutional Networks (for CNN layers)
+- ✅ Module 06: Optimizers (for Adam optimizer)
 
 ## Step 1: Load CIFAR-10 Data
 

@@ -432,7 +432,7 @@ This module implements patterns from:
 
 ## What's Next?
 
-In **Module 15: Profiling**, you'll measure where time goes in your transformer:
+In **Module 14: Profiling**, you measured where time goes in your transformer. Now you'll fix the bottleneck:
 
 - Profile attention, feedforward, and embedding operations
 - Identify computational bottlenecks beyond caching
