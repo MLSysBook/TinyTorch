@@ -36,7 +36,7 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 TinyTorch organizes learning through **three pedagogically-motivated tiers** that follow ML history:
 
 **🏗️ Foundation Tier (Modules 01-07)**: Build mathematical infrastructure - tensors, autograd, optimizers
-**🧠 Intelligence Tier (Modules 08-13)**: Implement modern AI - CNNs for vision, transformers for language
+**🏛️ Architecture Tier (Modules 08-13)**: Implement modern AI - CNNs for vision, transformers for language
 **⚡ Optimization Tier (Modules 14-20)**: Deploy production systems - profiling, quantization, acceleration
 
 Each tier builds complete, working systems with clear career connections and practical skills.

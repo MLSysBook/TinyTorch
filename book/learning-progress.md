@@ -30,7 +30,7 @@ TinyTorch organizes learning through **three pedagogically-motivated tiers**, ea
 
 ### Typical Student Progression by Tier
 - **🏗️ Foundation Tier (6-8 weeks)**: Build mathematical infrastructure - tensors, autograd, optimizers, training loops
-- **🧠 Intelligence Tier (4-6 weeks)**: Implement modern AI architectures - CNNs for vision, transformers for language
+- **🏛️ Architecture Tier (4-6 weeks)**: Implement modern AI architectures - CNNs for vision, transformers for language
 - **⚡ Optimization Tier (4-6 weeks)**: Deploy production systems - profiling, quantization, acceleration
 
 ### Study Approaches
