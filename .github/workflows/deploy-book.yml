@@ -44,17 +44,6 @@ jobs:
         python-version: '3.11'
         cache: 'pip'
 
-    - name: Debug - List checked out files
-      run: |
-        echo "=== Root directory ==="
-        ls -la
-        echo "=== Book directory ==="
-        ls -la book/ || echo "book/ doesn't exist"
-        echo "=== Chapters directory ==="
-        ls -la book/chapters/ || echo "book/chapters/ doesn't exist"
-        echo "=== Git status ==="
-        git status
-        
     - name: Install dependencies
       run: |
         pip install --upgrade pip
@@ -65,7 +54,7 @@ jobs:
       run: |
         cd book
         jupyter-book clean . || true
-        jupyter-book build . --all
+        jupyter-book build .
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
