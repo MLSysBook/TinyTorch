@@ -1949,179 +1949,141 @@ test_unit_optimization_comparison()
 
 # %% [markdown]
 """
+## 4.4 Systems Analysis - Benchmark Variance and Optimization Trade-offs
+
+Understanding measurement variance and optimization trade-offs through systematic analysis.
+"""
+
+# %%
+def analyze_benchmark_variance():
+    """📊 Analyze measurement variance and confidence intervals."""
+    print("📊 Analyzing Benchmark Variance")
+    print("=" * 60)
+
+    # Simulate benchmarking with different sample sizes
+    sample_sizes = [5, 10, 20, 50, 100]
+    true_latency = 10.0  # True mean latency in ms
+    noise_std = 1.5  # Standard deviation of measurement noise
+
+    print("Effect of Sample Size on Confidence Interval Width:\n")
+    print(f"{'Samples':<10} {'Mean (ms)':<15} {'CI Width (ms)':<15} {'Relative Error':<15}")
+    print("-" * 60)
+
+    for n_samples in sample_sizes:
+        # Simulate measurements
+        measurements = np.random.normal(true_latency, noise_std, n_samples)
+        mean_latency = np.mean(measurements)
+        std_latency = np.std(measurements)
+
+        # Calculate 95% confidence interval
+        t_score = 1.96
+        margin_error = t_score * (std_latency / np.sqrt(n_samples))
+        ci_width = 2 * margin_error
+        relative_error = ci_width / mean_latency * 100
+
+        print(f"{n_samples:<10} {mean_latency:<15.2f} {ci_width:<15.2f} {relative_error:<15.1f}%")
+
+    print("\n💡 Key Insights:")
+    print("   • More samples reduce confidence interval width")
+    print("   • CI width decreases with √n (diminishing returns)")
+    print("   • 20-50 samples typically sufficient for <10% error")
+    print("   • Statistical rigor requires measuring variance, not just mean")
+
+analyze_benchmark_variance()
+
+# %%
+def analyze_optimization_tradeoffs():
+    """📊 Analyze trade-offs between different optimization techniques."""
+    print("\n📊 Analyzing Optimization Trade-offs")
+    print("=" * 60)
+
+    # Simulated optimization results
+    optimizations = {
+        'Baseline': {'accuracy': 0.89, 'latency_ms': 45, 'memory_mb': 12, 'energy_j': 2.0},
+        'Quantization (INT8)': {'accuracy': 0.88, 'latency_ms': 30, 'memory_mb': 3, 'energy_j': 1.3},
+        'Pruning (70%)': {'accuracy': 0.87, 'latency_ms': 35, 'memory_mb': 4, 'energy_j': 1.5},
+        'Both (INT8 + 70%)': {'accuracy': 0.85, 'latency_ms': 22, 'memory_mb': 1, 'energy_j': 0.9},
+    }
+
+    # Calculate efficiency metrics
+    print("\nEfficiency Metrics (higher is better):\n")
+    print(f"{'Technique':<25} {'Acc/MB':<12} {'Acc/ms':<12} {'Acc/J':<12}")
+    print("-" * 60)
+
+    baseline = optimizations['Baseline']
+
+    for name, metrics in optimizations.items():
+        acc_per_mb = metrics['accuracy'] / metrics['memory_mb']
+        acc_per_ms = metrics['accuracy'] / metrics['latency_ms']
+        acc_per_j = metrics['accuracy'] / metrics['energy_j']
+
+        print(f"{name:<25} {acc_per_mb:<12.3f} {acc_per_ms:<12.4f} {acc_per_j:<12.3f}")
+
+    print("\nPareto Frontier Analysis:")
+    print("   • Quantization: Best memory efficiency (0.293 acc/MB)")
+    print("   • Pruning: Balanced trade-off")
+    print("   • Combined: Maximum resource efficiency, highest accuracy loss")
+
+    print("\n💡 Key Insights:")
+    print("   • No single optimization dominates all metrics")
+    print("   • Combined optimizations compound benefits and risks")
+    print("   • Choose based on deployment constraints (memory vs speed vs accuracy)")
+    print("   • Pareto frontier reveals non-dominated solutions")
+
+analyze_optimization_tradeoffs()
+
+# %% [markdown]
+"""
 ## 4.4 MLPerf Principles - Industry-Standard Benchmarking
 
-Before we dive into optimization strategies, let's learn from **MLPerf** - the industry-standard ML benchmarking framework. Understanding MLPerf principles will ground your capstone competition in professional ML systems evaluation.
+MLPerf (created by MLCommons) is the industry-standard ML benchmarking framework. Understanding these principles grounds your capstone competition in professional methodology.
 
-### What is MLPerf?
+### Core Principles
 
-MLPerf is the industry-standard benchmark suite for measuring ML system performance. Think of it as the "Olympics" of ML systems, but with rigorous scientific methodology:
+**Reproducibility:** Fixed hardware specs, software versions, random seeds, and multiple runs for statistical validity.
 
-- **Created by:** MLCommons (Google, NVIDIA, Intel, universities)
-- **Used by:** All major ML hardware/software companies
-- **Purpose:** Fair, reproducible comparison of ML systems
-- **Impact:** Drives billions in hardware/software decisions
+**Standardization:** Fixed models and datasets enable fair comparison. MLPerf has two divisions:
+- **Closed:** Same models/datasets, optimize systems (hardware/software)
+- **Open:** Modify models/algorithms, show innovation
 
-### Core MLPerf Principles
+**TinyMLPerf:** Edge device benchmarks (<1MB models, <100ms latency, <10mW power) that inspire the capstone.
 
-**1. Reproducibility**
-- Exact hardware specifications reported
-- Software versions documented
-- Random seeds controlled
-- Multiple runs required for statistical validity
+### Key Takeaways
 
-**2. Standardization**
-- Fixed model architectures (everyone runs the same models)
-- Fixed datasets (same training/test data)
-- Fixed quality targets (must achieve X% accuracy)
-- Fair comparison (apples-to-apples)
+1. Document everything for reproducibility
+2. Use same baseline for fair comparison
+3. Measure multiple metrics (accuracy, latency, memory, energy)
+4. Optimize for real deployment constraints
 
-**3. Divisions for Different Goals**
-
-MLPerf has TWO main divisions:
-
-**🔒 Closed Division** (Strict Rules):
-- Use provided model architectures exactly
-- Use provided datasets exactly
-- Can optimize: training algorithms, hardware, software stack
-- **Goal:** Fair comparison of SYSTEMS (not algorithms)
-- Example: "Which GPU trains ResNet-50 fastest?"
-
-**🔓 Open Division** (Flexible Rules):
-- Modify model architectures
-- Use different datasets
-- Novel algorithms allowed
-- **Goal:** Show innovation and new approaches
-- Example: "New pruning technique achieves 10x speedup!"
-
-**Why Two Divisions?**
-- Closed: Answers "What's the best hardware/software for X?"
-- Open: Answers "What's the best algorithm/innovation for Y?"
-
-### MLPerf Inference Benchmarks
-
-MLPerf Inference (what we care about) measures:
-- **Latency:** Single-stream inference time
-- **Throughput:** Offline batch processing speed
-- **Accuracy:** Must meet quality targets
-- **Power:** Energy efficiency (advanced)
-
-Common scenarios:
-- **Server:** Datacenter deployment (high throughput)
-- **Edge:** On-device inference (low latency, low power)
-- **Mobile:** Smartphone deployment (tiny models)
-
-### TinyMLPerf - MLPerf for Tiny Systems
-
-TinyMLPerf is MLPerf for embedded/edge devices:
-- Models <1MB
-- Latency <100ms
-- Power <10mW
-- Real deployment constraints
-
-**This is what inspires your capstone!**
-
-### Key Takeaways for Your Competition
-
-1. **Reproducibility Matters:** Document everything
-2. **Fair Comparison:** Same baseline for everyone
-3. **Multiple Metrics:** Not just accuracy - latency, memory, energy
-4. **Real Constraints:** Optimize for actual deployment scenarios
-5. **Closed vs Open:** Understand the rules of your competition
-
-**In Module 20**, you'll participate in **TinyMLPerf-style competition** following these principles!
+**Module 20 capstone** follows TinyMLPerf-style principles!
 """
 
 # %% [markdown]
 """
 ## 4.5 Combination Strategies - Preparing for TorchPerf Olympics
 
-You've learned individual optimizations (M14-18). Now it's time to combine them strategically! The order and parameters matter significantly for final performance.
+Strategic optimization combines multiple techniques for different competition objectives. The order matters: quantize-then-prune may preserve accuracy better, while prune-then-quantize may be faster.
 
-### Why Combination Order Matters
+### Ablation Studies
 
-Consider these two strategies:
-- **Strategy A**: Quantize INT8 → Prune 70% → Fuse kernels
-- **Strategy B**: Prune 70% → Quantize INT8 → Fuse kernels
-
-Strategy A might preserve more accuracy because quantization happens first (on the full network), while Strategy B might be faster because pruning reduces what needs to be quantized. The "best" depends on your Olympic event!
-
-### Ablation Studies: Understanding Individual Contributions
-
-Professional ML engineers use **ablation studies** to understand what each optimization contributes:
+Professional ML engineers use ablation studies to understand each optimization's contribution:
 
 ```
 Baseline:           Accuracy: 89%, Latency: 45ms, Memory: 12MB
 + Quantization:     Accuracy: 88%, Latency: 30ms, Memory: 3MB   (Δ: -1%, -33%, -75%)
 + Pruning:          Accuracy: 87%, Latency: 22ms, Memory: 2MB   (Δ: -1%, -27%, -33%)
 + Kernel Fusion:    Accuracy: 87%, Latency: 18ms, Memory: 2MB   (Δ: 0%, -18%, 0%)
-
-Conclusion: Quantization provides biggest memory reduction, fusion provides latency boost
 ```
 
-This systematic analysis tells you what to prioritize for each Olympic event!
+### Olympic Event Quick Guide
 
-### Olympic Event Strategies
+- **Latency Sprint**: Fusion > Caching > Quantization > Pruning
+- **Memory Challenge**: Quantization > Pruning > Compression
+- **Accuracy Contest**: High-bit quantization (8-bit), light pruning (30-50%)
+- **All-Around**: Balanced INT8 + 60% pruning + selective fusion
+- **Extreme Push**: 4-bit quantization + 90% pruning (verify accuracy threshold)
 
-**🏃 Latency Sprint**: Minimize inference time
-- Priority: Kernel fusion > KV caching > Quantization > Pruning
-- Risk: Aggressive optimizations may hurt accuracy
-- Tip: Start with proven speed techniques, then add memory techniques if needed
-
-**🏋️ Memory Challenge**: Minimize model footprint
-- Priority: Quantization > Pruning > Compression
-- Risk: Model quality degradation
-- Tip: Quantize first (4x memory reduction), then prune to meet target
-
-**🎯 Accuracy Contest**: Maximize accuracy within constraints
-- Priority: Minimal optimizations, careful tuning
-- Risk: Not enough optimization to meet constraints
-- Tip: Use high-bit quantization (8-bit), light pruning (30-50%)
-
-**🏋️‍♂️ All-Around**: Best balanced performance
-- Priority: Balanced application of all techniques
-- Risk: Jack of all trades, master of none
-- Tip: Use moderate settings for each technique (INT8, 60% pruning, selective fusion)
-
-**🚀 Extreme Push**: Most aggressive optimization
-- Priority: Maximum of everything
-- Risk: Significant accuracy loss
-- Tip: Start with 4-bit quantization + 90% pruning, verify accuracy threshold
-
-### Example: Combining for All-Around Event
-
-```python
-from tinytorch.optimization.quantization import quantize_model
-from tinytorch.optimization.compression import magnitude_prune
-from tinytorch.generation.kv_cache import enable_kv_cache
-
-# Load baseline
-baseline_model = load_baseline("cifar10_cnn")
-
-# Apply balanced optimization strategy
-optimized = baseline_model
-
-# Step 1: Quantize to INT8 (moderate precision)
-optimized = quantize_model(optimized, bits=8)
-
-# Step 2: Prune 60% (moderate sparsity)
-optimized = magnitude_prune(optimized, sparsity=0.6)
-
-# Step 3: Enable KV cache for transformers (if applicable)
-if hasattr(optimized, 'transformer_blocks'):
-    enable_kv_cache(optimized)
-
-# Benchmark using TorchPerf
-from tinytorch.benchmarking.benchmark import Benchmark, OlympicEvent
-
-benchmark = Benchmark([baseline_model, optimized], 
-                     [{"name": "baseline"}, {"name": "optimized"}])
-
-results = benchmark.run_latency_benchmark()
-# Compare and iterate!
-```
-
-The key: **Start with one technique, measure impact, add next technique, repeat!**
+**Key strategy:** Start with one technique, measure impact, add next, repeat!
 """
 
 # %% [markdown]

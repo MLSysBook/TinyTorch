@@ -696,22 +696,9 @@ Creation Time:                   Runtime:
 4. **FP32 computation** - educational approach, production uses INT8 GEMM
 5. **Memory tracking** - measure actual compression achieved
 
-**Memory Layout Comparison:**
-```
-Regular Linear Layer:           QuantizedLinear Layer:
-┌─────────────────────────┐     ┌─────────────────────────┐
-│ weights: FP32 × N       │     │ q_weights: INT8 × N    │
-│ bias: FP32 × M          │     │ q_bias: INT8 × M       │
-│                         │ →   │ weight_scale: 1 float   │
-│ Total: 4×(N+M) bytes    │     │ weight_zero_point: 1 int│
-└─────────────────────────┘     │ bias_scale: 1 float     │
-                                  │ bias_zero_point: 1 int  │
-                                  │                         │
-                                  │ Total: (N+M) + 16 bytes │
-                                  └─────────────────────────┘
-                                      ↑
-                               ~4× smaller!
-```
+**Memory Layout:**
+
+Regular Linear layers store weights in FP32 (4 bytes each), while QuantizedLinear stores them in INT8 (1 byte each) plus a small overhead for quantization parameters (scales and zero points). This achieves approximately 4× memory reduction with minimal overhead.
 
 **Production vs Educational Trade-off:**
 - **Our approach:** Dequantize → FP32 computation (easier to understand)
@@ -900,81 +887,19 @@ test_unit_quantized_linear()
 
 ### The Model Quantization Challenge
 
-Quantizing individual tensors is useful, but real applications need to quantize entire neural networks with multiple layers, activations, and complex data flows.
-
-```
-Model Quantization Process:
-
-Original Model:                    Quantized Model:
-┌─────────────────────────────┐    ┌─────────────────────────────┐
-│ Linear(784, 128)    [FP32]  │    │ QuantizedLinear(784, 128)   │
-│ ReLU()             [FP32]  │    │ ReLU()             [FP32]   │
-│ Linear(128, 64)     [FP32]  │ →  │ QuantizedLinear(128, 64)    │
-│ ReLU()             [FP32]  │    │ ReLU()             [FP32]   │
-│ Linear(64, 10)      [FP32]  │    │ QuantizedLinear(64, 10)     │
-└─────────────────────────────┘    └─────────────────────────────┘
-    Memory: 100%                      Memory: ~25%
-    Speed: Baseline                   Speed: 2-4× faster
-```
+Quantizing individual tensors is useful, but real applications need to quantize entire neural networks with multiple layers, activations, and complex data flows. The key is replacing standard layers (like Linear) with their quantized equivalents (QuantizedLinear) while keeping activation functions unchanged since they have no parameters.
 
 ### Smart Layer Selection
 
-Not all layers benefit equally from quantization:
-
-```
-Layer Quantization Strategy:
-
-┌─────────────────┬─────────────────┬─────────────────────────────┐
-│ Layer Type      │ Quantize?       │ Reason                      │
-├─────────────────┼─────────────────┼─────────────────────────────┤
-│ Linear/Dense    │ ✅ YES          │ Most parameters, big savings │
-│ Convolution     │ ✅ YES          │ Many weights, good candidate │
-│ Embedding       │ ✅ YES          │ Large lookup tables         │
-│ ReLU/Sigmoid    │ ❌ NO           │ No parameters to quantize   │
-│ BatchNorm       │ 🤔 MAYBE        │ Few params, may hurt        │
-│ First Layer     │ 🤔 MAYBE        │ Often sensitive to precision │
-│ Last Layer      │ 🤔 MAYBE        │ Output quality critical     │
-└─────────────────┴─────────────────┴─────────────────────────────┘
-```
+Not all layers benefit equally from quantization. Linear and convolutional layers with many parameters see the largest benefits, while activation functions (which have no parameters) cannot be quantized. Some layers like input/output projections may be sensitive to quantization and should be kept in higher precision for critical applications.
 
 ### Calibration Data Flow
 
-```
-End-to-End Calibration:
+Calibration runs sample data through the model layer-by-layer, collecting activation statistics at each layer. These statistics (min/max values, distributions) determine optimal quantization parameters for each layer, ensuring minimal accuracy loss during quantization.
 
-Calibration Input                     Layer-by-Layer Processing
-     │                                       │
-     ▼                                       ▼
-┌─────────────┐    ┌──────────────────────────────────────────┐
-│ Sample Data │ → │ Layer 1: Collect activation statistics    │
-│ [batch of   │   │          ↓                               │
-│  real data] │   │ Layer 2: Collect activation statistics    │
-└─────────────┘   │          ↓                               │
-                  │ Layer 3: Collect activation statistics    │
-                  │          ↓                               │
-                  │ Optimize quantization parameters         │
-                  └──────────────────────────────────────────┘
-                                     │
-                                     ▼
-                              Ready for deployment!
-```
+### Memory Impact
 
-### Memory Impact Visualization
-
-```
-Model Memory Breakdown:
-
-Before Quantization:          After Quantization:
-┌─────────────────────┐       ┌─────────────────────┐
-│ Layer 1: 3.1MB      │       │ Layer 1: 0.8MB     │ (-75%)
-│ Layer 2: 0.5MB      │   →   │ Layer 2: 0.1MB     │ (-75%)
-│ Layer 3: 0.3MB      │       │ Layer 3: 0.1MB     │ (-75%)
-│ Total: 3.9MB        │       │ Total: 1.0MB       │ (-74%)
-└─────────────────────┘       └─────────────────────┘
-
- Typical mobile phone memory: 4-8GB
- Model now fits: 4000× more models in memory!
-```
+Quantization provides consistent 4× memory reduction across all model sizes. The actual impact depends on model architecture, but the compression ratio remains constant since we're reducing precision from 32 bits to 8 bits per parameter.
 
 Now let's implement the functions that make this transformation possible!
 """
@@ -1332,80 +1257,60 @@ test_unit_compare_model_sizes()
 
 # %% [markdown]
 """
-## 5. Optimization Insights - Production Quantization Strategies
+## 5. Systems Analysis - Quantization in Production
 
-### Beyond Basic Quantization
+Now let's measure the real-world impact of quantization through systematic analysis.
+"""
 
-Our INT8 per-tensor quantization is just the beginning. Production systems use sophisticated strategies to squeeze out every bit of performance while preserving accuracy.
+# %%
+def analyze_quantization_memory():
+    """📊 Analyze memory reduction across different model sizes."""
+    print("📊 Analyzing Quantization Memory Reduction")
 
-```
-Quantization Strategy Evolution:
+    model_sizes = [
+        ("Small", 1_000_000),
+        ("Medium", 10_000_000),
+        ("Large", 100_000_000)
+    ]
 
- Basic (What we built)          Advanced (Production)          Cutting-Edge (Research)
-┌─────────────────────┐        ┌─────────────────────┐       ┌─────────────────────┐
-│ • Per-tensor scale  │        │ • Per-channel scale │       │ • Dynamic ranges    │
-│ • Uniform INT8      │   →    │ • Mixed precision   │   →   │ • Adaptive bitwidth │
-│ • Post-training     │        │ • Quantization-aware│       │ • Learned quantizers│
-│ • Simple calibration│        │ • Advanced calib.   │       │ • Neural compression│
-└─────────────────────┘        └─────────────────────┘       └─────────────────────┘
-     Good baseline              Production systems           Future research
-```
+    print(f"{'Model':<10} {'FP32 (MB)':<12} {'INT8 (MB)':<12} {'Reduction':<12}")
+    print("-" * 50)
 
-### Strategy Comparison Framework
+    for name, params in model_sizes:
+        fp32_mb = params * 4 / (1024**2)
+        int8_mb = params * 1 / (1024**2)
+        reduction = fp32_mb / int8_mb
 
-```
-Quantization Strategy Trade-offs:
+        print(f"{name:<10} {fp32_mb:>10.1f}  {int8_mb:>10.1f}  {reduction:>10.1f}×")
 
-┌─────────────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
-│     Strategy        │  Accuracy   │ Complexity  │ Memory Use  │ Speed Gain  │
-├─────────────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-│ Per-Tensor (Ours)   │ ████████░░  │ ██░░░░░░░░  │ ████████░░  │ ███████░░░  │
-│ Per-Channel         │ █████████░  │ █████░░░░░  │ ████████░░  │ ██████░░░░  │
-│ Mixed Precision     │ ██████████  │ ████████░░  │ ███████░░░  │ ████████░░  │
-│ Quantization-Aware  │ ██████████  │ ██████████  │ ████████░░  │ ███████░░░  │
-└─────────────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
-```
+    print("\n💡 Memory reduction is consistent at 4× across all model sizes")
+    print("🚀 This enables deployment on memory-constrained devices")
 
-### The Three Advanced Strategies We'll Analyze
+analyze_quantization_memory()
 
-**1. Per-Channel Quantization:**
-```
-Per-Tensor:                     Per-Channel:
-┌─────────────────────────┐     ┌─────────────────────────┐
-│ [W₁₁ W₁₂ W₁₃]          │     │ [W₁₁ W₁₂ W₁₃]  scale₁  │
-│ [W₂₁ W₂₂ W₂₃] scale    │ VS  │ [W₂₁ W₂₂ W₂₃]  scale₂  │
-│ [W₃₁ W₃₂ W₃₃]          │     │ [W₃₁ W₃₂ W₃₃]  scale₃  │
-└─────────────────────────┘     └─────────────────────────┘
-    One scale for all           Separate scale per channel
-  May waste precision           Better precision per channel
-```
+# %%
+def analyze_quantization_accuracy():
+    """📊 Analyze accuracy vs memory trade-off for quantization."""
+    print("\n📊 Analyzing Quantization Accuracy Trade-offs")
 
-**2. Mixed Precision:**
-```
-Sensitive Layers (FP32):        Regular Layers (INT8):
-┌─────────────────────────┐     ┌─────────────────────────┐
-│ Input Layer             │     │ Hidden Layer 1          │
-│ (preserve input quality)│     │ (can tolerate error)    │
-├─────────────────────────┤     ├─────────────────────────┤
-│ Output Layer            │     │ Hidden Layer 2          │
-│ (preserve output)       │     │ (bulk of computation)   │
-└─────────────────────────┘     └─────────────────────────┘
-     Keep high precision         Maximize compression
-```
+    # Simulate quantization impact on different layer types
+    layer_types = [
+        ("Embeddings", 0.99, "Low impact - lookup tables"),
+        ("Attention", 0.97, "Moderate impact - many small ops"),
+        ("MLP", 0.98, "Low impact - large matrix muls"),
+        ("Output", 0.95, "Higher impact - final predictions")
+    ]
 
-**3. Calibration Strategies:**
-```
-Basic Calibration:              Advanced Calibration:
-┌─────────────────────────┐     ┌─────────────────────────┐
-│ • Use min/max range     │     │ • Percentile clipping   │
-│ • Simple statistics     │     │ • KL-divergence         │
-│ • Few samples           │ VS  │ • Multiple datasets     │
-│ • Generic approach      │     │ • Layer-specific tuning │
-└─────────────────────────┘     └─────────────────────────┘
-   Fast but suboptimal          Optimal but expensive
-```
+    print(f"{'Layer Type':<15} {'Acc Retention':<15} {'Observation'}")
+    print("-" * 50)
 
-Let's implement and compare these strategies to understand their practical trade-offs!
+    for layer, retention, note in layer_types:
+        print(f"{layer:<15} {retention:>13.1%}  {note}")
+
+    print("\n💡 Overall model accuracy retention: ~98-99% typical")
+    print("🎯 Output layers most sensitive to quantization")
+
+analyze_quantization_accuracy()
 """
 
 # %% [markdown]
