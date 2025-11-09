@@ -101,6 +101,13 @@ Thumbs.db
 *.tmp
 *.temp
 
+# Backup files
+*.bak
+*.backup
+
+# AI assistant configs
+.claude/
+
 # Project specific
 tito-cli.log
 COMMIT_LOG.txt
