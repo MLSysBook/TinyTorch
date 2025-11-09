@@ -42,7 +42,7 @@ parts:
   - file: chapters/07-training
     title: "07. Training"
 
-- caption: 🧠 Intelligence Tier (08-14)
+- caption: 🏛️ Architecture Tier (08-14)
   chapters:
   - file: chapters/08-dataloader
     title: "08. DataLoader"

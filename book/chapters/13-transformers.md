@@ -15,7 +15,7 @@ learning_objectives:
 
 # 13. Transformers
 
-**🧠 INTELLIGENCE TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
+**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
 
 ## Overview
 
