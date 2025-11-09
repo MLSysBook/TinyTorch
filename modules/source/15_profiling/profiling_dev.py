@@ -738,6 +738,106 @@ class Profiler:
 
 # %% [markdown]
 """
+## Helper Functions - Quick Profiling Utilities
+
+These helper functions provide simplified interfaces for common profiling tasks.
+They make it easy to quickly profile models and analyze characteristics.
+"""
+
+# %%
+#| export
+def quick_profile(model, input_tensor, profiler=None):
+    """
+    Quick profiling function for immediate insights.
+    
+    Provides a simplified interface for profiling that displays key metrics
+    in a student-friendly format.
+    
+    Args:
+        model: Model to profile
+        input_tensor: Input data for profiling
+        profiler: Optional Profiler instance (creates new one if None)
+    
+    Returns:
+        dict: Profile results with key metrics
+    
+    Example:
+        >>> model = Linear(128, 64)
+        >>> input_data = Tensor(np.random.randn(16, 128))
+        >>> results = quick_profile(model, input_data)
+        >>> # Displays formatted output automatically
+    """
+    if profiler is None:
+        profiler = Profiler()
+    
+    profile = profiler.profile_forward_pass(model, input_tensor)
+    
+    # Display formatted results
+    print("🔬 Quick Profile Results:")
+    print(f"   Parameters: {profile['parameters']:,}")
+    print(f"   FLOPs: {profile['flops']:,}")
+    print(f"   Latency: {profile['latency_ms']:.2f} ms")
+    print(f"   Memory: {profile['peak_memory_mb']:.2f} MB")
+    print(f"   Bottleneck: {profile['bottleneck']}")
+    print(f"   Efficiency: {profile['computational_efficiency']*100:.1f}%")
+    
+    return profile
+
+#| export
+def analyze_weight_distribution(model, percentiles=[10, 25, 50, 75, 90]):
+    """
+    Analyze weight distribution for compression insights.
+    
+    Helps understand which weights are small and might be prunable.
+    Used by Module 17 (Compression) to motivate pruning.
+    
+    Args:
+        model: Model to analyze
+        percentiles: List of percentiles to compute
+    
+    Returns:
+        dict: Weight distribution statistics
+    
+    Example:
+        >>> model = Linear(512, 512)
+        >>> stats = analyze_weight_distribution(model)
+        >>> print(f"Weights < 0.01: {stats['below_threshold_001']:.1f}%")
+    """
+    # Collect all weights
+    weights = []
+    if hasattr(model, 'parameters'):
+        for param in model.parameters():
+            weights.extend(param.data.flatten().tolist())
+    elif hasattr(model, 'weight'):
+        weights.extend(model.weight.data.flatten().tolist())
+    else:
+        return {'error': 'No weights found'}
+    
+    weights = np.array(weights)
+    abs_weights = np.abs(weights)
+    
+    # Calculate statistics
+    stats = {
+        'total_weights': len(weights),
+        'mean': float(np.mean(abs_weights)),
+        'std': float(np.std(abs_weights)),
+        'min': float(np.min(abs_weights)),
+        'max': float(np.max(abs_weights)),
+    }
+    
+    # Percentile analysis
+    for p in percentiles:
+        stats[f'percentile_{p}'] = float(np.percentile(abs_weights, p))
+    
+    # Threshold analysis (useful for pruning)
+    for threshold in [0.001, 0.01, 0.1]:
+        below = np.sum(abs_weights < threshold) / len(weights) * 100
+        stats[f'below_threshold_{str(threshold).replace(".", "")}'] = below
+    
+    return stats
+
+# %% [markdown]
+"""
 ## Parameter Counting - Model Size Analysis
 
 Parameter counting is the foundation of model profiling. Every parameter contributes to memory usage, training time, and model complexity. Let's validate our implementation.
