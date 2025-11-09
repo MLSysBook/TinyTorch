@@ -16,7 +16,7 @@ learning_objectives: []
 
 Build intelligent optimization algorithms that enable effective neural network training. This module implements the learning algorithms that power modern AI—from basic gradient descent to advanced adaptive methods that make training large-scale models possible.
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this module, you will be able to:
 
@@ -26,7 +26,7 @@ By the end of this module, you will be able to:
 - **Apply optimization in practice**: Use optimizers effectively in complete training workflows with real neural networks
 - **Analyze optimization dynamics**: Compare algorithm behavior, convergence patterns, and performance characteristics
 
-## 🧠 Build → Use → Optimize
+## Build → Use → Optimize
 
 This module follows TinyTorch's **Build → Use → Optimize** framework:
 
@@ -34,7 +34,7 @@ This module follows TinyTorch's **Build → Use → Optimize** framework:
 2. **Use**: Apply optimization algorithms to train neural networks and solve real optimization problems
 3. **Optimize**: Analyze convergence behavior, compare algorithm performance, and tune hyperparameters for optimal training
 
-## 📚 What You'll Build
+## Implementation Guide
 
 ### Core Optimization Algorithms
 ```python
@@ -100,7 +100,7 @@ for epoch in range(num_epochs):
 - **Adam Optimizer**: Adaptive learning rates with bias correction
 - **Learning Rate Scheduling**: Strategic adjustment during training
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 Ensure you understand the mathematical foundations:
@@ -122,7 +122,7 @@ tito test --module autograd
 5. **Add learning rate scheduling**: Build strategic learning rate adjustment systems
 6. **Export and verify**: `tito export --module optimizers && tito test --module optimizers`
 
-## 🧪 Testing Your Implementation
+## Testing
 
 ### Comprehensive Test Suite
 Run the full test suite to verify optimization algorithm correctness:
@@ -191,7 +191,7 @@ for step in range(50):
         print(f"Step {step}: x = {x.data}, loss = {loss.data:.6f}")
 ```
 
-## 🎯 Key Concepts
+## Systems Thinking Questions
 
 ### Real-World Applications
 - **Large Language Models**: GPT, BERT training relies on Adam optimization for stable convergence

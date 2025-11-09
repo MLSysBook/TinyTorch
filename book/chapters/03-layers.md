@@ -16,25 +16,46 @@ learning_objectives: []
 
 Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
-By the end of this module, you will be able to:
+By completing this module, you will be able to:
 
-- **Understand layers as mathematical functions**: Recognize that layers transform tensors through well-defined mathematical operations
-- **Implement Dense layers**: Build linear transformations using matrix multiplication and bias addition (`y = Wx + b`)
-- **Integrate activation functions**: Combine linear layers with nonlinear activations to enable complex pattern learning
-- **Compose simple building blocks**: Chain layers together to create complete neural network architectures
-- **Debug layer implementations**: Use shape analysis and mathematical properties to verify correct implementation
+1. **Understand layers as mathematical functions** that transform tensors through well-defined operations
+2. **Implement Dense layers** using matrix multiplication and bias addition (`y = Wx + b`)
+3. **Integrate activation functions** to combine linear transformations with nonlinearity
+4. **Compose building blocks** by chaining layers into complete neural network architectures
+5. **Debug layer implementations** using shape analysis and mathematical properties
 
-## 🧠 Build → Use → Reflect
+## Why This Matters
 
-This module follows TinyTorch's **Build → Use → Reflect** framework:
+### Production Context
 
-1. **Build**: Implement Dense layers and activation functions from mathematical foundations
-2. **Use**: Transform tensors through layer operations and see immediate results in various scenarios
-3. **Reflect**: Understand how simple layers compose into complex neural networks and why architecture matters
+Layers are the building blocks of every neural network in production:
 
-## 📚 What You'll Build
+- **Image Recognition** uses Dense layers for final classification (ResNet, EfficientNet)
+- **Language Models** compose thousands of transformer layers (GPT, BERT, Claude)
+- **Recommendation Systems** stack Dense layers to learn user-item interactions
+- **Autonomous Systems** chain convolutional and Dense layers for perception
+
+### Historical Context
+
+The evolution of layer abstractions enabled modern deep learning:
+
+- **1943**: McCulloch-Pitts neuron - first artificial neuron model
+- **1958**: Rosenblatt's Perceptron - single-layer learning algorithm
+- **1986**: Backpropagation - enabled training multi-layer networks
+- **2012**: AlexNet - proved deep layers (8 layers) revolutionize computer vision
+- **2017**: Transformers - layer composition scaled to 96+ layers in modern LLMs
+
+## Build → Use → Understand
+
+This module follows the foundational pedagogy for building blocks:
+
+1. **Build**: Implement Dense layer class with initialization, forward pass, and parameter management
+2. **Use**: Transform data through layer operations and compose multi-layer networks
+3. **Understand**: Analyze how layer composition creates expressivity and why architecture design matters
+
+## Implementation Guide
 
 ### Core Layer Implementation
 ```python
@@ -70,32 +91,9 @@ output = layer2(h1)                  # Final prediction
 - **Tanh integration**: Zero-centered outputs for better optimization
 - **Composition patterns**: Standard ways to combine layers and activations
 
-## 🚀 Getting Started
+## Testing
 
-### Prerequisites
-Ensure you have completed the foundational modules:
-
-```bash
-# Activate TinyTorch environment
-source bin/activate-tinytorch.sh
-
-# Verify prerequisite modules
-tito test --module tensor
-tito test --module activations
-```
-
-### Development Workflow
-1. **Open the development file**: `modules/source/04_layers/layers_dev.py`
-2. **Implement Dense layer class**: Start with `__init__` and `forward` methods
-3. **Test layer functionality**: Use inline tests for immediate feedback
-4. **Add activation integration**: Combine layers with activation functions
-5. **Build complete networks**: Chain multiple layers together
-6. **Export and verify**: `tito export --module layers && tito test --module layers`
-
-## 🧪 Testing Your Implementation
-
-### Comprehensive Test Suite
-Run the full test suite to verify mathematical correctness:
+Run the complete test suite to verify your implementation:
 
 ```bash
 # TinyTorch CLI (recommended)
@@ -152,7 +150,7 @@ output = layer2(h1)
 print(f"Final output: {output.data}")
 ```
 
-## 🎯 Key Concepts
+## Systems Thinking Questions
 
 ### Real-World Applications
 - **Computer Vision**: Dense layers process flattened image features in CNNs (like VGG, ResNet final layers)

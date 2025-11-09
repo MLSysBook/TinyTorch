@@ -16,7 +16,7 @@ learning_objectives: []
 
 Implement the mathematical functions that give neural networks their power to learn complex patterns. Without activation functions, neural networks would just be linear transformations—with them, you unlock the ability to learn any function.
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this module, you will be able to:
 
@@ -26,7 +26,7 @@ By the end of this module, you will be able to:
 - **Debug and test** activation implementations using both automated tests and visual analysis
 - **Connect theory to practice** by understanding when and why to use each activation function
 
-## 🧠 Build → Use → Analyze
+## Build → Use → Analyze
 
 This module follows TinyTorch's **Build → Use → Analyze** framework:
 
@@ -34,7 +34,7 @@ This module follows TinyTorch's **Build → Use → Analyze** framework:
 2. **Use**: Apply these functions in testing scenarios and visualize their mathematical behavior
 3. **Analyze**: Compare function properties, performance characteristics, and appropriate use cases through quantitative analysis
 
-## 📚 What You'll Build
+## Implementation Guide
 
 ### Core Activation Functions
 ```python
@@ -69,7 +69,7 @@ output = tanh(Tensor([0, 1, -1]))         # [0, 0.76, -0.76]
 - **Implementation**: Direct NumPy implementation with shape preservation
 - **Use Cases**: Hidden layers, RNNs, when zero-centered outputs are beneficial
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 Ensure you have completed the tensor module and understand basic tensor operations:
@@ -89,7 +89,7 @@ tito test --module tensor
 4. **Visualize function behavior**: Leverage plotting sections for mathematical understanding
 5. **Export and verify**: `tito export --module activations && tito test --module activations`
 
-## 🧪 Testing Your Implementation
+## Testing
 
 ### Comprehensive Test Suite
 Run the full test suite to verify mathematical correctness:
@@ -142,7 +142,7 @@ print("Sigmoid:", sigmoid(x).data) # [0.12, 0.27, 0.5, 0.73, 0.88]
 print("Tanh:", tanh(x).data)      # [-0.96, -0.76, 0, 0.76, 0.96]
 ```
 
-## 🎯 Key Concepts
+## Systems Thinking Questions
 
 ### Real-World Applications
 - **Computer Vision**: ReLU activations enable CNNs to learn hierarchical features (like those in ResNet, VGG)

@@ -16,7 +16,7 @@ learning_objectives: []
 
 Build the complete training pipeline that brings all TinyTorch components together. This capstone module orchestrates data loading, model forward passes, loss computation, backpropagation, and optimization into the end-to-end training workflows that power modern AI systems.
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this module, you will be able to:
 
@@ -26,7 +26,7 @@ By the end of this module, you will be able to:
 - **Build production training loops**: Implement robust training workflows with validation, logging, and progress tracking
 - **Master training dynamics**: Understand convergence, overfitting, generalization, and optimization in real scenarios
 
-## 🧠 Build → Use → Optimize
+## Build → Use → Optimize
 
 This module follows TinyTorch's **Build → Use → Optimize** framework:
 
@@ -34,7 +34,7 @@ This module follows TinyTorch's **Build → Use → Optimize** framework:
 2. **Use**: Train end-to-end neural networks on real datasets with full pipeline automation
 3. **Optimize**: Analyze training dynamics, debug convergence issues, and optimize training performance for production
 
-## 🎯 NEW: Model Checkpointing & Evaluation Tools
+## NEW: Model Checkpointing & Evaluation Tools
 
 ### Complete Training with Checkpointing
 This module now includes production features for our north star goal:
@@ -75,7 +75,7 @@ plot_training_history(history)  # Shows loss and accuracy curves
 - ✅ **`plot_training_history()`**: Visualize training and validation curves
 - ✅ **`compute_confusion_matrix()`**: Analyze classification errors by class
 
-## 📚 What You'll Build
+## Implementation Guide
 
 ### Complete Training Pipeline
 ```python
@@ -180,7 +180,7 @@ print(f"Final train accuracy: {history['train_accuracy'][-1]:.4f}")
 print(f"Final val accuracy: {history['val_accuracy'][-1]:.4f}")
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 Ensure you have completed the entire TinyTorch foundation:
@@ -207,7 +207,7 @@ tito test --module optimizers
 5. **Test end-to-end training**: Apply complete pipeline to real datasets and problems
 6. **Export and verify**: `tito export --module training && tito test --module training`
 
-## 🧪 Testing Your Implementation
+## Testing
 
 ### Comprehensive Test Suite
 Run the full test suite to verify complete training system functionality:
@@ -277,7 +277,7 @@ history = trainer.fit(train_loader, epochs=20, verbose=True)
 print(f"Training completed. Final accuracy: {history['train_accuracy'][-1]:.4f}")
 ```
 
-## 🎯 Key Concepts
+## Systems Thinking Questions
 
 ### Real-World Applications
 - **Production ML Systems**: Companies like Netflix, Google use similar training pipelines for recommendation and search systems
