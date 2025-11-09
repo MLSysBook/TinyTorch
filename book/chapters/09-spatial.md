@@ -15,7 +15,7 @@ learning_objectives:
 
 # 09. Spatial (CNNs)
 
-**🧠 INTELLIGENCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 6-8 hours
+**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 6-8 hours
 
 ## Overview
 
