@@ -402,6 +402,9 @@ def precise_timer():
     3. Return elapsed time when context exits
     4. Provide warmup capability for JIT compilation
 
+    Yields:
+        Timer object with .elapsed attribute (set after context exits)
+
     EXAMPLE:
     >>> with precise_timer() as timer:
     ...     time.sleep(0.1)  # Some operation
@@ -1720,6 +1723,14 @@ def compare_optimization_techniques(base_model: Any, optimized_models: List[Any]
     2. Calculate improvement ratios and trade-offs
     3. Generate insights about which optimizations work best
     4. Create recommendation matrix for different use cases
+
+    Args:
+        base_model: Baseline model (unoptimized)
+        optimized_models: List of models with different optimizations applied
+        datasets: List of datasets for evaluation
+
+    Returns:
+        Dictionary with 'base_metrics', 'optimized_results', 'improvements', 'recommendations'
 
     EXAMPLE:
     >>> models = [base_model, quantized_model, pruned_model, distilled_model]
