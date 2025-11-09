@@ -33,21 +33,26 @@ The key insight: Students implement the core algorithms (conv, linear transforms
 while this infrastructure provides the clean API they expect from PyTorch.
 """
 
+# Import Module base class
+from ..core.layers import Module
+
 # Import layers from core (these contain the student implementations)  
 from ..core.layers import Linear, ReLU, Dropout
 from ..core.activations import Sigmoid
 from ..core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 # Import transformer components
-from ..core.embeddings import Embedding, PositionalEncoding
-from ..core.attention import SelfAttention, scaled_dot_product_attention
-from ..core.transformers import LayerNorm, TransformerBlock
+from ..text.embeddings import Embedding, PositionalEncoding
+from ..core.attention import MultiHeadAttention, scaled_dot_product_attention
+from ..models.transformer import LayerNorm, TransformerBlock
 
-# Import functional interface  
-from . import functional
-
-# Make functional available as F (PyTorch convention)
-import tinytorch.nn.functional as F
+# Functional interface (if it exists)
+try:
+    from . import functional
+    F = functional
+except ImportError:
+    functional = None
+    F = None
 
 # Utility functions
 def Parameter(data, requires_grad=True):
@@ -84,14 +89,16 @@ __all__ = [
     'Conv2d',
     'Embedding',
     'PositionalEncoding',
-    'SelfAttention',
+    'MultiHeadAttention',
     'LayerNorm',
     'TransformerBlock',
     'Sequential',
     'Parameter',
     'scaled_dot_product_attention',
-    'functional',
-    'F'
 ]
+
+# Add functional exports if available
+if functional is not None:
+    __all__.extend(['functional', 'F'])
 
 # Note: Parameter function will be available after tensor module export
