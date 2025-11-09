@@ -353,7 +353,7 @@ In **Module 10: Tokenization**, you'll shift from processing images to processin
 - Build vocabulary management systems
 - Prepare text data for transformers in Module 13
 
-This completes the vision half of the Intelligence Tier. Next, you'll tackle language!
+This completes the vision half of the Architecture Tier. Next, you'll tackle language!
 
 ---
 

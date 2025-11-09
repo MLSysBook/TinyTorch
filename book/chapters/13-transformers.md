@@ -4,7 +4,7 @@ description: "Build full transformer models with encoder and decoder stacks"
 difficulty: 4
 time_estimate: "6-8 hours"
 prerequisites: ["Embeddings", "Attention"]
-next_steps: ["KV Caching (Performance Tier)"]
+next_steps: ["Memoization (Optimization Tier)"]
 learning_objectives:
   - "Implement complete transformer blocks with attention and feedforward layers"
   - "Design encoder stacks for bidirectional understanding (BERT-style)"

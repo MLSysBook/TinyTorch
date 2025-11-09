@@ -167,7 +167,7 @@ for batch in dataloader:  # Your data management
 
 **🎯 Foundation Achievement**: 95%+ accuracy on MNIST using 100% your own mathematical implementations
 
-### 🧠 After Intelligence Tier (Modules 08-13)
+### 🏛️ After Architecture Tier (Modules 08-13)
 - **Computer Vision Mastery**: CNNs achieving 75%+ accuracy on CIFAR-10 with YOUR convolution implementations
 - **Language Understanding**: Transformers generating coherent text using YOUR attention mechanisms
 - **Universal Architecture**: Discover why the SAME mathematical principles work for vision AND language
@@ -191,7 +191,7 @@ TinyTorch's three-tier structure follows the actual historical progression of ma
 - **Your Implementation**: Build automatic differentiation and gradient-based optimization
 - **Historical Milestone**: Train MLPs to 95%+ accuracy on MNIST using YOUR autograd engine
 
-### 🧠 Intelligence Era (1990s-2010s) → Intelligence Tier
+### 🏛️ Architecture Era (1990s-2010s) → Architecture Tier
 **The Revolution**: Specialized architectures for vision and language
 - **1998 Breakthrough**: CNNs revolutionize computer vision (LeCun's LeNet)
 - **2017 Breakthrough**: Transformers unify vision and language ("Attention is All You Need")
@@ -221,7 +221,7 @@ Module 1: Tensors → Module 2: Layers → Module 3: Training → ...
 ### TinyTorch Tier Approach:
 ```
 🏗️ Foundation Tier: Build mathematical infrastructure
-🧠 Intelligence Tier: Compose intelligent architectures
+🏛️ Architecture Tier: Compose intelligent architectures
 ⚡ Optimization Tier: Deploy at production scale
 ```
 **Advantage**: Each tier builds complete, working systems with clear progression
@@ -232,7 +232,7 @@ Module 1: Tensors → Module 2: Layers → Module 3: Training → ...
 **Foundation Tier**: "Why Adam needs 3× more memory than SGD and how to implement both from mathematical first principles"
 
 **Traditional**: "Transformers use attention mechanisms"
-**Intelligence Tier**: "How attention creates O(N²) scaling, why this limits context windows, and how to implement efficient attention yourself"
+**Architecture Tier**: "How attention creates O(N²) scaling, why this limits context windows, and how to implement efficient attention yourself"
 
 **Traditional**: "Deploy models with TensorFlow Serving"
 **Optimization Tier**: "How to profile bottlenecks, implement KV-caching for 10× speedup, and compete in production benchmarks"
@@ -245,7 +245,7 @@ After each tier, you become the team member who:
 - Implements custom optimizers: "I'll build a variant of Adam for this use case"
 - Understands memory patterns: "Batch size 64 hits your GPU memory limit here"
 
-**🧠 Intelligence Tier Graduate**:
+**🏛️ Architecture Tier Graduate**:
 - Designs novel architectures: "We can adapt transformers for this computer vision task"
 - Optimizes attention patterns: "This attention bottleneck is why your model won't scale to longer sequences"
 - Bridges vision and language: "The same mathematical principles work for both domains"
@@ -297,7 +297,7 @@ After each tier, you become the team member who:
 By completing all three tiers, you'll have built a complete ML framework that rivals production implementations:
 
 **🏗️ Foundation Tier Achievement**: 95%+ accuracy on MNIST with YOUR mathematical implementations
-**🧠 Intelligence Tier Achievement**: 75%+ accuracy on CIFAR-10 AND coherent text generation
+**🏛️ Architecture Tier Achievement**: 75%+ accuracy on CIFAR-10 AND coherent text generation
 **⚡ Optimization Tier Achievement**: Production systems competitive in TinyMLPerf benchmarks
 
 All using code you wrote yourself, from mathematical first principles to production optimization.
@@ -381,7 +381,7 @@ All using code you wrote yourself, from mathematical first principles to product
 
 **What You'll Learn**: Transform research models into production systems. Master profiling, optimization, and deployment techniques used by companies like OpenAI, Google, and Meta.
 
-**Prerequisites**: Intelligence Tier complete (Modules 08-13)
+**Prerequisites**: Architecture Tier complete (Modules 08-13)
 
 **Career Connection**: ML Systems Engineer, Performance Engineer, MLOps Engineer, Senior ML Engineer roles
 
