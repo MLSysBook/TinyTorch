@@ -15,7 +15,7 @@ learning_objectives:
 
 # 10. Tokenization
 
-**🧠 INTELLIGENCE TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
+**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
 
 ## Overview
 

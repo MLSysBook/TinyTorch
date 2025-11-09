@@ -15,7 +15,7 @@ learning_objectives:
 
 # 08. DataLoader
 
-**🧠 INTELLIGENCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
+**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
 ## Overview
 

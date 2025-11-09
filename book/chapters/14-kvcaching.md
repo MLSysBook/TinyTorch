@@ -15,7 +15,7 @@ learning_objectives:
 
 # 14. KV Caching
 
-**🧠 INTELLIGENCE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 4-5 hours
+**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 4-5 hours
 
 ## Overview
 
