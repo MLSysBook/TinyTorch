@@ -1231,6 +1231,25 @@ def compare_model_sizes(original_model, quantized_model) -> Dict[str, float]:
     2. Calculate bytes used (FP32 vs INT8)
     3. Include quantization overhead
     4. Return comparison metrics
+
+    Args:
+        original_model: Model before quantization
+        quantized_model: Model after quantization
+
+    Returns:
+        Dictionary with 'original_mb', 'quantized_mb', 'reduction_ratio', 'memory_saved_mb'
+
+    EXAMPLE:
+    >>> model = Sequential(Linear(100, 50), Linear(50, 10))
+    >>> quantize_model(model)
+    >>> stats = compare_model_sizes(model, model)  # Same model after in-place quantization
+    >>> print(f"Reduced to {stats['reduction_ratio']:.1f}x smaller")
+    Reduced to 4.0x smaller
+
+    HINTS:
+    - FP32 uses 4 bytes per parameter, INT8 uses 1 byte
+    - Include scale/zero_point overhead (2 values per quantized layer)
+    - Expected ratio: ~4x for INT8 quantization
     """
     ### BEGIN SOLUTION
     # Count original model parameters

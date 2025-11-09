@@ -267,6 +267,13 @@ def vectorized_matmul(a: Tensor, b: Tensor) -> Tensor:
     2. Use NumPy's optimized dot product (calls BLAS GEMM)
     3. Return result wrapped in Tensor
 
+    Args:
+        a: First tensor for multiplication (M×K or batch×M×K)
+        b: Second tensor for multiplication (K×N or batch×K×N)
+
+    Returns:
+        Result tensor of shape (M×N or batch×M×N)
+
     EXAMPLE:
     Matrix multiplication visualization:
     >>> a = Tensor([[1, 2], [3, 4]])  # 2×2
@@ -443,6 +450,12 @@ def fused_gelu(x: Tensor) -> Tensor:
     2. Avoid creating temporary arrays
     3. Let NumPy's broadcasting handle vectorization
 
+    Args:
+        x: Input tensor to apply GELU activation
+
+    Returns:
+        GELU-activated tensor (same shape as input)
+
     EXAMPLE:
     >>> x = Tensor([-2, -1, 0, 1, 2])
     >>> result = fused_gelu(x)
@@ -538,11 +551,27 @@ def unfused_gelu(x: Tensor) -> Tensor:
     2. Create temporary Tensor objects for each step
     3. This simulates real memory allocation overhead
 
+    Args:
+        x: Input tensor
+
+    Returns:
+        GELU-activated tensor (same shape as input)
+
+    EXAMPLE:
+    >>> x = Tensor([0.5, 1.0, -0.5])
+    >>> result = unfused_gelu(x)
+    >>> print(result.shape)
+    (3,)  # Same as input
+
     PERFORMANCE IMPACT:
     - Creates 7 temporary arrays
     - Each array allocation/deallocation has overhead
     - More memory bandwidth usage
     - Potential cache misses between operations
+
+    HINTS:
+    - Create each step as: temp = Tensor(operation)
+    - This forces memory allocation for educational comparison
     """
     ### BEGIN SOLUTION
     # Unfused version - creates many intermediate arrays
