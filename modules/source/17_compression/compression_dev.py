@@ -331,6 +331,12 @@ def measure_sparsity(model) -> float:
     3. Count total parameters
     4. Return percentage: zeros / total * 100
 
+    Args:
+        model: Model with .parameters() method
+
+    Returns:
+        Sparsity percentage (0.0-100.0)
+
     EXAMPLE:
     >>> model = Sequential(Linear(10, 5), Linear(5, 2))
     >>> sparsity = measure_sparsity(model)
