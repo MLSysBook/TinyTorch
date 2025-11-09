@@ -168,7 +168,7 @@ import platform
 from contextlib import contextmanager
 import warnings
 
-# Import Profiler from Module 15 for measurement reuse
+# Import Profiler from Module 14 for measurement reuse
 from tinytorch.profiling.profiler import Profiler
 
 # %%
@@ -196,7 +196,7 @@ We'll build a comprehensive benchmarking system that handles statistical analysi
 
 The architecture follows a hierarchical design:
 ```
-Profiler (Module 15) ← Base measurement tools
+Profiler (Module 14) ← Base measurement tools
        ↓
 BenchmarkResult ← Statistical container for measurements
        ↓
@@ -207,7 +207,7 @@ BenchmarkSuite ← Multi-metric comprehensive evaluation
 TinyMLPerf ← Standardized industry-style benchmarks
 ```
 
-**Key Architectural Decision**: The `Benchmark` class reuses `Profiler` from Module 15 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
+**Key Architectural Decision**: The `Benchmark` class reuses `Profiler` from Module 14 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
 
 Each level adds capability while maintaining statistical rigor at the foundation.
 """
@@ -552,7 +552,7 @@ class Benchmark:
         self.measurement_runs = measurement_runs
         self.results = {}
         
-        # Use Profiler from Module 15 for measurements
+        # Use Profiler from Module 14 for measurements
         self.profiler = Profiler()
 
         # System information for metadata
