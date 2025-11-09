@@ -1228,8 +1228,9 @@ test_unit_compress_model()
 
 # %% [markdown]
 """
+## 8.6 Systems Analysis - Compression Techniques
 
-Understanding the real-world implications of compression choices and how to design compression strategies for different deployment scenarios.
+Understanding the real-world effectiveness of different compression techniques through systematic measurement and comparison.
 
 ### Accuracy vs Compression Trade-offs
 
@@ -1314,6 +1315,106 @@ def demo_compression_with_profiler():
     print("\n✅ This is the power of compression: remove what doesn't matter!")
 
 demo_compression_with_profiler()
+
+# %% [markdown]
+"""
+## 8.6 Systems Analysis - Compression Techniques
+
+Understanding the real-world effectiveness of different compression techniques.
+"""
+
+# %%
+def analyze_compression_techniques():
+    """📊 Compare compression ratios across different techniques."""
+    print("📊 Analyzing Compression Techniques")
+    print("=" * 60)
+
+    # Create baseline model
+    from tinytorch.core.layers import Linear
+    model_configs = [
+        ("Small MLP", [Linear(128, 64), Linear(64, 32)]),
+        ("Medium MLP", [Linear(512, 256), Linear(256, 128)]),
+        ("Large MLP", [Linear(1024, 512), Linear(512, 256)])
+    ]
+
+    print(f"\n{'Model':<15} {'Technique':<20} {'Sparsity':<12} {'Compression':<12}")
+    print("-" * 60)
+
+    for model_name, layers in model_configs:
+        # Create model
+        model = Sequential(*layers)
+        baseline_params = sum(p.size for p in model.parameters())
+
+        # Test magnitude pruning
+        mag_model = Sequential(*[Linear(l.weight.shape[0], l.weight.shape[1]) for l in layers])
+        for i, layer in enumerate(mag_model.layers):
+            layer.weight = layers[i].weight
+            layer.bias = layers[i].bias if hasattr(layers[i], 'bias') else None
+        magnitude_prune(mag_model, sparsity=0.8)
+        mag_sparsity = measure_sparsity(mag_model)
+        mag_ratio = 1.0 / (1.0 - mag_sparsity / 100) if mag_sparsity < 100 else float('inf')
+
+        print(f"{model_name:<15} {'Magnitude (80%)':<20} {mag_sparsity:>10.1f}% {mag_ratio:>10.1f}x")
+
+        # Test structured pruning
+        struct_model = Sequential(*[Linear(l.weight.shape[0], l.weight.shape[1]) for l in layers])
+        for i, layer in enumerate(struct_model.layers):
+            layer.weight = layers[i].weight
+            layer.bias = layers[i].bias if hasattr(layers[i], 'bias') else None
+        structured_prune(struct_model, prune_ratio=0.5)
+        struct_sparsity = measure_sparsity(struct_model)
+        struct_ratio = 1.0 / (1.0 - struct_sparsity / 100) if struct_sparsity < 100 else float('inf')
+
+        print(f"{'':<15} {'Structured (50%)':<20} {struct_sparsity:>10.1f}% {struct_ratio:>10.1f}x")
+        print()
+
+    print("💡 Key Insights:")
+    print("   • Magnitude pruning achieves higher sparsity (80%+)")
+    print("   • Structured pruning creates hardware-friendly patterns")
+    print("   • Larger models compress more effectively")
+    print("   • Compression ratio = 1 / (1 - sparsity)")
+
+analyze_compression_techniques()
+
+# %% [markdown]
+"""
+### Knowledge Distillation Analysis
+
+Now let's analyze how knowledge distillation compares to other compression techniques for different compression ratios and accuracy preservation goals.
+"""
+
+# %%
+def analyze_distillation_effectiveness():
+    """📊 Analyze knowledge distillation compression and accuracy trade-offs."""
+    print("\n📊 Analyzing Knowledge Distillation Effectiveness")
+    print("=" * 60)
+
+    # Simulate teacher-student scenarios
+    scenarios = [
+        ("Large→Small", 100_000, 10_000, 0.95, 0.90, 10.0),
+        ("Medium→Tiny", 50_000, 5_000, 0.92, 0.87, 10.0),
+        ("Small→Micro", 10_000, 1_000, 0.88, 0.83, 10.0),
+    ]
+
+    print(f"\n{'Scenario':<15} {'Teacher':<12} {'Student':<12} {'Ratio':<10} {'Acc Loss':<10}")
+    print("-" * 60)
+
+    for name, teacher_params, student_params, teacher_acc, student_acc, compression in scenarios:
+        acc_retention = (student_acc / teacher_acc) * 100
+        acc_loss = teacher_acc - student_acc
+
+        print(f"{name:<15} {teacher_params:>10,}p {student_params:>10,}p {compression:>8.1f}x {acc_loss*100:>8.1f}%")
+
+    print("\n💡 Knowledge Distillation Insights:")
+    print("   • Achieves 10x+ compression with 5-10% accuracy loss")
+    print("   • Student learns teacher's 'soft' predictions")
+    print("   • More effective than naive pruning for large reductions")
+    print("   • Requires retraining (unlike pruning/quantization)")
+    print("\n🚀 Best Use Case:")
+    print("   Deploy small student models on edge devices")
+    print("   Train expensive teacher once, distill many students")
+
+analyze_distillation_effectiveness()
 
 # %% [markdown]
 """
@@ -1575,6 +1676,12 @@ You approximate a (512, 256) weight matrix with rank 64 using SVD.
 - Decomposed parameter count: _____ parameters
 - Compression ratio: _____x
 - At what rank does compression become ineffective? rank > _____
+
+### Question 5: Pruning Strategy Selection
+For deploying on a mobile device with 50MB model limit and 100ms latency requirement:
+- Which pruning strategy optimizes for memory? [magnitude/structured/both]
+- Which pruning strategy optimizes for speed? [magnitude/structured/both]
+- What order should you apply compression techniques? _____________
 """
 
 # %% [markdown]
