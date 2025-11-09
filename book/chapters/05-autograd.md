@@ -16,7 +16,7 @@ learning_objectives: []
 
 Build the automatic differentiation engine that makes neural network training possible. This module implements the mathematical foundation that enables backpropagation—transforming TinyTorch from a static computation library into a dynamic, trainable ML framework.
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this module, you will be able to:
 
@@ -26,7 +26,7 @@ By the end of this module, you will be able to:
 - **Apply backpropagation algorithms**: Implement the gradient computation that enables neural network optimization
 - **Integrate with ML systems**: Connect automatic differentiation with layers, networks, and training algorithms
 
-## 🧠 Build → Use → Analyze
+## Build → Use → Analyze
 
 This module follows TinyTorch's **Build → Use → Analyze** framework:
 
@@ -34,7 +34,7 @@ This module follows TinyTorch's **Build → Use → Analyze** framework:
 2. **Use**: Apply automatic differentiation to complex expressions and neural network forward passes
 3. **Analyze**: Understand computational graph construction, memory usage, and performance characteristics of autodiff systems
 
-## 📚 What You'll Build
+## Implementation Guide
 
 ### Automatic Differentiation System
 ```python
@@ -97,7 +97,7 @@ print(f"Complex gradient dx: {x.grad}")
 print(f"Complex gradient dy: {y.grad}")
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 Ensure you understand the mathematical building blocks:
@@ -120,7 +120,7 @@ tito test --module layers
 5. **Extend to all operations**: Add gradients for activations, matrix operations, etc.
 6. **Export and verify**: `tito export --module autograd && tito test --module autograd`
 
-## 🧪 Testing Your Implementation
+## Testing
 
 ### Comprehensive Test Suite
 Run the full test suite to verify mathematical correctness:
@@ -184,7 +184,7 @@ y.backward()
 print(f"d(exp(log(x)))/dx: {x.grad}")  # Should be 1
 ```
 
-## 🎯 Key Concepts
+## Systems Thinking Questions
 
 ### Real-World Applications
 - **Deep Learning Frameworks**: PyTorch, TensorFlow, JAX all use automatic differentiation for training
