@@ -416,6 +416,14 @@ def quantize_int8(tensor: Tensor) -> Tuple[Tensor, float, int]:
     4. Apply quantization formula: round((value - zero_point) / scale)
     5. Clamp to INT8 range [-128, 127]
 
+    Args:
+        tensor: Input FP32 tensor to quantize
+
+    Returns:
+        q_tensor: Quantized INT8 tensor
+        scale: Scaling factor (float)
+        zero_point: Zero point offset (int)
+
     EXAMPLE:
     >>> tensor = Tensor([[-1.0, 0.0, 2.0], [0.5, 1.5, -0.5]])
     >>> q_tensor, scale, zero_point = quantize_int8(tensor)
@@ -541,6 +549,14 @@ def dequantize_int8(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
     APPROACH:
     1. Apply inverse quantization: scale * quantized_value + zero_point * scale
     2. Return as new FP32 Tensor
+
+    Args:
+        q_tensor: Quantized INT8 tensor
+        scale: Scaling factor from quantization
+        zero_point: Zero point offset from quantization
+
+    Returns:
+        Reconstructed FP32 tensor
 
     EXAMPLE:
     >>> q_tensor = Tensor([[-42, 0, 85]])  # INT8 values
@@ -1048,6 +1064,13 @@ def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> No
     2. Replace each with QuantizedLinear version
     3. If calibration data provided, calibrate input quantization
     4. Handle Sequential containers properly
+
+    Args:
+        model: Model to quantize (with .layers or similar structure)
+        calibration_data: Optional list of sample inputs for calibration
+
+    Returns:
+        None (modifies model in-place)
 
     EXAMPLE:
     >>> model = Sequential(Linear(10, 5), ReLU(), Linear(5, 2))
