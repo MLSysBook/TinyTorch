@@ -55,6 +55,12 @@ jobs:
         cd book
         jupyter-book clean . || true
         jupyter-book build .
+        echo "=== Contents of book after build ==="
+        ls -la 
+        echo "=== Contents of _build (if exists) ==="
+        ls -la _build/ || echo "_build doesn't exist"
+        echo "=== Contents of _build/html (if exists) ==="
+        ls -la _build/html/ || echo "_build/html doesn't exist"
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
