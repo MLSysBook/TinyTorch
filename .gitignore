@@ -107,6 +107,8 @@ Thumbs.db
 
 # AI assistant configs
 .claude/
+.cursor/
+.ai/
 
 # Project specific
 tito-cli.log
