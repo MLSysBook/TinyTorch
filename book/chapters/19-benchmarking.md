@@ -3,7 +3,7 @@ title: "Benchmarking - Fair Performance Comparison"
 description: "MLPerf-style benchmarking with statistical rigor and standardized metrics"
 difficulty: 3
 time_estimate: "5-6 hours"
-prerequisites: ["All Performance Tier modules"]
+prerequisites: ["Profiling", "All optimization techniques"]
 next_steps: ["Competition (Capstone)"]
 learning_objectives:
   - "Implement MLPerf-inspired benchmarking frameworks"
@@ -19,7 +19,7 @@ learning_objectives:
 
 ## Overview
 
-Build rigorous benchmarking systems following MLPerf principles. This module implements fair comparison protocols, statistical testing, and normalized metrics for evaluating all the optimizations you've built in the Performance Tier.
+Build rigorous benchmarking systems following MLPerf principles. This module implements fair comparison protocols, statistical testing, and normalized metrics for evaluating all the optimizations you've built in the Optimization Tier.
 
 ## Learning Objectives
 
@@ -106,7 +106,7 @@ tinytorch/
 ## What's Next?
 
 In **Module 20: TinyMLPerf Competition** (Capstone), you'll apply everything:
-- Use all Performance Tier optimizations
+- Use all Optimization Tier techniques
 - Compete on a standardized benchmark
 - Submit results to a leaderboard
 - Demonstrate complete ML systems skills

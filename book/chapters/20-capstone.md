@@ -25,7 +25,7 @@ Your capstone challenge: optimize a CIFAR-10 CNN using everything you've learned
 
 By completing this capstone, you will be able to:
 
-1. **Apply all Performance Tier optimizations** (caching, profiling, acceleration, quantization, compression, benchmarking)
+1. **Apply all Optimization Tier techniques** (profiling, memoization, quantization, compression, acceleration, benchmarking)
 2. **Implement either Closed Division** (optimize given CNN; pure optimization challenge) or **Open Division** (design novel architecture; innovation challenge)
 3. **Generate validated submission** with standardized metrics, honor code attestation, and GitHub repo
 4. **Demonstrate complete ML systems skills** from implementation through optimization to deployment
@@ -262,8 +262,8 @@ This competition mirrors MLPerf principles:
 
 **You've completed TinyTorch!** You've built:
 - **Foundation Tier**: All ML building blocks from scratch
-- **Intelligence Tier**: Vision and language systems
-- **Performance Tier**: Production optimization techniques
+- **Architecture Tier**: Vision and language systems
+- **Optimization Tier**: Production optimization techniques
 - **Capstone**: Real-world ML systems engineering
 
 **Where to go from here:**
