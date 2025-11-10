@@ -27,11 +27,11 @@ real-world problems. Let's recreate that breakthrough using YOUR TinyTorch!
     └─────────────┘    └─────────┘    └─────────┘    └─────────┘
                                       Hidden Layer   10 Classes
 
-📊 DATASET: 8×8 Handwritten Digits
-  - 1,797 real handwritten digits (from UCI)
+📊 DATASET: TinyDigits (8×8 Handwritten Digits)
+  - 150 training + 47 test samples (curated from sklearn digits)
   - 8×8 grayscale images (64 features)
   - 10 classes (digits 0-9)
-  - Ships with TinyTorch (no download!)
+  - Ships with TinyTorch (~51 KB, no download!)
 
 🔥 THE BREAKTHROUGH:
   - Multi-layer networks learn hierarchical features
@@ -44,6 +44,8 @@ real-world problems. Let's recreate that breakthrough using YOUR TinyTorch!
 import sys
 import os
 import numpy as np
+import pickle
+from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, os.getcwd())
@@ -115,43 +117,51 @@ class DigitMLP:
 
 
 def load_digit_dataset():
-    """Load the 8×8 digits dataset."""
+    """Load the TinyDigits dataset (8×8 curated digits)."""
     console.print(Panel.fit(
-        "[bold]Loading 8×8 Digit Dataset[/bold]\n"
-        "Real handwritten digits from UCI repository",
+        "[bold]Loading TinyDigits Dataset[/bold]\n"
+        "Curated 8×8 handwritten digits optimized for fast learning",
         title="📊 Dataset",
         border_style="cyan"
     ))
-    
-    # Load from local data folder
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.join(script_dir, 'data', 'digits_8x8.npz')
-    
-    if not os.path.exists(data_path):
-        console.print(f"[red]✗ Dataset not found at {data_path}[/red]")
-        console.print("[yellow]Expected location: milestones/03_mlp_revival_1986/data/[/yellow]")
+
+    # Load from TinyDigits dataset (shipped with TinyTorch)
+    project_root = Path(__file__).parent.parent.parent
+    train_path = project_root / "datasets" / "tinydigits" / "train.pkl"
+    test_path = project_root / "datasets" / "tinydigits" / "test.pkl"
+
+    if not train_path.exists() or not test_path.exists():
+        console.print(f"[red]✗ TinyDigits dataset not found![/red]")
+        console.print(f"[yellow]Expected location: {train_path.parent}[/yellow]")
+        console.print("[yellow]Run: python3 datasets/tinydigits/create_tinydigits.py[/yellow]")
         sys.exit(1)
-    
-    data = np.load(data_path)
-    images = data['images']  # (1797, 8, 8)
-    labels = data['labels']  # (1797,)
-    
-    console.print(f"✓ Loaded {len(images)} digit images")
-    console.print(f"✓ Image shape: {images[0].shape}")
-    console.print(f"✓ Classes: {np.unique(labels)}")
-    
-    # Split into train/test (80/20)
-    n_train = int(0.8 * len(images))
-    
-    train_images = Tensor(images[:n_train].astype(np.float32))
-    train_labels = Tensor(labels[:n_train].astype(np.int64))
-    test_images = Tensor(images[n_train:].astype(np.float32))
-    test_labels = Tensor(labels[n_train:].astype(np.int64))
-    
+
+    # Load training data
+    with open(train_path, 'rb') as f:
+        train_data = pickle.load(f)
+    train_images_np = train_data['images']  # (150, 8, 8)
+    train_labels_np = train_data['labels']  # (150,)
+
+    # Load test data
+    with open(test_path, 'rb') as f:
+        test_data = pickle.load(f)
+    test_images_np = test_data['images']  # (47, 8, 8)
+    test_labels_np = test_data['labels']  # (47,)
+
+    console.print(f"✓ TinyDigits loaded ({train_images_np.shape[0] + test_images_np.shape[0]} total samples)")
+    console.print(f"✓ Image shape: {train_images_np[0].shape}")
+    console.print(f"✓ Classes: {np.unique(train_labels_np)}")
+
+    # Convert to Tensors
+    train_images = Tensor(train_images_np.astype(np.float32))
+    train_labels = Tensor(train_labels_np.astype(np.int64))
+    test_images = Tensor(test_images_np.astype(np.float32))
+    test_labels = Tensor(test_labels_np.astype(np.int64))
+
     console.print(f"\n📊 Split:")
     console.print(f"  Training: {len(train_images.data)} samples")
     console.print(f"  Testing:  {len(test_images.data)} samples\n")
-    
+
     return train_images, train_labels, test_images, test_labels
 
 
