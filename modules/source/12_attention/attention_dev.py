@@ -319,21 +319,22 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
     # Step 4: Apply causal mask if provided
     if mask is not None:
         # Handle both 2D (seq, seq) and 3D (batch, seq, seq) masks
-        # Negative mask values indicate positions to mask out (set to -inf)
+        # Mask values of 0 indicate positions to mask out (set to -inf)
+        # Mask values of 1 indicate positions to keep
         if len(mask.shape) == 2:
             # 2D mask: same for all batches (typical for causal masks)
             for b in range(batch_size):
                 for i in range(seq_len):
                     for j in range(seq_len):
-                        if mask.data[i, j] < 0:  # Negative values indicate masked positions
-                            scores[b, i, j] = mask.data[i, j]
+                        if mask.data[i, j] == 0:  # Zero values indicate masked positions
+                            scores[b, i, j] = -1e9  # Large negative value (effectively -inf)
         else:
             # 3D mask: batch-specific masks
             for b in range(batch_size):
                 for i in range(seq_len):
                     for j in range(seq_len):
-                        if mask.data[b, i, j] < 0:  # Negative values indicate masked positions
-                            scores[b, i, j] = mask.data[b, i, j]
+                        if mask.data[b, i, j] == 0:  # Zero values indicate masked positions
+                            scores[b, i, j] = -1e9  # Large negative value (effectively -inf)
 
     # Step 5: Apply softmax to get attention weights (probability distribution)
     attention_weights = np.zeros_like(scores)
