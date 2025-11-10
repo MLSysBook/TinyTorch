@@ -16,7 +16,7 @@
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
 __all__ = ['OlympicEvent', 'Benchmark', 'test_unit_benchmark', 'BenchmarkSuite', 'test_unit_benchmark_suite', 'TinyMLPerf',
-           'test_unit_tinymlperf', 'calculate_normalized_scores']
+           'test_unit_tinymlperf']
 
 # %% ../../modules/source/19_benchmarking/benchmarking_dev.ipynb 0
 #| default_exp benchmarking.benchmark
@@ -72,7 +72,7 @@ class Benchmark:
         self.measurement_runs = measurement_runs
         self.results = {}
         
-        # Use Profiler from Module 15 for measurements
+        # Use Profiler from Module 14 for measurements
         self.profiler = Profiler()
 
         # System information for metadata
@@ -1024,53 +1024,3 @@ def test_unit_tinymlperf():
     print("✅ TinyMLPerf works correctly!")
 
 test_unit_tinymlperf()
-
-# %% ../../modules/source/19_benchmarking/benchmarking_dev.ipynb 24
-def calculate_normalized_scores(baseline_results: dict, 
-                                optimized_results: dict) -> dict:
-    """
-    Calculate normalized performance metrics for fair competition comparison.
-    
-    This function converts absolute measurements into relative improvements,
-    enabling fair comparison across different hardware platforms.
-    
-    Args:
-        baseline_results: Dict with keys: 'latency', 'memory', 'accuracy'
-        optimized_results: Dict with same keys as baseline_results
-        
-    Returns:
-        Dict with normalized metrics:
-        - speedup: Relative latency improvement (higher is better)
-        - compression_ratio: Relative memory reduction (higher is better)
-        - accuracy_delta: Absolute accuracy change (closer to 0 is better)
-        - efficiency_score: Combined metric balancing all factors
-        
-    Example:
-        >>> baseline = {'latency': 100.0, 'memory': 12.0, 'accuracy': 0.89}
-        >>> optimized = {'latency': 40.0, 'memory': 3.0, 'accuracy': 0.87}
-        >>> scores = calculate_normalized_scores(baseline, optimized)
-        >>> print(f"Speedup: {scores['speedup']:.2f}x")
-        Speedup: 2.50x
-    """
-    # Calculate speedup (higher is better)
-    speedup = baseline_results['latency'] / optimized_results['latency']
-    
-    # Calculate compression ratio (higher is better)
-    compression_ratio = baseline_results['memory'] / optimized_results['memory']
-    
-    # Calculate accuracy delta (closer to 0 is better, negative means degradation)
-    accuracy_delta = optimized_results['accuracy'] - baseline_results['accuracy']
-    
-    # Calculate efficiency score (combined metric)
-    # Penalize accuracy loss: the more accuracy you lose, the lower your score
-    accuracy_penalty = max(1.0, 1.0 - accuracy_delta) if accuracy_delta < 0 else 1.0
-    efficiency_score = (speedup * compression_ratio) / accuracy_penalty
-    
-    return {
-        'speedup': speedup,
-        'compression_ratio': compression_ratio,
-        'accuracy_delta': accuracy_delta,
-        'efficiency_score': efficiency_score,
-        'baseline': baseline_results.copy(),
-        'optimized': optimized_results.copy()
-    }

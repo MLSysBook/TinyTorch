@@ -15,7 +15,7 @@
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['CosineSchedule', 'save_checkpoint', 'load_checkpoint', 'Trainer']
+__all__ = ['CosineSchedule', 'Trainer']
 
 # %% ../../modules/source/07_training/training_dev.ipynb 1
 import numpy as np
@@ -72,90 +72,6 @@ class CosineSchedule:
     ### END SOLUTION
 
 # %% ../../modules/source/07_training/training_dev.ipynb 14
-def save_checkpoint(checkpoint_dict: Dict[str, Any], path: str):
-    """
-    Save checkpoint dictionary to disk using pickle.
-    
-    This is a low-level utility for saving model state. Use this when you have
-    a custom training loop and want to save just what you need (model params,
-    config, metadata).
-    
-    For complete training state with optimizer and scheduler, use 
-    Trainer.save_checkpoint() instead.
-    
-    TODO: Implement checkpoint saving with pickle
-    
-    APPROACH:
-    1. Create parent directory if it doesn't exist (Path(path).parent.mkdir)
-    2. Open file in binary write mode ('wb')
-    3. Use pickle.dump() to serialize the checkpoint dictionary
-    4. Print confirmation message
-    
-    EXAMPLE:
-    >>> model = SimpleModel()
-    >>> checkpoint = {
-    ...     'model_params': [p.data.copy() for p in model.parameters()],
-    ...     'config': {'embed_dim': 32, 'num_layers': 2},
-    ...     'metadata': {'final_loss': 0.089, 'training_steps': 5000}
-    ... }
-    >>> save_checkpoint(checkpoint, 'checkpoints/model.pkl')
-    ✓ Checkpoint saved: checkpoints/model.pkl
-    
-    HINTS:
-    - Use Path(path).parent.mkdir(parents=True, exist_ok=True)
-    - pickle.dump(obj, file) writes the object to file
-    - Always print a success message so users know it worked
-    """
-    ### BEGIN SOLUTION
-    # Create parent directory if needed
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    
-    # Save checkpoint using pickle
-    with open(path, 'wb') as f:
-        pickle.dump(checkpoint_dict, f)
-    
-    print(f"✓ Checkpoint saved: {path}")
-    ### END SOLUTION
-
-# %% ../../modules/source/07_training/training_dev.ipynb 15
-def load_checkpoint(path: str) -> Dict[str, Any]:
-    """
-    Load checkpoint dictionary from disk using pickle.
-    
-    Companion function to save_checkpoint(). Restores the checkpoint dictionary
-    so you can rebuild your model, resume training, or inspect saved metadata.
-    
-    TODO: Implement checkpoint loading with pickle
-    
-    APPROACH:
-    1. Open file in binary read mode ('rb')
-    2. Use pickle.load() to deserialize the checkpoint
-    3. Print confirmation message
-    4. Return the loaded dictionary
-    
-    EXAMPLE:
-    >>> checkpoint = load_checkpoint('checkpoints/model.pkl')
-    ✓ Checkpoint loaded: checkpoints/model.pkl
-    >>> print(checkpoint['metadata']['final_loss'])
-    0.089
-    >>> model_params = checkpoint['model_params']
-    >>> # Now restore model: for param, data in zip(model.parameters(), model_params)...
-    
-    HINTS:
-    - pickle.load(file) reads and deserializes the object
-    - Return the loaded dictionary
-    - Print a success message for user feedback
-    """
-    ### BEGIN SOLUTION
-    # Load checkpoint using pickle
-    with open(path, 'rb') as f:
-        checkpoint = pickle.load(f)
-    
-    print(f"✓ Checkpoint loaded: {path}")
-    return checkpoint
-    ### END SOLUTION
-
-# %% ../../modules/source/07_training/training_dev.ipynb 19
 class Trainer:
     """
     Complete training orchestrator for neural networks.
@@ -330,11 +246,6 @@ class Trainer:
     def save_checkpoint(self, path: str):
         """
         Save complete training state for resumption.
-        
-        This high-level method saves everything needed to resume training:
-        model parameters, optimizer state, scheduler state, and training history.
-        
-        Uses the low-level save_checkpoint() function internally.
 
         Args:
             path: File path to save checkpoint
@@ -349,23 +260,19 @@ class Trainer:
             'training_mode': self.training_mode
         }
 
-        # Use the standalone save_checkpoint function
-        save_checkpoint(checkpoint, path)
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as f:
+            pickle.dump(checkpoint, f)
 
     def load_checkpoint(self, path: str):
         """
         Load training state from checkpoint.
-        
-        This high-level method restores complete training state including
-        model parameters, optimizer state, scheduler state, and history.
-        
-        Uses the low-level load_checkpoint() function internally.
 
         Args:
             path: File path to load checkpoint from
         """
-        # Use the standalone load_checkpoint function
-        checkpoint = load_checkpoint(path)
+        with open(path, 'rb') as f:
+            checkpoint = pickle.load(f)
 
         self.epoch = checkpoint['epoch']
         self.step = checkpoint['step']
