@@ -1281,7 +1281,7 @@ def test_unit_noninvasive_integration():
         def __init__(self):
             self.attention = self
 
-        def forward(self, x):
+        def forward(self, x, mask=None):
             # Simple pass-through for testing
             return x
 
