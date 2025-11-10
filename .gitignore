@@ -114,13 +114,11 @@ Thumbs.db
 tito-cli.log
 COMMIT_LOG.txt
 
-# Datasets (downloaded/generated)
+# Downloaded datasets (not source-controlled, too large)
 data/
 datasets/
 milestones/datasets/
 
-# Temporary reports and analysis files
-MODULE_REVIEW_REPORT*.md
+# Temporary AI-generated reports (not permanent project docs)
+MODULE_REVIEW_REPORT_*.md
 MODULE_STATUS_SUMMARY.md
-*_ANALYSIS.md
-*_AUDIT.md
