@@ -6,9 +6,11 @@ Create TinyDigits Dataset
 Extracts a balanced, curated subset from sklearn's digits dataset (8x8 grayscale).
 This creates a TinyTorch-branded educational dataset optimized for fast iteration.
 
+Following Karpathy's "~1000 samples" philosophy for educational datasets.
+
 Target sizes:
-- Training: 150 samples (15 per digit class 0-9)
-- Test: 47 samples (mix of clear and challenging examples)
+- Training: 1000 samples (100 per digit class 0-9)
+- Test: 200 samples (20 per digit class 0-9)
 """
 
 import numpy as np
@@ -16,17 +18,18 @@ import pickle
 from pathlib import Path
 
 def create_tinydigits():
-    """Create TinyDigits train/test split from full digits dataset."""
+    """Create TinyDigits train/test split from sklearn digits dataset."""
 
-    # Load the full sklearn digits dataset (shipped with repo)
-    source_path = Path(__file__).parent.parent.parent / "milestones/03_1986_mlp/data/digits_8x8.npz"
-    data = np.load(source_path)
-    images = data['images']  # (1797, 8, 8)
-    labels = data['labels']  # (1797,)
+    # Load directly from sklearn
+    from sklearn.datasets import load_digits
+    digits = load_digits()
+    images = digits.images.astype(np.float32) / 16.0  # Normalize to [0, 1]
+    labels = digits.target  # (1797,)
 
     print(f"📊 Source dataset: {images.shape[0]} samples")
     print(f"   Shape: {images.shape}, dtype: {images.dtype}")
     print(f"   Range: [{images.min():.3f}, {images.max():.3f}]")
+    print(f"   ✓ Normalized to [0, 1]")
 
     # Set random seed for reproducibility
     np.random.seed(42)
@@ -44,18 +47,16 @@ def create_tinydigits():
         # Shuffle indices
         np.random.shuffle(digit_indices)
 
-        # Split: 15 for training, rest for test pool
-        train_count = 15
-        test_pool = digit_indices[train_count:]
+        # Split: 100 for training, 20 for test (Karpathy's ~1000 samples philosophy)
+        train_count = 100
+        test_count = 20
 
-        # Training: First 15 samples
+        # Training: First 100 samples
         train_images.append(images[digit_indices[:train_count]])
         train_labels.extend([digit] * train_count)
 
-        # Test: Select 4-5 samples from remaining (47 total across all digits)
-        test_count = 5 if digit < 7 else 4  # 7*5 + 3*4 = 47
-        test_indices = np.random.choice(test_pool, size=test_count, replace=False)
-        test_images.append(images[test_indices])
+        # Test: Next 20 samples
+        test_images.append(images[digit_indices[train_count:train_count+test_count]])
         test_labels.extend([digit] * test_count)
 
         print(f"   Digit {digit}: {train_count} train, {test_count} test (from {digit_count} total)")
