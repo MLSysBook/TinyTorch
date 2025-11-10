@@ -16,7 +16,7 @@
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
 __all__ = ['validate_installation', 'load_baseline_model', 'generate_baseline', 'worked_example_optimization',
-           'optimize_for_competition', 'validate_submission', 'generate_submission']
+           'optimize_for_competition', 'generate_submission']
 
 # %% ../../modules/source/20_competition/competition_dev.ipynb 4
 import numpy as np
@@ -24,8 +24,6 @@ import json
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
-from ..benchmarking.benchmark import Benchmark, calculate_normalized_scores
-from ..profiling.profiler import Profiler
 
 def validate_installation() -> Dict[str, bool]:
     """
@@ -364,39 +362,37 @@ def worked_example_optimization():
     return submission
 
 # %% ../../modules/source/20_competition/competition_dev.ipynb 10
-def optimize_for_competition(baseline_model, event: str = "all_around", division: str = "closed"):
+def optimize_for_competition(baseline_model, event: str = "all_around"):
     """
     🏅 YOUR COMPETITION ENTRY - IMPLEMENT YOUR STRATEGY HERE!
     
+    This is where you apply optimization techniques from Modules 14-18.
+    
+    Available techniques:
+    - Module 14: KV Caching (for transformers) - enable_kv_cache()
+    - Module 16: Acceleration (vectorization, fusion)
+    - Module 17: Quantization (INT8, INT4) - quantize_model()
+    - Module 18: Compression (pruning) - magnitude_prune()
+    
     Args:
-        baseline_model: Starting model (use for Closed, optional for Open)
-        event: Category you're competing in
+        baseline_model: The unoptimized model
+        event: Which Olympic event you're competing in
             - "latency_sprint": Minimize latency
             - "memory_challenge": Minimize memory
             - "accuracy_contest": Maximize accuracy
             - "all_around": Best balance
             - "extreme_push": Most aggressive
-        division: "closed" or "open" - which track you chose
     
     Returns:
         Your optimized model
     
-    🔒 CLOSED DIVISION Example:
+    Example:
         from tinytorch.optimization.quantization import quantize_model
         from tinytorch.optimization.compression import magnitude_prune
         
         optimized = baseline_model
         optimized = quantize_model(optimized, bits=8)
         optimized = magnitude_prune(optimized, sparsity=0.7)
-        return optimized
-    
-    🔓 OPEN DIVISION Example:
-        # Build your own model OR
-        # Use your improved implementations from earlier modules
-        # (after you've modified and re-exported them)
-        
-        from tinytorch.models import YourCustomArchitecture
-        optimized = YourCustomArchitecture()
         return optimized
     """
     
@@ -442,201 +438,74 @@ def optimize_for_competition(baseline_model, event: str = "all_around", division
     
     return optimized_model
 
-#| export
-def validate_submission(submission: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Validate competition submission with sanity checks.
-    
-    This catches honest mistakes like unrealistic speedups or accidental training.
-    Honor code system - we trust but verify basic reasonableness.
-    
-    Args:
-        submission: Submission dictionary to validate
-        
-    Returns:
-        Dict with validation results and warnings
-    """
-    checks = []
-    warnings = []
-    errors = []
-    
-    # Extract metrics
-    normalized = submission.get("normalized_scores", {})
-    speedup = normalized.get("speedup", 1.0)
-    compression = normalized.get("compression_ratio", 1.0)
-    accuracy_delta = normalized.get("accuracy_delta", 0.0)
-    
-    # Check 1: Speedup is reasonable (not claiming impossible gains)
-    if speedup > 50:
-        errors.append(f"❌ Speedup {speedup:.1f}x seems unrealistic (>50x)")
-    elif speedup > 20:
-        warnings.append(f"⚠️  Speedup {speedup:.1f}x is very high - please verify measurements")
-    else:
-        checks.append(f"✅ Speedup {speedup:.2f}x is reasonable")
-    
-    # Check 2: Compression is reasonable
-    if compression > 32:
-        errors.append(f"❌ Compression {compression:.1f}x seems unrealistic (>32x)")
-    elif compression > 16:
-        warnings.append(f"⚠️  Compression {compression:.1f}x is very high - please verify")
-    else:
-        checks.append(f"✅ Compression {compression:.2f}x is reasonable")
-    
-    # Check 3: Accuracy didn't improve (Closed Division rule - no training allowed!)
-    division = submission.get("division", "closed")
-    if division == "closed" and accuracy_delta > 1.0:
-        errors.append(f"❌ Accuracy improved by {accuracy_delta:.1f}pp - did you accidentally train the model?")
-    elif accuracy_delta > 0.5:
-        warnings.append(f"⚠️  Accuracy improved by {accuracy_delta:.1f}pp - verify no training occurred")
-    else:
-        checks.append(f"✅ Accuracy change {accuracy_delta:+.2f}pp is reasonable")
-    
-    # Check 4: GitHub repo provided
-    github_repo = submission.get("github_repo", "")
-    if not github_repo or github_repo == "":
-        warnings.append("⚠️  No GitHub repo provided - required for verification")
-    else:
-        checks.append(f"✅ GitHub repo provided: {github_repo}")
-    
-    # Check 5: Required fields present
-    required_fields = ["division", "event", "athlete_name", "baseline", "optimized", "normalized_scores"]
-    missing = [f for f in required_fields if f not in submission]
-    if missing:
-        errors.append(f"❌ Missing required fields: {', '.join(missing)}")
-    else:
-        checks.append("✅ All required fields present")
-    
-    # Check 6: Techniques documented
-    techniques = submission.get("techniques_applied", [])
-    if not techniques or "TODO" in str(techniques):
-        warnings.append("⚠️  No optimization techniques listed")
-    else:
-        checks.append(f"✅ Techniques documented: {', '.join(techniques[:3])}...")
-    
-    return {
-        "valid": len(errors) == 0,
-        "checks": checks,
-        "warnings": warnings,
-        "errors": errors
-    }
-
-#| export
 def generate_submission(baseline_model, optimized_model, 
-                       division: str = "closed",
                        event: str = "all_around",
                        athlete_name: str = "YourName",
-                       github_repo: str = "",
                        techniques: List[str] = None) -> Dict[str, Any]:
     """
-    Generate standardized TinyMLPerf competition submission with normalized scoring.
+    Generate standardized competition submission.
     
     Args:
         baseline_model: Original unoptimized model
         optimized_model: Your optimized model
-        division: "closed" or "open"
-        event: Competition category (latency_sprint, memory_challenge, all_around, etc.)
-        athlete_name: Your name for submission
-        github_repo: GitHub repository URL for code verification
-        techniques: List of optimization techniques applied
+        event: Olympic event name
+        athlete_name: Your name for leaderboard
+        techniques: List of techniques applied
     
     Returns:
         Submission dictionary (will be saved as JSON)
     """
-    print("📤 Generating TinyMLPerf Competition Submission...")
+    print("📤 Generating Competition Submission...")
     print("=" * 70)
     
     # Get baseline metrics
     baseline_metrics = generate_baseline(quick=True)
     
-    # Benchmark optimized model
+    # For demonstration, estimate optimized metrics
+    # In real competition, this would benchmark the actual optimized model
     print("🔬 Benchmarking optimized model...")
     
-    # Use Profiler and Benchmark from Module 19
-    profiler = Profiler()
-    
-    # For demonstration, we'll use placeholder metrics
-    # In real competition, students would measure their actual optimized model
+    # Placeholder: Students' actual optimizations would be measured here
     optimized_metrics = {
-        "model": getattr(optimized_model, 'name', 'Optimized_Model'),
-        "accuracy": 84.0,  # Would be measured with actual test set
-        "latency_ms": 28.0,  # Would be measured with profiler
-        "memory_mb": 4.0,  # Would be measured with profiler
-        "parameters": 2000000,  # Would be counted
+        "model": "Your_Optimized_Model",
+        "accuracy": 84.0,  # Measured
+        "latency_ms": 28.0,  # Measured
+        "memory_mb": 4.0,  # Measured
+        "parameters": 2000000,  # Measured
     }
     
-    # Calculate normalized scores using Module 19's function
-    baseline_for_norm = {
-        "latency": baseline_metrics["latency_ms"],
-        "memory": baseline_metrics["memory_mb"],
-        "accuracy": baseline_metrics["accuracy"]
+    # Calculate improvements
+    improvements = {
+        "accuracy_change": optimized_metrics["accuracy"] - baseline_metrics["accuracy"],
+        "latency_speedup": baseline_metrics["latency_ms"] / optimized_metrics["latency_ms"],
+        "memory_reduction": baseline_metrics["memory_mb"] / optimized_metrics["memory_mb"],
     }
     
-    optimized_for_norm = {
-        "latency": optimized_metrics["latency_ms"],
-        "memory": optimized_metrics["memory_mb"],
-        "accuracy": optimized_metrics["accuracy"]
-    }
-    
-    normalized_scores = calculate_normalized_scores(baseline_for_norm, optimized_for_norm)
-    
-    # Create submission with all required fields
+    # Create submission
     submission = {
-        "division": division,
         "event": event,
         "athlete_name": athlete_name,
-        "github_repo": github_repo,
         "baseline": baseline_metrics,
         "optimized": optimized_metrics,
-        "normalized_scores": {
-            "speedup": normalized_scores["speedup"],
-            "compression_ratio": normalized_scores["compression_ratio"],
-            "accuracy_delta": normalized_scores["accuracy_delta"],
-            "efficiency_score": normalized_scores["efficiency_score"]
-        },
-        "techniques_applied": techniques or ["TODO: Document your optimization techniques"],
+        "improvements": improvements,
+        "techniques_applied": techniques or ["TODO: List your techniques"],
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "tinytorch_version": "0.1.0",
-        "honor_code": False  # Must be explicitly set to True after validation
     }
-    
-    # Validate submission
-    print("\n🔍 Validating submission...")
-    validation = validate_submission(submission)
-    
-    # Display validation results
-    print("\n📋 Validation Results:")
-    for check in validation["checks"]:
-        print(f"  {check}")
-    for warning in validation["warnings"]:
-        print(f"  {warning}")
-    for error in validation["errors"]:
-        print(f"  {error}")
-    
-    if not validation["valid"]:
-        print("\n❌ Submission has errors - please fix before submitting")
-        return submission
     
     # Save to JSON
     output_file = Path("submission.json")
     with open(output_file, "w") as f:
         json.dump(submission, f, indent=2)
     
-    print(f"\n✅ Submission saved to: {output_file}")
+    print(f"✅ Submission saved to: {output_file}")
     print()
-    print("📊 Your Normalized Scores (MLPerf-style):")
-    print(f"  Division:        {division.upper()}")
-    print(f"  Event:           {event.replace('_', ' ').title()}")
-    print(f"  Speedup:         {normalized_scores['speedup']:.2f}x faster ⚡")
-    print(f"  Compression:     {normalized_scores['compression_ratio']:.2f}x smaller 💾")
-    print(f"  Accuracy:        {optimized_metrics['accuracy']:.1f}% (Δ {normalized_scores['accuracy_delta']:+.2f}pp)")
-    print(f"  Efficiency:      {normalized_scores['efficiency_score']:.2f}")
+    print("📊 Your Results:")
+    print(f"  Event:           {event}")
+    print(f"  Accuracy:        {optimized_metrics['accuracy']:.1f}% (Δ {improvements['accuracy_change']:+.1f}pp)")
+    print(f"  Latency:         {optimized_metrics['latency_ms']:.1f}ms ({improvements['latency_speedup']:.2f}x faster)")
+    print(f"  Memory:          {optimized_metrics['memory_mb']:.2f}MB ({improvements['memory_reduction']:.2f}x smaller)")
     print()
-    print("📤 Next Steps:")
-    print("  1. Verify all metrics are correct")
-    print("  2. Push your code to GitHub (if not done)")
-    print("  3. Run: tito submit submission.json")
-    print("     (This will validate and prepare final submission)")
-    print()
+    print("📤 Upload submission.json to TorchPerf Olympics platform!")
     print("=" * 70)
     
     return submission

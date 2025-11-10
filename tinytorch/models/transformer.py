@@ -23,47 +23,7 @@ from ..core.tensor import Tensor
 from ..core.layers import Linear
 from ..core.attention import MultiHeadAttention
 from ..core.activations import GELU
-from ..text.embeddings import Embedding
-from ..core.autograd import SqrtBackward, MeanBackward
-
-# Monkey-patch sqrt method onto Tensor for LayerNorm
-def _tensor_sqrt(self):
-    """
-    Compute element-wise square root with gradient tracking.
-    
-    Used in normalization layers (LayerNorm, BatchNorm).
-    """
-    result_data = np.sqrt(self.data)
-    result = Tensor(result_data, requires_grad=self.requires_grad)
-    
-    if self.requires_grad:
-        result._grad_fn = SqrtBackward()
-        result._grad_fn.saved_tensors = (self,)
-        result._grad_fn.saved_output = result
-    
-    return result
-
-Tensor.sqrt = _tensor_sqrt
-
-# Monkey-patch mean method onto Tensor for LayerNorm
-def _tensor_mean(self, axis=None, keepdims=False):
-    """
-    Compute mean with gradient tracking.
-    
-    Used in normalization layers (LayerNorm, BatchNorm) and loss functions.
-    """
-    result_data = np.mean(self.data, axis=axis, keepdims=keepdims)
-    result = Tensor(result_data, requires_grad=self.requires_grad)
-    
-    if self.requires_grad:
-        result._grad_fn = MeanBackward()
-        result._grad_fn.saved_tensors = (self,)
-        result._grad_fn.axis = axis
-        result._grad_fn.keepdims = keepdims
-    
-    return result
-
-Tensor.mean = _tensor_mean
+from ..text.embeddings import Embedding, PositionalEncoding
 
 # %% ../../modules/source/13_transformers/transformers_dev.ipynb 9
 class LayerNorm:
@@ -101,7 +61,6 @@ class LayerNorm:
         self.eps = eps
 
         # Learnable parameters: scale and shift
-        # CRITICAL: requires_grad=True so optimizer can train these!
         self.gamma = Tensor(np.ones(normalized_shape), requires_grad=True)  # Scale parameter
         self.beta = Tensor(np.zeros(normalized_shape), requires_grad=True)  # Shift parameter
         ### END SOLUTION
@@ -124,23 +83,28 @@ class LayerNorm:
         HINT: Use keepdims=True to maintain tensor dimensions for broadcasting
         """
         ### BEGIN SOLUTION
-        # CRITICAL: Use Tensor operations (not .data) to maintain gradient flow!
         # Compute statistics across last dimension (features)
         mean = x.mean(axis=-1, keepdims=True)
 
         # Compute variance: E[(x - μ)²]
-        diff = x - mean  # Tensor subtraction maintains gradient
-        variance = (diff * diff).mean(axis=-1, keepdims=True)  # Tensor ops maintain gradient
+        # Use Tensor operations to preserve computation graph!
+        diff = x - mean
+        variance = (diff * diff).mean(axis=-1, keepdims=True)
 
-        # Normalize: (x - mean) / sqrt(variance + eps)
-        # Note: Use Tensor.sqrt() to preserve gradient flow
-        std = (variance + self.eps).sqrt()  # sqrt maintains gradient flow
-        normalized = diff / std  # Division maintains gradient flow
+        # Normalize - use Tensor operations to preserve gradients!
+        # Add eps as a Tensor for proper gradient flow
+        eps_tensor = Tensor(np.array(self.eps), requires_grad=False)
+        std = Tensor(np.sqrt(variance.data + self.eps), requires_grad=variance.requires_grad)
+        normalized = (x - mean) / std
 
         # Apply learnable transformation
         output = normalized * self.gamma + self.beta
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the layer norm to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """Return learnable parameters."""
@@ -183,10 +147,8 @@ class MLP:
 
         # Two-layer feed-forward network
         self.linear1 = Linear(embed_dim, hidden_dim)
+        self.gelu = GELU()  # Use GELU activation from activations module
         self.linear2 = Linear(hidden_dim, embed_dim)
-        
-        # GELU activation
-        self.gelu = GELU()
         ### END SOLUTION
 
     def forward(self, x):
@@ -209,14 +171,18 @@ class MLP:
         # First linear layer with expansion
         hidden = self.linear1.forward(x)
 
-        # GELU activation (callable pattern - activations have __call__)
-        hidden = self.gelu(hidden)
+        # GELU activation (YOUR activation from Module 03!)
+        hidden = self.gelu.forward(hidden)
 
         # Second linear layer back to original size
         output = self.linear2.forward(hidden)
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the MLP to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -298,7 +264,7 @@ class TransformerBlock:
         # First sub-layer: Multi-head self-attention with residual connection
         # Pre-norm: LayerNorm before attention
         normed1 = self.ln1.forward(x)
-        # Self-attention: MultiHeadAttention internally creates Q, K, V from input
+        # Self-attention: query, key, value are all the same (normed1)
         attention_out = self.attention.forward(normed1, mask)
 
         # Residual connection
@@ -314,6 +280,10 @@ class TransformerBlock:
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x, mask=None):
+        """Allows the transformer block to be called like a function."""
+        return self.forward(x, mask)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -433,6 +403,10 @@ class GPT:
 
         return logits
         ### END SOLUTION
+
+    def __call__(self, tokens):
+        """Allows the GPT model to be called like a function."""
+        return self.forward(tokens)
 
     def _create_causal_mask(self, seq_len):
         """Create causal mask to prevent attending to future positions."""

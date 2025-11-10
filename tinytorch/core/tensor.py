@@ -113,21 +113,10 @@ class Tensor:
         ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             # Tensor + Tensor: let NumPy handle broadcasting
-            result_data = self.data + other.data
+            return Tensor(self.data + other.data)
         else:
             # Tensor + scalar: NumPy broadcasts automatically
-            result_data = self.data + other
-
-        # Create new tensor with result
-        result = Tensor(result_data)
-
-        # Preserve gradient tracking if either operand requires gradients
-        if hasattr(self, 'requires_grad') and hasattr(other, 'requires_grad'):
-            result.requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
-        elif hasattr(self, 'requires_grad'):
-            result.requires_grad = self.requires_grad
-
-        return result
+            return Tensor(self.data + other)
         ### END SOLUTION
 
     # nbgrader={"grade": false, "grade_id": "more-arithmetic", "solution": true}
@@ -137,10 +126,12 @@ class Tensor:
 
         Common use: Centering data (x - mean), computing differences for loss functions.
         """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data - other.data)
         else:
             return Tensor(self.data - other)
+        ### END SOLUTION
 
     def __mul__(self, other):
         """
@@ -149,10 +140,12 @@ class Tensor:
         Common use: Scaling features, applying masks, gating mechanisms in neural networks.
         Note: This is * operator, not @ (which will be matrix multiplication).
         """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data * other.data)
         else:
             return Tensor(self.data * other)
+        ### END SOLUTION
 
     def __truediv__(self, other):
         """
@@ -160,10 +153,12 @@ class Tensor:
 
         Common use: Normalization (x / std), converting counts to probabilities.
         """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data / other.data)
         else:
             return Tensor(self.data / other)
+        ### END SOLUTION
 
     # nbgrader={"grade": false, "grade_id": "matmul-impl", "solution": true}
     def matmul(self, other):
@@ -232,7 +227,8 @@ class Tensor:
                 )
 
         # Perform optimized matrix multiplication
-        result_data = np.dot(self.data, other.data)
+        # Use np.matmul (not np.dot) for proper batched matrix multiplication with 3D+ tensors
+        result_data = np.matmul(self.data, other.data)
         return Tensor(result_data)
         ### END SOLUTION
 
@@ -304,16 +300,8 @@ class Tensor:
 
         # Reshape the data (NumPy handles the memory layout efficiently)
         reshaped_data = np.reshape(self.data, new_shape)
-        
-        # Create output tensor preserving gradient tracking
+        # Preserve gradient tracking from the original tensor (important for autograd!)
         result = Tensor(reshaped_data, requires_grad=self.requires_grad)
-        
-        # Set up backward function for autograd
-        if self.requires_grad:
-            from tinytorch.core.autograd import ReshapeBackward
-            result._grad_fn = ReshapeBackward()
-            result._grad_fn.saved_tensors = (self,)
-        
         return result
         ### END SOLUTION
 
@@ -380,7 +368,9 @@ class Tensor:
             axes[dim0], axes[dim1] = axes[dim1], axes[dim0]
             transposed_data = np.transpose(self.data, axes)
 
-        return Tensor(transposed_data)
+        # Preserve requires_grad for gradient tracking (Module 05 will add _grad_fn)
+        result = Tensor(transposed_data, requires_grad=self.requires_grad if hasattr(self, 'requires_grad') else False)
+        return result
         ### END SOLUTION
 
     # nbgrader={"grade": false, "grade_id": "reduction-ops", "solution": true}
