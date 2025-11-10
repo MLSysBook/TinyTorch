@@ -254,7 +254,8 @@ class Optimizer:
 
         # Check that parameters require gradients
         for i, param in enumerate(params):
-            if not isinstance(param, Tensor):
+            # Check if it's a Tensor (by duck typing to handle different import paths)
+            if not (hasattr(param, 'data') and hasattr(param, 'grad') and hasattr(param, 'requires_grad')):
                 raise TypeError(f"Parameter {i} must be a Tensor, got {type(param)}")
             if not param.requires_grad:
                 raise ValueError(f"Parameter {i} does not require gradients. Set requires_grad=True.")
@@ -473,12 +474,13 @@ class SGD(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient (param.grad is already a numpy array)
+            # Get gradient (param.grad can be either numpy array or Tensor)
             grad = param.grad
+            grad_data = grad.data if hasattr(grad, 'data') else grad
 
             # Apply weight decay
             if self.weight_decay != 0:
-                grad = grad + self.weight_decay * param.data
+                grad_data = grad_data + self.weight_decay * param.data
 
             # Update momentum buffer
             if self.momentum != 0:
@@ -487,11 +489,11 @@ class SGD(Optimizer):
                     self.momentum_buffers[i] = np.zeros_like(param.data)
 
                 # Update momentum: v = momentum * v_prev + grad
-                self.momentum_buffers[i] = self.momentum * self.momentum_buffers[i] + grad
-                grad = self.momentum_buffers[i]
+                self.momentum_buffers[i] = self.momentum * self.momentum_buffers[i] + grad_data
+                grad_data = self.momentum_buffers[i]
 
             # Update parameter: param = param - lr * grad
-            param.data = param.data - self.lr * grad
+            param.data = param.data - self.lr * grad_data
 
         # Increment step counter
         self.step_count += 1
@@ -705,12 +707,13 @@ class Adam(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient (param.grad is already a numpy array)
+            # Get gradient (handle both numpy arrays and Tensor objects)
             grad = param.grad
+            grad_data = grad.data if hasattr(grad, 'data') else grad
 
             # Apply weight decay
             if self.weight_decay != 0:
-                grad = grad + self.weight_decay * param.data
+                grad_data = grad_data + self.weight_decay * param.data
 
             # Initialize buffers if needed
             if self.m_buffers[i] is None:
@@ -718,10 +721,10 @@ class Adam(Optimizer):
                 self.v_buffers[i] = np.zeros_like(param.data)
 
             # Update biased first moment estimate
-            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad
+            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad_data
 
             # Update biased second moment estimate
-            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad ** 2)
+            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad_data ** 2)
 
             # Compute bias correction
             bias_correction1 = 1 - self.beta1 ** self.step_count
@@ -957,8 +960,9 @@ class AdamW(Optimizer):
                 self.v_buffers[i] = np.zeros_like(param.data)
 
             # Update moments using pure gradients
-            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad
-            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad ** 2)
+            grad_data = grad.data if hasattr(grad, 'data') else grad
+            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad_data
+            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad_data ** 2)
 
             # Compute bias correction
             bias_correction1 = 1 - self.beta1 ** self.step_count
