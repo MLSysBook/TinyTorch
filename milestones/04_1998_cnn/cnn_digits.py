@@ -30,7 +30,9 @@ You'll see CNNs outperform MLPs on the same digits dataset from Milestone 03!
 import sys
 import os
 import time
+import pickle
 import numpy as np
+from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -57,31 +59,40 @@ enable_autograd()
 
 def load_digits_dataset():
     """
-    Load the 8x8 digits dataset from local file.
-    
-    Returns 1,797 grayscale images of handwritten digits (0-9).
+    Load the TinyDigits dataset (8×8 curated digits).
+
+    Returns 150 training + 47 test grayscale images of handwritten digits (0-9).
     Each image is 8×8 pixels, perfect for quick CNN demonstrations.
+    Ships with TinyTorch - no downloads needed!
     """
-    # Load from the local data file (same as MLP milestone uses)
-    data_path = os.path.join(os.path.dirname(__file__), '../03_1986_mlp/data/digits_8x8.npz')
-    data = np.load(data_path)
-    
-    images = data['images']  # (1797, 8, 8)
-    labels = data['labels']  # (1797,)
-    
-    # Split into train/test (80/20)
-    n_train = int(0.8 * len(images))
-    
-    train_images = images[:n_train]
-    train_labels = labels[:n_train]
-    test_images = images[n_train:]
-    test_labels = labels[n_train:]
-    
+    # Load from TinyDigits dataset (shipped with TinyTorch)
+    project_root = Path(__file__).parent.parent.parent
+    train_path = project_root / "datasets" / "tinydigits" / "train.pkl"
+    test_path = project_root / "datasets" / "tinydigits" / "test.pkl"
+
+    if not train_path.exists() or not test_path.exists():
+        console.print(f"[red]✗ TinyDigits dataset not found![/red]")
+        console.print(f"[yellow]Expected location: {train_path.parent}[/yellow]")
+        console.print("[yellow]Run: python3 datasets/tinydigits/create_tinydigits.py[/yellow]")
+        sys.exit(1)
+
+    # Load training data
+    with open(train_path, 'rb') as f:
+        train_data = pickle.load(f)
+    train_images = train_data['images']  # (150, 8, 8)
+    train_labels = train_data['labels']  # (150,)
+
+    # Load test data
+    with open(test_path, 'rb') as f:
+        test_data = pickle.load(f)
+    test_images = test_data['images']  # (47, 8, 8)
+    test_labels = test_data['labels']  # (47,)
+
     # CNN expects (batch, channels, height, width)
     # Add channel dimension: (N, 8, 8) → (N, 1, 8, 8)
-    train_images = train_images[:, np.newaxis, :, :]  # (1437, 1, 8, 8)
-    test_images = test_images[:, np.newaxis, :, :]    # (360, 1, 8, 8)
-    
+    train_images = train_images[:, np.newaxis, :, :]  # (150, 1, 8, 8)
+    test_images = test_images[:, np.newaxis, :, :]    # (47, 1, 8, 8)
+
     return (
         Tensor(train_images.astype(np.float32)),
         Tensor(train_labels.astype(np.int64)),
