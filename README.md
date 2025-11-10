@@ -533,14 +533,3 @@ cd modules/source/01_tensor && jupyter lab tensor_dev.py
 
 **Start Small. Go Deep. Build ML Systems.**
 
-
-## For AI Assistants
-
-This project has shared rules for all AI assistants (Cursor, Claude, etc.) in `.shared-ai-rules.md`.
-
-Key guidelines:
-- Make small, focused commits - never lump multiple changes together
-- Test every change before moving on  
-- Follow the commit message format (no exclamation marks)
-- See `.shared-ai-rules.md` for complete guidelines
-
