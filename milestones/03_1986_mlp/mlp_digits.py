@@ -28,15 +28,15 @@ real-world problems. Let's recreate that breakthrough using YOUR TinyTorch!
                                       Hidden Layer   10 Classes
 
 📊 DATASET: TinyDigits (8×8 Handwritten Digits)
-  - 150 training + 47 test samples (curated from sklearn digits)
+  - 1000 training + 200 test samples (Karpathy's ~1K philosophy)
   - 8×8 grayscale images (64 features)
   - 10 classes (digits 0-9)
-  - Ships with TinyTorch (~51 KB, no download!)
+  - Ships with TinyTorch (~310 KB, no download!)
 
 🔥 THE BREAKTHROUGH:
   - Multi-layer networks learn hierarchical features
   - Hidden layer discovers useful digit patterns
-  - Expected: 85-90% accuracy (excellent for MLP on small images!)
+  - Expected: 75-85% accuracy (decent performance on tiny images!)
   
 📌 NOTE: This is a BASELINE. CNN (Milestone 04) will show improvement!
 """
