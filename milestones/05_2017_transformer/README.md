@@ -69,10 +69,10 @@ This milestone uses **progressive generation tasks** with 2 scripts:
 
 ## 📊 Expected Results
 
-| Script | Task | Context Length | Accuracy | Training Time |
-|--------|------|----------------|----------|---------------|
-| 01 (Q&A) | Answer questions | 128 chars | Coherent responses | 3-5 min |
-| 02 (Dialogue) | Multi-turn chat | 128 chars | Context-aware | 3-5 min |
+| Script | Task | Context Length | Success Criteria | Training Time |
+|--------|------|----------------|------------------|---------------|
+| 01 (Q&A) | Answer questions | 128 chars | Loss < 1.5, sensible word choices | 3-5 min |
+| 02 (Dialogue) | Multi-turn chat | 128 chars | Maintains topic coherence, loss < 1.5 | 3-5 min |
 
 ## 🎓 Key Learning: Why Attention Revolutionized AI
 
