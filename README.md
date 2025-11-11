@@ -354,24 +354,25 @@ python 02_lecun_cifar10.py     # Natural images (CIFAR-10)
 cd milestones/05_2017_transformer
 python 01_vaswani_generation.py  # Text generation
 python 02_vaswani_dialogue.py    # Interactive chat
-python 03_vaswani_profile.py     # Optimization analysis
 # Attention mechanisms for language modeling
 # YOUR attention implementation generates text!
 ```
-**Requirements**: Modules 01-13 (+ Tokenization, Embeddings, Attention, Transformers)  
+**Requirements**: Modules 01-13 (+ Tokenization, Embeddings, Attention, Transformers)
 **Achievement**: Language generation with self-attention
 
 ---
 
-### ⚡ 06. Systems Age (2024) - After Module 19
+### ⚡ 06. MLPerf - Optimization Era (2018) - After Module 18
 ```bash
-cd milestones/06_2024_systems_age
-python optimize_models.py
-# Profile, optimize, and benchmark YOUR framework
-# Compete on TinyMLPerf leaderboard!
+cd milestones/06_2018_mlperf
+python 01_baseline_profile.py    # Profile & establish metrics
+python 02_compression.py         # Quantization + pruning
+python 03_generation_opts.py     # KV-cache + batching
+# Systematic optimization: 8-16× smaller, 12-40× faster!
+# YOUR optimization pipeline achieves production targets
 ```
-**Requirements**: Modules 01-19 (Full optimization suite)  
-**Achievement**: Production-grade ML systems engineering
+**Requirements**: Modules 01-18 (Full optimization suite)
+**Achievement**: Production-ready ML systems optimization
 
 ---
 
