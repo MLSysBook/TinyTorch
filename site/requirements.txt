@@ -11,6 +11,9 @@ PyYAML>=6.0
 # Rich terminal formatting (for development feedback)
 rich>=13.0.0
 
+# Jupyter Book for building documentation
+jupyter-book>=0.15.0,<1.0.0
+
 # Jupyter environment
 jupyter>=1.0.0
 jupyterlab>=4.0.0
@@ -20,7 +23,7 @@ ipywidgets>=8.0.0
 # Sphinx extensions
 sphinxcontrib-mermaid>=0.9.2
 
-# Type checking support  
+# Type checking support
 typing-extensions>=4.0.0
 
 # For executing TinyTorch code
