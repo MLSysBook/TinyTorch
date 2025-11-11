@@ -13,7 +13,7 @@ learning_objectives:
   - "Measure compression ratios and inference speedups"
 ---
 
-# 17. Compression
+# 16. Compression
 
 **⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
@@ -81,8 +81,8 @@ Compression is now standard for deployment, not optional.
 ## Testing
 
 ```bash
-tito export 18_compression
-tito test 18_compression
+tito export 16_compression
+tito test 16_compression
 ```
 
 ## Where This Code Lives
@@ -110,12 +110,12 @@ tinytorch/
 
 ## What's Next?
 
-In **Module 19: Benchmarking**, you'll measure everything you've built:
-- Fair comparison across optimizations
-- Statistical significance testing
-- MLPerf-style benchmarking protocols
-- Comprehensive performance reports
+In **Module 17: Memoization**, you'll learn computational reuse:
+- KV-caching for transformers
+- Eliminate redundant computation
+- 10-15× speedup for autoregressive generation
+- Memory-compute trade-offs
 
 ---
 
-**Ready to compress models?** Open `modules/18_compression/compression_dev.py` and start implementing.
+**Ready to compress models?** Open `modules/16_compression/compression_dev.py` and start implementing.

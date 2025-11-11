@@ -3,7 +3,7 @@ title: "Quantization - Reduced Precision for Efficiency"
 description: "INT8 quantization, calibration, and mixed-precision strategies"
 difficulty: 3
 time_estimate: "5-6 hours"
-prerequisites: ["Profiling", "Memoization"]
+prerequisites: ["Profiling"]
 next_steps: ["Compression"]
 learning_objectives:
   - "Implement INT8 quantization for weights and activations"
@@ -13,7 +13,7 @@ learning_objectives:
   - "Measure memory and speed improvements from reduced precision"
 ---
 
-# 16. Quantization
+# 15. Quantization
 
 **⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
 
@@ -74,8 +74,8 @@ Dequantization: x_fp32 = (x_int8 - zero_point) * scale
 ## Testing
 
 ```bash
-tito export 17_quantization
-tito test 17_quantization
+tito export 15_quantization
+tito test 15_quantization
 ```
 
 ## Where This Code Lives
@@ -103,11 +103,11 @@ tinytorch/
 
 ## What's Next?
 
-In **Module 18: Compression**, you'll combine quantization with pruning:
+In **Module 16: Compression**, you'll combine quantization with pruning:
 - Remove unimportant weights (pruning)
 - Quantize remaining weights (INT8)
 - Achieve 10-50× compression with minimal accuracy loss
 
 ---
 
-**Ready to quantize models?** Open `modules/17_quantization/quantization_dev.py` and start implementing.
+**Ready to quantize models?** Open `modules/15_quantization/quantization_dev.py` and start implementing.

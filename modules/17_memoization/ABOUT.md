@@ -3,8 +3,8 @@ title: "Memoization - Computational Reuse for Inference"
 description: "Apply memoization pattern to transformers through KV caching for 10-15x faster generation"
 difficulty: 2
 time_estimate: "4-5 hours"
-prerequisites: ["Profiling", "Transformers"]
-next_steps: ["Quantization"]
+prerequisites: ["Profiling", "Transformers", "Quantization", "Compression"]
+next_steps: ["Acceleration"]
 learning_objectives:
   - "Understand memoization as a fundamental optimization pattern"
   - "Apply memoization to transformers through KV caching"
@@ -13,7 +13,7 @@ learning_objectives:
   - "Recognize when computational reuse applies to other problems"
 ---
 
-# 15. Memoization
+# 17. Memoization
 
 **⚡ OPTIMIZATION TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
 
@@ -368,10 +368,10 @@ Progress: Cached Generation ✓
 After completing the module:
 ```bash
 # Export to tinytorch package
-tito export 14_kvcaching
+tito export 17_memoization
 
 # Run integration tests
-tito test 14_kvcaching
+tito test 17_memoization
 ```
 
 ## Where This Code Lives
@@ -432,15 +432,15 @@ This module implements patterns from:
 
 ## What's Next?
 
-In **Module 14: Profiling**, you measured where time goes in your transformer. Now you'll fix the bottleneck:
+In **Module 18: Acceleration**, you'll learn hardware-aware optimization:
 
-- Profile attention, feedforward, and embedding operations
-- Identify computational bottlenecks beyond caching
-- Measure FLOPs, memory bandwidth, and latency
-- Understand performance characteristics across architectures
+- Vectorization and SIMD operations
+- Batch processing for GPU efficiency
+- Hardware-specific optimizations
+- Parallel computation strategies
 
-The caching you implemented solves the biggest inference bottleneck—now let's find what else to optimize!
+You've compressed models (Quantization + Compression) and now you're learning computational reuse (Memoization). Next, you'll accelerate computation through parallelism!
 
 ---
 
-**Ready to implement production-critical caching?** Open `modules/14_kvcaching/kvcaching_dev.py` and start implementing.
+**Ready to implement production-critical caching?** Open `modules/17_memoization/memoization_dev.py` and start implementing.
