@@ -23,7 +23,11 @@ parts:
 - caption: 🧭 Course Orientation
   chapters:
   - file: chapters/00-introduction
-    title: "Introduction"
+    title: "Course Structure"
+  - file: chapters/learning-journey
+    title: "Learning Journey"
+  - file: chapters/milestones
+    title: "Historical Milestones"
 
 - caption: 🏗️ Foundation Tier (01-07)
   chapters:

@@ -17,6 +17,45 @@ Milestones are **proof-of-mastery demonstrations** that showcase what you can bu
 
 ---
 
+## 🎯 Two Dimensions of Your Progress
+
+As you build TinyTorch, you're progressing along **TWO dimensions simultaneously**:
+
+### Pedagogical Dimension (Acts): What You're LEARNING
+
+**Act I (01-04)**: Building atomic components - mathematical foundations
+**Act II (05-07)**: The gradient revolution - systems that learn
+**Act III (08-09)**: Real-world complexity - data and scale
+**Act IV (10-13)**: Sequential intelligence - language understanding
+**Act V (14-19)**: Production systems - optimization and deployment
+**Act VI (20)**: Complete integration - unified AI systems
+
+**📖 See [The Learning Journey](learning-journey.html)** for the complete pedagogical narrative explaining WHY modules flow this way.
+
+### Historical Dimension (Milestones): What You CAN Build
+
+**1957: Perceptron** - Binary classification
+**1969: XOR** - Non-linear learning
+**1986: MLP** - Multi-class vision
+**1998: CNN** - Spatial intelligence
+**2017: Transformers** - Language generation
+**2024: Systems** - Production optimization
+
+### How They Connect
+
+| Learning Act | Unlocked Milestone | Proof of Mastery |
+|--------------|-------------------|------------------|
+| **Act I: Foundation (01-04)** | 🧠 1957 Perceptron | Your Linear layer recreates history |
+| **Act II: Learning (05-07)** | ⚡ 1969 XOR + 🔢 1986 MLP | Your autograd enables training (95%+ MNIST) |
+| **Act III: Data & Scale (08-09)** | 🖼️ 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
+| **Act IV: Language (10-13)** | 🤖 2017 Transformers | Your attention generates coherent text |
+| **Act V: Production (14-19)** | ⚡ 2024 Systems Age | Your optimizations compete in benchmarks |
+| **Act VI: Integration (20)** | 🏆 TinyGPT Capstone | Your complete framework works end-to-end |
+
+**Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built works (historical validation). Together, they show you're not just completing exercises - you're building something real.
+
+---
+
 ## 📅 The Timeline
 
 ### 🧠 01. Perceptron (1957) - Rosenblatt
