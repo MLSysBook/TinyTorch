@@ -187,8 +187,8 @@ class TinyTorchStatusAnalyzer:
         
         # Check basic files - try multiple naming patterns
         possible_dev_files = [
-            module_path / f"{module_name}_dev.py",
-            module_path / f"{module_name.split('_', 1)[1]}_dev.py" if '_' in module_name else None,
+            module_path / f"{module_name}.py",
+            module_path / f"{module_name.split('_', 1)[1]}.py" if '_' in module_name else None,
         ]
         dev_file = None
         for possible_file in possible_dev_files:
@@ -197,8 +197,8 @@ class TinyTorchStatusAnalyzer:
                 break
         
         if dev_file is None:
-            # Check if there's any *_dev.py file
-            dev_files = list(module_path.glob("*_dev.py"))
+            # Check if there's any *.py file
+            dev_files = list(module_path.glob("*.py"))
             if dev_files:
                 dev_file = dev_files[0]  # Use the first one found
         

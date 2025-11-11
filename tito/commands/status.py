@@ -45,7 +45,7 @@ class StatusCommand(BaseCommand):
             short_name = module_name[3:]  # Remove "00_" prefix
         else:
             short_name = module_name
-        dev_file = module_path / f"{short_name}_dev.py"
+        dev_file = module_path / f"{short_name}.py"
         if not dev_file.exists():
             return "not_found"
         
@@ -125,9 +125,9 @@ class StatusCommand(BaseCommand):
         console = self.console
         
         # Scan modules directory
-        modules_dir = Path("modules/source")
+        modules_dir = Path("modules")
         if not modules_dir.exists():
-            console.print(Panel("[red]❌ modules/source/ directory not found[/red]", 
+            console.print(Panel("[red]❌ modules/ directory not found[/red]", 
                               title="Error", border_style="red"))
             return 1
         
@@ -141,7 +141,7 @@ class StatusCommand(BaseCommand):
                               title="Warning", border_style="yellow"))
             return 0
         
-        console.print(Panel(f"📋 Found {len(module_dirs)} modules in modules/source directory", 
+        console.print(Panel(f"📋 Found {len(module_dirs)} modules in modules directory", 
                           title="Module Status Check", border_style="bright_cyan"))
         
         # Create status table
@@ -209,7 +209,7 @@ class StatusCommand(BaseCommand):
         console.print(f"   [bold cyan]tito status --comprehensive[/bold cyan]      # Full system health dashboard")
         console.print(f"   [bold cyan]tito module test --all[/bold cyan]           # Test all modules")
         console.print(f"   [bold cyan]tito module test MODULE_NAME[/bold cyan]     # Test specific module")
-        console.print(f"   [bold cyan]pytest modules/source/*/  -k test_[/bold cyan]  # Run pytest on inline tests")
+        console.print(f"   [bold cyan]pytest modules/*/  -k test_[/bold cyan]  # Run pytest on inline tests")
         console.print(f"   [bold cyan]pytest tests/test_*.py[/bold cyan]           # Run external tests")
         
         # Detailed view
@@ -243,7 +243,7 @@ class StatusCommand(BaseCommand):
             short_name = module_name[3:]  # Remove "00_" prefix
         else:
             short_name = module_name
-        dev_file = module_dir / f"{short_name}_dev.py"
+        dev_file = module_dir / f"{short_name}.py"
         readme_file = module_dir / "README.md"
         metadata_file = module_dir / "module.yaml"
         
@@ -386,7 +386,7 @@ class StatusCommand(BaseCommand):
         if status['dev_file']:
             dev_status += f" ({status.get('export_count', 0)} exports, {status.get('inline_test_count', 0)} inline tests)"
         
-        files_table.add_row(f"{module_name}_dev.py", dev_status)
+        files_table.add_row(f"{module_name}.py", dev_status)
         files_table.add_row("tests/test_*.py", "✅ Found" if status['external_tests'] else "❌ Missing")
         files_table.add_row("README.md", "✅ Found" if status['readme'] else "❌ Missing")
         
@@ -396,7 +396,7 @@ class StatusCommand(BaseCommand):
         if status['dev_file'] or status['external_tests']:
             console.print("\n[dim]💡 Test commands:[/dim]")
             if status['dev_file']:
-                console.print(f"[dim]   pytest modules/source/{module_name}/{module_name}_dev.py -k test_[/dim]")
+                console.print(f"[dim]   pytest modules/{module_name}/{module_name}.py -k test_[/dim]")
             if status['external_tests']:
                 short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
                 console.print(f"[dim]   pytest tests/test_{short_name}.py -v[/dim]")
@@ -415,7 +415,7 @@ class StatusCommand(BaseCommand):
             console.print(f"📝 {metadata['description']}")
         
         # Export info (read from dev file - source of truth)
-        module_path = Path(f"modules/source/{module_name}")
+        module_path = Path(f"modules/{module_name}")
         export_target = self._get_export_target(module_path)
         if export_target not in ['not_found', 'no_export', 'read_error']:
             console.print(f"📦 Exports to: {export_target}")
