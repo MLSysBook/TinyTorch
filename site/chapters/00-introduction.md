@@ -303,6 +303,8 @@ By completing all three tiers, you'll have built a complete ML framework that ri
 All using code you wrote yourself, from mathematical first principles to production optimization.
 ```
 
+**📖 Want to understand the pedagogical narrative behind this structure?** See [The Learning Journey](learning-journey.html) to understand WHY modules flow this way and HOW they build on each other through a six-act learning story.
+
 ---
 
 ### 🏗️ FOUNDATION TIER (Modules 01-07)

@@ -43,6 +43,34 @@ Each tier builds complete, working systems with clear career connections and pra
 
 **📖 See [Complete Three-Tier Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, time estimates, and learning outcomes.
 
+## 🗺️ Understanding Your Complete Learning Journey
+
+TinyTorch's 20 modules aren't arbitrary - they tell a carefully crafted story from building mathematical atoms to deploying production AI systems. Each module builds on previous foundations while setting up future capabilities.
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
+
+<div style="background: #f0f9ff; border: 1px solid #7dd3fc; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #0284c7;">🏗️ Three-Tier Structure</h4>
+<p style="margin: 0; font-size: 0.9rem;">Organized navigation through Foundation → Architecture → Optimization</p>
+<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/00-introduction.html">View Course Structure →</a></p>
+</div>
+
+<div style="background: #fdf4ff; border: 1px solid #e9d5ff; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #7c3aed;">📖 Six-Act Narrative</h4>
+<p style="margin: 0; font-size: 0.9rem;">The learning story: Why modules flow from atomic components to intelligence</p>
+<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/learning-journey.html">Read The Story →</a></p>
+</div>
+
+<div style="background: #fef3c7; border: 1px solid #fde047; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #a16207;">🏆 Historical Milestones</h4>
+<p style="margin: 0; font-size: 0.9rem;">Prove mastery by recreating ML history with YOUR implementations</p>
+<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/milestones.html">See Timeline →</a></p>
+</div>
+
+</div>
+
+**New to TinyTorch?** Start with the [Three-Tier Structure](chapters/00-introduction.html) to see what you'll build, then read [The Learning Journey](chapters/learning-journey.html) to understand the pedagogical progression that makes it all click.
+
 ## 🏆 Prove Your Mastery Through History
 
 As you complete modules, unlock **historical milestone demonstrations** that prove what you've built works! From Rosenblatt's 1957 perceptron to modern CNNs achieving 75%+ accuracy on CIFAR-10, each milestone recreates a breakthrough using YOUR implementations:
