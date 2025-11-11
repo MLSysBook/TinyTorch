@@ -40,7 +40,7 @@ tito system doctor
 ### Step 3: Start Building
 ```bash
 # Open first assignment
-cd modules/source/01_setup
+cd modules/01_setup
 jupyter lab setup_dev.py
 ```
 

@@ -1,4 +1,4 @@
-# Module 15: KV Caching - Inference Optimization
+# Module 17: Memoization/KV Caching - Inference Optimization
 
 **Time**: 2-3 hours
 **Difficulty**: ⭐⭐⭐⭐☆ (Advanced)
@@ -155,13 +155,13 @@ By completing this module, you will:
 - Module 14 (Profiling): How we validate speedup
 
 **Enables**:
-- Module 16 (Quantization): Next optimization (reduce precision for memory)
+- Module 18 (Acceleration): Combine caching with parallelization
 - Milestone 05 (Chatbot): Real-time generation with caching
 
 **Systems Pattern**:
 ```
 Module 05 (Autograd):     enable_autograd()  → Add gradients to Tensors
-Module 15 (KV Caching):   enable_kv_cache()  → Add caching to Attention
+Module 17 (Memoization):  enable_kv_cache()  → Add caching to Attention
                           ↓
         Critical Pattern: ENHANCE, don't MODIFY existing code!
 ```
@@ -220,10 +220,10 @@ After completing this module:
 
 3. **Compare**: Measure memory overhead vs model parameters
 
-4. **Move forward**: Module 16 (Quantization) teaches opposite trade-off!
+4. **Move forward**: Module 18 (Acceleration) teaches parallelization!
 
 ---
 
 **Ready to build the optimization that powers ChatGPT?** 🚀
 
-Start with: `modules/15_memoization/memoization_dev.py`
+Start with: `modules/17_memoization/memoization_dev.py`
