@@ -141,7 +141,7 @@ A: Those files are **auto-generated** from your source modules:
 
 **✅ Edit Here:**
 ```
-modules/source/02_tensor/tensor_dev.py  ← Your source code
+modules/02_tensor/tensor_dev.py  ← Your source code
 ```
 
 **❌ Don't Edit:**
@@ -150,7 +150,7 @@ tinytorch/core/tensor.py  ← Generated from source
 ```
 
 **Workflow:**
-1. Edit source: `modules/source/0X_name/name_dev.py`
+1. Edit source: `modules/0X_name/name_dev.py`
 2. Export: `tito module complete 0X_name`
 3. Uses your code: `from tinytorch.core.name import Component`
 
@@ -174,7 +174,7 @@ A: Common debugging steps:
 
 1. **Check syntax**: Run the module file directly
    ```bash
-   python modules/source/03_activations/activations_dev.py
+   python modules/03_activations/activations_dev.py
    ```
 
 2. **Verify function signature**: Make sure your function matches the expected interface
@@ -205,7 +205,7 @@ tito checkpoint test 03
 tito module complete 03_activations --dry-run
 
 # Run module file directly
-python modules/source/03_activations/activations_dev.py
+python modules/03_activations/activations_dev.py
 ```
 
 ### **System Issues**

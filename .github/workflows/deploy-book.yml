@@ -6,15 +6,15 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'book/**'
-      - 'modules/source/**'
+      - 'site/**'
+      - 'modules/**'
       - '.github/workflows/deploy-book.yml'
       - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
     paths:
-      - 'book/**'
-      - 'modules/source/**'
+      - 'site/**'
+      - 'modules/**'
       - 'tito/**'
   workflow_dispatch:
 
@@ -48,24 +48,24 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install "jupyter-book<1.0"
-        pip install -r book/requirements.txt
-        
+        pip install -r site/requirements.txt || pip install jupyter-book
+
     - name: Build Jupyter Book
       run: |
-        cd book
+        cd site
         jupyter-book clean . || true
         jupyter-book build .
-        echo "=== Contents of book after build ==="
-        ls -la 
+        echo "=== Contents of site after build ==="
+        ls -la
         echo "=== Contents of _build (if exists) ==="
         ls -la _build/ || echo "_build doesn't exist"
         echo "=== Contents of _build/html (if exists) ==="
         ls -la _build/html/ || echo "_build/html doesn't exist"
-        
+
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: book/_build/html
+        path: site/_build/html
 
   deploy:
     # Only deploy on main branch pushes (not PRs)

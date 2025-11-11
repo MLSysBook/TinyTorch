@@ -34,7 +34,7 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install "jupyter-book<1.0"
-        pip install -r book/requirements.txt
+        pip install -r site/requirements.txt || pip install jupyter-book
 
     - name: Install LaTeX (if latex method)
       if: github.event.inputs.method == 'latex' || github.event_name == 'release'
@@ -56,7 +56,7 @@ jobs:
     - name: Build PDF (simple method)
       if: github.event.inputs.method == 'simple' || github.event.inputs.method == ''
       run: |
-        cd book
+        cd docs
         jupyter-book clean . --all
         jupyter-book build . --builder pdfhtml
         # Copy to standard location
@@ -66,7 +66,7 @@ jobs:
     - name: Build PDF (LaTeX method)
       if: github.event.inputs.method == 'latex' || github.event_name == 'release'
       run: |
-        cd book
+        cd docs
         jupyter-book clean . --all
         jupyter-book build . --builder pdflatex
         # Copy to standard location
@@ -77,14 +77,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tinytorch-pdf-${{ github.event.inputs.method || 'latex' }}-${{ github.sha }}
-        path: book/_build/pdf-output/tinytorch-course.pdf
+        path: docs/_build/pdf-output/tinytorch-course.pdf
         retention-days: 90
 
     - name: Upload to release (if release event)
       if: github.event_name == 'release'
       uses: softprops/action-gh-release@v1
       with:
-        files: book/_build/pdf-output/tinytorch-course.pdf
+        files: docs/_build/pdf-output/tinytorch-course.pdf
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -94,7 +94,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Method:** ${{ github.event.inputs.method || 'latex' }}" >> $GITHUB_STEP_SUMMARY
         echo "**File:** tinytorch-course.pdf" >> $GITHUB_STEP_SUMMARY
-        echo "**Size:** $(du -h book/_build/pdf-output/tinytorch-course.pdf | cut -f1)" >> $GITHUB_STEP_SUMMARY
+        echo "**Size:** $(du -h docs/_build/pdf-output/tinytorch-course.pdf | cut -f1)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "Download the PDF from the artifacts section above." >> $GITHUB_STEP_SUMMARY
 

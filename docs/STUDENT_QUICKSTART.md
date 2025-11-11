@@ -34,7 +34,7 @@ tito system doctor
 tito module view 01_setup
 
 # Or open the notebook directly
-jupyter notebook modules/source/01_setup/setup_dev.ipynb
+jupyter notebook modules/01_setup/setup_dev.ipynb
 ```
 
 ## 📚 Learning Path

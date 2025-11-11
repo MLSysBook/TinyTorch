@@ -215,7 +215,7 @@ Contributors who follow these guidelines and make valuable educational improveme
 - **`docs/development/`** - Technical implementation guidelines
 
 ### Quick References
-- **Module Structure**: See any `modules/source/XX_name/` directory
+- **Module Structure**: See any `modules/XX_name/` directory
 - **Testing Patterns**: Check `tests/module_template/` 
 - **Example Code**: Look at `examples/xornet/` and `examples/cifar10/`
 
