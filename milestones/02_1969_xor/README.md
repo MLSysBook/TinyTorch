@@ -24,7 +24,7 @@ A demonstration of perceptron limitations and the multi-layer solution:
 | Module 04 | Losses | YOUR loss functions |
 | Module 05 | Autograd | YOUR automatic differentiation |
 | Module 06 | Optimizers | YOUR SGD optimizer |
-| Module 07 | Training | YOUR training loop |
+| Module 07 | Training | YOUR end-to-end training loop |
 
 ## 🏗️ Milestone Structure
 
@@ -68,10 +68,10 @@ The hidden layer learns to transform the space so XOR becomes linearly separable
 
 ## 📊 Expected Results
 
-| Script | Layers | Accuracy | What It Shows |
-|--------|--------|----------|---------------|
-| 01 (Single Layer) | 1 | ~50% | Cannot learn XOR (Minsky was right) |
-| 02 (Multi-Layer) | 2 | 100% | Hidden layers solve the problem! |
+| Script | Layers | Loss | Accuracy | What It Shows |
+|--------|--------|------|----------|---------------|
+| 01 (Single Layer) | 1 | ~0.69 (stuck!) | ~50% | Cannot learn XOR (Minsky was right) |
+| 02 (Multi-Layer) | 2 | → 0.0 | 100% | Hidden layers solve the problem! |
 
 ## 🎓 Key Learning: The Power of Depth
 

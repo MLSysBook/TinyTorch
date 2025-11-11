@@ -29,6 +29,7 @@ CNNs that exploit spatial structure in images:
 | Module 04 | Losses | YOUR CrossEntropyLoss |
 | Module 05 | Autograd | YOUR automatic differentiation |
 | Module 06 | Optimizers | YOUR SGD/Adam optimizers |
+| Module 07 | Training | YOUR end-to-end training loop |
 | Module 08 | DataLoader | YOUR data batching |
 | **Module 09** | **Spatial** | **YOUR Conv2d + MaxPool2d** |
 
@@ -61,10 +62,10 @@ This milestone uses **spatial architecture progression** with 2 scripts:
 
 ## 📊 Expected Results
 
-| Script | Dataset | Image Size | Architecture | Accuracy | vs MLP |
-|--------|---------|------------|--------------|----------|--------|
-| 01 (TinyDigits) | 1K train | 8×8 gray | Simple CNN | ~90% | +10% improvement |
-| 02 (CIFAR-10) | 50K train | 32×32 RGB | Deeper CNN | 65-75% | MLPs struggle here |
+| Script | Dataset | Image Size | Architecture | Accuracy | Training Time | vs MLP |
+|--------|---------|------------|--------------|----------|---------------|--------|
+| 01 (TinyDigits) | 1K train | 8×8 gray | Simple CNN | ~90% | 5-7 min | +10% improvement |
+| 02 (CIFAR-10) | 50K train | 32×32 RGB | Deeper CNN | 65-75% | 30-60 min | MLPs struggle here |
 
 ## 🎓 Key Learning: Why Convolution Dominates Vision
 
