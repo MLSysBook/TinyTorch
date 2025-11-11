@@ -2,7 +2,7 @@
 
 ## 🎯 Historical Context
 
-Frank Rosenblatt's Perceptron was the **first trainable artificial neural network** that could learn from examples. Published in 1957, it sparked the first AI boom and demonstrated that machines could actually learn to recognize patterns, launching the neural network revolution.
+Frank Rosenblatt's Perceptron was the **first trainable artificial neural network** that could learn from examples. Demonstrated in 1957 and published in 1958, it sparked the first AI boom and demonstrated that machines could actually learn to recognize patterns, launching the neural network revolution.
 
 This milestone recreates that pivotal moment using YOUR TinyTorch implementations.
 
@@ -14,7 +14,9 @@ A single-layer perceptron for binary classification, demonstrating:
 
 ## ✅ Required Modules
 
-**Run after Module 04** (Building blocks) and **Module 07** (Training)
+**Progressive Requirements:**
+- **Part 1 (Forward Only):** Run after Module 04 (building blocks)
+- **Part 2 (Trained):** Run after Module 07 (training capability)
 
 | Module | Component | What It Provides |
 |--------|-----------|------------------|
@@ -24,7 +26,7 @@ A single-layer perceptron for binary classification, demonstrating:
 | Module 04 | Losses | YOUR loss functions |
 | Module 05 | Autograd | YOUR automatic differentiation (Part 2 only) |
 | Module 06 | Optimizers | YOUR SGD optimizer (Part 2 only) |
-| Module 07 | Training | YOUR training loop (Part 2 only) |
+| Module 07 | Training | YOUR end-to-end training loop (Part 2 only) |
 
 ## 🏗️ Milestone Structure
 
