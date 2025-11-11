@@ -377,7 +377,7 @@ Storage: 28 values                   Storage: 7 values + indices
 Why this matters: Sparsity directly relates to memory savings, but achieving speedup requires special sparse computation libraries.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "measure-sparsity", "solution": true, "schema_version": 3}
 def measure_sparsity(model) -> float:
     """
     Calculate the percentage of zero weights in a model.
@@ -424,6 +424,7 @@ def measure_sparsity(model) -> float:
     return (zero_params / total_params) * 100.0
     ### END SOLUTION
 
+# %% nbgrader={"grade": true, "grade_id": "test-measure-sparsity", "locked": true, "points": 5, "solution": false, "schema_version": 3}
 def test_unit_measure_sparsity():
     """🔬 Test sparsity measurement functionality."""
     print("🔬 Unit Test: Measure Sparsity...")
@@ -508,7 +509,7 @@ Global thresholding treats the entire model as one big collection of weights, fi
 - Can hurt performance if layers have very different weight distributions
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "magnitude-prune", "solution": true, "schema_version": 3}
 def magnitude_prune(model, sparsity=0.9):
     """
     Remove weights with smallest magnitudes to achieve target sparsity.
@@ -563,6 +564,7 @@ def magnitude_prune(model, sparsity=0.9):
     return model
     ### END SOLUTION
 
+# %% nbgrader={"grade": true, "grade_id": "test-magnitude-prune", "locked": true, "points": 10, "solution": false, "schema_version": 3}
 def test_unit_magnitude_prune():
     """🔬 Test magnitude-based pruning functionality."""
     print("🔬 Unit Test: Magnitude Prune...")
@@ -672,7 +674,7 @@ Structured sparsity enables real hardware acceleration because:
 4. **Cache Efficiency**: Better spatial locality of memory access
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "structured-prune", "solution": true, "schema_version": 3}
 def structured_prune(model, prune_ratio=0.5):
     """
     Remove entire channels/neurons based on L2 norm importance.
@@ -728,6 +730,7 @@ def structured_prune(model, prune_ratio=0.5):
     return model
     ### END SOLUTION
 
+# %% nbgrader={"grade": true, "grade_id": "test-structured-prune", "locked": true, "points": 10, "solution": false, "schema_version": 3}
 def test_unit_structured_prune():
     """🔬 Test structured pruning functionality."""
     print("🔬 Unit Test: Structured Prune...")
@@ -840,7 +843,7 @@ It works poorly when:
 - **High precision required**: SVD introduces approximation error
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "low-rank-approx", "solution": true, "schema_version": 3}
 def low_rank_approximate(weight_matrix, rank_ratio=0.5):
     """
     Approximate weight matrix using low-rank decomposition (SVD).
@@ -882,6 +885,7 @@ def low_rank_approximate(weight_matrix, rank_ratio=0.5):
     return U_truncated, S_truncated, V_truncated
     ### END SOLUTION
 
+# %% nbgrader={"grade": true, "grade_id": "test-low-rank", "locked": true, "points": 10, "solution": false, "schema_version": 3}
 def test_unit_low_rank_approximate():
     """🔬 Test low-rank approximation functionality."""
     print("🔬 Unit Test: Low-Rank Approximate...")
@@ -1010,7 +1014,7 @@ Temperature T:
 ```
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "distillation", "solution": true, "schema_version": 3}
 #| export
 class KnowledgeDistillation:
     """
@@ -1126,6 +1130,7 @@ class KnowledgeDistillation:
         else:
             return -np.mean(np.sum(labels * np.log(predictions + 1e-8), axis=1))
 
+# %% nbgrader={"grade": true, "grade_id": "test-distillation", "locked": true, "points": 15, "solution": false, "schema_version": 3}
 def test_unit_knowledge_distillation():
     """🔬 Test knowledge distillation functionality."""
     print("🔬 Unit Test: Knowledge Distillation...")
@@ -1231,7 +1236,7 @@ CLOUD SERVICE (Minimal compression):
 ```
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "compress-model-comprehensive", "solution": true, "schema_version": 3}
 def compress_model(model, compression_config):
     """
     Apply comprehensive model compression based on configuration.
@@ -1292,6 +1297,7 @@ def compress_model(model, compression_config):
     return stats
     ### END SOLUTION
 
+# %% nbgrader={"grade": true, "grade_id": "test-compression-integration", "locked": true, "points": 20, "solution": false, "schema_version": 3}
 def test_unit_compress_model():
     """🔬 Test comprehensive model compression."""
     print("🔬 Unit Test: Compress Model...")
