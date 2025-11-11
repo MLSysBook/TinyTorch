@@ -56,7 +56,7 @@ class CheckpointValidator:
     
     def validate_module_exists(self, module_name: str) -> bool:
         """Check if a module file exists."""
-        module_file = self.module_path / module_name / f"{module_name.split('_')[1]}_dev.py"
+        module_file = self.module_path / module_name / f"{module_name.split('_')[1]}.py"
         return module_file.exists()
     
     def validate_module_exports(self, module_name: str) -> Tuple[bool, List[str]]:
