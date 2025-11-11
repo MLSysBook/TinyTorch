@@ -39,7 +39,7 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 **1986: MLP** - Multi-class vision
 **1998: CNN** - Spatial intelligence
 **2017: Transformers** - Language generation
-**2024: Systems** - Production optimization
+**2018: MLPerf** - Production optimization
 
 ### How They Connect
 
@@ -49,8 +49,8 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 | **Act II: Learning (05-07)** | ⚡ 1969 XOR + 🔢 1986 MLP | Your autograd enables training (95%+ MNIST) |
 | **Act III: Data & Scale (08-09)** | 🖼️ 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
 | **Act IV: Language (10-13)** | 🤖 2017 Transformers | Your attention generates coherent text |
-| **Act V: Production (14-19)** | ⚡ 2024 Systems Age | Your optimizations compete in benchmarks |
-| **Act VI: Integration (20)** | 🏆 TinyGPT Capstone | Your complete framework works end-to-end |
+| **Act V: Production (14-18)** | ⚡ 2018 MLPerf | Your optimizations achieve production speed |
+| **Act VI: Integration (19-20)** | 🏆 Benchmarking + Capstone | Your complete framework competes |
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built works (historical validation). Together, they show you're not just completing exercises - you're building something real.
 
@@ -80,10 +80,11 @@ Input → Linear → Sigmoid → Output
 
 ```bash
 cd milestones/01_1957_perceptron
-python perceptron_trained.py
+python 01_rosenblatt_forward.py   # See the problem (random weights)
+python 02_rosenblatt_trained.py   # See the solution (trained)
 ```
 
-**Expected Results**: 95%+ accuracy on linearly separable data
+**Expected Results**: ~50% (untrained) → 95%+ (trained) accuracy
 
 ---
 
@@ -108,11 +109,12 @@ Input → Linear → ReLU → Linear → Output
 - Breakthrough: Hidden representations
 
 ```bash
-cd milestones/02_1969_xor_crisis
-python xor_solved.py
+cd milestones/02_1969_xor
+python 01_xor_crisis.py   # Watch it fail (loss stuck at 0.69)
+python 02_xor_solved.py   # Hidden layers solve it!
 ```
 
-**Expected Results**: 90%+ accuracy solving XOR
+**Expected Results**: 50% (single layer) → 100% (multi-layer) on XOR
 
 ---
 
@@ -197,40 +199,43 @@ Tokens → Embeddings → Attention → FFN → ... → Attention → Output
 - Architecture: Long-range dependencies
 
 ```bash
-cd milestones/05_2017_transformer_era
-python vaswani_shakespeare.py
+cd milestones/05_2017_transformer
+python 01_vaswani_generation.py  # Q&A generation with TinyTalks
+python 02_vaswani_dialogue.py    # Multi-turn dialogue
 ```
 
-**Expected Results**: Coherent text generation
+**Expected Results**: Loss < 1.5, coherent responses to questions
 
 ---
 
-### ⚡ 06. Systems Age (2024) - Modern ML Engineering
+### ⚡ 06. MLPerf Era (2018) - The Optimization Revolution
 
-**After Modules 02-19**
+**After Modules 14-18**
 
 ```
-Profile → Analyze → Optimize → Benchmark → Compete
+Profile → Compress → Accelerate
 ```
 
-**The Present**: Modern ML is systems engineering - profiling, optimization, and production deployment.
+**The Turning Point**: As models grew larger, MLCommons' MLPerf (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.
 
 **What You'll Build**:
-- Performance profiling tools
-- Memory optimization techniques
-- Competitive benchmarking
+- Performance profiling and bottleneck analysis
+- Model compression (quantization + pruning)
+- Inference acceleration (KV-cache + batching)
 
 **Systems Insights**:
-- Full ML systems pipeline
-- Production optimization patterns
-- Real-world engineering trade-offs
+- Memory: 4-16× compression through quantization/pruning
+- Speed: 12-40× faster generation with KV-cache + batching
+- Workflow: Systematic "measure → optimize → validate" methodology
 
 ```bash
-cd milestones/06_2024_systems_age
-python optimize_models.py
+cd milestones/06_2018_mlperf
+python 01_baseline_profile.py   # Find bottlenecks
+python 02_compression.py         # Reduce size (quantize + prune)
+python 03_generation_opts.py    # Speed up inference (cache + batch)
 ```
 
-**Expected Results**: Production-grade optimized models
+**Expected Results**: 8-16× smaller models, 12-40× faster inference
 
 ---
 
@@ -245,7 +250,7 @@ python optimize_models.py
 | **1986** | Scale | Multi-class vision | Optimizers + Training |
 | **1998** | Structure | Spatial understanding | Conv2d + Pooling |
 | **2017** | Attention | Sequence modeling | Transformers + Attention |
-| **2024** | Systems | Production deployment | Profiling + Optimization |
+| **2018** | Optimization | Production deployment | Profiling + Compression + Acceleration |
 
 ### Systems Engineering Progression
 
@@ -276,7 +281,7 @@ tito module complete 03_activations
 
 ```bash
 cd milestones/01_1957_perceptron
-python perceptron_trained.py
+python 02_rosenblatt_trained.py
 ```
 
 ### 3. Understand the Systems
@@ -308,7 +313,7 @@ Each milestone includes:
 | 03. MLP (1986) | 08 | + Optimizers, Training |
 | 04. CNN (1998) | 09 | + Spatial, DataLoader |
 | 05. Transformer (2017) | 13 | + Tokenization, Embeddings, Attention |
-| 06. Systems (2024) | 19 | Full optimization suite |
+| 06. MLPerf (2018) | 18 | + Profiling, Quantization, Compression, Memoization, Acceleration |
 
 ### What Each Milestone Proves
 
@@ -347,7 +352,7 @@ By rebuilding ML history, you gain:
 
 ```bash
 cd milestones/01_1957_perceptron
-python perceptron_trained.py
+python 02_rosenblatt_trained.py
 ```
 
 **Build the future by understanding the past.** 🚀
