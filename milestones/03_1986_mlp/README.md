@@ -27,7 +27,7 @@ Multi-layer perceptrons (MLPs) on real image classification tasks:
 | Module 04 | Losses | YOUR CrossEntropyLoss |
 | Module 05 | Autograd | YOUR automatic differentiation |
 | Module 06 | Optimizers | YOUR SGD optimizer |
-| Module 07 | Training | YOUR training loop |
+| Module 07 | Training | YOUR end-to-end training loop |
 | Module 08 | DataLoader | YOUR batching and data pipeline |
 
 ## 🏗️ Milestone Structure
@@ -60,10 +60,10 @@ This milestone uses **progressive scaling** with 2 scripts:
 
 ## 📊 Expected Results
 
-| Script | Dataset | Image Size | Parameters | Accuracy | Training Time |
-|--------|---------|------------|------------|----------|---------------|
-| 01 (TinyDigits) | 1K train | 8×8 | ~2K | 75-85% | 3-5 min |
-| 02 (MNIST) | 60K train | 28×28 | ~100K | 94-97% | 10-15 min |
+| Script | Dataset | Image Size | Parameters | Loss | Accuracy | Training Time |
+|--------|---------|------------|------------|------|----------|---------------|
+| 01 (TinyDigits) | 1K train | 8×8 | ~2.4K | < 0.5 | 75-85% | 3-5 min |
+| 02 (MNIST) | 60K train | 28×28 | ~100K | < 0.2 | 94-97% | 10-15 min |
 
 ## 🎓 Key Learning: Hierarchical Feature Learning
 
