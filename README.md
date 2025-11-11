@@ -325,9 +325,9 @@ python xor_solved.py
 
 ### 🔢 03. MLP Revival (1986) - After Module 07
 ```bash
-cd milestones/03_1986_mlp_revival
-python mlp_digits.py     # 8x8 digit classification
-python mlp_mnist.py      # Full MNIST dataset
+cd milestones/03_1986_mlp
+python 01_rumelhart_tinydigits.py     # 8x8 digit classification
+python 02_rumelhart_mnist.py          # Full MNIST dataset
 # Backpropagation revolution on real vision!
 # YOUR training loops achieve 95%+ accuracy
 ```
@@ -338,9 +338,9 @@ python mlp_mnist.py      # Full MNIST dataset
 
 ### 🖼️ 04. CNN Revolution (1998) - After Module 09
 ```bash
-cd milestones/04_1998_cnn_revolution
-python cnn_digits.py     # Spatial features on digits
-python lecun_cifar10.py  # Natural images (CIFAR-10)
+cd milestones/04_1998_cnn
+python 01_lecun_tinydigits.py  # Spatial features on digits
+python 02_lecun_cifar10.py     # Natural images (CIFAR-10)
 # LeCun's CNNs achieve 75%+ on CIFAR-10!
 # YOUR Conv2d + MaxPool2d unlock spatial intelligence
 ```
@@ -351,8 +351,10 @@ python lecun_cifar10.py  # Natural images (CIFAR-10)
 
 ### 🤖 05. Transformer Era (2017) - After Module 13
 ```bash
-cd milestones/05_2017_transformer_era
-python vaswani_shakespeare.py
+cd milestones/05_2017_transformer
+python 01_vaswani_generation.py  # Text generation
+python 02_vaswani_dialogue.py    # Interactive chat
+python 03_vaswani_profile.py     # Optimization analysis
 # Attention mechanisms for language modeling
 # YOUR attention implementation generates text!
 ```

@@ -98,9 +98,9 @@ Images → Flatten → Linear → ReLU → Linear → ReLU → Linear → Classe
 - Architecture: Multi-layer feature learning
 
 ```bash
-cd milestones/03_1986_mlp_revival
-python mlp_digits.py      # 8x8 digits (quick)
-python mlp_mnist.py       # Full MNIST
+cd milestones/03_1986_mlp
+python 01_rumelhart_tinydigits.py  # 8x8 digits (quick)
+python 02_rumelhart_mnist.py       # Full MNIST
 ```
 
 **Expected Results**: 95%+ accuracy on MNIST
@@ -128,9 +128,9 @@ Images → Conv → ReLU → Pool → Conv → ReLU → Pool → Flatten → Lin
 - Architecture: Local connectivity + translation invariance
 
 ```bash
-cd milestones/04_1998_cnn_revolution
-python cnn_digits.py          # Spatial features on digits
-python lecun_cifar10.py       # CIFAR-10 @ 75%+ accuracy
+cd milestones/04_1998_cnn
+python 01_lecun_tinydigits.py  # Spatial features on digits
+python 02_lecun_cifar10.py     # CIFAR-10 @ 75%+ accuracy
 ```
 
 **Expected Results**: **75%+ accuracy on CIFAR-10** ✨
