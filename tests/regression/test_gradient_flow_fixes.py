@@ -34,7 +34,7 @@ def test_regression_batched_matmul():
     Regression test for Issue #1: np.dot doesn't handle batched 3D matmul.
     
     Bug: Using np.dot for 3D tensors produces wrong shapes.
-    Fix: Changed to np.matmul in modules/source/01_tensor/tensor_dev.py
+    Fix: Changed to np.matmul in modules/01_tensor/tensor.py
     Commit: Module 01 fixes
     """
     print("Testing regression: batched 3D matmul...")
@@ -59,7 +59,7 @@ def test_regression_transpose_requires_grad():
     Regression test for Issue #2: transpose() not preserving requires_grad.
     
     Bug: x.transpose() created Tensor without requires_grad.
-    Fix: Added requires_grad parameter in modules/source/01_tensor/tensor_dev.py
+    Fix: Added requires_grad parameter in modules/01_tensor/tensor.py
     Commit: Module 01 fixes
     """
     print("Testing regression: transpose requires_grad...")

@@ -356,7 +356,7 @@ class TestModule15MLOpsCore:
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/15_mlops/15_mlops_dev.py:
+            1. Create in modules/15_mlops/15_mlops.py:
             
             import time
             import numpy as np
