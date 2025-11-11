@@ -59,27 +59,40 @@ A **complete ML framework** capable of:
 ```
 TinyTorch/
 ├── modules/           # 🏗️ YOUR workspace - implement ML systems here
-│   ├── source/
-│   │   ├── 01_tensor/        # Module 01: Tensor operations from scratch
-│   │   ├── 02_activations/   # Module 02: ReLU, Softmax activations
-│   │   ├── 03_layers/        # Module 03: Linear layers, Module system
-│   │   ├── 04_losses/        # Module 04: MSE, CrossEntropy losses
-│   │   ├── 05_autograd/      # Module 05: Automatic differentiation
-│   │   ├── 06_optimizers/    # Module 06: SGD, Adam optimizers
-│   │   ├── 07_training/      # Module 07: Complete training loops
-│   │   ├── 08_dataloader/    # Module 08: Efficient data pipelines
-│   │   ├── 09_spatial/       # Module 09: Conv2d, MaxPool2d, CNNs
-│   │   ├── 10_tokenization/  # Module 10: Text processing
-│   │   ├── 11_embeddings/    # Module 11: Token & positional embeddings
-│   │   ├── 12_attention/     # Module 12: Multi-head attention
-│   │   ├── 13_transformers/  # Module 13: Complete transformer blocks
-│   │   ├── 14_profiling/     # Module 14: Performance analysis
-│   │   ├── 15_memoization/   # Module 15: KV-cache/memoization
-│   │   ├── 16_acceleration/  # Module 16: Hardware optimization
-│   │   ├── 17_quantization/  # Module 17: Model compression
-│   │   ├── 18_compression/   # Module 18: Pruning & distillation
-│   │   ├── 19_benchmarking/  # Module 19: Performance measurement
-│   │   └── 20_capstone/      # Module 20: Complete ML systems
+│   ├── 01_tensor/        # Module 01: Tensor operations from scratch
+│   │   ├── ABOUT.md      # Conceptual overview & learning objectives
+│   │   ├── README.md     # Practical implementation guide
+│   │   └── tensor.py     # Your implementation
+│   ├── 02_activations/   # Module 02: ReLU, Softmax activations
+│   ├── 03_layers/        # Module 03: Linear layers, Module system
+│   ├── 04_losses/        # Module 04: MSE, CrossEntropy losses
+│   ├── 05_autograd/      # Module 05: Automatic differentiation
+│   ├── 06_optimizers/    # Module 06: SGD, Adam optimizers
+│   ├── 07_training/      # Module 07: Complete training loops
+│   ├── 08_dataloader/    # Module 08: Efficient data pipelines
+│   ├── 09_spatial/       # Module 09: Conv2d, MaxPool2d, CNNs
+│   ├── 10_tokenization/  # Module 10: Text processing
+│   ├── 11_embeddings/    # Module 11: Token & positional embeddings
+│   ├── 12_attention/     # Module 12: Multi-head attention
+│   ├── 13_transformers/  # Module 13: Complete transformer blocks
+│   ├── 14_profiling/     # Module 14: Performance analysis
+│   ├── 15_memoization/   # Module 15: KV-cache/memoization
+│   ├── 16_quantization/  # Module 16: Model compression
+│   ├── 17_compression/   # Module 17: Pruning & distillation
+│   ├── 18_acceleration/  # Module 18: Hardware optimization
+│   ├── 19_benchmarking/  # Module 19: Performance measurement
+│   └── 20_capstone/      # Module 20: Complete ML systems
+│
+├── site/              # 🌐 Course website (Jupyter Book)
+│   ├── intro.md          # Landing page
+│   ├── _toc.yml          # Site navigation (links to modules)
+│   └── chapters/         # Site-specific content
+│
+├── docs/              # 📚 PDF book generation
+│   ├── _config_pdf.yml   # PDF-specific configuration
+│   ├── _toc_pdf.yml      # Linear chapter ordering
+│   ├── cover.md          # Book cover
+│   └── preface.md        # Book preface
 │
 ├── milestones/        # 🏆 Historical ML evolution - prove what you built!
 │   ├── 01_1957_perceptron/   # Rosenblatt's first trainable network
@@ -99,13 +112,13 @@ TinyTorch/
 │   ├── 02_activations/
 │   └── ...            # Tests mirror module structure
 │
-└── book/              # 📚 Complete course documentation (Jupyter Book)
-    ├── chapters/      # Learning guides for each module
-    └── resources/     # Additional learning materials
+└── tito/              # 🛠️ CLI tool for workflow automation
+    ├── commands/      # Student/instructor workflow commands
+    └── core/          # Core utilities
 ```
 
 **🚨 CRITICAL: Work in `modules/`, Import from `tinytorch/`**
-- ✅ **Edit code**: Always in `modules/XX_name/name_dev.py` files
+- ✅ **Edit code**: Always in `modules/XX_name/name.py` files
 - ✅ **Import & use**: Your built components from `tinytorch.core.component`
 - ❌ **Never edit**: Files in `tinytorch/` directly (auto-generated from modules)
 - 🔄 **Sync changes**: Use `tito module complete XX_name` to update package
@@ -526,7 +539,7 @@ Special thanks to students and contributors who helped refine this educational f
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch && source setup.sh
-cd modules/source/01_tensor && jupyter lab tensor_dev.py
+cd modules/01_tensor && jupyter lab tensor.py
 ```
 
 ---

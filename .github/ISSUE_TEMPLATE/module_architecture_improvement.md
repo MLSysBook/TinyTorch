@@ -24,7 +24,7 @@ Break each complex module into **smaller, focused sub-components** while maintai
 
 **Current Structure:**
 ```
-modules/source/02_tensor/
+modules/02_tensor/
 ├── tensor_dev.py          # 1,578 lines - everything in one file
 ├── module.yaml
 └── README.md
@@ -32,7 +32,7 @@ modules/source/02_tensor/
 
 **Proposed Structure:**
 ```
-modules/source/02_tensor/
+modules/02_tensor/
 ├── parts/
 │   ├── 01_foundations.py     # Mathematical foundations & tensor theory
 │   ├── 02_creation.py        # Tensor creation & initialization
@@ -49,7 +49,7 @@ modules/source/02_tensor/
 
 **Current Structure:**
 ```
-modules/source/15_mlops/
+modules/15_mlops/
 ├── mlops_dev.py          # 1,667 lines - entire MLOps pipeline
 ├── module.yaml  
 └── README.md
@@ -57,7 +57,7 @@ modules/source/15_mlops/
 
 **Proposed Structure:**
 ```
-modules/source/15_mlops/
+modules/15_mlops/
 ├── parts/
 │   ├── 01_monitoring.py      # Model and data drift detection
 │   ├── 02_deployment.py      # Model serving & API endpoints
