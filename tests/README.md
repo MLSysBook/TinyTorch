@@ -85,7 +85,7 @@ When adding a test, ask:
 - `integration/test_gradient_flow.py` - If this fails, training is broken
 
 📚 **Module validation**:
-- Each module's inline tests (in `modules/source/`)
+- Each module's inline tests (in `modules/`)
 - Module-specific tests in `tests/XX_modulename/`
 
 ## Test Coverage Goals

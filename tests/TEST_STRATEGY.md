@@ -13,7 +13,7 @@ This separation follows ML engineering best practices: validate components in is
 
 ## 📋 Tier 1: Inline Tests (Component Validation)
 
-### **Location**: `modules/source/XX_modulename/*_dev.py`
+### **Location**: `modules/XX_modulename/*_dev.py`
 
 ### **Purpose**:
 - Validate individual components work correctly
@@ -50,7 +50,7 @@ def test_unit_componentname():
 tito test 01_tensor --inline-only
 
 # Tests run when you execute the module file
-python modules/source/01_tensor/tensor_dev.py
+python modules/01_tensor/tensor_dev.py
 ```
 
 ### **Current Status** (Modules 01-15):
@@ -149,7 +149,7 @@ tests/
 
 ```bash
 # 1. Work on module
-cd modules/source/01_tensor
+cd modules/01_tensor
 vim tensor_dev.py
 
 # 2. Run inline tests (fast feedback)
