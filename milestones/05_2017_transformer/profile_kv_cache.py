@@ -342,7 +342,7 @@ def main():
         "• Profile different model sizes\n"
         "• Compare different architectures\n\n"
         "[dim]Data-driven optimization > guesswork![/dim]",
-        title="[bold]Module 15 Complete[/bold]",
+        title="[bold]Module 17 Complete[/bold]",
         border_style="green",
         box=box.DOUBLE
     ))
