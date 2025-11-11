@@ -18,6 +18,8 @@ A complete MLPerf-style optimization pipeline that takes a trained transformer a
 
 **Run after Module 18** (Full optimization suite)
 
+**Note:** This milestone builds on a working transformer from Milestone 05 (Modules 01-13). The table below shows the ADDITIONAL optimization modules required.
+
 | Module | Component | What It Provides |
 |--------|-----------|------------------|
 | Module 13 | Transformers | YOUR base model to optimize |
