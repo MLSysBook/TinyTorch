@@ -28,7 +28,7 @@
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Three-tier progression</strong> (18 modules) with NBGrader integration</li>
+<li><strong>Three-tier progression</strong> (20 modules) with NBGrader integration</li>
 <li><strong>Automated grading</strong> for immediate feedback</li>
 <li><strong>Professional CLI tools</strong> for development workflow</li>
 <li><strong>Real datasets</strong> (CIFAR-10, text generation)</li>
