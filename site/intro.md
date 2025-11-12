@@ -31,6 +31,18 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 
 **Core Learning Approach**: Build → Profile → Optimize. You'll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.
 
+## The Simple Workflow
+
+TinyTorch follows a three-step cycle:
+
+```
+1. Edit modules → 2. Export to package → 3. Validate with milestones
+```
+
+You work on module source files (`modules/source/`), export them to the TinyTorch package (`tito module complete N`), and prove they work by running historical milestone scripts. That's it.
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+
 ## Three-Tier Learning Pathway
 
 TinyTorch organizes learning through **three pedagogically-motivated tiers** that follow ML history:
@@ -221,7 +233,7 @@ You master modern LLM optimizations
 <!-- Bottom Row -->
 <div style="background: #faf5ff; border: 1px solid #b794f6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🎓 Instructors</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Classroom-ready • NBGrader integration • Automated grading</p>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Classroom-ready • NBGrader integration (coming soon)</p>
 <a href="usage-paths/classroom-use.html" style="display: inline-block; background: #6f42c1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Teaching Guide →</a>
 </div>
 
@@ -235,11 +247,23 @@ You master modern LLM optimizations
 
 ## Getting Started
 
-Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown and learning outcomes.
+Ready to build ML systems from scratch? Here's how to start:
 
-**Additional Resources**:
-- **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 21 capability checkpoints
-- **[Testing Framework](testing-framework.html)** - Understand our comprehensive validation system
-- **[Documentation & Guides](resources.html)** - Complete technical documentation and tutorials
+**Quick Setup** (15 minutes):
+1. Clone the repository
+2. Run `./setup-environment.sh`
+3. Start with Module 01 (Tensors)
+4. Export with `tito module complete 01`
+5. Validate by running milestone scripts
+
+**📖 See [Quick Start Guide](quickstart-guide.html)** for detailed setup instructions.
+
+**Understanding the Workflow**:
+- **📖 See [Student Workflow](student-workflow.html)** - The essential edit → export → validate cycle
+- **📖 See [Essential Commands](tito-essentials.html)** - Complete TITO command reference
+- **📖 See [Three-Tier Learning Structure](chapters/00-introduction.html)** - Detailed course structure
+
+**Optional Progress Tracking**:
+- **[Progress Tracking](learning-progress.html)** - Monitor your journey with capability checkpoints (optional)
 
 TinyTorch is more than a course—it's a community of learners building together. Join thousands exploring ML systems from the ground up.
