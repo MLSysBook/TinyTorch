@@ -70,14 +70,14 @@ See [Milestones Guide](chapters/milestones.md) for the full progression.
 
 TinyTorch has 20 modules organized in three tiers:
 
-### 🏗️ Foundation (Modules 01-07)
+### Foundation (Modules 01-07)
 Core ML infrastructure - tensors, autograd, training loops
 
 **Milestones unlocked:**
 - M01: Perceptron (after Module 07)
 - M02: XOR Crisis (after Module 07)
 
-### 🏛️ Architecture (Modules 08-13)
+### Architecture (Modules 08-13)
 Neural network architectures - data loading, CNNs, transformers
 
 **Milestones unlocked:**
@@ -85,11 +85,14 @@ Neural network architectures - data loading, CNNs, transformers
 - M04: CNNs (after Module 09)
 - M05: Transformers (after Module 13)
 
-### ⚡ Optimization (Modules 14-20)
-Production optimization - profiling, quantization, benchmarking, capstone
+### Optimization (Modules 14-19)
+Production optimization - profiling, quantization, benchmarking
 
 **Milestones unlocked:**
 - M06: MLPerf (after Module 18)
+
+### Capstone Competition (Module 20)
+Apply all optimizations in the MLPerf® Edu Competition
 
 ## Typical Development Session
 

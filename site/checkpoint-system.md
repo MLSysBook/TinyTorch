@@ -1,4 +1,4 @@
-# 🎯 TinyTorch Checkpoint System
+# TinyTorch Checkpoint System
 
 <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
 <h3 style="margin: 0 0 0.5rem 0; color: #856404;">📋 Optional Progress Tracking</h3>
@@ -42,9 +42,9 @@ The TinyTorch checkpoint system provides optional infrastructure for capability 
 
 ---
 
-## 🚀 The Five Major Checkpoints
+## The Five Major Checkpoints
 
-### 🎯 Foundation
+### Foundation
 *Core ML primitives and environment setup*
 
 **Modules**: Setup • Tensors • Activations  
@@ -152,7 +152,7 @@ Every checkpoint completion unlocks a concrete capability:
 
 The checkpoint system provides comprehensive progress tracking and capability validation through automated testing infrastructure.
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete command reference and usage examples.
+**📖 See [Essential Commands](tito-essentials.md)** for complete command reference and usage examples.
 
 ### Integration with Development
 The checkpoint system connects directly to your actual development work:
@@ -248,7 +248,7 @@ The checkpoint progression **Foundation → Architecture → Training → Infere
 - **Problem**: Modules don't work together due to missing dependencies
 - **Solution**: Verify prerequisite capabilities before testing advanced features
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete debugging command reference.
+**📖 See [Essential Commands](tito-essentials.md)** for complete debugging command reference.
 
 ### Checkpoint Test Structure
 
@@ -299,4 +299,4 @@ print("🏆 Foundation checkpoint PASSED")
 - Analyze memory usage during testing
 - Identify bottlenecks in capability validation
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete command reference and advanced usage examples.
+**📖 See [Essential Commands](tito-essentials.md)** for complete command reference and advanced usage examples.

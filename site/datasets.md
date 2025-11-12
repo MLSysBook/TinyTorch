@@ -14,7 +14,7 @@ TinyTorch uses a two-tier dataset approach:
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
 
 <div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1.5rem; border-radius: 0.5rem;">
-<h3 style="margin: 0 0 1rem 0; color: #1976d2;">📦 Shipped Datasets</h3>
+<h3 style="margin: 0 0 1rem 0; color: #1976d2;">Shipped Datasets</h3>
 <p style="margin: 0 0 1rem 0;"><strong>~350 KB total - Ships with repository</strong></p>
 <ul style="margin: 0; font-size: 0.9rem;">
 <li>Small enough to fit in Git (~1K samples each)</li>
@@ -26,7 +26,7 @@ TinyTorch uses a two-tier dataset approach:
 </div>
 
 <div style="background: #f3e5f5; border: 1px solid #9c27b0; padding: 1.5rem; border-radius: 0.5rem;">
-<h3 style="margin: 0 0 1rem 0; color: #7b1fa2;">⬇️ Downloaded Datasets</h3>
+<h3 style="margin: 0 0 1rem 0; color: #7b1fa2;">Downloaded Datasets</h3>
 <p style="margin: 0 0 1rem 0;"><strong>~180 MB - Auto-downloaded when needed</strong></p>
 <ul style="margin: 0; font-size: 0.9rem;">
 <li>Standard ML benchmarks (MNIST, CIFAR-10)</li>
@@ -49,9 +49,9 @@ TinyTorch uses a two-tier dataset approach:
 
 <div style="background: #fff5f5; border-left: 4px solid #e74c3c; padding: 1.5rem; margin: 1.5rem 0;">
 
-**📍 Location**: `datasets/tinydigits/`
-**📊 Size**: ~310 KB
-**🎯 Used by**: Milestones 03 & 04 (MLP and CNN examples)
+**Location**: `datasets/tinydigits/`  
+**Size**: ~310 KB  
+**Used by**: Milestones 03 & 04 (MLP and CNN examples)
 
 **Contents:**
 - 1,000 training samples
@@ -82,9 +82,9 @@ X_train, y_train, X_test, y_test = load_tinydigits()
 
 <div style="background: #f0fff4; border-left: 4px solid #22c55e; padding: 1.5rem; margin: 1.5rem 0;">
 
-**📍 Location**: `datasets/tinytalks/`
-**📊 Size**: ~40 KB
-**🎯 Used by**: Milestone 05 (Transformer/GPT text generation)
+**Location**: `datasets/tinytalks/`  
+**Size**: ~40 KB  
+**Used by**: Milestone 05 (Transformer/GPT text generation)
 
 **Contents:**
 - 350 Q&A pairs across 5 difficulty levels
@@ -117,7 +117,7 @@ dataset = load_tinytalks()
 # Returns list of (question, answer) pairs
 ```
 
-**📖 See detailed documentation:** `datasets/tinytalks/README.md`
+See detailed documentation: `datasets/tinytalks/README.md`
 
 </div>
 
@@ -131,9 +131,9 @@ These standard benchmarks download automatically when you run relevant milestone
 
 <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0;">
 
-**📍 Downloads to**: `milestones/datasets/mnist/`
-**📊 Size**: ~10 MB (compressed)
-**🎯 Used by**: `milestones/03_1986_mlp/02_rumelhart_mnist.py`
+**Downloads to**: `milestones/datasets/mnist/`  
+**Size**: ~10 MB (compressed)  
+**Used by**: `milestones/03_1986_mlp/02_rumelhart_mnist.py`
 
 **Contents:**
 - 60,000 training samples
@@ -157,9 +157,9 @@ These standard benchmarks download automatically when you run relevant milestone
 
 <div style="background: #fdf2f8; border-left: 4px solid #ec4899; padding: 1.5rem; margin: 1.5rem 0;">
 
-**📍 Downloads to**: `milestones/datasets/cifar-10/`
-**📊 Size**: ~170 MB (compressed)
-**🎯 Used by**: `milestones/04_1998_cnn/02_lecun_cifar10.py`
+**Downloads to**: `milestones/datasets/cifar-10/`  
+**Size**: ~170 MB (compressed)  
+**Used by**: `milestones/04_1998_cnn/02_lecun_cifar10.py`
 
 **Contents:**
 - 50,000 training samples
@@ -186,28 +186,28 @@ These standard benchmarks download automatically when you run relevant milestone
 ### Why These Specific Datasets?
 
 **TinyDigits (not full MNIST):**
-- ✅ 100× faster training iterations
-- ✅ Ships with repo (no download)
-- ✅ Same conceptual challenges
-- ✅ Perfect for learning and debugging
+- 100× faster training iterations
+- Ships with repo (no download)
+- Same conceptual challenges
+- Perfect for learning and debugging
 
 **TinyTalks (custom dataset):**
-- ✅ Designed for educational progression
-- ✅ Scaffolded difficulty levels
-- ✅ Character-level tokenization friendly
-- ✅ Engaging conversational format
+- Designed for educational progression
+- Scaffolded difficulty levels
+- Character-level tokenization friendly
+- Engaging conversational format
 
 **MNIST (when scaling up):**
-- ✅ Industry standard benchmark
-- ✅ Validates your implementation
-- ✅ Comparable to published results
-- ✅ 95%+ accuracy is achievable milestone
+- Industry standard benchmark
+- Validates your implementation
+- Comparable to published results
+- 95%+ accuracy is achievable milestone
 
 **CIFAR-10 (for CNN validation):**
-- ✅ Natural images (harder than digits)
-- ✅ RGB channels (multi-dimensional)
-- ✅ Standard CNN benchmark
-- ✅ 75%+ with basic CNN proves it works
+- Natural images (harder than digits)
+- RGB channels (multi-dimensional)
+- Standard CNN benchmark
+- 75%+ with basic CNN proves it works
 
 ---
 
@@ -249,12 +249,12 @@ conversations = load_tinytalks()
 
 | Dataset | Size | Samples | Ships With Repo | Purpose |
 |---------|------|---------|-----------------|---------|
-| TinyDigits | 310 KB | 1,200 | ✅ Yes | Fast MLP/CNN iteration |
-| TinyTalks | 40 KB | 350 pairs | ✅ Yes | Transformer learning |
-| MNIST | 10 MB | 70,000 | ❌ Downloads | MLP validation |
-| CIFAR-10 | 170 MB | 60,000 | ❌ Downloads | CNN validation |
+| TinyDigits | 310 KB | 1,200 | Yes | Fast MLP/CNN iteration |
+| TinyTalks | 40 KB | 350 pairs | Yes | Transformer learning |
+| MNIST | 10 MB | 70,000 | Downloads | MLP validation |
+| CIFAR-10 | 170 MB | 60,000 | Downloads | CNN validation |
 
-**Total shipped**: ~350 KB
+**Total shipped**: ~350 KB  
 **Total with benchmarks**: ~180 MB
 
 ---
@@ -283,27 +283,27 @@ conversations = load_tinytalks()
 
 ## Frequently Asked Questions
 
-**Q: Why not use full MNIST from the start?**
+**Q: Why not use full MNIST from the start?**  
 A: TinyDigits trains 100× faster, enabling rapid iteration during learning. MNIST validates your complete implementation later.
 
-**Q: Can I use my own datasets?**
+**Q: Can I use my own datasets?**  
 A: Absolutely! TinyTorch is a real framework—add your data loading code just like PyTorch.
 
-**Q: Why ship datasets in Git?**
+**Q: Why ship datasets in Git?**  
 A: 350 KB is negligible (smaller than many images), and it enables offline learning with instant iteration.
 
-**Q: Where does CIFAR-10 download from?**
+**Q: Where does CIFAR-10 download from?**  
 A: Official sources via `milestones/data_manager.py`, with integrity verification.
 
-**Q: Can I skip the large downloads?**
+**Q: Can I skip the large downloads?**  
 A: Yes! You can work through most milestones using only shipped datasets. Downloaded datasets are for validation milestones.
 
 ---
 
 ## Related Documentation
 
-- **📖 [Milestones Guide](chapters/milestones.html)** - See how each dataset is used in historical achievements
-- **📖 [Student Workflow](student-workflow.html)** - Learn the development cycle
-- **📖 [Quick Start](quickstart-guide.html)** - Start building in 15 minutes
+- [Milestones Guide](chapters/milestones.md) - See how each dataset is used in historical achievements
+- [Student Workflow](student-workflow.md) - Learn the development cycle
+- [Quick Start](quickstart-guide.md) - Start building in 15 minutes
 
 **Dataset implementation details**: See `datasets/tinydigits/README.md` and `datasets/tinytalks/README.md` for technical specifications.
