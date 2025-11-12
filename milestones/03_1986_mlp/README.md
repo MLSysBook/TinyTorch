@@ -1,6 +1,6 @@
 # Milestone 03: The MLP Revival (1986)
 
-## 🎯 Historical Context
+## Historical Context
 
 The 1969 XOR crisis had killed neural network research. Then in 1986, **Rumelhart, Hinton, and Williams** published "Learning representations by back-propagating errors," showing that:
 1. Multi-layer networks CAN solve complex problems
@@ -9,13 +9,13 @@ The 1969 XOR crisis had killed neural network research. Then in 1986, **Rumelhar
 
 This paper **ended the AI Winter** and launched modern deep learning. Now it's your turn to recreate that breakthrough using YOUR TinyTorch!
 
-## 📚 What You're Building
+## What You're Building
 
 Multi-layer perceptrons (MLPs) on real image classification tasks:
 1. **TinyDigits** - Learn hierarchical features on 8×8 handwritten digits
 2. **MNIST** - Scale up to the full 28×28 benchmark dataset
 
-## ✅ Required Modules
+## Required Modules
 
 **Run after Module 08** (Full training pipeline with data loading)
 
@@ -30,7 +30,7 @@ Multi-layer perceptrons (MLPs) on real image classification tasks:
 | Module 07 | Training | YOUR end-to-end training loop |
 | Module 08 | DataLoader | YOUR batching and data pipeline |
 
-## 🏗️ Milestone Structure
+## Milestone Structure
 
 This milestone uses **progressive scaling** with 2 scripts:
 
@@ -58,14 +58,14 @@ This milestone uses **progressive scaling** with 2 scripts:
 
 **Historical Note:** MNIST (1998) became THE benchmark for evaluating learning algorithms. MLPs hitting 95%+ proved neural networks were back!
 
-## 📊 Expected Results
+## Expected Results
 
 | Script | Dataset | Image Size | Parameters | Loss | Accuracy | Training Time |
 |--------|---------|------------|------------|------|----------|---------------|
 | 01 (TinyDigits) | 1K train | 8×8 | ~2.4K | < 0.5 | 75-85% | 3-5 min |
 | 02 (MNIST) | 60K train | 28×28 | ~100K | < 0.2 | 94-97% | 10-15 min |
 
-## 🎓 Key Learning: Hierarchical Feature Learning
+## Key Learning: Hierarchical Feature Learning
 
 MLPs don't just memorize - they learn useful internal representations:
 
@@ -81,7 +81,7 @@ This is **representation learning** - the foundation of deep learning's power.
 - Domain expertise → Data-driven discovery
 - This shift enabled modern AI
 
-## 🚀 Running the Milestone
+## Running the Milestone
 
 ```bash
 cd milestones/03_1986_mlp
@@ -93,13 +93,13 @@ python 01_rumelhart_tinydigits.py
 python 02_rumelhart_mnist.py
 ```
 
-## 📖 Further Reading
+## Further Reading
 
 - **The Backprop Paper**: Rumelhart, Hinton, Williams (1986). "Learning representations by back-propagating errors"
 - **MNIST Dataset**: LeCun et al. (1998). "Gradient-based learning applied to document recognition"
 - **Why MLPs Work**: Cybenko (1989). "Approximation by superpositions of a sigmoidal function" (Universal Approximation Theorem)
 
-## 🎯 Achievement Unlocked
+## Achievement Unlocked
 
 After completing this milestone, you'll understand:
 - How MLPs learn hierarchical features from raw pixels

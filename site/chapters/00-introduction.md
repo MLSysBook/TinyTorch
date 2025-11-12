@@ -342,7 +342,7 @@ All using code you wrote yourself, from mathematical first principles to product
 
 ---
 
-### 🧠 INTELLIGENCE TIER (Modules 08-13)
+### 🏛️ ARCHITECTURE TIER (Modules 08-13)
 **Modern AI Algorithms • 4-6 weeks • Vision + Language Architectures**
 
 <div style="background: #fef7ff; border: 1px solid #f3e8ff; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
