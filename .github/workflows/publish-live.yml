@@ -1,14 +1,14 @@
-name: Deploy TinyTorch Jupyter Book (Streamlined with tito)
+name: Publish Live Site
 
 # Trigger the workflow on push to main branch (publishing) or manual dispatch
-# This workflow uses tito CLI for consistent book generation and building
+# This workflow builds and deploys the live/production site to GitHub Pages
 on:
   push:
     branches: [ main ]
     paths:
       - 'site/**'
       - 'modules/**'
-      - '.github/workflows/deploy-book.yml'
+      - '.github/workflows/publish-live.yml'
       - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
@@ -20,9 +20,7 @@ on:
 
 # Set permissions for GitHub Pages deployment and content modification
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: write  # Needed to push to gh-pages branch
 
 # Allow only one concurrent deployment
 concurrency:
@@ -30,7 +28,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -62,20 +60,17 @@ jobs:
         echo "=== Contents of _build/html (if exists) ==="
         ls -la _build/html/ || echo "_build/html doesn't exist"
 
-    - name: Upload book artifact
-      uses: actions/upload-pages-artifact@v3
+    - name: Deploy main site to gh-pages branch (root)
+      # Only deploy on main branch pushes (not PRs)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        path: site/_build/html
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site/_build/html
+        destination_dir: .  # Deploy to root of gh-pages branch
+        publish_branch: gh-pages
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Deploy live site from main branch - ${{ github.sha }}'
+        keep_files: true  # Keep /dev/ directory when deploying main site
 
-  deploy:
-    # Only deploy on main branch pushes (not PRs)
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4 
