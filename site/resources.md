@@ -1,4 +1,4 @@
-# 📚 Additional Learning Resources
+# Additional Learning Resources
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Complement Your TinyTorch Journey</h2>
@@ -8,14 +8,13 @@
 While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
 
 **TinyTorch Learning Resources:**
-- **📖 See [Track Your Progress](learning-progress.html)** for monitoring capability development and learning progression
-- **📖 See [Progress Tracking](checkpoint-system.html)** for technical details on capability testing
-- **📖 See [Testing Guide](testing-framework.html)** for comprehensive testing methodology
-- **📖 See [Achievement Showcase](leaderboard.html)** for portfolio development and career readiness
+- See [Track Your Progress](learning-progress.md) for monitoring capability development and learning progression
+- See [Progress Tracking](checkpoint-system.md) for technical details on capability testing
+- See [Testing Guide](testing-framework.md) for comprehensive testing methodology
 
 ---
 
-## 🎓 Academic Courses
+## Academic Courses
 
 ### Machine Learning Systems
 - **[CS 329S: Machine Learning Systems Design](https://stanford-cs329s.github.io/)** (Stanford)  
@@ -36,7 +35,7 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 📖 Recommended Books
+## Recommended Books
 
 ### Systems & Engineering
 - **[Machine Learning Systems](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard)  
@@ -57,7 +56,7 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🛠️ Alternative Implementations
+## Alternative Implementations
 
 **Different approaches to building ML systems from scratch - see how others tackle the same challenge:**
 
@@ -76,31 +75,31 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🏭 Production Internals
+## Production Internals
 
 ### Framework Deep Dives
 - **[PyTorch Internals](http://blog.ezyang.com/2019/05/pytorch-internals/)** by Edward Yang  
   *How PyTorch actually works under the hood - a great read as see what you built in TinyTorch corresponds to the real PyTorch*
 
-- **[PyTorch Documentation: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.html)**  
+- **[PyTorch Documentation: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.md)**  
   *Custom operators and autograd functions - apply your TinyTorch knowledge*
 
 ---
 
 *Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.*
 
-## 🚀 Ready to Begin Your Journey?
+## Ready to Begin Your Journey?
 
 **Start with the fundamentals and build your way up.**
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete TITO command reference.
+See [Essential Commands](tito-essentials.md) for complete TITO command reference.
 
 **Your Next Steps:**
-1. **📖 See [Quick Start Guide](quickstart-guide.html)** for 15-minute hands-on experience
-2. **📖 See [Track Your Progress](learning-progress.html)** for understanding capability development
-3. **📖 See [Course Introduction](chapters/00-introduction.html)** for deep dive into course philosophy
+1. See [Quick Start Guide](quickstart-guide.md) for 15-minute hands-on experience
+2. See [Track Your Progress](learning-progress.md) for understanding capability development
+3. See [Course Introduction](chapters/00-introduction.md) for deep dive into course philosophy
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
-<h4 style="margin: 0 0 1rem 0; color: #495057;">🎯 Transform from Framework User to Systems Engineer</h4>
+<h4 style="margin: 0 0 1rem 0; color: #495057;">Transform from Framework User to Systems Engineer</h4>
 <p style="margin: 0; color: #6c757d;">These external resources complement the hands-on systems building you'll do in TinyTorch</p>
-</div> 
+</div>

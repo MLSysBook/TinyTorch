@@ -212,7 +212,7 @@ Milestones are historical ML achievements you recreate with YOUR implementations
 
 Each milestone proves your framework works by running actual ML experiments.
 
-**📖 See [Journey Through ML History](chapters/milestones.html)** for details.
+**📖 See [Journey Through ML History](chapters/milestones.md)** for details.
 
 ### Are the checkpoints required?
 
@@ -228,7 +228,7 @@ Each milestone proves your framework works by running actual ML experiments.
 - Helpful for self-assessment
 - Use `tito checkpoint status` to view progress
 
-**📖 See [Student Workflow](student-workflow.html)** for the core development cycle.
+**📖 See [Student Workflow](student-workflow.md)** for the core development cycle.
 
 ---
 
@@ -255,7 +255,7 @@ cd modules/01_tensor
 jupyter lab tensor_dev.py
 ```
 
-**📖 See [Quick Start Guide](quickstart-guide.html)** for detailed setup.
+**📖 See [Quick Start Guide](quickstart-guide.md)** for detailed setup.
 
 ### What's the typical workflow?
 
@@ -272,7 +272,7 @@ cd ../../milestones/01_1957_perceptron
 python rosenblatt_forward.py  # Uses YOUR implementation!
 ```
 
-**📖 See [Student Workflow](student-workflow.html)** for complete details.
+**📖 See [Student Workflow](student-workflow.md)** for complete details.
 
 ### Can I use this in my classroom?
 
@@ -283,7 +283,7 @@ python rosenblatt_forward.py  # Uses YOUR implementation!
 - NBGrader integration coming soon for automated grading
 - Instructor tooling under development
 
-**📖 See [Classroom Use Guide](usage-paths/classroom-use.html)** for details.
+**📖 See [Classroom Use Guide](usage-paths/classroom-use.md)** for details.
 
 ### How do I get help?
 

@@ -7,9 +7,9 @@
 ## What This Page Is About
 
 This page tells the **pedagogical story** behind TinyTorch's module progression. While other pages explain:
-- **WHAT you'll build** ([Three-Tier Structure](00-introduction.html)) - organized module breakdown
-- **WHEN in history** ([Milestones](milestones.html)) - recreating ML breakthroughs
-- **WHERE you are** ([Progress Tracking](../learning-progress.html)) - capability checkpoints
+- **WHAT you'll build** ([Three-Tier Structure](00-introduction.md)) - organized module breakdown
+- **WHEN in history** ([Milestones](milestones.md)) - recreating ML breakthroughs
+- **WHERE you are** ([Progress Tracking](../learning-progress.md)) - capability checkpoints
 
 This page explains **WHY modules flow this way** - the learning narrative that transforms 20 individual modules into a coherent journey from mathematical foundations to production AI systems.
 
@@ -312,7 +312,7 @@ As you progress through TinyTorch, you advance along **two dimensions simultaneo
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built actually works (historical validation).
 
-**📖 See [Journey Through ML History](milestones.html)** for complete milestone details and how to run them.
+**📖 See [Journey Through ML History](milestones.md)** for complete milestone details and how to run them.
 
 ---
 
@@ -346,7 +346,7 @@ The learning journey also maps to **21 capability checkpoints** you can track:
 - Checkpoint 19: Competitive benchmarking ✓
 - Checkpoint 20: Complete systems ✓
 
-**📖 See [Progress Tracking](../learning-progress.html)** to monitor your capability development.
+**📖 See [Progress Tracking](../learning-progress.md)** to monitor your capability development.
 
 ---
 
@@ -527,7 +527,7 @@ Typical time estimates (varies by background):
 - Act V → Systems (2024)
 - Act VI → TinyGPT (complete)
 
-**📖 See [Milestones](milestones.html)** for details.
+**📖 See [Milestones](milestones.md)** for details.
 
 ---
 
@@ -543,10 +543,10 @@ Typical time estimates (varies by background):
 </div>
 
 **Related Resources**:
-- **[Three-Tier Structure](00-introduction.html)** - Organized module breakdown with time estimates
-- **[Journey Through ML History](milestones.html)** - Historical milestones you'll recreate
-- **[Progress Tracking](../learning-progress.html)** - Monitor your capability development
-- **[Quick Start Guide](../quickstart-guide.html)** - Hands-on setup and first module
+- **[Three-Tier Structure](00-introduction.md)** - Organized module breakdown with time estimates
+- **[Journey Through ML History](milestones.md)** - Historical milestones you'll recreate
+- **[Progress Tracking](../learning-progress.md)** - Monitor your capability development
+- **[Quick Start Guide](../quickstart-guide.md)** - Hands-on setup and first module
 
 ---
 
