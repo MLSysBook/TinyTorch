@@ -1,18 +1,18 @@
 # Milestone 02: The XOR Crisis (1969)
 
-## 🎯 Historical Context
+## Historical Context
 
 In 1969, Marvin Minsky and Seymour Papert published **"Perceptrons,"** a book that mathematically proved single-layer perceptrons **CANNOT solve the XOR problem**. This revelation killed neural network research funding for over a decade - triggering the infamous **"AI Winter."**
 
 The proof was devastating: no matter how much you train, a single layer cannot learn XOR. This milestone recreates that crisis... and then shows how multi-layer networks solved it.
 
-## 📚 What You're Building
+## What You're Building
 
 A demonstration of perceptron limitations and the multi-layer solution:
 1. **The Crisis** - Watch a perceptron fail to learn XOR despite training
 2. **The Solution** - See how adding a hidden layer solves the "impossible" problem
 
-## ✅ Required Modules
+## Required Modules
 
 **Run after Module 07** (Training capability)
 
@@ -26,7 +26,7 @@ A demonstration of perceptron limitations and the multi-layer solution:
 | Module 06 | Optimizers | YOUR SGD optimizer |
 | Module 07 | Training | YOUR end-to-end training loop |
 
-## 🏗️ Milestone Structure
+## Milestone Structure
 
 This milestone uses **crisis → solution** narrative with 2 scripts:
 
@@ -66,14 +66,14 @@ Input → Hidden Layer → Output
 
 The hidden layer learns to transform the space so XOR becomes linearly separable!
 
-## 📊 Expected Results
+## Expected Results
 
 | Script | Layers | Loss | Accuracy | What It Shows |
 |--------|--------|------|----------|---------------|
 | 01 (Single Layer) | 1 | ~0.69 (stuck!) | ~50% | Cannot learn XOR (Minsky was right) |
 | 02 (Multi-Layer) | 2 | → 0.0 | 100% | Hidden layers solve the problem! |
 
-## 🎓 Key Learning: The Power of Depth
+## Key Learning: The Power of Depth
 
 This milestone teaches the **fundamental reason why deep learning works**:
 
@@ -82,7 +82,7 @@ This milestone teaches the **fundamental reason why deep learning works**:
 
 The XOR crisis wasn't about perceptrons being broken - it was about needing **depth** to solve complex problems. This realization (via backpropagation in 1986) ended the AI Winter.
 
-## 🚀 Running the Milestone
+## Running the Milestone
 
 ```bash
 cd milestones/02_1969_xor
@@ -94,13 +94,13 @@ python 01_xor_crisis.py
 python 02_xor_solved.py
 ```
 
-## 📖 Further Reading
+## Further Reading
 
 - **The Crisis**: Minsky, M., & Papert, S. (1969). "Perceptrons"
 - **The Solution**: Rumelhart, Hinton, Williams (1986). "Learning representations by back-propagating errors"
 - **Historical Context**: [AI Winter on Wikipedia](https://en.wikipedia.org/wiki/AI_winter)
 
-## 🎯 Achievement Unlocked
+## Achievement Unlocked
 
 After completing this milestone, you'll understand:
 - Why single-layer networks have fundamental limitations

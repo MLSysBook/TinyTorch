@@ -1,6 +1,6 @@
 # 🏆 Journey Through ML History
 
-**Experience the evolution of AI by rebuilding history's most important breakthroughs with YOUR TinyTorch implementations!**
+**Experience the evolution of AI by rebuilding history's most important breakthroughs with YOUR TinyTorch implementations.**
 
 ---
 
@@ -66,7 +66,7 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 Input → Linear → Sigmoid → Output
 ```
 
-**The Beginning**: The first trainable neural network! Frank Rosenblatt proved machines could learn from data.
+**The Beginning**: The first trainable neural network. Frank Rosenblatt proved machines could learn from data.
 
 **What You'll Build**:
 - Binary classification with gradient descent
@@ -96,7 +96,7 @@ python 02_rosenblatt_trained.py   # See the solution (trained)
 Input → Linear → ReLU → Linear → Output
 ```
 
-**The Challenge**: Minsky proved perceptrons couldn't solve XOR. This crisis nearly ended AI research!
+**The Challenge**: Minsky proved perceptrons couldn't solve XOR. This crisis nearly ended AI research.
 
 **What You'll Build**:
 - Hidden layers enable non-linear solutions
@@ -156,7 +156,7 @@ python 02_rumelhart_mnist.py       # Full MNIST
 Images → Conv → ReLU → Pool → Conv → ReLU → Pool → Flatten → Linear → Classes
 ```
 
-**The Game-Changer**: CNNs exploit spatial structure for computer vision. This enabled modern AI!
+**The Game-Changer**: CNNs exploit spatial structure for computer vision. This enabled modern AI.
 
 **What You'll Build**:
 - Convolutional feature extraction
@@ -317,10 +317,10 @@ Each milestone includes:
 
 ### What Each Milestone Proves
 
-✅ **Your implementations work** - Not just toy code  
-✅ **Historical significance** - These breakthroughs shaped modern AI  
-✅ **Systems understanding** - You know memory, compute, scaling  
-✅ **Production relevance** - Patterns used in real ML frameworks
+- **Your implementations work** - Not just toy code
+- **Historical significance** - These breakthroughs shaped modern AI
+- **Systems understanding** - You know memory, compute, scaling
+- **Production relevance** - Patterns used in real ML frameworks
 
 ---
 
