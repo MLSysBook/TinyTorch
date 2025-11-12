@@ -342,15 +342,27 @@ def generate_baseline(model_name: str = "cifar10_cnn", quick: bool = True) -> Di
     model = load_baseline_model(model_name)
     print(f"✅ Loaded baseline model: {model.name}")
     
-    # Count parameters
+    # Count parameters using the standard .parameters() API from Module 03
     def count_parameters(model):
+        """
+        Count total parameters in a model.
+
+        Uses the explicit .parameters() API from Module 03 instead of hasattr()
+        to count model parameters. This is cleaner and follows TinyTorch conventions.
+
+        Note: Previously used hasattr(attr, 'weights') which was incorrect -
+        TinyTorch uses .weight (singular) not .weights (plural).
+        """
         total = 0
-        for attr_name in dir(model):
-            attr = getattr(model, attr_name)
-            if hasattr(attr, 'weights') and attr.weights is not None:
-                total += attr.weights.size
-            if hasattr(attr, 'bias') and attr.bias is not None:
-                total += attr.bias.size
+        # Trust that model has .parameters() method (from Module 03)
+        try:
+            for param in model.parameters():
+                # Each param is a Tensor from Module 01 with .data attribute
+                total += param.data.size
+        except (AttributeError, TypeError):
+            # Fallback: model might not have parameters() method
+            # This shouldn't happen in TinyTorch, but handle gracefully
+            pass
         return total
     
     params = count_parameters(model)
