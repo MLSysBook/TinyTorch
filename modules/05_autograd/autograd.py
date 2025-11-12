@@ -1284,7 +1284,11 @@ def enable_autograd():
     ```
     """
 
-    # Check if already enabled (this is a monkey-patch check, so hasattr is valid)
+    # Educational Note: hasattr() is LEGITIMATE here because:
+    # 1. This is a runtime monkey-patch system (meta-programming)
+    # 2. We're checking if a class has been dynamically modified
+    # 3. _autograd_enabled is a marker attribute we add at runtime
+    # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
         print("⚠️ Autograd already enabled")
         return

@@ -224,8 +224,23 @@ class Sigmoid:
         ### BEGIN SOLUTION
         # Apply sigmoid: 1 / (1 + exp(-x))
         # Clip extreme values to prevent overflow (sigmoid(-500) ≈ 0, sigmoid(500) ≈ 1)
+        # Clipping at ±500 ensures exp() stays within float64 range
         z = np.clip(x.data, -500, 500)
-        result_data = 1.0 / (1.0 + np.exp(-z))
+
+        # Use numerically stable sigmoid
+        # For positive values: 1 / (1 + exp(-x))
+        # For negative values: exp(x) / (1 + exp(x)) = 1 / (1 + exp(-x)) after clipping
+        result_data = np.zeros_like(z)
+
+        # Positive values (including zero)
+        pos_mask = z >= 0
+        result_data[pos_mask] = 1.0 / (1.0 + np.exp(-z[pos_mask]))
+
+        # Negative values
+        neg_mask = z < 0
+        exp_z = np.exp(z[neg_mask])
+        result_data[neg_mask] = exp_z / (1.0 + exp_z)
+
         return Tensor(result_data)
         ### END SOLUTION
 

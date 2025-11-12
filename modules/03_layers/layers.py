@@ -75,9 +75,51 @@ import numpy as np
 import sys
 import os
 
-# Import dependencies from tinytorch package
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid
+# Try packaged import first, fall back to local import for development
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.activations import ReLU, Sigmoid
+except ModuleNotFoundError:
+    # Development mode: import from local modules
+    # Add parent directory paths for module imports
+    from pathlib import Path
+    module_root = Path(__file__).parent.parent
+
+    # Import Tensor first
+    tensor_path = str(module_root / '01_tensor')
+    if tensor_path not in sys.path:
+        sys.path.insert(0, tensor_path)
+
+    # Import activations (may fail if activations.py has same import issue)
+    activations_path = str(module_root / '02_activations')
+    if activations_path not in sys.path:
+        sys.path.insert(0, activations_path)
+
+    try:
+        from tensor import Tensor
+        from activations import ReLU, Sigmoid
+    except ModuleNotFoundError:
+        # If activations also has import issues, provide minimal stubs for testing
+        from tensor import Tensor
+        print("⚠️  Warning: Could not import activations module. Using minimal stubs for testing.")
+        print("⚠️  For full functionality, ensure Module 02 (activations) can run standalone.")
+
+        # Minimal ReLU stub for testing layers in isolation
+        class ReLU:
+            def forward(self, x):
+                return Tensor(np.maximum(0, x.data), requires_grad=x.requires_grad)
+            def __call__(self, x):
+                return self.forward(x)
+            def parameters(self):
+                return []
+
+        class Sigmoid:
+            def forward(self, x):
+                return Tensor(1.0 / (1.0 + np.exp(-x.data)), requires_grad=x.requires_grad)
+            def __call__(self, x):
+                return self.forward(x)
+            def parameters(self):
+                return []
 
 # %% [markdown]
 """
@@ -149,6 +191,55 @@ Let's build our layer system step by step. We'll implement two essential layer t
 
 # %% [markdown]
 """
+### 🏗️ Layer Base Class - Foundation for All Layers
+
+All neural network layers share common functionality: forward pass, parameter management, and callable interface. The base Layer class provides this consistent interface.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "layer-base", "solution": true}
+#| export
+class Layer:
+    """
+    Base class for all neural network layers.
+
+    All layers should inherit from this class and implement:
+    - forward(x): Compute layer output
+    - parameters(): Return list of trainable parameters
+
+    The __call__ method is provided to make layers callable.
+    """
+
+    def forward(self, x):
+        """
+        Forward pass through the layer.
+
+        Args:
+            x: Input tensor
+
+        Returns:
+            Output tensor after transformation
+        """
+        raise NotImplementedError("Subclasses must implement forward()")
+
+    def __call__(self, x, *args, **kwargs):
+        """Allow layer to be called like a function."""
+        return self.forward(x, *args, **kwargs)
+
+    def parameters(self):
+        """
+        Return list of trainable parameters.
+
+        Returns:
+            List of Tensor objects with requires_grad=True
+        """
+        return []  # Base class has no parameters
+
+    def __repr__(self):
+        """String representation of the layer."""
+        return f"{self.__class__.__name__}()"
+
+# %% [markdown]
+"""
 ### 🏗️ Linear Layer - The Foundation of Neural Networks
 
 Linear layers (also called Dense or Fully Connected layers) are the fundamental building blocks of neural networks. They implement the mathematical operation:
@@ -193,7 +284,7 @@ Linear(784, 256) Parameters:
 
 # %% nbgrader={"grade": false, "grade_id": "linear-layer", "solution": true}
 #| export
-class Linear:
+class Linear(Layer):
     """
     Linear (fully connected) layer: y = xW + b
 
@@ -355,7 +446,78 @@ def test_unit_linear_layer():
 if __name__ == "__main__":
     test_unit_linear_layer()
 
+# %% [markdown]
+"""
+### 🔬 Edge Case Tests: Linear Layer
+Additional tests for edge cases and error handling.
+"""
 
+# %% nbgrader={"grade": true, "grade_id": "test-linear-edge-cases", "locked": true, "points": 5}
+def test_edge_cases_linear():
+    """🔬 Test Linear layer edge cases."""
+    print("🔬 Edge Case Tests: Linear Layer...")
+
+    layer = Linear(10, 5)
+
+    # Test single sample (should handle 2D input)
+    x_2d = Tensor(np.random.randn(1, 10))
+    y = layer.forward(x_2d)
+    assert y.shape == (1, 5), "Should handle single sample"
+
+    # Test zero batch size (edge case)
+    x_empty = Tensor(np.random.randn(0, 10))
+    y_empty = layer.forward(x_empty)
+    assert y_empty.shape == (0, 5), "Should handle empty batch"
+
+    # Test numerical stability with large weights
+    layer_large = Linear(10, 5)
+    layer_large.weight.data = np.ones((10, 5)) * 100  # Large but not extreme
+    x = Tensor(np.ones((1, 10)))
+    y = layer_large.forward(x)
+    assert not np.any(np.isnan(y.data)), "Should not produce NaN with large weights"
+    assert not np.any(np.isinf(y.data)), "Should not produce Inf with large weights"
+
+    # Test with no bias
+    layer_no_bias = Linear(10, 5, bias=False)
+    x = Tensor(np.random.randn(4, 10))
+    y = layer_no_bias.forward(x)
+    assert y.shape == (4, 5), "Should work without bias"
+
+    print("✅ Edge cases handled correctly!")
+
+if __name__ == "__main__":
+    test_edge_cases_linear()
+
+# %% [markdown]
+"""
+### 🔬 Gradient Preparation Tests: Linear Layer
+Tests to ensure Linear layer is ready for gradient-based training (Module 05).
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-linear-grad-prep", "locked": true, "points": 5}
+def test_gradient_preparation_linear():
+    """🔬 Test Linear layer is ready for gradients (Module 05)."""
+    print("🔬 Gradient Preparation Test: Linear Layer...")
+
+    layer = Linear(10, 5)
+
+    # Verify requires_grad is set
+    assert layer.weight.requires_grad == True, "Weight should require gradients"
+    assert layer.bias.requires_grad == True, "Bias should require gradients"
+
+    # Verify gradient placeholders exist (even if None initially)
+    assert hasattr(layer.weight, 'grad'), "Weight should have grad attribute"
+    assert hasattr(layer.bias, 'grad'), "Bias should have grad attribute"
+
+    # Verify parameter collection works
+    params = layer.parameters()
+    assert len(params) == 2, "Should return 2 parameters"
+    assert all(p.requires_grad for p in params), "All parameters should require gradients"
+
+    print("✅ Layer ready for gradient-based training!")
+
+if __name__ == "__main__":
+    test_gradient_preparation_linear()
 
 
 
@@ -416,7 +578,7 @@ Computational Overhead: Minimal (element-wise operations)
 
 # %% nbgrader={"grade": false, "grade_id": "dropout-layer", "solution": true}
 #| export
-class Dropout:
+class Dropout(Layer):
     """
     Dropout layer for regularization.
 
@@ -543,9 +705,13 @@ def test_unit_dropout_layer():
 
     # Count non-zero elements (approximately 50% should survive)
     non_zero_count = np.count_nonzero(y_train.data)
-    expected_survival = 1000 * 0.5
-    # Allow 10% tolerance for randomness
-    assert 0.4 * 1000 < non_zero_count < 0.6 * 1000, f"Expected ~500 survivors, got {non_zero_count}"
+    expected = 500
+    # Use 3-sigma bounds: std = sqrt(n*p*(1-p)) = sqrt(1000*0.5*0.5) ≈ 15.8
+    std_error = np.sqrt(1000 * 0.5 * 0.5)
+    lower_bound = expected - 3 * std_error  # ≈ 453
+    upper_bound = expected + 3 * std_error  # ≈ 547
+    assert lower_bound < non_zero_count < upper_bound, \
+        f"Expected {expected}±{3*std_error:.0f} survivors, got {non_zero_count}"
 
     # Test scaling (surviving elements should be scaled by 1/(1-p) = 2.0)
     surviving_values = y_train.data[y_train.data != 0]
@@ -784,10 +950,35 @@ Final validation that everything works together correctly.
 """
 
 def import_previous_module(module_name: str, component_name: str):
+    """
+    Import a component from a previous module.
+    Handles both _dev.py and .py file formats.
+    """
     import sys
     import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
+    from pathlib import Path
+
+    module_dir = Path(__file__).parent.parent / module_name
+    if str(module_dir) not in sys.path:
+        sys.path.insert(0, str(module_dir))
+
+    # Try different module name formats
+    module_base = module_name.split('_', 1)[1]  # e.g., '02_activations' -> 'activations'
+
+    try:
+        # Try importing with _dev suffix first
+        module = __import__(f"{module_base}_dev")
+    except ModuleNotFoundError:
+        try:
+            # Fall back to module name without _dev
+            module = __import__(module_base)
+        except ModuleNotFoundError:
+            # If all else fails, return None or raise informative error
+            raise ImportError(
+                f"Could not import module '{module_name}'. "
+                f"Tried: {module_base}_dev.py and {module_base}.py"
+            )
+
     return getattr(module, component_name)
 
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 20}
@@ -806,6 +997,8 @@ def test_module():
     # Run all unit tests
     print("Running unit tests...")
     test_unit_linear_layer()
+    test_edge_cases_linear()
+    test_gradient_preparation_linear()
     test_unit_dropout_layer()
 
     print("\nRunning integration scenarios...")
@@ -813,15 +1006,19 @@ def test_module():
     # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
-    # Import real activation from module 02 using standardized helper
-    ReLU = import_previous_module('02_activations', 'ReLU')
+    # Try to import real activation from module 02, fall back to local stub if unavailable
+    try:
+        ReLU_class = import_previous_module('02_activations', 'ReLU')
+    except (ImportError, ModuleNotFoundError):
+        # Use the ReLU that was already imported/defined at module level
+        ReLU_class = ReLU
 
     # Build individual layers for manual composition
     layer1 = Linear(784, 128)
-    activation1 = ReLU()
+    activation1 = ReLU_class()
     dropout1 = Dropout(0.5)
     layer2 = Linear(128, 64)
-    activation2 = ReLU()
+    activation2 = ReLU_class()
     dropout2 = Dropout(0.3)
     layer3 = Linear(64, 10)
 

@@ -703,9 +703,12 @@ class Trainer:
         state = {}
         # Trust optimizer has lr attribute (from Modules 06)
         state['lr'] = self.optimizer.lr
-        # momentum_buffers is optional (only SGD with momentum)
-        if hasattr(self.optimizer, 'momentum_buffers'):
-            state['momentum_buffers'] = self.optimizer.momentum_buffers.copy()
+        # Use explicit API for momentum state (Module 06)
+        # This is cleaner and more explicit than hasattr()
+        if hasattr(self.optimizer, 'get_momentum_state'):
+            momentum_state = self.optimizer.get_momentum_state()
+            if momentum_state is not None:
+                state['momentum_buffers'] = momentum_state
         return state
 
     def _set_optimizer_state(self, state):
@@ -713,9 +716,10 @@ class Trainer:
         if 'lr' in state:
             # Trust optimizer has lr attribute (from Modules 06)
             self.optimizer.lr = state['lr']
-        # momentum_buffers is optional (only SGD with momentum)
-        if 'momentum_buffers' in state and hasattr(self.optimizer, 'momentum_buffers'):
-            self.optimizer.momentum_buffers = state['momentum_buffers']
+        # Use explicit API for momentum state (Module 06)
+        # This is cleaner and more explicit than hasattr()
+        if 'momentum_buffers' in state and hasattr(self.optimizer, 'set_momentum_state'):
+            self.optimizer.set_momentum_state(state['momentum_buffers'])
 
     def _get_scheduler_state(self):
         """Extract scheduler state for checkpointing."""
@@ -731,7 +735,11 @@ class Trainer:
         """Restore scheduler state from checkpoint."""
         if state is None or self.scheduler is None:
             return
-        # Scheduler attributes are flexible - keep hasattr for dynamic state
+        # Educational Note: hasattr() is legitimate here because:
+        # 1. Schedulers are user-extensible with custom attributes
+        # 2. State dict may have keys from different scheduler types
+        # 3. We safely skip attributes that don't exist on current scheduler
+        # This is duck-typing for polymorphic checkpoint restoration
         for key, value in state.items():
             if hasattr(self.scheduler, key):
                 setattr(self.scheduler, key, value)
