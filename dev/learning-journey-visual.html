@@ -1,0 +1,1051 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Visual Learning Journey &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'learning-journey-visual';</script>
+    <link rel="shortcut icon" href="_static/favicon.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="🏆 Journey Through ML History" href="chapters/milestones.html" />
+    <link rel="prev" title="The Learning Journey: From Atoms to Intelligence" href="chapters/learning-journey.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Visual Learning Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🌍 Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/learning-journey-visual.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Flearning-journey-visual.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/learning-journey-visual.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Visual Learning Journey</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-learning-flow">The Complete Learning Flow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dependencies">Module Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-tier-structure">Three-Tier Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-milestones-timeline">Historical Milestones Timeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#student-learning-paths">Student Learning Paths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-progression">Capability Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-cycle">Workflow Cycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-strategy">Dataset Strategy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">Success Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-investment-vs-outcomes">Time Investment vs. Outcomes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-difficulty-progression">Module Difficulty Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-pages">Related Pages</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="visual-learning-journey">
+<h1>Visual Learning Journey<a class="headerlink" href="#visual-learning-journey" title="Permalink to this heading">#</a></h1>
+<div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h2 style="margin: 0 0 1rem 0; color: #495057;">The TinyTorch Learning Journey</h2>
+<p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Visual roadmap from tensors to transformers</p>
+</div>
+<p><strong>Purpose</strong>: Visualize the learning progression, module dependencies, and milestone achievements in TinyTorch.</p>
+<hr class="docutils" />
+<section id="the-complete-learning-flow">
+<h2>The Complete Learning Flow<a class="headerlink" href="#the-complete-learning-flow" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd','primaryTextColor':'#1976d2','primaryBorderColor':'#2196f3','lineColor':'#2196f3','secondaryColor':'#fff3e0','tertiaryColor':'#f3e5f5'}}}%%
+
+flowchart TB
+    Start([Start: Setup Environment]) --&gt; M01[Module 01: Tensor]
+
+    subgraph Foundation[&quot;🏗️ Foundation Tier (Modules 01-07)&quot;]
+        M01 --&gt; M02[Module 02: Activations]
+        M02 --&gt; M03[Module 03: Layers]
+        M03 --&gt; M04[Module 04: Losses]
+        M04 --&gt; M05[Module 05: Autograd]
+        M05 --&gt; M06[Module 06: Optimizers]
+        M06 --&gt; M07[Module 07: Training]
+    end
+
+    M07 --&gt; MS01{{&quot;🏆 M01: 1957 Perceptron&quot;}}
+    M07 --&gt; MS02{{&quot;🏆 M02: 1969 XOR&quot;}}
+
+    MS02 --&gt; M08[Module 08: DataLoader]
+
+    M08 --&gt; MS03{{&quot;🏆 M03: 1986 MLP&lt;br/&gt;95%+ MNIST&quot;}}
+
+    subgraph Architecture[&quot;🏛️ Architecture Tier (Modules 08-13)&quot;]
+        M08 --&gt; M09[Module 09: Spatial/CNNs]
+        M08 --&gt; M10[Module 10: Tokenization]
+
+        M09 --&gt; MS04{{&quot;🏆 M04: 1998 CNN&lt;br/&gt;75%+ CIFAR-10&quot;}}
+
+        M10 --&gt; M11[Module 11: Embeddings]
+        M11 --&gt; M12[Module 12: Attention]
+        M12 --&gt; M13[Module 13: Transformers]
+    end
+
+    M13 --&gt; MS05{{&quot;🏆 M05: 2017 Transformers&lt;br/&gt;Text Generation&quot;}}
+
+    subgraph Optimization[&quot;⚡ Optimization Tier (Modules 14-20)&quot;]
+        MS05 --&gt; M14[Module 14: Profiling]
+        M14 --&gt; M15[Module 15: Quantization]
+        M14 --&gt; M16[Module 16: Compression]
+        M14 --&gt; M17[Module 17: Memoization]
+        M15 --&gt; M18[Module 18: Acceleration]
+        M16 --&gt; M18
+        M17 --&gt; M18
+        M18 --&gt; M19[Module 19: Benchmarking]
+        M19 --&gt; M20[Module 20: Competition]
+    end
+
+    M20 --&gt; MS06{{&quot;🏆 M06: 2024 MLPerf&lt;br/&gt;Production System&quot;}}
+    MS06 --&gt; Complete([🎓 Complete!&lt;br/&gt;ML Systems Engineer])
+
+    style M01 fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style M05 fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    style M07 fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    style M09 fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style M13 fill:#f3e5f5,stroke:#9c27b0,stroke-width:3px
+    style M20 fill:#fce4ec,stroke:#e91e63,stroke-width:3px
+    style MS01 fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style MS02 fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style MS03 fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style MS04 fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
+    style MS05 fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style MS06 fill:#ffccbc,stroke:#ff5722,stroke-width:3px
+    style Complete fill:#b2dfdb,stroke:#009688,stroke-width:4px
+    </pre><p><strong>Legend:</strong></p>
+<ul class="simple">
+<li><p>🟦 Blue: Foundation modules</p></li>
+<li><p>🟧 Orange highlights: Critical modules (Autograd, Training)</p></li>
+<li><p>🟪 Purple: Advanced architecture modules</p></li>
+<li><p>🟩 Green: Milestone achievements</p></li>
+<li><p>🟨 Yellow: North Star milestone (CIFAR-10)</p></li>
+<li><p>🟥 Red: Capstone</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="module-dependencies">
+<h2>Module Dependencies<a class="headerlink" href="#module-dependencies" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f5e9','primaryTextColor':'#2e7d32','primaryBorderColor':'#4caf50'}}}%%
+
+graph LR
+    subgraph Core[&quot;Core Foundation&quot;]
+        T[01 Tensor] --&gt; A[02 Activations]
+        T --&gt; L[03 Layers]
+        T --&gt; Lo[04 Losses]
+        T --&gt; D[08 DataLoader]
+    end
+
+    subgraph Training[&quot;Training Engine&quot;]
+        T -.enhances.-&gt; AG[05 Autograd]
+        AG --&gt; O[06 Optimizers]
+        L --&gt; O
+        O --&gt; TR[07 Training]
+        Lo --&gt; TR
+    end
+
+    subgraph Vision[&quot;Computer Vision&quot;]
+        T --&gt; S[09 Spatial]
+        A --&gt; S
+        L --&gt; S
+        AG --&gt; S
+    end
+
+    subgraph Language[&quot;NLP Pipeline&quot;]
+        T --&gt; TK[10 Tokenization]
+        TK --&gt; E[11 Embeddings]
+        T --&gt; E
+        E --&gt; AT[12 Attention]
+        L --&gt; AT
+        AG --&gt; AT
+        AT --&gt; TF[13 Transformers]
+        A --&gt; TF
+        E --&gt; TF
+    end
+
+    subgraph Opt[&quot;Optimization&quot;]
+        P[14 Profiling] --&gt; Q[15 Quantization]
+        P --&gt; C[16 Compression]
+        P --&gt; M[17 Memoization]
+        Q --&gt; AC[18 Acceleration]
+        C --&gt; AC
+        M --&gt; AC
+        AC --&gt; B[19 Benchmarking]
+        B --&gt; CP[20 Competition]
+    end
+
+    TR --&gt; S
+    TR --&gt; TF
+    S -.optimized by.-&gt; Opt
+    TF -.optimized by.-&gt; Opt
+
+    style T fill:#ffeb3b,stroke:#f57c00,stroke-width:4px
+    style AG fill:#ff9800,stroke:#e65100,stroke-width:4px
+    style TR fill:#ff9800,stroke:#e65100,stroke-width:4px
+    style S fill:#9c27b0,stroke:#4a148c,stroke-width:3px
+    style TF fill:#9c27b0,stroke:#4a148c,stroke-width:3px
+    style CP fill:#f44336,stroke:#b71c1c,stroke-width:3px
+    </pre><p><strong>Key Dependencies:</strong></p>
+<ul class="simple">
+<li><p><strong>Tensor (Module 01)</strong>: Foundation for everything - all modules depend on it</p></li>
+<li><p><strong>Autograd (Module 05)</strong>: Enhances Tensor, enables all learning</p></li>
+<li><p><strong>Training (Module 07)</strong>: Orchestrates the complete learning pipeline</p></li>
+<li><p><strong>Vision &amp; Language</strong>: Parallel tracks that converge at optimization</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="three-tier-structure">
+<h2>Three-Tier Structure<a class="headerlink" href="#three-tier-structure" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'fontSize':'16px'}}}%%
+
+timeline
+    title TinyTorch Three-Tier Learning Journey
+
+    section 🏗️ Foundation
+        Module 01 : Tensor
+        Module 02 : Activations
+        Module 03 : Layers
+        Module 04 : Losses
+        Module 05 : Autograd
+        Module 06 : Optimizers
+        Module 07 : Training
+
+    section 🏛️ Architecture
+        Module 08 : DataLoader
+        Module 09 : Spatial (CNNs)
+        Module 10 : Tokenization
+        Module 11 : Embeddings
+        Module 12 : Attention
+        Module 13 : Transformers
+
+    section ⚡ Optimization
+        Module 14 : Profiling
+        Module 15 : Quantization
+        Module 16 : Compression
+        Module 17 : Memoization
+        Module 18 : Acceleration
+        Module 19 : Benchmarking
+        Module 20 : Competition
+    </pre></section>
+<hr class="docutils" />
+<section id="historical-milestones-timeline">
+<h2>Historical Milestones Timeline<a class="headerlink" href="#historical-milestones-timeline" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff9c4','primaryTextColor':'#f57c00','primaryBorderColor':'#fbc02d'}}}%%
+
+gantt
+    title ML History Recreation Journey
+    dateFormat YYYY
+    axisFormat %Y
+
+    section Milestones
+    M01 1957 Perceptron          :milestone, 1957, 0d
+    M02 1969 XOR Solution         :milestone, 1969, 0d
+    M03 1986 MLP Revival          :milestone, 1986, 0d
+    M04 1998 CNN Revolution       :milestone, 1998, 0d
+    M05 2017 Transformer Era      :milestone, 2017, 0d
+    M06 2024 Systems Age          :milestone, 2024, 0d
+
+    section Your Progress
+    Foundation (M01-07)           :active, 1957, 1969
+    Architecture (M08-13)         :1969, 2017
+    Optimization (M14-20)         :2017, 2024
+    </pre><p><strong>Journey Through ML History</strong>: As you complete modules, you unlock milestones that recreate 67 years of machine learning breakthroughs using YOUR implementations.</p>
+</section>
+<hr class="docutils" />
+<section id="student-learning-paths">
+<h2>Student Learning Paths<a class="headerlink" href="#student-learning-paths" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base'}}%%
+
+flowchart TD
+    Start([Choose Your Path]) --&gt; Decision{Learning Goal?}
+
+    Decision --&gt;|&quot;Fast: Understand ML&quot;| Fast[&quot;🚀 Fast Track&lt;br/&gt;(6-8 weeks)&lt;br/&gt;Modules 01-09&quot;]
+    Decision --&gt;|&quot;Deep: Build Everything&quot;| Complete[&quot;🎯 Complete Builder&lt;br/&gt;(14-18 weeks)&lt;br/&gt;All 20 Modules&quot;]
+    Decision --&gt;|&quot;Focus: Specific Skills&quot;| Focused[&quot;🔍 Focused Explorer&lt;br/&gt;(8-12 weeks)&lt;br/&gt;Choose Tiers&quot;]
+
+    Fast --&gt; F1[Foundation&lt;br/&gt;01-07]
+    F1 --&gt; F2[DataLoader&lt;br/&gt;08]
+    F2 --&gt; F3[Spatial/CNNs&lt;br/&gt;09]
+    F3 --&gt; FResult[&quot;✅ Can build &amp; train&lt;br/&gt;neural networks&lt;br/&gt;75%+ CIFAR-10&quot;]
+
+    Complete --&gt; C1[Foundation&lt;br/&gt;01-07]
+    C1 --&gt; C2[Architecture&lt;br/&gt;08-13]
+    C2 --&gt; C3[Optimization&lt;br/&gt;14-20]
+    C3 --&gt; CResult[&quot;🏆 ML Systems&lt;br/&gt;Engineer&lt;br/&gt;Production-ready&quot;]
+
+    Focused --&gt; Choice{Focus Area?}
+    Choice --&gt;|Vision| FV[Foundation +&lt;br/&gt;Spatial 09]
+    Choice --&gt;|Language| FL[Foundation +&lt;br/&gt;NLP 10-13]
+    Choice --&gt;|Production| FO[Foundation +&lt;br/&gt;Optimization 14-20]
+
+    FV --&gt; FVResult[&quot;✅ Computer&lt;br/&gt;Vision Expert&quot;]
+    FL --&gt; FLResult[&quot;✅ NLP/LLM&lt;br/&gt;Specialist&quot;]
+    FO --&gt; FOResult[&quot;✅ ML Optimization&lt;br/&gt;Engineer&quot;]
+
+    style Fast fill:#e3f2fd,stroke:#2196f3
+    style Complete fill:#f3e5f5,stroke:#9c27b0
+    style Focused fill:#fff3e0,stroke:#f57c00
+    style FResult fill:#c8e6c9,stroke:#4caf50
+    style CResult fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
+    style FVResult fill:#c8e6c9,stroke:#4caf50
+    style FLResult fill:#c8e6c9,stroke:#4caf50
+    style FOResult fill:#c8e6c9,stroke:#4caf50
+    </pre></section>
+<hr class="docutils" />
+<section id="capability-progression">
+<h2>Capability Progression<a class="headerlink" href="#capability-progression" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e1f5fe','primaryTextColor':'#01579b'}}}%%
+
+graph TB
+    subgraph L1[&quot;Level 1: Foundation&quot;]
+        C1[&quot;Can create tensors&lt;br/&gt;and perform operations&quot;]
+        C2[&quot;Can build neural&lt;br/&gt;network layers&quot;]
+        C3[&quot;Can implement&lt;br/&gt;backpropagation&quot;]
+        C1 --&gt; C2 --&gt; C3
+    end
+
+    subgraph L2[&quot;Level 2: Training&quot;]
+        C4[&quot;Can train networks&lt;br/&gt;on datasets&quot;]
+        C5[&quot;Can achieve 95%+&lt;br/&gt;on MNIST&quot;]
+        C3 --&gt; C4 --&gt; C5
+    end
+
+    subgraph L3[&quot;Level 3: Architectures&quot;]
+        C6[&quot;Can build CNNs&lt;br/&gt;for vision&quot;]
+        C7[&quot;Can build transformers&lt;br/&gt;for language&quot;]
+        C8[&quot;Can achieve 75%+&lt;br/&gt;on CIFAR-10&quot;]
+        C5 --&gt; C6 --&gt; C8
+        C5 --&gt; C7
+    end
+
+    subgraph L4[&quot;Level 4: Production&quot;]
+        C9[&quot;Can profile and&lt;br/&gt;optimize models&quot;]
+        C10[&quot;Can compress 4×&lt;br/&gt;and speedup 10×&quot;]
+        C11[&quot;Can deploy production&lt;br/&gt;ML systems&quot;]
+        C8 --&gt; C9
+        C7 --&gt; C9
+        C9 --&gt; C10 --&gt; C11
+    end
+
+    C11 --&gt; Master[&quot;🎓 ML Systems&lt;br/&gt;Mastery&quot;]
+
+    style C1 fill:#e3f2fd
+    style C3 fill:#fff3e0
+    style C5 fill:#f3e5f5
+    style C8 fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
+    style C11 fill:#ffccbc
+    style Master fill:#c8e6c9,stroke:#4caf50,stroke-width:4px
+    </pre><p><strong>Each level builds concrete, measurable capabilities</strong> - not just “completed a module” but “can build production CNNs achieving 75%+ accuracy.”</p>
+</section>
+<hr class="docutils" />
+<section id="workflow-cycle">
+<h2>Workflow Cycle<a class="headerlink" href="#workflow-cycle" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#f0f4c3'}}}%%
+
+graph LR
+    Edit[&quot;📝 Edit Modules&lt;br/&gt;modules/source/XX_name/&quot;] --&gt; Export[&quot;⚙️ Export to Package&lt;br/&gt;tito module complete XX&quot;]
+    Export --&gt; Validate[&quot;✅ Validate with Milestones&lt;br/&gt;milestones/0X_*/script.py&quot;]
+    Validate --&gt; Check{Tests Pass?}
+    Check --&gt;|Yes| Next[&quot;➡️ Next Module&quot;]
+    Check --&gt;|No| Debug[&quot;🔍 Debug &amp; Fix&quot;]
+    Debug --&gt; Edit
+    Next --&gt; Edit
+
+    Validate -.optional.-&gt; Progress[&quot;📊 Track Progress&lt;br/&gt;tito checkpoint status&quot;]
+
+    style Edit fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style Export fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style Validate fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style Next fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style Debug fill:#ffcdd2,stroke:#f44336,stroke-width:2px
+    style Progress fill:#f5f5f5,stroke:#9e9e9e,stroke-width:1px,stroke-dasharray: 5 5
+    </pre><p><strong>The essential three-step cycle</strong>: Edit → Export → Validate</p>
+<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for detailed workflow guide.</p>
+</section>
+<hr class="docutils" />
+<section id="dataset-strategy">
+<h2>Dataset Strategy<a class="headerlink" href="#dataset-strategy" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8eaf6'}}}%%
+
+flowchart TB
+    Start([Start Learning]) --&gt; Ship[&quot;📦 Shipped Datasets&lt;br/&gt;(~350 KB in repo)&quot;]
+
+    Ship --&gt; TD[&quot;TinyDigits&lt;br/&gt;1,200 samples&lt;br/&gt;8×8 images&lt;br/&gt;310 KB&quot;]
+    Ship --&gt; TT[&quot;TinyTalks&lt;br/&gt;350 Q&amp;A pairs&lt;br/&gt;Character-level&lt;br/&gt;40 KB&quot;]
+
+    TD --&gt; M03[&quot;Milestone 03&lt;br/&gt;MLP on TinyDigits&lt;br/&gt;⚡ Fast iteration&quot;]
+    TT --&gt; M05[&quot;Milestone 05&lt;br/&gt;Transformers on TinyTalks&lt;br/&gt;⚡ Instant training&quot;]
+
+    M03 --&gt; Scale{Scale Up?}
+    M05 --&gt; Scale
+
+    Scale --&gt;|Yes| Download[&quot;⬇️ Downloaded Datasets&lt;br/&gt;(Auto-download when needed)&quot;]
+
+    Download --&gt; MNIST[&quot;MNIST&lt;br/&gt;70K samples&lt;br/&gt;28×28 images&lt;br/&gt;10 MB&quot;]
+    Download --&gt; CIFAR[&quot;CIFAR-10&lt;br/&gt;60K samples&lt;br/&gt;32×32 RGB&lt;br/&gt;170 MB&quot;]
+
+    MNIST --&gt; M03B[&quot;Milestone 03&lt;br/&gt;MLP on MNIST&lt;br/&gt;🎯 95%+ accuracy&quot;]
+    CIFAR --&gt; M04[&quot;Milestone 04&lt;br/&gt;CNN on CIFAR-10&lt;br/&gt;🏆 75%+ accuracy&quot;]
+
+    style Ship fill:#c8e6c9,stroke:#4caf50,stroke-width:2px
+    style TD fill:#e3f2fd,stroke:#2196f3
+    style TT fill:#e3f2fd,stroke:#2196f3
+    style Download fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style MNIST fill:#f3e5f5,stroke:#9c27b0
+    style CIFAR fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
+    style M04 fill:#ffccbc,stroke:#ff5722,stroke-width:3px
+    </pre><p><strong>Strategy</strong>: Start small (shipped datasets), iterate fast, then validate on benchmarks (downloaded datasets).</p>
+<p><strong>📖 See <span class="xref myst">Datasets Guide</span></strong> for complete dataset documentation.</p>
+</section>
+<hr class="docutils" />
+<section id="success-metrics">
+<h2>Success Metrics<a class="headerlink" href="#success-metrics" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base'}}%%
+
+mindmap
+  root((TinyTorch&lt;br/&gt;Success))
+    Technical Skills
+      Build tensors from scratch
+      Implement autograd engine
+      Train real neural networks
+      Achieve 75%+ CIFAR-10
+      Optimize for production
+
+    Understanding
+      Know how PyTorch works internally
+      Understand gradient flow
+      Debug ML issues from first principles
+      Profile and optimize bottlenecks
+
+    Career Impact
+      ML Systems Engineer role-ready
+      Can implement novel architectures
+      Production deployment skills
+      Portfolio project (capstone)
+
+    Milestones Achieved
+      6 historical ML breakthroughs
+      Recreated 67 years of ML history
+      95%+ MNIST accuracy
+      75%+ CIFAR-10 accuracy
+    </pre></section>
+<hr class="docutils" />
+<section id="time-investment-vs-outcomes">
+<h2>Time Investment vs. Outcomes<a class="headerlink" href="#time-investment-vs-outcomes" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base'}}%%
+
+quadrantChart
+    title Learning Paths: Time vs. Depth
+    x-axis &quot;Time Investment (weeks)&quot;
+    y-axis &quot;ML Systems Mastery&quot;
+    quadrant-1 &quot;Complete Mastery&quot;
+    quadrant-2 &quot;Deep Understanding&quot;
+    quadrant-3 &quot;Quick Learning&quot;
+    quadrant-4 &quot;Focused Skills&quot;
+
+    &quot;Fast Track (6-8w)&quot;: [0.35, 0.5]
+    &quot;Focused Vision (8w)&quot;: [0.45, 0.6]
+    &quot;Focused NLP (10w)&quot;: [0.55, 0.65]
+    &quot;Complete Builder (14-18w)&quot;: [0.85, 0.95]
+    &quot;Foundation Only (4w)&quot;: [0.25, 0.35]
+    </pre><p><strong>Quadrants:</strong></p>
+<ul class="simple">
+<li><p><strong>Bottom-left (Quick Learning)</strong>: Foundation tier - understand basics in 4 weeks</p></li>
+<li><p><strong>Top-left (Deep Understanding)</strong>: Fast track - build &amp; train networks in 6-8 weeks</p></li>
+<li><p><strong>Bottom-right (Focused Skills)</strong>: Specialized paths - vision or NLP focus</p></li>
+<li><p><strong>Top-right (Complete Mastery)</strong>: Full course - ML systems engineer in 14-18 weeks</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="module-difficulty-progression">
+<h2>Module Difficulty Progression<a class="headerlink" href="#module-difficulty-progression" title="Permalink to this heading">#</a></h2>
+<pre  class="mermaid">
+        %%{init: {'theme':'base'}}%%
+
+%%{init: {'theme':'base', 'themeVariables': { 'xyChart': {'backgroundColor': 'transparent'}}}}%%
+xychart-beta
+    title &quot;Difficulty Curve Across 20 Modules&quot;
+    x-axis [M01, M02, M03, M04, M05, M06, M07, M08, M09, M10, M11, M12, M13, M14, M15, M16, M17, M18, M19, M20]
+    y-axis &quot;Difficulty (1-5 stars)&quot; 0 --&gt; 5
+    line [2, 2, 3, 3, 4, 4, 4, 3, 5, 4, 4, 5, 5, 4, 5, 5, 4, 4, 4, 5]
+    </pre><p><strong>Key observations:</strong></p>
+<ul class="simple">
+<li><p><strong>Gentle start</strong>: Modules 01-02 are beginner-friendly</p></li>
+<li><p><strong>First challenge</strong>: Module 05 (Autograd) - the critical breakthrough</p></li>
+<li><p><strong>Sustained difficulty</strong>: Modules 09, 12, 13, 15-16 are advanced (⭐⭐⭐⭐⭐)</p></li>
+<li><p><strong>Capstone peak</strong>: Module 20 integrates everything</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="ready-to-start">
+<h2>Ready to Start?<a class="headerlink" href="#ready-to-start" title="Permalink to this heading">#</a></h2>
+<div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; color: #495057;">Begin Your Visual Journey</h3>
+<p style="margin: 0 0 1.5rem 0; color: #6c757d;">These diagrams show the path - now walk it!</p>
+<a href="quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">Start Building →</a>
+<a href="learning-progress.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Track Progress →</a>
+</div>
+</section>
+<hr class="docutils" />
+<section id="related-pages">
+<h2>Related Pages<a class="headerlink" href="#related-pages" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>📖 <span class="xref myst">Introduction</span></strong> - What is TinyTorch and why build from scratch</p></li>
+<li><p><strong>📖 <span class="xref myst">Student Workflow</span></strong> - The essential edit → export → validate cycle</p></li>
+<li><p><strong>📖 <span class="xref myst">Three-Tier Structure</span></strong> - Detailed tier breakdown</p></li>
+<li><p><strong>📖 <span class="xref myst">Milestones</span></strong> - Journey through ML history</p></li>
+<li><p><strong>📖 <span class="xref myst">FAQ</span></strong> - Common questions answered</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapters/learning-journey.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">The Learning Journey: From Atoms to Intelligence</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapters/milestones.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">🏆 Journey Through ML History</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-learning-flow">The Complete Learning Flow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dependencies">Module Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-tier-structure">Three-Tier Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-milestones-timeline">Historical Milestones Timeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#student-learning-paths">Student Learning Paths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-progression">Capability Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-cycle">Workflow Cycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-strategy">Dataset Strategy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">Success Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-investment-vs-outcomes">Time Investment vs. Outcomes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-difficulty-progression">Module Difficulty Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-pages">Related Pages</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
