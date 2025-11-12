@@ -9,15 +9,11 @@
 
 ## The Core Workflow
 
-TinyTorch follows a simple three-step cycle:
-
-```
-1. Edit modules → 2. Export to package → 3. Validate with milestones
-```
+TinyTorch follows a simple three-step cycle: **Edit modules → Export to package → Validate with milestones**
 
 **The essential command**: `tito module complete MODULE_NUMBER` - exports your code to the TinyTorch package.
 
-**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle guide.
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle, best practices, and troubleshooting.
 
 This page documents all available TITO commands. The checkpoint system (`tito checkpoint status`) is optional for progress tracking.
 
