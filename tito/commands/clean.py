@@ -113,7 +113,7 @@ class CleanCommand(BaseCommand):
         # Ask for confirmation unless --force is used
         if not args.force:
             console.print("\n[yellow]This will permanently remove the files listed above.[/yellow]")
-            console.print("[yellow]Python source files (*_dev.py) will be preserved.[/yellow]\n")
+            console.print("[yellow]Python source files (*.py) will be preserved.[/yellow]\n")
             
             try:
                 response = input("Are you sure you want to proceed? (y/N): ").strip().lower()

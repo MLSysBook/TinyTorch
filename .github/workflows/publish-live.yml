@@ -1,0 +1,76 @@
+name: Publish Live Site
+
+# Trigger the workflow on push to main branch (publishing) or manual dispatch
+# This workflow builds and deploys the live/production site to GitHub Pages
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'site/**'
+      - 'modules/**'
+      - '.github/workflows/publish-live.yml'
+      - 'tito/**'  # Also trigger when tito CLI changes
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'site/**'
+      - 'modules/**'
+      - 'tito/**'
+  workflow_dispatch:
+
+# Set permissions for GitHub Pages deployment and content modification
+permissions:
+  contents: write  # Needed to push to gh-pages branch
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install "jupyter-book<1.0"
+        pip install -r site/requirements.txt || pip install jupyter-book
+
+    - name: Build Jupyter Book
+      run: |
+        cd site
+        jupyter-book clean . || true
+        jupyter-book build .
+        echo "=== Contents of site after build ==="
+        ls -la
+        echo "=== Contents of _build (if exists) ==="
+        ls -la _build/ || echo "_build doesn't exist"
+        echo "=== Contents of _build/html (if exists) ==="
+        ls -la _build/html/ || echo "_build/html doesn't exist"
+
+    - name: Deploy main site to gh-pages branch (root)
+      # Only deploy on main branch pushes (not PRs)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site/_build/html
+        destination_dir: .  # Deploy to root of gh-pages branch
+        publish_branch: gh-pages
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Deploy live site from main branch - ${{ github.sha }}'
+        keep_files: true  # Keep /dev/ directory when deploying main site
+

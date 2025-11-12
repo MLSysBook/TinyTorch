@@ -245,7 +245,7 @@ python automation_deployment_script.py --validate
 ./bin/tito nbgrader generate 02_tensor
 
 # Check metadata integrity
-jupyter nbconvert --to notebook modules/source/02_tensor/tensor_dev.py
+jupyter nbconvert --to notebook modules/02_tensor/tensor_dev.py
 ```
 
 ---
