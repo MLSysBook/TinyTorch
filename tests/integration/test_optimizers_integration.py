@@ -18,12 +18,12 @@ module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'
 sys.path.insert(0, module_path)
 
 # Import modules in dependency order
-exec(open(os.path.join(module_path, '01_tensor/tensor_dev.py')).read())
-exec(open(os.path.join(module_path, '02_activations/activations_dev.py')).read())
-exec(open(os.path.join(module_path, '03_layers/layers_dev.py')).read())
-exec(open(os.path.join(module_path, '05_autograd/autograd_dev.py')).read())
-exec(open(os.path.join(module_path, '04_losses/losses_dev.py')).read())
-exec(open(os.path.join(module_path, '06_optimizers/optimizers_dev.py')).read())
+exec(open(os.path.join(module_path, '01_tensor/tensor.py')).read())
+exec(open(os.path.join(module_path, '02_activations/activations.py')).read())
+exec(open(os.path.join(module_path, '03_layers/layers.py')).read())
+exec(open(os.path.join(module_path, '05_autograd/autograd.py')).read())
+exec(open(os.path.join(module_path, '04_losses/losses.py')).read())
+exec(open(os.path.join(module_path, '06_optimizers/optimizers.py')).read())
 
 def test_sgd_with_linear_layer():
     """Test SGD optimizer with Linear layer and autograd."""

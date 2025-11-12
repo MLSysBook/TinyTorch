@@ -218,7 +218,7 @@ class NBGraderCommand(BaseCommand):
 
     def _get_module_directories(self) -> List[Path]:
         """Get all module directories with proper hierarchy support."""
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         if not source_dir.exists():
             return []
         
@@ -240,19 +240,19 @@ class NBGraderCommand(BaseCommand):
     def _resolve_module_name(self, module_input: str) -> Optional[str]:
         """Resolve module name from various input formats."""
         # If it's already a directory name, use it
-        if Path(f"modules/source/{module_input}").exists():
+        if Path(f"modules/{module_input}").exists():
             return module_input
         
         # Try to find by number prefix
         if module_input.isdigit():
             prefix = module_input.zfill(2)
-            source_dir = Path("modules/source")
+            source_dir = Path("modules")
             for item in source_dir.iterdir():
                 if item.is_dir() and item.name.startswith(prefix):
                     return item.name
         
         # Try to find by name suffix
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         for item in source_dir.iterdir():
             if item.is_dir() and item.name.endswith(f"_{module_input}"):
                 return item.name
@@ -375,7 +375,7 @@ class NBGraderCommand(BaseCommand):
         console.print(f"📝 Generating assignment for module: {module_name}")
         
         # Find the module development file in TinyTorch modules directory
-        module_dir = Path("modules/source") / module_name
+        module_dir = Path("modules") / module_name
         
         # Extract the short name from the module directory name
         # e.g., "00_setup" -> "setup", "01_tensor" -> "tensor"
@@ -394,7 +394,7 @@ class NBGraderCommand(BaseCommand):
         
         if not dev_file:
             console.print(f"❌ Module file not found in: {module_dir}")
-            console.print(f"   Looking for: {short_name}_dev.py or {short_name}_dev_enhanced.py")
+            console.print(f"   Looking for: {short_name}.py or {short_name}_dev_enhanced.py")
             return False
         
         # Convert to notebook and generate assignment

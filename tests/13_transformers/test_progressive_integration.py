@@ -306,7 +306,7 @@ class TestModule14BenchmarkingCore:
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/14_benchmarking/14_benchmarking_dev.py:
+            1. Create in modules/14_benchmarking/14_benchmarking.py:
             
             import time
             import numpy as np

@@ -27,7 +27,7 @@ exports_to: "tinytorch.core.{module_name}"
 
 # File Structure
 files:
-  dev_file: "{module_name}_dev.py"
+  dev_file: "{module_name}.py"
   test_file: "tests/test_{module_name}.py"
   readme: "README.md"
 

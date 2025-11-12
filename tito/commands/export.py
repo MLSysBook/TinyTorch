@@ -71,7 +71,7 @@ class ExportCommand(BaseCommand):
         else:
             short_name = module_name
         
-        dev_file = module_path / f"{short_name}_dev.py"
+        dev_file = module_path / f"{short_name}.py"
         if not dev_file.exists():
             return "unknown"
         
@@ -89,8 +89,8 @@ class ExportCommand(BaseCommand):
         return "unknown"
 
     def _discover_modules(self) -> list:
-        """Discover available modules from modules/source directory."""
-        source_dir = Path("modules/source")
+        """Discover available modules from modules directory."""
+        source_dir = Path("modules")
         modules = []
         
         if source_dir.exists():
@@ -266,7 +266,7 @@ class ExportCommand(BaseCommand):
 # ║  🛡️ STUDENT PROTECTION: This file contains optimized implementations.        ║
 # ║     Editing it directly may break module functionality and training.         ║
 # ║                                                                               ║
-# ║  🎓 LEARNING TIP: Work in modules/source/ - that's where real development    ║
+# ║  🎓 LEARNING TIP: Work in modules/ - that's where real development    ║
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 
@@ -305,20 +305,20 @@ class ExportCommand(BaseCommand):
         
         # Common mappings
         source_mappings = {
-            ('core', 'tensor'): 'modules/source/02_tensor/tensor_dev.py',
-            ('core', 'activations'): 'modules/source/03_activations/activations_dev.py', 
-            ('core', 'layers'): 'modules/source/04_layers/layers_dev.py',
-            ('core', 'dense'): 'modules/source/05_dense/dense_dev.py',
-            ('core', 'spatial'): 'modules/source/06_spatial/spatial_dev.py',
-            ('core', 'attention'): 'modules/source/07_attention/attention_dev.py',
-            ('core', 'dataloader'): 'modules/source/08_dataloader/dataloader_dev.py',
-            ('core', 'autograd'): 'modules/source/09_autograd/autograd_dev.py',
-            ('core', 'optimizers'): 'modules/source/10_optimizers/optimizers_dev.py',
-            ('core', 'training'): 'modules/source/11_training/training_dev.py',
-            ('core', 'compression'): 'modules/source/12_compression/compression_dev.py',
-            ('core', 'kernels'): 'modules/source/13_kernels/kernels_dev.py',
-            ('core', 'benchmarking'): 'modules/source/14_benchmarking/benchmarking_dev.py',
-            ('core', 'networks'): 'modules/source/16_tinygpt/tinygpt_dev.ipynb',
+            ('core', 'tensor'): 'modules/02_tensor/tensor.py',
+            ('core', 'activations'): 'modules/03_activations/activations.py', 
+            ('core', 'layers'): 'modules/04_layers/layers.py',
+            ('core', 'dense'): 'modules/05_dense/dense.py',
+            ('core', 'spatial'): 'modules/06_spatial/spatial.py',
+            ('core', 'attention'): 'modules/07_attention/attention.py',
+            ('core', 'dataloader'): 'modules/08_dataloader/dataloader.py',
+            ('core', 'autograd'): 'modules/09_autograd/autograd.py',
+            ('core', 'optimizers'): 'modules/10_optimizers/optimizers.py',
+            ('core', 'training'): 'modules/11_training/training.py',
+            ('core', 'compression'): 'modules/12_compression/compression.py',
+            ('core', 'kernels'): 'modules/13_kernels/kernels.py',
+            ('core', 'benchmarking'): 'modules/14_benchmarking/benchmarking.py',
+            ('core', 'networks'): 'modules/16_tinygpt/tinygpt_dev.ipynb',
         }
         
         if module_parts in source_mappings:
@@ -327,9 +327,9 @@ class ExportCommand(BaseCommand):
         # Fallback: try to guess based on the file name
         if len(module_parts) >= 2:
             module_name = module_parts[-1]  # e.g., 'tensor' from ('core', 'tensor')
-            return f"modules/source/XX_{module_name}/{module_name}_dev.py"
+            return f"modules/XX_{module_name}/{module_name}.py"
         
-        return "modules/source/[unknown]/[unknown]_dev.py"
+        return "modules/[unknown]/[unknown].py"
 
     def _show_export_details(self, console, module_name: Optional[str] = None):
         """Show detailed export information including where each module exports to."""
@@ -338,7 +338,7 @@ class ExportCommand(BaseCommand):
         
         if module_name:
             # Single module export
-            module_path = Path(f"modules/source/{module_name}")
+            module_path = Path(f"modules/{module_name}")
             export_target = self._get_export_target(module_path)
             if export_target != "unknown":
                 target_file = export_target.replace('.', '/') + '.py'
@@ -346,7 +346,7 @@ class ExportCommand(BaseCommand):
                 
                 # Extract the short name for display
                 short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
-                exports_text.append(f"     Source: modules/source/{module_name}/{short_name}_dev.py\n", style="dim")
+                exports_text.append(f"     Source: modules/{module_name}/{short_name}.py\n", style="dim")
                 exports_text.append(f"     Target: tinytorch/{target_file}\n", style="dim")
             else:
                 exports_text.append(f"  ❓ {module_name} → export target not found\n", style="yellow")
@@ -354,7 +354,7 @@ class ExportCommand(BaseCommand):
             # All modules export
             modules = self._discover_modules()
             for module_name in modules:
-                module_path = Path(f"modules/source/{module_name}")
+                module_path = Path(f"modules/{module_name}")
                 export_target = self._get_export_target(module_path)
                 if export_target != "unknown":
                     target_file = export_target.replace('.', '/') + '.py'
@@ -456,7 +456,7 @@ class ExportCommand(BaseCommand):
         module_name = module_path.name
         short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
         
-        dev_file = module_path / f"{short_name}_dev.py"
+        dev_file = module_path / f"{short_name}.py"
         if not dev_file.exists():
             self.console.print(f"[red]❌ Python file not found: {dev_file}[/red]")
             return False
@@ -539,7 +539,7 @@ class ExportCommand(BaseCommand):
         converted = []
         
         for module_name in modules:
-            module_path = Path(f"modules/source/{module_name}")
+            module_path = Path(f"modules/{module_name}")
             if self._convert_py_to_notebook(module_path):
                 converted.append(module_name)
         
@@ -563,9 +563,9 @@ class ExportCommand(BaseCommand):
             # Process each module
             for module_name in modules_to_export:
                 logger.debug(f"Processing module: {module_name}")
-                module_path = Path(f"modules/source/{module_name}")
+                module_path = Path(f"modules/{module_name}")
                 if not module_path.exists():
-                    console.print(Panel(f"[red]❌ Module '{module_name}' not found in modules/source/[/red]", 
+                    console.print(Panel(f"[red]❌ Module '{module_name}' not found in modules/[/red]", 
                                       title="Module Not Found", border_style="red"))
                     
                     # Show available modules

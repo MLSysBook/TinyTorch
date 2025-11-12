@@ -108,7 +108,7 @@ class TestPriorModulesStillWork:
             🔍 IMPORT ERROR: {str(e)}
             
             🔧 HOW TO FIX:
-            1. Implement Tensor class in modules/source/02_tensor/
+            1. Implement Tensor class in modules/02_tensor/
             2. Export module: tito module complete 02_tensor
             3. Check tinytorch.core.tensor exists
             4. Verify Tensor class is exported correctly
@@ -172,7 +172,7 @@ class TestPriorModulesStillWork:
             🔍 IMPORT ERROR: {str(e)}
             
             🔧 HOW TO FIX:
-            1. Implement ReLU and Sigmoid in modules/source/03_activations/
+            1. Implement ReLU and Sigmoid in modules/03_activations/
             2. Export module: tito module complete 03_activations
             3. Check tinytorch.core.activations exists
             4. Verify activation classes are exported
@@ -240,7 +240,7 @@ class TestModule04LayersCore:
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/04_layers/04_layers_dev.py:
+            1. Create in modules/04_layers/04_layers.py:
             
             class Layer:
                 '''Base class for all neural network layers.'''

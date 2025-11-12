@@ -112,7 +112,7 @@ class ModuleCompletionOrchestrator:
         """Export module using nbdev."""
         try:
             # Run nbdev_export for the specific module
-            cmd = ["nbdev_export", "--path", f"modules/source/{module_name}/{module_name}_dev.py"]
+            cmd = ["nbdev_export", "--path", f"modules/{module_name}/{module_name}.py"]
             result = subprocess.run(cmd, capture_output=True, text=True)
             
             if result.returncode == 0:

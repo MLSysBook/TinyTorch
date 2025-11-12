@@ -240,7 +240,7 @@ class TestModule06SpatialCore:
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/06_spatial/06_spatial_dev.py:
+            1. Create in modules/06_spatial/06_spatial.py:
             
             from tinytorch.core.layers import Layer
             from tinytorch.core.tensor import Tensor

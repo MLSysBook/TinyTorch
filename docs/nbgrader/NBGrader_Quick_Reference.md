@@ -87,7 +87,7 @@ source .venv/bin/activate
 ./bin/tito system doctor
 
 # Module not found
-ls modules/source/                          # Check available modules
+ls modules/                          # Check available modules
 ./bin/tito nbgrader generate 02_tensor      # Use exact name
 
 # Validation failures (normal for student notebooks)

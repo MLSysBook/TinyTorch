@@ -301,7 +301,7 @@ class TestModule09AutogradCore:
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/09_autograd/09_autograd_dev.py:
+            1. Create in modules/09_autograd/09_autograd.py:
             
             from tinytorch.core.tensor import Tensor
             

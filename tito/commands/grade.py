@@ -193,7 +193,7 @@ class GradeCommand(BaseCommand):
             return module
         
         # Try to find the module by short name
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         if source_dir.exists():
             for module_dir in source_dir.iterdir():
                 if module_dir.is_dir() and module_dir.name.endswith(f"_{module}"):
@@ -218,7 +218,7 @@ class GradeCommand(BaseCommand):
                 # Step 1: Generate assignment first
                 result = subprocess.run(
                     ["nbgrader", "generate_assignment", module,
-                     "--source", f"modules/source/{module}",
+                     "--source", f"modules/{module}",
                      "--force"],
                     capture_output=True,
                     text=True
@@ -259,7 +259,7 @@ class GradeCommand(BaseCommand):
         try:
             result = subprocess.run(
                 ["nbgrader", "generate_assignment", module,
-                 "--source", f"modules/source/{module}",
+                 "--source", f"modules/{module}",
                  "--force"],
                 capture_output=True,
                 text=True
@@ -418,7 +418,7 @@ class GradeCommand(BaseCommand):
 c = get_config()
 
 c.CourseDirectory.course_id = "tinytorch"
-c.CourseDirectory.source_directory = "modules/source"
+c.CourseDirectory.source_directory = "modules"
 c.CourseDirectory.release_directory = "release"
 c.CourseDirectory.submitted_directory = "submitted"
 c.CourseDirectory.autograded_directory = "autograded"

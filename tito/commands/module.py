@@ -275,13 +275,13 @@ class ModuleCommand(BaseCommand):
         """Normalize module name to full format (e.g., tensor -> 02_tensor)."""
         # If already in full format, validate it exists
         if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-            module_path = Path(f"modules/source/{module_name}")
+            module_path = Path(f"modules/{module_name}")
             if module_path.exists():
                 return module_name
             return ""
         
         # Try to find the module by short name
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         if source_dir.exists():
             for module_dir in source_dir.iterdir():
                 if module_dir.is_dir() and module_dir.name.endswith(f"_{module_name}"):
@@ -291,7 +291,7 @@ class ModuleCommand(BaseCommand):
 
     def _get_available_modules_text(self) -> str:
         """Get formatted text listing available modules."""
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         modules = []
         
         if source_dir.exists():

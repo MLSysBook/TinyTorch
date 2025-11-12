@@ -10,7 +10,7 @@ from rich.panel import Panel
 
 from .base import BaseCommand
 
-NOTEBOOKS_DIR = "modules/source"
+NOTEBOOKS_DIR = "modules"
 
 class BookCommand(BaseCommand):
     @property

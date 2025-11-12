@@ -48,23 +48,23 @@ class ViewCommand(BaseCommand):
             # Look for the specific dev file for this module
             # Extract module name (e.g., "tensor" from "01_tensor")
             module_name = args.module.split('_', 1)[1] if '_' in args.module else args.module
-            dev_file = module_dir / f"{module_name}_dev.py"
+            dev_file = module_dir / f"{module_name}.py"
             
             if not dev_file.exists():
-                # Fallback: look for any *_dev.py file
-                dev_files = list(module_dir.glob("*_dev.py"))
+                # Fallback: look for any *.py file
+                dev_files = list(module_dir.glob("*.py"))
                 if not dev_files:
                     raise ModuleNotFoundError(
                         f"No dev file found in module '{args.module}'. Expected: {dev_file}"
                     )
     
     def _find_dev_files(self) -> List[Path]:
-        """Find all *_dev.py files in modules directory."""
+        """Find all *.py files in modules directory."""
         dev_files = []
         for module_dir in self.config.modules_dir.iterdir():
             if module_dir.is_dir():
-                # Look for any *_dev.py file in the directory
-                for dev_py in module_dir.glob("*_dev.py"):
+                # Look for any *.py file in the directory
+                for dev_py in module_dir.glob("*.py"):
                     dev_files.append(dev_py)
         return dev_files
     
@@ -131,13 +131,13 @@ class ViewCommand(BaseCommand):
             target_dir = self.config.modules_dir / args.module
             # Find the specific dev file for this module
             module_name = args.module.split('_', 1)[1] if '_' in args.module else args.module
-            dev_file = target_dir / f"{module_name}_dev.py"
+            dev_file = target_dir / f"{module_name}.py"
             
             if dev_file.exists():
                 dev_files = [dev_file]
             else:
                 # Fallback: find any dev files
-                dev_files = list(target_dir.glob("*_dev.py"))
+                dev_files = list(target_dir.glob("*.py"))
             
             self.console.print(f"🔄 Generating notebook for module: {args.module}")
         else:
@@ -145,7 +145,7 @@ class ViewCommand(BaseCommand):
             dev_files = self._find_dev_files()
             if not dev_files:
                 self.console.print(Panel(
-                    "[yellow]⚠️  No *_dev.py files found in modules/[/yellow]", 
+                    "[yellow]⚠️  No *.py files found in modules/[/yellow]", 
                     title="Nothing to Convert", 
                     border_style="yellow"
                 ))

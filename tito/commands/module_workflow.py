@@ -258,7 +258,7 @@ class ModuleWorkflowCommand(BaseCommand):
         try:
             # Run the module's inline tests
             module_dir = self.config.modules_dir / module_name
-            dev_file = module_dir / f"{module_name.split('_')[1]}_dev.py"
+            dev_file = module_dir / f"{module_name.split('_')[1]}.py"
             
             if not dev_file.exists():
                 self.console.print(f"[yellow]⚠️  No dev file found: {dev_file}[/yellow]")

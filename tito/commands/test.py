@@ -533,7 +533,7 @@ class TestCommand(BaseCommand):
     def _discover_modules(self) -> List[str]:
         """Discover available modules."""
         modules = []
-        source_dir = Path("modules/source")
+        source_dir = Path("modules")
         
         if source_dir.exists():
             exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
@@ -554,7 +554,7 @@ class TestCommand(BaseCommand):
         else:
             short_name = module_name
         
-        return Path("modules/source") / module_name / f"{short_name}_dev.py"
+        return Path("modules") / module_name / f"{short_name}.py"
     
     def _generate_summary_report(self, results: List[ModuleTestResult]) -> None:
         """Generate a summary report for all modules."""
@@ -781,7 +781,7 @@ class TestCommand(BaseCommand):
                               f"[dim]  tito module test --all --summary - Summary report[/dim]", 
                               title="Module Required", border_style="red"))
         else:
-            console.print(Panel("[red]❌ No modules found in modules/source directory[/red]", 
+            console.print(Panel("[red]❌ No modules found in modules directory[/red]", 
                               title="Error", border_style="red"))
         
         return 1 

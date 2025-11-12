@@ -1,62 +1,95 @@
-# 🧠 Perceptron (1957) - Rosenblatt
+# Milestone 01: The Perceptron (1957)
 
-## What This Demonstrates
-The first trainable neural network in history! Using YOUR TinyTorch implementations to recreate Rosenblatt's pioneering perceptron.
+## Historical Context
 
-## Prerequisites
-Complete these TinyTorch modules first:
-- Module 02 (Tensor) - Data structures with gradients
-- Module 03 (Activations) - Sigmoid activation
-- Module 04 (Layers) - Linear layer
+Frank Rosenblatt's Perceptron was the **first trainable artificial neural network** that could learn from examples. Demonstrated in 1957 and published in 1958, it sparked the first AI boom and demonstrated that machines could actually learn to recognize patterns, launching the neural network revolution.
 
-## 🚀 Quick Start
+This milestone recreates that pivotal moment using YOUR TinyTorch implementations.
+
+## What You're Building
+
+A single-layer perceptron for binary classification, demonstrating:
+1. **The Problem** - Why random weights don't work (forward pass only)
+2. **The Solution** - How training makes the model learn (with gradient descent)
+
+## Required Modules
+
+**Progressive Requirements:**
+- **Part 1 (Forward Only):** Run after Module 04 (building blocks)
+- **Part 2 (Trained):** Run after Module 07 (training capability)
+
+| Module | Component | What It Provides |
+|--------|-----------|------------------|
+| Module 01 | Tensor | YOUR data structure |
+| Module 02 | Activations | YOUR sigmoid activation |
+| Module 03 | Layers | YOUR Linear layer |
+| Module 04 | Losses | YOUR loss functions |
+| Module 05 | Autograd | YOUR automatic differentiation (Part 2 only) |
+| Module 06 | Optimizers | YOUR SGD optimizer (Part 2 only) |
+| Module 07 | Training | YOUR end-to-end training loop (Part 2 only) |
+
+## Milestone Structure
+
+This milestone uses **progressive revelation** with 2 scripts:
+
+### 01_rosenblatt_forward.py
+**Purpose:** Demonstrate the problem (untrained model)
+
+- Build perceptron with random weights
+- Run forward pass on linearly separable data
+- Show that random weights = random predictions (~50% accuracy)
+- **Key Learning:** "My model doesn't work... yet!"
+
+**When to run:** After Module 04 (before learning training)
+
+### 02_rosenblatt_trained.py
+**Purpose:** Demonstrate the solution (trained model)
+
+- Same architecture, but WITH training
+- Apply gradient descent (YOUR autograd + optimizer)
+- Watch accuracy improve from ~50% to 95%+
+- **Key Learning:** "Training makes it work!"
+
+**When to run:** After Module 07 (after learning training)
+
+## Expected Results
+
+| Script | Accuracy | What It Shows |
+|--------|----------|---------------|
+| 01 (Forward Only) | ~50% | Random weights = random guessing |
+| 02 (Trained) | 95%+ | Training learns the pattern |
+
+## Key Learning: Forward Pass ≠ Intelligence
+
+The architecture isn't enough - the model only becomes "intelligent" through training. This milestone drives home the distinction between:
+- **Building the model** (easy - just connect layers)
+- **Making it learn** (the hard part - requires training)
+
+This is the foundation for understanding all of deep learning!
+
+## Running the Milestone
 
 ```bash
-# Run the perceptron training
-python rosenblatt_perceptron.py
+cd milestones/01_1957_perceptron
 
-# Test architecture only
-python rosenblatt_perceptron.py --test-only
+# Step 1: See the problem (run after Module 04)
+python 01_rosenblatt_forward.py
 
-# Custom epochs
-python rosenblatt_perceptron.py --epochs 200
+# Step 2: See the solution (run after Module 07)
+python 02_rosenblatt_trained.py
 ```
 
-## 📊 Dataset Information
+## Further Reading
 
-### Synthetic Linearly Separable Data
-- **Generated**: 1,000 points in 2D space
-- **Classes**: Binary (0 or 1)
-- **Property**: Linearly separable by design
-- **No Download Required**: Data generated on-the-fly
+- **Original Paper**: Rosenblatt, F. (1958). "The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain"
+- **Historical Context**: [Perceptron on Wikipedia](https://en.wikipedia.org/wiki/Perceptron)
 
-### Why Synthetic Data?
-The perceptron can only solve linearly separable problems. We generate data that's guaranteed to be separable to demonstrate the algorithm works when its assumptions are met.
+## Achievement Unlocked
 
-## 🏗️ Architecture
-```
-Input (x1, x2) → Linear (2→1) → Sigmoid → Binary Output
-```
+After completing this milestone, you'll understand:
+- How perceptrons work (forward pass)
+- Why random weights fail
+- How training transforms random weights into learned patterns
+- The fundamental learning loop: forward → loss → backward → update
 
-Simple but revolutionary - this proved machines could learn!
-
-## 📈 Expected Results
-- **Training Time**: ~30 seconds
-- **Accuracy**: 95%+ (problem is linearly separable)
-- **Parameters**: Just 3 (2 weights + 1 bias)
-
-## 💡 Historical Significance
-- **1957**: First demonstration of machine learning
-- **Innovation**: Weights that adjust based on errors
-- **Limitation**: Can't solve XOR (see xor_1969 example)
-- **Legacy**: Foundation for all modern neural networks
-
-## 🔧 Command Line Options
-- `--test-only`: Test architecture without training
-- `--epochs N`: Number of training epochs (default: 100)
-
-## 📚 What You Learn
-- How the first neural network worked
-- Why gradients enable learning
-- YOUR Linear layer performs the same math as 1957
-- Limitations that led to multi-layer networks
+**You've recreated the birth of neural networks!**

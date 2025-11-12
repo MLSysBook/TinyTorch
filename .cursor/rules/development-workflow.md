@@ -10,19 +10,19 @@
 ### The Golden Rule: Source → Export → Use
 
 ```
-modules/source/     →     tito export     →     tinytorch/     →     milestones/
+modules/     →     tito export     →     tinytorch/     →     milestones/
   (EDIT HERE!)          (BUILD STEP)         (NEVER EDIT!)       (USE IT!)
 ```
 
 ### Three Sacred Principles
 
-1. **ONLY edit files in `modules/source/`** - This is your source of truth
+1. **ONLY edit files in `modules/`** - This is your source of truth
 2. **ALWAYS use `tito export`** to build the `tinytorch/` package
 3. **NEVER modify anything in `tinytorch/` directly** - It's generated code!
 
 ### Why This Matters
 
-- **`modules/source/`**: Educational module sources (Python `.py` files)
+- **`modules/`**: Educational module sources (Python `.py` files)
 - **`tinytorch/`**: Generated package (like `node_modules/` or `dist/`)
 - **`milestones/`**: Student projects that import from `tinytorch`
 
@@ -32,7 +32,7 @@ modules/source/     →     tito export     →     tinytorch/     →     miles
 
 ```bash
 # 1. Edit the module source (ONLY place to make changes)
-vim modules/source/12_attention/attention_dev.py
+vim modules/12_attention/attention.py
 
 # 2. Export to tinytorch package (Build step)
 tito export
@@ -50,15 +50,15 @@ python tinytalks_dashboard.py  # Uses tinytorch.core.attention
 
 TinyTorch uses a literate programming approach with nbdev:
 
-1. **Edit ONLY `_dev.py` files** in `modules/source/*/`
+1. **Edit ONLY `.py` files** in `modules/*/`
 2. **Export to tinytorch** using `tito export`
 3. **Run tests** with `pytest` to verify changes
 4. **Never manually edit .ipynb files** - they are generated artifacts
-5. **Never manually edit tinytorch/** - it's generated from modules/source/
+5. **Never manually edit tinytorch/** - it's generated from modules/
 
 ### Why This Matters
 - `.ipynb` files are JSON and hard to merge/review
-- `_dev.py` files are the **source of truth**
+- `.py` files are the **source of truth**
 - `tinytorch/` is **generated code** (like compiled binaries)
 - nbdev ensures proper sync between code, tests, and documentation
 - Manual .ipynb edits will be overwritten on next export
@@ -67,7 +67,7 @@ TinyTorch uses a literate programming approach with nbdev:
 ### Correct Workflow Example
 ```bash
 # 1. Edit the Python source
-vim modules/source/12_attention/attention_dev.py
+vim modules/12_attention/attention.py
 
 # 2. Export to tinytorch package
 tito export
@@ -76,7 +76,7 @@ tito export
 pytest tests/12_attention/
 
 # 4. If tests pass, commit source changes
-git add modules/source/12_attention/attention_dev.py
+git add modules/12_attention/attention.py
 git commit -m "fix(attention): Handle 3D attention masks"
 ```
 

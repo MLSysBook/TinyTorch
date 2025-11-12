@@ -3,7 +3,7 @@
 **Version**: 2.0  
 **Date**: January 2025  
 **Status**: Complete Reference Guide  
-**Reference Implementation**: `modules/source/08_optimizers/optimizers_dev.py`
+**Reference Implementation**: `modules/08_optimizers/optimizers_dev.py`
 
 This document defines the complete set of rules, patterns, and conventions for developing TinyTorch modules. Instead of maintaining separate documentation, **use `08_optimizers` as your reference implementation** - it follows all current patterns perfectly.
 
@@ -26,7 +26,7 @@ Each module follows this pedagogical pattern:
 
 ### 1. **File Naming Convention**
 ```
-modules/source/NN_modulename/
+modules/NN_modulename/
 ├── modulename_dev.py          # Main development file (Python source)
 ├── modulename_dev.ipynb       # Generated notebook (temporary)
 ├── module.yaml                # Module configuration
@@ -94,7 +94,7 @@ print("Ready to [action]!")
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/source/NN_modulename/modulename_dev.py`  
+**Learning Side:** You work in `modules/NN_modulename/modulename_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.modulename`
 
 ```python
@@ -433,7 +433,7 @@ Before completing a module:
 
 ## 📚 Additional Resources
 
-- **Reference Implementation**: `modules/source/08_optimizers/optimizers_dev.py`
+- **Reference Implementation**: `modules/08_optimizers/optimizers_dev.py`
 - **NBGrader Documentation**: [NBGrader docs](https://nbgrader.readthedocs.io/)
 - **NBDev Documentation**: [NBDev docs](https://nbdev.fast.ai/)
 - **TinyTorch CLI**: Use `tito --help` for development commands

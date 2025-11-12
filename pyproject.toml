@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name="tinytorch"
 version = "0.0.1"
 description = "🚧 TinyTorch: Educational Deep Learning Framework (Coming Soon)"
-readme = "README_placeholder.md"
+readme = "README.md"
 requires-python=">=3.8"
 authors = [
     {name = "Vijay Janapa Reddi", email = "vj@eecs.harvard.edu"}

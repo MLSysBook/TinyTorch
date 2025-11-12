@@ -45,20 +45,20 @@ class NotebooksCommand(BaseCommand):
     def validate_args(self, args: Namespace) -> None:
         """Validate notebooks command arguments."""
         if args.module:
-            # Look in modules/source/ subdirectory
+            # Look in modules/ subdirectory
             source_dir = self.config.modules_dir / 'source'
             if not source_dir.exists():
                 source_dir = self.config.modules_dir
-            module_file = source_dir / args.module / f"{args.module}_dev.py"
+            module_file = source_dir / args.module / f"{args.module}.py"
             if not module_file.exists():
                 raise ModuleNotFoundError(
-                    f"Module '{args.module}' not found or no {args.module}_dev.py file"
+                    f"Module '{args.module}' not found or no {args.module}.py file"
                 )
     
     def _find_dev_files(self) -> List[Path]:
-        """Find all *_dev.py files in modules directory."""
+        """Find all *.py files in modules directory."""
         dev_files = []
-        # Look in modules/source/ subdirectory
+        # Look in modules/ subdirectory
         source_dir = self.config.modules_dir / 'source'
         if not source_dir.exists():
             # Fallback to modules_dir directly
@@ -66,7 +66,7 @@ class NotebooksCommand(BaseCommand):
         
         for module_dir in source_dir.iterdir():
             if module_dir.is_dir():
-                dev_py = module_dir / f"{module_dir.name}_dev.py"
+                dev_py = module_dir / f"{module_dir.name}.py"
                 if dev_py.exists():
                     dev_files.append(dev_py)
         return dev_files
@@ -103,17 +103,17 @@ class NotebooksCommand(BaseCommand):
         
         # Find files to convert
         if args.module:
-            # Look in modules/source/ subdirectory
+            # Look in modules/ subdirectory
             source_dir = self.config.modules_dir / 'source'
             if not source_dir.exists():
                 source_dir = self.config.modules_dir
-            dev_files = [source_dir / args.module / f"{args.module}_dev.py"]
+            dev_files = [source_dir / args.module / f"{args.module}.py"]
             self.console.print(f"🔄 Building notebook for module: {args.module}")
         else:
             dev_files = self._find_dev_files()
             if not dev_files:
                 self.console.print(Panel(
-                    "[yellow]⚠️  No *_dev.py files found in modules/[/yellow]", 
+                    "[yellow]⚠️  No *.py files found in modules/[/yellow]", 
                     title="Nothing to Convert", 
                     border_style="yellow"
                 ))
