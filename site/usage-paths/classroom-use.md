@@ -1,36 +1,43 @@
 # TinyTorch for Instructors: Complete ML Systems Course
 
+<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
+<h3 style="margin: 0 0 0.5rem 0; color: #856404;">🚧 Classroom Integration: Coming Soon</h3>
+<p style="margin: 0; color: #856404;">NBGrader integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
+<p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Currently available</strong>: Students can use TinyTorch with the standard workflow (edit modules → export → validate with milestones)</p>
+<p style="margin: 0.5rem 0 0 0;"><a href="../student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the current development cycle.</p>
+</div>
+
 <div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
-<strong>📖 Course Overview & Benefits:</strong> This page explains WHAT TinyTorch offers for ML education and WHY it's effective.<br>
-<strong>📖 For Setup & Daily Workflow:</strong> See <a href="../instructor-guide.html">Technical Instructor Guide</a> for step-by-step NBGrader setup and semester management.
+<strong>📖 Course Vision:</strong> This page describes the planned TinyTorch classroom experience.<br>
+<strong>📖 For Current Usage:</strong> Students should follow the <a href="../student-workflow.html">Student Workflow</a> guide.
 </div>
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
-<h2 style="margin: 0 0 1rem 0; color: #495057;">🏫 Turn-Key ML Systems Education</h2>
+<h2 style="margin: 0 0 1rem 0; color: #495057;">🏫 Planned: Turn-Key ML Systems Education</h2>
 <p style="font-size: 1.1rem; margin: 0; color: #6c757d;">Transform students from framework users to systems engineers</p>
 </div>
 
-**Transform Your ML Teaching:** Replace black-box API courses with deep systems understanding. Your students will build neural networks from scratch, understand every operation, and graduate job-ready for ML engineering roles.
+**Vision:** Replace black-box API courses with deep systems understanding. Students will build neural networks from scratch, understand every operation, and graduate job-ready for ML engineering roles.
 
 ---
 
-## 🎯 Complete Course Infrastructure
+## 🎯 Planned Course Infrastructure
 
 <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 1.5rem; margin: 1.5rem 0;">
-<h4 style="margin: 0 0 1rem 0; color: #0056b3;">What You Get: Production-Ready Course Materials</h4>
+<h4 style="margin: 0 0 1rem 0; color: #0056b3;">Planned Features: Production-Ready Course Materials</h4>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Three-tier progression</strong> (20 modules) with NBGrader integration</li>
-<li><strong>200+ automated tests</strong> for immediate feedback</li>
+<li><strong>Three-tier progression</strong> (18 modules) with NBGrader integration</li>
+<li><strong>Automated grading</strong> for immediate feedback</li>
 <li><strong>Professional CLI tools</strong> for development workflow</li>
 <li><strong>Real datasets</strong> (CIFAR-10, text generation)</li>
 </ul>
 </div>
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Complete instructor guide</strong> with setup & grading</li>
-<li><strong>Flexible pacing</strong> (8-20 weeks depending on depth)</li>
+<li><strong>Complete instructor guide</strong> with setup & grading (coming soon)</li>
+<li><strong>Flexible pacing</strong> (14-18 weeks depending on depth)</li>
 <li><strong>Industry practices</strong> (Git, testing, documentation)</li>
 <li><strong>Academic foundation</strong> from university research</li>
 </ul>
@@ -38,19 +45,10 @@
 </div>
 </div>
 
-**Course Duration:** 14-16 weeks (flexible pacing)  
+**Planned Course Duration:** 14-16 weeks (flexible pacing)
 **Student Outcome:** Complete ML framework supporting vision AND language models
 
-```{admonition} Complete Instructor Documentation
-:class: tip
-**See our comprehensive [Instructor Guide](../instructor-guide.md)** for:
-- Complete setup walkthrough (30 minutes)
-- Weekly assignment workflow with NBGrader
-- Grading automation and feedback generation
-- Student support and troubleshooting
-- End-to-end course management
-- Quick reference commands
-```
+**Current Status:** Students can work through modules individually using the standard workflow. Full classroom integration (NBGrader automation, instructor dashboards) coming soon.
 
 ---
 

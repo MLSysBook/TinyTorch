@@ -2,21 +2,44 @@
 
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Monitor Your Learning Journey</h2>
-<p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Track your capability development through 16 essential ML systems skills</p>
+<p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Track your capability development through 18 modules and 6 historical milestones</p>
 </div>
 
-**Purpose**: Monitor your capability development through the 21-checkpoint system. Track progress from foundation skills to production ML systems mastery.
+**Purpose**: Monitor your progress as you build a complete ML framework from scratch. Track module completion and milestone achievements.
 
-Track your progression through 21 essential ML systems capabilities. Each checkpoint represents fundamental competencies you'll master through hands-on implementation—from tensor operations to production-ready systems.
+## The Core Workflow
 
-## How to Track Your Progress
+TinyTorch follows a simple three-step cycle:
+
+```
+1. Edit modules → 2. Export to package → 3. Validate with milestones
+```
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+
+## Understanding Modules vs Checkpoints vs Milestones
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
-<h4 style="margin: 0 0 1rem 0; color: #1976d2;">🎯 Capability-Based Learning</h4>
 
-Use TinyTorch's 21-checkpoint system to monitor your capability development. Track progress from foundation skills to production ML systems mastery.
+**Modules (18 total)**: What you're building - the actual code implementations
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete progress tracking commands and workflow.
+- Located in `modules/source/`
+- You implement each component from scratch
+- Export with `tito module complete N`
+
+**Milestones (6 total)**: How you validate - historical proof scripts
+
+- Located in `milestones/`
+- Run scripts that use YOUR implementations
+- Recreate ML history (1957 Perceptron → 2018 MLPerf)
+
+**Checkpoints (21 total)**: Optional progress tracking
+
+- Use `tito checkpoint status` to view
+- Tracks capability mastery
+- Not required for the core workflow
+
+**📖 See [Journey Through ML History](chapters/milestones.html)** for milestone details.
 
 </div>
 
@@ -40,40 +63,66 @@ TinyTorch organizes learning through **three pedagogically-motivated tiers**, ea
 
 **📖 See [Quick Start Guide](quickstart-guide.html)** for immediate hands-on experience with your first module.
 
-## 21 Core Capabilities
+## Module Progression
 
-Track progress through essential ML systems competencies:
+Your journey through 18 modules organized in three tiers:
 
-```{admonition} Capability Tracking
-:class: note
-Each checkpoint validates mastery of fundamental ML systems skills.
+### 🏗️ Foundation Tier (Modules 01-07)
+
+Build the mathematical infrastructure:
+
+| Module | Component | What You Build |
+|--------|-----------|----------------|
+| 01 | Tensor | N-dimensional arrays with operations |
+| 02 | Activations | ReLU, Softmax, nonlinear functions |
+| 03 | Layers | Linear layers, forward/backward |
+| 04 | Losses | CrossEntropyLoss, MSELoss |
+| 05 | Autograd | Automatic differentiation engine |
+| 06 | Optimizers | SGD, Adam, parameter updates |
+| 07 | Training | Complete training loops |
+
+**Milestone unlocked**: M01 Perceptron (1957), M02 XOR (1969)
+
+### 🏛️ Architecture Tier (Modules 08-13)
+
+Implement modern architectures:
+
+| Module | Component | What You Build |
+|--------|-----------|----------------|
+| 08 | DataLoader | Batching and data pipelines |
+| 09 | Spatial | Conv2d, MaxPool2d for vision |
+| 10 | Tokenization | Character-level tokenizers |
+| 11 | Embeddings | Token and positional embeddings |
+| 12 | Attention | Multi-head self-attention |
+| 13 | Transformers | LayerNorm, TransformerBlock, GPT |
+
+**Milestones unlocked**: M03 MLP (1986), M04 CNN (1998), M05 Transformers (2017)
+
+### ⚡ Optimization Tier (Modules 14-18)
+
+Optimize for production:
+
+| Module | Component | What You Build |
+|--------|-----------|----------------|
+| 14 | Profiling | Performance measurement tools |
+| 15 | Quantization | INT8/FP16 implementations |
+| 16 | Compression | Pruning techniques |
+| 17 | Memoization | KV-cache for generation |
+| 18 | Acceleration | Batching strategies |
+
+**Milestone unlocked**: M06 MLPerf (2018)
+
+## Optional: Checkpoint System
+
+Track capability mastery with the optional checkpoint system:
+
+```bash
+tito checkpoint status  # View your progress
 ```
 
-| Checkpoint | Capability Question | Modules Required | Status |
-|------------|-------------------|------------------|--------|
-| 00 | Can I set up my environment? | 01 | ⬜ Setup |
-| 01 | Can I manipulate tensors? | 02 | ⬜ Foundation |
-| 02 | Can I add nonlinearity? | 03 | ⬜ Intelligence |
-| 03 | Can I build network layers? | 04 | ⬜ Components |
-| 04 | Can I measure loss? | 05 | ⬜ Networks |
-| 05 | Can I compute gradients? | 06 | ⬜ Learning |
-| 06 | Can I optimize parameters? | 07 | ⬜ Optimization |
-| 07 | Can I train models? | 08 | ⬜ Training |
-| 08 | Can I process images? | 09 | ⬜ Vision |
-| 09 | Can I load data efficiently? | 10 | ⬜ Data |
-| 10 | Can I process text? | 11 | ⬜ Language |
-| 11 | Can I create embeddings? | 12 | ⬜ Representation |
-| 12 | Can I implement attention? | 13 | ⬜ Attention |
-| 13 | Can I build transformers? | 14 | ⬜ Architecture |
-| 14 | Can I profile performance? | 14 | ⬜ Deployment |
-| 15 | Can I quantize models? | 15 | ⬜ Quantization |
-| 16 | Can I compress networks? | 16 | ⬜ Compression |
-| 17 | Can I cache computations? | 17 | ⬜ Memoization |
-| 18 | Can I accelerate algorithms? | 18 | ⬜ Acceleration |
-| 19 | Can I benchmark competitively? | 19 | ⬜ Competition |
-| 20 | Can I build complete language models? | 20 | ⬜ TinyGPT Capstone |
+This provides 21 capability checkpoints corresponding to modules and validates your understanding. Helpful for self-assessment but **not required** for the core workflow.
 
-**📖 See [Essential Commands](tito-essentials.html)** for progress monitoring commands.
+**📖 See [Essential Commands](tito-essentials.html)** for checkpoint commands.
 
 ---
 
@@ -121,10 +170,25 @@ Begin developing ML systems competencies immediately:
 <a href="chapters/01-setup.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Begin Setup →</a>
 </div>
 
-## Track Your Progress
+## How to Track Your Progress
 
-To monitor your capability development and learning progression, use the TITO checkpoint commands.
+The essential workflow:
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete command reference and usage examples.
+```bash
+# 1. Work on a module
+cd modules/source/03_layers
+jupyter lab 03_layers_dev.py
 
-**Approach**: You're building ML systems engineering capabilities through hands-on implementation. Each capability checkpoint validates practical competency, not just theoretical understanding.
+# 2. Export when ready
+tito module complete 03
+
+# 3. Validate with milestones
+cd ../../milestones/01_1957_perceptron
+python 01_rosenblatt_forward.py  # Uses YOUR implementation!
+```
+
+**Optional**: Use `tito checkpoint status` to see capability tracking
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+
+**Approach**: You're building ML systems engineering capabilities through hands-on implementation. Each module adds new functionality to your framework, and milestones prove it works.
