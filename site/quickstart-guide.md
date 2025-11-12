@@ -54,8 +54,18 @@ See [Essential Commands](tito-essentials.md) for verification commands and troub
 
 Let's build your first neural network component following the **TinyTorch workflow**:
 
-```
-1. Edit modules → 2. Export to package → 3. Validate with milestones
+```{mermaid}
+graph TD
+    Start[Clone & Setup] --> Edit[Edit Module<br/>tensor_dev.ipynb]
+    Edit --> Export[Export to Package<br/>tito module complete 01]
+    Export --> Test[Test Import<br/>from tinytorch import Tensor]
+    Test --> Next[Continue to Module 02]
+
+    style Start fill:#e3f2fd
+    style Edit fill:#fffbeb
+    style Export fill:#f0fdf4
+    style Test fill:#fef3c7
+    style Next fill:#f3e5f5
 ```
 
 See [Student Workflow](student-workflow.md) for the complete development cycle.
@@ -72,8 +82,8 @@ See [Student Workflow](student-workflow.md) for the complete development cycle.
 
 ```bash
 # Step 1: Edit the module source
-cd modules/source/01_tensor
-jupyter lab 01_tensor_dev.py
+cd modules/01_tensor
+jupyter lab tensor_dev.ipynb
 ```
 
 You'll implement core tensor operations:
@@ -109,8 +119,8 @@ See [Student Workflow](student-workflow.md) for the complete edit → export →
 
 ```bash
 # Step 1: Edit the module
-cd modules/source/02_activations
-jupyter lab 02_activations_dev.py
+cd modules/02_activations
+jupyter lab activations_dev.ipynb
 ```
 
 You'll implement essential activation functions:
@@ -146,7 +156,7 @@ tito checkpoint status  # View your completion tracking
 
 This is helpful for self-assessment but not required for the core workflow.
 
-See [Student Workflow](student-workflow.md) for the essential edit → export → validate cycle, and [Track Your Progress](learning-progress.md) for detailed capability tracking.
+See [Student Workflow](student-workflow.md) for the essential edit → export → validate cycle.
 
 </div>
 
@@ -205,7 +215,7 @@ In 15 minutes, you've:
 **Master the Workflow:**
 - See [Student Workflow](student-workflow.md) for the complete edit → export → validate cycle
 - See [Essential Commands](tito-essentials.md) for complete TITO command reference
-- See [Track Your Progress](learning-progress.md) for the full learning path
+- See [Student Workflow](student-workflow.md) for the complete development cycle
 
 **For Instructors:**
 - See [Classroom Setup Guide](usage-paths/classroom-use.md) for NBGrader integration (coming soon)
@@ -217,7 +227,7 @@ In 15 minutes, you've:
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 
 **The TinyTorch Development Cycle:**
-1. Edit module sources in `modules/source/`
+1. Edit module sources in `modules/NN_name/` (e.g., `modules/01_tensor/tensor_dev.ipynb`)
 2. Export with `tito module complete N`
 3. Validate by running milestone scripts
 

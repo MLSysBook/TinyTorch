@@ -69,6 +69,11 @@ lib/
 lib64/
 pyvenv.cfg
 share/
+# Prevent duplicate venvs in subdirectories
+site/.venv/
+**/.venv/
+**/venv/
+**/env/
 
 # IDEs
 .vscode/
@@ -151,3 +156,6 @@ MODULE_STATUS_SUMMARY.md
 **/VERIFY_*.py
 progress.json
 modules/HASATTR_*.md
+
+# Generated development notebooks (built from *_dev.py source files)
+modules/*/*_dev.ipynb
