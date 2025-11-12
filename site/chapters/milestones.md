@@ -43,6 +43,47 @@ See [The Learning Journey](learning-journey.md) for the complete pedagogical nar
 
 ### How They Connect
 
+```{mermaid}
+graph TB
+    subgraph "Pedagogical Acts (What You're Learning)"
+        A1["Act I: Foundation<br/>Modules 01-04<br/>Atomic Components"]
+        A2["Act II: Learning<br/>Modules 05-07<br/>Gradient Revolution"]
+        A3["Act III: Data & Scale<br/>Modules 08-09<br/>Real-World Complexity"]
+        A4["Act IV: Language<br/>Modules 10-13<br/>Sequential Intelligence"]
+        A5["Act V: Production<br/>Modules 14-19<br/>Optimization"]
+        A6["Act VI: Integration<br/>Module 20<br/>Complete Systems"]
+    end
+
+    subgraph "Historical Milestones (What You Can Build)"
+        M1["1957: Perceptron<br/>Binary Classification"]
+        M2["1969: XOR Crisis<br/>Non-linear Learning"]
+        M3["1986: MLP<br/>Multi-class Vision<br/>95%+ MNIST"]
+        M4["1998: CNN<br/>Spatial Intelligence<br/>75%+ CIFAR-10"]
+        M5["2017: Transformers<br/>Language Generation"]
+        M6["2018: MLPerf<br/>Production Speed"]
+    end
+
+    A1 --> M1
+    A2 --> M2
+    A2 --> M3
+    A3 --> M4
+    A4 --> M5
+    A5 --> M6
+
+    style A1 fill:#e3f2fd
+    style A2 fill:#fff8e1
+    style A3 fill:#e8f5e9
+    style A4 fill:#f3e5f5
+    style A5 fill:#fce4ec
+    style A6 fill:#fff3e0
+    style M1 fill:#ffcdd2
+    style M2 fill:#f8bbd0
+    style M3 fill:#e1bee7
+    style M4 fill:#d1c4e9
+    style M5 fill:#c5cae9
+    style M6 fill:#bbdefb
+```
+
 | Learning Act | Unlocked Milestone | Proof of Mastery |
 |--------------|-------------------|------------------|
 | **Act I: Foundation (01-04)** | 1957 Perceptron | Your Linear layer recreates history |
@@ -57,6 +98,17 @@ See [The Learning Journey](learning-journey.md) for the complete pedagogical nar
 ---
 
 ## The Timeline
+
+```{mermaid}
+timeline
+    title Journey Through ML History
+    1957 : Perceptron : Binary classification with gradient descent
+    1969 : XOR Crisis : Hidden layers solve non-linear problems
+    1986 : MLP Revival : Backpropagation enables deep learning
+    1998 : CNN Era : Spatial intelligence for computer vision
+    2017 : Transformers : Attention revolutionizes language AI
+    2018 : MLPerf : Production benchmarking and optimization
+```
 
 ### 01. Perceptron (1957) - Rosenblatt
 
