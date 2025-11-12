@@ -80,6 +80,7 @@ share/
 
 # Jupyter Book
 book/_build/
+site/_build/
 
 # NBGrader
 assignments/autograded/
