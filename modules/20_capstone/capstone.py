@@ -1465,10 +1465,11 @@ def analyze_training_performance():
     print("   Throughput improves with batching (better GPU utilization)")
     print("   Sweet spot: batch_size=16-32 for most GPUs")
 
-# Run all analyses
-memory_results = analyze_tinygpt_memory_scaling()
-analyze_optimization_impact()
-analyze_training_performance()
+# Run all analyses when developing this module
+if __name__ == "__main__":
+    memory_results = analyze_tinygpt_memory_scaling()
+    analyze_optimization_impact()
+    analyze_training_performance()
 
 # %% [markdown]
 """

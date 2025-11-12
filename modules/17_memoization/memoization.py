@@ -14,9 +14,9 @@
 
 # %% [markdown]
 """
-# Module 15: Memoization - Computational Reuse for Inference
+# Module 17: Memoization - Computational Reuse for Inference
 
-Welcome to Module 15! You'll implement memoization - a fundamental optimization pattern. We'll apply it to transformers through KV caching for 10-15x faster text generation.
+Welcome to Module 17! You'll implement memoization - a fundamental optimization pattern. We'll apply it to transformers through KV caching for 10-15x faster text generation.
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Complete transformer architecture (Module 13) and profiling tools (Module 14)
@@ -25,8 +25,8 @@ Welcome to Module 15! You'll implement memoization - a fundamental optimization 
 
 **Connection Map**:
 ```
-Profiling (14) → Memoization (15) → Quantization (16)
-(measure O(n²))  (cache K,V → O(n))  (reduce precision)
+Profiling (14) → Quantization (16) → Memoization (17) → Acceleration (18)
+(measure O(n²))  (reduce precision)   (cache K,V → O(n))  (optimize execution)
 ```
 
 ## Learning Objectives
@@ -41,7 +41,7 @@ Let's make inference blazingly fast through computational reuse!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/15_memoization/kvcaching_dev.py`  
+**Learning Side:** You work in `modules/17_memoization/kvcaching_dev.py`  
 **Building Side:** Code exports to `tinytorch.generation.kv_cache`
 
 ```python
@@ -932,9 +932,9 @@ We built KV caching in Module 15, but our transformer (Modules 12-13) doesn't kn
 - Makes Module 12 depend on Module 15 (wrong dependency direction!)
 - Violates clean module boundaries
 
-**✅ GOOD Solution**: Module 15 ADDS caching to existing models without modification!
+**✅ GOOD Solution**: Module 17 ADDS caching to existing models without modification!
 - Use composition + monkey-patching (like `enable_autograd()`)
-- Module 15 wraps/enhances Module 12, not modifies it
+- Module 17 wraps/enhances Module 12, not modifies it
 - Students learn systems engineering: "Add capabilities, don't break old code"
 
 ### Implementation Strategy
@@ -998,10 +998,16 @@ def enable_kv_cache(model):
 
     Pedagogical Note:
         This teaches students that optimizations can be LAYERED on top of
-        working systems. Module 15 doesn't break Modules 12-13; it enhances them!
+        working systems. Module 17 doesn't break Modules 12-13; it enhances them!
     """
     ### BEGIN SOLUTION
     import types
+
+    # Educational Note: hasattr() is LEGITIMATE here because:
+    # 1. This is a plugin system that works with user-defined models
+    # 2. We need runtime validation that model has required interface
+    # 3. Different model architectures may have different attributes
+    # This is the CORRECT use of hasattr() for duck-typing validation
 
     # Validate model has required attributes
     required_attrs = ['embed_dim', 'num_layers', 'num_heads', 'max_seq_len', 'blocks']
@@ -1034,7 +1040,9 @@ def enable_kv_cache(model):
 
     # Patch each transformer block's attention
     for layer_idx, block in enumerate(model.blocks):
-        # Store original attention forward method
+        # Educational Note: hasattr() is LEGITIMATE here because:
+        # This is a monkey-patching safety check to avoid double-patching
+        # We're checking if we've already modified this object
         if not hasattr(block, '_original_attention_forward'):
             block._original_attention_forward = block.attention.forward
 
@@ -1259,17 +1267,23 @@ def disable_kv_cache(model):
         disable_kv_cache(model)  # Back to normal
         ```
     """
+    # Educational Note: hasattr() is LEGITIMATE here because:
+    # Checking if monkey-patch markers exist before restoration
     if not hasattr(model, '_cache_enabled') or not model._cache_enabled:
         print("⚠️  KV cache not enabled on this model")
         return
-    
+
     # Restore original attention forwards
     for block in model.blocks:
+        # Educational Note: hasattr() is LEGITIMATE here because:
+        # Checking for monkey-patch backup before restoration
         if hasattr(block, '_original_attention_forward'):
             block.attention.forward = block._original_attention_forward
     
     # Clean up
     model._cache_enabled = False
+    # Educational Note: hasattr() is LEGITIMATE here because:
+    # Safe cleanup check before deleting dynamically added attribute
     if hasattr(model, '_kv_cache'):
         delattr(model, '_kv_cache')
     
@@ -1282,7 +1296,7 @@ def disable_kv_cache(model):
 
 Let's verify that `enable_kv_cache()` works without breaking the model!
 
-**This is an integration test** - it tests Module 15 enhancing Modules 12-13 without modification.
+**This is an integration test** - it tests Module 17 enhancing Modules 12-13 without modification.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-noninvasive", "locked": true, "points": 10}
@@ -1561,7 +1575,7 @@ def test_module():
 
     print("=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
-    print("Run: tito module complete 15")
+    print("Run: tito module complete 17")
 
 # %%
 if __name__ == "__main__":
@@ -1572,7 +1586,7 @@ if __name__ == "__main__":
 """
 ## 🤔 ML Systems Reflection Questions
 
-Answer these questions based on your implementation and the concepts you've learned in Modules 01-15.
+Answer these questions based on your implementation and the concepts you've learned in Modules 01-17.
 
 ### Question 1: Cache Size Calculation
 A 12-layer transformer has 12 attention heads per layer, 64-dimensional embeddings per head,
@@ -1686,7 +1700,7 @@ This optimization is THE technique that transformed language models from researc
 
 ### Ready for Next Steps
 Your KV caching implementation demonstrates the principle: "spend memory to save time"!
-Export with: `tito module complete 15`
+Export with: `tito module complete 17`
 
 **Next**: Module 16 (Quantization) will use the opposite trade-off: "sacrifice precision to save memory"!
 
@@ -1716,7 +1730,7 @@ You've implemented KV caching - the critical optimization that makes production 
 
 ### Key Systems Engineering Lesson
 
-**Module 15 doesn't modify Modules 12-13 - it ENHANCES them!**
+**Module 17 doesn't modify Modules 12-13 - it ENHANCES them!**
 
 This teaches the critical principle: **Add capabilities forward, never break backward.**
 - Old code keeps working (Module 12 unchanged)
@@ -1752,7 +1766,7 @@ Watch the tokens/sec metric jump from ~40 to ~500! 🚀
 
 ---
 
-**Congratulations! You've completed Module 15: KV Caching (Memoization)!**
+**Congratulations! You've completed Module 17: KV Caching (Memoization)!**
 
 You now understand the optimization that makes ChatGPT, Claude, and all production LLMs possible. This is THE technique that transformed language models from research toys into products used by millions of people every day.
 
