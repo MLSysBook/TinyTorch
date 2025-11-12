@@ -1,67 +1,69 @@
 # TinyTorch Datasets
 
-This directory contains datasets for TinyTorch examples and training.
+This directory contains datasets for TinyTorch milestone examples.
 
 ## Directory Structure
 
 ```
 datasets/
-├── tiny/           ← Tiny datasets shipped with repo (~100KB each)
-│   └── digits_8x8.npz (1,797 samples, 67KB)
-├── mnist/          ← Full MNIST (downloaded, gitignored)
-├── cifar10/        ← Full CIFAR-10 (downloaded, gitignored)
-└── download_*.py   ← Download scripts for large datasets
+├── tinydigits/     ← 8×8 handwritten digits (ships with repo, ~310KB)
+├── tinytalks/      ← Q&A dataset for transformers (ships with repo, ~40KB)
+└── README.md       ← This file
 ```
 
-## Quick Start
+## Shipped Datasets (No Download Required)
 
-**For learning (instant, offline):**
-```python
-# Use tiny shipped datasets
-import numpy as np
-data = np.load('datasets/tiny/digits_8x8.npz')
-```
+### TinyDigits
+- **Used by:** Milestones 03 & 04 (MLP and CNN examples)
+- **Contents:** 1,000 training + 200 test samples
+- **Format:** 8×8 grayscale images, pickled
+- **Size:** ~310 KB
+- **Purpose:** Fast iteration on real image classification
 
-**For serious training (download once):**
-```bash
-python datasets/download_mnist.py
-```
+### TinyTalks
+- **Used by:** Milestone 05 (Transformer/GPT examples)
+- **Contents:** 350 Q&A pairs across 5 difficulty levels
+- **Format:** Plain text (Q: ... A: ... format)
+- **Size:** ~40 KB
+- **Purpose:** Character-level conversational AI training
 
-## MNIST Dataset
+## Downloaded Datasets (On-Demand)
 
-The `mnist/` directory should contain the MNIST or Fashion-MNIST dataset files:
-- `train-images-idx3-ubyte.gz` - Training images (60,000 samples)
-- `train-labels-idx1-ubyte.gz` - Training labels
-- `t10k-images-idx3-ubyte.gz` - Test images (10,000 samples)
-- `t10k-labels-idx1-ubyte.gz` - Test labels
+The milestones automatically download larger datasets when needed:
 
-### Downloading the Dataset
+### MNIST
+- **Used by:** `milestones/03_1986_mlp/02_rumelhart_mnist.py`
+- **Downloads to:** `milestones/datasets/mnist/`
+- **Contents:** 60K training + 10K test samples
+- **Format:** 28×28 grayscale images
+- **Size:** ~10 MB compressed
+- **Auto-downloaded by:** `milestones/data_manager.py`
 
-Run the provided download script:
-```bash
-cd datasets
-python download_mnist.py
-```
+### CIFAR-10
+- **Used by:** `milestones/04_1998_cnn/02_lecun_cifar10.py`
+- **Downloads to:** `milestones/datasets/cifar-10/`
+- **Contents:** 50K training + 10K test samples
+- **Format:** 32×32 RGB images
+- **Size:** ~170 MB compressed
+- **Auto-downloaded by:** `milestones/data_manager.py`
 
-This will download Fashion-MNIST (which has the same format as MNIST but is more accessible).
+## Design Philosophy
 
-### Dataset Format
+**Shipped datasets** follow Karpathy's "~1K samples" philosophy:
+- Small enough to ship with repo
+- Large enough for meaningful learning
+- Fast training (seconds to minutes)
+- Instant gratification for students
 
-Both MNIST and Fashion-MNIST use the same IDX file format:
-- Images: 28x28 grayscale pixels
-- Labels: Integer values 0-9
-- Gzipped for compression
+**Downloaded datasets** are full benchmarks:
+- Standard ML benchmarks (MNIST, CIFAR-10)
+- Larger, slower, more realistic
+- Auto-downloaded only when needed
+- Used for scaling demonstrations
 
-Fashion-MNIST classes:
-- 0: T-shirt/top
-- 1: Trouser
-- 2: Pullover
-- 3: Dress
-- 4: Coat
-- 5: Sandal
-- 6: Shirt
-- 7: Sneaker
-- 8: Bag
-- 9: Ankle boot
+## Total Repository Size
 
-The examples will work with either original MNIST digits or Fashion-MNIST items.
+- **Shipped data:** ~350 KB (tinydigits + tinytalks)
+- **USB-friendly:** Entire repo fits on any device
+- **Offline-capable:** Core milestones work without internet
+- **Git-friendly:** No large binary files in version control
