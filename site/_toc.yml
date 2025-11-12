@@ -69,7 +69,7 @@ parts:
   - file: ../modules/13_transformers/ABOUT
     title: "13. Transformers"
 
-- caption: ⚡ Optimization Tier (14-19)
+- caption: ⚡ Optimization Tier (14-20)
   chapters:
   - file: ../modules/14_profiling/ABOUT
     title: "14. Profiling"
