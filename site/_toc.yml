@@ -17,8 +17,12 @@ parts:
   chapters:
   - file: tito-essentials
     title: "Essential Commands"
+  - file: student-workflow
+    title: "Student Workflow"
   - file: learning-progress
     title: "Track Your Progress"
+  - file: datasets
+    title: "Datasets Guide"
 
 - caption: 🧭 Course Orientation
   chapters:
@@ -26,8 +30,12 @@ parts:
     title: "Course Structure"
   - file: chapters/learning-journey
     title: "Learning Journey"
+  - file: learning-journey-visual
+    title: "Visual Learning Map"
   - file: chapters/milestones
     title: "Historical Milestones"
+  - file: faq
+    title: "FAQ"
 
 - caption: 🏗️ Foundation Tier (01-07)
   chapters:
