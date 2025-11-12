@@ -1,5 +1,12 @@
 # 🎯 TinyTorch Checkpoint System
 
+<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
+<h3 style="margin: 0 0 0.5rem 0; color: #856404;">📋 Optional Progress Tracking</h3>
+<p style="margin: 0; color: #856404;">This checkpoint system is <strong>optional</strong> for tracking your learning progress. It's not required for the core TinyTorch workflow.</p>
+<p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Core workflow</strong>: Edit modules → Export with <code>tito module complete N</code> → Validate with milestone scripts</p>
+<p style="margin: 0.5rem 0 0 0;"><a href="student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the essential development cycle.</p>
+</div>
+
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Technical Implementation Guide</h2>
 <p style="margin: 0; color: #6c757d;">Capability validation system architecture and implementation details</p>
@@ -7,7 +14,7 @@
 
 **Purpose**: Technical documentation for the checkpoint validation system. Understand the architecture and implementation details of capability-based learning assessment.
 
-The TinyTorch checkpoint system provides technical infrastructure for capability validation and progress tracking. This system transforms traditional module completion into measurable skill assessment through automated testing and validation.
+The TinyTorch checkpoint system provides optional infrastructure for capability validation and progress tracking. This system transforms traditional module completion into measurable skill assessment through automated testing and validation.
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 
