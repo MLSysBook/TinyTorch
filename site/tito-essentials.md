@@ -7,9 +7,23 @@
 
 **Purpose**: Complete command reference for the TITO CLI. Master the essential commands for development workflow, progress tracking, and system management.
 
-## 🚀 First 4 Commands (Start Here)
+## The Core Workflow
 
-Every TinyTorch journey begins with these essential commands:
+TinyTorch follows a simple three-step cycle:
+
+```
+1. Edit modules → 2. Export to package → 3. Validate with milestones
+```
+
+**The essential command**: `tito module complete MODULE_NUMBER` - exports your code to the TinyTorch package.
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle guide.
+
+This page documents all available TITO commands. The checkpoint system (`tito checkpoint status`) is optional for progress tracking.
+
+## 🚀 Most Important Commands
+
+The commands you'll use most often:
 
 <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0;">
 
@@ -19,67 +33,55 @@ Every TinyTorch journey begins with these essential commands:
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready for development</p>
 </div>
 
-<div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e;">
-<h4 style="margin: 0 0 0.5rem 0; color: #15803d;">🎯 Track Your Progress</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito checkpoint status</code>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">See which capabilities you've mastered</p>
-</div>
-
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
-<h4 style="margin: 0 0 0.5rem 0; color: #d97706;">🔨 Work on a Module</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito module work 02_tensor</code>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Open and start building tensor operations</p>
+<h4 style="margin: 0 0 0.5rem 0; color: #d97706;">🔨 Export Module to Package (Essential)</h4>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito module complete 01</code>
+<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Export your module to the TinyTorch package - use this after editing modules</p>
 </div>
 
-<div style="background: #fdf2f8; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ec4899;">
-<h4 style="margin: 0 0 0.5rem 0; color: #be185d;">✅ Complete Your Work</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito module complete 02_tensor</code>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Export your code and test your capabilities</p>
+<div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e;">
+<h4 style="margin: 0 0 0.5rem 0; color: #15803d;">🎯 Track Your Progress (Optional)</h4>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito checkpoint status</code>
+<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">See which capabilities you've mastered (optional capability tracking)</p>
 </div>
 
 </div>
 
-## 🔄 Your Daily Learning Workflow
+## 🔄 Typical Development Session
 
-Follow this proven pattern for effective learning:
+Here's what a typical session looks like:
 
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 
-**Morning Start:**
+**Edit modules:**
 ```bash
-# 1. Check environment
-tito system doctor
-
-# 2. See your progress  
-tito checkpoint status
-
-# 3. Start working on next module
-tito module work 03_activations
+cd modules/source/03_layers
+jupyter lab 03_layers_dev.py
+# Make your implementation...
 ```
 
-**During Development:**
+**Export to package:**
 ```bash
-# Test your understanding anytime
-tito checkpoint test 02
-
-# View your learning timeline
-tito checkpoint timeline
+# From repository root
+tito module complete 03
 ```
 
-**End of Session:**
+**Validate with milestones:**
 ```bash
-# Complete and export your work
-tito module complete 03_activations
-
-# Celebrate your progress!
-tito checkpoint status
+cd milestones/01_1957_perceptron
+python 01_rosenblatt_forward.py  # Uses YOUR implementation!
 ```
+
+**Optional progress tracking:**
+```bash
+tito checkpoint status  # See what you've completed
+```
+
+**📖 See [Student Workflow](student-workflow.html)** for complete development cycle details.
 
 </div>
 
-## 💪 Most Important Commands (Top 10)
-
-Master these commands for maximum efficiency:
+## 📖 Complete Command Reference
 
 ### 🏥 System & Health
 <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
@@ -90,124 +92,73 @@ tito system doctor
 ```
 *Diagnose environment issues before they block you*
 
-**Module Status**  
+**System Info**
 ```bash
-tito module status
+tito system info
 ```
-*See all available modules and your completion status*
+*View configuration details*
 
 </div>
 
-### 📊 Progress Tracking  
+### 🔨 Module Management
+<div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
+
+**Export Module to Package (Essential)**
+```bash
+tito module complete MODULE_NUMBER
+```
+*Export your implementation to the TinyTorch package - the key command in the workflow*
+
+**Example:**
+```bash
+tito module complete 05  # Export Module 05 (Autograd)
+```
+
+After exporting, your code is importable:
+```python
+from tinytorch.autograd import backward  # YOUR implementation!
+```
+
+</div>
+
+### 📊 Progress Tracking (Optional)
 <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
 
 **Capability Overview**
 ```bash
 tito checkpoint status
 ```
-*Quick view of your 16 core capabilities*
+*Quick view of your capabilities (optional tracking)*
 
 **Detailed Progress**
 ```bash
 tito checkpoint status --detailed
 ```
-*Module-by-module breakdown with test status*
+*Module-by-module breakdown*
 
 **Visual Timeline**
 ```bash
 tito checkpoint timeline
 ```
-*See your learning journey in beautiful visual format*
-
-</div>
-
-### 🔨 Module Development
-<div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
-
-**Start Working**
-```bash
-tito module work 05_dense
-```
-*Open module and start building*
-
-**Export to Package**
-```bash
-tito module complete 05_dense
-```
-*Export your code to the TinyTorch package + run capability test*
-
-**Quick Export (No Test)**
-```bash
-tito module export 05_dense
-```
-*Export without running capability tests*
-
-</div>
-
-### 🧪 Testing & Validation
-<div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
+*See your learning journey in visual format*
 
 **Test Specific Capability**
 ```bash
-tito checkpoint test 03
+tito checkpoint test CHECKPOINT_NUMBER
 ```
 *Verify you've mastered a specific capability*
 
-**Run Checkpoint with Details**
-```bash
-tito checkpoint run 03 --verbose
-```
-*See detailed output of capability validation*
-
 </div>
 
-## 🎓 Learning Stages & Commands
-
-### Stage 1: Foundation (Modules 1-4)
-**Key Commands:**
-- `tito module work 01_setup` → `tito module complete 01_setup`
-- `tito checkpoint test 00` (Environment)
-- `tito checkpoint test 01` (Foundation)
-
-### Stage 2: Core Learning (Modules 5-8)  
-**Key Commands:**
-- `tito checkpoint status` (Track your capabilities)
-- `tito checkpoint timeline` (Visual progress)
-- Complete modules 5-8 systematically
-
-### Stage 3: Advanced Systems (Modules 9+)
-**Key Commands:**
-- `tito checkpoint timeline --horizontal` (Linear view)
-- Focus on systems optimization modules
-- Use `tito checkpoint test XX` for validation
-
-## 👩‍🏫 Instructor Commands (NBGrader)
-
-For instructors managing the course:
+## 👩‍🏫 Instructor Commands (Coming Soon)
 
 <div style="background: #f3e5f5; padding: 1rem; border-radius: 0.25rem; margin: 1rem 0;">
 
-**Setup Course:**
-```bash
-tito nbgrader init              # Initialize NBGrader environment
-tito nbgrader status            # Check assignment status
-```
+TinyTorch includes NBGrader integration for classroom use. Full documentation for instructor workflows (assignment generation, autograding, etc.) will be available in future releases.
 
-**Manage Assignments:**
-```bash
-tito nbgrader generate 01_setup  # Create assignment from module
-tito nbgrader release 01_setup   # Release to students
-tito nbgrader collect 01_setup   # Collect submissions
-tito nbgrader autograde 01_setup # Automatic grading
-```
+**For now, focus on the student workflow**: edit modules → export → validate with milestones.
 
-**Reports & Export:**
-```bash
-tito nbgrader report            # Generate grade report
-tito nbgrader export            # Export grades to CSV
-```
-
-*For detailed instructor workflow, see [Instructor Guide](usage-paths/classroom-use.html)*
+*For current instructor capabilities, see [Classroom Use Guide](usage-paths/classroom-use.html)*
 
 </div>
 
@@ -223,38 +174,11 @@ tito system doctor          # Diagnose problems
 tito system info           # Show configuration details
 ```
 
-**Module Problems:**
-```bash
-tito module status         # Check what's available
-tito module info 02_tensor # Get specific module details
-```
-
-**Progress Confusion:**
+**Progress Tracking (Optional):**
 ```bash
 tito checkpoint status --detailed    # See exactly where you are
 tito checkpoint timeline            # Visualize your progress
 ```
-
-</div>
-
-## 🎯 Pro Tips for Efficiency
-
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
-
-<div style="background: #e6fffa; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #26d0ce;">
-<h4 style="margin: 0 0 0.5rem 0; color: #0d9488;">🔥 Hot Tip</h4>
-<p style="margin: 0; font-size: 0.9rem;">Use tab completion! Type `tito mod` + TAB to auto-complete commands</p>
-</div>
-
-<div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #3b82f6;">
-<h4 style="margin: 0 0 0.5rem 0; color: #1d4ed8;">⚡ Speed Boost</h4>
-<p style="margin: 0; font-size: 0.9rem;">Alias common commands: `alias ts='tito checkpoint status'`</p>
-</div>
-
-<div style="background: #fefce8; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #eab308;">
-<h4 style="margin: 0 0 0.5rem 0; color: #a16207;">🎯 Focus</h4>
-<p style="margin: 0; font-size: 0.9rem;">Always run `tito system doctor` first when starting a new session</p>
-</div>
 
 </div>
 

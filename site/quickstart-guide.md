@@ -52,7 +52,13 @@ You should see all green checkmarks! This confirms your environment is ready for
 
 ## 🏗️ 15-Minute First Module Walkthrough
 
-Let's build your first neural network component and unlock your first capability:
+Let's build your first neural network component following the **TinyTorch workflow**:
+
+```
+1. Edit modules → 2. Export to package → 3. Validate with milestones
+```
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
 
 ### Module 01: Tensor Foundations
 
@@ -65,9 +71,9 @@ Let's build your first neural network component and unlock your first capability
 **💻 Action:** Start with Module 01 to build tensor operations from scratch.
 
 ```bash
-# Navigate to the tensor module
-cd modules/01_tensor
-jupyter lab tensor_dev.py
+# Step 1: Edit the module source
+cd modules/source/01_tensor
+jupyter lab 01_tensor_dev.py
 ```
 
 You'll implement core tensor operations:
@@ -78,7 +84,14 @@ You'll implement core tensor operations:
 
 **Key Implementation:** Build the `Tensor` class that forms the foundation of all neural networks
 
-**📖 See [Essential Commands](tito-essentials.html)** for module workflow commands.
+```bash
+# Step 2: Export to package when ready
+tito module complete 01
+```
+
+This makes your implementation importable: `from tinytorch import Tensor`
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete edit → export → validate cycle.
 
 **✅ Achievement Unlocked:** Foundation capability - "Can I create and manipulate the building blocks of ML?"
 
@@ -94,6 +107,12 @@ You'll implement core tensor operations:
 
 **💻 Action:** Continue with Module 02 to add activation functions.
 
+```bash
+# Step 1: Edit the module
+cd modules/source/02_activations
+jupyter lab 02_activations_dev.py
+```
+
 You'll implement essential activation functions:
 - ReLU (Rectified Linear Unit) - the workhorse of deep learning
 - Softmax - for probability distributions
@@ -102,7 +121,12 @@ You'll implement essential activation functions:
 
 **Key Implementation:** Build activation functions that allow neural networks to learn complex patterns
 
-**📖 See [Essential Commands](tito-essentials.html)** for module development workflow.
+```bash
+# Step 2: Export when ready
+tito module complete 02
+```
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete edit → export → validate cycle.
 
 **✅ Achievement Unlocked:** Intelligence capability - "Can I add nonlinearity to enable learning?"
 
@@ -114,28 +138,38 @@ After completing your first modules:
 
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 
-**Check your new capabilities:** Track your progress through the 21-checkpoint system to see your growing ML systems expertise.
+**Check your new capabilities:** Use the optional checkpoint system to track your progress:
 
-**📖 See [Track Your Progress](learning-progress.html)** for detailed capability tracking and [Essential Commands](tito-essentials.html)** for progress monitoring commands.
+```bash
+tito checkpoint status  # View your completion tracking
+```
+
+This is helpful for self-assessment but not required for the core workflow.
+
+**📖 See [Student Workflow](student-workflow.html)** for the essential edit → export → validate cycle, and [Track Your Progress](learning-progress.html)** for detailed capability tracking.
 
 </div>
 
-## 🏆 Unlock Historical Milestones
+## 🏆 Validate with Historical Milestones
 
-As you progress, **prove what you've built** by recreating history's greatest ML breakthroughs:
+After exporting your modules, **prove what you've built** by running milestone scripts:
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 0.5rem; margin: 1.5rem 0; color: white;">
 
-**After Module 04**: Build **Rosenblatt's 1957 Perceptron** - the first trainable neural network  
-**After Module 06**: Solve the **1969 XOR Crisis** with multi-layer networks  
-**After Module 08**: Achieve **95%+ accuracy on MNIST** with 1986 backpropagation  
-**After Module 09**: Hit **75%+ on CIFAR-10** with 1998 CNNs - your North Star goal! 🎯
+**After Module 07**: Build **Rosenblatt's 1957 Perceptron** - the first trainable neural network
+**After Module 07**: Solve the **1969 XOR Crisis** with multi-layer networks
+**After Module 08**: Achieve **95%+ accuracy on MNIST** with 1986 backpropagation
+**After Module 09**: Hit **75%+ on CIFAR-10** with 1998 CNNs
+**After Module 13**: Generate text with **2017 Transformers**
+**After Module 18**: Optimize for production with **2018 MLPerf**
 
 **📖 See [Journey Through ML History](chapters/milestones.html)** for complete milestone demonstrations.
 
 </div>
 
-**Why Milestones Matter**: These aren't toy demos - they're historically significant achievements proving YOUR implementations work at production scale!
+**The Workflow**: Edit modules → Export with `tito module complete N` → Run milestone scripts to validate
+
+**📖 See [Student Workflow](student-workflow.html)** for the complete cycle.
 
 ## 🎯 What You Just Accomplished
 
@@ -166,14 +200,15 @@ In 15 minutes, you've:
 
 ### Immediate Next Actions (Choose One):
 
-**🔥 Continue Building (Recommended):** Begin Module 03 to add intelligence to your network with nonlinear activation functions.
+**🔥 Continue Building (Recommended):** Begin Module 03 to add layers to your network.
 
-**📚 Learn the Workflow:**
-- **📖 See [Essential Commands](tito-essentials.html)** for complete TITO command guide
+**📚 Master the Workflow:**
+- **📖 See [Student Workflow](student-workflow.html)** for the complete edit → export → validate cycle
+- **📖 See [Essential Commands](tito-essentials.html)** for complete TITO command reference
 - **📖 See [Track Your Progress](learning-progress.html)** for the full learning path
 
 **🎓 For Instructors:**
-- **📖 See [Classroom Setup Guide](usage-paths/classroom-use.html)** for NBGrader integration and grading workflow
+- **📖 See [Classroom Setup Guide](usage-paths/classroom-use.html)** for NBGrader integration (coming soon)
 
 </div>
 
@@ -181,13 +216,12 @@ In 15 minutes, you've:
 
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 
-**Essential Development Practices:**
-- Always verify your environment before starting
-- Track your progress through capability checkpoints
-- Follow the standard module development workflow
-- Use diagnostic commands when debugging issues
+**The TinyTorch Development Cycle:**
+1. Edit module sources in `modules/source/`
+2. Export with `tito module complete N`
+3. Validate by running milestone scripts
 
-**📖 See [Essential Commands](tito-essentials.html)** for complete workflow commands and troubleshooting guide.
+**📖 See [Student Workflow](student-workflow.html)** for detailed workflow guide and best practices.
 
 </div>
 
