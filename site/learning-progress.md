@@ -9,13 +9,9 @@
 
 ## The Core Workflow
 
-TinyTorch follows a simple three-step cycle:
+TinyTorch follows a simple three-step cycle: **Edit modules → Export to package → Validate with milestones**
 
-```
-1. Edit modules → 2. Export to package → 3. Validate with milestones
-```
-
-**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle, best practices, and troubleshooting.
 
 ## Understanding Modules vs Checkpoints vs Milestones
 
@@ -45,74 +41,36 @@ TinyTorch follows a simple three-step cycle:
 
 ## Your Learning Path Overview
 
-TinyTorch organizes learning through **three pedagogically-motivated tiers**, each building essential ML systems capabilities:
+TinyTorch organizes 20 modules through three pedagogically-motivated tiers: **Foundation** (build mathematical infrastructure), **Architecture** (implement modern AI), and **Optimization** (deploy production systems).
 
-**📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, time estimates, and learning outcomes.
+**📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for complete tier breakdown, detailed module descriptions, time estimates, and learning outcomes.
 
-## Student Learning Journey
+## Module Progression Checklist
 
-### Typical Student Progression by Tier
-- **🏗️ Foundation Tier (6-8 weeks)**: Build mathematical infrastructure - tensors, autograd, optimizers, training loops
-- **🏛️ Architecture Tier (4-6 weeks)**: Implement modern AI architectures - CNNs for vision, transformers for language
-- **⚡ Optimization Tier (4-6 weeks)**: Deploy production systems - profiling, quantization, acceleration
+Track your journey through the 20 modules:
 
-### Study Approaches
-- **Complete Builder** (14-18 weeks): Implement all three tiers from scratch
-- **Focused Explorer** (4-8 weeks): Pick specific tiers based on your goals
-- **Guided Learner** (8-12 weeks): Study implementations with hands-on exercises
+- [ ] **Module 01**: Tensor - N-dimensional arrays
+- [ ] **Module 02**: Activations - ReLU, Softmax
+- [ ] **Module 03**: Layers - Linear layers
+- [ ] **Module 04**: Losses - CrossEntropyLoss, MSELoss
+- [ ] **Module 05**: Autograd - Automatic differentiation
+- [ ] **Module 06**: Optimizers - SGD, Adam
+- [ ] **Module 07**: Training - Complete training loops
+- [ ] **Module 08**: DataLoader - Batching and pipelines
+- [ ] **Module 09**: Spatial - Conv2d, MaxPool2d
+- [ ] **Module 10**: Tokenization - Character-level tokenizers
+- [ ] **Module 11**: Embeddings - Token and positional embeddings
+- [ ] **Module 12**: Attention - Multi-head self-attention
+- [ ] **Module 13**: Transformers - LayerNorm, GPT
+- [ ] **Module 14**: Profiling - Performance measurement
+- [ ] **Module 15**: Quantization - INT8/FP16
+- [ ] **Module 16**: Compression - Pruning techniques
+- [ ] **Module 17**: Memoization - KV-cache
+- [ ] **Module 18**: Acceleration - Batching strategies
+- [ ] **Module 19**: Benchmarking - MLPerf-style comparison
+- [ ] **Module 20**: Competition - Capstone challenge
 
 **📖 See [Quick Start Guide](quickstart-guide.html)** for immediate hands-on experience with your first module.
-
-## Module Progression
-
-Your journey through 20 modules organized in three tiers:
-
-### 🏗️ Foundation Tier (Modules 01-07)
-
-Build the mathematical infrastructure:
-
-| Module | Component | What You Build |
-|--------|-----------|----------------|
-| 01 | Tensor | N-dimensional arrays with operations |
-| 02 | Activations | ReLU, Softmax, nonlinear functions |
-| 03 | Layers | Linear layers, forward/backward |
-| 04 | Losses | CrossEntropyLoss, MSELoss |
-| 05 | Autograd | Automatic differentiation engine |
-| 06 | Optimizers | SGD, Adam, parameter updates |
-| 07 | Training | Complete training loops |
-
-**Milestone unlocked**: M01 Perceptron (1957), M02 XOR (1969)
-
-### 🏛️ Architecture Tier (Modules 08-13)
-
-Implement modern architectures:
-
-| Module | Component | What You Build |
-|--------|-----------|----------------|
-| 08 | DataLoader | Batching and data pipelines |
-| 09 | Spatial | Conv2d, MaxPool2d for vision |
-| 10 | Tokenization | Character-level tokenizers |
-| 11 | Embeddings | Token and positional embeddings |
-| 12 | Attention | Multi-head self-attention |
-| 13 | Transformers | LayerNorm, TransformerBlock, GPT |
-
-**Milestones unlocked**: M03 MLP (1986), M04 CNN (1998), M05 Transformers (2017)
-
-### ⚡ Optimization Tier (Modules 14-20)
-
-Optimize for production:
-
-| Module | Component | What You Build |
-|--------|-----------|----------------|
-| 14 | Profiling | Performance measurement tools |
-| 15 | Quantization | INT8/FP16 implementations |
-| 16 | Compression | Pruning techniques |
-| 17 | Memoization | KV-cache for generation |
-| 18 | Acceleration | Batching strategies |
-| 19 | Benchmarking | MLPerf-style fair comparison |
-| 20 | Competition | Capstone optimization challenge |
-
-**Milestone unlocked**: M06 MLPerf (2018)
 
 ## Optional: Checkpoint System
 

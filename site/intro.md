@@ -33,27 +33,19 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 
 ## The Simple Workflow
 
-TinyTorch follows a three-step cycle:
+TinyTorch follows a simple three-step cycle:
 
 ```
 1. Edit modules → 2. Export to package → 3. Validate with milestones
 ```
 
-You work on module source files (`modules/source/`), export them to the TinyTorch package (`tito module complete N`), and prove they work by running historical milestone scripts. That's it.
-
-**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle, best practices, and troubleshooting.
 
 ## Three-Tier Learning Pathway
 
-TinyTorch organizes learning through **three pedagogically-motivated tiers** that follow ML history:
+TinyTorch organizes 20 modules through three pedagogically-motivated tiers: **Foundation** (build mathematical infrastructure), **Architecture** (implement modern AI), and **Optimization** (deploy production systems).
 
-**🏗️ Foundation Tier (Modules 01-07)**: Build mathematical infrastructure - tensors, autograd, optimizers
-**🏛️ Architecture Tier (Modules 08-13)**: Implement modern AI - CNNs for vision, transformers for language
-**⚡ Optimization Tier (Modules 14-20)**: Deploy production systems - profiling, quantization, acceleration
-
-Each tier builds complete, working systems with clear career connections and practical skills.
-
-**📖 See [Complete Three-Tier Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, time estimates, and learning outcomes.
+**📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, module lists, time estimates, and learning outcomes.
 
 ## 🗺️ Understanding Your Complete Learning Journey
 
@@ -85,117 +77,17 @@ TinyTorch's 20 modules aren't arbitrary - they tell a carefully crafted story fr
 
 ## 🏆 Prove Your Mastery Through History
 
-As you complete modules, unlock **historical milestone demonstrations** that prove what you've built works! From Rosenblatt's 1957 perceptron to modern CNNs achieving 75%+ accuracy on CIFAR-10, each milestone recreates a breakthrough using YOUR implementations:
+As you complete modules, unlock **historical milestone demonstrations** that prove what you've built works! Each milestone recreates a breakthrough using YOUR implementations—from Rosenblatt's 1957 perceptron to modern transformers and production optimization.
 
-- **🧠 1957: Perceptron** - First trainable network with YOUR Linear layer
-- **⚡ 1969: XOR Solution** - Multi-layer networks with YOUR autograd
-- **🔢 1986: MNIST MLP** - Backpropagation achieving 95%+ with YOUR optimizers
-- **🖼️ 1998: CIFAR-10 CNN** - Spatial intelligence with YOUR Conv2d (75%+ accuracy!)
-- **🤖 2017: Transformers** - Language generation with YOUR attention
-- **⚡ 2024: Systems Age** - Production optimization with YOUR profiling
-
-**📖 See [Journey Through ML History](chapters/milestones.html)** for complete milestone details and requirements.
+**📖 See [Journey Through ML History](chapters/milestones.html)** for complete timeline, requirements, and expected results.
 
 ## Why Build Instead of Use?
 
-The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them. When you build from scratch, you transform from a framework user into a systems engineer:
+The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them.
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
+When you just use PyTorch or TensorFlow, you're stuck when things break—OOM errors, NaN losses, slow training. When you build TinyTorch from scratch, you understand exactly why these issues happen and how to fix them. You know the memory layouts, gradient flows, and performance bottlenecks because you implemented them yourself.
 
-<!-- Top Row: Using Libraries Examples -->
-<div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ Using PyTorch</h3>
-
-```python
-import torch.nn as nn
-import torch.optim as optim
-
-model = nn.Linear(784, 10)
-optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-# Your model trains but then...
-# 🔥 OOM error! Why?
-# 🔥 Loss is NaN! How to debug?
-# 🔥 Training is slow! What's the bottleneck?
-```
-
-<p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-You're stuck when things break
-</p>
-</div>
-
-<div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ Using TensorFlow</h3>
-
-```python
-import tensorflow as tf
-
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(10)
-])
-
-# Magic happens somewhere...
-# 🤷 How are gradients computed?
-# 🤷 Why this initialization?
-# 🤷 What's happening in backward pass?
-```
-
-<p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-Magic boxes you can't understand
-</p>
-</div>
-
-<!-- Bottom Row: Building Your Own Examples -->
-<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ Building TinyTorch</h3>
-
-```python
-class Linear:
-    def __init__(self, in_features, out_features):
-        self.weight = randn(in_features, out_features) * 0.01
-        self.bias = zeros(out_features)
-
-    def forward(self, x):
-        self.input = x  # Save for backward
-        return x @ self.weight + self.bias
-
-    def backward(self, grad):
-        # You wrote this! You know exactly why:
-        self.weight.grad = self.input.T @ grad
-        self.bias.grad = grad.sum(axis=0)
-        return grad @ self.weight.T
-```
-
-<p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-You can debug anything
-</p>
-</div>
-
-<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ Building KV Cache</h3>
-
-```python
-class KVCache:
-    def __init__(self, max_seq_len, n_heads, head_dim):
-        # You understand EXACTLY the memory layout:
-        self.k_cache = zeros(max_seq_len, n_heads, head_dim)
-        self.v_cache = zeros(max_seq_len, n_heads, head_dim)
-        # That's why GPT needs GBs of RAM!
-
-    def update(self, k, v, pos):
-        # You know why position matters:
-        self.k_cache[pos:pos+len(k)] = k  # Reuse past computations
-        self.v_cache[pos:pos+len(v)] = v  # O(n²) → O(n) speedup!
-        # Now you understand why context windows are limited
-```
-
-<p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-You master modern LLM optimizations
-</p>
-</div>
-
-</div>
+**📖 See [FAQ](faq.html)** for detailed comparisons with PyTorch, TensorFlow, micrograd, and nanoGPT, including code examples and architectural differences.
 
 ## Who Is This For?
 
