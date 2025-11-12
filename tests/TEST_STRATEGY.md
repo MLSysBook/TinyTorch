@@ -1,5 +1,8 @@
 # TinyTorch Test Strategy
 
+> **📚 For the complete testing plan**: See `docs/development/MASTER_TESTING_PLAN.md`  
+> **🚀 Quick Reference**: See `docs/development/TESTING_QUICK_REFERENCE.md`
+
 ## 🎯 Testing Philosophy
 
 TinyTorch uses a **two-tier testing approach** that separates component validation from system integration:
