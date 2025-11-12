@@ -1,0 +1,65 @@
+name: Publish Dev Site
+
+# This workflow builds and deploys the dev site to /dev/ subdirectory
+# The dev site will be accessible at: https://mlsysbook.github.io/TinyTorch/dev/
+# 
+# Both main and dev sites deploy to the 'gh-pages' branch:
+# - Live site: deployed to root (/) when main branch is pushed
+# - Dev site: deployed to /dev/ subdirectory when dev branch is pushed
+# 
+# Setup: Configure GitHub Pages in repo Settings → Pages to serve from 'gh-pages' branch
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:  # Allow manual triggering
+
+# Set permissions for GitHub Pages deployment
+permissions:
+  contents: write  # Needed to push to gh-pages branch
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "dev-pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper versioning
+          
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r site/requirements.txt
+          
+      - name: Build Jupyter Book
+        working-directory: ./site
+        run: |
+          jupyter-book build . --all
+          
+      - name: Deploy to /dev/ subdirectory
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site/_build/html
+          destination_dir: dev  # Deploy to /dev/ subdirectory
+          publish_branch: gh-pages  # Deploy to same branch as main site
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy dev site to /dev/ from dev branch - ${{ github.sha }}'
+          force_orphan: false
+          keep_files: true  # Keep existing files (main site) when deploying
+
