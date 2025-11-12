@@ -1,6 +1,6 @@
 # Milestone 04: The CNN Revolution (1998)
 
-## 🎯 Historical Context
+## Historical Context
 
 After backpropagation revived neural networks (1986), researchers still struggled with image recognition. MLPs treated pixels independently, requiring millions of parameters and ignoring spatial structure.
 
@@ -11,13 +11,13 @@ Then in 1998, **Yann LeCun's LeNet-5** revolutionized computer vision with **Con
 
 LeNet achieved 99%+ accuracy on handwritten digits, launching the deep learning revolution that led to ImageNet (2012), object detection, and modern computer vision.
 
-## 📚 What You're Building
+## What You're Building
 
 CNNs that exploit spatial structure in images:
 1. **TinyDigits** - Prove convolution works on 8×8 digits
 2. **CIFAR-10** - Scale to natural color images (32×32)
 
-## ✅ Required Modules
+## Required Modules
 
 **Run after Module 09** (Spatial operations: Conv2d + Pooling)
 
@@ -33,7 +33,7 @@ CNNs that exploit spatial structure in images:
 | Module 08 | DataLoader | YOUR data batching |
 | **Module 09** | **Spatial** | **YOUR Conv2d + MaxPool2d** |
 
-## 🏗️ Milestone Structure
+## Milestone Structure
 
 This milestone uses **spatial architecture progression** with 2 scripts:
 
@@ -60,14 +60,14 @@ This milestone uses **spatial architecture progression** with 2 scripts:
 
 **Historical Note:** CIFAR-10 (2009) became the benchmark for evaluating CNN architectures before ImageNet.
 
-## 📊 Expected Results
+## Expected Results
 
 | Script | Dataset | Image Size | Architecture | Accuracy | Training Time | vs MLP |
 |--------|---------|------------|--------------|----------|---------------|--------|
 | 01 (TinyDigits) | 1K train | 8×8 gray | Simple CNN | ~90% | 5-7 min | +10% improvement |
 | 02 (CIFAR-10) | 50K train | 32×32 RGB | Deeper CNN | 65-75% | 30-60 min | MLPs struggle here |
 
-## 🎓 Key Learning: Why Convolution Dominates Vision
+## Key Learning: Why Convolution Dominates Vision
 
 CNNs exploit three key principles:
 
@@ -87,7 +87,7 @@ CNNs exploit three key principles:
 
 This is why CNNs remained state-of-the-art for vision until Vision Transformers (2020)!
 
-## 🚀 Running the Milestone
+## Running the Milestone
 
 ```bash
 cd milestones/04_1998_cnn
@@ -99,14 +99,14 @@ python 01_lecun_tinydigits.py
 python 02_lecun_cifar10.py
 ```
 
-## 📖 Further Reading
+## Further Reading
 
 - **LeNet-5 Paper**: LeCun et al. (1998). "Gradient-based learning applied to document recognition"
 - **CIFAR-10**: Krizhevsky (2009). "Learning Multiple Layers of Features from Tiny Images"
 - **ImageNet Moment**: Krizhevsky et al. (2012). "ImageNet Classification with Deep CNNs" (AlexNet)
 - **Modern Survey**: [A guide to convolution arithmetic](https://arxiv.org/abs/1603.07285)
 
-## 🎯 Achievement Unlocked
+## Achievement Unlocked
 
 After completing this milestone, you'll understand:
 - Why convolution works better than dense layers for images

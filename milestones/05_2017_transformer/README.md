@@ -1,6 +1,6 @@
 # Milestone 05: The Transformer Era (2017)
 
-## 🎯 Historical Context
+## Historical Context
 
 In 2017, Vaswani et al. published **"Attention Is All You Need,"** showing that attention mechanisms alone (no RNNs, no convolutions!) could achieve state-of-the-art results on sequence tasks. This breakthrough:
 
@@ -11,13 +11,13 @@ In 2017, Vaswani et al. published **"Attention Is All You Need,"** showing that 
 
 Transformers didn't just improve NLP - they unified vision, language, and multimodal AI. Now it's your turn to build one from scratch using YOUR TinyTorch!
 
-## 📚 What You're Building
+## What You're Building
 
 Character-level transformer models for text generation:
 1. **Question Answering** - Train on TinyTalks Q&A dataset
 2. **Dialogue Generation** - Generate coherent conversational responses
 
-## ✅ Required Modules
+## Required Modules
 
 **Run after Module 13** (Complete transformer stack)
 
@@ -35,7 +35,7 @@ Character-level transformer models for text generation:
 | **Module 12** | **Attention** | **YOUR multi-head self-attention** |
 | **Module 13** | **Transformers** | **YOUR LayerNorm + TransformerBlock + GPT** |
 
-## 🏗️ Milestone Structure
+## Milestone Structure
 
 This milestone uses **progressive generation tasks** with 2 scripts:
 
@@ -67,14 +67,14 @@ This milestone uses **progressive generation tasks** with 2 scripts:
 - YOUR implementation from scratch (no magic!)
 - Proves attention mechanism works
 
-## 📊 Expected Results
+## Expected Results
 
 | Script | Task | Context Length | Success Criteria | Training Time |
 |--------|------|----------------|------------------|---------------|
 | 01 (Q&A) | Answer questions | 128 chars | Loss < 1.5, sensible word choices | 3-5 min |
 | 02 (Dialogue) | Multi-turn chat | 128 chars | Maintains topic coherence, loss < 1.5 | 3-5 min |
 
-## 🎓 Key Learning: Why Attention Revolutionized AI
+## Key Learning: Why Attention Revolutionized AI
 
 Transformers solve the fundamental problems of RNNs:
 
@@ -99,7 +99,7 @@ Attention: Directly access ANY past position (no bottleneck!)
 
 This is why GPT, BERT, T5, and modern LLMs all use transformers!
 
-## 🚀 Running the Milestone
+## Running the Milestone
 
 ```bash
 cd milestones/05_2017_transformer
@@ -117,14 +117,14 @@ python 02_vaswani_dialogue.py --epochs 5 --batch-size 4
 - `--num-layers L` - Number of transformer blocks (default: 3)
 - `--num-heads H` - Attention heads (default: 4)
 
-## 📖 Further Reading
+## Further Reading
 
 - **The Paper**: Vaswani et al. (2017). "Attention Is All You Need"
 - **Illustrated Transformer**: http://jalammar.github.io/illustrated-transformer/
 - **GPT Evolution**: Radford et al. (2018, 2019, 2020). GPT-1/2/3 papers
 - **BERT**: Devlin et al. (2018). "BERT: Pre-training of Deep Bidirectional Transformers"
 
-## 🎯 Achievement Unlocked
+## Achievement Unlocked
 
 After completing this milestone, you'll understand:
 - How self-attention computes context-aware representations

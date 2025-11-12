@@ -1,12 +1,12 @@
 # Milestone 06: MLPerf - The Optimization Era (2018)
 
-## 🎯 Historical Context
+## Historical Context
 
 As ML models grew larger and deployment became critical, the community needed **systematic optimization methodologies**. MLCommons' MLPerf (2018) established standardized benchmarking and optimization workflows, shifting the focus from "can we build it?" to "can we deploy it efficiently?"
 
 This milestone teaches **production optimization** - the systematic process of profiling, compressing, and accelerating models for real-world deployment.
 
-## 📚 What You're Building
+## What You're Building
 
 A complete MLPerf-style optimization pipeline that takes a trained transformer and systematically optimizes it for production deployment. You'll learn to:
 
@@ -14,7 +14,7 @@ A complete MLPerf-style optimization pipeline that takes a trained transformer a
 2. **Compress** to reduce model size
 3. **Accelerate** to speed up inference
 
-## ✅ Required Modules
+## Required Modules
 
 **Run after Module 18** (Full optimization suite)
 
@@ -29,7 +29,7 @@ A complete MLPerf-style optimization pipeline that takes a trained transformer a
 | Module 17 | Memoization | YOUR KV-cache for generation |
 | Module 18 | Acceleration | YOUR batching strategies |
 
-## 🏗️ Milestone Structure
+## Milestone Structure
 
 This milestone uses **progressive optimization** with 3 scripts:
 
@@ -62,7 +62,7 @@ This milestone uses **progressive optimization** with 3 scripts:
 
 **Historical Anchor:** Production transformers (2019-2020) - GPT-2/GPT-3 deployment
 
-## 📊 Expected Results
+## Expected Results
 
 | Optimization Stage | Accuracy | Size | Speed | Notes |
 |-------------------|----------|------|-------|-------|
@@ -72,7 +72,7 @@ This milestone uses **progressive optimization** with 3 scripts:
 | + KV-Cache | 95-98% | 12.5% | 6-10× | Generation speedup |
 | + Batching | 95-98% | 12.5% | 12-40× | **Production ready!** |
 
-## 🎓 Key Learning: Optimization is Iterative
+## Key Learning: Optimization is Iterative
 
 Unlike earlier milestones where you "build and run," optimization requires:
 1. **Measure** (profile to find bottlenecks)
@@ -82,7 +82,7 @@ Unlike earlier milestones where you "build and run," optimization requires:
 
 This is the **systems thinking** that makes TinyTorch unique - you're not just learning ML, you're learning **ML systems engineering**.
 
-## 🚀 Running the Milestone
+## Running the Milestone
 
 ```bash
 cd milestones/06_2018_mlperf
@@ -97,14 +97,14 @@ python 02_compression.py
 python 03_generation_opts.py
 ```
 
-## 📖 Further Reading
+## Further Reading
 
 - **MLPerf**: https://mlcommons.org/en/inference-edge-11/
 - **Deep Compression** (Han et al., 2015): https://arxiv.org/abs/1510.00149
 - **MobileNets** (Howard et al., 2017): https://arxiv.org/abs/1704.04861
 - **Efficient Transformers Survey**: https://arxiv.org/abs/2009.06732
 
-## 🎯 Achievement Unlocked
+## Achievement Unlocked
 
 After completing this milestone, you'll understand:
 - How to profile ML models systematically
