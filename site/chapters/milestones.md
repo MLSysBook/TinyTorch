@@ -1,23 +1,23 @@
-# 🏆 Journey Through ML History
+# Journey Through ML History
 
 **Experience the evolution of AI by rebuilding history's most important breakthroughs with YOUR TinyTorch implementations.**
 
 ---
 
-## 🎯 What Are Milestones?
+## What Are Milestones?
 
 Milestones are **proof-of-mastery demonstrations** that showcase what you can build after completing specific modules. Each milestone recreates a historically significant ML achievement using YOUR implementations.
 
 ### Why This Approach?
 
-- 🧠 **Deep Understanding**: Experience the actual challenges researchers faced
-- 📈 **Progressive Learning**: Each milestone builds on previous foundations
-- 🏆 **Real Achievements**: Not toy examples - these are historically significant breakthroughs
-- 🔧 **Systems Thinking**: Understand WHY each innovation mattered for ML systems
+- **Deep Understanding**: Experience the actual challenges researchers faced
+- **Progressive Learning**: Each milestone builds on previous foundations
+- **Real Achievements**: Not toy examples - these are historically significant breakthroughs
+- **Systems Thinking**: Understand WHY each innovation mattered for ML systems
 
 ---
 
-## 🎯 Two Dimensions of Your Progress
+## Two Dimensions of Your Progress
 
 As you build TinyTorch, you're progressing along **TWO dimensions simultaneously**:
 
@@ -30,7 +30,7 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 **Act V (14-19)**: Production systems - optimization and deployment
 **Act VI (20)**: Complete integration - unified AI systems
 
-**📖 See [The Learning Journey](learning-journey.html)** for the complete pedagogical narrative explaining WHY modules flow this way.
+See [The Learning Journey](learning-journey.md) for the complete pedagogical narrative explaining WHY modules flow this way.
 
 ### Historical Dimension (Milestones): What You CAN Build
 
@@ -45,20 +45,20 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 
 | Learning Act | Unlocked Milestone | Proof of Mastery |
 |--------------|-------------------|------------------|
-| **Act I: Foundation (01-04)** | 🧠 1957 Perceptron | Your Linear layer recreates history |
-| **Act II: Learning (05-07)** | ⚡ 1969 XOR + 🔢 1986 MLP | Your autograd enables training (95%+ MNIST) |
-| **Act III: Data & Scale (08-09)** | 🖼️ 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
-| **Act IV: Language (10-13)** | 🤖 2017 Transformers | Your attention generates coherent text |
-| **Act V: Production (14-18)** | ⚡ 2018 MLPerf | Your optimizations achieve production speed |
-| **Act VI: Integration (19-20)** | 🏆 Benchmarking + Capstone | Your complete framework competes |
+| **Act I: Foundation (01-04)** | 1957 Perceptron | Your Linear layer recreates history |
+| **Act II: Learning (05-07)** | 1969 XOR + 1986 MLP | Your autograd enables training (95%+ MNIST) |
+| **Act III: Data & Scale (08-09)** | 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
+| **Act IV: Language (10-13)** | 2017 Transformers | Your attention generates coherent text |
+| **Act V: Production (14-18)** | 2018 MLPerf | Your optimizations achieve production speed |
+| **Act VI: Integration (19-20)** | Benchmarking + Capstone | Your complete framework competes |
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built works (historical validation). Together, they show you're not just completing exercises - you're building something real.
 
 ---
 
-## 📅 The Timeline
+## The Timeline
 
-### 🧠 01. Perceptron (1957) - Rosenblatt
+### 01. Perceptron (1957) - Rosenblatt
 
 **After Modules 02-04**
 
@@ -88,7 +88,7 @@ python 02_rosenblatt_trained.py   # See the solution (trained)
 
 ---
 
-### ⚡ 02. XOR Crisis (1969) - Minsky & Papert
+### 02. XOR Crisis (1969) - Minsky & Papert
 
 **After Modules 02-06**
 
@@ -118,7 +118,7 @@ python 02_xor_solved.py   # Hidden layers solve it!
 
 ---
 
-### 🔢 03. MLP Revival (1986) - Backpropagation Era
+### 03. MLP Revival (1986) - Backpropagation Era
 
 **After Modules 02-08**
 
@@ -148,7 +148,7 @@ python 02_rumelhart_mnist.py       # Full MNIST
 
 ---
 
-### 🖼️ 04. CNN Revolution (1998) - LeCun's Breakthrough
+### 04. CNN Revolution (1998) - LeCun's Breakthrough
 
 **After Modules 02-09** • **🎯 North Star Achievement**
 
@@ -178,7 +178,7 @@ python 02_lecun_cifar10.py     # CIFAR-10 @ 75%+ accuracy
 
 ---
 
-### 🤖 05. Transformer Era (2017) - Attention Revolution
+### 05. Transformer Era (2017) - Attention Revolution
 
 **After Modules 02-13**
 
@@ -208,7 +208,7 @@ python 02_vaswani_dialogue.py    # Multi-turn dialogue
 
 ---
 
-### ⚡ 06. MLPerf Era (2018) - The Optimization Revolution
+### 06. MLPerf Era (2018) - The Optimization Revolution
 
 **After Modules 14-18**
 
@@ -239,7 +239,7 @@ python 03_generation_opts.py    # Speed up inference (cache + batch)
 
 ---
 
-## 🎓 Learning Philosophy
+## Learning Philosophy
 
 ### Progressive Capability Building
 
@@ -263,7 +263,7 @@ Each milestone teaches critical systems thinking:
 
 ---
 
-## 🚀 How to Use Milestones
+## How to Use Milestones
 
 ### 1. Complete Prerequisites
 
@@ -302,7 +302,7 @@ Each milestone includes:
 
 ---
 
-## 🎯 Quick Reference
+## Quick Reference
 
 ### Milestone Prerequisites
 
@@ -324,7 +324,7 @@ Each milestone includes:
 
 ---
 
-## 📚 Further Learning
+## Further Learning
 
 After completing milestones, explore:
 
@@ -335,7 +335,7 @@ After completing milestones, explore:
 
 ---
 
-## 🌟 Why This Matters
+## Why This Matters
 
 **Most courses teach you to USE frameworks.**  
 **TinyTorch teaches you to UNDERSTAND them.**

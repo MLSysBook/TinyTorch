@@ -1,17 +1,17 @@
-# 🧪 Testing Framework
+# Testing Framework
 
 ```{admonition} Test-Driven ML Engineering
 :class: tip
 TinyTorch's testing framework ensures your implementations are not just educational, but production-ready and reliable.
 ```
 
-## 🎯 Testing Philosophy: Verify Understanding Through Implementation
+## Testing Philosophy: Verify Understanding Through Implementation
 
 TinyTorch testing goes beyond checking syntax - it validates that you understand ML systems engineering through working implementations.
 
-## ⚡ Quick Start: Validate Your Implementation
+## Quick Start: Validate Your Implementation
 
-### 🚀 Run Everything (Recommended)
+### Run Everything (Recommended)
 ```bash
 # Complete validation suite
 tito test --comprehensive
@@ -23,7 +23,7 @@ tito test --comprehensive
 # ✅ Overall TinyTorch Health: 100.0%
 ```
 
-### 🎯 Target-Specific Testing
+### Target-Specific Testing
 ```bash
 # Test what you just built
 tito module complete 02_tensor && tito checkpoint test 01
@@ -35,9 +35,9 @@ tito test --module attention --verbose
 tito test --performance --module training
 ```
 
-## 🔬 Testing Levels: From Components to Systems
+## Testing Levels: From Components to Systems
 
-### 1. 🧩 Module-Level Testing
+### 1. Module-Level Testing
 **Goal**: Verify individual components work correctly in isolation
 
 ```bash
@@ -91,7 +91,7 @@ tito checkpoint test 13  # "Can I build attention mechanisms?"
 tito checkpoint validate --from 00 --to 15
 ```
 
-**📖 See [Complete Checkpoint System Documentation](checkpoint-system.html)** for technical implementation details.
+**📖 See [Complete Checkpoint System Documentation](checkpoint-system.md)** for technical implementation details.
 
 **Key Capability Categories:**
 - **Foundation (00-03)**: Building blocks of neural networks
@@ -374,9 +374,9 @@ tito checkpoint status
 ```
 
 **Testing Integration with Your Learning Path:**
-- **📖 See [Track Your Progress](learning-progress.html)** for how testing fits into capability development
-- **📖 See [Track Capabilities](checkpoint-system.html)** for automated testing and progress validation
-- **📖 See [Showcase Achievements](leaderboard.html)** for how testing validates the skills you can claim
+- **📖 See [Track Your Progress](learning-progress.md)** for how testing fits into capability development
+- **📖 See [Track Capabilities](checkpoint-system.md)** for automated testing and progress validation
+- **📖 See [Historical Milestones](chapters/milestones.md)** for how testing validates achievements
 
 <div style="background: #e3f2fd; border: 2px solid #1976d2; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h4 style="margin: 0 0 1rem 0; color: #1565c0;">🎯 Testing Excellence = ML Systems Mastery</h4>
