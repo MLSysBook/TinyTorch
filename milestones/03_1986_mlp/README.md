@@ -1,92 +1,114 @@
-# 🔢 MNIST MLP (1986) - Backpropagation Revolution
+# Milestone 03: The MLP Revival (1986)
 
-## What This Demonstrates
-Multi-layer network solving real vision! Backpropagation enables training deep networks on actual handwritten digits.
+## Historical Context
 
-## Prerequisites
-Complete these TinyTorch modules first:
-- Module 02 (Tensor) - Data structures
-- Module 03 (Activations) - ReLU, Softmax
-- Module 04 (Layers) - Linear layers
-- Module 06 (Autograd) - Backpropagation
-- Module 07 (Optimizers) - SGD optimizer  
-- Module 08 (Training) - Training loops
+The 1969 XOR crisis had killed neural network research. Then in 1986, **Rumelhart, Hinton, and Williams** published "Learning representations by back-propagating errors," showing that:
+1. Multi-layer networks CAN solve complex problems
+2. Backpropagation makes them trainable
+3. They work on REAL-WORLD data (not just toy problems)
 
-Note: Runs BEFORE Module 10 (DataLoader), so uses manual batching.
+This paper **ended the AI Winter** and launched modern deep learning. Now it's your turn to recreate that breakthrough using YOUR TinyTorch!
 
-## 🚀 Quick Start
+## What You're Building
+
+Multi-layer perceptrons (MLPs) on real image classification tasks:
+1. **TinyDigits** - Learn hierarchical features on 8×8 handwritten digits
+2. **MNIST** - Scale up to the full 28×28 benchmark dataset
+
+## Required Modules
+
+**Run after Module 08** (Full training pipeline with data loading)
+
+| Module | Component | What It Provides |
+|--------|-----------|------------------|
+| Module 01 | Tensor | YOUR data structure with autograd |
+| Module 02 | Activations | YOUR ReLU activation |
+| Module 03 | Layers | YOUR Linear layers |
+| Module 04 | Losses | YOUR CrossEntropyLoss |
+| Module 05 | Autograd | YOUR automatic differentiation |
+| Module 06 | Optimizers | YOUR SGD optimizer |
+| Module 07 | Training | YOUR end-to-end training loop |
+| Module 08 | DataLoader | YOUR batching and data pipeline |
+
+## Milestone Structure
+
+This milestone uses **progressive scaling** with 2 scripts:
+
+### 01_rumelhart_tinydigits.py
+**Purpose:** Prove MLPs work on real images (fast iteration)
+
+- **Dataset:** TinyDigits (1000 train + 200 test, 8×8 images)
+- **Architecture:** Input(64) → Linear(64→32) → ReLU → Linear(32→10)
+- **Expected:** 75-85% accuracy in 3-5 minutes
+- **Key Learning:** "MLPs can learn hierarchical features from images!"
+
+**Why TinyDigits First?**
+- Fast training = quick feedback loop
+- Small size = easy to understand what's happening
+- Decent accuracy = proves concept works
+- Ships with TinyTorch = no downloads needed
+
+### 02_rumelhart_mnist.py
+**Purpose:** Scale to the classic benchmark
+
+- **Dataset:** MNIST (60K train + 10K test, 28×28 images)
+- **Architecture:** Input(784) → Linear(784→128) → ReLU → Linear(128→10)
+- **Expected:** 94-97% accuracy (competitive for MLPs!)
+- **Key Learning:** "Same principles scale to larger problems!"
+
+**Historical Note:** MNIST (1998) became THE benchmark for evaluating learning algorithms. MLPs hitting 95%+ proved neural networks were back!
+
+## Expected Results
+
+| Script | Dataset | Image Size | Parameters | Loss | Accuracy | Training Time |
+|--------|---------|------------|------------|------|----------|---------------|
+| 01 (TinyDigits) | 1K train | 8×8 | ~2.4K | < 0.5 | 75-85% | 3-5 min |
+| 02 (MNIST) | 60K train | 28×28 | ~100K | < 0.2 | 94-97% | 10-15 min |
+
+## Key Learning: Hierarchical Feature Learning
+
+MLPs don't just memorize - they learn useful internal representations:
+
+**Hidden Layer Discovers:**
+- Edge detectors (low-level features)
+- Curve patterns (mid-level features)
+- Digit-specific combinations (high-level features)
+
+This is **representation learning** - the foundation of deep learning's power.
+
+**Why This Matters:**
+- Manual feature engineering → Automatic feature learning
+- Domain expertise → Data-driven discovery
+- This shift enabled modern AI
+
+## Running the Milestone
 
 ```bash
-# Train on MNIST digits
-python train_mlp.py
+cd milestones/03_1986_mlp
 
-# Test architecture only
-python train_mlp.py --test-only
+# Step 1: Quick validation on TinyDigits (run after Module 08)
+python 01_rumelhart_tinydigits.py
 
-# Quick training (fewer epochs)
-python train_mlp.py --epochs 3
+# Step 2: Scale to MNIST benchmark (run after Module 08)
+python 02_rumelhart_mnist.py
 ```
 
-## 📊 Dataset Information
+## Further Reading
 
-### MNIST Handwritten Digits
-- **Size**: 70,000 grayscale 28×28 images (60K train, 10K test)
-- **Classes**: Digits 0-9
-- **Download**: ~10MB from http://yann.lecun.com/exdb/mnist/
-- **Storage**: Cached in `examples/datasets/mnist/` after first download
+- **The Backprop Paper**: Rumelhart, Hinton, Williams (1986). "Learning representations by back-propagating errors"
+- **MNIST Dataset**: LeCun et al. (1998). "Gradient-based learning applied to document recognition"
+- **Why MLPs Work**: Cybenko (1989). "Approximation by superpositions of a sigmoidal function" (Universal Approximation Theorem)
 
-### Sample Digits
-```
-  "7"          "2"          "1"
-░░░████░░    █████████    ░░░██░░░
-░░░░░██░░    ░░░░░░██░    ░░███░░░
-░░░░██░░░    ░░░░░██░░    ░░░██░░░
-░░░██░░░░    ░░░██░░░░    ░░░██░░░
-░░██░░░░░    ░░██░░░░░    ░░░██░░░
-░░██░░░░░    ██████████   ░░░██░░░
-```
+## Achievement Unlocked
 
-### Data Flow
-1. **Download**: Automatic from LeCun's website
-2. **Format**: Flatten 28×28 → 784 features
-3. **Batching**: Manual (DataLoader not available yet)
+After completing this milestone, you'll understand:
+- How MLPs learn hierarchical features from raw pixels
+- Why hidden layers discover useful representations
+- The power of backpropagation for multi-layer training
+- How to scale from toy datasets to real benchmarks
 
-## 🏗️ Architecture
-```
-Input (784) → Linear (784→128) → ReLU → Linear (128→64) → ReLU → Linear (64→10) → Output
-                ↑                          ↑                         ↑
-           Hidden Layer 1            Hidden Layer 2            10 Classes
-```
+**You've recreated the breakthrough that ended the AI Winter!**
 
-## 📈 Expected Results
-- **Training Time**: 2-3 minutes (5 epochs)
-- **Accuracy**: 95%+ on test set
-- **Parameters**: ~100K weights
+---
 
-## 💡 Historical Significance
-- **1986**: Backprop paper enables deep learning
-- **Innovation**: Automatic gradient computation
-- **Impact**: Proved neural networks could solve real problems
-- **YOUR Version**: Same architecture, YOUR implementation!
-
-## 🔧 Command Line Options
-- `--test-only`: Test architecture without training
-- `--epochs N`: Training epochs (default: 5)
-
-## 📚 What You Learn
-- How to handle real vision datasets
-- Multi-layer networks for complex patterns
-- Manual batching before DataLoader
-- YOUR complete training pipeline works!
-
-## 🐛 Troubleshooting
-
-### Download Issues
-If MNIST download fails:
-- Check internet connection
-- Falls back to synthetic data automatically
-- Manual download: http://yann.lecun.com/exdb/mnist/
-
-### Memory Issues
-- Reduce batch size in the code (default: 32)
-- Train for fewer epochs: `--epochs 2`
+**Note for Next Milestone:** MLPs treat images as flat vectors, ignoring spatial structure. Milestone 04 (CNN) will show why **convolutional** layers dramatically improve image recognition!

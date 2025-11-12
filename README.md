@@ -14,7 +14,9 @@
 ![GitHub Stars](https://img.shields.io/github/stars/MLSysBook/TinyTorch?style=social)
 ![Contributors](https://img.shields.io/github/contributors/MLSysBook/TinyTorch)
 
-> 🚧 **Work in Progress** - Actively developing TinyTorch for Spring 2025! All 20 core modules (01-20) are implemented but still being debugged and tested. Core foundation modules (01-09) are stable. Transformer and optimization modules (10-20) are functional but undergoing refinement. Join us in building the future of ML systems education.
+> 📢 **December 2024 Release** - TinyTorch is ready for community review! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions. **Seeking feedback on pedagogy, implementation quality, and learning progression.** Student version tooling exists but is untested. This release focuses on validating the educational content before classroom deployment.
+> 
+> 🎯 **For Reviewers**: Read the [📚 Jupyter Book](https://mlsysbook.github.io/TinyTorch/) to evaluate pedagogy. Clone the repo to run implementations. See [STUDENT_VERSION_TOOLING.md](STUDENT_VERSION_TOOLING.md) for classroom deployment plans.
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
@@ -57,27 +59,40 @@ A **complete ML framework** capable of:
 ```
 TinyTorch/
 ├── modules/           # 🏗️ YOUR workspace - implement ML systems here
-│   ├── source/
-│   │   ├── 01_tensor/        # Module 01: Tensor operations from scratch
-│   │   ├── 02_activations/   # Module 02: ReLU, Softmax activations
-│   │   ├── 03_layers/        # Module 03: Linear layers, Module system
-│   │   ├── 04_losses/        # Module 04: MSE, CrossEntropy losses
-│   │   ├── 05_autograd/      # Module 05: Automatic differentiation
-│   │   ├── 06_optimizers/    # Module 06: SGD, Adam optimizers
-│   │   ├── 07_training/      # Module 07: Complete training loops
-│   │   ├── 08_dataloader/    # Module 08: Efficient data pipelines
-│   │   ├── 09_spatial/       # Module 09: Conv2d, MaxPool2d, CNNs
-│   │   ├── 10_tokenization/  # Module 10: Text processing
-│   │   ├── 11_embeddings/    # Module 11: Token & positional embeddings
-│   │   ├── 12_attention/     # Module 12: Multi-head attention
-│   │   ├── 13_transformers/  # Module 13: Complete transformer blocks
-│   │   ├── 14_kvcaching/     # Module 14: KV-cache optimization
-│   │   ├── 15_profiling/     # Module 15: Performance analysis
-│   │   ├── 16_acceleration/  # Module 16: Hardware optimization
-│   │   ├── 17_quantization/  # Module 17: Model compression
-│   │   ├── 18_compression/   # Module 18: Pruning & distillation
-│   │   ├── 19_benchmarking/  # Module 19: Performance measurement
-│   │   └── 20_capstone/      # Module 20: Complete ML systems
+│   ├── 01_tensor/        # Module 01: Tensor operations from scratch
+│   │   ├── ABOUT.md      # Conceptual overview & learning objectives
+│   │   ├── README.md     # Practical implementation guide
+│   │   └── tensor.py     # Your implementation
+│   ├── 02_activations/   # Module 02: ReLU, Softmax activations
+│   ├── 03_layers/        # Module 03: Linear layers, Module system
+│   ├── 04_losses/        # Module 04: MSE, CrossEntropy losses
+│   ├── 05_autograd/      # Module 05: Automatic differentiation
+│   ├── 06_optimizers/    # Module 06: SGD, Adam optimizers
+│   ├── 07_training/      # Module 07: Complete training loops
+│   ├── 08_dataloader/    # Module 08: Efficient data pipelines
+│   ├── 09_spatial/       # Module 09: Conv2d, MaxPool2d, CNNs
+│   ├── 10_tokenization/  # Module 10: Text processing
+│   ├── 11_embeddings/    # Module 11: Token & positional embeddings
+│   ├── 12_attention/     # Module 12: Multi-head attention
+│   ├── 13_transformers/  # Module 13: Complete transformer blocks
+│   ├── 14_profiling/     # Module 14: Performance analysis
+│   ├── 15_memoization/   # Module 15: KV-cache/memoization
+│   ├── 16_quantization/  # Module 16: Model compression
+│   ├── 17_compression/   # Module 17: Pruning & distillation
+│   ├── 18_acceleration/  # Module 18: Hardware optimization
+│   ├── 19_benchmarking/  # Module 19: Performance measurement
+│   └── 20_capstone/      # Module 20: Complete ML systems
+│
+├── site/              # 🌐 Course website (Jupyter Book)
+│   ├── intro.md          # Landing page
+│   ├── _toc.yml          # Site navigation (links to modules)
+│   └── chapters/         # Site-specific content
+│
+├── docs/              # 📚 PDF book generation
+│   ├── _config_pdf.yml   # PDF-specific configuration
+│   ├── _toc_pdf.yml      # Linear chapter ordering
+│   ├── cover.md          # Book cover
+│   └── preface.md        # Book preface
 │
 ├── milestones/        # 🏆 Historical ML evolution - prove what you built!
 │   ├── 01_1957_perceptron/   # Rosenblatt's first trainable network
@@ -97,13 +112,13 @@ TinyTorch/
 │   ├── 02_activations/
 │   └── ...            # Tests mirror module structure
 │
-└── book/              # 📚 Complete course documentation (Jupyter Book)
-    ├── chapters/      # Learning guides for each module
-    └── resources/     # Additional learning materials
+└── tito/              # 🛠️ CLI tool for workflow automation
+    ├── commands/      # Student/instructor workflow commands
+    └── core/          # Core utilities
 ```
 
 **🚨 CRITICAL: Work in `modules/`, Import from `tinytorch/`**
-- ✅ **Edit code**: Always in `modules/XX_name/name_dev.py` files
+- ✅ **Edit code**: Always in `modules/XX_name/name.py` files
 - ✅ **Import & use**: Your built components from `tinytorch.core.component`
 - ❌ **Never edit**: Files in `tinytorch/` directly (auto-generated from modules)
 - 🔄 **Sync changes**: Use `tito module complete XX_name` to update package
@@ -178,7 +193,7 @@ Build transformers that generate text
 | 11 | Embeddings | Token embeddings + positional encoding | **Embedding tables** (vocab × dim parameters), lookup performance |
 | 12 | Attention | Multi-head attention mechanisms | **O(N²) scaling**, memory bottlenecks, attention optimization |
 | 13 | Transformers | Complete transformer blocks | **Layer scaling**, memory requirements, architectural trade-offs |
-| 14 | KV-Caching | Inference optimization for transformers | **Memory vs compute trade-offs**, cache management, generation efficiency |
+| 14 | Profiling | Performance analysis + bottleneck detection | **Memory profiling**, FLOP counting, **Amdahl's Law**, performance measurement |
 
 **Milestone Achievement**: TinyGPT language generation with optimized inference
 
@@ -189,7 +204,7 @@ Profile, optimize, and benchmark ML systems
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 15 | Profiling | Performance analysis + bottleneck detection | **Memory profiling**, FLOP counting, **Amdahl's Law**, performance measurement |
+| 15 | Memoization | Computational reuse via KV-caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
 | 16 | Acceleration | Hardware optimization + cache-friendly algorithms | **Cache hierarchies**, memory access patterns, **vectorization vs loops** |
 | 17 | Quantization | Model compression + precision reduction | **Precision trade-offs** (FP32→INT8), memory reduction, accuracy preservation |
 | 18 | Compression | Pruning + knowledge distillation | **Sparsity patterns**, parameter reduction, **compression ratios** |
@@ -242,8 +257,8 @@ tito checkpoint timeline
 - **01-02**: Foundation (Tensor, Activations)
 - **03-07**: Core Networks (Layers, Losses, Autograd, Optimizers, Training)
 - **08-09**: Computer Vision (DataLoader, Spatial ops - unlocks CIFAR-10 @ 75%+)
-- **10-14**: Language Models (Tokenization, Embeddings, Attention, Transformers, KV-Caching)
-- **15-19**: System Optimization (Profiling, Acceleration, Quantization, Compression, Benchmarking)
+- **10-13**: Language Models (Tokenization, Embeddings, Attention, Transformers)
+- **14-19**: System Optimization (Profiling, Memoization, Quantization, Compression, Acceleration, Benchmarking)
 - **20**: Capstone (Complete end-to-end ML systems)
 
 Each module asks: **"Can I build this capability from scratch?"** with hands-on validation.
@@ -310,9 +325,9 @@ python xor_solved.py
 
 ### 🔢 03. MLP Revival (1986) - After Module 07
 ```bash
-cd milestones/03_1986_mlp_revival
-python mlp_digits.py     # 8x8 digit classification
-python mlp_mnist.py      # Full MNIST dataset
+cd milestones/03_1986_mlp
+python 01_rumelhart_tinydigits.py     # 8x8 digit classification
+python 02_rumelhart_mnist.py          # Full MNIST dataset
 # Backpropagation revolution on real vision!
 # YOUR training loops achieve 95%+ accuracy
 ```
@@ -323,9 +338,9 @@ python mlp_mnist.py      # Full MNIST dataset
 
 ### 🖼️ 04. CNN Revolution (1998) - After Module 09
 ```bash
-cd milestones/04_1998_cnn_revolution
-python cnn_digits.py     # Spatial features on digits
-python lecun_cifar10.py  # Natural images (CIFAR-10)
+cd milestones/04_1998_cnn
+python 01_lecun_tinydigits.py  # Spatial features on digits
+python 02_lecun_cifar10.py     # Natural images (CIFAR-10)
 # LeCun's CNNs achieve 75%+ on CIFAR-10!
 # YOUR Conv2d + MaxPool2d unlock spatial intelligence
 ```
@@ -336,25 +351,28 @@ python lecun_cifar10.py  # Natural images (CIFAR-10)
 
 ### 🤖 05. Transformer Era (2017) - After Module 13
 ```bash
-cd milestones/05_2017_transformer_era
-python vaswani_shakespeare.py
+cd milestones/05_2017_transformer
+python 01_vaswani_generation.py  # Text generation
+python 02_vaswani_dialogue.py    # Interactive chat
 # Attention mechanisms for language modeling
 # YOUR attention implementation generates text!
 ```
-**Requirements**: Modules 01-13 (+ Tokenization, Embeddings, Attention, Transformers)  
+**Requirements**: Modules 01-13 (+ Tokenization, Embeddings, Attention, Transformers)
 **Achievement**: Language generation with self-attention
 
 ---
 
-### ⚡ 06. Systems Age (2024) - After Module 19
+### ⚡ 06. MLPerf - Optimization Era (2018) - After Module 18
 ```bash
-cd milestones/06_2024_systems_age
-python optimize_models.py
-# Profile, optimize, and benchmark YOUR framework
-# Compete on TinyMLPerf leaderboard!
+cd milestones/06_2018_mlperf
+python 01_baseline_profile.py    # Profile & establish metrics
+python 02_compression.py         # Quantization + pruning
+python 03_generation_opts.py     # KV-cache + batching
+# Systematic optimization: 8-16× smaller, 12-40× faster!
+# YOUR optimization pipeline achieves production targets
 ```
-**Requirements**: Modules 01-19 (Full optimization suite)  
-**Achievement**: Production-grade ML systems engineering
+**Requirements**: Modules 01-18 (Full optimization suite)
+**Achievement**: Production-ready ML systems optimization
 
 ---
 
@@ -389,8 +407,8 @@ pytest tests/
 - ✅ **20 modules implemented** (01 Tensor → 20 Capstone) - all code exists
 - ✅ **6 historical milestones** (1957 Perceptron → 2024 Systems Age)
 - ✅ **Foundation modules stable** (01-09): Tensor through Spatial operations
-- 🚧 **Transformer modules functional** (10-14): Tokenization through KV-Caching - undergoing testing
-- 🚧 **Optimization modules functional** (15-20): Profiling through Capstone - undergoing testing
+- 🚧 **Transformer modules functional** (10-13): Tokenization through Transformers - undergoing testing
+- 🚧 **Optimization modules functional** (14-20): Profiling through Capstone - undergoing testing
 - ✅ **KISS principle design** for clear, maintainable code
 - ✅ **Essential-only features**: Focus on what's used in production ML systems
 - 🎯 **Target: Spring 2025** - Active debugging and refinement in progress  
@@ -436,6 +454,44 @@ tito benchmark submit --event cnn_marathon
 - **Innovation**: Novel optimization techniques
 
 📊 **View Leaderboard**: [TinyMLPerf Competition](https://mlsysbook.github.io/TinyTorch/leaderboard.html) | Future: `tinytorch.org/leaderboard`
+
+## Academic Integrity & Solutions Philosophy
+
+### Why Solutions Are Public
+
+TinyTorch releases complete implementations publicly to support:
+- **Transparent peer review** of educational materials
+- **Instructor evaluation** before course adoption  
+- **Open-source community** contribution and improvement
+- **Real-world learning** from production-quality code
+
+### For Students: Learning > Copying
+
+**TinyTorch's pedagogy makes copying solutions ineffective:**
+
+1. **Progressive Complexity**: Module 05 (Autograd) requires deep understanding of Modules 01-04. You cannot fake building automatic differentiation by copying code you don't understand.
+
+2. **Integration Requirements**: Each module builds on previous work. Superficial copying breaks down as complexity compounds.
+
+3. **Systems Thinking**: The learning goal is understanding memory management, computational graphs, and performance trade-offs—not just getting tests to pass.
+
+4. **Self-Correcting**: Students who copy without understanding fail subsequent modules. The system naturally identifies shallow work.
+
+### For Instructors: Pedagogy Over Secrecy
+
+Modern ML education accepts that solutions are findable (Chegg, Course Hero, Discord). Defense comes through:
+
+**✅ Progressive module dependencies** (can't fake understanding)  
+**✅ Changed parameters/datasets** each semester  
+**✅ Competitive benchmarking** (reveals true optimization skill)  
+**✅ Honor codes** (trust students to learn honestly)  
+**✅ Focus on journey** (building > having built)
+
+See [STUDENT_VERSION_TOOLING.md](STUDENT_VERSION_TOOLING.md) for classroom deployment strategies.
+
+### Honor Code
+
+> "I understand that TinyTorch solutions are public for educational transparency. I commit to building my own understanding by struggling with implementations, not copying code. I recognize that copying teaches nothing and that subsequent modules will expose shallow understanding. I choose to learn."
 
 ## Contributing
 
@@ -486,9 +542,10 @@ Special thanks to students and contributors who helped refine this educational f
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch && source setup.sh
-cd modules/source/01_tensor && jupyter lab tensor_dev.py
+cd modules/01_tensor && jupyter lab tensor.py
 ```
 
 ---
 
 **Start Small. Go Deep. Build ML Systems.**
+

@@ -1,98 +1,121 @@
-# 🖼️ CIFAR-10 CNN Example
+# Milestone 04: The CNN Revolution (1998)
 
-## What This Demonstrates
-A modern CNN architecture for natural image classification using YOUR TinyTorch implementations!
+## Historical Context
 
-## Prerequisites
-Complete these TinyTorch modules first:
-- Module 02 (Tensor) - Data structures
-- Module 03 (Activations) - ReLU 
-- Module 04 (Layers) - Linear layers
-- Module 07 (Optimizers) - Adam
-- Module 09 (Spatial) - Conv2d, MaxPool2D
-- Module 10 (DataLoader) - Dataset, DataLoader
+After backpropagation revived neural networks (1986), researchers still struggled with image recognition. MLPs treated pixels independently, requiring millions of parameters and ignoring spatial structure.
 
-## 🚀 Quick Start
+Then in 1998, **Yann LeCun's LeNet-5** revolutionized computer vision with **Convolutional Neural Networks (CNNs)**. By using:
+- **Shared weights** (convolution) → 100× fewer parameters
+- **Local connectivity** → preserves spatial structure
+- **Pooling** → translation invariance
+
+LeNet achieved 99%+ accuracy on handwritten digits, launching the deep learning revolution that led to ImageNet (2012), object detection, and modern computer vision.
+
+## What You're Building
+
+CNNs that exploit spatial structure in images:
+1. **TinyDigits** - Prove convolution works on 8×8 digits
+2. **CIFAR-10** - Scale to natural color images (32×32)
+
+## Required Modules
+
+**Run after Module 09** (Spatial operations: Conv2d + Pooling)
+
+| Module | Component | What It Provides |
+|--------|-----------|------------------|
+| Module 01 | Tensor | YOUR data structure |
+| Module 02 | Activations | YOUR ReLU activation |
+| Module 03 | Layers | YOUR Linear layers |
+| Module 04 | Losses | YOUR CrossEntropyLoss |
+| Module 05 | Autograd | YOUR automatic differentiation |
+| Module 06 | Optimizers | YOUR SGD/Adam optimizers |
+| Module 07 | Training | YOUR end-to-end training loop |
+| Module 08 | DataLoader | YOUR data batching |
+| **Module 09** | **Spatial** | **YOUR Conv2d + MaxPool2d** |
+
+## Milestone Structure
+
+This milestone uses **spatial architecture progression** with 2 scripts:
+
+### 01_lecun_tinydigits.py
+**Purpose:** Prove CNNs > MLPs on same data
+
+- **Dataset:** TinyDigits (8×8 handwritten digits)
+- **Architecture:** Conv(1→8) → Pool → Conv(8→16) → Pool → Linear(→10)
+- **Comparison:** CNN ~90% vs MLP ~80% (Milestone 03)
+- **Key Learning:** "Convolution preserves spatial structure!"
+
+**Why This Comparison Matters:**
+- Same dataset, different architecture
+- Direct proof that spatial operations help
+- ~10% accuracy gain from exploiting locality
+
+### 02_lecun_cifar10.py
+**Purpose:** Scale to natural color images
+
+- **Dataset:** CIFAR-10 (60K images, 32×32 RGB, 10 classes)
+- **Architecture:** Deeper CNN with multiple conv blocks
+- **Expected:** 65-75% accuracy (decent for pure Python!)
+- **Key Learning:** "CNNs scale to realistic vision tasks!"
+
+**Historical Note:** CIFAR-10 (2009) became the benchmark for evaluating CNN architectures before ImageNet.
+
+## Expected Results
+
+| Script | Dataset | Image Size | Architecture | Accuracy | Training Time | vs MLP |
+|--------|---------|------------|--------------|----------|---------------|--------|
+| 01 (TinyDigits) | 1K train | 8×8 gray | Simple CNN | ~90% | 5-7 min | +10% improvement |
+| 02 (CIFAR-10) | 50K train | 32×32 RGB | Deeper CNN | 65-75% | 30-60 min | MLPs struggle here |
+
+## Key Learning: Why Convolution Dominates Vision
+
+CNNs exploit three key principles:
+
+### 1. Local Connectivity
+**MLP:** Every pixel connects to every neuron (millions of parameters)
+**CNN:** Only local regions connect (shared filters, 100× fewer params)
+
+### 2. Translation Invariance
+**MLP:** "Cat in top-left" ≠ "Cat in bottom-right" (different weights!)
+**CNN:** Same filter detects features anywhere (shared weights)
+
+### 3. Hierarchical Features
+**Layer 1:** Edge detectors (vertical, horizontal, diagonal)
+**Layer 2:** Texture patterns (combinations of edges)
+**Layer 3:** Object parts (wheels, faces, legs)
+**Output:** Full objects (cars, cats, planes)
+
+This is why CNNs remained state-of-the-art for vision until Vision Transformers (2020)!
+
+## Running the Milestone
 
 ```bash
-# Test architecture only (no data download)
-python train_cnn.py --test-only
+cd milestones/04_1998_cnn
 
-# Train with real CIFAR-10 data (~170MB download)
-python train_cnn.py
+# Step 1: Prove CNNs > MLPs (run after Module 09)
+python 01_lecun_tinydigits.py
 
-# Quick test with subset of data
-python train_cnn.py --quick-test
+# Step 2: Scale to natural images (run after Module 09)
+python 02_lecun_cifar10.py
 ```
 
-## 📊 Dataset Information
+## Further Reading
 
-### CIFAR-10 Details
-- **Size**: 60,000 32×32 color images (50K train, 10K test)
-- **Classes**: airplane, car, bird, cat, deer, dog, frog, horse, ship, truck
-- **Download**: ~170MB from https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
-- **Storage**: Cached in `examples/datasets/cifar-10/` after first download
+- **LeNet-5 Paper**: LeCun et al. (1998). "Gradient-based learning applied to document recognition"
+- **CIFAR-10**: Krizhevsky (2009). "Learning Multiple Layers of Features from Tiny Images"
+- **ImageNet Moment**: Krizhevsky et al. (2012). "ImageNet Classification with Deep CNNs" (AlexNet)
+- **Modern Survey**: [A guide to convolution arithmetic](https://arxiv.org/abs/1603.07285)
 
-### Data Flow
-1. **First Run**: Downloads CIFAR-10 from the web (shows progress)
-2. **Subsequent Runs**: Uses cached data (no re-download)
-3. **Offline Mode**: Falls back to synthetic data if download fails
+## Achievement Unlocked
 
-### Dataset Handling
-```python
-# The example uses DataManager for downloading
-data_manager = DatasetManager()  # Handles download/caching
-(train_data, train_labels), (test_data, test_labels) = data_manager.get_cifar10()
+After completing this milestone, you'll understand:
+- Why convolution works better than dense layers for images
+- How local connectivity + weight sharing reduce parameters
+- What CNNs learn at each layer (edges → textures → parts → objects)
+- Why spatial operations dominated vision until transformers
 
-# Then wraps in YOUR Dataset interface
-train_dataset = CIFARDataset(train_data, train_labels)  # YOUR Dataset
+**You've recreated the architecture that launched modern computer vision!**
 
-# Finally uses YOUR DataLoader for batching
-train_loader = DataLoader(train_dataset, batch_size=32)  # YOUR DataLoader
-```
+---
 
-## 🏗️ Architecture
-```
-Input (32×32×3) → Conv2d (3→32) → ReLU → MaxPool (2×2) → 
-Conv2d (32→64) → ReLU → MaxPool (2×2) → Flatten → 
-Linear (2304→256) → ReLU → Linear (256→10) → Output
-```
-
-## 📈 Expected Results
-- **Training Time**: 3-5 minutes for demo (3 epochs, 100 batches/epoch)
-- **Accuracy**: 65%+ on test set (with simple architecture)
-- **Parameters**: ~600K weights
-
-## 🔧 Command Line Options
-- `--epochs N`: Number of training epochs (default: 3)
-- `--batch-size N`: Batch size (default: 32)
-- `--test-only`: Test architecture without training
-- `--quick-test`: Use subset of data for quick testing
-- `--no-visualize`: Skip visualization
-
-## 💡 What You Learn
-- How CNNs extract hierarchical features from images
-- Why spatial structure matters for vision
-- How YOUR Conv2d, MaxPool2D, and DataLoader work together
-- Complete end-to-end training pipeline with real data
-
-## 🐛 Troubleshooting
-
-### Download Issues
-If CIFAR-10 download fails:
-- Check internet connection
-- The example will automatically use synthetic data
-- You can manually download from https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
-
-### Memory Issues
-If you run out of memory:
-- Use smaller batch size: `--batch-size 16`
-- Use quick test mode: `--quick-test`
-- Reduce number of epochs: `--epochs 1`
-
-## 📚 Educational Notes
-This example shows how YOUR implementations handle:
-- **Spatial feature extraction** through convolutions
-- **Efficient data loading** with batching and shuffling  
-- **Real-world datasets** with proper train/test splits
-- **Complete training loops** with YOUR optimizer and autograd
+**Note for Next Milestone:** CNNs excel at vision, but what about sequences (text, audio, time series)? Milestone 05 introduces **Transformers** - the architecture that unified vision AND language!

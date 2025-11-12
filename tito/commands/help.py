@@ -270,8 +270,8 @@ class HelpCommand(BaseCommand):
         elif starting_point == 'first_module':
             console.print("\n[bold blue]🛠️ Setting up Module 1...[/bold blue]")
             console.print("Next commands:")
-            console.print("  [code]cd modules/source/01_setup[/code]")
-            console.print("  [code]jupyter lab setup_dev.py[/code]")
+            console.print("  [code]cd modules/01_setup[/code]")
+            console.print("  [code]jupyter lab setup.py[/code]")
             
         elif starting_point == 'milestone_project':
             console.print("\n[bold blue]🎯 Weekend Project Recommendations...[/bold blue]")
@@ -315,7 +315,7 @@ class HelpCommand(BaseCommand):
         # Common workflows
         console.print("\n[bold cyan]📋 Common Workflows:[/bold cyan]")
         workflows = [
-            ("New User", "tito help -i → tito checkpoint status → cd modules/source/01_setup"),
+            ("New User", "tito help -i → tito checkpoint status → cd modules/01_setup"),
             ("Continue Learning", "tito checkpoint status → work on next module → tito module complete XX"),
             ("Join Community", "tito leaderboard join → submit progress → see global rankings"),
             ("Get Help", "tito system doctor → check docs/FAQ → ask community")
@@ -371,7 +371,7 @@ class HelpCommand(BaseCommand):
         
         # Simplified implementation for now
         checkpoints_dir = Path("tests/checkpoints")
-        modules_dir = Path("modules/source")
+        modules_dir = Path("modules")
         
         return {
             'is_new_user': not checkpoints_dir.exists(),
@@ -424,7 +424,7 @@ class HelpCommand(BaseCommand):
             "• [code]tito system doctor[/code] - Verify installation\n"
             "• [code]tito help --interactive[/code] - Personalized guidance\n"
             "• [code]tito checkpoint status[/code] - See learning path\n"
-            "• [code]cd modules/source/01_setup[/code] - Start first module",
+            "• [code]cd modules/01_setup[/code] - Start first module",
             title="First Steps",
             border_style="blue"
         )

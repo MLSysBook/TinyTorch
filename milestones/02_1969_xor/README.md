@@ -1,145 +1,111 @@
-# ⊕ XOR Problem (1969) - Minsky & Papert
+# Milestone 02: The XOR Crisis (1969)
 
-## Historical Significance
+## Historical Context
 
-In 1969, Marvin Minsky and Seymour Papert published "Perceptrons," mathematically proving that single-layer perceptrons **cannot** solve the XOR problem. This revelation killed neural network research funding for over a decade - the infamous "AI Winter."
+In 1969, Marvin Minsky and Seymour Papert published **"Perceptrons,"** a book that mathematically proved single-layer perceptrons **CANNOT solve the XOR problem**. This revelation killed neural network research funding for over a decade - triggering the infamous **"AI Winter."**
 
-In 1986, Rumelhart, Hinton, and Williams published the backpropagation algorithm for multi-layer networks, and XOR became trivial. This milestone recreates both the crisis and the solution using YOUR TinyTorch!
+The proof was devastating: no matter how much you train, a single layer cannot learn XOR. This milestone recreates that crisis... and then shows how multi-layer networks solved it.
 
-## Prerequisites
+## What You're Building
 
-Complete these TinyTorch modules first:
+A demonstration of perceptron limitations and the multi-layer solution:
+1. **The Crisis** - Watch a perceptron fail to learn XOR despite training
+2. **The Solution** - See how adding a hidden layer solves the "impossible" problem
 
-**For Part 1 (xor_crisis.py):**
-- Module 01 (Tensor)
-- Module 02 (Activations) 
-- Module 03 (Layers)
-- Module 04 (Losses)
-- Module 05 (Autograd)
-- Module 06 (Optimizers)
+## Required Modules
 
-**For Part 2 (xor_solved.py):**
-- All of the above ✓
+**Run after Module 07** (Training capability)
 
-## Quick Start
+| Module | Component | What It Provides |
+|--------|-----------|------------------|
+| Module 01 | Tensor | YOUR data structure |
+| Module 02 | Activations | YOUR sigmoid/ReLU activations |
+| Module 03 | Layers | YOUR Linear layers |
+| Module 04 | Losses | YOUR loss functions |
+| Module 05 | Autograd | YOUR automatic differentiation |
+| Module 06 | Optimizers | YOUR SGD optimizer |
+| Module 07 | Training | YOUR end-to-end training loop |
 
-### Part 1: The Crisis (1969)
-Watch a single-layer perceptron **fail** to learn XOR:
+## Milestone Structure
 
-```bash
-python milestones/02_xor_crisis_1969/xor_crisis.py
+This milestone uses **crisis → solution** narrative with 2 scripts:
+
+### 01_xor_crisis.py
+**Purpose:** Demonstrate the fundamental limitation
+
+- Train a single-layer perceptron on XOR
+- Watch loss stay high (~0.69) and accuracy stuck at 50%
+- No matter how long you train, it CANNOT learn
+- **Key Learning:** "Minsky was right - single layers can't solve XOR"
+
+**The XOR Problem:**
+```
+Inputs    Output
+x1  x2    XOR
+0   0  →  0   (same)
+0   1  →  1   (different)
+1   0  →  1   (different)
+1   1  →  0   (same)
 ```
 
-**Expected:** ~50% accuracy (random guessing) - proves Minsky was right!
+These 4 points CANNOT be separated by a single line!
 
-### Part 2: The Solution (1986)
-Watch a multi-layer network **solve** the "impossible" problem:
+### 02_xor_solved.py
+**Purpose:** Show how multi-layer networks solve it
 
-```bash
-python milestones/02_xor_crisis_1969/xor_solved.py
+- Add ONE hidden layer (2-layer network)
+- Same XOR problem, now solvable
+- Watch accuracy reach 100%
+- **Key Learning:** "Hidden layers unlock non-linear problems!"
+
+**The Solution:**
+```
+Input → Hidden Layer → Output
+        (learns useful features)
 ```
 
-**Expected:** 75%+ accuracy (problem solved!) - proves hidden layers work!
-
-## The XOR Problem
-
-### What is XOR?
-
-XOR (Exclusive OR) outputs 1 when inputs **differ**, 0 when they're the **same**:
-
-```
-┌────┬────┬─────┐
-│ x₁ │ x₂ │ XOR │
-├────┼────┼─────┤
-│ 0  │ 0  │  0  │ ← same
-│ 0  │ 1  │  1  │ ← different
-│ 1  │ 0  │  1  │ ← different
-│ 1  │ 1  │  0  │ ← same
-└────┴────┴─────┘
-```
-
-### Why It's Impossible for Single Layers
-
-The problem is **non-linearly separable** - no single straight line can separate the points:
-
-```
-Visual Representation:
-
-1 │ ○ (0,1)    ● (1,1)      Try drawing a line:
-  │   [1]       [0]          ANY line fails!
-  │
-0 │ ● (0,0)    ○ (1,0)       
-  │   [0]       [1]         
-  └─────────────────
-    0          1
-```
-
-This fundamental limitation ended the first era of neural networks.
-
-## The Solution
-
-Hidden layers create a **new feature space** where XOR becomes linearly separable!
-
-### Original 1986 Architecture
-```
-Input (2) → Hidden (2) + Sigmoid → Output (1) + Sigmoid
-
-Total: Only 9 parameters!
-```
-
-The 2 hidden units learn:
-- `h₁ ≈ x₁ AND NOT x₂`
-- `h₂ ≈ x₂ AND NOT x₁`
-- `output ≈ h₁ OR h₂` = XOR
-
-### Our Implementation
-```
-Input (2) → Hidden (4-8) + ReLU → Output (1) + Sigmoid
-
-Modern activation, slightly larger for robustness
-```
+The hidden layer learns to transform the space so XOR becomes linearly separable!
 
 ## Expected Results
 
-### Part 1: The Crisis
-- **Accuracy:** ~50% (random guessing)
-- **Loss:** Stuck around 0.69 (not decreasing)
-- **Weights:** Don't converge to meaningful values
-- **Conclusion:** Single-layer perceptrons **cannot** solve XOR
+| Script | Layers | Loss | Accuracy | What It Shows |
+|--------|--------|------|----------|---------------|
+| 01 (Single Layer) | 1 | ~0.69 (stuck!) | ~50% | Cannot learn XOR (Minsky was right) |
+| 02 (Multi-Layer) | 2 | → 0.0 | 100% | Hidden layers solve the problem! |
 
-### Part 2: The Solution
-- **Accuracy:** 75-100% (problem solved!)
-- **Loss:** Decreases to ~0.35 or lower
-- **Weights:** Learn meaningful features
-- **Conclusion:** Multi-layer networks **can** solve XOR
+## Key Learning: The Power of Depth
 
-## What You Learn
+This milestone teaches the **fundamental reason why deep learning works**:
 
-1. **Why depth matters** - Hidden layers enable non-linear functions
-2. **Historical context** - The XOR crisis that stopped AI research
-3. **The breakthrough** - Backpropagation through hidden layers
-4. **Your autograd works!** - Multi-layer gradients flow correctly
+- **Single layers** = Only linear decision boundaries (limited expressiveness)
+- **Multiple layers** = Can learn ANY decision boundary (universal approximation)
 
-## Files in This Milestone
+The XOR crisis wasn't about perceptrons being broken - it was about needing **depth** to solve complex problems. This realization (via backpropagation in 1986) ended the AI Winter.
 
-- `xor_crisis.py` - Single-layer perceptron **failing** on XOR (1969 crisis)
-- `xor_solved.py` - Multi-layer network **solving** XOR (1986 breakthrough)
-- `README.md` - This file
+## Running the Milestone
 
-## Historical Timeline
+```bash
+cd milestones/02_1969_xor
 
-- **1969:** Minsky & Papert prove single-layer networks can't solve XOR
-- **1970-1986:** AI Winter - 17 years of minimal neural network research
-- **1986:** Rumelhart, Hinton, Williams publish backpropagation for multi-layer nets
-- **1986+:** AI Renaissance begins
-- **TODAY:** Deep learning powers GPT, AlphaGo, autonomous vehicles, etc.
+# Step 1: Experience the crisis (run after Module 07)
+python 01_xor_crisis.py
 
-## Next Steps
+# Step 2: See the solution (run after Module 07)
+python 02_xor_solved.py
+```
 
-After completing this milestone:
+## Further Reading
 
-- **Milestone 03:** MLP Revival (1986) - Train deeper networks on real data
-- **Module 08:** DataLoaders for batch processing
-- **Module 09:** CNNs for image recognition
+- **The Crisis**: Minsky, M., & Papert, S. (1969). "Perceptrons"
+- **The Solution**: Rumelhart, Hinton, Williams (1986). "Learning representations by back-propagating errors"
+- **Historical Context**: [AI Winter on Wikipedia](https://en.wikipedia.org/wiki/AI_winter)
 
-Every modern AI architecture builds on what you just learned - hidden layers + backpropagation!
+## Achievement Unlocked
+
+After completing this milestone, you'll understand:
+- Why single-layer networks have fundamental limitations
+- What "linear separability" means (and why it matters)
+- How hidden layers enable non-linear decision boundaries
+- The historical importance of this problem (caused AI Winter!)
+
+**You've experienced the crisis that shaped neural network history!**
