@@ -68,7 +68,7 @@ See [Milestones Guide](chapters/milestones.md) for the full progression.
 
 ## Module Progression
 
-TinyTorch has 18 modules organized in three tiers:
+TinyTorch has 20 modules organized in three tiers:
 
 ### 🏗️ Foundation (Modules 01-07)
 Core ML infrastructure - tensors, autograd, training loops
@@ -85,8 +85,8 @@ Neural network architectures - data loading, CNNs, transformers
 - M04: CNNs (after Module 09)
 - M05: Transformers (after Module 13)
 
-### ⚡ Optimization (Modules 14-18)
-Production optimization - profiling, quantization, acceleration
+### ⚡ Optimization (Modules 14-20)
+Production optimization - profiling, quantization, benchmarking, capstone
 
 **Milestones unlocked:**
 - M06: MLPerf (after Module 18)

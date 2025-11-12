@@ -2,7 +2,7 @@
 
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Monitor Your Learning Journey</h2>
-<p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Track your capability development through 18 modules and 6 historical milestones</p>
+<p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Track your capability development through 20 modules and 6 historical milestones</p>
 </div>
 
 **Purpose**: Monitor your progress as you build a complete ML framework from scratch. Track module completion and milestone achievements.
@@ -65,7 +65,7 @@ TinyTorch organizes learning through **three pedagogically-motivated tiers**, ea
 
 ## Module Progression
 
-Your journey through 18 modules organized in three tiers:
+Your journey through 20 modules organized in three tiers:
 
 ### 🏗️ Foundation Tier (Modules 01-07)
 
@@ -98,7 +98,7 @@ Implement modern architectures:
 
 **Milestones unlocked**: M03 MLP (1986), M04 CNN (1998), M05 Transformers (2017)
 
-### ⚡ Optimization Tier (Modules 14-18)
+### ⚡ Optimization Tier (Modules 14-20)
 
 Optimize for production:
 
@@ -109,6 +109,8 @@ Optimize for production:
 | 16 | Compression | Pruning techniques |
 | 17 | Memoization | KV-cache for generation |
 | 18 | Acceleration | Batching strategies |
+| 19 | Benchmarking | MLPerf-style fair comparison |
+| 20 | Competition | Capstone optimization challenge |
 
 **Milestone unlocked**: M06 MLPerf (2018)
 
