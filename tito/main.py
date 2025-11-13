@@ -90,43 +90,46 @@ class TinyTorchCLI:
         """Create the main argument parser."""
         parser = argparse.ArgumentParser(
             prog="tito",
-            description="TinyTorch CLI - Build ML systems from scratch",
+            description="Tiny🔥Torch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 Command Groups:
   system       System environment and configuration commands
-  module       Module development and management commands  
+  module       Module development workflow - start, complete, resume modules
   package      Package management and nbdev integration commands
   nbgrader     Assignment management and auto-grading commands
-  checkpoint   Track ML systems engineering progress through checkpoints
-  milestone    Epic capability achievements and ML systems mastery
-  leaderboard  Join the inclusive community, share progress, celebrate achievements
-  olympics     Special competition events with focused challenges and recognition
+  checkpoint   Progress tracking - view capabilities unlocked and learning journey
+  milestone    Epic achievements - celebrate major capability unlocks
+  leaderboard  Community showcase - share progress, connect with learners
+  olympics     Competition events - friendly challenges and recognition
 
-Convenience Commands:
-  export      Export modules to package (quick shortcut)
-  test        Run tests (quick shortcut)
-  book        Build and manage Jupyter Book
-  grade       Simplified grading interface (wraps NBGrader)
-  demo        Run AI capability demos (show what your framework can do!)
+Convenience Shortcuts:
+  export       Quick export (alias for: tito module export)
+  test         Quick test (alias for: tito module test)
+  book         Build Jupyter Book documentation
+  grade        Simplified grading interface (wraps NBGrader)
+  demo         Run capability demos (show what you've built!)
 
-Examples:
+Getting Started:
   tito setup                    First-time environment setup
-  tito module start 01          Start Module 01 (tensors)
-  tito module complete 01       Complete Module 01 (test + export)
+  tito module start 01          Start Module 01 (tensors, first time)
+  tito module complete 01       Complete Module 01 (test + export + track)
   tito module resume 02         Resume working on Module 02
-  tito module status            View your learning progress
-  tito system info              Show system information
+  tito module status            View your progress across all modules
+
+Tracking Progress:
+  tito checkpoint status        See all capabilities unlocked
   tito checkpoint timeline      Visual progress timeline
-  tito book build               Build the Jupyter Book locally
+  tito leaderboard join         Join the community
+  tito leaderboard profile      View your achievement journey
             """
         )
         
         # Global options
         parser.add_argument(
-            '--version', 
+            '--version',
             action='version',
-            version='TinyTorch CLI 0.1.0'
+            version='Tiny🔥Torch CLI 0.1.0'
         )
         parser.add_argument(
             '--verbose', '-v',
@@ -214,30 +217,31 @@ Examples:
                     "  [bold cyan]setup[/bold cyan]        - First-time environment setup\n\n"
                     "[bold]Command Groups:[/bold]\n"
                     "  [bold green]system[/bold green]       - System environment and configuration\n"
-                    "  [bold green]module[/bold green]       - Module development and management\n"
+                    "  [bold green]module[/bold green]       - Module workflow (start, complete, resume)\n"
                     "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
                     "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
-                    "  [bold green]checkpoint[/bold green]   - Track ML systems engineering progress\n"
-                    "  [bold magenta]milestone[/bold magenta]    - Epic capability achievements and ML mastery\n"
-                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Join the inclusive community, share progress\n"
-                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Special competition events and recognition\n\n"
-                    "[bold]Convenience Commands:[/bold]\n"
-                    "  [bold green]export[/bold green]      - Export modules to package\n"
-                    "  [bold green]test[/bold green]        - Run tests\n"
-                    "  [bold green]book[/bold green]        - Build and manage Jupyter Book\n"
-                    "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
+                    "  [bold cyan]checkpoint[/bold cyan]   - Progress tracking (capabilities unlocked)\n"
+                    "  [bold magenta]milestone[/bold magenta]    - Epic achievements (major unlocks)\n"
+                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Community showcase (share progress)\n"
+                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Competition events (challenges)\n\n"
+                    "[bold]Convenience Shortcuts:[/bold]\n"
+                    "  [bold yellow]export[/bold yellow]      - Quick export (→ module export)\n"
+                    "  [bold yellow]test[/bold yellow]        - Quick test (→ module test)\n"
+                    "  [bold green]book[/bold green]        - Build Jupyter Book documentation\n"
+                    "  [bold green]logo[/bold green]        - Learn about Tiny🔥Torch philosophy\n"
                     "[bold]Quick Start:[/bold]\n"
-                    "  [dim]tito setup[/dim]                    - First-time environment setup\n"
-                    "  [dim]tito module start 01[/dim]          - Start building tensors (first time)\n"
-                    "  [dim]tito module complete 01[/dim]       - Complete Module 01 (test + export)\n"
-                    "  [dim]tito module start 02[/dim]          - Begin activation functions\n"
-                    "  [dim]tito module status[/dim]            - View your progress\n"
+                    "  [dim]tito setup[/dim]                    - First-time setup (run once)\n"
+                    "  [dim]tito module start 01[/dim]          - Start Module 01 (tensors)\n"
+                    "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
+                    "  [dim]tito module start 02[/dim]          - Continue to Module 02\n"
+                    "  [dim]tito module status[/dim]            - View all progress\n\n"
+                    "[bold]Track Progress:[/bold]\n"
+                    "  [dim]tito checkpoint status[/dim]        - Capabilities unlocked\n"
+                    "  [dim]tito leaderboard profile[/dim]      - Your achievement journey\n\n"
                     "[bold]Get Help:[/bold]\n"
-                    "  [dim]tito system[/dim]                   - Show system subcommands\n"
-                    "  [dim]tito module[/dim]                   - Show module subcommands\n"
-                    "  [dim]tito package[/dim]                  - Show package subcommands\n"
+                    "  [dim]tito <command>[/dim]                - Show command subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
-                    title="Welcome to TinyTorch!",
+                    title="Welcome to Tiny🔥Torch!",
                     border_style="bright_green"
                 ))
                 return 0
