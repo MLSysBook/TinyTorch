@@ -76,37 +76,15 @@ from typing import Dict, List, Any, Optional, Tuple
 from collections import defaultdict
 import gc
 
-# Add path for module dependencies (development mode)
-# In production, these imports work directly from installed package
-module_root = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(module_root, '..', '01_tensor'))
-sys.path.insert(0, os.path.join(module_root, '..', '03_layers'))
-sys.path.insert(0, os.path.join(module_root, '..', '08_spatial'))
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.spatial import Conv2d
 
-# Import our TinyTorch components for profiling
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.layers import Linear
-    from tinytorch.core.spatial import Conv2d
-except ImportError:
-    # Fallback to development imports
-    try:
-        from tensor_dev import Tensor
-        from layers_dev import Linear
-        from spatial_dev import Conv2d
-    except ImportError:
-        print("⚠️ WARNING: Could not import TinyTorch components.")
-        print("This module requires Modules 01 (Tensor), 03 (Layers), and 08 (Spatial).")
-        print("Either install TinyTorch or ensure previous modules are available.")
-        # Create minimal mock classes for documentation generation
-        class Tensor:
-            def __init__(self, data):
-                self.data = np.array(data)
-                self.shape = self.data.shape
-        class Linear:
-            pass
-        class Conv2d:
-            pass
+# Constants for memory and performance measurement
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
 # %% [markdown]
 """
@@ -329,14 +307,20 @@ class Profiler:
         ### BEGIN SOLUTION
         total_params = 0
 
-        # Handle different model types
-        if hasattr(model, 'parameters'):
-            # Model with parameters() method (Sequential, custom models)
+        # Handle SimpleModel pattern (has .layers attribute)
+        if hasattr(model, 'layers'):
+            # SimpleModel: iterate through layers
+            for layer in model.layers:
+                for param in layer.parameters():
+                    total_params += param.data.size
+        elif hasattr(model, 'parameters'):
+            # Model with direct parameters() method
             for param in model.parameters():
                 total_params += param.data.size
         elif hasattr(model, 'weight'):
-            # Single layer (Linear, Conv2d)
+            # Single layer (Linear, Conv2d) - all have .weight
             total_params += model.weight.data.size
+            # Check for bias (may be None)
             if hasattr(model, 'bias') and model.bias is not None:
                 total_params += model.bias.data.size
         else:
@@ -462,8 +446,8 @@ class Profiler:
 
         # Calculate parameter memory
         param_count = self.count_parameters(model)
-        parameter_memory_bytes = param_count * 4  # Assume float32
-        parameter_memory_mb = parameter_memory_bytes / (1024 * 1024)
+        parameter_memory_bytes = param_count * BYTES_PER_FLOAT32
+        parameter_memory_mb = parameter_memory_bytes / MB_TO_BYTES
 
         # Create input and measure activation memory
         dummy_input = Tensor(np.random.randn(*input_shape))
@@ -471,20 +455,14 @@ class Profiler:
 
         # Estimate activation memory (simplified)
         activation_memory_bytes = input_memory_bytes * 2  # Rough estimate
-        activation_memory_mb = activation_memory_bytes / (1024 * 1024)
+        activation_memory_mb = activation_memory_bytes / MB_TO_BYTES
 
-        # Try to run forward pass and measure peak
-        try:
-            if hasattr(model, 'forward'):
-                _ = model.forward(dummy_input)
-            elif hasattr(model, '__call__'):
-                _ = model(dummy_input)
-        except:
-            pass  # Ignore errors for simplified measurement
+        # Run forward pass to measure peak memory usage
+        _ = model.forward(dummy_input)
 
         # Get peak memory
         _current_memory, peak_memory = tracemalloc.get_traced_memory()
-        peak_memory_mb = (peak_memory - _baseline_memory) / (1024 * 1024)
+        peak_memory_mb = (peak_memory - _baseline_memory) / MB_TO_BYTES
 
         tracemalloc.stop()
 
@@ -530,35 +508,15 @@ class Profiler:
         - Handle different model interfaces (forward, __call__)
         """
         ### BEGIN SOLUTION
-        # Warmup runs
+        # Warmup runs to stabilize performance
         for _ in range(warmup):
-            try:
-                if hasattr(model, 'forward'):
-                    _ = model.forward(input_tensor)
-                elif hasattr(model, '__call__'):
-                    _ = model(input_tensor)
-                else:
-                    # Fallback for simple operations
-                    _ = input_tensor
-            except:
-                pass  # Ignore errors during warmup
+            _ = model.forward(input_tensor)
 
         # Measurement runs
         times = []
         for _ in range(iterations):
             start_time = time.perf_counter()
-
-            try:
-                if hasattr(model, 'forward'):
-                    _ = model.forward(input_tensor)
-                elif hasattr(model, '__call__'):
-                    _ = model(input_tensor)
-                else:
-                    # Minimal operation for timing
-                    _ = input_tensor.data.copy()
-            except:
-                pass  # Ignore errors but still measure time
-
+            _ = model.forward(input_tensor)
             end_time = time.perf_counter()
             times.append((end_time - start_time) * 1000)  # Convert to milliseconds
 
@@ -901,8 +859,10 @@ def test_unit_helper_functions():
     print("🔬 Unit Test: Helper Functions...")
 
     # Test 1: Quick profile function
-    test_tensor = Tensor(np.random.randn(8, 16))
-    profile = quick_profile(test_tensor, test_tensor, profiler=Profiler())
+    from tinytorch.core.layers import Linear
+    test_model = Linear(16, 8)
+    test_input = Tensor(np.random.randn(8, 16))
+    profile = quick_profile(test_model, test_input, profiler=Profiler())
 
     # Validate profile contains expected keys
     assert 'parameters' in profile, "Quick profile should include parameters"
@@ -1137,7 +1097,9 @@ def test_unit_memory_measurement():
 
     # Test 1: Basic memory measurement
     test_tensor = Tensor(np.random.randn(10, 20))
-    memory_stats = profiler.measure_memory(test_tensor, (10, 20))
+    from tinytorch.core.layers import Linear
+    test_model = Linear(20, 10)
+    memory_stats = profiler.measure_memory(test_model, (10, 20))
 
     # Validate dictionary structure
     required_keys = ['parameter_memory_mb', 'activation_memory_mb', 'peak_memory_mb', 'memory_efficiency']
@@ -1151,11 +1113,12 @@ def test_unit_memory_measurement():
     print(f"✅ Basic measurement: {memory_stats['peak_memory_mb']:.3f} MB peak")
 
     # Test 2: Memory scaling with size
-    small_tensor = Tensor(np.random.randn(5, 5))
-    large_tensor = Tensor(np.random.randn(50, 50))
+    from tinytorch.core.layers import Linear
+    small_model = Linear(5, 5)
+    large_model = Linear(50, 50)
 
-    small_memory = profiler.measure_memory(small_tensor, (5, 5))
-    large_memory = profiler.measure_memory(large_tensor, (50, 50))
+    small_memory = profiler.measure_memory(small_model, (5, 5))
+    large_memory = profiler.measure_memory(large_model, (50, 50))
 
     # Larger tensor should use more activation memory
     assert large_memory['activation_memory_mb'] >= small_memory['activation_memory_mb'], \
@@ -1224,8 +1187,10 @@ def test_unit_latency_measurement():
     profiler = Profiler()
 
     # Test 1: Basic latency measurement
-    test_tensor = Tensor(np.random.randn(4, 8))
-    latency = profiler.measure_latency(test_tensor, test_tensor, warmup=2, iterations=5)
+    from tinytorch.core.layers import Linear
+    test_model = Linear(8, 4)
+    test_input = Tensor(np.random.randn(4, 8))
+    latency = profiler.measure_latency(test_model, test_input, warmup=2, iterations=5)
 
     assert latency >= 0, f"Latency should be non-negative, got {latency}"
     assert latency < 1000, f"Latency seems too high for simple operation: {latency} ms"
@@ -1234,7 +1199,7 @@ def test_unit_latency_measurement():
     # Test 2: Measurement consistency
     latencies = []
     for _ in range(3):
-        lat = profiler.measure_latency(test_tensor, test_tensor, warmup=1, iterations=3)
+        lat = profiler.measure_latency(test_model, test_input, warmup=1, iterations=3)
         latencies.append(lat)
 
     # Measurements should be in reasonable range
@@ -1244,11 +1209,13 @@ def test_unit_latency_measurement():
     print(f"✅ Consistency: {avg_latency:.3f} ± {std_latency:.3f} ms")
 
     # Test 3: Size scaling
-    small_tensor = Tensor(np.random.randn(2, 2))
-    large_tensor = Tensor(np.random.randn(20, 20))
+    small_model = Linear(2, 2)
+    large_model = Linear(20, 20)
+    small_input = Tensor(np.random.randn(2, 2))
+    large_input = Tensor(np.random.randn(20, 20))
 
-    small_latency = profiler.measure_latency(small_tensor, small_tensor, warmup=1, iterations=3)
-    large_latency = profiler.measure_latency(large_tensor, large_tensor, warmup=1, iterations=3)
+    small_latency = profiler.measure_latency(small_model, small_input, warmup=1, iterations=3)
+    large_latency = profiler.measure_latency(large_model, large_input, warmup=1, iterations=3)
 
     # Larger operations might take longer (though not guaranteed for simple operations)
     print(f"✅ Scaling: Small {small_latency:.3f} ms, Large {large_latency:.3f} ms")
@@ -1320,10 +1287,12 @@ def test_unit_advanced_profiling():
 
     # Create profiler and test model
     profiler = Profiler()
+    from tinytorch.core.layers import Linear
+    test_model = Linear(8, 4)
     test_input = Tensor(np.random.randn(4, 8))
 
     # Test forward pass profiling
-    forward_profile = profiler.profile_forward_pass(test_input, test_input)
+    forward_profile = profiler.profile_forward_pass(test_model, test_input)
 
     # Validate forward profile structure
     required_forward_keys = [
@@ -1342,7 +1311,7 @@ def test_unit_advanced_profiling():
     print(f"✅ Forward profiling: {forward_profile['gflops_per_second']:.2f} GFLOP/s")
 
     # Test backward pass profiling
-    backward_profile = profiler.profile_backward_pass(test_input, test_input)
+    backward_profile = profiler.profile_backward_pass(test_model, test_input)
 
     # Validate backward profile structure
     required_backward_keys = [
@@ -1409,6 +1378,8 @@ def analyze_model_scaling():
 
     for size in sizes:
         # Create models of different sizes for comparison
+        from tinytorch.core.layers import Linear
+        test_model = Linear(size, size)
         input_shape = (32, size)  # Batch of 32
         dummy_input = Tensor(np.random.randn(*input_shape))
 
@@ -1417,8 +1388,8 @@ def analyze_model_scaling():
         linear_flops = size * size * 2  # matmul
 
         # Measure actual performance
-        latency = profiler.measure_latency(dummy_input, dummy_input, warmup=3, iterations=10)
-        memory = profiler.measure_memory(dummy_input, input_shape)
+        latency = profiler.measure_latency(test_model, dummy_input, warmup=3, iterations=10)
+        memory = profiler.measure_memory(test_model, input_shape)
 
         gflops_per_second = (linear_flops / 1e9) / (latency / 1000)
 
@@ -1466,12 +1437,14 @@ def analyze_batch_size_effects():
     print("-" * 85)
 
     for batch_size in batch_sizes:
+        from tinytorch.core.layers import Linear
+        test_model = Linear(feature_size, feature_size)
         input_shape = (batch_size, feature_size)
         dummy_input = Tensor(np.random.randn(*input_shape))
 
         # Measure performance
-        latency = profiler.measure_latency(dummy_input, dummy_input, warmup=3, iterations=10)
-        memory = profiler.measure_memory(dummy_input, input_shape)
+        latency = profiler.measure_latency(test_model, dummy_input, warmup=3, iterations=10)
+        memory = profiler.measure_memory(test_model, input_shape)
 
         # Calculate throughput
         samples_per_second = (batch_size * 1000) / latency  # samples/second
@@ -1529,7 +1502,13 @@ def benchmark_operation_efficiency():
     input_tensor = Tensor(np.random.randn(32, size))
 
     # Elementwise operations (memory-bound)
-    elementwise_latency = profiler.measure_latency(input_tensor, input_tensor, iterations=20)
+    # Create a simple model wrapper for elementwise operations
+    class ElementwiseModel:
+        def forward(self, x):
+            return x + x  # Simple elementwise operation
+    
+    elementwise_model = ElementwiseModel()
+    elementwise_latency = profiler.measure_latency(elementwise_model, input_tensor, iterations=20)
     elementwise_flops = size * 32  # One operation per element
 
     operations.append({
@@ -1542,8 +1521,9 @@ def benchmark_operation_efficiency():
     })
 
     # Matrix operations (compute-bound)
-    matrix_tensor = Tensor(np.random.randn(size, size))
-    matrix_latency = profiler.measure_latency(matrix_tensor, input_tensor, iterations=10)
+    from tinytorch.core.layers import Linear
+    matrix_model = Linear(size, size)
+    matrix_latency = profiler.measure_latency(matrix_model, input_tensor, iterations=10)
     matrix_flops = size * size * 2  # Matrix multiplication
 
     operations.append({
@@ -1556,7 +1536,12 @@ def benchmark_operation_efficiency():
     })
 
     # Reduction operations (memory-bound)
-    reduction_latency = profiler.measure_latency(input_tensor, input_tensor, iterations=20)
+    class ReductionModel:
+        def forward(self, x):
+            return x.sum()  # Sum reduction operation
+    
+    reduction_model = ReductionModel()
+    reduction_latency = profiler.measure_latency(reduction_model, input_tensor, iterations=20)
     reduction_flops = size * 32  # Sum reduction
 
     operations.append({
@@ -1612,9 +1597,15 @@ def analyze_profiling_overhead():
 
     # With profiling - includes measurement overhead
     profiler = Profiler()
+    # Create a simple model for profiling overhead measurement
+    class TestModel:
+        def forward(self, x):
+            return x + 1.0
+    
+    test_model = TestModel()
     start_time = time.perf_counter()
     for _ in range(iterations):
-        _ = profiler.measure_latency(test_tensor, test_tensor, warmup=1, iterations=1)
+        _ = profiler.measure_latency(test_model, test_tensor, warmup=1, iterations=1)
     end_time = time.perf_counter()
     profiled_ms = (end_time - start_time) * 1000
 
@@ -1676,7 +1667,8 @@ def test_module():
     profiler = Profiler()
 
     # Create test model and data
-    test_model = Tensor(np.random.randn(16, 32))
+    from tinytorch.core.layers import Linear
+    test_model = Linear(16, 32)
     test_input = Tensor(np.random.randn(8, 16))
 
     # Run complete profiling workflow
@@ -1724,8 +1716,10 @@ def test_module():
     print("4. Testing production profiling scenario...")
 
     # Simulate larger model analysis
+    from tinytorch.core.layers import Linear
+    large_model = Linear(512, 256)
     large_input = Tensor(np.random.randn(32, 512))  # Larger model input
-    large_profile = profiler.profile_forward_pass(large_input, large_input)
+    large_profile = profiler.profile_forward_pass(large_model, large_input)
 
     # Verify profile contains optimization insights
     assert 'bottleneck' in large_profile, "Profile should identify bottlenecks"
