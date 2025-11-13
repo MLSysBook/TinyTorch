@@ -61,17 +61,35 @@ from tinytorch.core.losses import MSELoss, CrossEntropyLoss, BinaryCrossEntropyL
 
 # %% [markdown]
 """
-## 📋 Module Prerequisites & Setup
+## 📋 Module Dependencies
 
-This module builds on previous TinyTorch components. Here's what we need and why:
+**Prerequisites**: Modules 01 (Tensor), 02 (Activations), and 03 (Layers) must be completed
 
-**Required Components:**
-- **Tensor** (Module 01): Foundation for all loss computations
-- **Linear** (Module 03): For testing loss functions with realistic predictions  
-- **ReLU** (Module 02): For building test networks that generate realistic outputs
+**External Dependencies**:
+- `numpy` (for numerical operations)
 
-**Integration Helper:**
-The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
+**TinyTorch Dependencies**:
+- **Module 01 (Tensor)**: Foundation for all loss computations
+  - Used for: Input/output data structures, shape operations, element-wise operations
+  - Required: Yes - losses operate on Tensor objects
+- **Module 02 (Activations)**: Activation functions for testing
+  - Used for: ReLU for building test networks that generate realistic outputs
+  - Required: Yes - for testing loss functions with realistic predictions
+- **Module 03 (Layers)**: Layer components for testing
+  - Used for: Linear layer for testing loss functions with realistic predictions
+  - Required: Yes - for building test networks
+
+**Dependency Flow**:
+```
+Module 01 (Tensor) → Module 02 (Activations) → Module 03 (Layers) → Module 04 (Losses) → Module 05 (Autograd)
+     ↓                      ↓                         ↓                    ↓                    ↓
+  Foundation          Nonlinearity              Architecture        Error Measurement      Gradient Flow
+```
+
+**Import Strategy**:
+This module imports directly from the TinyTorch package (`from tinytorch.core.*`).
+**Assumption**: Modules 01 (Tensor), 02 (Activations), and 03 (Layers) have been completed and exported to the package.
+If you see import errors, ensure you've run `tito export` after completing previous modules.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
@@ -81,23 +99,13 @@ The `import_previous_module()` function below helps us cleanly import components
 import numpy as np
 from typing import Optional
 
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU
+from tinytorch.core.layers import Linear
 
-# Import from previous development modules
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-
-from tensor_dev import Tensor
-from activations_dev import ReLU
-from layers_dev import Linear
+# Constants for numerical stability
+EPSILON = 1e-7  # Small value to prevent log(0) and numerical instability
 
 # %% [markdown]
 """
@@ -459,7 +467,7 @@ def test_unit_mse_loss():
     predictions = Tensor([1.0, 2.0, 3.0])
     targets = Tensor([1.0, 2.0, 3.0])
     perfect_loss = loss_fn.forward(predictions, targets)
-    assert np.allclose(perfect_loss.data, 0.0, atol=1e-7), f"Perfect predictions should have 0 loss, got {perfect_loss.data}"
+    assert np.allclose(perfect_loss.data, 0.0, atol=EPSILON), f"Perfect predictions should have 0 loss, got {perfect_loss.data}"
 
     # Test known case
     predictions = Tensor([1.0, 2.0, 3.0])
@@ -803,7 +811,7 @@ class BinaryCrossEntropyLoss:
         """
         ### BEGIN SOLUTION
         # Step 1: Clamp predictions to avoid numerical issues with log(0) and log(1)
-        eps = 1e-7
+        eps = EPSILON
         clamped_preds = np.clip(predictions.data, eps, 1 - eps)
 
         # Step 2: Compute binary cross-entropy

@@ -272,8 +272,15 @@ def load_baseline_model(model_name: str = "cifar10_cnn"):
         >>> print(f"Parameters: {sum(p.size for p in model.parameters())}")
     """
     from tinytorch.core.layers import Linear
-    from tinytorch.core.spatial import Conv2d, MaxPool2d, Flatten
+    from tinytorch.core.spatial import Conv2d, MaxPool2d
     from tinytorch.core.activations import ReLU
+    from tinytorch.core.tensor import Tensor
+    
+    # Flatten is not a separate class - it's just a reshape operation
+    class Flatten:
+        def forward(self, x):
+            batch_size = x.shape[0]
+            return Tensor(x.data.reshape(batch_size, -1))
     
     if model_name == "cifar10_cnn":
         # Simple CNN: Conv -> Pool -> Conv -> Pool -> FC -> FC

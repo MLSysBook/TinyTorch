@@ -61,15 +61,29 @@ from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
 
 # %% [markdown]
 """
-## 📋 Module Prerequisites & Setup
+## 📋 Module Dependencies
 
-This module builds on previous TinyTorch components. Here's what we need and why:
+**Prerequisites**: Module 01 (Tensor) must be completed
 
-**Required Components:**
-- **Tensor** (Module 01): Foundation for all activation computations and data flow
+**External Dependencies**:
+- `numpy` (for numerical operations)
 
-**Integration Helper:**
-The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
+**TinyTorch Dependencies**:
+- **Module 01 (Tensor)**: Foundation for all activation computations and data flow
+  - Used for: Input/output data structures, shape operations, element-wise operations
+  - Required: Yes - activations operate on Tensor objects
+
+**Dependency Flow**:
+```
+Module 01 (Tensor) → Module 02 (Activations) → Module 03 (Layers)
+     ↓                      ↓                         ↓
+  Foundation          Nonlinearity              Architecture
+```
+
+**Import Strategy**:
+This module imports directly from the TinyTorch package (`from tinytorch.core.*`).
+**Assumption**: Module 01 (Tensor) has been completed and exported to the package.
+If you see import errors, ensure you've run `tito export` after completing Module 01.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
@@ -78,11 +92,12 @@ The `import_previous_module()` function below helps us cleanly import components
 
 import numpy as np
 from typing import Optional
-import sys
-import os
 
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
 
-# Import will be in export cell
+# Constants for numerical comparisons
+TOLERANCE = 1e-10  # Small tolerance for floating-point comparisons in tests
 
 # %% [markdown]
 """
@@ -281,8 +296,8 @@ def test_unit_sigmoid():
     # Test specific values
     x = Tensor([-1000, 1000])  # Extreme values
     result = sigmoid.forward(x)
-    assert np.allclose(result.data[0], 0, atol=1e-10), "sigmoid(-∞) should approach 0"
-    assert np.allclose(result.data[1], 1, atol=1e-10), "sigmoid(+∞) should approach 1"
+    assert np.allclose(result.data[0], 0, atol=TOLERANCE), "sigmoid(-∞) should approach 0"
+    assert np.allclose(result.data[1], 1, atol=TOLERANCE), "sigmoid(+∞) should approach 1"
 
     print("✅ Sigmoid works correctly!")
 
@@ -521,8 +536,8 @@ def test_unit_tanh():
     # Test extreme values
     x = Tensor([-1000, 1000])
     result = tanh.forward(x)
-    assert np.allclose(result.data[0], -1, atol=1e-10), "tanh(-∞) should approach -1"
-    assert np.allclose(result.data[1], 1, atol=1e-10), "tanh(+∞) should approach 1"
+    assert np.allclose(result.data[0], -1, atol=TOLERANCE), "tanh(-∞) should approach -1"
+    assert np.allclose(result.data[1], 1, atol=TOLERANCE), "tanh(+∞) should approach 1"
 
     print("✅ Tanh works correctly!")
 
@@ -632,7 +647,7 @@ def test_unit_gelu():
     # Test zero (should be approximately 0)
     x = Tensor([0.0])
     result = gelu.forward(x)
-    assert np.allclose(result.data, [0.0], atol=1e-10), f"GELU(0) should be ≈0, got {result.data}"
+    assert np.allclose(result.data, [0.0], atol=TOLERANCE), f"GELU(0) should be ≈0, got {result.data}"
 
     # Test positive values (should be roughly preserved)
     x = Tensor([1.0])
@@ -835,12 +850,6 @@ Final validation that everything works together correctly.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "module-test", "locked": true, "points": 20}
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
 
 def test_module():
     """
