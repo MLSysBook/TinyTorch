@@ -1,0 +1,1051 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10. Tokenization &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/10_tokenization_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="11. Embeddings" href="11_embeddings_ABOUT.html" />
+    <link rel="prev" title="09. Convolutional Networks" href="09_spatial_ABOUT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/10_tokenization_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/10_tokenization_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/10_tokenization_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>10. Tokenization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tokenization">
+<h1>10. Tokenization<a class="headerlink" href="#tokenization" title="Permalink to this heading">#</a></h1>
+<p><strong>🏛️ ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>Build tokenization systems that convert raw text into numerical sequences for language models. This module implements character-level and subword tokenizers (BPE) that balance vocabulary size, sequence length, and computational efficiency.</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By completing this module, you will be able to:</p>
+<ol class="arabic simple">
+<li><p><strong>Implement character-level and subword tokenization</strong> strategies for converting text to token sequences</p></li>
+<li><p><strong>Design efficient vocabulary management</strong> systems with special tokens and encoding/decoding</p></li>
+<li><p><strong>Understand trade-offs</strong> between vocabulary size (model parameters) and sequence length (computation)</p></li>
+<li><p><strong>Build BPE (Byte Pair Encoding)</strong> tokenizer for optimal subword unit representation</p></li>
+<li><p><strong>Apply text processing optimization</strong> techniques for production NLP pipelines at scale</p></li>
+</ol>
+</section>
+<section id="why-this-matters">
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<section id="production-context">
+<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
+<p>Every language model depends on tokenization:</p>
+<ul class="simple">
+<li><p><strong>GPT-4</strong> uses a 100K-token vocabulary trained on trillions of tokens of text</p></li>
+<li><p><strong>Google Translate</strong> processes billions of sentences daily through tokenization pipelines</p></li>
+<li><p><strong>BERT</strong> pioneered WordPiece tokenization that handles 100+ languages efficiently</p></li>
+<li><p><strong>Code models</strong> like Copilot use specialized tokenizers for programming languages</p></li>
+</ul>
+</section>
+<section id="historical-context">
+<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
+<p>Tokenization evolved with language modeling:</p>
+<ul class="simple">
+<li><p><strong>Word-Level (pre-2016)</strong>: Simple but massive vocabularies (100K+ words); struggles with rare words and typos</p></li>
+<li><p><strong>Character-Level (2015)</strong>: Small vocabulary but extremely long sequences; computationally expensive</p></li>
+<li><p><strong>BPE (2016)</strong>: Subword tokenization balances both; enabled GPT and modern transformers</p></li>
+<li><p><strong>SentencePiece (2018)</strong>: Unified text and multilingual tokenization; powers modern multilingual models</p></li>
+<li><p><strong>Modern (2020+)</strong>: Specialized tokenizers for code, math, and multimodal content</p></li>
+</ul>
+<p>The tokenizers you’re building are the foundation of all modern NLP.</p>
+</section>
+</section>
+<section id="pedagogical-pattern-build-use-analyze">
+<h2>Pedagogical Pattern: Build → Use → Analyze<a class="headerlink" href="#pedagogical-pattern-build-use-analyze" title="Permalink to this heading">#</a></h2>
+<section id="build">
+<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
+<p>Implement from first principles:</p>
+<ul class="simple">
+<li><p>Character-level tokenizer with vocab management</p></li>
+<li><p>Special tokens (<PAD>, <UNK>, <BOS>, <EOS>)</p></li>
+<li><p>BPE algorithm for learning subword merges</p></li>
+<li><p>Encode/decode functions for text ↔ tokens</p></li>
+<li><p>Vocabulary serialization for model deployment</p></li>
+</ul>
+</section>
+<section id="use">
+<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
+<p>Apply to real problems:</p>
+<ul class="simple">
+<li><p>Tokenize Shakespeare and modern text datasets</p></li>
+<li><p>Build vocabularies of different sizes (1K, 10K, 50K tokens)</p></li>
+<li><p>Compare character vs BPE on sequence length</p></li>
+<li><p>Handle out-of-vocabulary words gracefully</p></li>
+<li><p>Measure tokenization throughput (tokens/second)</p></li>
+</ul>
+</section>
+<section id="analyze">
+<h3>3. Analyze<a class="headerlink" href="#analyze" title="Permalink to this heading">#</a></h3>
+<p>Deep-dive into design trade-offs:</p>
+<ul class="simple">
+<li><p>How does vocabulary size affect model parameters?</p></li>
+<li><p>Why do longer sequences increase computation quadratically (in transformers)?</p></li>
+<li><p>What’s the sweet spot between vocab size and sequence length?</p></li>
+<li><p>How does tokenization affect rare words and morphology?</p></li>
+<li><p>Why do multilingual models need larger vocabularies?</p></li>
+</ul>
+</section>
+</section>
+<section id="implementation-guide">
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
+<p><strong>Character-Level Tokenizer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CharacterTokenizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple character-level tokenization.</span>
+<span class="sd">    </span>
+<span class="sd">    Treats each character as a token. Simple but results in long sequences.</span>
+<span class="sd">    Vocab size: typically 100-500 (all ASCII or Unicode characters)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_char</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Special tokens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PAD_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;PAD&gt;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UNK_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;UNK&gt;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BOS_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;BOS&gt;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">EOS_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;EOS&gt;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_vocab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build vocabulary from text corpus.&quot;&quot;&quot;</span>
+        <span class="c1"># Add special tokens first</span>
+        <span class="n">special_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">PAD_TOKEN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">UNK_TOKEN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BOS_TOKEN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">EOS_TOKEN</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">special_tokens</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">)</span>
+        
+        <span class="c1"># Add all unique characters</span>
+        <span class="n">unique_chars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">texts</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_chars</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">)</span>
+        
+        <span class="c1"># Create reverse mapping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_char</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">char</span> <span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert text to token IDs.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_to_idx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">UNK_TOKEN</span><span class="p">])</span> 
+                <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert token IDs back to text.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_to_char</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">token_ids</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>BPE (Byte Pair Encoding) Tokenizer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BPETokenizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Byte Pair Encoding for subword tokenization.</span>
+<span class="sd">    </span>
+<span class="sd">    Iteratively merges most frequent character pairs to create subword units.</span>
+<span class="sd">    Balances vocabulary size and sequence length optimally.</span>
+<span class="sd">    </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;unhappiness&quot; → [&quot;un&quot;, &quot;happi&quot;, &quot;ness&quot;] (3 tokens)</span>
+<span class="sd">        vs character-level: [&quot;u&quot;,&quot;n&quot;,&quot;h&quot;,&quot;a&quot;,&quot;p&quot;,&quot;p&quot;,&quot;i&quot;,&quot;n&quot;,&quot;e&quot;,&quot;s&quot;,&quot;s&quot;] (11 tokens)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merges</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Learned merge rules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{}</span>   <span class="c1"># Token to ID mapping</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Learn BPE merges from corpus.</span>
+<span class="sd">        </span>
+<span class="sd">        Algorithm:</span>
+<span class="sd">        1. Start with character-level vocabulary</span>
+<span class="sd">        2. Count all adjacent character pairs</span>
+<span class="sd">        3. Merge most frequent pair</span>
+<span class="sd">        4. Repeat until vocabulary reaches target size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize with character-level vocab</span>
+        <span class="n">vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_char_vocab</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        
+        <span class="c1"># Learn merges iteratively</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">:</span>
+            <span class="c1"># Count pairs</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_pairs</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">vocab</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pairs</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+            <span class="c1"># Merge most frequent pair</span>
+            <span class="n">best_pair</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">pairs</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+            <span class="n">texts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_pair</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">best_pair</span><span class="p">)</span>
+            <span class="n">vocab</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">best_pair</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">merges</span><span class="p">[</span><span class="n">best_pair</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">best_pair</span><span class="p">)</span>
+        
+        <span class="c1"># Build final vocabulary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">vocab</span><span class="p">))}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode text using learned BPE merges.&quot;&quot;&quot;</span>
+        <span class="c1"># Start with characters</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        
+        <span class="c1"># Apply merges in learned order</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pairs</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+            <span class="c1"># Find first mergeable pair</span>
+            <span class="n">mergeable</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">merges</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mergeable</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+            <span class="c1"># Apply merge</span>
+            <span class="n">pair</span> <span class="o">=</span> <span class="n">mergeable</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">new_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">pair</span><span class="p">:</span>
+                    <span class="n">new_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merges</span><span class="p">[</span><span class="n">pair</span><span class="p">])</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">new_tokens</span>
+        
+        <span class="c1"># Convert tokens to IDs</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="s1">&#39;&lt;UNK&gt;&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Vocabulary Management</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Vocabulary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage token-to-ID mappings with special tokens.</span>
+<span class="sd">    </span>
+<span class="sd">    Provides clean interface for encoding/decoding and vocab serialization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># Reserve special token IDs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PAD_ID</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UNK_ID</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BOS_ID</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">EOS_ID</span> <span class="o">=</span> <span class="mi">3</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_special_tokens</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_special_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">special</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;&lt;PAD&gt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAD_ID</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;&lt;UNK&gt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">UNK_ID</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s1">&#39;&lt;BOS&gt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BOS_ID</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;&lt;EOS&gt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">EOS_ID</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">special</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">token</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save vocabulary for deployment.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load vocabulary for inference.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</section>
+<section id="step-by-step-implementation">
+<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Build Character Tokenizer</strong></p>
+<ul class="simple">
+<li><p>Create vocabulary from unique characters</p></li>
+<li><p>Add special tokens (PAD, UNK, BOS, EOS)</p></li>
+<li><p>Implement encode (text → IDs) and decode (IDs → text)</p></li>
+<li><p>Handle unknown characters gracefully</p></li>
+</ul>
+</li>
+<li><p><strong>Implement BPE Algorithm</strong></p>
+<ul class="simple">
+<li><p>Start with character vocabulary</p></li>
+<li><p>Count adjacent pair frequencies</p></li>
+<li><p>Merge most frequent pairs iteratively</p></li>
+<li><p>Build merge rules and final vocabulary</p></li>
+</ul>
+</li>
+<li><p><strong>Add Vocabulary Management</strong></p>
+<ul class="simple">
+<li><p>Create token ↔ ID bidirectional mappings</p></li>
+<li><p>Implement serialization for saving/loading</p></li>
+<li><p>Handle special tokens consistently</p></li>
+<li><p>Support vocabulary extension</p></li>
+</ul>
+</li>
+<li><p><strong>Optimize for Production</strong></p>
+<ul class="simple">
+<li><p>Cache encode/decode results</p></li>
+<li><p>Use efficient data structures (tries, hash maps)</p></li>
+<li><p>Batch process multiple texts</p></li>
+<li><p>Measure throughput (tokens/second)</p></li>
+</ul>
+</li>
+<li><p><strong>Compare Tokenization Strategies</strong></p>
+<ul class="simple">
+<li><p>Measure sequence lengths for same text</p></li>
+<li><p>Analyze vocabulary size requirements</p></li>
+<li><p>Test on rare words and typos</p></li>
+<li><p>Evaluate multilingual performance</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<section id="inline-tests-during-development">
+<h3>Inline Tests (During Development)<a class="headerlink" href="#inline-tests-during-development" title="Permalink to this heading">#</a></h3>
+<p>Run inline tests while building:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/10_tokenization
+python<span class="w"> </span>tokenization_dev.py
+</pre></div>
+</div>
+<p>Expected output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Unit Test: Character tokenizer...
+✅ Vocabulary built with 89 unique characters
+✅ Encode/decode round-trip successful
+✅ Special tokens handled correctly
+Progress: Character Tokenizer ✓
+
+Unit Test: BPE tokenizer...
+✅ Learned 5000 merge rules from corpus
+✅ Sequence length reduced 3.2x vs character-level
+✅ Handles rare words and typos gracefully
+Progress: BPE Tokenizer ✓
+
+Unit Test: Vocabulary management...
+✅ Token-to-ID mappings bidirectional
+✅ Vocabulary saved and loaded correctly
+✅ Special token IDs reserved
+Progress: Vocabulary ✓
+</pre></div>
+</div>
+</section>
+<section id="export-and-validate">
+<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
+<p>After completing the module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to tinytorch package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>10_tokenization
+
+<span class="c1"># Run integration tests</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>10_tokenization
+</pre></div>
+</div>
+</section>
+</section>
+<section id="where-this-code-lives">
+<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
+├── text/
+│   └── tokenization.py         # Your implementation goes here
+└── __init__.py                 # Exposes CharTokenizer, BPETokenizer, etc.
+
+Usage in other modules:
+&gt;&gt;&gt; from tinytorch.text import BPETokenizer
+&gt;&gt;&gt; tokenizer = BPETokenizer(vocab_size=10000)
+&gt;&gt;&gt; tokenizer.train(texts)
+&gt;&gt;&gt; ids = tokenizer.encode(&quot;Hello world!&quot;)
+</pre></div>
+</div>
+</section>
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Vocabulary Size vs Model Size</strong>: GPT-2 has 50K vocabulary with 768-dim embeddings = 38M parameters just for embeddings. How does this scale to GPT-3’s 100K vocabulary?</p></li>
+<li><p><strong>Sequence Length vs Computation</strong>: Transformers have O(n²) attention complexity. If BPE reduces sequence length from 1000 to 300 tokens, how much does this reduce computation?</p></li>
+<li><p><strong>Rare Word Handling</strong>: A word-level tokenizer marks rare words as <UNK>, losing all information. How does BPE handle rare words like “unhappiness” even if never seen during training?</p></li>
+<li><p><strong>Multilingual Challenges</strong>: English needs ~30K tokens for good coverage. Chinese needs 50K+. Why? How does this affect multilingual model design?</p></li>
+<li><p><strong>Tokenization as Compression</strong>: BPE learns common patterns like “ing”, “ed”, “tion”. Why is this similar to data compression? What’s the connection to information theory?</p></li>
+</ol>
+</section>
+<section id="real-world-connections">
+<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
+<section id="industry-applications">
+<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
+<p><strong>OpenAI GPT Series</strong></p>
+<ul class="simple">
+<li><p>GPT-2: 50K BPE vocabulary, trained on 8M web pages</p></li>
+<li><p>GPT-3: 100K vocabulary, handles code and multilingual text</p></li>
+<li><p>GPT-4: Advanced tiktoken library with 100K+ tokens</p></li>
+<li><p>Tokenization optimization critical for $700/1M token economics</p></li>
+</ul>
+<p><strong>Google Multilingual Models</strong></p>
+<ul class="simple">
+<li><p>SentencePiece used in BERT, T5, PaLM for 100+ languages</p></li>
+<li><p>Unified tokenization across languages without preprocessing</p></li>
+<li><p>Optimized for fast serving at Google-scale traffic</p></li>
+</ul>
+<p><strong>Code Models (GitHub Copilot, AlphaCode)</strong></p>
+<ul class="simple">
+<li><p>Specialized tokenizers for programming languages</p></li>
+<li><p>Handle indentation, operators, and variable names efficiently</p></li>
+<li><p>Balance natural language and code syntax</p></li>
+</ul>
+</section>
+<section id="research-impact">
+<h3>Research Impact<a class="headerlink" href="#research-impact" title="Permalink to this heading">#</a></h3>
+<p>This module implements patterns from:</p>
+<ul class="simple">
+<li><p>BPE (Sennrich et al., 2016): Subword tokenization for NMT</p></li>
+<li><p>WordPiece (Google, 2016): BERT tokenization strategy</p></li>
+<li><p>SentencePiece (Kudo, 2018): Language-agnostic tokenization</p></li>
+<li><p>tiktoken (OpenAI, 2023): Fast BPE for GPT-3/4</p></li>
+</ul>
+</section>
+</section>
+<section id="whats-next">
+<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<p>In <strong>Module 11: Embeddings</strong>, you’ll convert these token IDs into dense vector representations:</p>
+<ul class="simple">
+<li><p>Map discrete token IDs to continuous embeddings</p></li>
+<li><p>Learn position encodings for sequence order</p></li>
+<li><p>Implement lookup tables for fast embedding retrieval</p></li>
+<li><p>Understand how embeddings capture semantic similarity</p></li>
+</ul>
+<p>The tokens you create here become the input to every transformer and language model!</p>
+<hr class="docutils" />
+<p><strong>Ready to build tokenizers from scratch?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/10_tokenization/tokenization_dev.py</span></code> and start implementing.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="09_spatial_ABOUT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">09. Convolutional Networks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="11_embeddings_ABOUT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">11. Embeddings</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

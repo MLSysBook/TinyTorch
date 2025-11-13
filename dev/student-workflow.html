@@ -64,12 +64,20 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'student-workflow';</script>
     <link rel="shortcut icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Track Your Progress" href="learning-progress.html" />
-    <link rel="prev" title="Essential TITO Commands" href="tito-essentials.html" />
+    <link rel="next" title="TinyTorch for Instructors: Complete ML Systems Course" href="usage-paths/classroom-use.html" />
+    <link rel="prev" title="Quick Start Guide" href="quickstart-guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -176,34 +184,60 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
-<ul class="nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/07_training_ABOUT.html">07. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-journey-visual.html">Visual Learning Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🌍 Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
 </ul>
 
@@ -424,9 +458,10 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-progression">Module Progression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-07">🏗️ Foundation (Modules 01-07)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-modules-08-13">🏛️ Architecture (Modules 08-13)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-modules-14-20">⚡ Optimization (Modules 14-20)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-07">Foundation (Modules 01-07)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-modules-08-13">Architecture (Modules 08-13)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-modules-14-19">Optimization (Modules 14-19)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone-competition-module-20">Capstone Competition (Module 20)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-development-session">Typical Development Session</a></li>
@@ -451,22 +486,29 @@ document.write(`
 <section id="the-core-workflow">
 <h2>The Core Workflow<a class="headerlink" href="#the-core-workflow" title="Permalink to this heading">#</a></h2>
 <p>TinyTorch follows a simple three-step cycle:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Edit modules → 2. Export to package → 3. Validate with milestones
-</pre></div>
-</div>
-<section id="step-1-edit-modules">
+<pre  class="mermaid">
+        graph LR
+    A[Edit Modules&lt;br/&gt;modules/NN_name/] --&gt; B[Export to Package&lt;br/&gt;tito module complete N]
+    B --&gt; C[Validate with Milestones&lt;br/&gt;Run milestone scripts]
+    C --&gt; A
+
+    style A fill:#e3f2fd
+    style B fill:#f0fdf4
+    style C fill:#fef3c7
+    </pre><section id="step-1-edit-modules">
 <h3>Step 1: Edit Modules<a class="headerlink" href="#step-1-edit-modules" title="Permalink to this heading">#</a></h3>
-<p>Work on module source files in <code class="docutils literal notranslate"><span class="pre">modules/source/</span></code>:</p>
+<p>Work on module notebooks in <code class="docutils literal notranslate"><span class="pre">modules/</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example: Working on Module 03 (Layers)</span>
-<span class="nb">cd</span><span class="w"> </span>modules/source/03_layers
-<span class="c1"># Edit the *_dev.py files with your implementation</span>
+<span class="nb">cd</span><span class="w"> </span>modules/03_layers
+jupyter<span class="w"> </span>lab<span class="w"> </span>layers_dev.ipynb
 </pre></div>
 </div>
-<p>Each module is a Jupyter notebook in Python format (<code class="docutils literal notranslate"><span class="pre">.py</span></code> files with cell markers). You’ll:</p>
+<p>Each module is a Jupyter notebook that you edit interactively. You’ll:</p>
 <ul class="simple">
 <li><p>Implement the required functionality</p></li>
 <li><p>Add docstrings and comments</p></li>
-<li><p>Include tests within the module</p></li>
+<li><p>Run and test your code inline</p></li>
+<li><p>See immediate feedback</p></li>
 </ul>
 </section>
 <section id="step-2-export-to-package">
@@ -512,7 +554,7 @@ python<span class="w"> </span>02_rosenblatt_trained.py<span class="w">  </span><
 <h2>Module Progression<a class="headerlink" href="#module-progression" title="Permalink to this heading">#</a></h2>
 <p>TinyTorch has 20 modules organized in three tiers:</p>
 <section id="foundation-modules-01-07">
-<h3>🏗️ Foundation (Modules 01-07)<a class="headerlink" href="#foundation-modules-01-07" title="Permalink to this heading">#</a></h3>
+<h3>Foundation (Modules 01-07)<a class="headerlink" href="#foundation-modules-01-07" title="Permalink to this heading">#</a></h3>
 <p>Core ML infrastructure - tensors, autograd, training loops</p>
 <p><strong>Milestones unlocked:</strong></p>
 <ul class="simple">
@@ -521,7 +563,7 @@ python<span class="w"> </span>02_rosenblatt_trained.py<span class="w">  </span><
 </ul>
 </section>
 <section id="architecture-modules-08-13">
-<h3>🏛️ Architecture (Modules 08-13)<a class="headerlink" href="#architecture-modules-08-13" title="Permalink to this heading">#</a></h3>
+<h3>Architecture (Modules 08-13)<a class="headerlink" href="#architecture-modules-08-13" title="Permalink to this heading">#</a></h3>
 <p>Neural network architectures - data loading, CNNs, transformers</p>
 <p><strong>Milestones unlocked:</strong></p>
 <ul class="simple">
@@ -530,27 +572,32 @@ python<span class="w"> </span>02_rosenblatt_trained.py<span class="w">  </span><
 <li><p>M05: Transformers (after Module 13)</p></li>
 </ul>
 </section>
-<section id="optimization-modules-14-20">
-<h3>⚡ Optimization (Modules 14-20)<a class="headerlink" href="#optimization-modules-14-20" title="Permalink to this heading">#</a></h3>
-<p>Production optimization - profiling, quantization, benchmarking, capstone</p>
+<section id="optimization-modules-14-19">
+<h3>Optimization (Modules 14-19)<a class="headerlink" href="#optimization-modules-14-19" title="Permalink to this heading">#</a></h3>
+<p>Production optimization - profiling, quantization, benchmarking</p>
 <p><strong>Milestones unlocked:</strong></p>
 <ul class="simple">
 <li><p>M06: MLPerf (after Module 18)</p></li>
 </ul>
+</section>
+<section id="capstone-competition-module-20">
+<h3>Capstone Competition (Module 20)<a class="headerlink" href="#capstone-competition-module-20" title="Permalink to this heading">#</a></h3>
+<p>Apply all optimizations in the MLPerf® Edu Competition</p>
 </section>
 </section>
 <section id="typical-development-session">
 <h2>Typical Development Session<a class="headerlink" href="#typical-development-session" title="Permalink to this heading">#</a></h2>
 <p>Here’s what a typical session looks like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Work on a module</span>
-<span class="nb">cd</span><span class="w"> </span>modules/source/05_autograd
-<span class="c1"># Edit 05_autograd_dev.py with your implementation</span>
+<span class="nb">cd</span><span class="w"> </span>modules/05_autograd
+jupyter<span class="w"> </span>lab<span class="w"> </span>autograd_dev.ipynb
+<span class="c1"># Edit your implementation interactively</span>
 
 <span class="c1"># 2. Export when ready</span>
 tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">05</span>
 
 <span class="c1"># 3. Validate with existing milestones</span>
-<span class="nb">cd</span><span class="w"> </span>../../milestones/01_1957_perceptron
+<span class="nb">cd</span><span class="w"> </span>../milestones/01_1957_perceptron
 python<span class="w"> </span>01_rosenblatt_forward.py<span class="w">  </span><span class="c1"># Should still work!</span>
 
 <span class="c1"># 4. Continue to next module or milestone</span>
@@ -628,20 +675,20 @@ tito<span class="w"> </span>system<span class="w"> </span>info
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="tito-essentials.html"
+       href="quickstart-guide.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Essential TITO Commands</p>
+        <p class="prev-next-title">Quick Start Guide</p>
       </div>
     </a>
     <a class="right-next"
-       href="learning-progress.html"
+       href="usage-paths/classroom-use.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Track Your Progress</p>
+        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -668,9 +715,10 @@ tito<span class="w"> </span>system<span class="w"> </span>info
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-progression">Module Progression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-07">🏗️ Foundation (Modules 01-07)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-modules-08-13">🏛️ Architecture (Modules 08-13)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-modules-14-20">⚡ Optimization (Modules 14-20)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-07">Foundation (Modules 01-07)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-modules-08-13">Architecture (Modules 08-13)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-modules-14-19">Optimization (Modules 14-19)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone-competition-module-20">Capstone Competition (Module 20)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-development-session">Typical Development Session</a></li>

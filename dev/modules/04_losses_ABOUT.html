@@ -1,0 +1,838 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>04. Losses &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/04_losses_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="05. Autograd" href="05_autograd_ABOUT.html" />
+    <link rel="prev" title="03. Layers" href="03_layers_ABOUT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/04_losses_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/04_losses_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/04_losses_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>04. Losses</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-mse-mean-squared-error-loss">Step 1: MSE (Mean Squared Error) Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-crossentropy-loss">Step 2: CrossEntropy Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-loss-function-properties">Step 3: Loss Function Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-considerations">Production Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="losses">
+<h1>04. Losses<a class="headerlink" href="#losses" title="Permalink to this heading">#</a></h1>
+<p><strong>🏗️ FOUNDATION TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 3-4 hours</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>Implement the mathematical functions that measure how wrong your model’s predictions are. Loss functions are the bridge between model outputs and the optimization process—they define what “better” means and drive the entire learning process.</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By completing this module, you will be able to:</p>
+<ol class="arabic simple">
+<li><p><strong>Implement MSE loss</strong> for regression tasks with numerically stable computation</p></li>
+<li><p><strong>Build CrossEntropy loss</strong> for classification using the log-sum-exp trick for numerical stability</p></li>
+<li><p><strong>Understand mathematical properties</strong> of loss landscapes and their impact on optimization</p></li>
+<li><p><strong>Recognize the role</strong> of loss functions in connecting predictions to training objectives</p></li>
+<li><p><strong>Apply appropriate losses</strong> for regression, binary classification, and multi-class classification</p></li>
+</ol>
+</section>
+<section id="why-this-matters">
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<section id="production-context">
+<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
+<p>Loss functions are fundamental to all machine learning systems:</p>
+<ul class="simple">
+<li><p><strong>Recommendation Systems</strong> use MSE and ranking losses to learn user preferences</p></li>
+<li><p><strong>Image Classification</strong> relies on CrossEntropy loss for category prediction (ImageNet, CIFAR-10)</p></li>
+<li><p><strong>Language Models</strong> use CrossEntropy to predict next tokens in GPT, Claude, and all LLMs</p></li>
+<li><p><strong>Autonomous Driving</strong> combines multiple losses for perception, planning, and control</p></li>
+</ul>
+</section>
+<section id="historical-context">
+<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
+<p>Loss functions evolved with machine learning itself:</p>
+<ul class="simple">
+<li><p><strong>Least Squares (1805)</strong>: Gauss invented MSE for astronomical orbit predictions</p></li>
+<li><p><strong>Maximum Likelihood (1912)</strong>: Fisher formalized statistical foundations of loss functions</p></li>
+<li><p><strong>CrossEntropy (1950s)</strong>: Information theory brought entropy-based losses to ML</p></li>
+<li><p><strong>Modern Deep Learning (2012+)</strong>: Careful loss design enables training billion-parameter models</p></li>
+</ul>
+</section>
+</section>
+<section id="build-use-understand">
+<h2>Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Permalink to this heading">#</a></h2>
+<p>This module follows the classic pedagogy for foundational concepts:</p>
+<ol class="arabic simple">
+<li><p><strong>Build</strong>: Implement MSE and CrossEntropy loss functions from mathematical definitions</p></li>
+<li><p><strong>Use</strong>: Apply losses to regression and classification tasks, seeing how they drive learning</p></li>
+<li><p><strong>Understand</strong>: Analyze loss landscapes, gradients, and numerical stability considerations</p></li>
+</ol>
+</section>
+<section id="implementation-guide">
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<section id="step-1-mse-mean-squared-error-loss">
+<h3>Step 1: MSE (Mean Squared Error) Loss<a class="headerlink" href="#step-1-mse-mean-squared-error-loss" title="Permalink to this heading">#</a></h3>
+<p>Implement L2 loss for regression:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MSELoss</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mean Squared Error loss for regression.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute MSE: (1/n) * Σ(predictions - targets)²</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            predictions: Model outputs</span>
+<span class="sd">            targets: Ground truth values</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Scalar loss value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">-</span> <span class="n">targets</span>
+        <span class="n">squared</span> <span class="o">=</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span>
+        <span class="k">return</span> <span class="n">squared</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-crossentropy-loss">
+<h3>Step 2: CrossEntropy Loss<a class="headerlink" href="#step-2-crossentropy-loss" title="Permalink to this heading">#</a></h3>
+<p>Implement log-likelihood loss for classification:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CrossEntropyLoss</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CrossEntropy loss for multi-class classification.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logits</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute CrossEntropy with log-sum-exp trick for numerical stability.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            logits: Raw model outputs (before softmax)</span>
+<span class="sd">            targets: Class indices or one-hot vectors</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Scalar loss value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Log-sum-exp trick for numerical stability</span>
+        <span class="n">max_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">exp_logits</span> <span class="o">=</span> <span class="p">(</span><span class="n">logits</span> <span class="o">-</span> <span class="n">max_logits</span><span class="p">)</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span>
+        <span class="n">log_probs</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">-</span> <span class="n">max_logits</span> <span class="o">-</span> <span class="n">exp_logits</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
+        
+        <span class="c1"># Negative log-likelihood</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">log_probs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-loss-function-properties">
+<h3>Step 3: Loss Function Properties<a class="headerlink" href="#step-3-loss-function-properties" title="Permalink to this heading">#</a></h3>
+<p>Understand key mathematical properties:</p>
+<ul class="simple">
+<li><p><strong>Convexity</strong>: MSE is convex; CrossEntropy is convex in logits</p></li>
+<li><p><strong>Gradients</strong>: Smooth gradients enable effective optimization</p></li>
+<li><p><strong>Scale</strong>: Loss magnitude affects learning rate tuning</p></li>
+<li><p><strong>Numerical Stability</strong>: Requires careful implementation (log-sum-exp trick)</p></li>
+</ul>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<section id="inline-tests">
+<h3>Inline Tests<a class="headerlink" href="#inline-tests" title="Permalink to this heading">#</a></h3>
+<p>The module includes immediate feedback:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
+🔬 Unit Test: MSE Loss...
+✅ MSE computes squared error correctly
+✅ MSE gradient flows properly
+✅ MSE handles batch dimensions correctly
+📈 Progress: MSE Loss ✓
+
+🔬 Unit Test: CrossEntropy Loss...
+✅ CrossEntropy numerically stable
+✅ CrossEntropy matches PyTorch implementation
+✅ CrossEntropy handles multi-class problems
+📈 Progress: CrossEntropy Loss ✓
+</pre></div>
+</div>
+</section>
+<section id="export-and-validate">
+<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--module<span class="w"> </span>04_losses
+
+<span class="c1"># Run test suite</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>04_losses
+</pre></div>
+</div>
+</section>
+</section>
+<section id="where-this-code-lives">
+<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
+├── nn/
+│   └── losses.py          # MSELoss, CrossEntropyLoss
+└── core/
+    └── tensor.py          # Underlying tensor operations
+</pre></div>
+</div>
+<p>After export, use as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">MSELoss</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span>
+
+<span class="c1"># For regression</span>
+<span class="n">mse</span> <span class="o">=</span> <span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+
+<span class="c1"># For classification</span>
+<span class="n">ce</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Why does CrossEntropy require the log-sum-exp trick?</strong> What numerical instability occurs without it?</p></li>
+<li><p><strong>How does loss scale affect learning?</strong> If you multiply your loss by 100, what happens to gradients and learning?</p></li>
+<li><p><strong>Why do we use MSE for regression but CrossEntropy for classification?</strong> What makes each appropriate for its task?</p></li>
+<li><p><strong>How do loss functions connect to probability theory?</strong> What is the relationship between CrossEntropy and maximum likelihood?</p></li>
+<li><p><strong>What happens if you use the wrong loss function?</strong> Try MSE for classification or CrossEntropy for regression—what breaks?</p></li>
+</ol>
+</section>
+<section id="real-world-connections">
+<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
+<section id="industry-applications">
+<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Computer Vision</strong>: CrossEntropy trains all classification models (ResNet, EfficientNet, Vision Transformers)</p></li>
+<li><p><strong>NLP</strong>: CrossEntropy is the foundation of all language models (GPT, BERT, T5)</p></li>
+<li><p><strong>Recommendation</strong>: MSE and ranking losses optimize Netflix, Spotify, YouTube recommendations</p></li>
+<li><p><strong>Robotics</strong>: MSE trains continuous control policies for manipulation and navigation</p></li>
+</ul>
+</section>
+<section id="production-considerations">
+<h3>Production Considerations<a class="headerlink" href="#production-considerations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Numerical Stability</strong>: Log-sum-exp trick prevents overflow/underflow in production systems</p></li>
+<li><p><strong>Loss Scaling</strong>: Careful scaling enables mixed-precision training (FP16/BF16)</p></li>
+<li><p><strong>Weighted Losses</strong>: Class weights handle imbalanced datasets in production</p></li>
+<li><p><strong>Custom Losses</strong>: Production systems often combine multiple loss terms</p></li>
+</ul>
+</section>
+</section>
+<section id="whats-next">
+<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<p>Now that you can measure prediction quality, you’re ready for <strong>Module 05: Autograd</strong> where you’ll learn how to automatically compute gradients of these loss functions, enabling the optimization that drives all of machine learning.</p>
+<p><strong>Preview</strong>: Autograd will automatically compute ∂Loss/∂weights for any loss function you build, making training possible without manual gradient derivations!</p>
+<hr class="docutils" />
+<p><strong>Need Help?</strong></p>
+<ul class="simple">
+<li><p>Check the inline tests in <code class="docutils literal notranslate"><span class="pre">modules/04_losses/losses_dev.py</span></code></p></li>
+<li><p>Review mathematical derivations in the module comments</p></li>
+<li><p>Compare your implementation against PyTorch’s losses</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_layers_ABOUT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">03. Layers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_autograd_ABOUT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">05. Autograd</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-mse-mean-squared-error-loss">Step 1: MSE (Mean Squared Error) Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-crossentropy-loss">Step 2: CrossEntropy Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-loss-function-properties">Step 3: Loss Function Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-considerations">Production Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

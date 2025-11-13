@@ -6,24 +6,32 @@ This guide explains the actual day-to-day workflow for building your ML framewor
 
 TinyTorch follows a simple three-step cycle:
 
-```
-1. Edit modules → 2. Export to package → 3. Validate with milestones
+```{mermaid}
+graph LR
+    A[Edit Modules<br/>modules/NN_name/] --> B[Export to Package<br/>tito module complete N]
+    B --> C[Validate with Milestones<br/>Run milestone scripts]
+    C --> A
+
+    style A fill:#e3f2fd
+    style B fill:#f0fdf4
+    style C fill:#fef3c7
 ```
 
 ### Step 1: Edit Modules
 
-Work on module source files in `modules/source/`:
+Work on module notebooks in `modules/`:
 
 ```bash
 # Example: Working on Module 03 (Layers)
-cd modules/source/03_layers
-# Edit the *_dev.py files with your implementation
+cd modules/03_layers
+jupyter lab layers_dev.ipynb
 ```
 
-Each module is a Jupyter notebook in Python format (`.py` files with cell markers). You'll:
+Each module is a Jupyter notebook that you edit interactively. You'll:
 - Implement the required functionality
 - Add docstrings and comments
-- Include tests within the module
+- Run and test your code inline
+- See immediate feedback
 
 ### Step 2: Export to Package
 
@@ -70,14 +78,14 @@ See [Milestones Guide](chapters/milestones.md) for the full progression.
 
 TinyTorch has 20 modules organized in three tiers:
 
-### 🏗️ Foundation (Modules 01-07)
+### Foundation (Modules 01-07)
 Core ML infrastructure - tensors, autograd, training loops
 
 **Milestones unlocked:**
 - M01: Perceptron (after Module 07)
 - M02: XOR Crisis (after Module 07)
 
-### 🏛️ Architecture (Modules 08-13)
+### Architecture (Modules 08-13)
 Neural network architectures - data loading, CNNs, transformers
 
 **Milestones unlocked:**
@@ -85,11 +93,14 @@ Neural network architectures - data loading, CNNs, transformers
 - M04: CNNs (after Module 09)
 - M05: Transformers (after Module 13)
 
-### ⚡ Optimization (Modules 14-20)
-Production optimization - profiling, quantization, benchmarking, capstone
+### Optimization (Modules 14-19)
+Production optimization - profiling, quantization, benchmarking
 
 **Milestones unlocked:**
 - M06: MLPerf (after Module 18)
+
+### Capstone Competition (Module 20)
+Apply all optimizations in the MLPerf® Edu Competition
 
 ## Typical Development Session
 
@@ -97,14 +108,15 @@ Here's what a typical session looks like:
 
 ```bash
 # 1. Work on a module
-cd modules/source/05_autograd
-# Edit 05_autograd_dev.py with your implementation
+cd modules/05_autograd
+jupyter lab autograd_dev.ipynb
+# Edit your implementation interactively
 
 # 2. Export when ready
 tito module complete 05
 
 # 3. Validate with existing milestones
-cd ../../milestones/01_1957_perceptron
+cd ../milestones/01_1957_perceptron
 python 01_rosenblatt_forward.py  # Should still work!
 
 # 4. Continue to next module or milestone

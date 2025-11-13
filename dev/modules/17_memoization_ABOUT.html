@@ -1,0 +1,1094 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>17. Memoization &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/17_memoization_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="18. Acceleration" href="18_acceleration_ABOUT.html" />
+    <link rel="prev" title="16. Compression" href="16_compression_ABOUT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/17_memoization_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/17_memoization_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/17_memoization_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>17. Memoization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-optimize">Pedagogical Pattern: Build → Use → Optimize</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize">3. Optimize</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="memoization">
+<h1>17. Memoization<a class="headerlink" href="#memoization" title="Permalink to this heading">#</a></h1>
+<p><strong>⚡ OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>Learn memoization - a fundamental optimization pattern that caches computational results to avoid redundant work. You’ll apply this pattern to transformers through KV (Key-Value) caching, achieving 10-15× speedup for autoregressive generation by storing and reusing attention keys and values.</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By completing this module, you will be able to:</p>
+<ol class="arabic simple">
+<li><p><strong>Implement KV caching</strong> to eliminate redundant attention key/value computations during generation</p></li>
+<li><p><strong>Design cache management systems</strong> for efficient multi-turn conversation handling</p></li>
+<li><p><strong>Understand memory-speed trade-offs</strong> between caching everything vs recomputing on-the-fly</p></li>
+<li><p><strong>Optimize transformer latency</strong> from O(n²) to O(n) per generated token</p></li>
+<li><p><strong>Apply caching patterns</strong> used in ChatGPT, Claude, and all production language models</p></li>
+</ol>
+</section>
+<section id="why-this-matters">
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<section id="production-context">
+<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
+<p>KV caching is mandatory for production LLM serving:</p>
+<ul class="simple">
+<li><p><strong>ChatGPT</strong> uses KV caching for all multi-turn conversations; without it, latency would be unusable</p></li>
+<li><p><strong>Claude</strong> caches up to 100K tokens of context; enables long document processing</p></li>
+<li><p><strong>GitHub Copilot</strong> caches code context; provides real-time completions</p></li>
+<li><p><strong>Google Gemini</strong> uses multi-level caching; serves billions of requests daily</p></li>
+</ul>
+</section>
+<section id="historical-context">
+<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
+<p>Caching evolved with transformer deployment:</p>
+<ul class="simple">
+<li><p><strong>Early Transformers (2017-2019)</strong>: No caching; research focused on training, not inference</p></li>
+<li><p><strong>GPT-2 Deployment (2019)</strong>: KV caching implemented; enabled practical text generation</p></li>
+<li><p><strong>Production Scale (2020+)</strong>: Multi-level caching (KV + intermediate layers); critical for economics</p></li>
+<li><p><strong>Modern Systems (2023+)</strong>: Distributed caching across GPUs; 100K+ token contexts</p></li>
+</ul>
+<p>Without KV caching, ChatGPT would be 50-100× slower and economically infeasible.</p>
+</section>
+</section>
+<section id="pedagogical-pattern-build-use-optimize">
+<h2>Pedagogical Pattern: Build → Use → Optimize<a class="headerlink" href="#pedagogical-pattern-build-use-optimize" title="Permalink to this heading">#</a></h2>
+<section id="build">
+<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
+<p>Implement from first principles:</p>
+<ul class="simple">
+<li><p>KV cache data structure for attention</p></li>
+<li><p>Cache management (append, reuse, clear)</p></li>
+<li><p>Cached attention forward pass</p></li>
+<li><p>Multi-turn conversation caching</p></li>
+<li><p>Memory-efficient cache storage</p></li>
+</ul>
+</section>
+<section id="use">
+<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
+<p>Apply to real problems:</p>
+<ul class="simple">
+<li><p>Optimize GPT decoder for text generation</p></li>
+<li><p>Cache conversation history for multi-turn chat</p></li>
+<li><p>Measure latency improvement (10-100× speedup)</p></li>
+<li><p>Profile memory usage vs cache size</p></li>
+<li><p>Compare cached vs non-cached inference</p></li>
+</ul>
+</section>
+<section id="optimize">
+<h3>3. Optimize<a class="headerlink" href="#optimize" title="Permalink to this heading">#</a></h3>
+<p>Production-ready enhancements:</p>
+<ul class="simple">
+<li><p>Implement cache eviction policies (LRU, FIFO)</p></li>
+<li><p>Add distributed caching across GPUs</p></li>
+<li><p>Optimize memory layout for cache hits</p></li>
+<li><p>Compress cached values (quantization)</p></li>
+<li><p>Build cache warmup strategies</p></li>
+</ul>
+</section>
+</section>
+<section id="implementation-guide">
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
+<p><strong>Understanding the Problem - Why Caching Helps</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># WITHOUT KV caching (naive autoregressive generation):</span>
+<span class="c1"># Generate token 1: compute attention for [t0]</span>
+<span class="c1"># Generate token 2: compute attention for [t0, t1]  ← recomputes t0</span>
+<span class="c1"># Generate token 3: compute attention for [t0, t1, t2]  ← recomputes t0, t1</span>
+<span class="c1"># Generate token n: compute attention for [t0, ..., tn]  ← recomputes everything</span>
+<span class="c1"># </span>
+<span class="c1"># Complexity: O(n²) - quadratic in sequence length</span>
+<span class="c1"># For 100 tokens: ~5000 attention operations</span>
+
+<span class="c1"># WITH KV caching:</span>
+<span class="c1"># Generate token 1: compute K,V for [t0], cache them</span>
+<span class="c1"># Generate token 2: reuse cached K,V for t0, compute only for t1</span>
+<span class="c1"># Generate token 3: reuse cached K,V for t0,t1, compute only for t2</span>
+<span class="c1"># Generate token n: reuse all cached, compute only for tn</span>
+<span class="c1">#</span>
+<span class="c1"># Complexity: O(n) - linear in sequence length</span>
+<span class="c1"># For 100 tokens: ~100 attention operations (50× speedup!)</span>
+</pre></div>
+</div>
+<p><strong>KV Cache Data Structure</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KVCache</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cache for attention keys and values.</span>
+<span class="sd">    </span>
+<span class="sd">    Stores computed K,V matrices to avoid recomputation during</span>
+<span class="sd">    autoregressive generation.</span>
+<span class="sd">    </span>
+<span class="sd">    Memory layout:</span>
+<span class="sd">        keys: (num_layers, batch, num_heads, seq_len, d_k)</span>
+<span class="sd">        values: (num_layers, batch, num_heads, seq_len, d_v)</span>
+<span class="sd">    </span>
+<span class="sd">    For GPT-2:</span>
+<span class="sd">        12 layers × 12 heads × 1024 seq × 64 dims = ~9M values</span>
+<span class="sd">        At FP16 (2 bytes): 18MB per batch item</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_k</span><span class="p">,</span> <span class="n">d_v</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="n">num_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">=</span> <span class="n">max_seq_len</span>
+        
+        <span class="c1"># Pre-allocate cache tensors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="p">{}</span>   <span class="c1"># {layer_idx: (batch, heads, seq_len, d_k)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># {layer_idx: (batch, heads, seq_len, d_v)}</span>
+        
+        <span class="c1"># Track current sequence length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_idx</span><span class="p">,</span> <span class="n">new_keys</span><span class="p">,</span> <span class="n">new_values</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append new keys/values to cache for a layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            layer_idx: Which transformer layer</span>
+<span class="sd">            new_keys: (batch, heads, 1, d_k) - single new position</span>
+<span class="sd">            new_values: (batch, heads, 1, d_v) - single new position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">layer_idx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
+            <span class="c1"># Initialize cache for this layer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_keys</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Concatenate with existing cache</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">],</span> <span class="n">new_keys</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">],</span> <span class="n">new_values</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Update sequence length (same across all layers)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve cached keys/values for a layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            keys: (batch, heads, seq_len, d_k)</span>
+<span class="sd">            values: (batch, heads, seq_len, d_v)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all cached data.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">memory_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate cache memory usage in bytes.&quot;&quot;&quot;</span>
+        <span class="n">total_elements</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="n">total_elements</span> <span class="o">+=</span> <span class="n">k</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+        <span class="c1"># Assume FP16 (2 bytes per element)</span>
+        <span class="k">return</span> <span class="n">total_elements</span> <span class="o">*</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><strong>Cached Attention Layer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CachedMultiHeadAttention</span><span class="p">(</span><span class="n">MultiHeadAttention</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-head attention with KV caching support.</span>
+<span class="sd">    </span>
+<span class="sd">    Extends MultiHeadAttention to cache K,V matrices during generation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kv_cache</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with optional KV caching.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            query: (batch, 1, d_model) - single new position</span>
+<span class="sd">            key: (batch, seq_len, d_model) - optional, for initial pass</span>
+<span class="sd">            value: (batch, seq_len, d_model) - optional, for initial pass</span>
+<span class="sd">            kv_cache: KVCache object</span>
+<span class="sd">            layer_idx: Which layer (for cache indexing)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            output: (batch, 1, d_model) - attended output</span>
+<span class="sd">            attention_weights: (batch, heads, 1, seq_len) - for analysis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># Project query for new position</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_q</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>  <span class="c1"># (batch, 1, d_model)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Q: (batch, heads, 1, d_k)</span>
+        
+        <span class="k">if</span> <span class="n">kv_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">layer_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Check if cache exists for this layer</span>
+            <span class="n">cached_K</span><span class="p">,</span> <span class="n">cached_V</span> <span class="o">=</span> <span class="n">kv_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">cached_K</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># First token: compute and cache K,V</span>
+                <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_k</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_v</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">K</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                
+                <span class="c1"># Cache for future tokens</span>
+                <span class="n">kv_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Subsequent tokens: compute only new K,V, concat with cache</span>
+                <span class="n">new_K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_k</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>  <span class="c1"># key is just new position</span>
+                <span class="n">new_V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_v</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">new_K</span> <span class="o">=</span> <span class="n">new_K</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">new_V</span> <span class="o">=</span> <span class="n">new_V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                
+                <span class="c1"># Append to cache</span>
+                <span class="n">kv_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">,</span> <span class="n">new_K</span><span class="p">,</span> <span class="n">new_V</span><span class="p">)</span>
+                
+                <span class="c1"># Use full cached K,V</span>
+                <span class="n">K</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">kv_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">layer_idx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No caching: regular attention</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_k</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_v</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Compute attention with cached K,V</span>
+        <span class="n">attended</span><span class="p">,</span> <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+        
+        <span class="c1"># Reshape output</span>
+        <span class="n">attended</span> <span class="o">=</span> <span class="n">attended</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_o</span><span class="p">(</span><span class="n">attended</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">attention_weights</span>
+</pre></div>
+</div>
+<p><strong>Cached Generation - The Full Pipeline</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_with_cache</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">start_tokens</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Autoregressive generation with KV caching.</span>
+<span class="sd">    </span>
+<span class="sd">    Achieves 10-100× speedup over non-cached generation.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        model: Transformer with KV cache support</span>
+<span class="sd">        start_tokens: (batch, start_len) initial sequence</span>
+<span class="sd">        max_new_tokens: Number of tokens to generate</span>
+<span class="sd">        temperature: Sampling temperature</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        generated: (batch, start_len + max_new_tokens) full sequence</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">start_tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">generated</span> <span class="o">=</span> <span class="n">start_tokens</span>
+    
+    <span class="c1"># Initialize KV cache</span>
+    <span class="n">kv_cache</span> <span class="o">=</span> <span class="n">KVCache</span><span class="p">(</span>
+        <span class="n">num_layers</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+        <span class="n">d_k</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">d_k</span><span class="p">,</span>
+        <span class="n">d_v</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">d_k</span><span class="p">,</span>
+        <span class="n">max_seq_len</span><span class="o">=</span><span class="n">start_tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">max_new_tokens</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Process initial sequence (fills cache)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">start_tokens</span><span class="p">,</span> <span class="n">kv_cache</span><span class="o">=</span><span class="n">kv_cache</span><span class="p">)</span>
+    
+    <span class="c1"># Generate tokens one at a time (uses cache)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_new_tokens</span><span class="p">):</span>
+        <span class="c1"># Forward pass on ONLY the last token</span>
+        <span class="c1"># Cache provides context from all previous tokens</span>
+        <span class="n">last_token</span> <span class="o">=</span> <span class="n">generated</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># (batch, 1)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">last_token</span><span class="p">,</span> <span class="n">kv_cache</span><span class="o">=</span><span class="n">kv_cache</span><span class="p">)</span>  <span class="c1"># (batch, 1, vocab_size)</span>
+        
+        <span class="c1"># Sample next token</span>
+        <span class="n">next_token_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">temperature</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">next_token_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">next_token</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        
+        <span class="c1"># Append to sequence</span>
+        <span class="n">generated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">generated</span><span class="p">,</span> <span class="n">next_token</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">generated</span>
+</pre></div>
+</div>
+</section>
+<section id="step-by-step-implementation">
+<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Design KV Cache Structure</strong></p>
+<ul class="simple">
+<li><p>Create storage for keys and values per layer</p></li>
+<li><p>Support appending new keys/values efficiently</p></li>
+<li><p>Add retrieval and clearing methods</p></li>
+<li><p>Calculate memory usage</p></li>
+</ul>
+</li>
+<li><p><strong>Modify Attention for Caching</strong></p>
+<ul class="simple">
+<li><p>Add KV cache parameter to forward pass</p></li>
+<li><p>Check if cache exists for current layer</p></li>
+<li><p>Compute only new K,V when cache present</p></li>
+<li><p>Concat new K,V with cached values</p></li>
+</ul>
+</li>
+<li><p><strong>Implement Cached Generation</strong></p>
+<ul class="simple">
+<li><p>Initialize cache before generation loop</p></li>
+<li><p>Process initial tokens (fill cache)</p></li>
+<li><p>Generate new tokens using cached context</p></li>
+<li><p>Measure speedup vs non-cached</p></li>
+</ul>
+</li>
+<li><p><strong>Add Cache Management</strong></p>
+<ul class="simple">
+<li><p>Implement cache clearing between conversations</p></li>
+<li><p>Add cache size limits and eviction</p></li>
+<li><p>Support batch processing with caching</p></li>
+<li><p>Handle variable sequence lengths</p></li>
+</ul>
+</li>
+<li><p><strong>Optimize Memory Layout</strong></p>
+<ul class="simple">
+<li><p>Use contiguous tensors for cache hits</p></li>
+<li><p>Implement FP16 caching for memory savings</p></li>
+<li><p>Add cache compression (quantization)</p></li>
+<li><p>Profile memory bandwidth bottlenecks</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<section id="inline-tests-during-development">
+<h3>Inline Tests (During Development)<a class="headerlink" href="#inline-tests-during-development" title="Permalink to this heading">#</a></h3>
+<p>Run inline tests while building:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/14_kvcaching
+python<span class="w"> </span>kvcaching_dev.py
+</pre></div>
+</div>
+<p>Expected output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Unit Test: KV cache data structure...
+✅ Cache initialization successful
+✅ Append and retrieval work correctly
+✅ Memory usage calculated: 18MB per batch
+Progress: KV Cache ✓
+
+Unit Test: Cached attention...
+✅ First token: K,V computed and cached
+✅ Subsequent tokens: reuse cached K,V
+✅ Attention output matches non-cached version
+Progress: Cached Attention ✓
+
+Unit Test: Generation with caching...
+✅ Generated 100 tokens with caching
+✅ Speedup: 47× faster than without cache
+✅ Output quality: identical to non-cached
+Progress: Cached Generation ✓
+</pre></div>
+</div>
+</section>
+<section id="export-and-validate">
+<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
+<p>After completing the module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to tinytorch package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>17_memoization
+
+<span class="c1"># Run integration tests</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>17_memoization
+</pre></div>
+</div>
+</section>
+</section>
+<section id="where-this-code-lives">
+<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
+├── nn/
+│   └── kvcache.py              # Your implementation goes here
+└── __init__.py                 # Exposes KVCache, CachedMultiHeadAttention
+
+Usage in other modules:
+&gt;&gt;&gt; from tinytorch.nn import KVCache, CachedMultiHeadAttention
+&gt;&gt;&gt; cache = KVCache(num_layers=12, batch_size=1, num_heads=12, d_k=64, d_v=64, max_seq_len=1024)
+&gt;&gt;&gt; generated = generate_with_cache(model, start_tokens, max_new_tokens=100)
+</pre></div>
+</div>
+</section>
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Memory-Speed Trade-off</strong>: KV cache uses 18MB per batch for GPT-2. For batch=32, that’s 576MB. What if you have 8GB GPU? How many concurrent users can you serve? What’s the trade-off?</p></li>
+<li><p><strong>Cache Invalidation</strong>: In multi-turn chat, when should you clear the cache? What if context exceeds max_seq_len? How do production systems handle this?</p></li>
+<li><p><strong>Distributed Caching</strong>: For models too large for one GPU, you need tensor parallelism. How do you partition the KV cache across GPUs? What’s the communication overhead?</p></li>
+<li><p><strong>Quantized Caching</strong>: Storing cache in INT8 instead of FP16 saves 50% memory. What’s the accuracy impact? When is this worth it?</p></li>
+<li><p><strong>Speculation and Prefetching</strong>: What if you predict the next query and pre-compute KV cache? How would you implement speculative caching?</p></li>
+</ol>
+</section>
+<section id="real-world-connections">
+<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
+<section id="industry-applications">
+<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
+<p><strong>Conversational AI (OpenAI ChatGPT, Anthropic Claude)</strong></p>
+<ul class="simple">
+<li><p>KV caching for all multi-turn conversations</p></li>
+<li><p>Cache eviction policies for context window limits</p></li>
+<li><p>Memory-speed trade-offs define pricing ($/1M tokens)</p></li>
+<li><p>Without caching, latency would be 50-100× worse</p></li>
+</ul>
+<p><strong>Code Completion (GitHub Copilot, Cursor)</strong></p>
+<ul class="simple">
+<li><p>Real-time caching of code context</p></li>
+<li><p>Incremental updates as user types</p></li>
+<li><p>Low-latency requirements (&lt; 100ms) mandate caching</p></li>
+<li><p>Cache hit rates directly impact user experience</p></li>
+</ul>
+<p><strong>Search and Retrieval (Perplexity, Bing AI)</strong></p>
+<ul class="simple">
+<li><p>Cache document embeddings and attention</p></li>
+<li><p>Multi-stage caching (retrieval + generation)</p></li>
+<li><p>Distributed caching across data centers</p></li>
+<li><p>Cache warmup for popular queries</p></li>
+</ul>
+</section>
+<section id="research-impact">
+<h3>Research Impact<a class="headerlink" href="#research-impact" title="Permalink to this heading">#</a></h3>
+<p>This module implements patterns from:</p>
+<ul class="simple">
+<li><p>GPT-2 (2019): First large-scale use of KV caching</p></li>
+<li><p>Megatron-LM (2020): Distributed KV caching across GPUs</p></li>
+<li><p>FlashAttention (2022): Memory-efficient attention without full caching</p></li>
+<li><p>PagedAttention (2023): Virtual memory for KV cache management</p></li>
+</ul>
+</section>
+</section>
+<section id="whats-next">
+<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<p>In <strong>Module 18: Acceleration</strong>, you’ll learn hardware-aware optimization:</p>
+<ul class="simple">
+<li><p>Vectorization and SIMD operations</p></li>
+<li><p>Batch processing for GPU efficiency</p></li>
+<li><p>Hardware-specific optimizations</p></li>
+<li><p>Parallel computation strategies</p></li>
+</ul>
+<p>You’ve compressed models (Quantization + Compression) and now you’re learning computational reuse (Memoization). Next, you’ll accelerate computation through parallelism!</p>
+<hr class="docutils" />
+<p><strong>Ready to implement production-critical caching?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/17_memoization/memoization_dev.py</span></code> and start implementing.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="16_compression_ABOUT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">16. Compression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="18_acceleration_ABOUT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">18. Acceleration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-optimize">Pedagogical Pattern: Build → Use → Optimize</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize">3. Optimize</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

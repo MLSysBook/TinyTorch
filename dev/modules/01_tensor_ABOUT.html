@@ -1,0 +1,948 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>01. Tensor &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/01_tensor_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="02. Activations" href="02_activations_ABOUT.html" />
+    <link rel="prev" title="TinyTorch for Instructors: Complete ML Systems Course" href="../usage-paths/classroom-use.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/01_tensor_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/01_tensor_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/01_tensor_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>01. Tensor</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-pattern-build-use-understand">Learning Pattern: Build → Use → Understand</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand">3. Understand</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-reality-check">Systems Reality Check</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-check">Prerequisites Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-build">Step-by-Step Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-tensor-class-foundation">Step 1: Tensor Class Foundation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-arithmetic-operations">Step 2: Arithmetic Operations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-shape-manipulation">Step 3: Shape Manipulation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-reductions">Step 4: Reductions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-export-validation">Module Export &amp; Validation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-applications">Research Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tensor">
+<h1>01. Tensor<a class="headerlink" href="#tensor" title="Permalink to this heading">#</a></h1>
+<p><strong>🏗️ FOUNDATION TIER</strong> | Difficulty: ⭐ (1/4) | Time: 4-6 hours</p>
+<p><strong>Build N-dimensional arrays from scratch - the foundation of all ML computations.</strong></p>
+<hr class="docutils" />
+<section id="what-youll-build">
+<h2>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Permalink to this heading">#</a></h2>
+<p>The <strong>Tensor</strong> class is the fundamental data structure of machine learning. It represents N-dimensional arrays and provides operations for manipulation, computation, and transformation.</p>
+<p>By the end of this module, you’ll have a working Tensor implementation that handles:</p>
+<ul class="simple">
+<li><p>Creating and initializing N-dimensional arrays</p></li>
+<li><p>Arithmetic operations (addition, multiplication, division, powers)</p></li>
+<li><p>Shape manipulation (reshape, transpose, broadcasting)</p></li>
+<li><p>Reductions (sum, mean, min, max along any axis)</p></li>
+<li><p>Memory-efficient data storage and copying</p></li>
+</ul>
+<section id="example-usage">
+<h3>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="c1"># Create tensors</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]])</span>
+
+<span class="c1"># Properties</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>    <span class="c1"># (2, 2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>     <span class="c1"># 4</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>    <span class="c1"># float64</span>
+
+<span class="c1"># Operations</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>         <span class="c1"># Addition</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>         <span class="c1"># Element-wise multiplication</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>        <span class="c1"># Exponentiation</span>
+
+<span class="c1"># Shape manipulation</span>
+<span class="n">reshaped</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">transposed</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># Reductions</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>             <span class="c1"># Scalar sum</span>
+<span class="n">means</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>      <span class="c1"># Mean along axis</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="learning-pattern-build-use-understand">
+<h2>Learning Pattern: Build → Use → Understand<a class="headerlink" href="#learning-pattern-build-use-understand" title="Permalink to this heading">#</a></h2>
+<section id="build">
+<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
+<p>Implement the Tensor class from scratch using NumPy as the underlying array library. You’ll create constructors, operator overloading, shape manipulation methods, and reduction operations.</p>
+</section>
+<section id="use">
+<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
+<p>Apply your Tensor implementation to real problems: matrix multiplication, data normalization, statistical computations. Test with various shapes and data types.</p>
+</section>
+<section id="understand">
+<h3>3. Understand<a class="headerlink" href="#understand" title="Permalink to this heading">#</a></h3>
+<p>Grasp the systems-level implications: why tensor operations dominate compute time, how memory layout affects performance, and how broadcasting enables efficient computations without data copying.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By completing this module, you will:</p>
+<ol class="arabic simple">
+<li><p><strong>Systems Understanding</strong>: Recognize tensors as the universal data structure in ML frameworks, understanding how all neural network operations decompose into tensor primitives</p></li>
+<li><p><strong>Core Implementation</strong>: Build a complete Tensor class supporting arithmetic, shape manipulation, and reductions with proper error handling</p></li>
+<li><p><strong>Pattern Recognition</strong>: Understand broadcasting rules and how they enable efficient computations across different tensor shapes</p></li>
+<li><p><strong>Framework Connection</strong>: See how your implementation mirrors PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> and TensorFlow’s <code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code> design</p></li>
+<li><p><strong>Performance Trade-offs</strong>: Analyze memory usage vs computation speed, understanding when to copy data vs create views</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="why-this-matters">
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<section id="production-context">
+<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
+<p>Every modern ML framework is built on tensors:</p>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> is the core class - all operations work with tensors</p></li>
+<li><p><strong>TensorFlow</strong>: <code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code> represents data flowing through computation graphs</p></li>
+<li><p><strong>JAX</strong>: <code class="docutils literal notranslate"><span class="pre">jax.numpy.ndarray</span></code> extends NumPy with automatic differentiation</p></li>
+<li><p><strong>NumPy</strong>: The foundation - understanding tensors starts here</p></li>
+</ul>
+<p>By building your own Tensor class, you’ll understand what happens when you call <code class="docutils literal notranslate"><span class="pre">torch.matmul()</span></code> or <code class="docutils literal notranslate"><span class="pre">tf.reduce_sum()</span></code> - not just the API, but the actual computation.</p>
+</section>
+<section id="systems-reality-check">
+<h3>Systems Reality Check<a class="headerlink" href="#systems-reality-check" title="Permalink to this heading">#</a></h3>
+<p><strong>Performance Note</strong>: Tensor operations dominate training time. A single matrix multiplication in a linear layer might take 90% of forward pass time. Understanding tensor internals is essential for optimization.</p>
+<p><strong>Memory Note</strong>: Large models store billions of parameters as tensors. A GPT-3 scale model requires 350GB of memory just for weights (175B parameters × 2 bytes for FP16). Efficient tensor memory management is critical.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="implementation-guide">
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites-check">
+<h3>Prerequisites Check<a class="headerlink" href="#prerequisites-check" title="Permalink to this heading">#</a></h3>
+<p>Verify your environment is ready:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
+</pre></div>
+</div>
+<p>All checks should pass before starting implementation.</p>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to tensor module</span>
+<span class="nb">cd</span><span class="w"> </span>modules/01_tensor/
+
+<span class="c1"># Open development file (choose your preferred method)</span>
+jupyter<span class="w"> </span>lab<span class="w"> </span>tensor_dev.py<span class="w">          </span><span class="c1"># Jupytext (recommended)</span>
+<span class="c1"># OR</span>
+code<span class="w"> </span>tensor_dev.py<span class="w">                 </span><span class="c1"># Direct Python editing</span>
+</pre></div>
+</div>
+</section>
+<section id="step-by-step-build">
+<h3>Step-by-Step Build<a class="headerlink" href="#step-by-step-build" title="Permalink to this heading">#</a></h3>
+<section id="step-1-tensor-class-foundation">
+<h4>Step 1: Tensor Class Foundation<a class="headerlink" href="#step-1-tensor-class-foundation" title="Permalink to this heading">#</a></h4>
+<p>Create the basic Tensor class with initialization and properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Tensor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize tensor from Python list or NumPy array&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return tensor shape&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return total number of elements&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span>
+</pre></div>
+</div>
+<p><strong>Why this matters</strong>: Properties enable clean API design - users can write <code class="docutils literal notranslate"><span class="pre">x.shape</span></code> instead of <code class="docutils literal notranslate"><span class="pre">x.get_shape()</span></code>, matching PyTorch conventions.</p>
+</section>
+<section id="step-2-arithmetic-operations">
+<h4>Step 2: Arithmetic Operations<a class="headerlink" href="#step-2-arithmetic-operations" title="Permalink to this heading">#</a></h4>
+<p>Implement operator overloading for element-wise operations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Element-wise addition&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Element-wise multiplication&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Systems insight</strong>: These operations vectorize automatically via NumPy, achieving ~100x speedup over Python loops. This is why frameworks use tensors.</p>
+</section>
+<section id="step-3-shape-manipulation">
+<h4>Step 3: Shape Manipulation<a class="headerlink" href="#step-3-shape-manipulation" title="Permalink to this heading">#</a></h4>
+<p>Implement reshape, transpose, and broadcasting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return tensor with new shape&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">))</span>
+
+<span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return transposed tensor&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Memory consideration</strong>: Reshape and transpose often return <em>views</em> (no data copying) for efficiency. Understanding views vs copies is crucial for memory optimization.</p>
+</section>
+<section id="step-4-reductions">
+<h4>Step 4: Reductions<a class="headerlink" href="#step-4-reductions" title="Permalink to this heading">#</a></h4>
+<p>Implement aggregation operations along axes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum tensor elements along axis&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mean of tensor elements along axis&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Production pattern</strong>: Reductions are fundamental - every loss function uses them. Understanding axis semantics prevents bugs in multi-dimensional operations.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="testing-your-implementation">
+<h2>Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
+<section id="inline-tests">
+<h3>Inline Tests<a class="headerlink" href="#inline-tests" title="Permalink to this heading">#</a></h3>
+<p>Test within your development file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create test tensors</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+
+<span class="c1"># Test operations</span>
+<span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]]</span>
+<span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="mi">10</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Basic operations working&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="module-export-validation">
+<h3>Module Export &amp; Validation<a class="headerlink" href="#module-export-validation" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export your implementation to TinyTorch package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="m">01</span>
+
+<span class="c1"># Run comprehensive test suite</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span>
+</pre></div>
+</div>
+<p><strong>Expected output</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✓ All tests passed! [25/25]
+✓ Module 01 complete!
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="where-this-code-lives">
+<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
+<p>After export, your Tensor implementation becomes part of the TinyTorch package:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Other modules and future code can now import YOUR implementation:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="c1"># Used throughout TinyTorch:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>      <span class="c1"># Uses Tensor for weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>   <span class="c1"># Operates on Tensors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">backward</span>  <span class="c1"># Computes Tensor gradients</span>
+</pre></div>
+</div>
+<p><strong>Package structure</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
+├── core/
+│   ├── tensor.py  ← YOUR implementation exports here
+│   ├── activations.py
+│   ├── layers.py
+│   └── ...
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<p>Reflect on these questions as you build (no right/wrong answers):</p>
+<ol class="arabic simple">
+<li><p><strong>Complexity Analysis</strong>: Why is matrix multiplication O(n³) for n×n matrices? How does this affect training time for large models?</p></li>
+<li><p><strong>Memory Trade-offs</strong>: When should reshape create a view vs copy data? What are the performance implications?</p></li>
+<li><p><strong>Production Scaling</strong>: A GPT-3 scale model has 175 billion parameters. How much memory is required to store these as FP32 tensors? As FP16?</p></li>
+<li><p><strong>Design Decisions</strong>: Why do frameworks like PyTorch store data as NumPy arrays internally? What are alternatives?</p></li>
+<li><p><strong>Framework Comparison</strong>: How does your Tensor class differ from <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>? What features are missing? Why might those features matter?</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="real-world-connections">
+<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
+<section id="industry-applications">
+<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Deep Learning Training</strong>: All neural network layers operate on tensors (Linear, Conv2d, Attention all perform tensor operations)</p></li>
+<li><p><strong>Scientific Computing</strong>: Tensors represent multidimensional data (climate models, molecular simulations)</p></li>
+<li><p><strong>Computer Vision</strong>: Images are 3D tensors (height × width × channels)</p></li>
+<li><p><strong>NLP</strong>: Text embeddings are 2D tensors (sequence_length × embedding_dim)</p></li>
+</ul>
+</section>
+<section id="research-applications">
+<h3>Research Applications<a class="headerlink" href="#research-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Automatic Differentiation</strong>: Frameworks like PyTorch track tensor operations to compute gradients</p></li>
+<li><p><strong>Distributed Training</strong>: Large models split tensors across GPUs using tensor parallelism</p></li>
+<li><p><strong>Quantization</strong>: Tensors can be stored in reduced precision (INT8 instead of FP32) for efficiency</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="whats-next">
+<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<p><strong>Congratulations!</strong> You’ve built the foundation of TinyTorch. Your Tensor class will power everything that follows - from activation functions to complete neural networks.</p>
+<p>Next, you’ll add nonlinearity to enable networks to learn complex patterns.</p>
+<p><strong>Module 02: Activations</strong> - Implement ReLU, Sigmoid, Tanh, and other activation functions that transform tensor values</p>
+<p><span class="xref myst">Continue to Module 02: Activations →</span></p>
+<hr class="docutils" />
+<p><strong>Need Help?</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/mlsysbook/TinyTorch/discussions">Ask in GitHub Discussions</a></p></li>
+<li><p><span class="xref myst">View Tensor API Reference</span></p></li>
+<li><p><a class="reference external" href="https://github.com/mlsysbook/TinyTorch/issues">Report Issues</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../usage-paths/classroom-use.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02_activations_ABOUT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">02. Activations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-pattern-build-use-understand">Learning Pattern: Build → Use → Understand</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand">3. Understand</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-reality-check">Systems Reality Check</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-check">Prerequisites Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-build">Step-by-Step Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-tensor-class-foundation">Step 1: Tensor Class Foundation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-arithmetic-operations">Step 2: Arithmetic Operations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-shape-manipulation">Step 3: Shape Manipulation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-reductions">Step 4: Reductions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-export-validation">Module Export &amp; Validation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-applications">Research Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -64,6 +64,14 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="shortcut icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -177,34 +185,60 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/07_training_ABOUT.html">07. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-journey-visual.html">Visual Learning Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🌍 Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
 </ul>
 
@@ -418,15 +452,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simple-workflow">The Simple Workflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-tier-learning-pathway">Three-Tier Learning Pathway</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-your-complete-learning-journey">🗺️ Understanding Your Complete Learning Journey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prove-your-mastery-through-history">🏆 Prove Your Mastery Through History</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-journey">Your Learning Journey</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-this-for">Who Is This For?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-choose-your-learning-path">How to Choose Your Learning Path</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-build-use-reflect-approach">The Build → Use → Reflect Approach</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-path">Start Your Path</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-resources">Essential Resources</a></li>
 </ul>
             </nav>
         </div>
@@ -438,145 +471,172 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div id="wip-banner" class="wip-banner">
-  <div class="wip-banner-content">
-    <div class="wip-banner-title">
-      <span class="icon">🚧</span>
-      <span class="icon">⚠️</span>
-      <span>Under Construction - Active Development</span>
-      <span class="icon">🔨</span>
-      <span class="icon">🚧</span>
-    </div>
-    <div class="wip-banner-description">
-      TinyTorch is under active construction! We're building in public and sharing our progress for early feedback. Expect frequent updates, changes, and improvements as we develop the framework together with the community.
-    </div>
-    <button id="wip-banner-toggle" class="wip-banner-toggle" title="Collapse banner">
-      <i class="fas fa-chevron-up"></i>
-    </button>
-    <button id="wip-banner-close" class="wip-banner-close" title="Dismiss banner">
-      ×
-    </button>
-  </div>
-</div>
-<section id="tinytorch-build-ml-systems-from-scratch">
+  <section id="tinytorch-build-ml-systems-from-scratch">
 <h1>TinyTorch: Build ML Systems from Scratch<a class="headerlink" href="#tinytorch-build-ml-systems-from-scratch" title="Permalink to this heading">#</a></h1>
-<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 3rem 0;">
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: white; padding: 3rem 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h2 style="color: white; font-size: 2.5rem; margin: 0 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
-<section id="what-is-tinytorch">
-<h2>What is TinyTorch?<a class="headerlink" href="#what-is-tinytorch" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch is an educational ML systems course where you <strong>build complete neural networks from scratch</strong>. Instead of blindly using PyTorch or TensorFlow as black boxes, you implement every component yourself—from tensors and gradients to optimizers and attention mechanisms—gaining deep understanding of how modern ML frameworks actually work.</p>
-<p><strong>Core Learning Approach</strong>: Build → Profile → Optimize. You’ll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.</p>
-</section>
-<section id="the-simple-workflow">
-<h2>The Simple Workflow<a class="headerlink" href="#the-simple-workflow" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch follows a simple three-step cycle:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Edit modules → 2. Export to package → 3. Validate with milestones
-</pre></div>
+<p style="font-size: 1.3rem; margin: 0 0 2rem 0; opacity: 0.95;">
+Implement every component of a neural network framework yourself—from tensors to transformers to production optimization—and understand exactly how modern ML systems work.
+</p>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0; text-align: center;">
+  <div>
+    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">95%+</div>
+    <div style="opacity: 0.9;">MNIST Accuracy</div>
+    <div style="font-size: 0.9rem; opacity: 0.75;">Your neural networks</div>
+  </div>
+  <div>
+    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">75%+</div>
+    <div style="opacity: 0.9;">CIFAR-10 Accuracy</div>
+    <div style="font-size: 0.9rem; opacity: 0.75;">Your CNNs</div>
+  </div>
+  <div>
+    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
+    <div style="opacity: 0.9;">Your Code</div>
+    <div style="font-size: 0.9rem; opacity: 0.75;">Every implementation</div>
+  </div>
 </div>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete development cycle, best practices, and troubleshooting.</p>
-</section>
-<section id="three-tier-learning-pathway">
-<h2>Three-Tier Learning Pathway<a class="headerlink" href="#three-tier-learning-pathway" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch organizes 20 modules through three pedagogically-motivated tiers: <strong>Foundation</strong> (build mathematical infrastructure), <strong>Architecture</strong> (implement modern AI), and <strong>Optimization</strong> (deploy production systems).</p>
-<p><strong>📖 See <span class="xref myst">Three-Tier Learning Structure</span></strong> for detailed tier breakdown, module lists, time estimates, and learning outcomes.</p>
-</section>
-<section id="understanding-your-complete-learning-journey">
-<h2>🗺️ Understanding Your Complete Learning Journey<a class="headerlink" href="#understanding-your-complete-learning-journey" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch’s 20 modules aren’t arbitrary - they tell a carefully crafted story from building mathematical atoms to deploying production AI systems. Each module builds on previous foundations while setting up future capabilities.</p>
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
-<div style="background: #f0f9ff; border: 1px solid #7dd3fc; padding: 1.5rem; border-radius: 0.5rem;">
-<h4 style="margin: 0 0 1rem 0; color: #0284c7;">🏗️ Three-Tier Structure</h4>
-<p style="margin: 0; font-size: 0.9rem;">Organized navigation through Foundation → Architecture → Optimization</p>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/00-introduction.html">View Course Structure →</a></p>
-</div>
-<div style="background: #fdf4ff; border: 1px solid #e9d5ff; padding: 1.5rem; border-radius: 0.5rem;">
-<h4 style="margin: 0 0 1rem 0; color: #7c3aed;">📖 Six-Act Narrative</h4>
-<p style="margin: 0; font-size: 0.9rem;">The learning story: Why modules flow from atomic components to intelligence</p>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/learning-journey.html">Read The Story →</a></p>
-</div>
-<div style="background: #fef3c7; border: 1px solid #fde047; padding: 1.5rem; border-radius: 0.5rem;">
-<h4 style="margin: 0 0 1rem 0; color: #a16207;">🏆 Historical Milestones</h4>
-<p style="margin: 0; font-size: 0.9rem;">Prove mastery by recreating ML history with YOUR implementations</p>
-<p style="margin: 0.5rem 0 0 0; font-size: 0.85rem;"><a href="chapters/milestones.html">See Timeline →</a></p>
+<div style="margin-top: 2rem;">
+  <a href="quickstart-guide.html" style="display: inline-block; background: white; color: #1e3a8a; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
+    Start Building in 15 Minutes →
+  </a>
+  <a href="chapters/00-introduction.html" style="display: inline-block; background: transparent; color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
+    Learn More
+  </a>
 </div>
 </div>
-<p><strong>New to TinyTorch?</strong> Start with the <span class="xref myst">Three-Tier Structure</span> to see what you’ll build, then read <span class="xref myst">The Learning Journey</span> to understand the pedagogical progression that makes it all click.</p>
-</section>
-<section id="prove-your-mastery-through-history">
-<h2>🏆 Prove Your Mastery Through History<a class="headerlink" href="#prove-your-mastery-through-history" title="Permalink to this heading">#</a></h2>
-<p>As you complete modules, unlock <strong>historical milestone demonstrations</strong> that prove what you’ve built works! Each milestone recreates a breakthrough using YOUR implementations—from Rosenblatt’s 1957 perceptron to modern transformers and production optimization.</p>
-<p><strong>📖 See <span class="xref myst">Journey Through ML History</span></strong> for complete timeline, requirements, and expected results.</p>
+<section id="your-learning-journey">
+<h2>Your Learning Journey<a class="headerlink" href="#your-learning-journey" title="Permalink to this heading">#</a></h2>
+<p>Build a complete ML systems framework through three progressive tiers—from mathematical foundations to production optimization—and prove your mastery through historically significant milestones.</p>
+<pre  class="mermaid">
+        graph TD
+    subgraph Foundation[&quot;Foundation Tier (01-07)&quot;]
+        F[&quot;Build Mathematical Infrastructure&lt;br/&gt;Tensors → Autograd → Training&lt;br/&gt;&lt;br/&gt;Achieve: 95%+ MNIST Accuracy&quot;]
+    end
+
+    subgraph Architecture[&quot;Architecture Tier (08-13)&quot;]
+        A[&quot;Implement Modern AI&lt;br/&gt;DataLoader → CNNs → Transformers&lt;br/&gt;&lt;br/&gt;Achieve: 75%+ CIFAR-10, Text Generation&quot;]
+    end
+
+    subgraph Optimization[&quot;Optimization Tier (14-19)&quot;]
+        O[&quot;Deploy Production Systems&lt;br/&gt;Profile → Quantize → Benchmark&lt;br/&gt;&lt;br/&gt;Achieve: Sub-100ms Inference&quot;]
+    end
+
+    subgraph Capstone[&quot;Capstone (20)&quot;]
+        C[&quot;Complete Integration&lt;br/&gt;MLPerf Competition&lt;br/&gt;&lt;br/&gt;Compete on Real Hardware&quot;]
+    end
+
+    F --&gt; A
+    A --&gt; O
+    O --&gt; C
+
+    style Foundation fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Architecture fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style Optimization fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style Capstone fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    </pre><p><strong>Browse complete module details in the sidebar navigation</strong> — organized by tier with clear learning objectives and implementation guides.</p>
+<p><strong>See <span class="xref myst">Complete Course Structure</span></strong> for detailed tier breakdowns, time estimates, and career connections.</p>
 </section>
 <section id="why-build-instead-of-use">
 <h2>Why Build Instead of Use?<a class="headerlink" href="#why-build-instead-of-use" title="Permalink to this heading">#</a></h2>
-<p>The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them.</p>
-<p>When you just use PyTorch or TensorFlow, you’re stuck when things break—OOM errors, NaN losses, slow training. When you build TinyTorch from scratch, you understand exactly why these issues happen and how to fix them. You know the memory layouts, gradient flows, and performance bottlenecks because you implemented them yourself.</p>
-<p><strong>📖 See <span class="xref myst">FAQ</span></strong> for detailed comparisons with PyTorch, TensorFlow, micrograd, and nanoGPT, including code examples and architectural differences.</p>
+<p>Understanding the difference between using a framework and building one is the difference between being limited by tools and being empowered to create them.</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+<div style="background: #fef2f2; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ef4444;">
+<h3 style="margin: 0 0 1rem 0; color: #991b1b;">Traditional ML Education</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="c1"># When this breaks, you&#39;re stuck</span>
+</pre></div>
+</div>
+<p><strong>Problem</strong>: OOM errors, NaN losses, slow training—you can’t debug what you don’t understand.</p>
+</div>
+<div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e;">
+<h3 style="margin: 0 0 1rem 0; color: #166534;">TinyTorch Approach</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>  <span class="c1"># YOUR code</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>       <span class="c1"># YOUR implementation</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="c1"># You know exactly how this works</span>
+</pre></div>
+</div>
+<p><strong>Advantage</strong>: You understand memory layouts, gradient flows, and performance bottlenecks because you implemented them.</p>
+</div>
+</div>
+<p><strong>Systems Thinking</strong>: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to production reality.</p>
+<p><strong>See <span class="xref myst">Course Philosophy</span></strong> for the full origin story and pedagogical approach.</p>
 </section>
-<section id="who-is-this-for">
-<h2>Who Is This For?<a class="headerlink" href="#who-is-this-for" title="Permalink to this heading">#</a></h2>
-<p><strong>Perfect if you’re asking these questions:</strong></p>
-<p><strong>ML Systems Engineers</strong>: “Why does my model training OOM at batch size 32? How do attention mechanisms scale quadratically with sequence length? When does data loading become the bottleneck?” You’ll build and profile every component, understanding memory hierarchies, computational complexity, and system bottlenecks that production ML systems face daily.</p>
-<p><strong>Students &amp; Researchers</strong>: “How does that <code class="docutils literal notranslate"><span class="pre">nn.Linear()</span></code> call actually compute gradients? Why does Adam optimizer need 3× the memory of SGD? What’s actually happening during a forward pass?” You’ll implement the mathematics you learned in class and discover how theoretical concepts become practical systems with real performance implications.</p>
-<p><strong>Performance Engineers</strong>: “Where are the actual bottlenecks in transformer inference? How does KV-cache reduce computation by 10-100×? Why does my CNN use 4GB of memory?” By building these systems from scratch, you’ll understand memory access patterns, cache efficiency, and optimization opportunities that profilers alone can’t teach.</p>
-<p><strong>Academics &amp; Educators</strong>: “How can I teach ML systems—not just ML algorithms?” TinyTorch provides a complete pedagogical framework emphasizing systems thinking: memory profiling, performance analysis, and scaling behavior are built into every module, not added as an afterthought.</p>
-<p><strong>ML Practitioners</strong>: “Why does training slow down after epoch 10? How do I debug gradient explosions? When should I use mixed precision?” Even experienced engineers often treat frameworks as black boxes. By understanding the systems underneath, you’ll debug faster, optimize better, and make informed architectural decisions.</p>
-</section>
-<section id="how-to-choose-your-learning-path">
-<h2>How to Choose Your Learning Path<a class="headerlink" href="#how-to-choose-your-learning-path" title="Permalink to this heading">#</a></h2>
-<p><strong>Three Learning Approaches</strong>: You can <strong>build complete tiers</strong> (implement all 20 modules), <strong>focus on specific tiers</strong> (target your skill gaps), or <strong>explore selectively</strong> (study key concepts). Each tier builds complete, working systems.</p>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 3rem 0;">
-<!-- Top Row -->
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🔬 Quick Start</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">15 minutes setup • Try foundational modules • Hands-on experience</p>
-<a href="quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Start Building →</a>
-</div>
-<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 2rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">📚 Full Course</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">8+ weeks study • Complete ML framework • Systems understanding</p>
-<a href="chapters/00-introduction.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Course Overview →</a>
-</div>
-<!-- Bottom Row -->
-<div style="background: #faf5ff; border: 1px solid #b794f6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🎓 Instructors</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Classroom-ready • NBGrader integration (coming soon)</p>
-<a href="usage-paths/classroom-use.html" style="display: inline-block; background: #6f42c1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Teaching Guide →</a>
-</div>
-<div style="background: #fff8dc; border: 1px solid #daa520; padding: 2rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">📊 Learning Community</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Track progress • Join competitions • Student leaderboard</p>
-<a href="leaderboard.html" style="display: inline-block; background: #b8860b; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">View Progress →</a>
-</div>
-</div>
-</section>
-<section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
-<p>Ready to build ML systems from scratch? Here’s how to start:</p>
-<p><strong>Quick Setup</strong> (15 minutes):</p>
-<ol class="arabic simple">
-<li><p>Clone the repository</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">./setup-environment.sh</span></code></p></li>
-<li><p>Start with Module 01 (Tensors)</p></li>
-<li><p>Export with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">01</span></code></p></li>
-<li><p>Validate by running milestone scripts</p></li>
+<section id="the-build-use-reflect-approach">
+<h2>The Build → Use → Reflect Approach<a class="headerlink" href="#the-build-use-reflect-approach" title="Permalink to this heading">#</a></h2>
+<p>Every module follows a proven learning cycle that builds deep understanding:</p>
+<pre  class="mermaid">
+        graph LR
+    B[Build&lt;br/&gt;Implement from scratch] --&gt; U[Use&lt;br/&gt;Real data, real problems]
+    U --&gt; R[Reflect&lt;br/&gt;Systems thinking questions]
+    R --&gt; B
+
+    style B fill:#FFC107,color:#000
+    style U fill:#4CAF50,color:#fff
+    style R fill:#2196F3,color:#fff
+    </pre><ol class="arabic simple">
+<li><p><strong>Build</strong>: Implement each component yourself—tensors, autograd, optimizers, attention</p></li>
+<li><p><strong>Use</strong>: Apply your implementations to real problems—MNIST, CIFAR-10, text generation</p></li>
+<li><p><strong>Reflect</strong>: Answer systems thinking questions—memory usage, scaling behavior, trade-offs</p></li>
 </ol>
-<p><strong>📖 See <span class="xref myst">Quick Start Guide</span></strong> for detailed setup instructions.</p>
-<p><strong>Understanding the Workflow</strong>:</p>
-<ul class="simple">
-<li><p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> - The essential edit → export → validate cycle</p></li>
-<li><p><strong>📖 See <span class="xref myst">Essential Commands</span></strong> - Complete TITO command reference</p></li>
-<li><p><strong>📖 See <span class="xref myst">Three-Tier Learning Structure</span></strong> - Detailed course structure</p></li>
-</ul>
-<p><strong>Optional Progress Tracking</strong>:</p>
-<ul class="simple">
-<li><p><strong><span class="xref myst">Progress Tracking</span></strong> - Monitor your journey with capability checkpoints (optional)</p></li>
-</ul>
-<p>TinyTorch is more than a course—it’s a community of learners building together. Join thousands exploring ML systems from the ground up.</p>
+<p>This approach develops not just coding ability, but systems engineering intuition essential for production ML.</p>
 </section>
-<div class="toctree-wrapper compound">
+<section id="is-this-for-you">
+<h2>Is This For You?<a class="headerlink" href="#is-this-for-you" title="Permalink to this heading">#</a></h2>
+<p><strong>Perfect if you want to</strong>:</p>
+<ul class="simple">
+<li><p>Debug ML systems when frameworks fail (OOM errors, gradient explosions, performance bottlenecks)</p></li>
+<li><p>Implement custom operations for research or production</p></li>
+<li><p>Understand how PyTorch, TensorFlow, and JAX actually work under the hood</p></li>
+<li><p>Transition from ML user to ML systems engineer</p></li>
+</ul>
+<p><strong>Prerequisites</strong>: Python programming and basic linear algebra (matrix multiplication). No prior ML framework experience required—you’ll build your own.</p>
+<section id="start-your-path">
+<h3>Start Your Path<a class="headerlink" href="#start-your-path" title="Permalink to this heading">#</a></h3>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
+<div style="background: #eff6ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #3b82f6;">
+<h4 style="margin: 0 0 1rem 0; color: #1e40af;">Quick Start</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Get hands-on immediately</p>
+<a href="quickstart-guide.html" style="color: #1e40af; font-weight: 600; text-decoration: none;">15-Minute Setup →</a>
 </div>
+<div style="background: #faf5ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #9333ea;">
+<h4 style="margin: 0 0 1rem 0; color: #6b21a8;">Learn More</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Understand the approach</p>
+<a href="chapters/00-introduction.html" style="color: #6b21a8; font-weight: 600; text-decoration: none;">Course Philosophy →</a>
+</div>
+<div style="background: #f0fdfa; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #14b8a6;">
+<h4 style="margin: 0 0 1rem 0; color: #115e59;">For Instructors</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Classroom integration</p>
+<a href="usage-paths/classroom-use.html" style="color: #115e59; font-weight: 600; text-decoration: none;">Teaching Guide →</a>
+</div>
+</div>
+</section>
+</section>
+<section id="essential-resources">
+<h2>Essential Resources<a class="headerlink" href="#essential-resources" title="Permalink to this heading">#</a></h2>
+<p><strong>Core Documentation</strong>:</p>
+<ul class="simple">
+<li><p><strong><span class="xref myst">Quick Start Guide</span></strong> — 15-minute setup and first module</p></li>
+<li><p><strong><span class="xref myst">Course Structure</span></strong> — Detailed tier breakdowns and learning outcomes</p></li>
+<li><p><strong><a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a></strong> — Day-to-day development cycle</p></li>
+<li><p><strong><a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">TITO Essentials</span></a></strong> — Complete CLI command reference</p></li>
+<li><p><strong><a class="reference internal" href="chapters/milestones.html"><span class="doc std std-doc">Historical Milestones</span></a></strong> — Prove your implementations through ML history</p></li>
+</ul>
+<p><strong>Learning Support</strong>:</p>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="faq.html"><span class="doc std std-doc">FAQ</span></a></strong> — Comparisons with PyTorch, TensorFlow, micrograd</p></li>
+<li><p><strong><a class="reference internal" href="testing-framework.html"><span class="doc std std-doc">Testing Framework</span></a></strong> — Quality assurance and validation</p></li>
+<li><p><strong><a class="reference internal" href="community.html"><span class="doc std std-doc">Community</span></a></strong> — Connect with other builders</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Ready to build?</strong> Start with the <span class="xref myst">Quick Start Guide</span> to go from zero to building neural networks in 15 minutes.</p>
+<p><strong>Want context first?</strong> Read the <span class="xref myst">Course Introduction</span> to understand the origin story, philosophy, and complete learning progression.</p>
+<p><strong>Teaching a course?</strong> Review the <span class="xref myst">Instructor Guide</span> for classroom integration, automated grading, and curriculum planning.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -650,15 +710,14 @@ Don't just import it. Build it.
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simple-workflow">The Simple Workflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-tier-learning-pathway">Three-Tier Learning Pathway</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-your-complete-learning-journey">🗺️ Understanding Your Complete Learning Journey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prove-your-mastery-through-history">🏆 Prove Your Mastery Through History</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-journey">Your Learning Journey</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-this-for">Who Is This For?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-choose-your-learning-path">How to Choose Your Learning Path</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-build-use-reflect-approach">The Build → Use → Reflect Approach</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-path">Start Your Path</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-resources">Essential Resources</a></li>
 </ul>
   </nav></div>
 

@@ -36,7 +36,7 @@ When you implement your own tensor operations, write your own autograd, build yo
 
 ---
 
-## 🎯 Core Learning Concepts
+## Core Learning Concepts
 
 <div style="background: #f7fafc; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
 
@@ -143,7 +143,7 @@ output = model(input)                    # YOU know exactly how this works
 
 ## What You'll Achieve: Tier-by-Tier Mastery
 
-### 🏗️ After Foundation Tier (Modules 01-07)
+### After Foundation Tier (Modules 01-07)
 Build a complete neural network framework from mathematical first principles:
 
 ```python
@@ -167,13 +167,13 @@ for batch in dataloader:  # Your data management
 
 **🎯 Foundation Achievement**: 95%+ accuracy on MNIST using 100% your own mathematical implementations
 
-### 🏛️ After Architecture Tier (Modules 08-13)
+### After Architecture Tier (Modules 08-13)
 - **Computer Vision Mastery**: CNNs achieving 75%+ accuracy on CIFAR-10 with YOUR convolution implementations
 - **Language Understanding**: Transformers generating coherent text using YOUR attention mechanisms
 - **Universal Architecture**: Discover why the SAME mathematical principles work for vision AND language
 - **AI Breakthrough Recreation**: Implement the architectures that created the modern AI revolution
 
-### ⚡ After Optimization Tier (Modules 14-20)
+### After Optimization Tier (Modules 14-20)
 - **Production Performance**: Systems optimized for <100ms inference latency using YOUR profiling tools
 - **Memory Efficiency**: Models compressed to 25% original size with YOUR quantization implementations
 - **Hardware Acceleration**: Kernels achieving 10x speedups through YOUR vectorization techniques
@@ -185,20 +185,20 @@ for batch in dataloader:  # Your data management
 
 TinyTorch's three-tier structure follows the actual historical progression of machine learning breakthroughs:
 
-### 🏗️ Foundation Era (1980s-1990s) → Foundation Tier
+### Foundation Era (1980s-1990s) → Foundation Tier
 **The Beginning**: Mathematical foundations that started it all
 - **1986 Breakthrough**: Backpropagation enables multi-layer networks
 - **Your Implementation**: Build automatic differentiation and gradient-based optimization
 - **Historical Milestone**: Train MLPs to 95%+ accuracy on MNIST using YOUR autograd engine
 
-### 🏛️ Architecture Era (1990s-2010s) → Architecture Tier
+### Architecture Era (1990s-2010s) → Architecture Tier
 **The Revolution**: Specialized architectures for vision and language
 - **1998 Breakthrough**: CNNs revolutionize computer vision (LeCun's LeNet)
 - **2017 Breakthrough**: Transformers unify vision and language ("Attention is All You Need")
 - **Your Implementation**: Build CNNs achieving 75%+ on CIFAR-10, then transformers for text generation
 - **Historical Milestone**: Recreate both revolutions using YOUR spatial and attention implementations
 
-### ⚡ Optimization Era (2010s-Present) → Optimization Tier
+### Optimization Era (2010s-Present) → Optimization Tier
 **The Engineering**: Production systems that scale to billions of users
 - **2020s Breakthrough**: Efficient inference enables real-time LLMs (GPT, ChatGPT)
 - **Your Implementation**: Build KV-caching, quantization, and production optimizations
@@ -278,7 +278,7 @@ After each tier, you become the team member who:
 
 ---
 
-## 🚀 Start Your Journey
+## Start Your Journey
 
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Begin Building ML Systems</h3>
@@ -288,9 +288,9 @@ After each tier, you become the team member who:
 </div>
 
 **Next Steps**:
-- **New to TinyTorch**: Start with [Quick Start Guide](../quickstart-guide.html) for immediate hands-on experience
-- **Ready to Commit**: Begin [Module 01: Setup](01-setup.html) to configure your development environment
-- **Teaching a Course**: Review [Instructor Guide](../usage-paths/classroom-use.html) for classroom integration
+- **New to TinyTorch**: Start with [Quick Start Guide](../quickstart-guide.md) for immediate hands-on experience
+- **Ready to Commit**: Begin [Module 01: Tensor](../../modules/01_tensor/ABOUT.md) to start building
+- **Teaching a Course**: Review [Instructor Guide](../usage-paths/classroom-use.md) for classroom integration
 
 ```{admonition} Your Three-Tier Journey Awaits
 :class: tip
@@ -303,11 +303,11 @@ By completing all three tiers, you'll have built a complete ML framework that ri
 All using code you wrote yourself, from mathematical first principles to production optimization.
 ```
 
-**📖 Want to understand the pedagogical narrative behind this structure?** See [The Learning Journey](learning-journey.html) to understand WHY modules flow this way and HOW they build on each other through a six-act learning story.
+**📖 Want to understand the pedagogical narrative behind this structure?** See [The Learning Journey](learning-journey.md) to understand WHY modules flow this way and HOW they build on each other through a six-act learning story.
 
 ---
 
-### 🏗️ FOUNDATION TIER (Modules 01-07)
+### Foundation Tier (Modules 01-07)
 **Building Blocks of ML Systems • 6-8 weeks • All Prerequisites for Neural Networks**
 
 <div style="background: #f8f9fd; border: 1px solid #e0e7ff; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
@@ -342,7 +342,7 @@ All using code you wrote yourself, from mathematical first principles to product
 
 ---
 
-### 🏛️ ARCHITECTURE TIER (Modules 08-13)
+### Architecture Tier (Modules 08-13)
 **Modern AI Algorithms • 4-6 weeks • Vision + Language Architectures**
 
 <div style="background: #fef7ff; border: 1px solid #f3e8ff; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
@@ -376,7 +376,7 @@ All using code you wrote yourself, from mathematical first principles to product
 
 ---
 
-### ⚡ OPTIMIZATION TIER (Modules 14-20)
+### Optimization Tier (Modules 14-19)
 **Production & Performance • 4-6 weeks • Deploy and Scale ML Systems**
 
 <div style="background: #f0fdfa; border: 1px solid #a7f3d0; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
@@ -411,7 +411,7 @@ All using code you wrote yourself, from mathematical first principles to product
 
 ---
 
-## 🎯 Learning Path Recommendations
+## Learning Path Recommendations
 
 ### Choose Your Learning Style
 

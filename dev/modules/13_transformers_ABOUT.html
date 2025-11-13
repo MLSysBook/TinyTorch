@@ -1,0 +1,1126 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>13. Transformers &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/13_transformers_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="14. Profiling" href="14_profiling_ABOUT.html" />
+    <link rel="prev" title="12. Attention" href="12_attention_ABOUT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/13_transformers_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/13_transformers_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/13_transformers_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>13. Transformers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="transformers">
+<h1>13. Transformers<a class="headerlink" href="#transformers" title="Permalink to this heading">#</a></h1>
+<p><strong>🏛️ ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>Build complete transformer models by composing attention, feedforward, and normalization layers. This module implements encoder stacks (BERT-style) and decoder stacks (GPT-style) that power all modern language models.</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By completing this module, you will be able to:</p>
+<ol class="arabic simple">
+<li><p><strong>Implement complete transformer blocks</strong> with multi-head attention, feedforward networks, and normalization</p></li>
+<li><p><strong>Design encoder stacks</strong> for bidirectional understanding using masked self-attention (BERT-style)</p></li>
+<li><p><strong>Build decoder stacks</strong> for autoregressive text generation with causal masking (GPT-style)</p></li>
+<li><p><strong>Understand layer normalization and residual connections</strong> critical for training deep transformer networks</p></li>
+<li><p><strong>Apply transformer architectures</strong> to language modeling, text generation, and sequence-to-sequence tasks</p></li>
+</ol>
+</section>
+<section id="why-this-matters">
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<section id="production-context">
+<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
+<p>Transformers are the architecture of modern AI:</p>
+<ul class="simple">
+<li><p><strong>GPT-4</strong>: 96-layer decoder-only transformer; powers ChatGPT and GitHub Copilot</p></li>
+<li><p><strong>BERT</strong>: 12-layer encoder-only transformer; ranks billions of web pages for Google Search</p></li>
+<li><p><strong>T5</strong>: Encoder-decoder transformer; Google’s universal text-to-text model</p></li>
+<li><p><strong>Claude, Gemini, Llama</strong>: All transformer-based; billions of users daily</p></li>
+</ul>
+</section>
+<section id="historical-context">
+<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
+<p>Transformers unified and dominated AI:</p>
+<ul class="simple">
+<li><p><strong>Pre-Transformer (pre-2017)</strong>: RNNs/LSTMs for sequences; CNNs for vision; separate architectures</p></li>
+<li><p><strong>Attention is All You Need (2017)</strong>: Pure transformer beats RNNs; parallelizable; scales efficiently</p></li>
+<li><p><strong>BERT/GPT (2018)</strong>: Transformers dominate NLP; pre-training + fine-tuning paradigm</p></li>
+<li><p><strong>Transformers Everywhere (2020+)</strong>: Vision (ViT), speech (Whisper), protein folding (AlphaFold), multimodal (GPT-4)</p></li>
+</ul>
+<p>The architecture you’re implementing powers virtually all modern AI systems.</p>
+</section>
+</section>
+<section id="pedagogical-pattern-build-use-analyze">
+<h2>Pedagogical Pattern: Build → Use → Analyze<a class="headerlink" href="#pedagogical-pattern-build-use-analyze" title="Permalink to this heading">#</a></h2>
+<section id="build">
+<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
+<p>Implement from first principles:</p>
+<ul class="simple">
+<li><p>Feedforward network with two linear layers and activation</p></li>
+<li><p>Layer normalization for training stability</p></li>
+<li><p>Transformer block: attention → residual → norm → FFN → residual → norm</p></li>
+<li><p>Encoder stack (bidirectional, BERT-style)</p></li>
+<li><p>Decoder stack (autoregressive, GPT-style)</p></li>
+</ul>
+</section>
+<section id="use">
+<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
+<p>Apply to real problems:</p>
+<ul class="simple">
+<li><p>Train GPT-style decoder on Shakespeare text generation</p></li>
+<li><p>Build BERT-style encoder for sequence classification</p></li>
+<li><p>Implement encoder-decoder for sequence-to-sequence tasks</p></li>
+<li><p>Generate text autoregressively with sampling</p></li>
+<li><p>Compare encoder-only vs decoder-only architectures</p></li>
+</ul>
+</section>
+<section id="analyze">
+<h3>3. Analyze<a class="headerlink" href="#analyze" title="Permalink to this heading">#</a></h3>
+<p>Deep-dive into architectural choices:</p>
+<ul class="simple">
+<li><p>Why are residual connections critical for deep transformers?</p></li>
+<li><p>How does layer normalization differ from batch normalization?</p></li>
+<li><p>When would you use encoder-only vs decoder-only vs encoder-decoder?</p></li>
+<li><p>Why pre-norm vs post-norm transformer blocks?</p></li>
+<li><p>What’s the compute/memory trade-off in stacking many layers?</p></li>
+</ul>
+</section>
+</section>
+<section id="implementation-guide">
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
+<p><strong>Feedforward Network - Position-Wise FFN</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FeedForward</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Position-wise feedforward network in transformer.</span>
+<span class="sd">    </span>
+<span class="sd">    Two linear transformations with ReLU activation:</span>
+<span class="sd">        FFN(x) = ReLU(xW₁ + b₁)W₂ + b₂</span>
+<span class="sd">    </span>
+<span class="sd">    Applied identically to each position independently.</span>
+<span class="sd">    Typically d_ff = 4 × d_model (expansion factor).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        d_model: Input/output dimension (e.g., 512)</span>
+<span class="sd">        d_ff: Hidden dimension (e.g., 2048 = 4 × 512)</span>
+<span class="sd">        dropout: Dropout probability for regularization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">d_ff</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># x: (batch, seq_len, d_model)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>      <span class="c1"># (batch, seq_len, d_ff)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>          <span class="c1"># Nonlinearity</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>       <span class="c1"># Regularization</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>       <span class="c1"># (batch, seq_len, d_model)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p><strong>Layer Normalization - Training Stability</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LayerNorm</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Layer normalization for transformer training stability.</span>
+<span class="sd">    </span>
+<span class="sd">    Normalizes across feature dimension for each sample independently.</span>
+<span class="sd">    Unlike BatchNorm, works with any batch size including batch=1.</span>
+<span class="sd">    </span>
+<span class="sd">    Formula: y = γ(x - μ)/√(σ² + ε) + β</span>
+<span class="sd">    where μ, σ² computed per sample across features</span>
+<span class="sd">    </span>
+<span class="sd">    Why not BatchNorm?</span>
+<span class="sd">    - Transformers process variable-length sequences</span>
+<span class="sd">    - LayerNorm independent of batch size (better for inference)</span>
+<span class="sd">    - Empirically works better for NLP tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">Tensor</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">d_model</span><span class="p">))</span>   <span class="c1"># Learned scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">Tensor</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d_model</span><span class="p">))</span>   <span class="c1"># Learned shift</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># x: (batch, seq_len, d_model)</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">normalized</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
+</pre></div>
+</div>
+<p><strong>Transformer Block - Complete Layer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TransformerBlock</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Single transformer layer with attention and feedforward.</span>
+<span class="sd">    </span>
+<span class="sd">    Architecture (Pre-Norm variant):</span>
+<span class="sd">        x → LayerNorm → MultiHeadAttention → Residual</span>
+<span class="sd">          → LayerNorm → FeedForward → Residual</span>
+<span class="sd">    </span>
+<span class="sd">    Pre-Norm (shown above) vs Post-Norm:</span>
+<span class="sd">        - Pre-Norm: Normalize before sub-layers; better gradient flow</span>
+<span class="sd">        - Post-Norm: Normalize after sub-layers; original Transformer paper</span>
+<span class="sd">        - Pre-Norm generally preferred for deep models (&gt;12 layers)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="c1"># Attention sub-layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+        
+        <span class="c1"># Feedforward sub-layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span> <span class="o">=</span> <span class="n">FeedForward</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with residual connections.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: (batch, seq_len, d_model)</span>
+<span class="sd">            mask: Optional attention mask</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            output: (batch, seq_len, d_model)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Attention sub-layer with residual</span>
+        <span class="n">normed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">attended</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="n">normed</span><span class="p">,</span> <span class="n">normed</span><span class="p">,</span> <span class="n">normed</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">(</span><span class="n">attended</span><span class="p">)</span>  <span class="c1"># Residual connection</span>
+        
+        <span class="c1"># Feedforward sub-layer with residual</span>
+        <span class="n">normed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">fed_forward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span><span class="p">(</span><span class="n">normed</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">(</span><span class="n">fed_forward</span><span class="p">)</span>  <span class="c1"># Residual connection</span>
+        
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p><strong>GPT-Style Decoder - Autoregressive Generation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">GPTDecoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;GPT-style decoder for autoregressive language modeling.</span>
+<span class="sd">    </span>
+<span class="sd">    Architecture:</span>
+<span class="sd">        Input tokens → Embed + PositionalEncoding</span>
+<span class="sd">        → TransformerBlocks (with causal masking)</span>
+<span class="sd">        → Linear projection to vocabulary</span>
+<span class="sd">    </span>
+<span class="sd">    Features:</span>
+<span class="sd">        - Causal masking: position i can only attend to positions ≤ i</span>
+<span class="sd">        - Autoregressive: generates one token at a time</span>
+<span class="sd">        - Pre-training objective: predict next token</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">max_len</span><span class="p">):</span>
+        <span class="c1"># Embedding layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding</span> <span class="o">=</span> <span class="n">LearnedPositionalEmbedding</span><span class="p">(</span><span class="n">max_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        
+        <span class="c1"># Transformer blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransformerBlock</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">)</span> 
+                       <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">)]</span>
+        
+        <span class="c1"># Output projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_proj</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through decoder.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            token_ids: (batch, seq_len) token indices</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            logits: (batch, seq_len, vocab_size) unnormalized predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span>
+        
+        <span class="c1"># Embeddings</span>
+        <span class="n">token_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span>
+        <span class="n">pos_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">token_embeds</span> <span class="o">+</span> <span class="n">pos_embeds</span>  <span class="c1"># (batch, seq_len, d_model)</span>
+        
+        <span class="c1"># Create causal mask</span>
+        <span class="n">causal_mask</span> <span class="o">=</span> <span class="n">create_causal_mask</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+        
+        <span class="c1"># Transformer blocks</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">causal_mask</span><span class="p">)</span>
+        
+        <span class="c1"># Output projection</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># (batch, seq_len, vocab_size)</span>
+        
+        <span class="k">return</span> <span class="n">logits</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_tokens</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Autoregressive text generation.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            start_tokens: (batch, start_len) initial sequence</span>
+<span class="sd">            max_new_tokens: Number of tokens to generate</span>
+<span class="sd">            temperature: Sampling temperature (higher = more random)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            generated: (batch, start_len + max_new_tokens) full sequence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">generated</span> <span class="o">=</span> <span class="n">start_tokens</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_new_tokens</span><span class="p">):</span>
+            <span class="c1"># Forward pass</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">generated</span><span class="p">)</span>  <span class="c1"># (batch, seq_len, vocab_size)</span>
+            
+            <span class="c1"># Get logits for last position</span>
+            <span class="n">next_token_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">temperature</span>
+            
+            <span class="c1"># Sample from distribution</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">next_token_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">next_token</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>  <span class="c1"># (batch, 1)</span>
+            
+            <span class="c1"># Append to sequence</span>
+            <span class="n">generated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">generated</span><span class="p">,</span> <span class="n">next_token</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">generated</span>
+</pre></div>
+</div>
+<p><strong>BERT-Style Encoder - Bidirectional Understanding</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BERTEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BERT-style encoder for bidirectional sequence understanding.</span>
+<span class="sd">    </span>
+<span class="sd">    Architecture:</span>
+<span class="sd">        Input tokens → Embed + PositionalEncoding</span>
+<span class="sd">        → TransformerBlocks (no causal masking)</span>
+<span class="sd">        → Task-specific head (classification, QA, etc.)</span>
+<span class="sd">    </span>
+<span class="sd">    Features:</span>
+<span class="sd">        - Bidirectional: each position attends to all positions</span>
+<span class="sd">        - Pre-training: masked language modeling (MLM)</span>
+<span class="sd">        - Fine-tuning: task-specific heads added</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">max_len</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding</span> <span class="o">=</span> <span class="n">LearnedPositionalEmbedding</span><span class="p">(</span><span class="n">max_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransformerBlock</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">)</span> 
+                       <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">)]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">,</span> <span class="n">attention_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through encoder.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            token_ids: (batch, seq_len)</span>
+<span class="sd">            attention_mask: Optional mask for padding tokens</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            embeddings: (batch, seq_len, d_model) contextualized representations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Embeddings</span>
+        <span class="n">token_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span>
+        <span class="n">pos_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embedding</span><span class="p">(</span><span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">token_embeds</span> <span class="o">+</span> <span class="n">pos_embeds</span>
+        
+        <span class="c1"># Transformer blocks (bidirectional - no causal mask)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">)</span>
+        
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</section>
+<section id="step-by-step-implementation">
+<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Build Feedforward Network</strong></p>
+<ul class="simple">
+<li><p>Two linear layers with expansion factor (4×)</p></li>
+<li><p>Add ReLU activation between layers</p></li>
+<li><p>Include dropout for regularization</p></li>
+<li><p>Test with different d_ff values</p></li>
+</ul>
+</li>
+<li><p><strong>Implement Layer Normalization</strong></p>
+<ul class="simple">
+<li><p>Compute mean and std across feature dimension</p></li>
+<li><p>Add learnable scale (gamma) and shift (beta)</p></li>
+<li><p>Handle numerical stability with epsilon</p></li>
+<li><p>Compare with batch normalization</p></li>
+</ul>
+</li>
+<li><p><strong>Create Transformer Block</strong></p>
+<ul class="simple">
+<li><p>Add multi-head attention sub-layer</p></li>
+<li><p>Implement residual connections</p></li>
+<li><p>Add layer normalization (pre-norm placement)</p></li>
+<li><p>Include feedforward sub-layer</p></li>
+<li><p>Test forward and backward passes</p></li>
+</ul>
+</li>
+<li><p><strong>Build GPT Decoder</strong></p>
+<ul class="simple">
+<li><p>Stack transformer blocks</p></li>
+<li><p>Add token and position embeddings</p></li>
+<li><p>Implement causal masking</p></li>
+<li><p>Add output projection to vocabulary</p></li>
+<li><p>Implement autoregressive generation</p></li>
+</ul>
+</li>
+<li><p><strong>Build BERT Encoder</strong></p>
+<ul class="simple">
+<li><p>Stack transformer blocks without causal mask</p></li>
+<li><p>Add bidirectional attention</p></li>
+<li><p>Implement padding mask handling</p></li>
+<li><p>Test on classification tasks</p></li>
+<li><p>Compare with decoder architecture</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<section id="inline-tests-during-development">
+<h3>Inline Tests (During Development)<a class="headerlink" href="#inline-tests-during-development" title="Permalink to this heading">#</a></h3>
+<p>Run inline tests while building:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/13_transformers
+python<span class="w"> </span>transformers_dev.py
+</pre></div>
+</div>
+<p>Expected output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Unit Test: Transformer block...
+✅ Attention + FFN sub-layers work correctly
+✅ Residual connections preserve gradient flow
+✅ Layer normalization stabilizes training
+Progress: Transformer Block ✓
+
+Unit Test: GPT decoder...
+✅ 12-layer decoder initialized successfully
+✅ Causal masking prevents future information leak
+✅ Text generation produces coherent sequences
+Progress: GPT Decoder ✓
+
+Unit Test: BERT encoder...
+✅ Bidirectional attention accesses all positions
+✅ Padding mask ignores padding tokens correctly
+✅ Encoder outputs contextualized representations
+Progress: BERT Encoder ✓
+</pre></div>
+</div>
+</section>
+<section id="export-and-validate">
+<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
+<p>After completing the module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to tinytorch package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>13_transformers
+
+<span class="c1"># Run integration tests</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>13_transformers
+</pre></div>
+</div>
+</section>
+</section>
+<section id="where-this-code-lives">
+<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
+├── models/
+│   ├── transformer.py          # Transformer blocks
+│   ├── gpt.py                  # GPT decoder
+│   └── bert.py                 # BERT encoder
+└── __init__.py                 # Exposes transformer models
+
+Usage in other modules:
+&gt;&gt;&gt; from tinytorch.models import GPTDecoder, BERTEncoder
+&gt;&gt;&gt; gpt = GPTDecoder(vocab_size=50000, d_model=768, num_layers=12, num_heads=12, d_ff=3072, max_len=1024)
+&gt;&gt;&gt; generated_text = gpt.generate(start_tokens, max_new_tokens=100)
+</pre></div>
+</div>
+</section>
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Layer Depth Trade-offs</strong>: GPT-3 has 96 layers. What are the benefits? What are the challenges (training stability, memory, gradients)? Why can’t we just use 1000 layers?</p></li>
+<li><p><strong>Residual Connections Necessity</strong>: Remove residual connections from a 12-layer transformer. What happens during training? Why do gradients vanish? How do residuals solve this?</p></li>
+<li><p><strong>Pre-Norm vs Post-Norm</strong>: Original Transformer used post-norm (norm after sub-layer). Modern transformers use pre-norm (norm before). Why? What’s the gradient flow difference?</p></li>
+<li><p><strong>Encoder vs Decoder Choice</strong>: When would you use encoder-only (BERT), decoder-only (GPT), or encoder-decoder (T5)? What tasks suit each architecture?</p></li>
+<li><p><strong>Memory Scaling</strong>: A 12-layer transformer with d_model=768 has how many parameters? How does this scale with layers, dimensions, and vocabulary size? What’s the memory footprint?</p></li>
+</ol>
+</section>
+<section id="real-world-connections">
+<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
+<section id="industry-applications">
+<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
+<p><strong>Large Language Models (OpenAI, Anthropic, Google)</strong></p>
+<ul class="simple">
+<li><p>GPT-4: 96-layer decoder stack, trained on trillions of tokens</p></li>
+<li><p>Claude: Decoder-only architecture with constitutional AI training</p></li>
+<li><p>PaLM 2: Decoder with 340B parameters across 64 layers</p></li>
+<li><p>Gemini: Multimodal transformer processing text, images, audio</p></li>
+</ul>
+<p><strong>Search and Understanding (Google, Microsoft)</strong></p>
+<ul class="simple">
+<li><p>BERT powers Google Search ranking for billions of queries daily</p></li>
+<li><p>Bing uses transformer encoder for semantic search</p></li>
+<li><p>Question-answering systems built on BERT fine-tuning</p></li>
+<li><p>Document understanding and summarization</p></li>
+</ul>
+<p><strong>Code Generation (GitHub, Google, Meta)</strong></p>
+<ul class="simple">
+<li><p>Copilot: GPT-based decoder trained on GitHub code</p></li>
+<li><p>AlphaCode: Transformer decoder for competitive programming</p></li>
+<li><p>CodeLlama: Specialized decoder for code completion</p></li>
+<li><p>All use decoder-only transformer architecture</p></li>
+</ul>
+</section>
+<section id="research-impact">
+<h3>Research Impact<a class="headerlink" href="#research-impact" title="Permalink to this heading">#</a></h3>
+<p>This module implements patterns from:</p>
+<ul class="simple">
+<li><p>Transformer (Vaswani et al., 2017): The foundational architecture</p></li>
+<li><p>BERT (Devlin et al., 2018): Bidirectional encoder pre-training</p></li>
+<li><p>GPT-2/3 (Radford et al., 2019): Decoder-only scaling</p></li>
+<li><p>T5 (Raffel et al., 2020): Unified encoder-decoder framework</p></li>
+</ul>
+</section>
+</section>
+<section id="whats-next">
+<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<p>In <strong>Module 14: Profiling</strong> (Optimization Tier), you’ll learn to measure and analyze performance:</p>
+<ul class="simple">
+<li><p>Profile time, memory, and compute for transformer operations</p></li>
+<li><p>Identify bottlenecks in attention, feedforward, and embedding layers</p></li>
+<li><p>Measure FLOPs and memory bandwidth utilization</p></li>
+<li><p>Build the foundation for data-driven optimization</p></li>
+</ul>
+<p>The transformers you built are complete—now it’s time to understand their performance characteristics!</p>
+<hr class="docutils" />
+<p><strong>Ready to build GPT and BERT from scratch?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/13_transformers/transformers_dev.py</span></code> and start implementing.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="12_attention_ABOUT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">12. Attention</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="14_profiling_ABOUT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">14. Profiling</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
