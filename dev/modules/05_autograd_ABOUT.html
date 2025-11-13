@@ -77,7 +77,7 @@ window.addEventListener("load", () => mermaid.run());
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="06. Optimizers" href="06_optimizers_ABOUT.html" />
-    <link rel="prev" title="04. Losses" href="04_losses_ABOUT.html" />
+    <link rel="prev" title="04. Loss Functions" href="04_losses_ABOUT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -220,11 +220,12 @@ window.addEventListener("load", () => mermaid.run());
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -238,6 +239,7 @@ window.addEventListener("load", () => mermaid.run());
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -480,7 +482,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-mode-vs-forward-mode-autodiff">Reverse-Mode vs Forward-Mode Autodiff</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-accumulation-and-memory-management">Gradient Accumulation and Memory Management</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-torch-autograd-function-comparison">PyTorch torch.autograd.Function Comparison</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-implementation-maps-to-pytorch">How Your Implementation Maps to PyTorch</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
@@ -926,14 +928,74 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <li><p><strong>Physics Simulations</strong>: Differentiable physics engines use autodiff for inverse problems like inferring material properties from observed motion</p></li>
 </ul>
 </section>
-<section id="pytorch-torch-autograd-function-comparison">
-<h3>PyTorch torch.autograd.Function Comparison<a class="headerlink" href="#pytorch-torch-autograd-function-comparison" title="Permalink to this heading">#</a></h3>
+<section id="how-your-implementation-maps-to-pytorch">
+<h3>How Your Implementation Maps to PyTorch<a class="headerlink" href="#how-your-implementation-maps-to-pytorch" title="Permalink to this heading">#</a></h3>
+<p><strong>What you just built:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your TinyTorch autograd implementation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddBackward</span><span class="p">,</span> <span class="n">MulBackward</span>
+
+<span class="c1"># Forward pass with gradient tracking</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>  <span class="c1"># Builds computation graph</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Backward pass computes gradients</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># YOUR implementation traverses graph</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>  <span class="c1"># Gradients you computed</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>How PyTorch does it:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PyTorch equivalent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="c1"># Forward pass with gradient tracking</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">]],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">w</span>  <span class="c1"># Builds computation graph (same concept)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Backward pass computes gradients</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># PyTorch autograd engine</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>  <span class="c1"># Same gradient values</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Key Insight</strong>: Your <code class="docutils literal notranslate"><span class="pre">Function</span></code> classes (AddBackward, MulBackward, MatmulBackward) implement the <strong>exact same gradient computation rules</strong> that PyTorch uses internally. When you call <code class="docutils literal notranslate"><span class="pre">loss.backward()</span></code>, both implementations traverse the computation graph in reverse topological order, applying the chain rule via each Function’s backward method.</p>
+<p><strong>What’s the SAME?</strong></p>
 <ul class="simple">
-<li><p><strong>Function Architecture</strong>: Your Function classes mirror PyTorch’s torch.autograd.Function. Both implement forward() and backward() (apply in your case)</p></li>
-<li><p><strong>Enhanced Tensor vs Variable</strong>: PyTorch used to have separate Variable wrapper (pre-v0.4) but merged it into Tensor in 2018. Your implementation follows modern PyTorch style</p></li>
-<li><p><strong>Performance Optimization</strong>: PyTorch implements Function.apply() in C++ with optimized gradient formulas. Your Python implementation demonstrates principles but runs ~100-1000x slower</p></li>
-<li><p><strong>Memory Pooling</strong>: Production frameworks reuse memory allocations across backward passes. What speedup does this provide?</p></li>
+<li><p><strong>Computational graph architecture</strong>: Tensor operations create Function nodes</p></li>
+<li><p><strong>Gradient computation</strong>: Chain rule via reverse-mode autodiff</p></li>
+<li><p><strong>API design</strong>: <code class="docutils literal notranslate"><span class="pre">requires_grad</span></code>, <code class="docutils literal notranslate"><span class="pre">.backward()</span></code>, <code class="docutils literal notranslate"><span class="pre">.grad</span></code> attribute</p></li>
+<li><p><strong>Function pattern</strong>: <code class="docutils literal notranslate"><span class="pre">forward()</span></code> computes output, <code class="docutils literal notranslate"><span class="pre">backward()</span></code> computes gradients</p></li>
+<li><p><strong>Tensor enhancement</strong>: Gradients stored directly in Tensor (modern PyTorch style, not Variable wrapper)</p></li>
 </ul>
+<p><strong>What’s different in production PyTorch?</strong></p>
+<ul class="simple">
+<li><p><strong>Backend</strong>: C++/CUDA implementation ~100-1000× faster</p></li>
+<li><p><strong>Memory optimization</strong>: Graph nodes pooled and reused across iterations</p></li>
+<li><p><strong>Optimized gradients</strong>: Hand-tuned gradient formulas (e.g., fused operations)</p></li>
+<li><p><strong>Advanced features</strong>: Higher-order gradients, gradient checkpointing, JIT compilation</p></li>
+</ul>
+<p><strong>Why this matters</strong>: When you debug PyTorch training and encounter <code class="docutils literal notranslate"><span class="pre">RuntimeError:</span> <span class="pre">element</span> <span class="pre">0</span> <span class="pre">of</span> <span class="pre">tensors</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">require</span> <span class="pre">grad</span></code>, you understand this is checking the computation graph structure you implemented. When gradients are <code class="docutils literal notranslate"><span class="pre">None</span></code>, you know backward() hasn’t been called or the tensor isn’t connected to the loss—concepts from YOUR implementation.</p>
+<p><strong>Production usage example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PyTorch production code (after TinyTorch)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># Uses torch.Tensor with requires_grad=True</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Training loop - same workflow you built</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># Forward pass builds graph</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># Backward pass (YOUR implementation&#39;s logic)</span>
+<span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>  <span class="c1"># Update using .grad (YOUR gradients)</span>
+</pre></div>
+</div>
+<p>After implementing autograd yourself, you understand that <code class="docutils literal notranslate"><span class="pre">loss.backward()</span></code> traverses the computation graph you built during forward pass, calling each operation’s gradient function (AddBackward, MatmulBackward, etc.) in reverse order—exactly like your implementation.</p>
 </section>
 <section id="mathematical-foundations">
 <h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
@@ -1046,7 +1108,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">04. Losses</p>
+        <p class="prev-next-title">04. Loss Functions</p>
       </div>
     </a>
     <a class="right-next"
@@ -1103,7 +1165,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-mode-vs-forward-mode-autodiff">Reverse-Mode vs Forward-Mode Autodiff</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-accumulation-and-memory-management">Gradient Accumulation and Memory Management</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-torch-autograd-function-comparison">PyTorch torch.autograd.Function Comparison</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-implementation-maps-to-pytorch">How Your Implementation Maps to PyTorch</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>

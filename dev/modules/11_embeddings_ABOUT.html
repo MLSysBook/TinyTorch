@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>11. Embeddings &#8212; TinyTorch</title>
+    <title>11. Embeddings - Token to Vector Representations &#8212; TinyTorch</title>
   
   
   
@@ -68,8 +68,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="12. Attention" href="12_attention_ABOUT.html" />
-    <link rel="prev" title="10. Tokenization" href="10_tokenization_ABOUT.html" />
+    <link rel="next" title="12. Attention - The Mechanism That Powers Modern AI" href="12_attention_ABOUT.html" />
+    <link rel="prev" title="10. Tokenization - Text to Numerical Sequences" href="10_tokenization_ABOUT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,11 +212,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -230,6 +231,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -433,7 +435,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>11. Embeddings</h1>
+    <h1>11. Embeddings - Token to Vector Representations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -445,35 +447,33 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embedding-layer-the-token-lookup-table">Embedding Layer - The Token Lookup Table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sinusoidal-positional-encoding-transformer-style">Sinusoidal Positional Encoding (Transformer-Style)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learned-positional-encoding-gpt-style">Learned Positional Encoding (GPT-Style)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-embedding-system">Complete Embedding System</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -485,416 +485,473 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="embeddings">
-<h1>11. Embeddings<a class="headerlink" href="#embeddings" title="Permalink to this heading">#</a></h1>
-<p><strong>🏛️ ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
+  <section id="embeddings-token-to-vector-representations">
+<h1>11. Embeddings - Token to Vector Representations<a class="headerlink" href="#embeddings-token-to-vector-representations" title="Permalink to this heading">#</a></h1>
+<p><strong>ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
-<p>Build embedding systems that transform discrete token IDs into dense vector representations. This module implements lookup tables, positional encodings, and optimization techniques that power all modern language models.</p>
+<p>Build the embedding systems that transform discrete token IDs into dense, learnable vector representations - the bridge between symbolic text and neural computation. This module implements lookup tables, positional encodings, and the optimization techniques that power every modern language model from word2vec to GPT-4’s input layers.</p>
+<p>You’ll discover why embeddings aren’t just “lookup tables” but sophisticated parameter spaces where semantic meaning emerges through training. By implementing both token embeddings and positional encodings from scratch, you’ll understand the architectural choices that shape how transformers process language and why certain design decisions (sinusoidal vs learned positions, embedding dimensions, initialization strategies) have profound implications for model capacity, memory usage, and inference performance.</p>
 </section>
 <section id="learning-objectives">
 <h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
-<p>By completing this module, you will be able to:</p>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Implement embedding layers</strong>: Build efficient lookup tables for token-to-vector conversion with proper Xavier initialization and gradient flow</p></li>
+<li><p><strong>Design positional encodings</strong>: Create both sinusoidal (Transformer-style) and learned (GPT-style) position representations with different extrapolation capabilities</p></li>
+<li><p><strong>Understand memory scaling</strong>: Analyze how vocabulary size and embedding dimensions impact parameter count, memory bandwidth, and serving costs</p></li>
+<li><p><strong>Optimize embedding lookups</strong>: Implement sparse gradient updates that avoid computing gradients for 99% of vocabulary during training</p></li>
+<li><p><strong>Apply dimensionality principles</strong>: Balance semantic expressiveness with computational efficiency in vector space design and initialization</p></li>
+</ul>
+</section>
+<section id="build-use-reflect">
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Implement embedding layers</strong> with efficient lookup table operations for token-to-vector conversion</p></li>
-<li><p><strong>Design positional encodings</strong> (learned and sinusoidal) to capture sequence order information</p></li>
-<li><p><strong>Understand memory scaling</strong> with vocabulary size and embedding dimensions in production models</p></li>
-<li><p><strong>Optimize embedding lookups</strong> for cache efficiency and memory bandwidth utilization</p></li>
-<li><p><strong>Apply dimensionality principles</strong> to balance expressiveness and computational efficiency</p></li>
+<li><p><strong>Build</strong>: Implement embedding lookup tables with trainable parameters, sinusoidal positional encodings using mathematical patterns, learned position embeddings, and complete token+position combination systems</p></li>
+<li><p><strong>Use</strong>: Convert tokenized text sequences to dense vectors, add positional information for sequence order awareness, and prepare embeddings for attention mechanisms</p></li>
+<li><p><strong>Reflect</strong>: Analyze memory scaling with vocabulary size (why GPT-3’s embeddings use 2.4GB), understand sparse gradient efficiency for large vocabularies, and explore semantic geometry in learned embedding spaces</p></li>
 </ol>
-</section>
-<section id="why-this-matters">
-<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
-<section id="production-context">
-<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
-<p>Embeddings are the foundation of all modern NLP:</p>
-<ul class="simple">
-<li><p><strong>GPT-3’s embedding table</strong>: 50K vocab × 12K dims = 600M parameters (20% of total model)</p></li>
-<li><p><strong>BERT’s embeddings</strong>: Token + position + segment embeddings enable bidirectional understanding</p></li>
-<li><p><strong>Word2Vec/GloVe</strong>: Pioneered semantic embeddings; “king - man + woman ≈ queen”</p></li>
-<li><p><strong>Recommendation systems</strong>: Embedding tables for billions of items (YouTube, Netflix, Spotify)</p></li>
-</ul>
-</section>
-<section id="historical-context">
-<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
-<p>Embeddings evolved from sparse to dense representations:</p>
-<ul class="simple">
-<li><p><strong>One-Hot Encoding (pre-2013)</strong>: Vocabulary-sized vectors; no semantic similarity</p></li>
-<li><p><strong>Word2Vec (2013)</strong>: Dense embeddings capture semantic relationships; revolutionized NLP</p></li>
-<li><p><strong>GloVe (2014)</strong>: Global co-occurrence statistics improve quality</p></li>
-<li><p><strong>Contextual Embeddings (2018)</strong>: BERT/GPT embeddings depend on context; same word, different vectors</p></li>
-<li><p><strong>Modern Scale (2020+)</strong>: 100K+ vocabulary embeddings in production language models</p></li>
-</ul>
-<p>The embeddings you’re building are the input layer of transformers and all modern NLP.</p>
-</section>
-</section>
-<section id="pedagogical-pattern-build-use-analyze">
-<h2>Pedagogical Pattern: Build → Use → Analyze<a class="headerlink" href="#pedagogical-pattern-build-use-analyze" title="Permalink to this heading">#</a></h2>
-<section id="build">
-<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
-<p>Implement from first principles:</p>
-<ul class="simple">
-<li><p>Embedding layer with learnable lookup table</p></li>
-<li><p>Sinusoidal positional encoding (Transformer-style)</p></li>
-<li><p>Learned positional embeddings (GPT-style)</p></li>
-<li><p>Combined token + position embeddings</p></li>
-<li><p>Gradient flow through embedding lookups</p></li>
-</ul>
-</section>
-<section id="use">
-<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
-<p>Apply to real problems:</p>
-<ul class="simple">
-<li><p>Convert token sequences to dense vectors</p></li>
-<li><p>Add positional information for sequence order</p></li>
-<li><p>Visualize embedding spaces with t-SNE</p></li>
-<li><p>Measure semantic similarity with cosine distance</p></li>
-<li><p>Integrate with attention mechanisms (Module 12)</p></li>
-</ul>
-</section>
-<section id="analyze">
-<h3>3. Analyze<a class="headerlink" href="#analyze" title="Permalink to this heading">#</a></h3>
-<p>Deep-dive into design trade-offs:</p>
-<ul class="simple">
-<li><p>How does embedding dimension affect model capacity?</p></li>
-<li><p>Why do transformers need positional encodings?</p></li>
-<li><p>What’s the memory cost of large vocabularies?</p></li>
-<li><p>How do embeddings capture semantic relationships?</p></li>
-<li><p>Why sinusoidal vs learned position encodings?</p></li>
-</ul>
-</section>
+<div class="tip admonition">
+<p class="admonition-title">Systems Reality Check</p>
+<p><strong>Production Context</strong>: GPT-3’s embedding table contains 50,257 vocabulary × 12,288 dimensions = 617M parameters (about 20% of the model’s 175B total). Every token lookup requires reading 48KB of memory - making embedding access a major bandwidth bottleneck during inference, especially for long sequences.</p>
+<p><strong>Performance Note</strong>: During training, only ~1% of vocabulary appears in each batch. Sparse gradient updates avoid computing gradients for the other 99% of embedding parameters, saving massive computation and memory bandwidth. This is why frameworks like PyTorch implement specialized sparse gradient operations for embeddings.</p>
+</div>
 </section>
 <section id="implementation-guide">
 <h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
-<section id="core-components">
-<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
-<p><strong>Embedding Layer - Token Lookup Table</strong></p>
+<section id="embedding-layer-the-token-lookup-table">
+<h3>Embedding Layer - The Token Lookup Table<a class="headerlink" href="#embedding-layer-the-token-lookup-table" title="Permalink to this heading">#</a></h3>
+<p>The fundamental building block that maps discrete token IDs to continuous dense vectors. This is where semantic meaning will eventually be learned through training.</p>
+<p><strong>Core Implementation Pattern:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Embedding</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Learnable embedding layer for token-to-vector conversion.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Implements efficient lookup table that maps token IDs to dense vectors.</span>
-<span class="sd">    The core component of all language models.</span>
-<span class="sd">    </span>
+<span class="sd">    The foundation of all language models and sequence processing.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        vocab_size: Size of vocabulary (e.g., 50,000 for GPT-2)</span>
 <span class="sd">        embedding_dim: Dimension of dense vectors (e.g., 768 for BERT-base)</span>
-<span class="sd">    </span>
-<span class="sd">    Memory: vocab_size × embedding_dim parameters</span>
-<span class="sd">    Example: 50K vocab × 768 dim = 38M parameters</span>
+
+<span class="sd">    Memory Cost: vocab_size × embedding_dim parameters</span>
+<span class="sd">    Example: 50K vocab × 768 dim = 38.4M parameters (153MB at FP32)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
-        
-        <span class="c1"># Initialize embedding table randomly</span>
-        <span class="c1"># Shape: (vocab_size, embedding_dim)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.02</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">):</span>
+
+        <span class="c1"># Xavier/Glorot initialization for stable gradients</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">6.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">vocab_size</span> <span class="o">+</span> <span class="n">embedding_dim</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">limit</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)),</span>
+            <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Look up embeddings for token IDs.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            token_ids: (batch_size, seq_len) tensor of token IDs</span>
-<span class="sd">        </span>
+<span class="sd">            indices: (batch_size, seq_len) tensor of token IDs</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            embeddings: (batch_size, seq_len, embedding_dim) dense vectors</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span>
-        
-        <span class="c1"># Lookup operation: index into embedding table</span>
-        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">token_ids</span><span class="p">]</span>  <span class="c1"># Advanced indexing</span>
-        
-        <span class="k">return</span> <span class="n">embeddings</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gradients accumulate in embedding table.</span>
-<span class="sd">        </span>
-<span class="sd">        Only embeddings that were looked up receive gradients.</span>
-<span class="sd">        This is sparse gradient update - critical for efficiency.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">embed_dim</span> <span class="o">=</span> <span class="n">grad_output</span><span class="o">.</span><span class="n">shape</span>
-        
-        <span class="c1"># Accumulate gradients for each unique token ID</span>
-        <span class="n">grad_weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
-                <span class="n">token_id</span> <span class="o">=</span> <span class="n">token_ids</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span>
-                <span class="n">grad_weight</span><span class="p">[</span><span class="n">token_id</span><span class="p">]</span> <span class="o">+=</span> <span class="n">grad_output</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">]</span>
-        
-        <span class="k">return</span> <span class="n">grad_weight</span>
+        <span class="c1"># Advanced indexing: O(1) per token lookup</span>
+        <span class="n">embedded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">indices</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">embedded</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+
+        <span class="c1"># Attach gradient computation (sparse updates during backward)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">_grad_fn</span> <span class="o">=</span> <span class="n">EmbeddingBackward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
-<p><strong>Positional Encoding - Sinusoidal (Transformer-Style)</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SinusoidalPositionalEncoding</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixed sinusoidal positional encoding.</span>
-<span class="sd">    </span>
-<span class="sd">    Used in original Transformer (Vaswani et al., 2017).</span>
-<span class="sd">    Encodes absolute position using sine/cosine functions of different frequencies.</span>
-<span class="sd">    </span>
+<p><strong>Why This Design Works:</strong></p>
+<ul class="simple">
+<li><p><strong>Xavier initialization</strong> ensures gradients don’t explode or vanish during early training</p></li>
+<li><p><strong>Advanced indexing</strong> provides O(1) lookup complexity regardless of vocabulary size</p></li>
+<li><p><strong>Sparse gradients</strong> mean only embeddings for tokens in the current batch receive updates</p></li>
+<li><p><strong>Trainable weights</strong> allow the model to learn semantic relationships through backpropagation</p></li>
+</ul>
+</section>
+<section id="sinusoidal-positional-encoding-transformer-style">
+<h3>Sinusoidal Positional Encoding (Transformer-Style)<a class="headerlink" href="#sinusoidal-positional-encoding-transformer-style" title="Permalink to this heading">#</a></h3>
+<p>Fixed mathematical encodings that capture position without learned parameters. The original “Attention is All You Need” approach that enables extrapolation to longer sequences.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_sinusoidal_embeddings</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create sinusoidal positional encodings from Vaswani et al. (2017).</span>
+
+<span class="sd">    Uses sine/cosine functions of different frequencies to encode position.</span>
+
+<span class="sd">    Formula:</span>
+<span class="sd">        PE(pos, 2i)   = sin(pos / 10000^(2i/embed_dim))  # Even indices</span>
+<span class="sd">        PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))  # Odd indices</span>
+
+<span class="sd">    Where:</span>
+<span class="sd">        pos = position in sequence (0, 1, 2, ...)</span>
+<span class="sd">        i = dimension pair index</span>
+<span class="sd">        10000 = base frequency (creates wavelengths from 2π to 10000·2π)</span>
+
 <span class="sd">    Advantages:</span>
-<span class="sd">    - No learned parameters</span>
-<span class="sd">    - Can generalize to longer sequences than training length</span>
-<span class="sd">    - Mathematically elegant relative position representation</span>
+<span class="sd">        - Zero parameters (no memory overhead)</span>
+<span class="sd">        - Generalizes to sequences longer than training</span>
+<span class="sd">        - Smooth transitions (nearby positions similar)</span>
+<span class="sd">        - Rich frequency spectrum across dimensions</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">=</span> <span class="n">max_seq_len</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
-        
-        <span class="c1"># Pre-compute positional encodings</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encodings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_encodings</span><span class="p">()</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute sinusoidal position encodings.</span>
-<span class="sd">        </span>
-<span class="sd">        PE(pos, 2i) = sin(pos / 10000^(2i/d_model))</span>
-<span class="sd">        PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-        <span class="n">div_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> 
-                         <span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">))</span>
-        
-        <span class="n">encodings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">))</span>
-        <span class="n">encodings</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>  <span class="c1"># Even indices</span>
-        <span class="n">encodings</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>  <span class="c1"># Odd indices</span>
-        
-        <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">encodings</span><span class="p">)</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return positional encodings for sequence length.</span>
-<span class="sd">        </span>
-<span class="sd">        Args:</span>
-<span class="sd">            seq_len: Length of input sequence</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            pos_encodings: (seq_len, embedding_dim) positional vectors</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodings</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+    <span class="c1"># Position indices: [0, 1, 2, ..., max_seq_len-1]</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="c1"># Frequency term for each dimension pair</span>
+    <span class="n">div_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">*</span>
+        <span class="o">-</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">embedding_dim</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Initialize positional encoding matrix</span>
+    <span class="n">pe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># Apply sine to even indices (0, 2, 4, ...)</span>
+    <span class="n">pe</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>
+
+    <span class="c1"># Apply cosine to odd indices (1, 3, 5, ...)</span>
+    <span class="n">pe</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">pe</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Learned Positional Embeddings (GPT-Style)</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LearnedPositionalEmbedding</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Learned positional embeddings.</span>
-<span class="sd">    </span>
-<span class="sd">    Used in GPT models. Learns absolute position representations during training.</span>
-<span class="sd">    </span>
-<span class="sd">    Advantages:</span>
-<span class="sd">    - Can learn task-specific position patterns</span>
-<span class="sd">    - Often performs slightly better than sinusoidal</span>
-<span class="sd">    </span>
-<span class="sd">    Disadvantages:</span>
-<span class="sd">    - Cannot generalize beyond max trained sequence length</span>
-<span class="sd">    - Requires additional parameters</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">=</span> <span class="n">max_seq_len</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
-        
-        <span class="c1"># Learnable position embedding table</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.02</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Look up learned position embeddings.</span>
-<span class="sd">        </span>
-<span class="sd">        Args:</span>
-<span class="sd">            seq_len: Length of input sequence</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            pos_embeddings: (seq_len, embedding_dim) learned vectors</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
-</pre></div>
-</div>
-<p><strong>Combined Token + Position Embeddings</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_combined_embeddings</span><span class="p">(</span><span class="n">token_ids</span><span class="p">,</span> <span class="n">token_embeddings</span><span class="p">,</span> <span class="n">pos_embeddings</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine token and position embeddings.</span>
-<span class="sd">    </span>
-<span class="sd">    Used as input to transformer models.</span>
-<span class="sd">    </span>
+<p><strong>Why Sinusoidal Patterns Work:</strong></p>
+<ul class="simple">
+<li><p><strong>Different frequencies</strong> per dimension: high frequencies change rapidly between positions, low frequencies change slowly</p></li>
+<li><p><strong>Unique signatures</strong> for each position through combination of frequencies</p></li>
+<li><p><strong>Linear combinations</strong> allow the model to learn relative position offsets through attention</p></li>
+<li><p><strong>No length limit</strong> - can compute encodings for any sequence length at inference time</p></li>
+</ul>
+</section>
+<section id="learned-positional-encoding-gpt-style">
+<h3>Learned Positional Encoding (GPT-Style)<a class="headerlink" href="#learned-positional-encoding-gpt-style" title="Permalink to this heading">#</a></h3>
+<p>Trainable position embeddings that can adapt to task-specific patterns. Used in GPT models and other architectures where positional patterns may be learnable.</p>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PositionalEncoding</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Learnable positional encoding layer.</span>
+
+<span class="sd">    Trainable position-specific vectors added to token embeddings.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        token_ids: (batch_size, seq_len) token indices</span>
-<span class="sd">        token_embeddings: Embedding layer for tokens</span>
-<span class="sd">        pos_embeddings: Positional encoding layer</span>
-<span class="sd">    </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        combined: (batch_size, seq_len, embedding_dim) token + position</span>
+<span class="sd">        max_seq_len: Maximum sequence length to support</span>
+<span class="sd">        embedding_dim: Dimension matching token embeddings</span>
+
+<span class="sd">    Advantages:</span>
+<span class="sd">        - Can learn task-specific position patterns</span>
+<span class="sd">        - May capture regularities like sentence structure</span>
+<span class="sd">        - Often performs slightly better than sinusoidal</span>
+
+<span class="sd">    Disadvantages:</span>
+<span class="sd">        - Requires additional parameters (max_seq_len × embedding_dim)</span>
+<span class="sd">        - Cannot extrapolate beyond training sequence length</span>
+<span class="sd">        - Needs sufficient training data to learn position patterns</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">token_ids</span><span class="o">.</span><span class="n">shape</span>
-    
-    <span class="c1"># Get token embeddings</span>
-    <span class="n">token_vecs</span> <span class="o">=</span> <span class="n">token_embeddings</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span>  <span class="c1"># (B, L, D)</span>
-    
-    <span class="c1"># Get position embeddings</span>
-    <span class="n">pos_vecs</span> <span class="o">=</span> <span class="n">pos_embeddings</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>        <span class="c1"># (L, D)</span>
-    
-    <span class="c1"># Add them together (broadcasting handles batch dimension)</span>
-    <span class="n">combined</span> <span class="o">=</span> <span class="n">token_vecs</span> <span class="o">+</span> <span class="n">pos_vecs</span>          <span class="c1"># (B, L, D)</span>
-    
-    <span class="k">return</span> <span class="n">combined</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_seq_len</span> <span class="o">=</span> <span class="n">max_seq_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
+
+        <span class="c1"># Smaller initialization than token embeddings (additive combination)</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">embedding_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_embeddings</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">limit</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)),</span>
+            <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add positional encodings to input embeddings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: (batch_size, seq_len, embedding_dim) input embeddings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Position-aware embeddings of same shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Get position embeddings for this sequence length</span>
+        <span class="n">pos_embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_embeddings</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+
+        <span class="c1"># Broadcast to batch dimension: (1, seq_len, embedding_dim)</span>
+        <span class="n">pos_embeddings</span> <span class="o">=</span> <span class="n">pos_embeddings</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="c1"># Element-wise addition combines token and position information</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">pos_embeddings</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p><strong>Learned parameters</strong> can capture task-specific patterns (e.g., sentence beginnings, clause boundaries)</p></li>
+<li><p><strong>Smaller initialization</strong> because positions add to token embeddings (not replace them)</p></li>
+<li><p><strong>Fixed max length</strong> is a limitation but acceptable for many production use cases</p></li>
+<li><p><strong>Element-wise addition</strong> preserves both token semantics and position information</p></li>
+</ul>
+</section>
+<section id="complete-embedding-system">
+<h3>Complete Embedding System<a class="headerlink" href="#complete-embedding-system" title="Permalink to this heading">#</a></h3>
+<p>Production-ready integration of token and positional embeddings used in real transformer implementations.</p>
+<p><strong>Full Pipeline:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingLayer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete embedding system combining token and positional embeddings.</span>
+
+<span class="sd">    Production component matching PyTorch/HuggingFace transformer patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                 <span class="n">pos_encoding</span><span class="o">=</span><span class="s1">&#39;learned&#39;</span><span class="p">,</span> <span class="n">scale_embeddings</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_embeddings</span> <span class="o">=</span> <span class="n">scale_embeddings</span>
+
+        <span class="c1"># Token embedding table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+
+        <span class="c1"># Positional encoding strategy</span>
+        <span class="k">if</span> <span class="n">pos_encoding</span> <span class="o">==</span> <span class="s1">&#39;learned&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_encoding</span> <span class="o">=</span> <span class="n">PositionalEncoding</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">pos_encoding</span> <span class="o">==</span> <span class="s1">&#39;sinusoidal&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_encoding</span> <span class="o">=</span> <span class="n">create_sinusoidal_embeddings</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">pos_encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_encoding</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert tokens to position-aware embeddings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokens: (batch_size, seq_len) token indices</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (batch_size, seq_len, embed_dim) position-aware vectors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Token lookup</span>
+        <span class="n">token_embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+        <span class="c1"># Optional scaling (Transformer convention: √embed_dim)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_embeddings</span><span class="p">:</span>
+            <span class="n">token_embeds</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">token_embeds</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">))</span>
+
+        <span class="c1"># Add positional information</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_encoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_encoding</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">token_embeds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">token_embeds</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p><strong>Integration Benefits:</strong></p>
+<ul class="simple">
+<li><p><strong>Flexible positional encoding</strong> supports learned, sinusoidal, or none</p></li>
+<li><p><strong>Embedding scaling</strong> (multiply by √d) is Transformer convention for gradient stability</p></li>
+<li><p><strong>Batch processing</strong> handles variable sequence lengths efficiently</p></li>
+<li><p><strong>Parameter management</strong> tracks all trainable components for optimization</p></li>
+</ul>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Before starting this module, ensure you have completed:</p>
+<ul class="simple">
+<li><p><strong>Module 01 (Tensor)</strong>: Provides the foundational Tensor class with gradient tracking and operations</p></li>
+<li><p><strong>Module 10 (Tokenization)</strong>: Required for converting text to token IDs that embeddings consume</p></li>
+</ul>
+<p>Verify your prerequisites:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify prerequisite modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tokenization
 </pre></div>
 </div>
 </section>
-<section id="step-by-step-implementation">
-<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Create Embedding Layer</strong></p>
-<ul class="simple">
-<li><p>Initialize weight matrix (vocab_size × embedding_dim)</p></li>
-<li><p>Implement forward pass with indexing</p></li>
-<li><p>Add backward pass with sparse gradient accumulation</p></li>
-<li><p>Test with small vocabulary</p></li>
-</ul>
-</li>
-<li><p><strong>Implement Sinusoidal Positions</strong></p>
-<ul class="simple">
-<li><p>Compute sine/cosine encodings</p></li>
-<li><p>Handle even/odd indices correctly</p></li>
-<li><p>Verify periodicity properties</p></li>
-<li><p>Test generalization to longer sequences</p></li>
-</ul>
-</li>
-<li><p><strong>Add Learned Positions</strong></p>
-<ul class="simple">
-<li><p>Create learnable position table</p></li>
-<li><p>Initialize with small random values</p></li>
-<li><p>Implement forward and backward passes</p></li>
-<li><p>Compare with sinusoidal encodings</p></li>
-</ul>
-</li>
-<li><p><strong>Combine Token + Position</strong></p>
-<ul class="simple">
-<li><p>Add token and position embeddings</p></li>
-<li><p>Handle batch broadcasting correctly</p></li>
-<li><p>Verify gradient flow through both</p></li>
-<li><p>Test with real tokenized sequences</p></li>
-</ul>
-</li>
-<li><p><strong>Analyze Embedding Spaces</strong></p>
-<ul class="simple">
-<li><p>Visualize embeddings with t-SNE or PCA</p></li>
-<li><p>Measure cosine similarity between tokens</p></li>
-<li><p>Verify semantic relationships emerge</p></li>
-<li><p>Profile memory and lookup efficiency</p></li>
-</ul>
-</li>
+<li><p><strong>Open the development notebook</strong>: <code class="docutils literal notranslate"><span class="pre">modules/11_embeddings/embeddings_dev.ipynb</span></code></p></li>
+<li><p><strong>Implement Embedding class</strong>: Create lookup table with Xavier initialization and efficient indexing</p></li>
+<li><p><strong>Build sinusoidal encodings</strong>: Compute sine/cosine position representations using mathematical formula</p></li>
+<li><p><strong>Create learned positions</strong>: Add trainable position embedding table with proper initialization</p></li>
+<li><p><strong>Integrate complete system</strong>: Combine token and position embeddings with flexible encoding strategies</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">11</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">embeddings</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
-<section id="inline-tests-during-development">
-<h3>Inline Tests (During Development)<a class="headerlink" href="#inline-tests-during-development" title="Permalink to this heading">#</a></h3>
-<p>Run inline tests while building:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/11_embeddings
-python<span class="w"> </span>embeddings_dev.py
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify embedding functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>embeddings
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>embeddings<span class="w"> </span>-v
 </pre></div>
 </div>
-<p>Expected output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Unit Test: Embedding layer...
-✅ Lookup table created: 10K vocab × 256 dims = 2.5M parameters
-✅ Forward pass shape correct: (32, 20, 256)
-✅ Backward pass accumulates gradients correctly
-Progress: Embedding Layer ✓
+</section>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Embedding lookup correctness</strong>: Verify token IDs map to correct vector rows in weight table</p></li>
+<li><p>✅ <strong>Gradient flow verification</strong>: Ensure sparse gradient updates accumulate properly during backpropagation</p></li>
+<li><p>✅ <strong>Positional encoding math</strong>: Validate sinusoidal formula implementation with correct frequencies</p></li>
+<li><p>✅ <strong>Shape broadcasting</strong>: Test token + position combination across batch dimensions</p></li>
+<li><p>✅ <strong>Memory efficiency profiling</strong>: Verify parameter count and lookup performance characteristics</p></li>
+</ul>
+</section>
+<section id="inline-testing-validation">
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive unit tests during development:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
+🔬 Unit Test: Embedding layer...
+✅ Lookup table created: 10K vocab × 256 dims = 2.56M parameters
+✅ Forward pass shape correct: (32, 20, 256) for batch of 32 sequences
+✅ Backward pass sparse gradients accumulate correctly
+✅ Xavier initialization keeps variance stable
+📈 Progress: Embedding Layer ✓
 
-Unit Test: Sinusoidal positional encoding...
-✅ Encodings computed for 512 positions
-✅ Sine/cosine patterns verified
-✅ Generalization to longer sequences works
-Progress: Sinusoidal Positions ✓
+🔬 Unit Test: Sinusoidal positional encoding...
+✅ Encodings computed for 512 positions × 256 dimensions
+✅ Sine/cosine patterns verified (pos 0: [0, 1, 0, 1, ...])
+✅ Different positions have unique signatures
+✅ Frequency spectrum correct (high to low across dimensions)
+📈 Progress: Sinusoidal Positions ✓
 
-Unit Test: Combined embeddings...
-✅ Token + position addition works
-✅ Gradient flows through both components
+🔬 Unit Test: Learned positional encoding...
+✅ Trainable position embeddings initialized
+✅ Addition with token embeddings preserves gradients
 ✅ Batch broadcasting handled correctly
-Progress: Combined Embeddings ✓
-</pre></div>
-</div>
-</section>
-<section id="export-and-validate">
-<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
-<p>After completing the module:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to tinytorch package</span>
-tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>11_embeddings
+📈 Progress: Learned Positions ✓
 
-<span class="c1"># Run integration tests</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>11_embeddings
+🔬 Unit Test: Complete embedding system...
+✅ Token + position combination works for all strategies
+✅ Embedding scaling (√d) applied correctly
+✅ Variable sequence lengths handled gracefully
+✅ Parameter counting correct for each configuration
+📈 Progress: Complete System ✓
 </pre></div>
 </div>
 </section>
-</section>
-<section id="where-this-code-lives">
-<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
-├── nn/
-│   └── embeddings.py           # Your implementation goes here
-└── __init__.py                 # Exposes Embedding, PositionalEncoding, etc.
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<p>Test your embedding implementation interactively:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.text.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">PositionalEncoding</span><span class="p">,</span> <span class="n">create_sinusoidal_embeddings</span>
 
-Usage in other modules:
-&gt;&gt;&gt; from tinytorch.nn import Embedding, SinusoidalPositionalEncoding
-&gt;&gt;&gt; token_emb = Embedding(vocab_size=50000, embedding_dim=768)
-&gt;&gt;&gt; pos_emb = SinusoidalPositionalEncoding(max_len=512, dim=768)
+<span class="c1"># Create embedding layer</span>
+<span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">256</span>
+<span class="n">token_emb</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+
+<span class="c1"># Test token lookup</span>
+<span class="n">token_ids</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">23</span><span class="p">],</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">19</span><span class="p">]])</span>  <span class="c1"># (2, 3) - batch of 2 sequences</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">token_emb</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span>      <span class="c1"># (2, 3, 256)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Token embeddings shape: </span><span class="si">{</span><span class="n">embeddings</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add learned positional encodings</span>
+<span class="n">pos_emb</span> <span class="o">=</span> <span class="n">PositionalEncoding</span><span class="p">(</span><span class="n">max_seq_len</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">token_embeddings_3d</span> <span class="o">=</span> <span class="n">embeddings</span>  <span class="c1"># Already (batch, seq, embed)</span>
+<span class="n">pos_aware</span> <span class="o">=</span> <span class="n">pos_emb</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">token_embeddings_3d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position-aware shape: </span><span class="si">{</span><span class="n">pos_aware</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (2, 3, 256)</span>
+
+<span class="c1"># Try sinusoidal encodings</span>
+<span class="n">sin_pe</span> <span class="o">=</span> <span class="n">create_sinusoidal_embeddings</span><span class="p">(</span><span class="n">max_seq_len</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">sin_positions</span> <span class="o">=</span> <span class="n">sin_pe</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="mi">3</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>  <span class="c1"># (1, 3, 256)</span>
+<span class="n">combined</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">embeddings</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">sin_positions</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sinusoidal combined: </span><span class="si">{</span><span class="n">combined</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (2, 3, 256)</span>
+
+<span class="c1"># Verify position 0 pattern (should be [0, 1, 0, 1, ...])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Position 0 pattern: </span><span class="si">{</span><span class="n">sin_pe</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Expected: [~0.0, ~1.0, ~0.0, ~1.0, ~0.0, ~1.0, ~0.0, ~1.0]</span>
 </pre></div>
 </div>
+</section>
 </section>
 <section id="systems-thinking-questions">
 <h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Memory Scaling</strong>: GPT-3 has 50K vocab × 12K dims = 600M embedding parameters. At FP32 (4 bytes), how much memory? At FP16? Why does this matter for training vs inference?</p></li>
-<li><p><strong>Sparse Gradients</strong>: During training, only ~1% of vocabulary appears in each batch. How does sparse gradient accumulation save computation compared to dense updates?</p></li>
-<li><p><strong>Embedding Dimension Choice</strong>: BERT-base uses 768 dims, BERT-large uses 1024. How does dimension affect: (a) model capacity, (b) computation, © memory bandwidth?</p></li>
-<li><p><strong>Position Encoding Trade-offs</strong>: Sinusoidal allows generalization to any length. Learned positions are limited to max training length. When would you choose each?</p></li>
-<li><p><strong>Semantic Geometry</strong>: Why do word embeddings exhibit linear relationships like “king - man + woman ≈ queen”? What property of the training objective causes this?</p></li>
-</ol>
-</section>
-<section id="real-world-connections">
-<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
-<section id="industry-applications">
-<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
-<p><strong>Large Language Models (OpenAI, Anthropic, Google)</strong></p>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>GPT-4: 100K+ vocabulary embeddings</p></li>
-<li><p>Embedding tables often 20-40% of total model parameters</p></li>
-<li><p>Optimized embedding access critical for inference latency</p></li>
-<li><p>Mixed-precision (FP16) embeddings save memory</p></li>
-</ul>
-<p><strong>Recommendation Systems (YouTube, Netflix, Spotify)</strong></p>
-<ul class="simple">
-<li><p>Billion-scale item embeddings for personalization</p></li>
-<li><p>Embedding retrieval systems for fast nearest-neighbor search</p></li>
-<li><p>Continuous embedding updates with online learning</p></li>
-<li><p>Embedding quantization for serving efficiency</p></li>
-</ul>
-<p><strong>Multilingual Models (Google Translate, Facebook M2M)</strong></p>
-<ul class="simple">
-<li><p>Shared embedding spaces across 100+ languages</p></li>
-<li><p>Cross-lingual embeddings enable zero-shot transfer</p></li>
-<li><p>Vocabulary size optimization for multilingual coverage</p></li>
-<li><p>Embedding alignment techniques for language pairs</p></li>
+<li><p><strong>Large Language Models (GPT-4, Claude, Llama)</strong>: Embedding tables often contain 20-40% of total model parameters. GPT-3’s 50K vocab × 12K dims = 617M embedding parameters alone (2.4GB at FP32). This makes embeddings a major memory consumer in serving infrastructure.</p></li>
+<li><p><strong>Recommendation Systems (YouTube, Netflix, Spotify)</strong>: Billion-scale item embeddings for personalized content retrieval. YouTube’s embedding space contains hundreds of millions of video embeddings, enabling fast nearest-neighbor search for recommendations in milliseconds.</p></li>
+<li><p><strong>Multilingual Models (Google Translate, mBERT)</strong>: Shared embedding spaces across 100+ languages enable zero-shot cross-lingual transfer. Words with similar meanings across languages cluster together in the learned vector space, allowing translation without parallel data.</p></li>
+<li><p><strong>Search Engines (Google, Bing)</strong>: Query and document embeddings power semantic search beyond keyword matching. BERT-style embeddings capture meaning, letting “how to fix a leaky faucet” match “plumbing repair for dripping tap” even with no shared words.</p></li>
 </ul>
 </section>
-<section id="research-impact">
-<h3>Research Impact<a class="headerlink" href="#research-impact" title="Permalink to this heading">#</a></h3>
-<p>This module implements patterns from:</p>
+<section id="mathematical-foundations">
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Word2Vec (2013): Pioneered dense semantic embeddings</p></li>
-<li><p>GloVe (2014): Global co-occurrence matrix factorization</p></li>
-<li><p>Transformer (2017): Sinusoidal positional encodings</p></li>
-<li><p>BERT (2018): Contextual embeddings revolutionized NLP</p></li>
-<li><p>GPT (2018): Learned positional embeddings for autoregressive models</p></li>
+<li><p><strong>Embedding Geometry</strong>: Why do word embeddings exhibit linear relationships like “king - man + woman ≈ queen”? The training objective (predicting context words in word2vec, or next tokens in language models) creates geometric structure where semantic relationships become linear vector operations. This emerges without explicit supervision.</p></li>
+<li><p><strong>Dimensionality Trade-offs</strong>: Higher dimensions increase expressiveness (more capacity to separate distinct concepts) but require more memory and computation. BERT-base uses 768 dimensions, BERT-large uses 1024 - carefully chosen based on performance-cost Pareto analysis. Doubling dimensions doubles memory but may only improve accuracy by a few percentage points.</p></li>
+<li><p><strong>Positional Encoding Mathematics</strong>: Sinusoidal encodings use different frequencies (wavelengths from 2π to 10,000·2π) so each position gets a unique pattern. The model can learn relative positions through attention: the dot product of position encodings at offsets k captures periodic patterns the attention mechanism learns to use.</p></li>
+<li><p><strong>Sparse Gradient Efficiency</strong>: During training with vocabulary size V and batch containing b unique tokens, dense gradients would update all V embeddings. Sparse gradients only update b embeddings - when b &lt;&lt; V (typical: 1000 tokens vs 50K vocab), this saves ~98% of gradient computation and memory bandwidth.</p></li>
+</ul>
+</section>
+<section id="performance-characteristics">
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Memory Scaling</strong>: Embedding tables grow as O(vocab_size × embedding_dim). At FP32 (4 bytes per parameter): 50K vocab × 768 dims = 153MB, 100K vocab × 1024 dims = 410MB. Mixed precision (FP16) cuts this in half, but vocabulary size dominates scaling for large models.</p></li>
+<li><p><strong>Bandwidth Bottleneck</strong>: Every token lookup reads embedding_dim × sizeof(dtype) bytes from memory. With 768 dims at FP32, that’s 3KB per token. Processing a 2048-token context requires reading 6MB from the embedding table - memory bandwidth becomes the bottleneck, not compute.</p></li>
+<li><p><strong>Cache Efficiency</strong>: Sequential token access has poor cache locality because tokens are typically non-sequential in the embedding table (token IDs [1, 42, 7, 99] means random jumps through the weight matrix). Batching improves throughput by amortizing cache misses, but embedding access remains memory-bound, not compute-bound.</p></li>
+<li><p><strong>Inference Optimization</strong>: Embedding quantization (INT8 or even INT4) reduces memory footprint and bandwidth by 2-4×, critical for deployment. KV-caching in transformers makes embedding lookup happen only once per token (not per layer), so optimizing this cold start is important for latency-sensitive applications.</p></li>
 </ul>
 </section>
 </section>
-<section id="whats-next">
-<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
-<p>In <strong>Module 12: Attention</strong>, you’ll use these embeddings as input to attention mechanisms:</p>
-<ul class="simple">
-<li><p>Query, Key, Value projections from embeddings</p></li>
-<li><p>Scaled dot-product attention over embedded sequences</p></li>
-<li><p>Multi-head attention for different representation subspaces</p></li>
-<li><p>Self-attention that relates all positions in a sequence</p></li>
-</ul>
-<p>The embeddings you built are the foundation input to every transformer!</p>
+<section id="ready-to-build">
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to implement the embedding systems that power modern AI language understanding. These lookup tables and positional encodings are the bridge between discrete tokens (words, subwords, characters) and the continuous vector spaces where neural networks operate. What seems like a simple “array lookup” is actually the foundation of how language models represent meaning.</p>
+<p>What makes this module special is understanding not just <em>how</em> embeddings work, but <em>why</em> certain design choices matter. Why do we need positional encodings when embeddings already contain token information? Why sparse gradients instead of dense updates? How does embedding dimension affect model capacity versus memory footprint? These aren’t just implementation details - they’re fundamental design principles that shape every production language model’s architecture.</p>
+<p>By building embeddings from scratch, you’ll gain intuition for memory-computation trade-offs in deep learning systems. You’ll understand why GPT-3’s embedding table consumes 2.4GB of memory, and why that matters for serving costs at scale (more memory = more expensive GPUs = higher operational costs). You’ll see how sinusoidal encodings allow transformers to process sequences longer than training data, while learned positions might perform better on specific tasks with known maximum lengths.</p>
+<p>This is where theory meets the economic realities of deploying AI at scale. Every architectural choice - vocabulary size, embedding dimension, positional encoding strategy - has both technical implications (accuracy, generalization) and business implications (memory costs, inference latency, serving throughput). Understanding these trade-offs is what separates machine learning researchers from machine learning systems engineers.</p>
+<p>Choose your preferred way to engage with this module:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab</div>
+<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Jupyter notebook source and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💾 Save Your Progress</p>
+<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
+</div>
 <hr class="docutils" />
-<p><strong>Ready to build embedding systems from scratch?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/11_embeddings/embeddings_dev.py</span></code> and start implementing.</p>
+<div class="prev-next-area">
+<a class="left-prev" href="../modules/10_tokenization_ABOUT.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../modules/12_attention_ABOUT.html" title="next page">Next Module →</a>
+</div>
 </section>
 </section>
 
@@ -934,7 +991,7 @@ Usage in other modules:
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">10. Tokenization</p>
+        <p class="prev-next-title">10. Tokenization - Text to Numerical Sequences</p>
       </div>
     </a>
     <a class="right-next"
@@ -942,7 +999,7 @@ Usage in other modules:
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">12. Attention</p>
+        <p class="prev-next-title">12. Attention - The Mechanism That Powers Modern AI</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -964,35 +1021,33 @@ Usage in other modules:
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-analyze">Pedagogical Pattern: Build → Use → Analyze</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analyze">3. Analyze</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#embedding-layer-the-token-lookup-table">Embedding Layer - The Token Lookup Table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sinusoidal-positional-encoding-transformer-style">Sinusoidal Positional Encoding (Transformer-Style)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learned-positional-encoding-gpt-style">Learned Positional Encoding (GPT-Style)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-embedding-system">Complete Embedding System</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests-during-development">Inline Tests (During Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
   </nav></div>
 

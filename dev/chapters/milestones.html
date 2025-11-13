@@ -220,11 +220,12 @@ window.addEventListener("load", () => mermaid.run());
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -238,6 +239,7 @@ window.addEventListener("load", () => mermaid.run());
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -467,7 +469,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlp-revival-1986-backpropagation-era">03. MLP Revival (1986) - Backpropagation Era</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-revolution-1998-lecuns-breakthrough">04. CNN Revolution (1998) - LeCun’s Breakthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-era-2017-attention-revolution">05. Transformer Era (2017) - Attention Revolution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlperf-era-2018-the-optimization-revolution">06. MLPerf Era (2018) - The Optimization Revolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#torch-olympics-era-2018-the-optimization-revolution">06. Torch Olympics Era (2018) - The Optimization Revolution</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy">Learning Philosophy</a><ul class="nav section-nav flex-column">
@@ -538,7 +540,7 @@ document.write(`
 <strong>1986: MLP</strong> - Multi-class vision
 <strong>1998: CNN</strong> - Spatial intelligence
 <strong>2017: Transformers</strong> - Language generation
-<strong>2018: MLPerf</strong> - Production optimization</p>
+<strong>2018: Torch Olympics</strong> - Production optimization</p>
 </section>
 <section id="how-they-connect">
 <h3>How They Connect<a class="headerlink" href="#how-they-connect" title="Permalink to this heading">#</a></h3>
@@ -559,7 +561,7 @@ document.write(`
         M3[&quot;1986: MLP&lt;br/&gt;Multi-class Vision&lt;br/&gt;95%+ MNIST&quot;]
         M4[&quot;1998: CNN&lt;br/&gt;Spatial Intelligence&lt;br/&gt;75%+ CIFAR-10&quot;]
         M5[&quot;2017: Transformers&lt;br/&gt;Language Generation&quot;]
-        M6[&quot;2018: MLPerf&lt;br/&gt;Production Speed&quot;]
+        M6[&quot;2018: Torch Olympics&lt;br/&gt;Production Speed&quot;]
     end
 
     A1 --&gt; M1
@@ -606,7 +608,7 @@ document.write(`
 <td><p>Your attention generates coherent text</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Act V: Production (14-18)</strong></p></td>
-<td><p>2018 MLPerf</p></td>
+<td><p>2018 Torch Olympics</p></td>
 <td><p>Your optimizations achieve production speed</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Act VI: Integration (19-20)</strong></p></td>
@@ -630,7 +632,7 @@ document.write(`
     1986 : MLP Revival : Backpropagation enables deep learning
     1998 : CNN Era : Spatial intelligence for computer vision
     2017 : Transformers : Attention revolutionizes language AI
-    2018 : MLPerf : Production benchmarking and optimization
+    2018 : Torch Olympics : Production benchmarking and optimization
     </pre><section id="perceptron-1957-rosenblatt">
 <h3>01. Perceptron (1957) - Rosenblatt<a class="headerlink" href="#perceptron-1957-rosenblatt" title="Permalink to this heading">#</a></h3>
 <p><strong>After Modules 02-04</strong></p>
@@ -766,13 +768,13 @@ python<span class="w"> </span>02_vaswani_dialogue.py<span class="w">    </span><
 <p><strong>Expected Results</strong>: Loss &lt; 1.5, coherent responses to questions</p>
 </section>
 <hr class="docutils" />
-<section id="mlperf-era-2018-the-optimization-revolution">
-<h3>06. MLPerf Era (2018) - The Optimization Revolution<a class="headerlink" href="#mlperf-era-2018-the-optimization-revolution" title="Permalink to this heading">#</a></h3>
+<section id="torch-olympics-era-2018-the-optimization-revolution">
+<h3>06. Torch Olympics Era (2018) - The Optimization Revolution<a class="headerlink" href="#torch-olympics-era-2018-the-optimization-revolution" title="Permalink to this heading">#</a></h3>
 <p><strong>After Modules 14-18</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Profile → Compress → Accelerate
 </pre></div>
 </div>
-<p><strong>The Turning Point</strong>: As models grew larger, MLCommons’ MLPerf (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.</p>
+<p><strong>The Turning Point</strong>: As models grew larger, MLCommons’ Torch Olympics (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.</p>
 <p><strong>What You’ll Build</strong>:</p>
 <ul class="simple">
 <li><p>Performance profiling and bottleneck analysis</p></li>
@@ -929,7 +931,7 @@ python<span class="w"> </span>02_rosenblatt_trained.py
 <td><p>13</p></td>
 <td><p>+ Tokenization, Embeddings, Attention</p></td>
 </tr>
-<tr class="row-odd"><td><p>06. MLPerf (2018)</p></td>
+<tr class="row-odd"><td><p>06. Torch Olympics (2018)</p></td>
 <td><p>18</p></td>
 <td><p>+ Profiling, Quantization, Compression, Memoization, Acceleration</p></td>
 </tr>
@@ -952,7 +954,7 @@ python<span class="w"> </span>02_rosenblatt_trained.py
 <h2>Further Learning<a class="headerlink" href="#further-learning" title="Permalink to this heading">#</a></h2>
 <p>After completing milestones, explore:</p>
 <ul class="simple">
-<li><p><strong>TinyMLPerf Competition</strong>: Optimize your implementations</p></li>
+<li><p><strong>Torch Olympics Competition</strong>: Optimize your implementations</p></li>
 <li><p><strong>Leaderboard</strong>: Compare with other students</p></li>
 <li><p><strong>Capstone Projects</strong>: Build your own ML applications</p></li>
 <li><p><strong>Research Papers</strong>: Read the original papers for each milestone</p></li>
@@ -1060,7 +1062,7 @@ python<span class="w"> </span>02_rosenblatt_trained.py
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlp-revival-1986-backpropagation-era">03. MLP Revival (1986) - Backpropagation Era</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-revolution-1998-lecuns-breakthrough">04. CNN Revolution (1998) - LeCun’s Breakthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-era-2017-attention-revolution">05. Transformer Era (2017) - Attention Revolution</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlperf-era-2018-the-optimization-revolution">06. MLPerf Era (2018) - The Optimization Revolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#torch-olympics-era-2018-the-optimization-revolution">06. Torch Olympics Era (2018) - The Optimization Revolution</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy">Learning Philosophy</a><ul class="nav section-nav flex-column">

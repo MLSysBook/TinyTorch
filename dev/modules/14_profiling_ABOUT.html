@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>14. Profiling &#8212; TinyTorch</title>
+    <title>14. Profiling - Performance Measurement for ML Systems &#8212; TinyTorch</title>
   
   
   
@@ -68,8 +68,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="15. Quantization" href="15_quantization_ABOUT.html" />
-    <link rel="prev" title="13. Transformers" href="13_transformers_ABOUT.html" />
+    <link rel="next" title="15. Quantization - Reduced Precision for Efficiency" href="15_quantization_ABOUT.html" />
+    <link rel="prev" title="13. Transformers - Complete GPT Architecture" href="13_transformers_ABOUT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,11 +212,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -230,6 +231,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -433,7 +435,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>14. Profiling</h1>
+    <h1>14. Profiling - Performance Measurement for ML Systems</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -444,36 +446,41 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context-profiling-drives-optimization-economics">Production Context: Profiling Drives Optimization Economics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-evolution-from-ad-hoc-timing-to-systematic-measurement">Historical Evolution: From Ad-Hoc Timing to Systematic Measurement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-actually-build">What You’ll Actually Build</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-optimize">Pedagogical Pattern: Build → Use → Optimize</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize">3. Optimize</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-component-profiler-class">Core Component: Profiler Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-counting-memory-footprint-analysis">Parameter Counting: Memory Footprint Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flop-counting-computational-cost-analysis">FLOP Counting: Computational Cost Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-profiling-understanding-allocation-patterns">Memory Profiling: Understanding Allocation Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#latency-measurement-statistical-timing-methodology">Latency Measurement: Statistical Timing Methodology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-foundations">Profiling Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -485,465 +492,663 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="profiling">
-<h1>14. Profiling<a class="headerlink" href="#profiling" title="Permalink to this heading">#</a></h1>
-<p><strong>⚡ OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours</p>
+  <section id="profiling-performance-measurement-for-ml-systems">
+<h1>14. Profiling - Performance Measurement for ML Systems<a class="headerlink" href="#profiling-performance-measurement-for-ml-systems" title="Permalink to this heading">#</a></h1>
+<p><strong>OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
-<p>Build comprehensive profiling tools to measure where time and memory go in your ML systems. This module implements timing profilers, memory trackers, and FLOP counters that reveal bottlenecks and guide optimization decisions.</p>
-</section>
-<section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
-<p>By completing this module, you will be able to:</p>
-<ol class="arabic simple">
-<li><p><strong>Implement timing profilers</strong> with statistical rigor (multiple runs, confidence intervals) for accurate measurements</p></li>
-<li><p><strong>Design memory profilers</strong> to track allocation patterns, peak usage, and identify memory leaks</p></li>
-<li><p><strong>Build FLOP counters</strong> to measure theoretical computational complexity of different operations</p></li>
-<li><p><strong>Understand performance bottlenecks</strong> by comparing MLPs, CNNs, and Transformers systematically</p></li>
-<li><p><strong>Apply data-driven analysis</strong> to prioritize optimization efforts based on actual impact</p></li>
-</ol>
+<p>Build profiling tools that measure where compute and memory go in ML systems. This module implements parameter counters, FLOP analyzers, memory trackers, and timing profilers with statistical rigor. You’ll profile real models to identify bottlenecks—memory-bound vs compute-bound, attention vs feedforward, batch size effects—and use data to guide optimization decisions.</p>
+<p><strong>Optimization Tier Focus</strong>: Modules 1-13 taught you to build ML systems. Modules 14-20 teach you to measure and optimize them. Profiling is the foundation—you can’t optimize what you don’t measure.</p>
 </section>
 <section id="why-this-matters">
 <h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
-<section id="production-context">
-<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
-<p>Profiling is mandatory for production ML systems:</p>
+<section id="production-context-profiling-drives-optimization-economics">
+<h3>Production Context: Profiling Drives Optimization Economics<a class="headerlink" href="#production-context-profiling-drives-optimization-economics" title="Permalink to this heading">#</a></h3>
+<p>Every major ML organization profiles extensively:</p>
 <ul class="simple">
-<li><p><strong>Google TPU teams</strong> profile every operation to optimize hardware utilization</p></li>
-<li><p><strong>OpenAI</strong> profiles GPT training to identify $millions in compute savings</p></li>
-<li><p><strong>Meta</strong> profiles inference to serve billions of requests per day efficiently</p></li>
-<li><p><strong>NVIDIA</strong> uses profiling to optimize cuDNN kernels for peak performance</p></li>
+<li><p><strong>Google TPU teams</strong> profile every kernel to achieve 40-50% MFU (Model FLOPs Utilization), translating to millions in compute savings</p></li>
+<li><p><strong>OpenAI</strong> profiles GPT training runs to identify gradient checkpointing opportunities, reducing memory by 10× with minimal speed cost</p></li>
+<li><p><strong>Meta</strong> profiles PyTorch inference serving billions of requests daily, using data to guide operator fusion and quantization decisions</p></li>
+<li><p><strong>NVIDIA</strong> uses Nsight profiler to optimize cuDNN kernels, achieving near-theoretical-peak performance on tensor cores</p></li>
 </ul>
+<p><strong>The Economics</strong>: A 10% optimization on a $10M training run saves $1M. But only if you measure first—guessing wastes engineering time on non-bottlenecks.</p>
 </section>
-<section id="historical-context">
-<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
+<section id="historical-evolution-from-ad-hoc-timing-to-systematic-measurement">
+<h3>Historical Evolution: From Ad-Hoc Timing to Systematic Measurement<a class="headerlink" href="#historical-evolution-from-ad-hoc-timing-to-systematic-measurement" title="Permalink to this heading">#</a></h3>
 <p>Profiling evolved with ML scale:</p>
 <ul class="simple">
-<li><p><strong>Early ML (pre-2012)</strong>: Ad-hoc timing with <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>; no systematic profiling</p></li>
-<li><p><strong>Deep Learning Era (2012-2017)</strong>: NVIDIA profiler, TensorBoard timing; focus on GPU utilization</p></li>
-<li><p><strong>Production Scale (2018+)</strong>: Comprehensive profiling (compute, memory, I/O, network); optimization critical for economics</p></li>
-<li><p><strong>Modern Systems (2020+)</strong>: Automated profiling and optimization; ML compilers use profiling data</p></li>
+<li><p><strong>Pre-2012 (Small models)</strong>: Ad-hoc timing with <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>, no systematic methodology</p></li>
+<li><p><strong>2012-2017 (Deep learning era)</strong>: NVIDIA profiler, TensorBoard timing; focus on GPU utilization</p></li>
+<li><p><strong>2018+ (Production scale)</strong>: Comprehensive profiling (compute, memory, I/O, network); optimization becomes economically critical</p></li>
+<li><p><strong>2020+ (Modern systems)</strong>: Automated profiling guides ML compilers; tools like PyTorch Profiler integrate with training workflows</p></li>
 </ul>
-<p>Without profiling, you’re optimizing blind—profiling shows you where to focus.</p>
 </section>
-</section>
-<section id="pedagogical-pattern-build-use-optimize">
-<h2>Pedagogical Pattern: Build → Use → Optimize<a class="headerlink" href="#pedagogical-pattern-build-use-optimize" title="Permalink to this heading">#</a></h2>
-<section id="build">
-<h3>1. Build<a class="headerlink" href="#build" title="Permalink to this heading">#</a></h3>
-<p>Implement from first principles:</p>
+<section id="what-youll-actually-build">
+<h3>What You’ll Actually Build<a class="headerlink" href="#what-youll-actually-build" title="Permalink to this heading">#</a></h3>
+<p>Let’s be precise about what you implement in this module:</p>
+<p><strong>You WILL build</strong>:</p>
 <ul class="simple">
-<li><p>High-precision timing with multiple runs</p></li>
-<li><p>Statistical analysis (mean, std, confidence intervals)</p></li>
-<li><p>Memory profiler tracking allocations and deallocations</p></li>
-<li><p>FLOP counter for theoretical complexity</p></li>
-<li><p>Comparative profiler across architectures</p></li>
+<li><p>Parameter counter: Walks model structure, sums weight and bias elements</p></li>
+<li><p>FLOP counter: Calculates theoretical operations for Linear, Conv2d based on dimensions</p></li>
+<li><p>Memory profiler: Uses Python’s tracemalloc to track allocations during forward/backward</p></li>
+<li><p>Timing profiler: Uses time.perf_counter() with warmup runs and statistical analysis (median latency)</p></li>
 </ul>
-</section>
-<section id="use">
-<h3>2. Use<a class="headerlink" href="#use" title="Permalink to this heading">#</a></h3>
-<p>Apply to real problems:</p>
+<p><strong>You will NOT build</strong> (these are production tools requiring kernel instrumentation):</p>
 <ul class="simple">
-<li><p>Profile attention vs feedforward in transformers</p></li>
-<li><p>Compare MLP vs CNN vs Transformer efficiency</p></li>
-<li><p>Identify memory bottlenecks in training loops</p></li>
-<li><p>Measure impact of batch size on throughput</p></li>
-<li><p>Analyze scaling behavior with model size</p></li>
+<li><p>GPU profiler (requires CUDA kernel hooks)</p></li>
+<li><p>PyTorch Profiler integration (requires autograd instrumentation)</p></li>
+<li><p>Operator-level timeline traces (requires framework integration)</p></li>
 </ul>
+<p><strong>Why this scope matters</strong>: You’ll understand profiling fundamentals that transfer to production tools. The techniques you implement (parameter counting formulas, FLOP calculations, statistical timing) are exactly what PyTorch Profiler and TensorBoard use internally. You’re building the same measurement primitives, just without kernel-level instrumentation.</p>
 </section>
-<section id="optimize">
-<h3>3. Optimize<a class="headerlink" href="#optimize" title="Permalink to this heading">#</a></h3>
-<p>Production insights:</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
 <ul class="simple">
-<li><p>Prioritize optimizations by impact (80/20 rule)</p></li>
-<li><p>Measure before/after optimization</p></li>
-<li><p>Understand hardware utilization (CPU vs GPU)</p></li>
-<li><p>Identify memory bandwidth vs compute bottlenecks</p></li>
-<li><p>Build optimization roadmap based on data</p></li>
+<li><p><strong>Count parameters accurately</strong>: Predict model size and memory footprint by counting weights and biases across different layer types</p></li>
+<li><p><strong>Measure computational cost</strong>: Implement FLOP counters that calculate theoretical compute for matrix multiplications, convolutions, and attention operations</p></li>
+<li><p><strong>Track memory usage</strong>: Build memory profilers using tracemalloc to measure parameter, activation, and gradient memory during forward and backward passes</p></li>
+<li><p><strong>Profile latency rigorously</strong>: Create timing profilers with warmup runs, multiple iterations, and statistical analysis (median, confidence intervals)</p></li>
+<li><p><strong>Identify performance bottlenecks</strong>: Analyze profiling data to distinguish memory-bound from compute-bound operations and prioritize optimization efforts</p></li>
 </ul>
 </section>
+<section id="build-use-reflect">
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
+<ol class="arabic simple">
+<li><p><strong>Build</strong>: Implement Profiler class with parameter counting, FLOP calculation, memory tracking, and latency measurement using time.perf_counter() and tracemalloc</p></li>
+<li><p><strong>Use</strong>: Profile complete models to measure characteristics, compare MLP vs attention operations, analyze batch size impact on throughput, and benchmark different architectures</p></li>
+<li><p><strong>Reflect</strong>: Where does compute time actually go in transformers? When is your system memory-bound vs compute-bound? How do measurement choices affect optimization decisions?</p></li>
+</ol>
 </section>
 <section id="implementation-guide">
 <h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
-<section id="core-components">
-<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
-<p><strong>High-Precision Timer</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Timer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;High-precision timing with statistical analysis.</span>
-<span class="sd">    </span>
-<span class="sd">    Performs multiple runs to account for variance and noise.</span>
-<span class="sd">    Reports mean, std, and confidence intervals.</span>
-<span class="sd">    </span>
-<span class="sd">    Example:</span>
-<span class="sd">        timer = Timer()</span>
-<span class="sd">        with timer:</span>
-<span class="sd">            model.forward(x)</span>
-<span class="sd">        print(f&quot;Time: {timer.mean:.3f}ms ± {timer.std:.3f}ms&quot;)</span>
+<section id="core-component-profiler-class">
+<h3>Core Component: Profiler Class<a class="headerlink" href="#core-component-profiler-class" title="Permalink to this heading">#</a></h3>
+<p>The Profiler class provides comprehensive performance analysis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Profiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Professional-grade ML model profiler.</span>
+
+<span class="sd">    Measures parameters, FLOPs, memory, and latency with statistical rigor.</span>
+<span class="sd">    Used for bottleneck identification and optimization guidance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_runs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">warmup_runs</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_runs</span> <span class="o">=</span> <span class="n">num_runs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">warmup_runs</span> <span class="o">=</span> <span class="n">warmup_runs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Warmup runs (not counted)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">warmup_runs</span><span class="p">):</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-            <span class="c1"># Operation happens in with block</span>
-        
-        <span class="c1"># Timed runs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elapsed</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Convert to ms</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">)</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">)</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">confidence_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;95% confidence interval using t-distribution.&quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
-        <span class="n">ci</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">loc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ci</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">ci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">()</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">ms ± </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">ms (95% CI: [</span><span class="si">{</span><span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">])&quot;</span>
-</pre></div>
-</div>
-<p><strong>Memory Profiler</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MemoryProfiler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Track memory allocations and peak usage.</span>
-<span class="sd">    </span>
-<span class="sd">    Monitors memory throughout execution to identify:</span>
-<span class="sd">    - Peak memory usage</span>
-<span class="sd">    - Memory leaks</span>
-<span class="sd">    - Allocation patterns</span>
-<span class="sd">    - Memory bandwidth bottlenecks</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">peak_memory</span> <span class="o">=</span> <span class="mi">0</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take memory snapshot at current point.&quot;&quot;&quot;</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
-        <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">()</span>
-        <span class="n">mem_info</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span>
-        
-        <span class="n">snapshot</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
-            <span class="s1">&#39;rss&#39;</span><span class="p">:</span> <span class="n">mem_info</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># MB</span>
-            <span class="s1">&#39;vms&#39;</span><span class="p">:</span> <span class="n">mem_info</span><span class="o">.</span><span class="n">vms</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># MB</span>
-            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snapshot</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">peak_memory</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peak_memory</span><span class="p">,</span> <span class="n">snapshot</span><span class="p">[</span><span class="s1">&#39;rss&#39;</span><span class="p">])</span>
-        
-        <span class="k">return</span> <span class="n">snapshot</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate memory usage report.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peak Memory: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">peak_memory</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Memory Timeline:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">snap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">snap</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">snap</span><span class="p">[</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
-        
-        <span class="c1"># Calculate memory growth</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">growth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total Growth: </span><span class="si">{</span><span class="n">growth</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
-            
-            <span class="c1"># Check for potential memory leak</span>
-            <span class="k">if</span> <span class="n">growth</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>  <span class="c1"># Arbitrary threshold</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️  Potential memory leak detected!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>FLOP Counter</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FLOPCounter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Count floating-point operations for complexity analysis.</span>
-<span class="sd">    </span>
-<span class="sd">    Provides theoretical computational complexity independent of hardware.</span>
-<span class="sd">    Useful for comparing different architectural choices.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_flops</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span> <span class="o">=</span> <span class="p">{}</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">count_matmul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A_shape</span><span class="p">,</span> <span class="n">B_shape</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count FLOPs for matrix multiplication.</span>
-<span class="sd">        </span>
-<span class="sd">        C = A @ B where A is (m, k) and B is (k, n)</span>
-<span class="sd">        FLOPs = 2*m*k*n (multiply-add for each output element)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">measurements</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation_counts</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count total trainable parameters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Total parameter count (e.g., 125M for GPT-2 Small)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">m</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">A_shape</span>
-        <span class="n">k2</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">B_shape</span>
-        <span class="k">assert</span> <span class="n">k</span> <span class="o">==</span> <span class="n">k2</span><span class="p">,</span> <span class="s2">&quot;Invalid matmul dimensions&quot;</span>
-        
-        <span class="n">flops</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_flops</span> <span class="o">+=</span> <span class="n">flops</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span><span class="p">[</span><span class="s1">&#39;matmul&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matmul&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">flops</span>
-        <span class="k">return</span> <span class="n">flops</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">count_attention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count FLOPs for multi-head attention.</span>
-<span class="sd">        </span>
-<span class="sd">        Components:</span>
-<span class="sd">        - Q,K,V projections: 3 * (batch * seq_len * d_model * d_model)</span>
-<span class="sd">        - Attention scores: batch * heads * seq_len * seq_len * d_k</span>
-<span class="sd">        - Attention weighting: batch * heads * seq_len * seq_len * d_v</span>
-<span class="sd">        - Output projection: batch * seq_len * d_model * d_model</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">d_k</span> <span class="o">=</span> <span class="n">d_model</span> <span class="o">//</span> <span class="n">num_heads</span>
-        
-        <span class="c1"># QKV projections</span>
-        <span class="n">qkv_flops</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_matmul</span><span class="p">((</span><span class="n">batch</span> <span class="o">*</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">),</span> <span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">))</span>
-        
-        <span class="c1"># Attention computation</span>
-        <span class="n">scores_flops</span> <span class="o">=</span> <span class="n">batch</span> <span class="o">*</span> <span class="n">num_heads</span> <span class="o">*</span> <span class="n">seq_len</span> <span class="o">*</span> <span class="n">seq_len</span> <span class="o">*</span> <span class="n">d_k</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">weights_flops</span> <span class="o">=</span> <span class="n">batch</span> <span class="o">*</span> <span class="n">num_heads</span> <span class="o">*</span> <span class="n">seq_len</span> <span class="o">*</span> <span class="n">seq_len</span> <span class="o">*</span> <span class="n">d_k</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="n">attention_flops</span> <span class="o">=</span> <span class="n">scores_flops</span> <span class="o">+</span> <span class="n">weights_flops</span>
-        
-        <span class="c1"># Output projection</span>
-        <span class="n">output_flops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_matmul</span><span class="p">((</span><span class="n">batch</span> <span class="o">*</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">),</span> <span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">))</span>
-        
-        <span class="n">total</span> <span class="o">=</span> <span class="n">qkv_flops</span> <span class="o">+</span> <span class="n">attention_flops</span> <span class="o">+</span> <span class="n">output_flops</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span><span class="p">[</span><span class="s1">&#39;attention&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attention&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">total</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;parameters&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span>  <span class="c1"># Count elements</span>
         <span class="k">return</span> <span class="n">total</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate FLOP report with breakdown.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total FLOPs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_flops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GFLOPs&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Breakdown by operation:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">op</span><span class="p">,</span> <span class="n">flops</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">op_counts</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">percentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">flops</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_flops</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">op</span><span class="si">:</span><span class="s2">20s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">flops</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2"> GFLOPs (</span><span class="si">{</span><span class="n">percentage</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Architecture Profiler - Comparative Analysis</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ArchitectureProfiler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare performance across different architectures.</span>
-<span class="sd">    </span>
-<span class="sd">    Profiles MLP, CNN, and Transformer on same task to understand</span>
-<span class="sd">    compute/memory trade-offs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">profile_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Profile a model comprehensively.&quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;model_name&#39;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
-            <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">count_parameters</span><span class="p">(</span><span class="n">model</span><span class="p">),</span>
-            <span class="s1">&#39;timing&#39;</span><span class="p">:</span> <span class="p">{},</span>
-            <span class="s1">&#39;memory&#39;</span><span class="p">:</span> <span class="p">{},</span>
-            <span class="s1">&#39;flops&#39;</span><span class="p">:</span> <span class="p">{}</span>
-        <span class="p">}</span>
-        
-        <span class="c1"># Timing profile</span>
-        <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="n">num_runs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">num_runs</span> <span class="o">+</span> <span class="n">timer</span><span class="o">.</span><span class="n">warmup_runs</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">timer</span><span class="p">:</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;timing&#39;</span><span class="p">][</span><span class="s1">&#39;forward&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">mean</span>
-        
-        <span class="c1"># Memory profile</span>
-        <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryProfiler</span><span class="p">()</span>
-        <span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;Before forward&quot;</span><span class="p">)</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
-        <span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;After forward&quot;</span><span class="p">)</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">][</span><span class="s1">&#39;peak&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mem</span><span class="o">.</span><span class="n">peak_memory</span>
-        
-        <span class="c1"># FLOP count</span>
-        <span class="n">flop_counter</span> <span class="o">=</span> <span class="n">FLOPCounter</span><span class="p">()</span>
-        <span class="c1"># Count FLOPs based on model architecture</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;flops&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flop_counter</span><span class="o">.</span><span class="n">total_flops</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-        <span class="k">return</span> <span class="n">result</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">compare</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate comparative report.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Architecture Comparison&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
-        
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">M&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Forward time: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timing&#39;</span><span class="p">][</span><span class="s1">&#39;forward&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Peak memory: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">][</span><span class="s1">&#39;peak&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">MB&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  FLOPs: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;flops&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">GFLOPs&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_flops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count FLOPs (Floating Point Operations) for forward pass.</span>
+
+<span class="sd">        Linear layer: 2 × M × K × N (matmul is M×K @ K×N)</span>
+<span class="sd">        Conv2d: 2 × output_h × output_w × kernel_h × kernel_w × in_ch × out_ch</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Total FLOPs for one forward pass (hardware-independent)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Implementation calculates based on layer type and dimensions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure memory usage during forward pass.</span>
+
+<span class="sd">        Uses tracemalloc to track:</span>
+<span class="sd">        - Parameter memory (weights, biases)</span>
+<span class="sd">        - Activation memory (intermediate tensors)</span>
+<span class="sd">        - Peak memory (maximum allocation)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict with memory breakdown in MB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tracemalloc</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># Run forward pass, measure peak allocation</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure_latency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">,</span>
+                       <span class="n">warmup</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure inference latency with statistical rigor.</span>
+
+<span class="sd">        Protocol:</span>
+<span class="sd">        1. Warmup runs (cache warming, JIT compilation)</span>
+<span class="sd">        2. Multiple measurements (statistical significance)</span>
+<span class="sd">        3. Median calculation (robust to outliers)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Median latency in milliseconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Warmup runs (discard results)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+
+        <span class="c1"># Timed runs</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># High-precision timer</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+            <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Convert to ms</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>  <span class="c1"># Median is robust to outliers</span>
 </pre></div>
 </div>
 </section>
-<section id="step-by-step-implementation">
-<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<section id="parameter-counting-memory-footprint-analysis">
+<h3>Parameter Counting: Memory Footprint Analysis<a class="headerlink" href="#parameter-counting-memory-footprint-analysis" title="Permalink to this heading">#</a></h3>
+<p>Parameter counting predicts model size and memory requirements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Linear layer example
+layer = Linear(768, 3072)  # GPT-2 feedforward dimension
+
+# Manual calculation:
+weight_params = 768 × 3072 = 2,359,296
+bias_params = 3072
+total_params = 2,362,368
+
+# Memory at FP32 (4 bytes per parameter):
+memory_bytes = 2,362,368 × 4 = 9,449,472 bytes = 9.01 MB
+
+# Profiler implementation:
+profiler = Profiler()
+count = profiler.count_parameters(layer)
+assert count == 2_362_368
+
+# Why this matters:
+# GPT-2 Small: 124M params → 496 MB
+# GPT-2 XL: 1.5B params → 6.0 GB
+# Knowing parameter count predicts deployment hardware requirements
+</pre></div>
+</div>
+<p><strong>Parameter Counting Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Linear layers: <code class="docutils literal notranslate"><span class="pre">(input_features</span> <span class="pre">×</span> <span class="pre">output_features)</span> <span class="pre">+</span> <span class="pre">output_features</span></code></p></li>
+<li><p>Conv2d layers: <code class="docutils literal notranslate"><span class="pre">(kernel_h</span> <span class="pre">×</span> <span class="pre">kernel_w</span> <span class="pre">×</span> <span class="pre">in_channels</span> <span class="pre">×</span> <span class="pre">out_channels)</span> <span class="pre">+</span> <span class="pre">out_channels</span></code></p></li>
+<li><p>Embeddings: <code class="docutils literal notranslate"><span class="pre">vocab_size</span> <span class="pre">×</span> <span class="pre">embedding_dim</span></code></p></li>
+<li><p>Attention: Count Q/K/V projection weights separately</p></li>
+</ul>
+</section>
+<section id="flop-counting-computational-cost-analysis">
+<h3>FLOP Counting: Computational Cost Analysis<a class="headerlink" href="#flop-counting-computational-cost-analysis" title="Permalink to this heading">#</a></h3>
+<p>FLOPs measure compute independently of hardware:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Matrix multiplication FLOP calculation</span>
+<span class="c1"># C = A @ B where A is (M, K) and B is (K, N)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">count_matmul_flops</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Each output element C[i,j] requires K multiply-adds.</span>
+
+<span class="sd">    Total outputs: M × N</span>
+<span class="sd">    FLOPs per output: 2 × K (multiply + add)</span>
+<span class="sd">    Total FLOPs: 2 × M × K × N</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">M</span> <span class="o">*</span> <span class="n">K</span> <span class="o">*</span> <span class="n">N</span>
+
+<span class="c1"># Example: GPT-2 feedforward forward pass</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">seq_len</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">d_model</span> <span class="o">=</span> <span class="mi">768</span>
+<span class="n">d_ff</span> <span class="o">=</span> <span class="mi">3072</span>
+
+<span class="c1"># First linear: (batch × seq, d_model) @ (d_model, d_ff)</span>
+<span class="n">flops_1</span> <span class="o">=</span> <span class="n">count_matmul_flops</span><span class="p">(</span><span class="n">batch_size</span> <span class="o">*</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">)</span>
+<span class="c1"># = 2 × 16384 × 768 × 3072 = 77,309,411,328 FLOPs</span>
+
+<span class="c1"># Second linear: (batch × seq, d_ff) @ (d_ff, d_model)</span>
+<span class="n">flops_2</span> <span class="o">=</span> <span class="n">count_matmul_flops</span><span class="p">(</span><span class="n">batch_size</span> <span class="o">*</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+<span class="c1"># = 2 × 16384 × 3072 × 768 = 77,309,411,328 FLOPs</span>
+
+<span class="n">total_flops</span> <span class="o">=</span> <span class="n">flops_1</span> <span class="o">+</span> <span class="n">flops_2</span>  <span class="c1"># ~154 GFLOPs for one feedforward layer</span>
+
+<span class="c1"># Hardware context:</span>
+<span class="c1"># NVIDIA A100: 312 TFLOPS (FP16) → theoretical time = 154 / 312000 = 0.5 ms</span>
+<span class="c1"># Actual time will be higher due to memory bandwidth and kernel overhead</span>
+</pre></div>
+</div>
+<p><strong>FLOP Formulas Reference</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Linear layer
+flops = 2 × batch_size × seq_len × input_features × output_features
+
+# Conv2d
+flops = 2 × batch × output_h × output_w × kernel_h × kernel_w × in_ch × out_ch
+
+# Multi-head attention (simplified)
+# QKV projections: 3 × linear projections
+# Attention scores: batch × heads × seq × seq × d_k
+# Attention weighting: batch × heads × seq × seq × d_k
+# Output projection: 1 × linear projection
+flops = (4 × batch × seq × d_model × d_model) +
+        (4 × batch × heads × seq × seq × d_k)
+</pre></div>
+</div>
+</section>
+<section id="memory-profiling-understanding-allocation-patterns">
+<h3>Memory Profiling: Understanding Allocation Patterns<a class="headerlink" href="#memory-profiling-understanding-allocation-patterns" title="Permalink to this heading">#</a></h3>
+<p>Memory profiling reveals where RAM goes during training:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MemoryProfiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Track memory allocations and identify usage patterns.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take memory snapshot at execution point.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">()</span>
+        <span class="n">mem_info</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+            <span class="s1">&#39;rss&#39;</span><span class="p">:</span> <span class="n">mem_info</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Resident Set Size (MB)</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate memory usage report.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Memory Timeline:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">snap</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">):</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">delta_val</span> <span class="o">=</span> <span class="n">snap</span><span class="p">[</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="n">delta_val</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> MB)&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">snap</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">snap</span><span class="p">[</span><span class="s1">&#39;rss&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2"> MB</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example: Profile transformer forward pass</span>
+<span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryProfiler</span><span class="p">()</span>
+<span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
+
+<span class="c1"># Forward pass</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+<span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;after_forward&quot;</span><span class="p">)</span>
+
+<span class="c1"># Backward pass</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;after_backward&quot;</span><span class="p">)</span>
+
+<span class="c1"># Update weights</span>
+<span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="n">mem</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="s2">&quot;after_optimizer&quot;</span><span class="p">)</span>
+
+<span class="n">mem</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>
+
+<span class="c1"># Output interpretation:</span>
+<span class="c1"># baseline                     : 1024.00 MB</span>
+<span class="c1"># after_forward               : 1124.00 MB (+100.00 MB)  ← Activation memory</span>
+<span class="c1"># after_backward              : 1624.00 MB (+500.00 MB)  ← Gradient memory</span>
+<span class="c1"># after_optimizer             : 2124.00 MB (+500.00 MB)  ← Adam state (momentum + velocity)</span>
+<span class="c1">#</span>
+<span class="c1"># Total training memory = 2.1× forward memory (for Adam optimizer)</span>
+</pre></div>
+</div>
+<p><strong>Memory Components Breakdown</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Training Memory = Parameters + Activations + Gradients + Optimizer State
+
+Example for GPT-2 Small (124M parameters):
+Parameters:    496 MB  (124M × 4 bytes)
+Activations:   200 MB  (depends on batch size and sequence length)
+Gradients:     496 MB  (same as parameters)
+Adam state:    992 MB  (momentum + velocity = 2× parameters)
+─────────────────────────────────────
+Total:        2184 MB  (4.4× parameter memory!)
+
+Optimization strategies by component:
+- Parameters: Quantization (reduce precision)
+- Activations: Gradient checkpointing (recompute instead of store)
+- Gradients: Mixed precision (FP16 gradients)
+- Optimizer: SGD instead of Adam (0× vs 2× parameter memory)
+</pre></div>
+</div>
+</section>
+<section id="latency-measurement-statistical-timing-methodology">
+<h3>Latency Measurement: Statistical Timing Methodology<a class="headerlink" href="#latency-measurement-statistical-timing-methodology" title="Permalink to this heading">#</a></h3>
+<p>Accurate latency measurement requires handling variance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">measure_latency_correctly</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Production-quality latency measurement.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Step 1: Warmup runs (stabilize system state)</span>
+    <span class="c1"># - JIT compilation happens on first runs</span>
+    <span class="c1"># - CPU/GPU caches warm up</span>
+    <span class="c1"># - Operating system scheduling stabilizes</span>
+    <span class="n">warmup_runs</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup_runs</span><span class="p">):</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Multiple measurements (statistical significance)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">measurement_runs</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">measurement_runs</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># Nanosecond precision</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elapsed</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Convert to milliseconds</span>
+
+    <span class="c1"># Step 3: Statistical analysis</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+        <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>      <span class="c1"># Robust to outliers</span>
+        <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+        <span class="s1">&#39;p50&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>  <span class="c1"># Median</span>
+        <span class="s1">&#39;p95&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="mi">95</span><span class="p">),</span>  <span class="c1"># 95th percentile</span>
+        <span class="s1">&#39;p99&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>   <span class="c1"># 99th percentile (tail latency)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Example output:</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;mean&#39;: 5.234,</span>
+<span class="c1">#   &#39;median&#39;: 5.180,    ← Use this for reporting (robust)</span>
+<span class="c1">#   &#39;std&#39;: 0.456,</span>
+<span class="c1">#   &#39;min&#39;: 4.890,</span>
+<span class="c1">#   &#39;max&#39;: 8.120,       ← Outlier (OS scheduling event)</span>
+<span class="c1">#   &#39;p50&#39;: 5.180,</span>
+<span class="c1">#   &#39;p95&#39;: 5.890,</span>
+<span class="c1">#   &#39;p99&#39;: 6.340        ← Important for user-facing latency</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Why median, not mean?</span>
+<span class="c1"># Mean is sensitive to outliers (8.120 ms max skews average)</span>
+<span class="c1"># Median represents typical performance</span>
+<span class="c1"># For user-facing systems, report p95 or p99 (worst-case experience)</span>
+</pre></div>
+</div>
+<p><strong>Measurement Pitfalls and Solutions</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ❌ WRONG: Single measurement</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>  <span class="c1"># Low precision</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="n">latency</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>  <span class="c1"># Affected by system noise</span>
+
+<span class="c1"># ✅ CORRECT: Statistical measurement</span>
+<span class="n">profiler</span> <span class="o">=</span> <span class="n">Profiler</span><span class="p">()</span>
+<span class="n">latency</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">measure_latency</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># Returns median of 100 measurements after 10 warmup runs</span>
+
+<span class="c1"># ❌ WRONG: Measuring cold start</span>
+<span class="n">latency</span> <span class="o">=</span> <span class="n">time_function_once</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>  <span class="c1"># Includes JIT compilation</span>
+
+<span class="c1"># ✅ CORRECT: Warmup runs</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># Discard these results</span>
+<span class="n">latency</span> <span class="o">=</span> <span class="n">measure_with_statistics</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>  <span class="c1"># Now measure</span>
+
+<span class="c1"># ❌ WRONG: Using mean with outliers</span>
+<span class="n">times</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">]</span>  <span class="c1"># 50ms outlier from OS scheduling</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>  <span class="c1"># = 14.12 ms (misleading!)</span>
+
+<span class="c1"># ✅ CORRECT: Using median</span>
+<span class="n">median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>  <span class="c1"># = 5.2 ms (representative)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you understand the foundations from previous modules:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify prerequisite modules (all modules 1-13)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>transformer
+</pre></div>
+</div>
+<p><strong>Why these prerequisites</strong>: You’ll profile models built in Modules 1-13. Understanding the implementations helps you interpret profiling results (e.g., why attention is memory-bound).</p>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Build High-Precision Timer</strong></p>
-<ul class="simple">
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">time.perf_counter()</span></code> for nanosecond precision</p></li>
-<li><p>Implement multiple runs with warmup</p></li>
-<li><p>Calculate mean, std, confidence intervals</p></li>
-<li><p>Test with known delays</p></li>
-</ul>
-</li>
-<li><p><strong>Implement Memory Profiler</strong></p>
-<ul class="simple">
-<li><p>Track memory at key points (before/after operations)</p></li>
-<li><p>Calculate peak memory usage</p></li>
-<li><p>Identify memory growth patterns</p></li>
-<li><p>Detect potential leaks</p></li>
-</ul>
-</li>
-<li><p><strong>Create FLOP Counter</strong></p>
-<ul class="simple">
-<li><p>Count operations for matmul, convolution, attention</p></li>
-<li><p>Build hierarchical counting (operation → layer → model)</p></li>
-<li><p>Compare theoretical vs actual performance</p></li>
-<li><p>Identify compute-bound vs memory-bound operations</p></li>
-</ul>
-</li>
-<li><p><strong>Build Architecture Profiler</strong></p>
-<ul class="simple">
-<li><p>Profile MLP on MNIST/CIFAR</p></li>
-<li><p>Profile CNN on CIFAR</p></li>
-<li><p>Profile Transformer on text</p></li>
-<li><p>Generate comparative reports</p></li>
-</ul>
-</li>
-<li><p><strong>Analyze Results</strong></p>
-<ul class="simple">
-<li><p>Identify bottleneck operations (Pareto principle)</p></li>
-<li><p>Compare efficiency across architectures</p></li>
-<li><p>Understand scaling behavior</p></li>
-<li><p>Prioritize optimization opportunities</p></li>
-</ul>
-</li>
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/14_profiling/profiling_dev.ipynb</span></code> or <code class="docutils literal notranslate"><span class="pre">.py</span></code></p></li>
+<li><p><strong>Implement parameter counting</strong>: Walk model structure, sum parameter elements</p></li>
+<li><p><strong>Build FLOP counter</strong>: Calculate operations based on layer types and dimensions</p></li>
+<li><p><strong>Create memory profiler</strong>: Use tracemalloc to track allocations during forward/backward</p></li>
+<li><p><strong>Add timing profiler</strong>: Implement warmup runs, multiple measurements, statistical analysis</p></li>
+<li><p><strong>Implement advanced profiling</strong>: Build <code class="docutils literal notranslate"><span class="pre">profile_forward_pass()</span></code> and <code class="docutils literal notranslate"><span class="pre">profile_backward_pass()</span></code> combining all metrics</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">14</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">profiling</span></code></p></li>
 </ol>
+<p><strong>Development tips</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test parameter counting manually first</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">expected_params</span> <span class="o">=</span> <span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span> <span class="o">+</span> <span class="mi">64</span>  <span class="c1"># weight + bias = 8256</span>
+<span class="n">actual_params</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">count_parameters</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">actual_params</span> <span class="o">==</span> <span class="n">expected_params</span>
+
+<span class="c1"># Verify FLOP calculations with small examples</span>
+<span class="n">flops</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">count_flops</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+<span class="n">expected_flops</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">128</span> <span class="o">*</span> <span class="mi">64</span>  <span class="c1"># matmul FLOPs = 16384</span>
+<span class="k">assert</span> <span class="n">flops</span> <span class="o">==</span> <span class="n">expected_flops</span>
+
+<span class="c1"># Check memory profiler returns expected keys</span>
+<span class="n">mem</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">measure_memory</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+<span class="k">assert</span> <span class="s1">&#39;parameter_memory_mb&#39;</span> <span class="ow">in</span> <span class="n">mem</span>
+<span class="k">assert</span> <span class="s1">&#39;activation_memory_mb&#39;</span> <span class="ow">in</span> <span class="n">mem</span>
+<span class="k">assert</span> <span class="s1">&#39;peak_memory_mb&#39;</span> <span class="ow">in</span> <span class="n">mem</span>
+
+<span class="c1"># Validate latency measurement stability</span>
+<span class="n">latencies</span> <span class="o">=</span> <span class="p">[</span><span class="n">profiler</span><span class="o">.</span><span class="n">measure_latency</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">latencies</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">std_dev</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">latencies</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.2</span>  <span class="c1"># Coefficient of variation &lt; 20%</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
-<section id="inline-tests">
-<h3>Inline Tests<a class="headerlink" href="#inline-tests" title="Permalink to this heading">#</a></h3>
-<p>Run inline tests while building:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/15_profiling
-python<span class="w"> </span>profiling_dev.py
-</pre></div>
-</div>
-<p>Expected output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Unit Test: Timer with statistical analysis...
-✅ Multiple runs produce consistent results
-✅ Confidence intervals computed correctly
-✅ Warmup runs excluded from statistics
-Progress: Timing Profiler ✓
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify profiling functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>profiling
 
-Unit Test: Memory profiler...
-✅ Snapshots capture memory correctly
-✅ Peak memory tracked accurately
-✅ Memory growth detected
-Progress: Memory Profiler ✓
-
-Unit Test: FLOP counter...
-✅ Matmul FLOPs: 2*m*k*n verified
-✅ Attention FLOPs match theoretical
-✅ Operation breakdown correct
-Progress: FLOP Counter ✓
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>profiling<span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
-<section id="export-and-validate">
-<h3>Export and Validate<a class="headerlink" href="#export-and-validate" title="Permalink to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>15_profiling
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>15_profiling
-</pre></div>
-</div>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Parameter counting accuracy</strong>: Verifies correct counts for Linear, Conv2d, models with/without parameters</p></li>
+<li><p>✅ <strong>FLOP calculation correctness</strong>: Validates formulas for different layer types (Linear, Conv2d, attention)</p></li>
+<li><p>✅ <strong>Memory measurement reliability</strong>: Checks tracemalloc integration, memory component tracking</p></li>
+<li><p>✅ <strong>Latency measurement consistency</strong>: Tests statistical timing with warmup runs and multiple iterations</p></li>
+<li><p>✅ <strong>Advanced profiling completeness</strong>: Validates forward/backward profiling returns all required metrics</p></li>
+</ul>
 </section>
-</section>
-<section id="where-this-code-lives">
-<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
-├── profiler/
-│   └── profiling.py            # Your implementation goes here
-└── __init__.py                 # Exposes Timer, MemoryProfiler, etc.
+<section id="inline-testing-validation">
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive unit tests:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Parameter counting validation
+🔬 Unit Test: Parameter Counting...
+✅ Simple model: 55 parameters (10×5 weight + 5 bias)
+✅ No parameter model: 0 parameters
+✅ Direct tensor: 0 parameters
+✅ Parameter counting works correctly!
 
-Usage:
-&gt;&gt;&gt; from tinytorch.profiler import Timer, MemoryProfiler, FLOPCounter
-&gt;&gt;&gt; timer = Timer()
-&gt;&gt;&gt; with timer:
-&gt;&gt;&gt;     model.forward(x)
-&gt;&gt;&gt; print(timer.report())
+# FLOP counting validation
+🔬 Unit Test: FLOP Counting...
+✅ Tensor operation: 32 FLOPs
+✅ Linear layer: 16384 FLOPs (128 × 64 × 2)
+✅ Batch independence: 16384 FLOPs (same for batch 1 and 32)
+✅ FLOP counting works correctly!
+
+# Memory measurement validation
+🔬 Unit Test: Memory Measurement...
+✅ Basic measurement: 0.153 MB peak
+✅ Scaling: Small 0.002 MB → Large 0.020 MB
+✅ Efficiency: 0.524 (0-1 range)
+✅ Memory measurement works correctly!
+
+# Latency measurement validation
+🔬 Unit Test: Latency Measurement...
+✅ Basic latency: 0.008 ms
+✅ Consistency: 0.010 ± 0.002 ms
+✅ Scaling: Small 0.006 ms, Large 0.012 ms
+✅ Latency measurement works correctly!
 </pre></div>
 </div>
+</section>
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">profiling_dev</span><span class="w"> </span><span class="kn">import</span> <span class="n">Profiler</span><span class="p">,</span> <span class="n">quick_profile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.nn.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="c1"># Example 1: Profile a simple layer</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">input_tensor</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+
+<span class="n">profiler</span> <span class="o">=</span> <span class="n">Profiler</span><span class="p">()</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">profile_forward_pass</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FLOPs: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;flops&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latency: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;latency_ms&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memory: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;peak_memory_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bottleneck: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;bottleneck&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Output:</span>
+<span class="c1"># Parameters: 32,896</span>
+<span class="c1"># FLOPs: 2,097,152</span>
+<span class="c1"># Latency: 0.15 ms</span>
+<span class="c1"># Memory: 2.10 MB</span>
+<span class="c1"># Bottleneck: memory</span>
+
+<span class="c1"># Example 2: Compare architectures</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+<span class="n">attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">mlp_profile</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">profile_forward_pass</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_input</span><span class="p">)</span>
+<span class="n">attention_profile</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">profile_forward_pass</span><span class="p">(</span><span class="n">attention</span><span class="p">,</span> <span class="n">attention_input</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLP GFLOP/s: </span><span class="si">{</span><span class="n">mlp_profile</span><span class="p">[</span><span class="s1">&#39;gflops_per_second&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attention GFLOP/s: </span><span class="si">{</span><span class="n">attention_profile</span><span class="p">[</span><span class="s1">&#39;gflops_per_second&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Output reveals which operation is more efficient</span>
+
+<span class="c1"># Example 3: Analyze training memory</span>
+<span class="n">training_profile</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">profile_backward_pass</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward memory: </span><span class="si">{</span><span class="n">training_profile</span><span class="p">[</span><span class="s1">&#39;forward_memory_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gradient memory: </span><span class="si">{</span><span class="n">training_profile</span><span class="p">[</span><span class="s1">&#39;gradient_memory_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total training memory: </span><span class="si">{</span><span class="n">training_profile</span><span class="p">[</span><span class="s1">&#39;total_memory_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">opt_name</span><span class="p">,</span> <span class="n">opt_memory</span> <span class="ow">in</span> <span class="n">training_profile</span><span class="p">[</span><span class="s1">&#39;optimizer_memory_estimates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">total_with_opt</span> <span class="o">=</span> <span class="n">training_profile</span><span class="p">[</span><span class="s1">&#39;total_memory_mb&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">opt_memory</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">opt_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">total_with_opt</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB total&quot;</span><span class="p">)</span>
+<span class="c1"># Output:</span>
+<span class="c1"># Forward memory: 2.1 MB</span>
+<span class="c1"># Gradient memory: 2.0 MB</span>
+<span class="c1"># Total training memory: 4.1 MB</span>
+<span class="c1"># SGD: 4.1 MB total</span>
+<span class="c1"># ADAM: 8.1 MB total (2× extra for momentum + velocity)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="systems-thinking-questions">
 <h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Amdahl’s Law</strong>: If attention is 70% of compute and you optimize it 2×, what’s the overall speedup? Why can’t you get 2× end-to-end speedup?</p></li>
-<li><p><strong>Memory vs Compute Bottlenecks</strong>: Your GPU can do 100 TFLOPs/s but memory bandwidth is 900 GB/s. For FP32 operations needing 4 bytes/FLOP, what’s the bottleneck? When?</p></li>
-<li><p><strong>Batch Size Impact</strong>: Doubling batch size doesn’t double throughput. Why? What’s the relationship between batch size, memory, and throughput?</p></li>
-<li><p><strong>Profiling Overhead</strong>: Your profiler adds 5% overhead. Is this acceptable? When would you use sampling profilers vs instrumentation profilers?</p></li>
-<li><p><strong>Hardware Differences</strong>: Your code runs 10× slower on CPU than GPU for large matrices, but only 2× slower for small ones. Why? What’s the crossover point?</p></li>
-</ol>
-</section>
-<section id="real-world-connections">
-<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
-<section id="industry-applications">
-<h3>Industry Applications<a class="headerlink" href="#industry-applications" title="Permalink to this heading">#</a></h3>
-<p><strong>Google TPU Optimization</strong></p>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Profile every kernel to maximize TPU utilization</p></li>
-<li><p>Optimize for both FLOPs and memory bandwidth</p></li>
-<li><p>Use profiling to guide hardware design decisions</p></li>
-<li><p>Achieve 40-50% utilization (very high for accelerators)</p></li>
-</ul>
-<p><strong>OpenAI Training Optimization</strong></p>
-<ul class="simple">
-<li><p>Profile GPT training to find $millions in savings</p></li>
-<li><p>Identify gradient checkpointing opportunities</p></li>
-<li><p>Optimize data loading pipelines</p></li>
-<li><p>Achieve 50%+ MFU (model FLOPs utilization)</p></li>
-</ul>
-<p><strong>Meta Inference Serving</strong></p>
-<ul class="simple">
-<li><p>Profile PyTorch models for production deployment</p></li>
-<li><p>Identify operator fusion opportunities</p></li>
-<li><p>Optimize for latency (p50, p99) not just throughput</p></li>
-<li><p>Serve billions of requests per day efficiently</p></li>
+<li><p><strong>Google TPU Optimization</strong>: Profile every kernel to achieve 40-50% MFU (Model FLOPs Utilization). Google improved T5 training from 35% to 48% MFU through profiling-guided optimization, saving millions in compute costs at scale across thousands of TPUs. How would you use profiling to identify and fix utilization bottlenecks?</p></li>
+<li><p><strong>OpenAI GPT Training</strong>: Profile forward and backward passes separately to measure memory usage across parameters, activations, gradients, and optimizer state. OpenAI identified activation memory as the bottleneck and implemented gradient checkpointing, reducing memory by 10× with only 20% compute overhead while achieving 50%+ MFU. What trade-offs exist between recomputation time and storage memory?</p></li>
+<li><p><strong>Meta PyTorch Inference</strong>: Profile operator-by-operator timelines to measure kernel launch overhead and identify operator fusion opportunities. Meta reduced inference latency by 2-3× through operator fusion and optimized p99 latency for billions of daily requests serving Facebook/Instagram recommendations. Why optimize for latency percentiles rather than average?</p></li>
+<li><p><strong>NVIDIA cuDNN Development</strong>: Use Nsight profiler to analyze warp occupancy, register pressure, and memory bandwidth utilization to achieve 90%+ of theoretical peak performance. NVIDIA’s profiling data guides both kernel optimization and next-generation hardware design (H100 architecture). How do you distinguish compute-bound from memory-bound kernels?</p></li>
 </ul>
 </section>
-<section id="research-impact">
-<h3>Research Impact<a class="headerlink" href="#research-impact" title="Permalink to this heading">#</a></h3>
-<p>This module implements patterns from:</p>
+<section id="profiling-foundations">
+<h3>Profiling Foundations<a class="headerlink" href="#profiling-foundations" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>TensorBoard Profiler (Google, 2019): Visual profiling for TensorFlow</p></li>
-<li><p>PyTorch Profiler (Meta, 2020): Comprehensive profiling for PyTorch</p></li>
-<li><p>NVIDIA Nsight (2021): GPU-specific profiling and optimization</p></li>
-<li><p>MLPerf (2022): Standardized benchmarking and profiling</p></li>
+<li><p><strong>Amdahl’s Law and ROI</strong>: If attention takes 70% of time and you achieve 2× speedup on attention only, overall speedup is just 1.53× (not 2×) because unoptimized portions limit gains. Why does this mean optimization is iterative—requiring re-profiling after each change to identify new bottlenecks?</p></li>
+<li><p><strong>Memory Bandwidth Bottlenecks</strong>: An elementwise ReLU operation on 1B elements achieves only 112 GFLOPs/s despite 100 TFLOPS peak compute (0.11% utilization) because it’s memory-bound (8.89 ms to move 8 GB data vs 0.01 ms to compute). What optimization strategies help memory-bound operations vs compute-bound operations?</p></li>
+<li><p><strong>Statistical Timing Methodology</strong>: Single measurements include system noise (OS scheduling, thermal throttling, cache effects). Proper profiling uses warmup runs (JIT compilation, cache warming), multiple measurements (100+ iterations), and reports median (robust to outliers) plus p95/p99 percentiles (tail latency). Why does mean latency hide outliers that affect user experience?</p></li>
+<li><p><strong>Profiling Overhead Trade-offs</strong>: Instrumentation profiling (15% overhead) provides precise per-operation timing but distorts fast operations, while sampling profiling (2% overhead) enables always-on production monitoring but may miss operations &lt;1 ms. When should you choose instrumentation vs sampling profilers?</p></li>
+</ul>
+</section>
+<section id="performance-characteristics">
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Batch Size Scaling</strong>: Throughput doesn’t scale linearly with batch size due to fixed overhead (kernel launch amortizes), memory bandwidth saturation (transfers dominate at large batches), and memory constraints (OOM limits maximum batch size). For a system showing 200→667→914→985 samples/s at batch sizes 1→8→32→64, what’s the optimal batch size for throughput vs efficiency vs latency?</p></li>
+<li><p><strong>GPU vs CPU Crossover</strong>: Small matrices (128×128) run faster on CPU despite GPU’s 1000× more cores because GPU overhead (1 ms kernel launch) dominates compute time. Large matrices (4096×4096) achieve 267× GPU speedup because overhead amortizes and parallelism saturates GPU cores. What’s the crossover point and why does PyTorch automatically dispatch based on operation size?</p></li>
+<li><p><strong>Parameter vs Activation Memory</strong>: Training memory = Parameters + Activations + Gradients + Optimizer State. For GPT-2 Small (124M params = 496 MB), total training memory is 2.18 GB (4.4× parameter memory) due to activations (200 MB), gradients (496 MB), and Adam state (992 MB = 2× parameters). Which component should you optimize for different memory constraints?</p></li>
+<li><p><strong>FLOPs vs Latency</strong>: Theoretical FLOPs predict compute cost hardware-independently, but actual latency depends on memory bandwidth and kernel efficiency. A GPT-2 feedforward layer requires 154 GFLOPs, suggesting 0.5 ms on A100 (312 TFLOPS), but actual time is higher due to memory overhead. Why is profiling real hardware essential despite theoretical calculations?</p></li>
 </ul>
 </section>
 </section>
-<section id="whats-next">
-<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
-<p>In <strong>Module 15: Quantization</strong>, you’ll use your profiling data to compress models:</p>
+<section id="ready-to-build">
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to implement the profiling tools that enable all subsequent optimization work. These techniques transform research models into production systems by revealing exactly where time and memory go.</p>
+<p><strong>What you’ll achieve</strong>:</p>
 <ul class="simple">
-<li><p>Reduce precision from FP32 to INT8 for 4× memory savings</p></li>
-<li><p>Implement calibration strategies to minimize accuracy loss</p></li>
-<li><p>Measure memory and speed improvements</p></li>
-<li><p>Apply quantization based on profiling insights</p></li>
+<li><p>Understand where compute time actually goes in ML models (measure, don’t guess)</p></li>
+<li><p>Distinguish memory-bound from compute-bound operations (guides optimization strategy)</p></li>
+<li><p>Make data-driven optimization decisions using Amdahl’s Law (maximize ROI on engineering time)</p></li>
+<li><p>Build the measurement foundation for Modules 15-20 (optimization techniques)</p></li>
 </ul>
-<p>Profiling shows you <em>what</em> to optimize—the next modules show you <em>how</em> to optimize it!</p>
+<p><strong>The profiling mindset</strong>:</p>
+<blockquote>
+<div><p>“Measure twice, optimize once. Profile before every optimization decision. Without measurement, you’re flying blind.”
+— Every production ML engineer</p>
+</div></blockquote>
+<p>Choose your preferred way to engage with this module:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/14_profiling/profiling_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab</div>
+<p class="sd-card-text">Use Google Colab for cloud compute power and easy sharing.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/14_profiling/profiling_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/14_profiling/profiling_dev.py"></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💾 Save Your Progress</p>
+<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/14_profiling
+tito<span class="w"> </span>module<span class="w"> </span>start<span class="w"> </span><span class="m">14</span>
+python<span class="w"> </span>profiling_dev.py<span class="w">  </span><span class="c1"># Inline tests as you build</span>
+</pre></div>
+</div>
 <hr class="docutils" />
-<p><strong>Ready to become a performance detective?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/14_profiling/profiling_dev.py</span></code> and start implementing.</p>
+<div class="prev-next-area">
+<a class="left-prev" href="../13_transformers/ABOUT.html" title="previous page">← Module 13: Transformers</a>
+<a class="right-next" href="../15_quantization/ABOUT.html" title="next page">Module 15: Quantization →</a>
+</div>
 </section>
 </section>
 
@@ -983,7 +1188,7 @@ Usage:
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">13. Transformers</p>
+        <p class="prev-next-title">13. Transformers - Complete GPT Architecture</p>
       </div>
     </a>
     <a class="right-next"
@@ -991,7 +1196,7 @@ Usage:
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">15. Quantization</p>
+        <p class="prev-next-title">15. Quantization - Reduced Precision for Efficiency</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1012,36 +1217,41 @@ Usage:
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context-profiling-drives-optimization-economics">Production Context: Profiling Drives Optimization Economics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-evolution-from-ad-hoc-timing-to-systematic-measurement">Historical Evolution: From Ad-Hoc Timing to Systematic Measurement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-actually-build">What You’ll Actually Build</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-pattern-build-use-optimize">Pedagogical Pattern: Build → Use → Optimize</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build">1. Build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use">2. Use</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize">3. Optimize</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-implementation">Step-by-Step Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-component-profiler-class">Core Component: Profiler Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-counting-memory-footprint-analysis">Parameter Counting: Memory Footprint Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flop-counting-computational-cost-analysis">FLOP Counting: Computational Cost Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-profiling-understanding-allocation-patterns">Memory Profiling: Understanding Allocation Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#latency-measurement-statistical-timing-methodology">Latency Measurement: Statistical Timing Methodology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-tests">Inline Tests</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-and-validate">Export and Validate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-applications">Industry Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-foundations">Profiling Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
   </nav></div>
 

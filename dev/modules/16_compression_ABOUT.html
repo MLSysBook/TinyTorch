@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>16. Compression &#8212; TinyTorch</title>
+    <title>16. Compression - Pruning and Model Compression &#8212; TinyTorch</title>
   
   
   
@@ -68,8 +68,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="17. Memoization" href="17_memoization_ABOUT.html" />
-    <link rel="prev" title="15. Quantization" href="15_quantization_ABOUT.html" />
+    <link rel="next" title="17. Memoization - Computational Reuse for Inference" href="17_memoization_ABOUT.html" />
+    <link rel="prev" title="15. Quantization - Reduced Precision for Efficiency" href="15_quantization_ABOUT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,11 +212,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -230,6 +231,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -433,7 +435,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>16. Compression</h1>
+    <h1>16. Compression - Pruning and Model Compression</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -445,20 +447,35 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-techniques">Core Techniques</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparsity-measurement">Sparsity Measurement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude-based-pruning-unstructured">Magnitude-Based Pruning (Unstructured)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structured-pruning-hardware-friendly">Structured Pruning (Hardware-Friendly)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-distillation">Knowledge Distillation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-rank-approximation">Low-Rank Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-compression-pipeline">Complete Compression Pipeline</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compression-theory-foundations">Compression Theory Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics-and-trade-offs">Performance Characteristics and Trade-offs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -470,121 +487,420 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="compression">
-<h1>16. Compression<a class="headerlink" href="#compression" title="Permalink to this heading">#</a></h1>
-<p><strong>⚡ OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours</p>
+  <section id="compression-pruning-and-model-compression">
+<h1>16. Compression - Pruning and Model Compression<a class="headerlink" href="#compression-pruning-and-model-compression" title="Permalink to this heading">#</a></h1>
+<p><strong>OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
-<p>Compress neural networks through pruning (removing weights) and combining with quantization. This module implements techniques to achieve 10-50× compression with minimal accuracy loss, enabling deployment on resource-constrained devices.</p>
+<p>Modern neural networks are massively overparameterized. BERT has 110M parameters but can compress to 40% size with 97% accuracy retention (DistilBERT). GPT-2 can be pruned 90% and retrained to similar performance (Lottery Ticket Hypothesis). Model compression techniques remove unnecessary parameters to enable practical deployment on resource-constrained devices.</p>
+<p>This module implements core compression strategies: magnitude-based pruning (removing smallest weights), structured pruning (removing entire channels for hardware efficiency), knowledge distillation (training smaller models from larger teachers), and low-rank approximation (matrix factorization). You’ll understand the critical trade-offs between compression ratio, inference speedup, and accuracy retention.</p>
+<p><strong>Important reality check</strong>: The implementations in this module demonstrate compression algorithms using NumPy, focusing on educational understanding of the techniques. Achieving actual inference speedup from sparse models requires specialized hardware support (NVIDIA’s 2:4 sparsity, specialized sparse CUDA kernels) or optimized libraries (torch.sparse, cuSPARSE) beyond this module’s scope. You’ll learn when compression helps versus when it creates overhead without benefits.</p>
 </section>
 <section id="learning-objectives">
 <h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
-<p>By completing this module, you will be able to:</p>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Understand compression fundamentals</strong>: Differentiate between unstructured sparsity (scattered zeros), structured sparsity (removed channels), and architectural compression (distillation)</p></li>
+<li><p><strong>Implement magnitude pruning</strong>: Remove weights below importance thresholds to achieve 50-95% sparsity with minimal accuracy loss</p></li>
+<li><p><strong>Design structured pruning</strong>: Remove entire computational units (channels, neurons) using importance metrics like L2 norm</p></li>
+<li><p><strong>Apply knowledge distillation</strong>: Train student models to match teacher performance using temperature-scaled soft targets</p></li>
+<li><p><strong>Analyze compression trade-offs</strong>: Measure when pruning reduces model size without delivering proportional speedup, and understand hardware constraints</p></li>
+</ul>
+</section>
+<section id="build-use-reflect">
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Implement magnitude-based pruning</strong> to identify and remove unimportant weights</p></li>
-<li><p><strong>Design structured pruning strategies</strong> (channel pruning, layer-wise) for actual speedups</p></li>
-<li><p><strong>Apply iterative pruning</strong> with fine-tuning to maintain model accuracy</p></li>
-<li><p><strong>Combine pruning with quantization</strong> for maximum compression (50-100× possible)</p></li>
-<li><p><strong>Measure compression ratios</strong> and verify inference speedup vs accuracy trade-offs</p></li>
+<li><p><strong>Build</strong>: Implement magnitude pruning, structured pruning, knowledge distillation, and low-rank approximation algorithms</p></li>
+<li><p><strong>Use</strong>: Apply compression techniques to realistic neural networks and measure sparsity, parameter reduction, and memory savings</p></li>
+<li><p><strong>Reflect</strong>: Understand why 90% unstructured sparsity rarely accelerates inference, when structured pruning delivers real speedups, and how compression strategies must adapt to hardware constraints</p></li>
 </ol>
-</section>
-<section id="why-this-matters">
-<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
-<section id="production-context">
-<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
-<p>Compression enables practical deployment:</p>
-<ul class="simple">
-<li><p><strong>BERT Distillation (DistilBERT)</strong>: 40% smaller, 60% faster, 97% accuracy retention</p></li>
-<li><p><strong>MobileNet</strong>: Structured pruning + quantization for mobile deployment</p></li>
-<li><p><strong>Lottery Ticket Hypothesis</strong>: Sparse networks train as well as dense ones</p></li>
-<li><p><strong>GPT-3 Distillation</strong>: Smaller models approaching GPT-3 performance</p></li>
-</ul>
-</section>
-<section id="historical-context">
-<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Pre-2015</strong>: Limited compression work; models small enough for hardware</p></li>
-<li><p><strong>2015-2017</strong>: Magnitude pruning (Han et al.); Lottery Ticket Hypothesis</p></li>
-<li><p><strong>2018-2020</strong>: Structured pruning; distillation; BERT compression</p></li>
-<li><p><strong>2020+</strong>: Extreme compression (100×); sparse transformers; efficient architectures</p></li>
-</ul>
-<p>Compression is now standard for deployment, not optional.</p>
-</section>
 </section>
 <section id="implementation-guide">
 <h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
-<section id="core-techniques">
-<h3>Core Techniques<a class="headerlink" href="#core-techniques" title="Permalink to this heading">#</a></h3>
-<p><strong>Magnitude Pruning</strong></p>
+<section id="sparsity-measurement">
+<h3>Sparsity Measurement<a class="headerlink" href="#sparsity-measurement" title="Permalink to this heading">#</a></h3>
+<p>Before compression, you need to quantify model density:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate percentage of zero weights in model.&quot;&quot;&quot;</span>
+    <span class="n">total_params</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">zero_params</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+        <span class="n">total_params</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">zero_params</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">zero_params</span> <span class="o">/</span> <span class="n">total_params</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+</pre></div>
+</div>
+<p><strong>Why this matters</strong>: Sparsity measurement reveals how much redundancy exists. A 90% sparse model has only 10% active weights, but achieving speedup from this sparsity requires specialized hardware or storage formats.</p>
+</section>
+<section id="magnitude-based-pruning-unstructured">
+<h3>Magnitude-Based Pruning (Unstructured)<a class="headerlink" href="#magnitude-based-pruning-unstructured" title="Permalink to this heading">#</a></h3>
+<p>Remove individual weights with smallest absolute values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">magnitude_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sparsity</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove smallest weights to achieve target sparsity.&quot;&quot;&quot;</span>
+    <span class="c1"># Collect all weights (excluding biases)</span>
+    <span class="n">all_weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">weight_params</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Skip 1D biases</span>
+            <span class="n">all_weights</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+            <span class="n">weight_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+    <span class="c1"># Find threshold at desired percentile</span>
+    <span class="n">magnitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">all_weights</span><span class="p">)</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">magnitudes</span><span class="p">,</span> <span class="n">sparsity</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># Zero out weights below threshold</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">weight_params</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span>
+        <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">mask</span>
+</pre></div>
+</div>
+<p><strong>Characteristics</strong>:</p>
 <ul class="simple">
-<li><p>Sort weights by absolute value</p></li>
-<li><p>Remove smallest X% (typically 50-90%)</p></li>
-<li><p>Fine-tune remaining weights</p></li>
-<li><p>Can achieve 10× compression with &lt;1% accuracy loss</p></li>
+<li><p><strong>Compression</strong>: Can achieve 90%+ sparsity with minimal accuracy loss</p></li>
+<li><p><strong>Speed reality</strong>: Creates scattered zeros that don’t accelerate dense matrix operations</p></li>
+<li><p><strong>Storage benefit</strong>: Sparse formats (CSR, COO) reduce memory when combined with specialized storage</p></li>
+<li><p><strong>Hardware requirement</strong>: Needs sparse tensor support for any speedup (torch.sparse, cuSPARSE)</p></li>
 </ul>
-<p><strong>Structured Pruning</strong></p>
+<p><strong>Critical insight</strong>: High sparsity ratios don’t equal speedup. Dense matrix operations (GEMM) are highly optimized; sparse operations require irregular memory access and specialized kernels. Without hardware acceleration, 90% sparse models run at similar speeds to dense models.</p>
+</section>
+<section id="structured-pruning-hardware-friendly">
+<h3>Structured Pruning (Hardware-Friendly)<a class="headerlink" href="#structured-pruning-hardware-friendly" title="Permalink to this heading">#</a></h3>
+<p>Remove entire channels or neurons for actual hardware benefits:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">structured_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prune_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove entire channels based on L2 norm importance.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">Linear</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">):</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span>
+
+            <span class="c1"># Calculate L2 norm for each output channel</span>
+            <span class="n">channel_norms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Identify channels to remove (lowest importance)</span>
+            <span class="n">num_channels</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">num_to_prune</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_channels</span> <span class="o">*</span> <span class="n">prune_ratio</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">num_to_prune</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Get indices of weakest channels</span>
+                <span class="n">prune_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span>
+                    <span class="n">channel_norms</span><span class="p">,</span> <span class="n">num_to_prune</span>
+                <span class="p">)[:</span><span class="n">num_to_prune</span><span class="p">]</span>
+
+                <span class="c1"># Zero entire channels</span>
+                <span class="n">weight</span><span class="p">[:,</span> <span class="n">prune_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">layer</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">prune_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p><strong>Characteristics</strong>:</p>
 <ul class="simple">
-<li><p>Remove entire channels/neurons</p></li>
-<li><p>Achieves actual speedup (vs unstructured sparsity)</p></li>
-<li><p>Typically 2-5× compression</p></li>
-<li><p>More aggressive accuracy impact</p></li>
+<li><p><strong>Compression</strong>: 30-70% typical (coarser granularity than magnitude pruning)</p></li>
+<li><p><strong>Speed benefit</strong>: Smaller dense matrices enable faster computation when architecturally reduced</p></li>
+<li><p><strong>Accuracy trade-off</strong>: Loses more accuracy than unstructured pruning at same sparsity level</p></li>
+<li><p><strong>Hardware friendly</strong>: Regular memory access patterns work well with standard dense operations</p></li>
 </ul>
-<p><strong>Iterative Pruning</strong></p>
+<p><strong>Critical insight</strong>: Structured pruning achieves lower compression ratios but enables real speedup when combined with architectural changes. Simply zeroing channels doesn’t help—you need to physically remove them from the model architecture to see benefits.</p>
+</section>
+<section id="knowledge-distillation">
+<h3>Knowledge Distillation<a class="headerlink" href="#knowledge-distillation" title="Permalink to this heading">#</a></h3>
+<p>Transfer knowledge from large teacher models to smaller students:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KnowledgeDistillation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compress models through teacher-student training.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">teacher_model</span><span class="p">,</span> <span class="n">student_model</span><span class="p">,</span>
+                 <span class="n">temperature</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span> <span class="o">=</span> <span class="n">teacher_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">student_model</span> <span class="o">=</span> <span class="n">student_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>  <span class="c1"># Soften distributions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>  <span class="c1"># Balance soft vs hard targets</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">distillation_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_logits</span><span class="p">,</span>
+                         <span class="n">teacher_logits</span><span class="p">,</span> <span class="n">true_labels</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combined loss: soft targets + hard labels.&quot;&quot;&quot;</span>
+        <span class="c1"># Temperature-scaled softmax for soft targets</span>
+        <span class="n">student_soft</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">student_logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
+        <span class="n">teacher_soft</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">teacher_logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
+
+        <span class="c1"># Soft loss: learn from teacher&#39;s knowledge</span>
+        <span class="n">soft_loss</span> <span class="o">=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">student_soft</span><span class="p">,</span> <span class="n">teacher_soft</span><span class="p">)</span>
+
+        <span class="c1"># Hard loss: learn correct answers</span>
+        <span class="n">student_hard</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">student_logits</span><span class="p">)</span>
+        <span class="n">hard_loss</span> <span class="o">=</span> <span class="n">cross_entropy</span><span class="p">(</span><span class="n">student_hard</span><span class="p">,</span> <span class="n">true_labels</span><span class="p">)</span>
+
+        <span class="c1"># Weighted combination</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">soft_loss</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">hard_loss</span>
+</pre></div>
+</div>
+<p><strong>Why distillation works</strong>:</p>
 <ul class="simple">
-<li><p>Prune gradually (10% at a time)</p></li>
-<li><p>Fine-tune after each pruning step</p></li>
-<li><p>Better accuracy than one-shot pruning</p></li>
-<li><p>More training cost</p></li>
+<li><p><strong>Soft targets</strong>: Teacher’s probability distributions reveal uncertainty and class relationships</p></li>
+<li><p><strong>Temperature scaling</strong>: Higher temperatures (T=3-5) soften sharp predictions, providing richer training signal</p></li>
+<li><p><strong>Architectural freedom</strong>: Student can have completely different architecture, not just pruned weights</p></li>
+<li><p><strong>Accuracy preservation</strong>: Students often match 95-99% of teacher performance with 5-10× fewer parameters</p></li>
 </ul>
-<p><strong>Pruning + Quantization</strong></p>
+<p><strong>Production example</strong>: DistilBERT uses distillation to compress BERT from 110M to 66M parameters (40% reduction) while retaining 97% accuracy on GLUE benchmarks.</p>
+</section>
+<section id="low-rank-approximation">
+<h3>Low-Rank Approximation<a class="headerlink" href="#low-rank-approximation" title="Permalink to this heading">#</a></h3>
+<p>Compress weight matrices through SVD factorization:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">low_rank_approximate</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">,</span> <span class="n">rank_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factorize matrix using truncated SVD.&quot;&quot;&quot;</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">weight_matrix</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Perform singular value decomposition</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">weight_matrix</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Truncate to target rank</span>
+    <span class="n">max_rank</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">target_rank</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">rank_ratio</span> <span class="o">*</span> <span class="n">max_rank</span><span class="p">))</span>
+
+    <span class="n">U_truncated</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="p">:</span><span class="n">target_rank</span><span class="p">]</span>
+    <span class="n">S_truncated</span> <span class="o">=</span> <span class="n">S</span><span class="p">[:</span><span class="n">target_rank</span><span class="p">]</span>
+    <span class="n">V_truncated</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:</span><span class="n">target_rank</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># Reconstruct: W ≈ U @ diag(S) @ V</span>
+    <span class="k">return</span> <span class="n">U_truncated</span><span class="p">,</span> <span class="n">S_truncated</span><span class="p">,</span> <span class="n">V_truncated</span>
+</pre></div>
+</div>
+<p><strong>Compression math</strong>:</p>
 <ul class="simple">
-<li><p>Prune 90% of weights → 10× reduction</p></li>
-<li><p>Quantize FP32 → INT8 → 4× reduction</p></li>
-<li><p>Combined: 40× compression</p></li>
+<li><p>Original matrix: m × n parameters</p></li>
+<li><p>Factorized: (m × k) + k + (k × n) = k(m + n + 1) parameters</p></li>
+<li><p>Compression achieved when: k &lt; mn/(m+n+1)</p></li>
+<li><p>Example: (1000×1000) = 1M params → (1000×100 + 100×1000) = 200K params (80% reduction)</p></li>
 </ul>
+<p><strong>When low-rank works</strong>: Large matrices with redundancy (common in fully-connected layers). <strong>When it fails</strong>: Small matrices or convolutions with less redundancy.</p>
+</section>
+<section id="complete-compression-pipeline">
+<h3>Complete Compression Pipeline<a class="headerlink" href="#complete-compression-pipeline" title="Permalink to this heading">#</a></h3>
+<p>Combine multiple techniques for maximum compression:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">compression_config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply comprehensive compression strategy.&quot;&quot;&quot;</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;original_params&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()),</span>
+        <span class="s1">&#39;original_sparsity&#39;</span><span class="p">:</span> <span class="n">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">),</span>
+        <span class="s1">&#39;applied_techniques&#39;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Apply magnitude pruning</span>
+    <span class="k">if</span> <span class="s1">&#39;magnitude_prune&#39;</span> <span class="ow">in</span> <span class="n">compression_config</span><span class="p">:</span>
+        <span class="n">sparsity</span> <span class="o">=</span> <span class="n">compression_config</span><span class="p">[</span><span class="s1">&#39;magnitude_prune&#39;</span><span class="p">]</span>
+        <span class="n">magnitude_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sparsity</span><span class="o">=</span><span class="n">sparsity</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;applied_techniques&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;magnitude_</span><span class="si">{</span><span class="n">sparsity</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Apply structured pruning</span>
+    <span class="k">if</span> <span class="s1">&#39;structured_prune&#39;</span> <span class="ow">in</span> <span class="n">compression_config</span><span class="p">:</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">compression_config</span><span class="p">[</span><span class="s1">&#39;structured_prune&#39;</span><span class="p">]</span>
+        <span class="n">structured_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prune_ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;applied_techniques&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;structured_</span><span class="si">{</span><span class="n">ratio</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;final_sparsity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stats</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;magnitude_prune&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>   <span class="c1"># 80% sparsity</span>
+    <span class="s1">&#39;structured_prune&#39;</span><span class="p">:</span> <span class="mf">0.3</span>   <span class="c1"># Remove 30% of channels</span>
+<span class="p">}</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Achieved </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;final_sparsity&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">% sparsity&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Multi-stage strategy</strong>: Different techniques target different redundancy types. Magnitude pruning removes unimportant individual weights; structured pruning removes redundant channels; distillation creates fundamentally smaller architectures.</p>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you understand compression foundations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify prerequisite modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>quantization
+</pre></div>
+</div>
+<p><strong>Required knowledge</strong>:</p>
+<ul class="simple">
+<li><p>Neural network training and fine-tuning (pruned models need retraining)</p></li>
+<li><p>Gradient-based optimization (fine-tuning after compression)</p></li>
+<li><p>Quantization techniques (often combined with pruning for multiplicative gains)</p></li>
+</ul>
+<p><strong>From previous modules</strong>:</p>
+<ul class="simple">
+<li><p><strong>Tensor operations</strong>: Weight manipulation and masking</p></li>
+<li><p><strong>Optimizers</strong>: Fine-tuning compressed models</p></li>
+<li><p><strong>Quantization</strong>: Combining compression techniques (10× pruning + 4× quantization = 40× total)</p></li>
+</ul>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/16_compression/compression_dev.ipynb</span></code></p></li>
+<li><p><strong>Implement sparsity measurement</strong>: Calculate percentage of zero weights across model</p></li>
+<li><p><strong>Build magnitude pruning</strong>: Remove smallest weights using percentile thresholds</p></li>
+<li><p><strong>Create structured pruning</strong>: Remove entire channels based on L2 norm importance</p></li>
+<li><p><strong>Implement knowledge distillation</strong>: Build teacher-student training with temperature scaling</p></li>
+<li><p><strong>Add low-rank approximation</strong>: Factor large matrices using truncated SVD</p></li>
+<li><p><strong>Build compression pipeline</strong>: Combine techniques sequentially</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">16</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">compression</span></code></p></li>
+</ol>
 </section>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>16_compression
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>16_compression
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify compression functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>compression
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>compression<span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
-<section id="where-this-code-lives">
-<h2>Where This Code Lives<a class="headerlink" href="#where-this-code-lives" title="Permalink to this heading">#</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
-├── compression/
-│   └── prune.py
-└── __init__.py
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Sparsity measurement</strong>: Correctly counts zero vs total parameters</p></li>
+<li><p>✅ <strong>Magnitude pruning</strong>: Achieves target sparsity with appropriate threshold selection</p></li>
+<li><p>✅ <strong>Structured pruning</strong>: Removes entire channels, creates block sparsity patterns</p></li>
+<li><p>✅ <strong>Knowledge distillation</strong>: Combines soft and hard losses with temperature scaling</p></li>
+<li><p>✅ <strong>Low-rank approximation</strong>: Reduces parameters through SVD factorization</p></li>
+<li><p>✅ <strong>Compression pipeline</strong>: Sequential application preserves functionality</p></li>
+</ul>
+</section>
+<section id="inline-testing-validation">
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive validation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>🔬 Unit Test: Measure Sparsity...
+✅ measure_sparsity works correctly!
+
+🔬 Unit Test: Magnitude Prune...
+✅ magnitude_prune works correctly!
+
+🔬 Unit Test: Structured Prune...
+✅ structured_prune works correctly!
+
+🔬 Integration Test: Complete compression pipeline...
+✅ Achieved 82.5% sparsity with 2 techniques
+
+📊 Progress: Compression module ✓
 </pre></div>
 </div>
+</section>
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compression_dev</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">magnitude_prune</span><span class="p">,</span> <span class="n">structured_prune</span><span class="p">,</span>
+    <span class="n">measure_sparsity</span><span class="p">,</span> <span class="n">KnowledgeDistillation</span>
+<span class="p">)</span>
+
+<span class="c1"># Test magnitude pruning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">(</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initial sparsity: </span><span class="si">{</span><span class="n">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+<span class="n">magnitude_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sparsity</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After pruning: </span><span class="si">{</span><span class="n">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test structured pruning</span>
+<span class="n">structured_prune</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">prune_ratio</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After structured: </span><span class="si">{</span><span class="n">measure_sparsity</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test knowledge distillation</span>
+<span class="n">teacher</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">(</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">student</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">(</span><span class="n">Linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>  <span class="c1"># 3× smaller</span>
+<span class="n">kd</span> <span class="o">=</span> <span class="n">KnowledgeDistillation</span><span class="p">(</span><span class="n">teacher</span><span class="p">,</span> <span class="n">student</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="systems-thinking-questions">
 <h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Lottery Ticket Hypothesis</strong>: Why can pruned networks retrain to full accuracy? What does this say about overparameterization?</p></li>
-<li><p><strong>Structured vs Unstructured</strong>: Unstructured pruning achieves better compression but no speedup. Why? When is sparse computation actually faster?</p></li>
-<li><p><strong>Distillation vs Pruning</strong>: Both compress models. When would you use each? Can you combine them?</p></li>
-</ol>
-</section>
-<section id="real-world-connections">
-<h2>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h2>
-<p><strong>DistilBERT</strong>: 40% smaller BERT with 97% performance
-<strong>MobileNetV2</strong>: Efficient architectures + pruning for mobile
-<strong>NVIDIA TensorRT</strong>: Automatic pruning + quantization for deployment</p>
-</section>
-<section id="whats-next">
-<h2>What’s Next?<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
-<p>In <strong>Module 17: Memoization</strong>, you’ll learn computational reuse:</p>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>KV-caching for transformers</p></li>
-<li><p>Eliminate redundant computation</p></li>
-<li><p>10-15× speedup for autoregressive generation</p></li>
-<li><p>Memory-compute trade-offs</p></li>
+<li><p><strong>Mobile deployment</strong>: DistilBERT achieves 40% size reduction with 97% accuracy retention, enabling BERT on mobile devices</p></li>
+<li><p><strong>Edge inference</strong>: MobileNetV2/V3 combine structured pruning with depthwise convolutions for &lt;10MB models running real-time on phones</p></li>
+<li><p><strong>Production acceleration</strong>: NVIDIA TensorRT applies automatic pruning + quantization for 3-10× speedup on inference workloads</p></li>
+<li><p><strong>Model democratization</strong>: GPT distillation (DistilGPT-2) creates 40% smaller models approaching full performance on consumer hardware</p></li>
 </ul>
+</section>
+<section id="compression-theory-foundations">
+<h3>Compression Theory Foundations<a class="headerlink" href="#compression-theory-foundations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Lottery Ticket Hypothesis</strong>: Pruned networks can retrain to full accuracy from initial weights, suggesting networks contain sparse “winning ticket” subnetworks</p></li>
+<li><p><strong>Overparameterization insights</strong>: Modern networks have excess capacity for easier optimization, not representation—most parameters help training, not inference</p></li>
+<li><p><strong>Information bottleneck</strong>: Compression forces models to distill essential knowledge, sometimes improving generalization by removing noise</p></li>
+<li><p><strong>Hardware-algorithm co-design</strong>: Effective compression requires algorithms designed for hardware constraints (memory bandwidth, cache locality, SIMD width)</p></li>
+</ul>
+</section>
+<section id="performance-characteristics-and-trade-offs">
+<h3>Performance Characteristics and Trade-offs<a class="headerlink" href="#performance-characteristics-and-trade-offs" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Unstructured sparsity limitations</strong>: 90% sparse models rarely accelerate without specialized hardware—dense GEMM operations are too optimized</p></li>
+<li><p><strong>Structured sparsity benefits</strong>: Removing entire channels enables speedup when architecturally implemented (smaller dense matrices, not just zeros)</p></li>
+<li><p><strong>Compression-accuracy curves</strong>: Accuracy degrades gradually until critical sparsity threshold, then collapses—find the “knee” of the curve</p></li>
+<li><p><strong>Iterative pruning advantage</strong>: Gradual compression with fine-tuning (10 steps × 10% sparsity increase) achieves higher compression with better accuracy than one-shot pruning</p></li>
+<li><p><strong>Multiplicative compression</strong>: Combining techniques multiplies gains—90% pruning (10× reduction) + INT8 quantization (4× reduction) = 40× total compression</p></li>
+</ul>
+</section>
+</section>
+<section id="ready-to-build">
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to implement compression techniques that transform research models into deployable systems. These optimizations bridge the gap between what’s possible in the lab and what’s practical in production on resource-constrained devices.</p>
+<p>Understanding compression from first principles—implementing pruning algorithms yourself rather than using torch.nn.utils.prune—gives you deep insight into the trade-offs between model size, inference speed, and accuracy. You’ll discover why most sparsity doesn’t accelerate inference, when structured pruning actually helps, and how to design compression strategies for different deployment scenarios (mobile apps need aggressive compression; cloud services need balanced approaches).</p>
+<p>This module emphasizes honest engineering: you’ll see that achieving 90% sparsity is straightforward but getting speedup from that sparsity requires specialized hardware or libraries beyond these NumPy implementations. Production compression combines multiple techniques sequentially, carefully measuring accuracy after each stage and stopping when degradation exceeds acceptable thresholds.</p>
+<p>Take your time with this module. Compression is where theory meets deployment constraints, where algorithmic elegance confronts hardware reality. The techniques you implement here enable real-world ML deployment at scale!</p>
+<p>Choose your preferred way to engage with this module:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/16_compression/compression_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab</div>
+<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/16_compression/compression_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/16_compression/compression_dev.py"></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💾 Save Your Progress</p>
+<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
+</div>
 <hr class="docutils" />
-<p><strong>Ready to compress models?</strong> Open <code class="docutils literal notranslate"><span class="pre">modules/16_compression/compression_dev.py</span></code> and start implementing.</p>
+<div class="prev-next-area">
+<a class="left-prev" href="../modules/15_quantization/ABOUT.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../modules/17_memoization/ABOUT.html" title="next page">Next Module →</a>
+</div>
 </section>
 </section>
 
@@ -624,7 +940,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">15. Quantization</p>
+        <p class="prev-next-title">15. Quantization - Reduced Precision for Efficiency</p>
       </div>
     </a>
     <a class="right-next"
@@ -632,7 +948,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">17. Memoization</p>
+        <p class="prev-next-title">17. Memoization - Computational Reuse for Inference</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -654,20 +970,35 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-techniques">Core Techniques</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparsity-measurement">Sparsity Measurement</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude-based-pruning-unstructured">Magnitude-Based Pruning (Unstructured)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structured-pruning-hardware-friendly">Structured Pruning (Hardware-Friendly)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-distillation">Knowledge Distillation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-rank-approximation">Low-Rank Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-compression-pipeline">Complete Compression Pipeline</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives">Where This Code Lives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compression-theory-foundations">Compression Theory Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics-and-trade-offs">Performance Characteristics and Trade-offs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
   </nav></div>
 

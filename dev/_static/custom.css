@@ -1,3 +1,63 @@
+/* ============================================
+   TinyTorch Design System - ML Systems Education
+   ============================================ */
+
+/* Color Variables - ML Systems Theme */
+:root {
+    /* Primary Brand Colors */
+    --tt-primary-blue: #1e3a8a;
+    --tt-primary-blue-light: #3b82f6;
+    --tt-primary-blue-lighter: #60a5fa;
+
+    /* Fire Gradient (Tagline) */
+    --tt-fire-red: #E74C3C;
+    --tt-fire-orange: #E67E22;
+    --tt-fire-yellow: #F39C12;
+
+    /* Tier Colors - Learning Journey */
+    --tt-foundation-bg: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    --tt-foundation-border: #1976d2;
+    --tt-foundation-text: #0d47a1;
+    --tt-foundation-text-light: #1565c0;
+
+    --tt-architecture-bg: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    --tt-architecture-border: #7b1fa2;
+    --tt-architecture-text: #4a148c;
+    --tt-architecture-text-light: #6a1b9a;
+
+    --tt-optimization-bg: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    --tt-optimization-border: #f57c00;
+    --tt-optimization-text: #e65100;
+    --tt-optimization-text-light: #ef6c00;
+
+    --tt-olympics-bg: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+    --tt-olympics-border: #c2185b;
+    --tt-olympics-text: #880e4f;
+    --tt-olympics-text-light: #ad1457;
+
+    /* Semantic Colors */
+    --tt-text-primary: #1f2937;
+    --tt-text-secondary: #374151;
+    --tt-text-muted: #6b7280;
+
+    /* Spacing System */
+    --tt-space-xs: 0.5rem;
+    --tt-space-sm: 0.75rem;
+    --tt-space-md: 1rem;
+    --tt-space-lg: 1.5rem;
+    --tt-space-xl: 2rem;
+    --tt-space-2xl: 3rem;
+
+    /* Border Radius */
+    --tt-radius-sm: 0.5rem;
+    --tt-radius-md: 0.75rem;
+
+    /* Shadows */
+    --tt-shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --tt-shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --tt-shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+
 /* Mermaid diagram styling - remove grey backgrounds ONLY from Mermaid containers */
 pre.mermaid {
     background: transparent !important;

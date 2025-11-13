@@ -221,11 +221,12 @@ window.addEventListener("load", () => mermaid.run());
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
@@ -239,6 +240,7 @@ window.addEventListener("load", () => mermaid.run());
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
 </ul>
 
@@ -452,13 +454,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-journey">Your Learning Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-tier-learning-path">Four-Tier Learning Path</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recreate-70-years-of-ml-history">Recreate 70 Years of ML History</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-build-use-reflect-approach">The Build → Use → Reflect Approach</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-path">Start Your Path</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-resources">Essential Resources</a></li>
 </ul>
             </nav>
@@ -473,70 +473,55 @@ document.write(`
                   
   <section id="tinytorch-build-ml-systems-from-scratch">
 <h1>TinyTorch: Build ML Systems from Scratch<a class="headerlink" href="#tinytorch-build-ml-systems-from-scratch" title="Permalink to this heading">#</a></h1>
-<div style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: white; padding: 3rem 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
-<h2 style="color: white; font-size: 2.5rem; margin: 0 0 1rem 0; font-weight: 700;">
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
-<p style="font-size: 1.3rem; margin: 0 0 2rem 0; opacity: 0.95;">
-Implement every component of a neural network framework yourself—from tensors to transformers to production optimization—and understand exactly how modern ML systems work.
+<p style="text-align: center; font-size: 1.2rem; margin: 0 auto 2rem auto; max-width: 800px; color: #374151;">
+Build a complete neural network framework from scratch—tensors to transformers—and understand how ML systems really work.
 </p>
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0; text-align: center;">
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">95%+</div>
-    <div style="opacity: 0.9;">MNIST Accuracy</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Your neural networks</div>
-  </div>
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">75%+</div>
-    <div style="opacity: 0.9;">CIFAR-10 Accuracy</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Your CNNs</div>
-  </div>
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
-    <div style="opacity: 0.9;">Your Code</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Every implementation</div>
-  </div>
-</div>
-<div style="margin-top: 2rem;">
-  <a href="quickstart-guide.html" style="display: inline-block; background: white; color: #1e3a8a; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
+<div style="text-align: center; margin: 2rem 0;">
+  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
-  <a href="chapters/00-introduction.html" style="display: inline-block; background: transparent; color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
-    Learn More
-  </a>
+</div>
+<section id="four-tier-learning-path">
+<h2>Four-Tier Learning Path<a class="headerlink" href="#four-tier-learning-path" title="Permalink to this heading">#</a></h2>
+<p>Build ML systems understanding through progressive tiers—from mathematical foundations to competition-ready optimization.</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0 2.5rem 0; max-width: 900px;">
+<div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #1976d2;">
+<h3 style="margin: 0 0 0.5rem 0; color: #0d47a1; font-size: 1.1rem; font-weight: 600;">Foundation (01-07)</h3>
+<p style="margin: 0; color: #1565c0; font-size: 0.9rem; line-height: 1.5;">Tensors, autograd, training loops</p>
+</div>
+<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #7b1fa2;">
+<h3 style="margin: 0 0 0.5rem 0; color: #4a148c; font-size: 1.1rem; font-weight: 600;">Architecture (08-13)</h3>
+<p style="margin: 0; color: #6a1b9a; font-size: 0.9rem; line-height: 1.5;">Data loading, CNNs, transformers</p>
+</div>
+<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #f57c00;">
+<h3 style="margin: 0 0 0.5rem 0; color: #e65100; font-size: 1.1rem; font-weight: 600;">Optimization (14-19)</h3>
+<p style="margin: 0; color: #ef6c00; font-size: 0.9rem; line-height: 1.5;">Profiling, quantization, benchmarking</p>
+</div>
+<div style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #c2185b;">
+<h3 style="margin: 0 0 0.5rem 0; color: #880e4f; font-size: 1.1rem; font-weight: 600;">Torch Olympics (20)</h3>
+<p style="margin: 0; color: #ad1457; font-size: 0.9rem; line-height: 1.5;">Compete in ML systems challenges</p>
 </div>
 </div>
-<section id="your-learning-journey">
-<h2>Your Learning Journey<a class="headerlink" href="#your-learning-journey" title="Permalink to this heading">#</a></h2>
-<p>Build a complete ML systems framework through three progressive tiers—from mathematical foundations to production optimization—and prove your mastery through historically significant milestones.</p>
-<pre  class="mermaid">
-        graph TD
-    subgraph Foundation[&quot;Foundation Tier (01-07)&quot;]
-        F[&quot;Build Mathematical Infrastructure&lt;br/&gt;Tensors → Autograd → Training&lt;br/&gt;&lt;br/&gt;Achieve: 95%+ MNIST Accuracy&quot;]
-    end
-
-    subgraph Architecture[&quot;Architecture Tier (08-13)&quot;]
-        A[&quot;Implement Modern AI&lt;br/&gt;DataLoader → CNNs → Transformers&lt;br/&gt;&lt;br/&gt;Achieve: 75%+ CIFAR-10, Text Generation&quot;]
-    end
-
-    subgraph Optimization[&quot;Optimization Tier (14-19)&quot;]
-        O[&quot;Deploy Production Systems&lt;br/&gt;Profile → Quantize → Benchmark&lt;br/&gt;&lt;br/&gt;Achieve: Sub-100ms Inference&quot;]
-    end
-
-    subgraph Capstone[&quot;Capstone (20)&quot;]
-        C[&quot;Complete Integration&lt;br/&gt;MLPerf Competition&lt;br/&gt;&lt;br/&gt;Compete on Real Hardware&quot;]
-    end
-
-    F --&gt; A
-    A --&gt; O
-    O --&gt; C
-
-    style Foundation fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    style Architecture fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style Optimization fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    style Capstone fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    </pre><p><strong>Browse complete module details in the sidebar navigation</strong> — organized by tier with clear learning objectives and implementation guides.</p>
-<p><strong>See <span class="xref myst">Complete Course Structure</span></strong> for detailed tier breakdowns, time estimates, and career connections.</p>
+<p>Each tier unlocks <strong>historical milestones</strong> where you validate implementations by recreating breakthrough moments in ML history. <strong><span class="xref myst">View milestone demos</span></strong> to see what you’ll build.</p>
+<p><strong><span class="xref myst">Complete course structure</span></strong> • <strong><span class="xref myst">Daily workflow guide</span></strong> • <strong><span class="xref myst">Join the community</span></strong></p>
+</section>
+<section id="recreate-70-years-of-ml-history">
+<h2>Recreate 70 Years of ML History<a class="headerlink" href="#recreate-70-years-of-ml-history" title="Permalink to this heading">#</a></h2>
+<p>As you progress through tiers, you’ll validate your work by recreating historically significant breakthroughs:</p>
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.75rem 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+<div style="max-width: 650px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">
+<p><strong>1957 — Perceptron</strong> • First trainable neural network</p>
+<p><strong>1969 — XOR Crisis</strong> • Solved with hidden layers</p>
+<p><strong>1986 — Backpropagation</strong> • Multi-layer learning</p>
+<p><strong>1998 — CNNs</strong> • Spatial intelligence</p>
+<p><strong>2017 — Transformers</strong> • Attention mechanisms</p>
+<p><strong>2018 — Systems</strong> • Performance optimization</p>
+</div>
+</div>
+<p>From Rosenblatt’s 1957 Perceptron to modern systems optimization—build and validate every breakthrough yourself. <strong><span class="xref myst">Explore milestones</span></strong></p>
 </section>
 <section id="why-build-instead-of-use">
 <h2>Why Build Instead of Use?<a class="headerlink" href="#why-build-instead-of-use" title="Permalink to this heading">#</a></h2>
@@ -563,7 +548,7 @@ Implement every component of a neural network framework yourself—from tensors 
 <p><strong>Advantage</strong>: You understand memory layouts, gradient flows, and performance bottlenecks because you implemented them.</p>
 </div>
 </div>
-<p><strong>Systems Thinking</strong>: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to production reality.</p>
+<p><strong>Systems Thinking</strong>: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to systems understanding.</p>
 <p><strong>See <span class="xref myst">Course Philosophy</span></strong> for the full origin story and pedagogical approach.</p>
 </section>
 <section id="the-build-use-reflect-approach">
@@ -595,26 +580,6 @@ Implement every component of a neural network framework yourself—from tensors 
 <li><p>Transition from ML user to ML systems engineer</p></li>
 </ul>
 <p><strong>Prerequisites</strong>: Python programming and basic linear algebra (matrix multiplication). No prior ML framework experience required—you’ll build your own.</p>
-<section id="start-your-path">
-<h3>Start Your Path<a class="headerlink" href="#start-your-path" title="Permalink to this heading">#</a></h3>
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
-<div style="background: #eff6ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #3b82f6;">
-<h4 style="margin: 0 0 1rem 0; color: #1e40af;">Quick Start</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Get hands-on immediately</p>
-<a href="quickstart-guide.html" style="color: #1e40af; font-weight: 600; text-decoration: none;">15-Minute Setup →</a>
-</div>
-<div style="background: #faf5ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #9333ea;">
-<h4 style="margin: 0 0 1rem 0; color: #6b21a8;">Learn More</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Understand the approach</p>
-<a href="chapters/00-introduction.html" style="color: #6b21a8; font-weight: 600; text-decoration: none;">Course Philosophy →</a>
-</div>
-<div style="background: #f0fdfa; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #14b8a6;">
-<h4 style="margin: 0 0 1rem 0; color: #115e59;">For Instructors</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Classroom integration</p>
-<a href="usage-paths/classroom-use.html" style="color: #115e59; font-weight: 600; text-decoration: none;">Teaching Guide →</a>
-</div>
-</div>
-</section>
 </section>
 <section id="essential-resources">
 <h2>Essential Resources<a class="headerlink" href="#essential-resources" title="Permalink to this heading">#</a></h2>
@@ -632,10 +597,6 @@ Implement every component of a neural network framework yourself—from tensors 
 <li><p><strong><a class="reference internal" href="testing-framework.html"><span class="doc std std-doc">Testing Framework</span></a></strong> — Quality assurance and validation</p></li>
 <li><p><strong><a class="reference internal" href="community.html"><span class="doc std std-doc">Community</span></a></strong> — Connect with other builders</p></li>
 </ul>
-<hr class="docutils" />
-<p><strong>Ready to build?</strong> Start with the <span class="xref myst">Quick Start Guide</span> to go from zero to building neural networks in 15 minutes.</p>
-<p><strong>Want context first?</strong> Read the <span class="xref myst">Course Introduction</span> to understand the origin story, philosophy, and complete learning progression.</p>
-<p><strong>Teaching a course?</strong> Review the <span class="xref myst">Instructor Guide</span> for classroom integration, automated grading, and curriculum planning.</p>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -710,13 +671,11 @@ Implement every component of a neural network framework yourself—from tensors 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-journey">Your Learning Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-tier-learning-path">Four-Tier Learning Path</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recreate-70-years-of-ml-history">Recreate 70 Years of ML History</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-build-use-reflect-approach">The Build → Use → Reflect Approach</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-path">Start Your Path</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-this-for-you">Is This For You?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-resources">Essential Resources</a></li>
 </ul>
   </nav></div>

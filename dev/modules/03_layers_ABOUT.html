@@ -68,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="04. Losses" href="04_losses_ABOUT.html" />
+    <link rel="next" title="04. Loss Functions" href="04_losses_ABOUT.html" />
     <link rel="prev" title="02. Activations" href="02_activations_ABOUT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -212,11 +212,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. MLPerf® Edu Competition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
@@ -230,6 +231,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -445,32 +447,33 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-layer-the-neural-network-workhorse">Linear Layer: The Neural Network Workhorse</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-preventing-overfitting">Dropout: Preventing Overfitting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-composition-building-neural-networks">Layer Composition: Building Neural Networks</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-layer-implementation">Core Layer Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dense-layer-implementation">Dense Layer Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activation-layer-integration">Activation Layer Integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-development">Inline Testing &amp; Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-network-building-blocks">Neural Network Building Blocks</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-patterns">Implementation Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-design-patterns">Architecture Design Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -484,102 +487,152 @@ document.write(`
                   
   <section id="layers">
 <h1>03. Layers<a class="headerlink" href="#layers" title="Permalink to this heading">#</a></h1>
-<p><strong>🏗️ FOUNDATION TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
+<p><strong>FOUNDATION TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
-<p>Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.</p>
+<p>Build the fundamental building blocks that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, with learnable parameters that define the transformation. You’ll implement Linear layers (the workhorse of deep learning) and Dropout regularization, understanding how these simple abstractions enable arbitrarily complex architectures through composition.</p>
 </section>
 <section id="learning-objectives">
 <h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
-<p>By completing this module, you will be able to:</p>
-<ol class="arabic simple">
-<li><p><strong>Understand layers as mathematical functions</strong> that transform tensors through well-defined operations</p></li>
-<li><p><strong>Implement Dense layers</strong> using matrix multiplication and bias addition (<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">Wx</span> <span class="pre">+</span> <span class="pre">b</span></code>)</p></li>
-<li><p><strong>Integrate activation functions</strong> to combine linear transformations with nonlinearity</p></li>
-<li><p><strong>Compose building blocks</strong> by chaining layers into complete neural network architectures</p></li>
-<li><p><strong>Debug layer implementations</strong> using shape analysis and mathematical properties</p></li>
-</ol>
-</section>
-<section id="why-this-matters">
-<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
-<section id="production-context">
-<h3>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h3>
-<p>Layers are the building blocks of every neural network in production:</p>
+<p>By the end of this module, you will be able to:</p>
 <ul class="simple">
-<li><p><strong>Image Recognition</strong> uses Dense layers for final classification (ResNet, EfficientNet)</p></li>
-<li><p><strong>Language Models</strong> compose thousands of transformer layers (GPT, BERT, Claude)</p></li>
-<li><p><strong>Recommendation Systems</strong> stack Dense layers to learn user-item interactions</p></li>
-<li><p><strong>Autonomous Systems</strong> chain convolutional and Dense layers for perception</p></li>
+<li><p><strong>Understand Layer Abstraction</strong>: Recognize layers as composable functions with parameters, mirroring PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> design pattern</p></li>
+<li><p><strong>Implement Linear Transformations</strong>: Build <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code> with proper Xavier initialization to prevent gradient vanishing/explosion</p></li>
+<li><p><strong>Master Parameter Management</strong>: Track trainable parameters using <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> method for optimizer integration</p></li>
+<li><p><strong>Build Dropout Regularization</strong>: Implement training/inference mode switching with proper scaling to prevent overfitting</p></li>
+<li><p><strong>Analyze Memory Scaling</strong>: Calculate parameter counts and understand how network architecture affects memory footprint</p></li>
 </ul>
 </section>
-<section id="historical-context">
-<h3>Historical Context<a class="headerlink" href="#historical-context" title="Permalink to this heading">#</a></h3>
-<p>The evolution of layer abstractions enabled modern deep learning:</p>
-<ul class="simple">
-<li><p><strong>1943</strong>: McCulloch-Pitts neuron - first artificial neuron model</p></li>
-<li><p><strong>1958</strong>: Rosenblatt’s Perceptron - single-layer learning algorithm</p></li>
-<li><p><strong>1986</strong>: Backpropagation - enabled training multi-layer networks</p></li>
-<li><p><strong>2012</strong>: AlexNet - proved deep layers (8 layers) revolutionize computer vision</p></li>
-<li><p><strong>2017</strong>: Transformers - layer composition scaled to 96+ layers in modern LLMs</p></li>
-</ul>
-</section>
-</section>
-<section id="build-use-understand">
-<h2>Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Permalink to this heading">#</a></h2>
-<p>This module follows the foundational pedagogy for building blocks:</p>
+<section id="build-use-reflect">
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Build</strong>: Implement Dense layer class with initialization, forward pass, and parameter management</p></li>
-<li><p><strong>Use</strong>: Transform data through layer operations and compose multi-layer networks</p></li>
-<li><p><strong>Understand</strong>: Analyze how layer composition creates expressivity and why architecture design matters</p></li>
+<li><p><strong>Build</strong>: Implement Linear and Dropout layer classes with proper initialization, forward passes, and parameter tracking</p></li>
+<li><p><strong>Use</strong>: Compose layers manually to create multi-layer networks for MNIST digit classification</p></li>
+<li><p><strong>Reflect</strong>: Analyze memory scaling, computational complexity, and the trade-offs between model capacity and efficiency</p></li>
 </ol>
 </section>
 <section id="implementation-guide">
 <h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
-<section id="core-layer-implementation">
-<h3>Core Layer Implementation<a class="headerlink" href="#core-layer-implementation" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dense layer: fundamental building block</span>
-<span class="n">layer</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Shape transformation: (1, 3) → (1, 2)</span>
+<section id="linear-layer-the-neural-network-workhorse">
+<h3>Linear Layer: The Neural Network Workhorse<a class="headerlink" href="#linear-layer-the-neural-network-workhorse" title="Permalink to this heading">#</a></h3>
+<p>The Linear layer implements the fundamental transformation <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>
 
-<span class="c1"># With activation functions</span>
-<span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
-<span class="n">activated</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># Apply nonlinearity</span>
+<span class="c1"># Create a linear transformation: 784 input features → 256 output features</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
 
-<span class="c1"># Chaining operations</span>
-<span class="n">layer1</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>  <span class="c1"># Image → hidden</span>
-<span class="n">layer2</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>   <span class="c1"># Hidden → classes</span>
-<span class="n">activation</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="c1"># Forward pass: transform input batch</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>  <span class="c1"># 32 images, 784 pixels each</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Output: (32, 256)</span>
 
-<span class="c1"># Forward pass composition</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="o">...</span><span class="p">]])</span>  <span class="c1"># Input data</span>
-<span class="n">h1</span> <span class="o">=</span> <span class="n">activation</span><span class="p">(</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>           <span class="c1"># First transformation</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">layer2</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>                  <span class="c1"># Final prediction</span>
+<span class="c1"># Access trainable parameters</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weight shape: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (784, 256)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bias shape: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>      <span class="c1"># (256,)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total params: </span><span class="si">{</span><span class="mi">784</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">256</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>     <span class="c1"># 200,960 parameters</span>
+</pre></div>
+</div>
+<p><strong>Key Design Decisions:</strong></p>
+<ul class="simple">
+<li><p><strong>Xavier Initialization</strong>: Weights scaled by <code class="docutils literal notranslate"><span class="pre">sqrt(1/in_features)</span></code> to maintain gradient flow through deep networks</p></li>
+<li><p><strong>Parameter Tracking</strong>: <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> method returns list of tensors with <code class="docutils literal notranslate"><span class="pre">requires_grad=True</span></code> for optimizer compatibility</p></li>
+<li><p><strong>Bias Handling</strong>: Optional bias parameter (<code class="docutils literal notranslate"><span class="pre">bias=False</span></code> for architectures like batch normalization)</p></li>
+</ul>
+</section>
+<section id="dropout-preventing-overfitting">
+<h3>Dropout: Preventing Overfitting<a class="headerlink" href="#dropout-preventing-overfitting" title="Permalink to this heading">#</a></h3>
+<p>Dropout randomly zeros elements during training to force network robustness:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropout</span>
+
+<span class="c1"># Create dropout with 50% probability</span>
+<span class="n">dropout</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+
+<span class="c1"># Training mode: randomly zero elements and scale by 1/(1-p)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Example output: [2.0, 0.0, 6.0, 0.0] - survivors scaled by 2.0</span>
+
+<span class="c1"># Inference mode: pass through unchanged</span>
+<span class="n">y_eval</span> <span class="o">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Output: [1.0, 2.0, 3.0, 4.0] - no dropout applied</span>
+</pre></div>
+</div>
+<p><strong>Why Inverted Dropout?</strong>
+During training, surviving elements are scaled by <code class="docutils literal notranslate"><span class="pre">1/(1-p)</span></code> so that expected values match during inference. This eliminates the need to scale during evaluation, making deployment simpler.</p>
+</section>
+<section id="layer-composition-building-neural-networks">
+<h3>Layer Composition: Building Neural Networks<a class="headerlink" href="#layer-composition-building-neural-networks" title="Permalink to this heading">#</a></h3>
+<p>Layers compose through sequential application - no container needed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>
+
+<span class="c1"># Build 3-layer MNIST classifier manually</span>
+<span class="n">layer1</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">activation1</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">dropout1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">layer2</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">activation2</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">dropout2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">layer3</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Forward pass: explicit composition shows data flow</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">activation1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">dropout1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layer2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">activation2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">dropout2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layer3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="c1"># Process batch</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>  <span class="c1"># 32 MNIST images</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Shape: (32, 10) - class logits</span>
+
+<span class="c1"># Collect all parameters for training</span>
+<span class="n">all_params</span> <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="o">+</span> <span class="n">layer2</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="o">+</span> <span class="n">layer3</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trainable parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_params</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 6 tensors (3 weights, 3 biases)</span>
 </pre></div>
 </div>
 </section>
-<section id="dense-layer-implementation">
-<h3>Dense Layer Implementation<a class="headerlink" href="#dense-layer-implementation" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Mathematical foundation</strong>: Linear transformation <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">Wx</span> <span class="pre">+</span> <span class="pre">b</span></code></p></li>
-<li><p><strong>Weight initialization</strong>: Xavier/Glorot uniform initialization for stable gradients</p></li>
-<li><p><strong>Bias handling</strong>: Optional bias terms for translation invariance</p></li>
-<li><p><strong>Shape management</strong>: Automatic handling of batch dimensions and matrix operations</p></li>
-</ul>
 </section>
-<section id="activation-layer-integration">
-<h3>Activation Layer Integration<a class="headerlink" href="#activation-layer-integration" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>ReLU integration</strong>: Most common activation for hidden layers</p></li>
-<li><p><strong>Sigmoid integration</strong>: Probability outputs for binary classification</p></li>
-<li><p><strong>Tanh integration</strong>: Zero-centered outputs for better optimization</p></li>
-<li><p><strong>Composition patterns</strong>: Standard ways to combine layers and activations</p></li>
-</ul>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you’ve completed the prerequisite modules:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify Module 01 (Tensor) is complete</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+
+<span class="c1"># Verify Module 02 (Activations) is complete</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
+</pre></div>
+</div>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/03_layers/layers_dev.py</span></code></p></li>
+<li><p><strong>Implement Linear layer</strong>: Build <code class="docutils literal notranslate"><span class="pre">__init__</span></code> with Xavier initialization, <code class="docutils literal notranslate"><span class="pre">forward</span></code> with matrix multiplication, and <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> method</p></li>
+<li><p><strong>Add Dropout layer</strong>: Implement training/inference mode switching with proper mask generation and scaling</p></li>
+<li><p><strong>Test layer composition</strong>: Verify manual composition of multi-layer networks with mixed layer types</p></li>
+<li><p><strong>Analyze systems behavior</strong>: Run memory analysis to understand parameter scaling with network size</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">03</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">layers</span></code></p></li>
+</ol>
 </section>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
-<p>Run the complete test suite to verify your implementation:</p>
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify layer functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
 
@@ -587,30 +640,43 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>layers<span class="w"> </span>-v
 </pre></div>
 </div>
+</section>
 <section id="test-coverage-areas">
 <h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>✅ <strong>Layer Functionality</strong>: Verify Dense layers perform correct linear transformations</p></li>
-<li><p>✅ <strong>Weight Initialization</strong>: Ensure proper weight initialization for training stability</p></li>
-<li><p>✅ <strong>Shape Preservation</strong>: Confirm layers handle batch dimensions correctly</p></li>
-<li><p>✅ <strong>Activation Integration</strong>: Test seamless combination with activation functions</p></li>
-<li><p>✅ <strong>Network Composition</strong>: Verify layers can be chained into complete networks</p></li>
+<li><p>✅ <strong>Linear Layer Functionality</strong>: Verify <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code> computation with correct matrix dimensions and broadcasting</p></li>
+<li><p>✅ <strong>Xavier Initialization</strong>: Ensure weights scaled by <code class="docutils literal notranslate"><span class="pre">sqrt(1/in_features)</span></code> for gradient stability</p></li>
+<li><p>✅ <strong>Parameter Management</strong>: Confirm <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> returns all trainable tensors with <code class="docutils literal notranslate"><span class="pre">requires_grad=True</span></code></p></li>
+<li><p>✅ <strong>Dropout Training Mode</strong>: Validate probabilistic masking with correct <code class="docutils literal notranslate"><span class="pre">1/(1-p)</span></code> scaling</p></li>
+<li><p>✅ <strong>Dropout Inference Mode</strong>: Verify passthrough behavior without modification during evaluation</p></li>
+<li><p>✅ <strong>Layer Composition</strong>: Test multi-layer forward passes with mixed layer types</p></li>
+<li><p>✅ <strong>Edge Cases</strong>: Handle empty batches, single samples, no-bias configurations, and probability boundaries</p></li>
 </ul>
 </section>
-<section id="inline-testing-development">
-<h3>Inline Testing &amp; Development<a class="headerlink" href="#inline-testing-development" title="Permalink to this heading">#</a></h3>
-<p>The module includes educational feedback during development:</p>
+<section id="inline-testing-validation">
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive inline tests with educational feedback:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🔬 Unit Test: Dense layer functionality...
-✅ Dense layer computes y = Wx + b correctly
-✅ Weight initialization within expected range
-✅ Output shape matches expected dimensions
-📈 Progress: Dense Layer ✓
+🔬 Unit Test: Linear Layer...
+✅ Linear layer computes y = xW + b correctly
+✅ Weight initialization within expected Xavier range
+✅ Bias initialized to zeros
+✅ Output shape matches expected dimensions (32, 256)
+✅ Parameter list contains weight and bias tensors
+📈 Progress: Linear Layer ✓
 
-# Integration testing
-🔬 Unit Test: Layer composition...
-✅ Multiple layers chain correctly
-✅ Activations integrate seamlessly
+🔬 Unit Test: Dropout Layer...
+✅ Inference mode passes through unchanged
+✅ Training mode zeros ~50% of elements
+✅ Survivors scaled by 1/(1-p) = 2.0
+✅ Zero dropout (p=0.0) preserves all values
+✅ Full dropout (p=1.0) zeros everything
+📈 Progress: Dropout Layer ✓
+
+🔬 Integration Test: Multi-layer Network...
+✅ 3-layer network processes batch: (32, 784) → (32, 10)
+✅ Parameter count: 235,146 parameters across 6 tensors
+✅ All parameters have requires_grad=True
 📈 Progress: Layer Composition ✓
 </pre></div>
 </div>
@@ -618,24 +684,30 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <section id="manual-testing-examples">
 <h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">layers_dev</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dense</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">activations_dev</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>
 
-<span class="c1"># Test basic layer functionality</span>
-<span class="n">layer</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="c1"># Test Linear layer forward pass</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>  <span class="c1"># Single MNIST image</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Output shape: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> → Output: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (1, 784) → (1, 256)</span>
 
-<span class="c1"># Test layer composition</span>
-<span class="n">layer1</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="n">layer2</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="c1"># Test parameter counting</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span>
+<span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters: </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 200,960</span>
 
-<span class="c1"># Forward pass</span>
-<span class="n">h1</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">layer2</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final output: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Test Dropout behavior</span>
+<span class="n">dropout</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)))</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y_eval</span> <span class="o">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training: ~</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> survived&quot;</span><span class="p">)</span>  <span class="c1"># ~50</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inference: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">y_eval</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> survived&quot;</span><span class="p">)</span>   <span class="c1"># 100</span>
+
+<span class="c1"># Test composition</span>
+<span class="n">net</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">layer3</span><span class="p">(</span><span class="n">dropout2</span><span class="p">(</span><span class="n">activation2</span><span class="p">(</span><span class="n">layer2</span><span class="p">(</span><span class="n">dropout1</span><span class="p">(</span><span class="n">activation1</span><span class="p">(</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">)))))))</span>
 </pre></div>
 </div>
 </section>
@@ -645,44 +717,45 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <section id="real-world-applications">
 <h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Computer Vision</strong>: Dense layers process flattened image features in CNNs (like VGG, ResNet final layers)</p></li>
-<li><p><strong>Natural Language Processing</strong>: Dense layers transform word embeddings in transformers and RNNs</p></li>
-<li><p><strong>Recommendation Systems</strong>: Dense layers combine user and item features for preference prediction</p></li>
-<li><p><strong>Scientific Computing</strong>: Dense layers approximate complex functions in physics simulations and engineering</p></li>
+<li><p><strong>Computer Vision</strong>: How do Linear layers in ResNet-50’s final classification head transform 2048 feature maps to 1000 class logits? What determines this bottleneck layer’s size?</p></li>
+<li><p><strong>Language Models</strong>: GPT-3 uses Linear layers with 12,288 input features. How much memory do these layers consume, and why does this limit model deployment?</p></li>
+<li><p><strong>Recommendation Systems</strong>: Netflix uses multi-layer networks with Dropout. How does <code class="docutils literal notranslate"><span class="pre">p=0.5</span></code> affect training time vs model accuracy on sparse user-item interactions?</p></li>
+<li><p><strong>Edge Deployment</strong>: A mobile CNN has 5 Linear layers totaling 2MB. How do you decide which layers to quantize or prune when targeting 500KB model size?</p></li>
 </ul>
 </section>
 <section id="mathematical-foundations">
 <h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Linear Transformation</strong>: <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">Wx</span> <span class="pre">+</span> <span class="pre">b</span></code> where W is the weight matrix and b is the bias vector</p></li>
-<li><p><strong>Matrix Multiplication</strong>: Efficient batch processing through vectorized operations</p></li>
-<li><p><strong>Weight Initialization</strong>: Xavier/Glorot initialization prevents vanishing/exploding gradients</p></li>
-<li><p><strong>Function Composition</strong>: Networks as nested function calls: <code class="docutils literal notranslate"><span class="pre">f3(f2(f1(x)))</span></code></p></li>
+<li><p><strong>Xavier Initialization</strong>: Why does <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">sqrt(1/fan_in)</span></code> preserve gradient variance through layers? What happens in a 20-layer network without proper initialization?</p></li>
+<li><p><strong>Matrix Multiplication Complexity</strong>: A Linear(1024, 1024) layer with batch size 128 performs how many FLOPs? How does this compare to a Dropout layer on the same tensor?</p></li>
+<li><p><strong>Dropout Mathematics</strong>: During training with <code class="docutils literal notranslate"><span class="pre">p=0.5</span></code>, what’s the expected value of each element? Why must we scale by <code class="docutils literal notranslate"><span class="pre">1/(1-p)</span></code> to match inference behavior?</p></li>
+<li><p><strong>Parameter Growth</strong>: If you double the hidden layer size from 256 to 512, how many times more parameters do you have in Linear(784, hidden) + Linear(hidden, 10)?</p></li>
 </ul>
 </section>
-<section id="neural-network-building-blocks">
-<h3>Neural Network Building Blocks<a class="headerlink" href="#neural-network-building-blocks" title="Permalink to this heading">#</a></h3>
+<section id="architecture-design-patterns">
+<h3>Architecture Design Patterns<a class="headerlink" href="#architecture-design-patterns" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Modularity</strong>: Layers as reusable components that can be combined in different ways</p></li>
-<li><p><strong>Standardized Interface</strong>: All layers follow the same input/output pattern for easy composition</p></li>
-<li><p><strong>Shape Consistency</strong>: Automatic handling of batch dimensions and shape transformations</p></li>
-<li><p><strong>Nonlinearity</strong>: Activation functions between layers enable learning of complex patterns</p></li>
+<li><p><strong>Layer Width vs Depth</strong>: A 784→512→10 network vs 784→256→256→10 - which has more parameters? Which typically generalizes better and why?</p></li>
+<li><p><strong>Dropout Placement</strong>: Should you place Dropout before or after activation functions? What’s the difference between <code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">ReLU</span> <span class="pre">→</span> <span class="pre">Dropout</span></code> vs <code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">Dropout</span> <span class="pre">→</span> <span class="pre">ReLU</span></code>?</p></li>
+<li><p><strong>Bias Necessity</strong>: When can you safely use <code class="docutils literal notranslate"><span class="pre">bias=False</span></code>? How does batch normalization (Module 09) interact with bias terms?</p></li>
+<li><p><strong>Composition Philosophy</strong>: We deliberately avoided a Sequential container. What trade-offs do explicit composition and container abstractions make for debugging vs convenience?</p></li>
 </ul>
 </section>
-<section id="implementation-patterns">
-<h3>Implementation Patterns<a class="headerlink" href="#implementation-patterns" title="Permalink to this heading">#</a></h3>
+<section id="performance-characteristics">
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Class-based Design</strong>: Layers as objects with state (weights) and behavior (forward pass)</p></li>
-<li><p><strong>Initialization Strategy</strong>: Proper weight initialization for stable training dynamics</p></li>
-<li><p><strong>Error Handling</strong>: Graceful handling of shape mismatches and invalid inputs</p></li>
-<li><p><strong>Testing Philosophy</strong>: Comprehensive testing of mathematical properties and edge cases</p></li>
+<li><p><strong>Memory Hierarchy</strong>: A Linear(4096, 4096) layer has 16M parameters (64MB). Does this fit in L3 cache? How does cache performance affect training speed?</p></li>
+<li><p><strong>Batch Size Scaling</strong>: Measuring throughput from batch_size=1 to 512, why does samples/sec increase but eventually plateau? What’s the bottleneck?</p></li>
+<li><p><strong>Dropout Overhead</strong>: Profiling shows Dropout adds 2% overhead to training time. Where is this cost - mask generation, element-wise multiply, or memory bandwidth?</p></li>
+<li><p><strong>Parameter Memory vs Activation Memory</strong>: In a 100-layer network, which dominates memory usage during training? How does gradient checkpointing address this?</p></li>
 </ul>
 </section>
 </section>
 <section id="ready-to-build">
-<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
-<p>You’re about to build the fundamental building blocks that power every neural network! Dense layers might seem simple, but they’re the workhorses of deep learning—from the final layers of image classifiers to the core components of language models.</p>
-<p>Understanding how these simple linear transformations compose into complex intelligence is one of the most beautiful insights in machine learning. Take your time, understand the mathematics, and enjoy building the foundation of artificial intelligence!</p>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to implement the abstractions that power every neural network in production. Linear layers might seem deceptively simple - just matrix multiplication and bias addition - but this simplicity is the foundation of extraordinary complexity. From ResNet’s 25 million parameters to GPT-3’s 175 billion, every learned transformation ultimately reduces to chains of <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code>.</p>
+<p>Understanding layer composition is crucial for systems thinking. When you see “ResNet-50,” you’ll know exactly how parameter counts scale with depth. When debugging vanishing gradients, you’ll understand why Xavier initialization matters. When deploying to mobile devices, you’ll calculate memory footprints in your head.</p>
+<p>Take your time with this module. Test each component thoroughly. Analyze the memory patterns. Build the intuition for how these simple building blocks compose into intelligence. This is where deep learning becomes real.</p>
 <p>Choose your preferred way to engage with this module:</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
@@ -693,16 +766,16 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/04_layers/layers_dev.ipynb"></a></div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/03_layers/layers_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab  </div>
+⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/04_layers/layers_dev.ipynb"></a></div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -711,7 +784,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/04_layers/layers_dev.py"></a></div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.py"></a></div>
 </div>
 </div>
 </div>
@@ -721,8 +794,8 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 <hr class="docutils" />
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/03_activations.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/05_dense.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../modules/02_activations_ABOUT.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../modules/04_losses_ABOUT.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -771,7 +844,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">04. Losses</p>
+        <p class="prev-next-title">04. Loss Functions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -793,32 +866,33 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-context">Production Context</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-layer-the-neural-network-workhorse">Linear Layer: The Neural Network Workhorse</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-preventing-overfitting">Dropout: Preventing Overfitting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-composition-building-neural-networks">Layer Composition: Building Neural Networks</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-guide">Implementation Guide</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-layer-implementation">Core Layer Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dense-layer-implementation">Dense Layer Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activation-layer-integration">Activation Layer Integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-development">Inline Testing &amp; Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-validation">Inline Testing &amp; Validation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-network-building-blocks">Neural Network Building Blocks</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-patterns">Implementation Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-design-patterns">Architecture Design Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">Ready to Build?</a></li>
 </ul>
   </nav></div>
 
