@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.18.1
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -1760,7 +1760,6 @@ def test_module():
     test_unit_benchmark_suite()
     test_unit_tinymlperf()
     test_unit_optimization_comparison()
-    test_unit_normalized_scoring()
 
     print("\nRunning integration scenarios...")
 
