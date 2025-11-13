@@ -39,7 +39,7 @@ See [The Learning Journey](learning-journey.md) for the complete pedagogical nar
 **1986: MLP** - Multi-class vision
 **1998: CNN** - Spatial intelligence
 **2017: Transformers** - Language generation
-**2018: MLPerf** - Production optimization
+**2018: Torch Olympics** - Production optimization
 
 ### How They Connect
 
@@ -60,7 +60,7 @@ graph TB
         M3["1986: MLP<br/>Multi-class Vision<br/>95%+ MNIST"]
         M4["1998: CNN<br/>Spatial Intelligence<br/>75%+ CIFAR-10"]
         M5["2017: Transformers<br/>Language Generation"]
-        M6["2018: MLPerf<br/>Production Speed"]
+        M6["2018: Torch Olympics<br/>Production Speed"]
     end
 
     A1 --> M1
@@ -90,7 +90,7 @@ graph TB
 | **Act II: Learning (05-07)** | 1969 XOR + 1986 MLP | Your autograd enables training (95%+ MNIST) |
 | **Act III: Data & Scale (08-09)** | 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
 | **Act IV: Language (10-13)** | 2017 Transformers | Your attention generates coherent text |
-| **Act V: Production (14-18)** | 2018 MLPerf | Your optimizations achieve production speed |
+| **Act V: Production (14-18)** | 2018 Torch Olympics | Your optimizations achieve production speed |
 | **Act VI: Integration (19-20)** | Benchmarking + Capstone | Your complete framework competes |
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built works (historical validation). Together, they show you're not just completing exercises - you're building something real.
@@ -107,7 +107,7 @@ timeline
     1986 : MLP Revival : Backpropagation enables deep learning
     1998 : CNN Era : Spatial intelligence for computer vision
     2017 : Transformers : Attention revolutionizes language AI
-    2018 : MLPerf : Production benchmarking and optimization
+    2018 : Torch Olympics : Production benchmarking and optimization
 ```
 
 ### 01. Perceptron (1957) - Rosenblatt
@@ -260,7 +260,7 @@ python 02_vaswani_dialogue.py    # Multi-turn dialogue
 
 ---
 
-### 06. MLPerf Era (2018) - The Optimization Revolution
+### 06. Torch Olympics Era (2018) - The Optimization Revolution
 
 **After Modules 14-18**
 
@@ -268,7 +268,7 @@ python 02_vaswani_dialogue.py    # Multi-turn dialogue
 Profile → Compress → Accelerate
 ```
 
-**The Turning Point**: As models grew larger, MLCommons' MLPerf (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.
+**The Turning Point**: As models grew larger, MLCommons' Torch Olympics (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.
 
 **What You'll Build**:
 - Performance profiling and bottleneck analysis
@@ -365,7 +365,7 @@ Each milestone includes:
 | 03. MLP (1986) | 08 | + Optimizers, Training |
 | 04. CNN (1998) | 09 | + Spatial, DataLoader |
 | 05. Transformer (2017) | 13 | + Tokenization, Embeddings, Attention |
-| 06. MLPerf (2018) | 18 | + Profiling, Quantization, Compression, Memoization, Acceleration |
+| 06. Torch Olympics (2018) | 18 | + Profiling, Quantization, Compression, Memoization, Acceleration |
 
 ### What Each Milestone Proves
 
@@ -380,7 +380,7 @@ Each milestone includes:
 
 After completing milestones, explore:
 
-- **TinyMLPerf Competition**: Optimize your implementations
+- **Torch Olympics Competition**: Optimize your implementations
 - **Leaderboard**: Compare with other students
 - **Capstone Projects**: Build your own ML applications
 - **Research Papers**: Read the original papers for each milestone

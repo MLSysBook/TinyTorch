@@ -227,7 +227,7 @@ You build comprehensive benchmarking tools with precise timing, statistical anal
 
 **Systems Insight**: Benchmarking is a science - proper methodology (warmup, statistical significance, controlling variables) matters as much as the measurements themselves.
 
-**🎯 Act V Achievement**: Production-ready systems competitive in TinyMLPerf benchmarks! Models achieve <100ms inference latency with 4× memory reduction.
+**🎯 Act V Achievement**: Production-ready systems competitive in Torch Olympics benchmarks! Models achieve <100ms inference latency with 4× memory reduction.
 
 **Connection to Act VI**: You have all the pieces - foundation, learning, data, language, optimization. Time to assemble them into a complete AI system.
 

@@ -177,7 +177,7 @@ for batch in dataloader:  # Your data management
 - **Production Performance**: Systems optimized for <100ms inference latency using YOUR profiling tools
 - **Memory Efficiency**: Models compressed to 25% original size with YOUR quantization implementations
 - **Hardware Acceleration**: Kernels achieving 10x speedups through YOUR vectorization techniques
-- **Competition Ready**: TinyMLPerf submissions competitive with industry implementations
+- **Competition Ready**: Torch Olympics submissions competitive with industry implementations
 
 ---
 
@@ -202,7 +202,7 @@ TinyTorch's three-tier structure follows the actual historical progression of ma
 **The Engineering**: Production systems that scale to billions of users
 - **2020s Breakthrough**: Efficient inference enables real-time LLMs (GPT, ChatGPT)
 - **Your Implementation**: Build KV-caching, quantization, and production optimizations
-- **Historical Milestone**: Deploy systems competitive in TinyMLPerf benchmarks
+- **Historical Milestone**: Deploy systems competitive in Torch Olympics benchmarks
 
 **Why This Progression Matters**: You'll understand not just modern AI, but WHY it evolved this way. Each tier builds essential capabilities that inform the next, just like ML history itself.
 
@@ -253,7 +253,7 @@ After each tier, you become the team member who:
 **⚡ Optimization Tier Graduate**:
 - Deploys production systems: "I can get us from 500ms to 50ms inference latency"
 - Leads performance optimization: "Here's our memory bottleneck and my 3-step plan to fix it"
-- Competes at industry scale: "Our optimizations achieve TinyMLPerf benchmark performance"
+- Competes at industry scale: "Our optimizations achieve Torch Olympics benchmark performance"
 
 ---
 
@@ -289,7 +289,7 @@ After each tier, you become the team member who:
 
 **Next Steps**:
 - **New to TinyTorch**: Start with [Quick Start Guide](../quickstart-guide.md) for immediate hands-on experience
-- **Ready to Commit**: Begin [Module 01: Tensor](../../modules/01_tensor/ABOUT.md) to start building
+- **Ready to Commit**: Begin [Module 01: Tensor](../modules/01_tensor_ABOUT.html) to start building
 - **Teaching a Course**: Review [Instructor Guide](../usage-paths/classroom-use.md) for classroom integration
 
 ```{admonition} Your Three-Tier Journey Awaits
@@ -298,7 +298,7 @@ By completing all three tiers, you'll have built a complete ML framework that ri
 
 **🏗️ Foundation Tier Achievement**: 95%+ accuracy on MNIST with YOUR mathematical implementations
 **🏛️ Architecture Tier Achievement**: 75%+ accuracy on CIFAR-10 AND coherent text generation
-**⚡ Optimization Tier Achievement**: Production systems competitive in TinyMLPerf benchmarks
+**⚡ Optimization Tier Achievement**: Production systems competitive in Torch Olympics benchmarks
 
 All using code you wrote yourself, from mathematical first principles to production optimization.
 ```
@@ -398,10 +398,10 @@ All using code you wrote yourself, from mathematical first principles to product
 | **16** | **Compression** | Model optimization | Pruning, distillation, ONNX |
 | **17** | **Memoization** | Memory management | KV-cache for generation |
 | **18** | **Acceleration** | Speed improvements | CUDA kernels, vectorization |
-| **19** | **Benchmarking** | Measurement systems | MLPerf, production monitoring |
+| **19** | **Benchmarking** | Measurement systems | Torch Olympics, production monitoring |
 | **20** | **Capstone** | Full system integration | End-to-end ML pipeline |
 
-**🎯 Tier Milestone**: Build **production-ready systems** competitive in TinyMLPerf benchmarks!
+**🎯 Tier Milestone**: Build **production-ready systems** competitive in Torch Olympics benchmarks!
 
 **Skills Gained**:
 - Profile memory usage and identify bottlenecks

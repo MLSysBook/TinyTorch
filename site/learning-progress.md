@@ -27,7 +27,7 @@ See [Student Workflow](student-workflow.md) for the complete development cycle, 
 
 - Located in `milestones/`
 - Run scripts that use YOUR implementations
-- Recreate ML history (1957 Perceptron → 2018 MLPerf)
+- Recreate ML history (1957 Perceptron → 2018 Torch Olympics)
 
 **Checkpoints (21 total)**: Optional progress tracking
 
@@ -67,7 +67,7 @@ Track your journey through the 20 modules:
 - [ ] **Module 16**: Compression - Pruning techniques
 - [ ] **Module 17**: Memoization - KV-cache
 - [ ] **Module 18**: Acceleration - Batching strategies
-- [ ] **Module 19**: Benchmarking - MLPerf-style comparison
+- [ ] **Module 19**: Benchmarking - Torch Olympics-style comparison
 - [ ] **Module 20**: Competition - Capstone challenge
 
 **📖 See [Quick Start Guide](quickstart-guide.md)** for immediate hands-on experience with your first module.

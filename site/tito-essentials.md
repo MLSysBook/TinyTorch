@@ -184,7 +184,7 @@ tito checkpoint timeline            # Visualize your progress
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Start Your TinyTorch Journey</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">Follow the 2-minute setup and begin building ML systems from scratch</p>
 <a href="quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">2-Minute Setup →</a>
-<a href="learning-progress.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Track Progress →</a>
+<a href="student-workflow.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Student Workflow →</a>
 </div>
 
 ---
