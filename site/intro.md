@@ -1,15 +1,15 @@
-# TinyTorch: Build ML Systems from Scratch
+# TinyTorch: Tensors to Systems
 
 <h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 
 <p style="text-align: center; font-size: 1.2rem; margin: 0 auto 2rem auto; max-width: 800px; color: #374151;">
-Build a complete neural network framework from scratch—tensors to transformers—and understand how ML systems really work.
+Build a complete ML framework from tensors to systems—understand how PyTorch, TensorFlow, and JAX really work.
 </p>
 
 <div style="text-align: center; margin: 2rem 0;">
-  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+  <a href="quickstart-guide" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
 </div>
@@ -42,35 +42,13 @@ Build ML systems understanding through progressive tiers—from mathematical fou
 
 </div>
 
-Each tier unlocks **historical milestones** where you validate implementations by recreating breakthrough moments in ML history. **[View milestone demos](chapters/milestones.html)** to see what you'll build.
+**[Complete course structure](chapters/00-introduction)** • **[Daily workflow guide](student-workflow)** • **[Join the community](community)**
 
-**[Complete course structure](chapters/00-introduction.html)** • **[Daily workflow guide](student-workflow.html)** • **[Join the community](community.html)**
+## Validation Through Milestones
 
-## Recreate 70 Years of ML History
+Validate your implementations with concrete benchmarks—MNIST accuracy, CIFAR-10 performance, transformer text generation. Each milestone proves your code works.
 
-As you progress through tiers, you'll validate your work by recreating historically significant breakthroughs:
-
-<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.75rem 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-
-<div style="max-width: 650px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">
-
-**1957 — Perceptron** • First trainable neural network
-
-**1969 — XOR Crisis** • Solved with hidden layers
-
-**1986 — Backpropagation** • Multi-layer learning
-
-**1998 — CNNs** • Spatial intelligence
-
-**2017 — Transformers** • Attention mechanisms
-
-**2018 — Systems** • Performance optimization
-
-</div>
-
-</div>
-
-From Rosenblatt's 1957 Perceptron to modern systems optimization—build and validate every breakthrough yourself. **[Explore milestones](chapters/milestones.html)**
+**[View milestone requirements](chapters/milestones)** to see the technical benchmarks you'll achieve.
 
 ## Why Build Instead of Use?
 
@@ -108,7 +86,7 @@ output = model(input)
 
 **Systems Thinking**: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to systems understanding.
 
-**See [Course Philosophy](chapters/00-introduction.html)** for the full origin story and pedagogical approach.
+**See [Course Philosophy](chapters/00-introduction)** for the full origin story and pedagogical approach.
 
 ## The Build → Use → Reflect Approach
 
@@ -144,8 +122,8 @@ This approach develops not just coding ability, but systems engineering intuitio
 ## Essential Resources
 
 **Core Documentation**:
-- **[Quick Start Guide](quickstart-guide.html)** — 15-minute setup and first module
-- **[Course Structure](chapters/00-introduction.html)** — Detailed tier breakdowns and learning outcomes
+- **[Quick Start Guide](quickstart-guide)** — 15-minute setup and first module
+- **[Course Structure](chapters/00-introduction)** — Detailed tier breakdowns and learning outcomes
 - **[Student Workflow](student-workflow.md)** — Day-to-day development cycle
 - **[TITO Essentials](tito-essentials.md)** — Complete CLI command reference
 - **[Historical Milestones](chapters/milestones.md)** — Prove your implementations through ML history
