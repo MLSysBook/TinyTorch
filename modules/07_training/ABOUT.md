@@ -1,216 +1,379 @@
 ---
 title: "Training"
-description: "Neural network training loops, loss functions, and metrics"
+description: "Complete training loops with scheduling, gradient clipping, and checkpointing"
 difficulty: "⭐⭐⭐⭐"
-time_estimate: "8-10 hours"
-prerequisites: []
-next_steps: []
-learning_objectives: []
+time_estimate: "6-8 hours"
+prerequisites: ["tensor", "activations", "layers", "losses", "autograd", "optimizers"]
+next_steps: ["dataloader"]
+learning_objectives:
+  - "Implement complete Trainer class orchestrating forward/backward passes, loss computation, and optimization"
+  - "Build CosineSchedule for adaptive learning rate management during training"
+  - "Create gradient clipping utilities to prevent exploding gradients and training instability"
+  - "Design checkpointing system for saving and resuming training state"
+  - "Understand memory overhead, gradient accumulation, and train/eval mode switching"
 ---
 
 # 07. Training
 
-**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 8-10 hours
+**FOUNDATION TIER** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours
 
 ## Overview
 
-Build the complete training pipeline that brings all TinyTorch components together. This capstone module orchestrates data loading, model forward passes, loss computation, backpropagation, and optimization into the end-to-end training workflows that power modern AI systems.
+Build the complete training infrastructure that orchestrates neural network learning end-to-end. This capstone module of the Foundation tier brings together all previous components—tensors, layers, losses, gradients, and optimizers—into production-ready training loops with learning rate scheduling, gradient clipping, and model checkpointing. You'll create the same training patterns that power PyTorch, TensorFlow, and every production ML system.
 
 ## Learning Objectives
 
 By the end of this module, you will be able to:
 
-- **Design complete training architectures**: Orchestrate all ML components into cohesive training systems
-- **Implement essential loss functions**: Build MSE, CrossEntropy, and BinaryCrossEntropy from mathematical foundations
-- **Create evaluation frameworks**: Develop metrics systems for classification, regression, and model performance assessment
-- **Build production training loops**: Implement robust training workflows with validation, logging, and progress tracking
-- **Master training dynamics**: Understand convergence, overfitting, generalization, and optimization in real scenarios
+- **Implement complete Trainer class**: Orchestrate forward passes, loss computation, backpropagation, and parameter updates into cohesive training loops with train/eval mode switching
+- **Build CosineSchedule for adaptive learning rates**: Create learning rate schedulers that start fast for quick convergence, then slow down for fine-tuning, following cosine annealing curves
+- **Create gradient clipping utilities**: Implement global norm gradient clipping to prevent exploding gradients and training instability in deep networks
+- **Design checkpointing system**: Build save/load functionality that preserves complete training state—model parameters, optimizer buffers, scheduler state, and training history
+- **Understand training systems architecture**: Master memory overhead (4-6× model size), gradient accumulation strategies, checkpoint management, and the difference between training and evaluation modes
 
-## Build → Use → Optimize
+## Build → Use → Reflect
 
-This module follows TinyTorch's **Build → Use → Optimize** framework:
+This module follows TinyTorch's **Build → Use → Reflect** framework:
 
-1. **Build**: Implement loss functions, evaluation metrics, and complete training orchestration systems
-2. **Use**: Train end-to-end neural networks on real datasets with full pipeline automation
-3. **Optimize**: Analyze training dynamics, debug convergence issues, and optimize training performance for production
-
-## NEW: Model Checkpointing & Evaluation Tools
-
-### Complete Training with Checkpointing
-This module now includes production features for our north star goal:
-
-```python
-from tinytorch.core.training import Trainer, CrossEntropyLoss, Accuracy
-from tinytorch.core.training import evaluate_model, plot_training_history
-
-# Train with automatic model checkpointing
-trainer = Trainer(model, CrossEntropyLoss(), Adam(lr=0.001), [Accuracy()])
-history = trainer.fit(
-    train_loader,
-    val_dataloader=test_loader,
-    epochs=30,
-    save_best=True,                    # ✅ NEW: Saves best model automatically
-    checkpoint_path='best_model.pkl',  # ✅ NEW: Checkpoint location
-    early_stopping_patience=5          # ✅ NEW: Stop if no improvement
-)
-
-# Load best model after training
-trainer.load_checkpoint('best_model.pkl')
-print(f"✅ Restored best model from epoch {trainer.current_epoch}")
-
-# Evaluate with comprehensive metrics
-results = evaluate_model(model, test_loader)
-print(f"Test Accuracy: {results['accuracy']:.2%}")
-print(f"Confusion Matrix:\n{results['confusion_matrix']}")
-
-# Visualize training progress
-plot_training_history(history)  # Shows loss and accuracy curves
-```
-
-### What's New in This Module
-- ✅ **`save_checkpoint()`/`load_checkpoint()`**: Save and restore model state during training
-- ✅ **`save_best=True`**: Automatically saves model with best validation performance
-- ✅ **`early_stopping_patience`**: Stop training when validation loss stops improving
-- ✅ **`evaluate_model()`**: Comprehensive model evaluation with confusion matrix
-- ✅ **`plot_training_history()`**: Visualize training and validation curves
-- ✅ **`compute_confusion_matrix()`**: Analyze classification errors by class
+1. **Build**: Implement CosineSchedule for learning rate scheduling, clip_grad_norm for gradient stability, and complete Trainer class with checkpointing
+2. **Use**: Train neural networks end-to-end with real optimization dynamics, observe learning rate adaptation, and experiment with gradient accumulation
+3. **Reflect**: Analyze training memory overhead (parameters + gradients + optimizer state), understand when to checkpoint, and compare training strategies across different scenarios
 
 ## Implementation Guide
 
-### Complete Training Pipeline
+### The Training Loop Cycle
+
+Training orchestrates data, forward pass, loss, gradients, and updates in an iterative cycle:
+
+```{mermaid}
+graph LR
+    A[Data Batch] --> B[Forward Pass<br/>Model]
+    B --> C[Loss<br/>Compute]
+    C --> D[Backward Pass<br/>Autograd]
+    D --> E[Optimizer Step<br/>Update θ]
+    E --> F[Next Batch]
+    F --> A
+
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#ffe0b2
+    style E fill:#fce4ec
+    style F fill:#f0fdf4
+```
+
+**Cycle**: Load batch → Forward through model → Compute loss → Backward gradients → Update parameters → Repeat
+
+### CosineSchedule - Adaptive Learning Rate Management
+
+Learning rate scheduling is like adjusting driving speed based on road conditions—start fast on the highway, slow down in neighborhoods for precision. Cosine annealing provides smooth transitions from aggressive learning to fine-tuning:
+
 ```python
-# End-to-end training system
-from tinytorch.core.training import Trainer
-from tinytorch.core.losses import CrossEntropyLoss
-from tinytorch.core.metrics import Accuracy
+class CosineSchedule:
+    """
+    Cosine annealing learning rate schedule.
 
-# Define complete model architecture
-model = Sequential([
-    Dense(784, 128), ReLU(),
-    Dense(128, 64), ReLU(),
-    Dense(64, 10), Softmax()
-])
+    Starts at max_lr, decreases following cosine curve to min_lr.
+    Formula: lr = min_lr + (max_lr - min_lr) * (1 + cos(π*epoch/T)) / 2
+    """
+    def __init__(self, max_lr=0.1, min_lr=0.01, total_epochs=100):
+        self.max_lr = max_lr
+        self.min_lr = min_lr
+        self.total_epochs = total_epochs
 
-# Configure training components
-optimizer = Adam(model.parameters(), learning_rate=0.001)
-loss_fn = CrossEntropyLoss()
-metrics = [Accuracy()]
+    def get_lr(self, epoch: int) -> float:
+        """Get learning rate for current epoch."""
+        if epoch >= self.total_epochs:
+            return self.min_lr
 
-# Create and configure trainer
+        # Cosine annealing: smooth decrease from max to min
+        cosine_factor = (1 + np.cos(np.pi * epoch / self.total_epochs)) / 2
+        return self.min_lr + (self.max_lr - self.min_lr) * cosine_factor
+
+# Usage example
+schedule = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=50)
+print(schedule.get_lr(0))   # 0.1 - fast learning initially
+print(schedule.get_lr(25))  # ~0.05 - gradual slowdown
+print(schedule.get_lr(50))  # 0.001 - fine-tuning at end
+```
+
+### Gradient Clipping - Preventing Training Explosions
+
+Gradient clipping is a speed governor that prevents dangerously large gradients from destroying training progress. Global norm clipping scales all gradients uniformly while preserving their relative magnitudes:
+
+```python
+def clip_grad_norm(parameters: List, max_norm: float = 1.0) -> float:
+    """
+    Clip gradients by global norm to prevent exploding gradients.
+
+    Computes total_norm = sqrt(sum of all gradient squares).
+    If total_norm > max_norm, scales all gradients by max_norm/total_norm.
+    """
+    if not parameters:
+        return 0.0
+
+    # Compute global norm across all parameters
+    total_norm = 0.0
+    for param in parameters:
+        if param.grad is not None:
+            grad_data = param.grad.data if hasattr(param.grad, 'data') else param.grad
+            total_norm += np.sum(grad_data ** 2)
+
+    total_norm = np.sqrt(total_norm)
+
+    # Clip if necessary - preserves gradient direction
+    if total_norm > max_norm:
+        clip_coef = max_norm / total_norm
+        for param in parameters:
+            if param.grad is not None:
+                if hasattr(param.grad, 'data'):
+                    param.grad.data *= clip_coef
+                else:
+                    param.grad *= clip_coef
+
+    return float(total_norm)
+
+# Usage example
+params = model.parameters()
+original_norm = clip_grad_norm(params, max_norm=1.0)
+print(f"Gradient norm: {original_norm:.2f} → clipped to 1.0")
+```
+
+### Trainer Class - Complete Training Orchestration
+
+The Trainer class conducts the symphony of training—coordinating model, optimizer, loss function, and scheduler into cohesive learning loops with checkpointing and evaluation:
+
+```python
+class Trainer:
+    """
+    Complete training orchestrator for neural networks.
+
+    Handles training loops, evaluation, scheduling, gradient clipping,
+    checkpointing, and train/eval mode switching.
+    """
+    def __init__(self, model, optimizer, loss_fn, scheduler=None, grad_clip_norm=None):
+        self.model = model
+        self.optimizer = optimizer
+        self.loss_fn = loss_fn
+        self.scheduler = scheduler
+        self.grad_clip_norm = grad_clip_norm
+
+        # Training state
+        self.epoch = 0
+        self.step = 0
+        self.training_mode = True
+
+        # History tracking
+        self.history = {
+            'train_loss': [],
+            'eval_loss': [],
+            'learning_rates': []
+        }
+
+    def train_epoch(self, dataloader, accumulation_steps=1):
+        """
+        Train for one epoch through the dataset.
+
+        Supports gradient accumulation for effective larger batch sizes.
+        """
+        self.model.training = True
+        total_loss = 0.0
+        num_batches = 0
+        accumulated_loss = 0.0
+
+        for batch_idx, (inputs, targets) in enumerate(dataloader):
+            # Forward pass
+            outputs = self.model.forward(inputs)
+            loss = self.loss_fn.forward(outputs, targets)
+
+            # Scale loss for accumulation
+            scaled_loss = loss.data / accumulation_steps
+            accumulated_loss += scaled_loss
+
+            # Backward pass
+            loss.backward()
+
+            # Update every accumulation_steps batches
+            if (batch_idx + 1) % accumulation_steps == 0:
+                # Gradient clipping
+                if self.grad_clip_norm is not None:
+                    clip_grad_norm(self.model.parameters(), self.grad_clip_norm)
+
+                # Optimizer step
+                self.optimizer.step()
+                self.optimizer.zero_grad()
+
+                total_loss += accumulated_loss
+                accumulated_loss = 0.0
+                num_batches += 1
+                self.step += 1
+
+        # Update learning rate
+        if self.scheduler is not None:
+            current_lr = self.scheduler.get_lr(self.epoch)
+            self.optimizer.lr = current_lr
+            self.history['learning_rates'].append(current_lr)
+
+        avg_loss = total_loss / max(num_batches, 1)
+        self.history['train_loss'].append(avg_loss)
+        self.epoch += 1
+
+        return avg_loss
+
+    def evaluate(self, dataloader):
+        """
+        Evaluate model without updating parameters.
+
+        Sets model.training = False for proper evaluation behavior.
+        """
+        self.model.training = False
+        total_loss = 0.0
+        correct = 0
+        total = 0
+
+        for inputs, targets in dataloader:
+            # Forward pass only - no gradients
+            outputs = self.model.forward(inputs)
+            loss = self.loss_fn.forward(outputs, targets)
+            total_loss += loss.data
+
+            # Calculate accuracy for classification
+            if len(outputs.data.shape) > 1:
+                predictions = np.argmax(outputs.data, axis=1)
+                if len(targets.data.shape) == 1:
+                    correct += np.sum(predictions == targets.data)
+                else:
+                    correct += np.sum(predictions == np.argmax(targets.data, axis=1))
+                total += len(predictions)
+
+        avg_loss = total_loss / len(dataloader) if len(dataloader) > 0 else 0.0
+        accuracy = correct / total if total > 0 else 0.0
+
+        self.history['eval_loss'].append(avg_loss)
+        return avg_loss, accuracy
+
+    def save_checkpoint(self, path: str):
+        """Save complete training state for resumption."""
+        checkpoint = {
+            'epoch': self.epoch,
+            'step': self.step,
+            'model_state': {i: p.data.copy() for i, p in enumerate(self.model.parameters())},
+            'optimizer_state': self._get_optimizer_state(),
+            'scheduler_state': self._get_scheduler_state(),
+            'history': self.history,
+            'training_mode': self.training_mode
+        }
+
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as f:
+            pickle.dump(checkpoint, f)
+
+    def load_checkpoint(self, path: str):
+        """Load training state from checkpoint."""
+        with open(path, 'rb') as f:
+            checkpoint = pickle.load(f)
+
+        self.epoch = checkpoint['epoch']
+        self.step = checkpoint['step']
+        self.history = checkpoint['history']
+
+        # Restore model parameters
+        for i, param in enumerate(self.model.parameters()):
+            if i in checkpoint['model_state']:
+                param.data = checkpoint['model_state'][i].copy()
+```
+
+### Complete Training Example
+
+Bringing all components together into production-ready training:
+
+```python
+from tinytorch.core.training import Trainer, CosineSchedule, clip_grad_norm
+from tinytorch.core.layers import Linear
+from tinytorch.core.losses import MSELoss
+from tinytorch.core.optimizers import SGD
+
+# Build model
+class SimpleNN:
+    def __init__(self):
+        self.layer1 = Linear(3, 5)
+        self.layer2 = Linear(5, 2)
+        self.training = True
+
+    def forward(self, x):
+        x = self.layer1.forward(x)
+        x = Tensor(np.maximum(0, x.data))  # ReLU
+        return self.layer2.forward(x)
+
+    def parameters(self):
+        return self.layer1.parameters() + self.layer2.parameters()
+
+# Configure training
+model = SimpleNN()
+optimizer = SGD(model.parameters(), lr=0.1, momentum=0.9)
+loss_fn = MSELoss()
+scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=10)
+
+# Create trainer with gradient clipping
 trainer = Trainer(
     model=model,
-    optimizer=optimizer, 
+    optimizer=optimizer,
     loss_fn=loss_fn,
-    metrics=metrics
+    scheduler=scheduler,
+    grad_clip_norm=1.0  # Prevent exploding gradients
 )
 
-# Train with comprehensive monitoring
-history = trainer.fit(
-    train_dataloader=train_loader,
-    val_dataloader=val_loader,
-    epochs=50,
-    verbose=True
-)
-```
+# Train for multiple epochs
+for epoch in range(10):
+    train_loss = trainer.train_epoch(train_data)
+    eval_loss, accuracy = trainer.evaluate(val_data)
 
-### Loss Function Library
-```python
-# Regression loss for continuous targets
-mse_loss = MeanSquaredError()
-regression_loss = mse_loss(predictions, continuous_targets)
+    print(f"Epoch {epoch}: train_loss={train_loss:.4f}, "
+          f"eval_loss={eval_loss:.4f}, accuracy={accuracy:.4f}")
 
-# Multi-class classification loss
-ce_loss = CrossEntropyLoss()
-classification_loss = ce_loss(logits, class_indices)
+    # Save checkpoint periodically
+    if epoch % 5 == 0:
+        trainer.save_checkpoint(f'checkpoint_epoch_{epoch}.pkl')
 
-# Binary classification loss
-bce_loss = BinaryCrossEntropyLoss()
-binary_loss = bce_loss(sigmoid_outputs, binary_labels)
-
-# All losses support batch processing and gradient computation
-loss.backward()  # Automatic differentiation integration
-```
-
-### Evaluation Metrics System
-```python
-# Classification performance measurement
-accuracy = Accuracy()
-acc_score = accuracy(predictions, true_labels)  # Returns 0.0 to 1.0
-
-# Regression error measurement  
-mae = MeanAbsoluteError()
-error = mae(predictions, targets)
-
-# Extensible metric framework
-class CustomMetric:
-    def __call__(self, y_pred, y_true):
-        # Implement custom evaluation logic
-        return custom_score
-
-metrics = [Accuracy(), CustomMetric()]
-trainer = Trainer(model, optimizer, loss_fn, metrics)
-```
-
-### Real-World Training Workflows
-```python
-# Train on CIFAR-10 with full pipeline
-from tinytorch.core.dataloader import CIFAR10Dataset, DataLoader
-
-# Load and prepare data
-train_dataset = CIFAR10Dataset("data/cifar10/", train=True, download=True)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-
-# Configure CNN for computer vision
-cnn_model = Sequential([
-    Conv2D(3, 16, kernel_size=3), ReLU(),
-    MaxPool2D(kernel_size=2),
-    Conv2D(16, 32, kernel_size=3), ReLU(),
-    Flatten(),
-    Dense(32 * 13 * 13, 128), ReLU(),
-    Dense(128, 10)
-])
-
-# Train with monitoring and validation
-trainer = Trainer(cnn_model, Adam(cnn_model.parameters()), CrossEntropyLoss(), [Accuracy()])
-history = trainer.fit(train_loader, val_loader, epochs=100)
-
-# Analyze training results
-print(f"Final train accuracy: {history['train_accuracy'][-1]:.4f}")
-print(f"Final val accuracy: {history['val_accuracy'][-1]:.4f}")
+# Restore from checkpoint
+trainer.load_checkpoint('checkpoint_epoch_5.pkl')
+print(f"Resumed training from epoch {trainer.epoch}")
 ```
 
 ## Getting Started
 
 ### Prerequisites
-Ensure you have completed the entire TinyTorch foundation:
+
+Ensure you have completed all Foundation tier modules:
 
 ```bash
 # Activate TinyTorch environment
 source bin/activate-tinytorch.sh
 
-# Verify all prerequisite modules (this is the capstone!)
-tito test --module tensor
-tito test --module activations  
-tito test --module layers
-tito test --module networks
-tito test --module dataloader
-tito test --module autograd
-tito test --module optimizers
+# Verify all prerequisites (Training is the Foundation capstone!)
+tito test --module tensor      # Module 01: Tensor operations
+tito test --module activations # Module 02: Activation functions
+tito test --module layers      # Module 03: Neural network layers
+tito test --module losses      # Module 04: Loss functions
+tito test --module autograd    # Module 05: Automatic differentiation
+tito test --module optimizers  # Module 06: Parameter update algorithms
 ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/10_training/training_dev.py`
-2. **Implement loss functions**: Build MSE, CrossEntropy, and BinaryCrossEntropy with proper gradients
-3. **Create metrics system**: Develop Accuracy and extensible evaluation framework
-4. **Build Trainer class**: Orchestrate training loop with validation and monitoring
-5. **Test end-to-end training**: Apply complete pipeline to real datasets and problems
-6. **Export and verify**: `tito export --module training && tito test --module training`
+
+1. **Open the development file**: `modules/07_training/training.py`
+2. **Implement CosineSchedule**: Build learning rate scheduler with cosine annealing (smooth max_lr → min_lr transition)
+3. **Create clip_grad_norm**: Implement global norm gradient clipping to prevent exploding gradients
+4. **Build Trainer class**: Orchestrate complete training loop with train_epoch(), evaluate(), and checkpointing
+5. **Add gradient accumulation**: Support effective larger batch sizes with limited memory
+6. **Test end-to-end training**: Validate complete pipeline with real models and data
+7. **Export and verify**: `tito module complete 07 && tito test --module training`
 
 ## Testing
 
 ### Comprehensive Test Suite
-Run the full test suite to verify complete training system functionality:
+
+Run the full test suite to verify complete training infrastructure:
 
 ```bash
 # TinyTorch CLI (recommended)
@@ -221,117 +384,142 @@ python -m pytest tests/ -k training -v
 ```
 
 ### Test Coverage Areas
-- ✅ **Loss Function Implementation**: Verify mathematical correctness and gradient computation
-- ✅ **Metrics System**: Test accuracy calculation and extensible framework
-- ✅ **Training Loop Orchestration**: Ensure proper coordination of all components
-- ✅ **End-to-End Training**: Verify complete workflows on real datasets
-- ✅ **Convergence Analysis**: Test training dynamics and optimization behavior
+
+- **CosineSchedule Correctness**: Verify cosine annealing produces correct learning rates at start, middle, and end epochs
+- **Gradient Clipping Stability**: Test global norm computation and uniform scaling when gradients exceed threshold
+- **Trainer Orchestration**: Ensure proper coordination of forward pass, backward pass, optimization, and scheduling
+- **Checkpointing Completeness**: Validate save/load preserves model state, optimizer buffers, scheduler state, and training history
+- **Memory Analysis**: Measure training memory overhead (parameters + gradients + optimizer state = 4-6× model size)
 
 ### Inline Testing & Training Analysis
-The module includes comprehensive training validation and convergence monitoring:
+
+The module includes comprehensive validation of training dynamics:
+
 ```python
-# Example inline test output
-🔬 Unit Test: CrossEntropy loss function...
-✅ Mathematical correctness verified
-✅ Gradient computation working
-✅ Batch processing supported
-📈 Progress: Loss Functions ✓
+# CosineSchedule validation
+schedule = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=100)
+print(schedule.get_lr(0))    # 0.1 - aggressive learning initially
+print(schedule.get_lr(50))   # ~0.055 - gradual slowdown
+print(schedule.get_lr(100))  # 0.01 - fine-tuning at end
 
-# Training monitoring
-🔬 Unit Test: Complete training pipeline...
-✅ Trainer orchestrates all components correctly
-✅ Training loop converges on test problem
-✅ Validation monitoring working
-📈 Progress: End-to-End Training ✓
+# Gradient clipping validation
+param.grad = np.array([100.0, 200.0])  # Large gradients
+original_norm = clip_grad_norm([param], max_norm=1.0)
+# original_norm ≈ 223.6 → clipped to 1.0
+assert np.linalg.norm(param.grad.data) ≈ 1.0
 
-# Real dataset training
-📊 Training on CIFAR-10 subset...
-Epoch 1/10: train_loss=2.345, train_acc=0.234, val_loss=2.123, val_acc=0.278
-Epoch 5/10: train_loss=1.456, train_acc=0.567, val_loss=1.543, val_acc=0.523
-✅ Model converging successfully
+# Trainer integration validation
+trainer = Trainer(model, optimizer, loss_fn, scheduler, grad_clip_norm=1.0)
+loss = trainer.train_epoch(train_data)
+eval_loss, accuracy = trainer.evaluate(test_data)
+trainer.save_checkpoint('checkpoint.pkl')
 ```
 
 ### Manual Testing Examples
+
 ```python
-from training_dev import Trainer, CrossEntropyLoss, Accuracy
-from networks_dev import Sequential
-from layers_dev import Dense
-from activations_dev import ReLU, Softmax
-from optimizers_dev import Adam
+from training import Trainer, CosineSchedule, clip_grad_norm
+from layers import Linear
+from losses import MSELoss
+from optimizers import SGD
+from tensor import Tensor
 
-# Test complete training on synthetic data
-model = Sequential([Dense(4, 8), ReLU(), Dense(8, 3), Softmax()])
-optimizer = Adam(model.parameters(), learning_rate=0.01)
-loss_fn = CrossEntropyLoss()
-metrics = [Accuracy()]
+# Test complete training pipeline
+class SimpleModel:
+    def __init__(self):
+        self.layer = Linear(2, 1)
+        self.training = True
 
-trainer = Trainer(model, optimizer, loss_fn, metrics)
+    def forward(self, x):
+        return self.layer.forward(x)
+
+    def parameters(self):
+        return self.layer.parameters()
+
+# Create training system
+model = SimpleModel()
+optimizer = SGD(model.parameters(), lr=0.01)
+loss_fn = MSELoss()
+scheduler = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=10)
+
+trainer = Trainer(model, optimizer, loss_fn, scheduler, grad_clip_norm=1.0)
 
 # Create simple dataset
-from dataloader_dev import SimpleDataset, DataLoader
-train_dataset = SimpleDataset(size=1000, num_features=4, num_classes=3)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+train_data = [
+    (Tensor([[1.0, 0.5]]), Tensor([[2.0]])),
+    (Tensor([[0.5, 1.0]]), Tensor([[1.5]]))
+]
 
 # Train and monitor
-history = trainer.fit(train_loader, epochs=20, verbose=True)
-print(f"Training completed. Final accuracy: {history['train_accuracy'][-1]:.4f}")
+for epoch in range(10):
+    loss = trainer.train_epoch(train_data)
+    lr = scheduler.get_lr(epoch)
+    print(f"Epoch {epoch}: loss={loss:.4f}, lr={lr:.4f}")
+
+# Test checkpointing
+trainer.save_checkpoint('test_checkpoint.pkl')
+trainer.load_checkpoint('test_checkpoint.pkl')
+print(f"Restored from epoch {trainer.epoch}")
 ```
 
 ## Systems Thinking Questions
 
 ### Real-World Applications
-- **Production ML Systems**: Companies like Netflix, Google use similar training pipelines for recommendation and search systems
-- **Research Workflows**: Academic researchers use training frameworks like this for experimental model development
-- **MLOps Platforms**: Production training systems extend these patterns with distributed computing and monitoring
-- **Edge AI Training**: Federated learning systems use similar orchestration patterns across distributed devices
+
+- **Production Training Pipelines**: PyTorch Lightning, Hugging Face Transformers, TensorFlow Estimators all use similar Trainer architectures with checkpointing and scheduling
+- **Large-Scale Model Training**: GPT, BERT, and vision models rely on gradient clipping and learning rate scheduling for stable convergence across billions of parameters
+- **Research Experimentation**: Academic ML uses checkpointing for long experiments with periodic evaluation and model selection
+- **Fault-Tolerant Training**: Cloud training systems use checkpoints to resume after infrastructure failures or spot instance interruptions
 
 ### Training System Architecture
-- **Loss Functions**: Mathematical objectives that define what the model should learn
-- **Metrics**: Human-interpretable measures of model performance for monitoring and decision-making
-- **Training Loop**: Orchestration pattern that coordinates data loading, forward passes, backward passes, and optimization
-- **Validation Strategy**: Techniques for monitoring generalization and preventing overfitting
 
-### Machine Learning Engineering
-- **Training Dynamics**: Understanding convergence, overfitting, underfitting, and optimization landscapes
-- **Hyperparameter Tuning**: Systematic approaches to learning rate, batch size, and architecture selection
-- **Debugging Training**: Common failure modes and diagnostic techniques for training issues
-- **Production Considerations**: Scalability, monitoring, reproducibility, and deployment readiness
+- **Memory Breakdown**: Training requires parameters (1×) + gradients (1×) + optimizer state (2-3×) = 4-6× model memory footprint
+- **Gradient Accumulation**: Enables effective batch size of accumulation_steps × actual_batch_size with fixed memory—trades time for memory efficiency
+- **Train/Eval Modes**: Different layer behaviors during training (dropout active, batch norm updates) vs evaluation (dropout off, fixed batch norm)
+- **Checkpoint Components**: Must save model parameters, optimizer buffers (momentum, Adam m/v), scheduler state, epoch counter, and training history for exact resumption
 
-### Systems Integration Patterns
-- **Component Orchestration**: How to coordinate multiple ML components into cohesive systems
-- **Error Handling**: Robust handling of training failures, data issues, and convergence problems
-- **Monitoring and Logging**: Tracking training progress, performance metrics, and system health
-- **Extensibility**: Design patterns that enable easy addition of new losses, metrics, and training strategies
+### Training Dynamics
 
-## 🎉 Ready to Build?
+- **Learning Rate Scheduling**: Cosine annealing starts fast (quick convergence when far from optimum) then slows (stable fine-tuning near solution)
+- **Exploding Gradients**: Occur in deep networks and RNNs when gradient magnitudes grow exponentially through backpropagation—gradient clipping prevents training collapse
+- **Gradient Accumulation Trade-offs**: Reduces memory by processing small batches but increases training time linearly with accumulation steps
+- **Checkpointing Strategy**: Balance disk space (1GB+ per checkpoint) vs fault tolerance (more frequent = less lost work) and evaluation frequency (save best model)
 
-You're about to complete the TinyTorch framework by building the training system that brings everything together! This is where all your hard work on tensors, layers, networks, data loading, gradients, and optimization culminates in a complete ML system.
+### Performance Characteristics
 
-Training is the heart of machine learning—it's where models learn from data and become intelligent. You're building the same patterns used to train GPT, train computer vision models, and power production AI systems. Take your time, understand how all the pieces fit together, and enjoy creating something truly powerful!
+- **Training Memory Scaling**: Adam optimizer uses 4× parameter memory (params + grads + m + v) vs SGD with momentum at 3× (params + grads + momentum)
+- **Checkpoint Overhead**: Pickle serialization adds 10-30% overhead beyond raw parameter data—use compression for large models
+- **Learning Rate Impact**: Too high causes instability/divergence, too low causes slow convergence—scheduling adapts automatically
+- **Global Norm vs Individual Clipping**: Global norm preserves gradient direction while preventing explosion—individual clipping can distort optimization trajectory
 
- 
+## Ready to Build?
 
+You're about to complete the Foundation tier by building the training infrastructure that brings neural networks to life! This is where all your work on tensors, activations, layers, losses, gradients, and optimizers comes together into a cohesive system that actually learns from data.
+
+Training is the heart of machine learning—the process that transforms random initialization into intelligent models. You're implementing the same patterns used to train GPT, BERT, ResNet, and every production AI system. Understanding how scheduling, gradient clipping, checkpointing, and mode switching work together gives you mastery over the training process.
+
+This module is the culmination of everything you've built. Take your time understanding how each piece fits into the bigger picture, and enjoy creating a complete ML training system from scratch!
 
 Choose your preferred way to engage with this module:
 
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/11_training/training_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/07_training/training.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
-```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/11_training/training_dev.ipynb
+```{grid-item-card} ⚡ Open in Colab
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/07_training/training.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/11_training/training_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/07_training/training.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
@@ -348,6 +536,6 @@ Browse the Python source code and understand the implementation.
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/10_autograd.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/12_training.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../modules/06_optimizers_ABOUT.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../modules/08_dataloader_ABOUT.html" title="next page">Next Module →</a>
 </div>

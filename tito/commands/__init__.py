@@ -23,7 +23,7 @@ from .book import BookCommand
 
 # Command groups
 from .system import SystemCommand
-from .module import ModuleCommand
+from .module_workflow import ModuleWorkflowCommand
 from .package import PackageCommand
 
 __all__ = [
@@ -43,6 +43,6 @@ __all__ = [
     'BookCommand',
     # Command groups
     'SystemCommand',
-    'ModuleCommand',
+    'ModuleWorkflowCommand',
     'PackageCommand',
 ] 

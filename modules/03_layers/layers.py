@@ -29,15 +29,32 @@ Tensor → Activations → Layers → Networks
 (data)   (intelligence) (building blocks) (architectures)
 ```
 
-## ✅ Prerequisites: Modules 01-02 Must Be Working
+## 📋 Module Dependencies
 
-Before starting this module, verify:
-- [ ] Module 01 (Tensor): Run pytest modules/source/01_tensor/test_tensor.py
-- [ ] Module 02 (Activations): Run pytest modules/source/02_activations/test_activations.py
+**Prerequisites**: Modules 01 (Tensor) and 02 (Activations) must be completed
 
-If any prerequisite fails, either:
-1. Fix the broken module first
-2. Use the reference implementation from that module's directory
+**External Dependencies**:
+- `numpy` (for numerical operations)
+
+**TinyTorch Dependencies**:
+- **Module 01 (Tensor)**: Foundation for all layer computations
+  - Used for: Weight storage, input/output data structures, shape operations
+  - Required: Yes - layers operate on Tensor objects
+- **Module 02 (Activations)**: Activation functions for testing layer integration
+  - Used for: ReLU, Sigmoid for testing layer compositions
+  - Required: Yes - layers are tested with activations
+
+**Dependency Flow**:
+```
+Module 01 (Tensor) → Module 02 (Activations) → Module 03 (Layers) → Module 04 (Losses)
+     ↓                      ↓                         ↓                    ↓
+  Foundation          Nonlinearity              Architecture        Error Measurement
+```
+
+**Import Strategy**:
+This module imports directly from the TinyTorch package (`from tinytorch.core.*`).
+**Assumption**: Modules 01 (Tensor) and 02 (Activations) have been completed and exported to the package.
+If you see import errors, ensure you've run `tito export` after completing previous modules.
 
 ## Learning Objectives
 By the end of this module, you will:
@@ -72,54 +89,18 @@ from tinytorch.core.activations import ReLU, Sigmoid  # Module 02 - intelligence
 #| export
 
 import numpy as np
-import sys
-import os
 
-# Try packaged import first, fall back to local import for development
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid
-except ModuleNotFoundError:
-    # Development mode: import from local modules
-    # Add parent directory paths for module imports
-    from pathlib import Path
-    module_root = Path(__file__).parent.parent
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid
 
-    # Import Tensor first
-    tensor_path = str(module_root / '01_tensor')
-    if tensor_path not in sys.path:
-        sys.path.insert(0, tensor_path)
+# Constants for weight initialization
+XAVIER_SCALE_FACTOR = 1.0  # Xavier/Glorot initialization uses sqrt(1/fan_in)
+HE_SCALE_FACTOR = 2.0  # He initialization uses sqrt(2/fan_in) for ReLU
 
-    # Import activations (may fail if activations.py has same import issue)
-    activations_path = str(module_root / '02_activations')
-    if activations_path not in sys.path:
-        sys.path.insert(0, activations_path)
-
-    try:
-        from tensor import Tensor
-        from activations import ReLU, Sigmoid
-    except ModuleNotFoundError:
-        # If activations also has import issues, provide minimal stubs for testing
-        from tensor import Tensor
-        print("⚠️  Warning: Could not import activations module. Using minimal stubs for testing.")
-        print("⚠️  For full functionality, ensure Module 02 (activations) can run standalone.")
-
-        # Minimal ReLU stub for testing layers in isolation
-        class ReLU:
-            def forward(self, x):
-                return Tensor(np.maximum(0, x.data), requires_grad=x.requires_grad)
-            def __call__(self, x):
-                return self.forward(x)
-            def parameters(self):
-                return []
-
-        class Sigmoid:
-            def forward(self, x):
-                return Tensor(1.0 / (1.0 + np.exp(-x.data)), requires_grad=x.requires_grad)
-            def __call__(self, x):
-                return self.forward(x)
-            def parameters(self):
-                return []
+# Constants for dropout
+DROPOUT_MIN_PROB = 0.0  # Minimum dropout probability (no dropout)
+DROPOUT_MAX_PROB = 1.0  # Maximum dropout probability (drop everything)
 
 # %% [markdown]
 """
@@ -320,7 +301,7 @@ class Linear(Layer):
         self.out_features = out_features
 
         # Xavier/Glorot initialization for stable gradients
-        scale = np.sqrt(1.0 / in_features)
+        scale = np.sqrt(XAVIER_SCALE_FACTOR / in_features)
         weight_data = np.random.randn(in_features, out_features) * scale
         self.weight = Tensor(weight_data, requires_grad=True)
 
@@ -418,7 +399,7 @@ def test_unit_linear_layer():
 
     # Test Xavier initialization (weights should be reasonably scaled)
     weight_std = np.std(layer.weight.data)
-    expected_std = np.sqrt(1.0 / 784)
+    expected_std = np.sqrt(XAVIER_SCALE_FACTOR / 784)
     assert 0.5 * expected_std < weight_std < 2.0 * expected_std, f"Weight std {weight_std} not close to Xavier {expected_std}"
 
     # Test bias initialization (should be zeros)
@@ -601,8 +582,8 @@ class Dropout(Layer):
         >>> dropout = Dropout(0.5)  # Zero 50% of elements during training
         """
         ### BEGIN SOLUTION
-        if not 0.0 <= p <= 1.0:
-            raise ValueError(f"Dropout probability must be between 0 and 1, got {p}")
+        if not DROPOUT_MIN_PROB <= p <= DROPOUT_MAX_PROB:
+            raise ValueError(f"Dropout probability must be between {DROPOUT_MIN_PROB} and {DROPOUT_MAX_PROB}, got {p}")
         self.p = p
         ### END SOLUTION
 
@@ -610,13 +591,17 @@ class Dropout(Layer):
         """
         Forward pass through dropout layer.
 
-        TODO: Apply dropout during training, pass through during inference
+        During training: randomly zeros elements with probability p
+        During inference: scales outputs by (1-p) to maintain expected value
+
+        This prevents overfitting by forcing the network to not rely on specific neurons.
+
+        TODO: Implement dropout forward pass
 
         APPROACH:
-        1. If not training, return input unchanged
-        2. If training, create random mask with probability (1-p)
-        3. Multiply input by mask and scale by 1/(1-p)
-        4. Return result as new Tensor
+        1. If training=False or p=0, return input unchanged
+        2. If p=1, return zeros (preserve requires_grad)
+        3. Otherwise: create random mask, apply it, scale by 1/(1-p)
 
         EXAMPLE:
         >>> dropout = Dropout(0.5)
@@ -630,11 +615,11 @@ class Dropout(Layer):
         - training=False should return input unchanged
         """
         ### BEGIN SOLUTION
-        if not training or self.p == 0.0:
+        if not training or self.p == DROPOUT_MIN_PROB:
             # During inference or no dropout, pass through unchanged
             return x
 
-        if self.p == 1.0:
+        if self.p == DROPOUT_MAX_PROB:
             # Drop everything (preserve requires_grad for gradient flow)
             return Tensor(np.zeros_like(x.data), requires_grad=x.requires_grad)
 
@@ -949,37 +934,6 @@ def analyze_layer_performance():
 Final validation that everything works together correctly.
 """
 
-def import_previous_module(module_name: str, component_name: str):
-    """
-    Import a component from a previous module.
-    Handles both _dev.py and .py file formats.
-    """
-    import sys
-    import os
-    from pathlib import Path
-
-    module_dir = Path(__file__).parent.parent / module_name
-    if str(module_dir) not in sys.path:
-        sys.path.insert(0, str(module_dir))
-
-    # Try different module name formats
-    module_base = module_name.split('_', 1)[1]  # e.g., '02_activations' -> 'activations'
-
-    try:
-        # Try importing with _dev suffix first
-        module = __import__(f"{module_base}_dev")
-    except ModuleNotFoundError:
-        try:
-            # Fall back to module name without _dev
-            module = __import__(module_base)
-        except ModuleNotFoundError:
-            # If all else fails, return None or raise informative error
-            raise ImportError(
-                f"Could not import module '{module_name}'. "
-                f"Tried: {module_base}_dev.py and {module_base}.py"
-            )
-
-    return getattr(module, component_name)
 
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 20}
 def test_module():
@@ -1006,12 +960,8 @@ def test_module():
     # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
-    # Try to import real activation from module 02, fall back to local stub if unavailable
-    try:
-        ReLU_class = import_previous_module('02_activations', 'ReLU')
-    except (ImportError, ModuleNotFoundError):
-        # Use the ReLU that was already imported/defined at module level
-        ReLU_class = ReLU
+    # Use ReLU imported from package at module level
+    ReLU_class = ReLU
 
     # Build individual layers for manual composition
     layer1 = Linear(784, 128)

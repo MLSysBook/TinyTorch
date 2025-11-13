@@ -58,7 +58,7 @@ flowchart TB
         M19 --> M20[Module 20: Competition]
     end
 
-    M20 --> MS06{{"🏆 M06: 2024 MLPerf<br/>Production System"}}
+    M20 --> MS06{{"🏆 M06: 2024 Torch Olympics<br/>Production System"}}
     MS06 --> Complete([🎓 Complete!<br/>ML Systems Engineer])
 
     style M01 fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
@@ -342,7 +342,7 @@ graph LR
 
 **The essential three-step cycle**: Edit → Export → Validate
 
-**📖 See [Student Workflow](student-workflow.html)** for detailed workflow guide.
+**📖 See [Student Workflow](student-workflow.md)** for detailed workflow guide.
 
 ---
 
@@ -382,7 +382,7 @@ flowchart TB
 
 **Strategy**: Start small (shipped datasets), iterate fast, then validate on benchmarks (downloaded datasets).
 
-**📖 See [Datasets Guide](datasets.html)** for complete dataset documentation.
+**📖 See [Datasets Guide](datasets.md)** for complete dataset documentation.
 
 ---
 
@@ -484,8 +484,8 @@ xychart-beta
 
 ## Related Pages
 
-- **📖 [Introduction](intro.html)** - What is TinyTorch and why build from scratch
-- **📖 [Student Workflow](student-workflow.html)** - The essential edit → export → validate cycle
-- **📖 [Three-Tier Structure](chapters/00-introduction.html)** - Detailed tier breakdown
-- **📖 [Milestones](chapters/milestones.html)** - Journey through ML history
-- **📖 [FAQ](faq.html)** - Common questions answered
+- **📖 [Introduction](intro.md)** - What is TinyTorch and why build from scratch
+- **📖 [Student Workflow](student-workflow.md)** - The essential edit → export → validate cycle
+- **📖 [Three-Tier Structure](chapters/00-introduction.md)** - Detailed tier breakdown
+- **📖 [Milestones](chapters/milestones.md)** - Journey through ML history
+- **📖 [FAQ](faq.md)** - Common questions answered

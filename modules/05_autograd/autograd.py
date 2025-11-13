@@ -69,6 +69,9 @@ import os
 
 from tinytorch.core.tensor import Tensor
 
+# Constants for numerical differentiation
+EPSILON = 1e-7  # Small perturbation for numerical gradient computation
+
 # %% [markdown]
 """
 ## 1. Introduction: What is Automatic Differentiation?
@@ -1195,7 +1198,7 @@ class BCEBackward(Function):
         predictions, = self.saved_tensors
         
         if isinstance(predictions, Tensor) and predictions.requires_grad:
-            eps = 1e-7
+            eps = EPSILON
             p = np.clip(predictions.data, eps, 1 - eps)
             y = self.targets_data
             
@@ -1491,7 +1494,12 @@ def enable_autograd():
             if self.data.size == 1:
                 gradient = np.ones_like(self.data)
             else:
-                raise ValueError("backward() requires gradient for non-scalar outputs")
+                raise ValueError(
+                    f"backward() called on non-scalar tensor without gradient argument.\n"
+                    f"  Tensor shape: {self.shape}\n"
+                    f"  Issue: For non-scalar outputs, you must provide the gradient from the next layer.\n"
+                    f"  Fix: Call backward(gradient) with the gradient tensor from the loss function."
+                )
 
         # Initialize or accumulate gradient
         if self.grad is None:
@@ -1608,7 +1616,7 @@ def enable_autograd():
         def tracked_bce_forward(self, predictions, targets):
             """Binary cross-entropy with gradient tracking."""
             # Compute BCE loss
-            eps = 1e-7
+            eps = EPSILON
             clamped_preds = np.clip(predictions.data, eps, 1 - eps)
             log_preds = np.log(clamped_preds)
             log_one_minus_preds = np.log(1 - clamped_preds)
