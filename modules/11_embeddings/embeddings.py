@@ -67,6 +67,10 @@ from typing import List, Optional, Tuple
 # Import from previous modules - following dependency chain
 from tinytorch.core.tensor import Tensor
 
+# Constants for memory calculations
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
+
 # %% [markdown]
 """
 ## 1. Introduction - Why Embeddings?
@@ -1048,7 +1052,7 @@ def analyze_embedding_memory_scaling():
     for name, vocab_size, embed_dim in scenarios:
         # Calculate memory for FP32 (4 bytes per parameter)
         params = vocab_size * embed_dim
-        memory_mb = params * 4 / (1024 * 1024)
+        memory_mb = params * BYTES_PER_FLOAT32 / MB_TO_BYTES
         params_m = params / 1_000_000
 
         print(f"{name:<15} {vocab_size:<12,} {embed_dim:<12} {memory_mb:<15.1f} {params_m:<15.2f}")

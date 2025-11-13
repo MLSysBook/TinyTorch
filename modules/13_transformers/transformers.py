@@ -56,6 +56,10 @@ from tinytorch.core.attention import MultiHeadAttention
 from tinytorch.core.activations import GELU
 from tinytorch.text.embeddings import Embedding, PositionalEncoding
 
+# Constants for memory calculations
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
+
 # %% [markdown]
 """
 ## 📦 Where This Code Lives in the Final Package
@@ -1537,7 +1541,7 @@ def analyze_parameter_scaling():
             total_params += param.size
 
         # Calculate memory requirements (4 bytes per float32 parameter)
-        memory_mb = (total_params * 4) / (1024 * 1024)
+        memory_mb = (total_params * BYTES_PER_FLOAT32) / MB_TO_BYTES
 
         print(f"{config['name']} Model:")
         print(f"  Parameters: {total_params:,}")
@@ -1573,8 +1577,8 @@ def analyze_attention_memory():
         attention_elements = batch_size * num_heads * seq_len * seq_len
 
         # 4 bytes per float32
-        memory_bytes = attention_elements * 4
-        memory_mb = memory_bytes / (1024 * 1024)
+        memory_bytes = attention_elements * BYTES_PER_FLOAT32
+        memory_mb = memory_bytes / MB_TO_BYTES
 
         print(f"{seq_len:6d} | {seq_len}×{seq_len} × {batch_size}×{num_heads} | {memory_mb:8.1f}")
 

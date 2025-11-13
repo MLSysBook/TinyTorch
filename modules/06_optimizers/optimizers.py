@@ -65,6 +65,15 @@ from typing import List, Union, Optional, Dict, Any
 # Import Tensor from Module 01 (now with gradient support from Module 05)
 from tinytorch.core.tensor import Tensor
 
+# Constants for optimizer defaults
+DEFAULT_LEARNING_RATE_SGD = 0.01  # Default learning rate for SGD
+DEFAULT_LEARNING_RATE_ADAM = 0.001  # Default learning rate for Adam/AdamW
+DEFAULT_MOMENTUM = 0.9  # Default momentum for SGD
+DEFAULT_BETA1 = 0.9  # First moment decay rate for Adam
+DEFAULT_BETA2 = 0.999  # Second moment decay rate for Adam
+DEFAULT_EPS = 1e-8  # Small epsilon for numerical stability in Adam
+DEFAULT_WEIGHT_DECAY_ADAMW = 0.01  # Default weight decay for AdamW
+
 # %% [markdown]
 """
 ## 1. Introduction: What are Optimizers?
@@ -416,7 +425,7 @@ class SGD(Optimizer):
     previous updates to reduce oscillations and accelerate convergence.
     """
 
-    def __init__(self, params: List[Tensor], lr: float = 0.01, momentum: float = 0.0, weight_decay: float = 0.0):
+    def __init__(self, params: List[Tensor], lr: float = DEFAULT_LEARNING_RATE_SGD, momentum: float = 0.0, weight_decay: float = 0.0):
         """
         Initialize SGD optimizer.
 
@@ -455,7 +464,7 @@ class SGD(Optimizer):
         Returns:
             bool: True if momentum is enabled (momentum > 0), False otherwise
 
-        Example:
+        EXAMPLE:
             >>> optimizer = SGD(params, lr=0.01, momentum=0.9)
             >>> optimizer.has_momentum()
             True
@@ -473,7 +482,7 @@ class SGD(Optimizer):
             Optional[List]: List of momentum buffers if momentum is enabled,
                           None otherwise
 
-        Example:
+        EXAMPLE:
             >>> optimizer = SGD(params, lr=0.01, momentum=0.9)
             >>> optimizer.step()  # Initialize buffers
             >>> state = optimizer.get_momentum_state()
@@ -494,7 +503,7 @@ class SGD(Optimizer):
         Args:
             state: List of momentum buffers or None
 
-        Example:
+        EXAMPLE:
             >>> optimizer = SGD(params, lr=0.01, momentum=0.9)
             >>> state = optimizer.get_momentum_state()
             >>> # Training interruption...
@@ -707,7 +716,7 @@ class Adam(Optimizer):
     This makes it effective for problems with sparse gradients or noisy data.
     """
 
-    def __init__(self, params: List[Tensor], lr: float = 0.001, betas: tuple = (0.9, 0.999), eps: float = 1e-8, weight_decay: float = 0.0):
+    def __init__(self, params: List[Tensor], lr: float = DEFAULT_LEARNING_RATE_ADAM, betas: tuple = (DEFAULT_BETA1, DEFAULT_BETA2), eps: float = DEFAULT_EPS, weight_decay: float = 0.0):
         """
         Initialize Adam optimizer.
 
@@ -955,7 +964,7 @@ class AdamW(Optimizer):
     regularization and is the preferred version for most applications.
     """
 
-    def __init__(self, params: List[Tensor], lr: float = 0.001, betas: tuple = (0.9, 0.999), eps: float = 1e-8, weight_decay: float = 0.01):
+    def __init__(self, params: List[Tensor], lr: float = DEFAULT_LEARNING_RATE_ADAM, betas: tuple = (DEFAULT_BETA1, DEFAULT_BETA2), eps: float = DEFAULT_EPS, weight_decay: float = DEFAULT_WEIGHT_DECAY_ADAMW):
         """
         Initialize AdamW optimizer.
 
@@ -1296,13 +1305,6 @@ def analyze_optimizer_convergence_behavior():
 Final validation that everything works together correctly.
 """
 
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
-
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 25}
 def test_module():
     """
@@ -1328,11 +1330,10 @@ def test_module():
     # Test realistic neural network optimization scenario
     print("🔬 Integration Test: Multi-layer Network Optimization...")
 
-    # Import components from previous modules using standardized helper
-    Tensor = import_previous_module('01_tensor', 'Tensor')
-    Linear = import_previous_module('03_layers', 'Linear')
-    ReLU = import_previous_module('02_activations', 'ReLU')
-    MSELoss = import_previous_module('04_losses', 'MSELoss')
+    # Import components from TinyTorch package (previous modules must be completed and exported)
+    from tinytorch.core.layers import Linear
+    from tinytorch.core.activations import ReLU
+    from tinytorch.core.losses import MSELoss
 
     # Create parameters for a 2-layer network
     # Layer 1: 3 inputs -> 4 hidden

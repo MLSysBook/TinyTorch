@@ -66,6 +66,11 @@ import time
 
 from tinytorch.core.tensor import Tensor
 
+# Constants for convolution defaults
+DEFAULT_KERNEL_SIZE = 3  # Default kernel size for convolutions
+DEFAULT_STRIDE = 1  # Default stride for convolutions
+DEFAULT_PADDING = 0  # Default padding for convolutions
+
 # %% [markdown]
 """
 ## 1. Introduction - What are Spatial Operations?

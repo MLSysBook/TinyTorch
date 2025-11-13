@@ -61,17 +61,31 @@ Let's get started!
 
 import numpy as np
 
+# Constants for memory calculations
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
+
 # %% [markdown]
 """
-## Module 01: Tensor Foundation - Dependency Information
+## 📋 Module Dependencies
 
 **Prerequisites**: NONE - This is the foundation module
 
-**Dependencies**:
-- NumPy (for array operations and numerical computing)
+**External Dependencies**:
+- `numpy` (for array operations and numerical computing)
+
+**TinyTorch Dependencies**: NONE
 
 **Important**: This module has NO TinyTorch dependencies.
 All future modules will import FROM this module.
+
+**Dependency Flow**:
+```
+Module 01 (Tensor) → All Future Modules
+     ↓
+  Foundation for entire TinyTorch system
+```
 
 Students completing this module will have built the foundation
 that every other TinyTorch component depends on.
@@ -497,7 +511,11 @@ class Tensor:
         # Handle -1 for automatic dimension inference (like NumPy)
         if -1 in new_shape:
             if new_shape.count(-1) > 1:
-                raise ValueError("Can only specify one unknown dimension with -1")
+                raise ValueError(
+                    "Can only specify one unknown dimension with -1.\n"
+                    "  Issue: Reshape allows one -1 to auto-calculate that dimension.\n"
+                    "  Fix: Specify only one -1 in the new_shape tuple."
+                )
 
             # Calculate the unknown dimension
             known_size = 1
@@ -575,7 +593,11 @@ class Tensor:
         else:
             # Specific dimensions to transpose
             if dim0 is None or dim1 is None:
-                raise ValueError("Both dim0 and dim1 must be specified for specific dimension transpose")
+                raise ValueError(
+                    "Both dim0 and dim1 must be specified for specific dimension transpose.\n"
+                    "  Issue: transpose(dim0, dim1) requires both dimension indices.\n"
+                    "  Fix: Provide both dim0 and dim1, e.g., tensor.transpose(0, 1)."
+                )
 
             # Validate dimensions exist
             if dim0 >= len(self.shape) or dim1 >= len(self.shape) or dim0 < 0 or dim1 < 0:
@@ -1451,7 +1473,7 @@ def analyze_memory_layout():
 
     import time
 
-    print(f"\nTesting with {size}×{size} matrix ({matrix.size * 4 / 1024 / 1024:.1f} MB)")
+    print(f"\nTesting with {size}×{size} matrix ({matrix.size * BYTES_PER_FLOAT32 / MB_TO_BYTES:.1f} MB)")
     print("-" * 60)
 
     # Test 1: Row-wise access (cache-friendly)
@@ -1476,7 +1498,7 @@ def analyze_memory_layout():
         col_sums.append(col_sum)
     col_time = time.time() - start
     print(f"   Time: {col_time*1000:.1f}ms")
-    print(f"   Access pattern: Strided (jumps {size * 4} bytes per element)")
+    print(f"   Access pattern: Strided (jumps {size * BYTES_PER_FLOAT32} bytes per element)")
 
     # Calculate slowdown
     slowdown = col_time / row_time
@@ -1567,13 +1589,6 @@ Every layer in a neural network - from simple MLPs to complex transformers - use
 
 Final validation that everything works together correctly before module completion.
 """
-
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
 
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 20}
 def test_module():

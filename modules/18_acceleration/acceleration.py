@@ -17,9 +17,9 @@
 
 # %% [markdown]
 """
-# Module 16: Acceleration - Hardware-Aware Optimization
+# Module 18: Acceleration - Hardware-Aware Optimization
 
-Welcome to Module 16! You're about to master the art of neural network acceleration through vectorization and kernel fusion.
+Welcome to Module 18! You're about to master the art of neural network acceleration through vectorization and kernel fusion.
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Complete neural network foundation with tensors (01), autograd (05), layers (03), training (07), and CNNs (09)
@@ -49,7 +49,7 @@ Let's optimize for speed!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/16_acceleration/acceleration_dev.py`
+**Learning Side:** You work in `modules/18_acceleration/acceleration_dev.py`
 **Building Side:** Code exports to `tinytorch.nn.acceleration`
 
 ```python
@@ -69,6 +69,11 @@ import numpy as np
 import time
 from typing import Dict, List, Tuple, Optional, Any, Union
 import warnings
+
+# Constants for performance measurement
+DEFAULT_WARMUP_ITERATIONS = 2  # Default warmup iterations for timing
+DEFAULT_TIMING_ITERATIONS = 5  # Default timing iterations for measurement
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 
 # %% [markdown]
 """
@@ -143,32 +148,8 @@ Real-world performance wins:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-import", "solution": true}
-# Import required dependencies for development
-import sys
-from pathlib import Path
-
-# Add parent directories to path for development
-module_path = Path(__file__).parent.parent
-sys.path.insert(0, str(module_path / "01_tensor"))
-
-### BEGIN SOLUTION
-# Import from development modules
-try:
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    # Fallback to development import
-    try:
-        from tensor_dev import Tensor
-    except ImportError:
-        print("⚠️ WARNING: Could not import Tensor.")
-        print("This module requires Module 01 (Tensor).")
-        print("Either install TinyTorch or ensure tensor_dev.py is available.")
-        # Create a minimal Tensor stub for testing
-        class Tensor:
-            def __init__(self, data):
-                self.data = np.array(data, dtype=np.float32)
-                self.shape = self.data.shape
-### END SOLUTION
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
@@ -582,8 +563,8 @@ def test_unit_fusion_speedup():
     # Create moderately large tensor for meaningful timing
     size = 2000
     x = Tensor(np.random.randn(size, size).astype(np.float32))
-    warmup_iterations = 2
-    timing_iterations = 5
+    warmup_iterations = DEFAULT_WARMUP_ITERATIONS
+    timing_iterations = DEFAULT_TIMING_ITERATIONS
 
     # Warmup both implementations
     for _ in range(warmup_iterations):
@@ -1161,27 +1142,11 @@ This is how professional ML engineers work: profile → optimize → measure →
 """
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-acceleration", "solution": true}
-# Import Profiler from Module 14 (optional - only if available)
-try:
-    from tinytorch.profiling.profiler import Profiler
-    PROFILER_AVAILABLE = True
-except ImportError:
-    # Try development import
-    try:
-        sys.path.insert(0, str(module_path / "14_profiling"))
-        from profiling_dev import Profiler
-        PROFILER_AVAILABLE = True
-    except ImportError:
-        PROFILER_AVAILABLE = False
-        print("⚠️ WARNING: Profiler not available. Skipping profiler demo.")
-        print("This is optional - Module 14 (Profiling) not required for core functionality.")
+# Import Profiler from Module 14 (Module 18 comes after Module 14)
+from tinytorch.profiling.profiler import Profiler
 
 def demo_acceleration_with_profiler():
     """📊 Demonstrate acceleration gains using Profiler from Module 14."""
-    if not PROFILER_AVAILABLE:
-        print("⚠️ Profiler not available - skipping demo")
-        print("This is optional functionality for integration testing")
-        return
 
     print("📊 Measuring Acceleration Gains with Profiler")
     print("=" * 70)

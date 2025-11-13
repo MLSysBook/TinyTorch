@@ -18,38 +18,30 @@
 
 # %% [markdown]
 """
-# Module 19: Benchmarking - TorchPerf Olympics Preparation
+# Module 19: Benchmarking - Statistical Measurement & Fair Comparison
 
-Welcome to the final implementation module! You've learned individual optimization techniques in Modules 14-18. Now you'll build the benchmarking infrastructure that powers **TorchPerf Olympics** - the capstone competition framework.
+Welcome to Module 19! You've learned individual optimization techniques in Modules 14-18. Now you'll build the benchmarking infrastructure that enables fair, statistically rigorous performance measurement.
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Complete ML framework with profiling, acceleration, quantization, and compression
-**You'll Build**: TorchPerf benchmarking system for fair model comparison and capstone submission
-**You'll Enable**: Systematic optimization combination and competitive performance evaluation
+**You'll Build**: Professional benchmarking system with statistical rigor and reproducible measurement protocols
+**You'll Enable**: Fair comparison of optimizations with confidence in your measurements
 
 **Connection Map**:
 ```
-Individual Optimizations (M14-18) → Benchmarking (M19) → TorchPerf Olympics (Capstone)
-(techniques)                        (evaluation)         (competition)
+Individual Optimizations (M14-18) → Benchmarking (M19) → Competition (Module 20)
+(techniques)                        (measurement)        (workflow)
 ```
-
-## 🏅 TorchPerf Olympics: The Capstone Framework
-
-The TorchPerf Olympics is your capstone competition! Choose your event:
-- 🏃 **Latency Sprint**: Minimize inference time (fastest model wins)
-- 🏋️ **Memory Challenge**: Minimize model size (smallest footprint wins)  
-- 🎯 **Accuracy Contest**: Maximize accuracy within constraints
-- 🏋️‍♂️ **All-Around**: Best balanced performance across all metrics
-- 🚀 **Extreme Push**: Most aggressive optimization while staying viable
 
 ## Learning Objectives
 By the end of this module, you will:
-1. Implement professional benchmarking infrastructure with statistical rigor
-2. Learn to combine optimization techniques strategically (order matters!)
-3. Build the TorchPerf class - your standardized capstone submission framework
-4. Understand ablation studies and systematic performance evaluation
+1. Implement statistical measurement infrastructure (confidence intervals, multiple runs)
+2. Understand why single measurements are unreliable and how to achieve statistical confidence
+3. Build a benchmarking harness that controls for system noise and variability
+4. Master reproducible measurement protocols (warmup, deterministic runs, environment control)
+5. Create fair comparison frameworks that enable valid optimization decisions
 
-🔥 Carry the torch. Optimize the model. Win the gold! 🏅
+**Key Insight**: Benchmarking isn't about getting "the number" - it's about understanding measurement uncertainty and making statistically valid comparisons.
 """
 
 # %% [markdown]
@@ -61,19 +53,20 @@ By the end of this module, you will:
 
 ```python
 # How to use this module:
-from tinytorch.benchmarking.benchmark import Benchmark, OlympicEvent
+from tinytorch.benchmarking.benchmark import Benchmark, BenchmarkResult
 
-# For capstone submission:
+# Measure performance with statistical rigor:
 benchmark = Benchmark([baseline_model, optimized_model],
                      [{"name": "baseline"}, {"name": "optimized"}])
 results = benchmark.run_latency_benchmark()
+# Results include mean, std, confidence intervals for valid comparison
 ```
 
 **Why this matters:**
-- **Learning:** Complete benchmarking ecosystem in one focused module for rigorous evaluation
-- **TorchPerf Olympics:** The Benchmark class provides the standardized framework for capstone submissions
+- **Learning:** Complete benchmarking methodology in one focused module for rigorous evaluation
+- **Statistical Rigor:** Multiple runs, confidence intervals, and proper measurement protocols
 - **Consistency:** All benchmarking operations and reporting in benchmarking.benchmark
-- **Integration:** Works seamlessly with optimization modules (M14-18) for complete systems evaluation
+- **Integration:** Works seamlessly with optimization modules (M14-18) and competition workflow (Module 20)
 """
 
 # %% [markdown]
@@ -172,23 +165,6 @@ import warnings
 # Import Profiler from Module 15 for measurement reuse
 from tinytorch.profiling.profiler import Profiler
 
-# %%
-#| export
-from enum import Enum
-
-class OlympicEvent(Enum):
-    """
-    TorchPerf Olympics event categories.
-    
-    Each event optimizes for different objectives with specific constraints.
-    Students choose their event and compete for medals!
-    """
-    LATENCY_SPRINT = "latency_sprint"      # Minimize latency (accuracy >= 85%)
-    MEMORY_CHALLENGE = "memory_challenge"   # Minimize memory (accuracy >= 85%)
-    ACCURACY_CONTEST = "accuracy_contest"   # Maximize accuracy (latency < 100ms, memory < 10MB)
-    ALL_AROUND = "all_around"               # Best balanced score across all metrics
-    EXTREME_PUSH = "extreme_push"           # Most aggressive optimization (accuracy >= 80%)
-
 # %% [markdown]
 """
 # 3. Implementation - Building Professional Benchmarking Infrastructure
@@ -204,9 +180,9 @@ BenchmarkResult ← Statistical container for measurements
 Benchmark ← Uses Profiler + adds multi-model comparison
        ↓
 BenchmarkSuite ← Multi-metric comprehensive evaluation
-       ↓
-TinyMLPerf ← Standardized industry-style benchmarks
 ```
+
+**Note**: Competition-specific frameworks (like event types and submission formats) are handled in Module 20, which uses this benchmarking harness.
 
 **Key Architectural Decision**: The `Benchmark` class reuses `Profiler` from Module 15 for individual model measurements, then adds statistical comparison across multiple models. This demonstrates proper systems architecture - build once, reuse everywhere!
 
@@ -1205,438 +1181,6 @@ test_unit_benchmark_suite()
 
 # %% [markdown]
 """
-## TinyMLPerf - Standardized Industry Benchmarking
-
-TinyMLPerf provides standardized benchmarks that enable fair comparison across different systems, similar to how MLPerf works for larger models. This is crucial for reproducible research and industry adoption.
-
-### Why Standardization Matters
-
-Without standards, every team benchmarks differently:
-- Different datasets, input sizes, measurement protocols
-- Different accuracy metrics, latency definitions
-- Different hardware configurations, software stacks
-
-This makes it impossible to compare results across papers, products, or research groups.
-
-### TinyMLPerf Benchmark Architecture
-
-```
-TinyMLPerf Benchmark Structure:
-┌─────────────────────────────────────────────────────────┐
-│                  Benchmark Definition                   │
-│ • Standard datasets (CIFAR-10, Speech Commands, etc.)  │
-│ • Fixed input shapes and data types                     │
-│ • Target accuracy and latency thresholds               │
-│ • Measurement protocol (warmup, runs, etc.)            │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│                 Execution Protocol                      │
-│ 1. Model registration and validation                   │
-│ 2. Warmup phase (deterministic random inputs)          │
-│ 3. Measurement phase (statistical sampling)            │
-│ 4. Accuracy evaluation (ground truth comparison)       │
-│ 5. Compliance checking (thresholds, statistical tests) │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│              Compliance Determination                   │
-│ PASS: accuracy ≥ target AND latency ≤ target           │
-│ FAIL: Either constraint violated                        │
-│ Report: Detailed metrics + system information          │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Standard Benchmark Tasks
-
-**Keyword Spotting**: Wake word detection from audio
-- Input: 1-second 16kHz audio samples
-- Task: Binary classification (keyword present/absent)
-- Target: 90% accuracy, <100ms latency
-
-**Visual Wake Words**: Person detection in images
-- Input: 96×96 RGB images
-- Task: Binary classification (person present/absent)
-- Target: 80% accuracy, <200ms latency
-
-**Anomaly Detection**: Industrial sensor monitoring
-- Input: 640-element sensor feature vectors
-- Task: Binary classification (anomaly/normal)
-- Target: 85% accuracy, <50ms latency
-
-### Reproducibility Requirements
-
-All TinyMLPerf benchmarks use:
-- **Fixed random seeds**: Deterministic input generation
-- **Standardized hardware**: Reference implementations for comparison
-- **Statistical validation**: Multiple runs with confidence intervals
-- **Compliance reporting**: Machine-readable results format
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tinymlperf", "solution": true}
-#| export
-class TinyMLPerf:
-    """
-    TinyMLPerf-style standardized benchmarking for edge ML systems.
-
-    TODO: Implement standardized benchmarks following TinyMLPerf methodology
-
-    APPROACH:
-    1. Define standard benchmark tasks and datasets
-    2. Implement standardized measurement protocols
-    3. Ensure reproducible results across different systems
-    4. Generate compliance reports for fair comparison
-
-    EXAMPLE:
-    >>> perf = TinyMLPerf()
-    >>> results = perf.run_keyword_spotting_benchmark(model)
-    >>> perf.generate_compliance_report(results)
-
-    HINTS:
-    - Use fixed random seeds for reproducibility
-    - Implement warm-up and measurement phases
-    - Follow TinyMLPerf power and latency measurement standards
-    - Generate standardized result formats
-    """
-    ### BEGIN SOLUTION
-    def __init__(self, random_seed: int = 42):
-        """Initialize TinyMLPerf benchmark suite."""
-        self.random_seed = random_seed
-        np.random.seed(random_seed)
-
-        # Standard TinyMLPerf benchmark configurations
-        self.benchmarks = {
-            'keyword_spotting': {
-                'input_shape': (1, 16000),  # 1 second of 16kHz audio
-                'target_accuracy': 0.90,
-                'max_latency_ms': 100,
-                'description': 'Wake word detection'
-            },
-            'visual_wake_words': {
-                'input_shape': (1, 96, 96, 3),  # 96x96 RGB image
-                'target_accuracy': 0.80,
-                'max_latency_ms': 200,
-                'description': 'Person detection in images'
-            },
-            'anomaly_detection': {
-                'input_shape': (1, 640),  # Machine sensor data
-                'target_accuracy': 0.85,
-                'max_latency_ms': 50,
-                'description': 'Industrial anomaly detection'
-            },
-            'image_classification': {
-                'input_shape': (1, 32, 32, 3),  # CIFAR-10 style
-                'target_accuracy': 0.75,
-                'max_latency_ms': 150,
-                'description': 'Tiny image classification'
-            }
-        }
-
-    def run_standard_benchmark(self, model: Any, benchmark_name: str,
-                             num_runs: int = 100) -> Dict[str, Any]:
-        """Run a standardized TinyMLPerf benchmark."""
-        if benchmark_name not in self.benchmarks:
-            raise ValueError(f"Unknown benchmark: {benchmark_name}. "
-                           f"Available: {list(self.benchmarks.keys())}")
-
-        config = self.benchmarks[benchmark_name]
-        print(f"🔬 Running TinyMLPerf {benchmark_name} benchmark...")
-        print(f"   Target: {config['target_accuracy']:.1%} accuracy, "
-              f"<{config['max_latency_ms']}ms latency")
-
-        # Generate standardized test inputs
-        input_shape = config['input_shape']
-        test_inputs = []
-        for i in range(num_runs):
-            # Use deterministic random generation for reproducibility
-            np.random.seed(self.random_seed + i)
-            if len(input_shape) == 2:  # Audio/sequence data
-                test_input = np.random.randn(*input_shape).astype(np.float32)
-            else:  # Image data
-                test_input = np.random.randint(0, 256, input_shape).astype(np.float32) / 255.0
-            test_inputs.append(test_input)
-
-        # Warmup phase (10% of runs)
-        warmup_runs = max(1, num_runs // 10)
-        print(f"   Warming up ({warmup_runs} runs)...")
-        for i in range(warmup_runs):
-            try:
-                if hasattr(model, 'forward'):
-                    model.forward(test_inputs[i])
-                elif hasattr(model, 'predict'):
-                    model.predict(test_inputs[i])
-                elif callable(model):
-                    model(test_inputs[i])
-            except:
-                pass  # Skip if model doesn't support this input
-
-        # Measurement phase
-        print(f"   Measuring performance ({num_runs} runs)...")
-        latencies = []
-        predictions = []
-
-        for i, test_input in enumerate(test_inputs):
-            with precise_timer() as timer:
-                try:
-                    if hasattr(model, 'forward'):
-                        output = model.forward(test_input)
-                    elif hasattr(model, 'predict'):
-                        output = model.predict(test_input)
-                    elif callable(model):
-                        output = model(test_input)
-                    else:
-                        # Simulate prediction
-                        output = np.random.rand(2) if benchmark_name in ['keyword_spotting', 'visual_wake_words'] else np.random.rand(10)
-
-                    predictions.append(output)
-                except:
-                    # Fallback simulation
-                    predictions.append(np.random.rand(2))
-
-                latencies.append(timer.elapsed * 1000)  # Convert to ms
-
-        # Simulate accuracy calculation (would use real labels in practice)
-        # Generate synthetic ground truth labels
-        np.random.seed(self.random_seed)
-        if benchmark_name in ['keyword_spotting', 'visual_wake_words']:
-            # Binary classification
-            true_labels = np.random.randint(0, 2, num_runs)
-            predicted_labels = []
-            for pred in predictions:
-                try:
-                    if hasattr(pred, 'data'):
-                        pred_array = pred.data
-                    else:
-                        pred_array = np.array(pred)
-
-                    if len(pred_array.shape) > 1:
-                        pred_array = pred_array.flatten()
-
-                    if len(pred_array) >= 2:
-                        predicted_labels.append(1 if pred_array[1] > pred_array[0] else 0)
-                    else:
-                        predicted_labels.append(1 if pred_array[0] > 0.5 else 0)
-                except:
-                    predicted_labels.append(np.random.randint(0, 2))
-        else:
-            # Multi-class classification
-            num_classes = 10 if benchmark_name == 'image_classification' else 5
-            true_labels = np.random.randint(0, num_classes, num_runs)
-            predicted_labels = []
-            for pred in predictions:
-                try:
-                    if hasattr(pred, 'data'):
-                        pred_array = pred.data
-                    else:
-                        pred_array = np.array(pred)
-
-                    if len(pred_array.shape) > 1:
-                        pred_array = pred_array.flatten()
-
-                    predicted_labels.append(np.argmax(pred_array) % num_classes)
-                except:
-                    predicted_labels.append(np.random.randint(0, num_classes))
-
-        # Calculate accuracy
-        correct_predictions = sum(1 for true, pred in zip(true_labels, predicted_labels) if true == pred)
-        accuracy = correct_predictions / num_runs
-
-        # Add some realistic noise based on model complexity
-        model_name = getattr(model, 'name', 'unknown_model')
-        if 'efficient' in model_name.lower():
-            accuracy = min(0.95, accuracy + 0.1)  # Efficient models might be less accurate
-        elif 'accurate' in model_name.lower():
-            accuracy = min(0.98, accuracy + 0.2)  # Accurate models perform better
-
-        # Compile results
-        results = {
-            'benchmark_name': benchmark_name,
-            'model_name': getattr(model, 'name', 'unknown_model'),
-            'accuracy': accuracy,
-            'mean_latency_ms': np.mean(latencies),
-            'std_latency_ms': np.std(latencies),
-            'p50_latency_ms': np.percentile(latencies, 50),
-            'p90_latency_ms': np.percentile(latencies, 90),
-            'p99_latency_ms': np.percentile(latencies, 99),
-            'max_latency_ms': np.max(latencies),
-            'throughput_fps': 1000 / np.mean(latencies),
-            'target_accuracy': config['target_accuracy'],
-            'target_latency_ms': config['max_latency_ms'],
-            'accuracy_met': accuracy >= config['target_accuracy'],
-            'latency_met': np.mean(latencies) <= config['max_latency_ms'],
-            'compliant': accuracy >= config['target_accuracy'] and np.mean(latencies) <= config['max_latency_ms'],
-            'num_runs': num_runs,
-            'random_seed': self.random_seed
-        }
-
-        print(f"   Results: {accuracy:.1%} accuracy, {np.mean(latencies):.1f}ms latency")
-        print(f"   Compliance: {'✅ PASS' if results['compliant'] else '❌ FAIL'}")
-
-        return results
-
-    def run_all_benchmarks(self, model: Any) -> Dict[str, Dict[str, Any]]:
-        """Run all TinyMLPerf benchmarks on a model."""
-        all_results = {}
-
-        print(f"🚀 Running full TinyMLPerf suite on {getattr(model, 'name', 'model')}...")
-        print("=" * 60)
-
-        for benchmark_name in self.benchmarks.keys():
-            try:
-                results = self.run_standard_benchmark(model, benchmark_name)
-                all_results[benchmark_name] = results
-                print()
-            except Exception as e:
-                print(f"   ❌ Failed to run {benchmark_name}: {e}")
-                all_results[benchmark_name] = {'error': str(e)}
-
-        return all_results
-
-    def generate_compliance_report(self, results: Dict[str, Dict[str, Any]],
-                                 output_path: str = "tinymlperf_report.json") -> str:
-        """Generate TinyMLPerf compliance report."""
-        # Calculate overall compliance
-        compliant_benchmarks = []
-        total_benchmarks = 0
-
-        report_data = {
-            'tinymlperf_version': '1.0',
-            'random_seed': self.random_seed,
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'model_name': 'unknown',
-            'benchmarks': {},
-            'summary': {}
-        }
-
-        for benchmark_name, result in results.items():
-            if 'error' not in result:
-                total_benchmarks += 1
-                if result.get('compliant', False):
-                    compliant_benchmarks.append(benchmark_name)
-
-                # Set model name from first successful result
-                if report_data['model_name'] == 'unknown':
-                    report_data['model_name'] = result.get('model_name', 'unknown')
-
-                # Store benchmark results
-                report_data['benchmarks'][benchmark_name] = {
-                    'accuracy': result['accuracy'],
-                    'mean_latency_ms': result['mean_latency_ms'],
-                    'p99_latency_ms': result['p99_latency_ms'],
-                    'throughput_fps': result['throughput_fps'],
-                    'target_accuracy': result['target_accuracy'],
-                    'target_latency_ms': result['target_latency_ms'],
-                    'accuracy_met': result['accuracy_met'],
-                    'latency_met': result['latency_met'],
-                    'compliant': result['compliant']
-                }
-
-        # Summary statistics
-        if total_benchmarks > 0:
-            compliance_rate = len(compliant_benchmarks) / total_benchmarks
-            report_data['summary'] = {
-                'total_benchmarks': total_benchmarks,
-                'compliant_benchmarks': len(compliant_benchmarks),
-                'compliance_rate': compliance_rate,
-                'overall_compliant': compliance_rate == 1.0,
-                'compliant_benchmark_names': compliant_benchmarks
-            }
-
-        # Save report
-        with open(output_path, 'w') as f:
-            json.dump(report_data, f, indent=2)
-
-        # Generate human-readable summary
-        summary_lines = []
-        summary_lines.append("# TinyMLPerf Compliance Report")
-        summary_lines.append("=" * 40)
-        summary_lines.append(f"Model: {report_data['model_name']}")
-        summary_lines.append(f"Date: {report_data['timestamp']}")
-        summary_lines.append("")
-
-        if total_benchmarks > 0:
-            summary_lines.append(f"## Overall Result: {'✅ COMPLIANT' if report_data['summary']['overall_compliant'] else '❌ NON-COMPLIANT'}")
-            summary_lines.append(f"Compliance Rate: {compliance_rate:.1%} ({len(compliant_benchmarks)}/{total_benchmarks})")
-            summary_lines.append("")
-
-            summary_lines.append("## Benchmark Details:")
-            for benchmark_name, result in report_data['benchmarks'].items():
-                status = "✅ PASS" if result['compliant'] else "❌ FAIL"
-                summary_lines.append(f"- **{benchmark_name}**: {status}")
-                summary_lines.append(f"  - Accuracy: {result['accuracy']:.1%} (target: {result['target_accuracy']:.1%})")
-                summary_lines.append(f"  - Latency: {result['mean_latency_ms']:.1f}ms (target: <{result['target_latency_ms']}ms)")
-                summary_lines.append("")
-        else:
-            summary_lines.append("No successful benchmark runs.")
-
-        summary_text = "\n".join(summary_lines)
-
-        # Save human-readable report
-        summary_path = output_path.replace('.json', '_summary.md')
-        with open(summary_path, 'w') as f:
-            f.write(summary_text)
-
-        print(f"📄 TinyMLPerf report saved to {output_path}")
-        print(f"📄 Summary saved to {summary_path}")
-
-        return summary_text
-    ### END SOLUTION
-
-def test_unit_tinymlperf():
-    """🔬 Test TinyMLPerf standardized benchmarking."""
-    print("🔬 Unit Test: TinyMLPerf...")
-
-    # Create mock model for testing
-    class MockModel:
-        def __init__(self, name):
-            self.name = name
-
-        def forward(self, x):
-            time.sleep(0.001)  # Simulate computation
-            # Return appropriate output shape for different benchmarks
-            if hasattr(x, 'shape'):
-                if len(x.shape) == 2:  # Audio/sequence
-                    return np.random.rand(2)  # Binary classification
-                else:  # Image
-                    return np.random.rand(10)  # Multi-class
-            return np.random.rand(2)
-
-    model = MockModel("test_model")
-    perf = TinyMLPerf(random_seed=42)
-
-    # Test individual benchmark
-    result = perf.run_standard_benchmark(model, 'keyword_spotting', num_runs=5)
-
-    # Verify result structure
-    required_keys = ['accuracy', 'mean_latency_ms', 'throughput_fps', 'compliant']
-    assert all(key in result for key in required_keys)
-    assert 0 <= result['accuracy'] <= 1
-    assert result['mean_latency_ms'] > 0
-    assert result['throughput_fps'] > 0
-
-    # Test full benchmark suite (with fewer runs for speed)
-    import tempfile
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        # Run subset of benchmarks for testing
-        subset_results = {}
-        for benchmark in ['keyword_spotting', 'image_classification']:
-            subset_results[benchmark] = perf.run_standard_benchmark(model, benchmark, num_runs=3)
-
-        # Test compliance report generation
-        report_path = f"{tmp_dir}/test_report.json"
-        summary = perf.generate_compliance_report(subset_results, report_path)
-
-        # Verify report was created
-        assert Path(report_path).exists()
-        assert "TinyMLPerf Compliance Report" in summary
-        assert "Compliance Rate" in summary
-
-    print("✅ TinyMLPerf works correctly!")
-
-test_unit_tinymlperf()
-
-# %% [markdown]
-"""
 # 4. Integration - Building Complete Benchmark Workflows
 
 Now we'll integrate all our benchmarking components into complete workflows that demonstrate professional ML systems evaluation. This integration shows how to combine statistical rigor with practical insights.
@@ -2098,139 +1642,24 @@ Google TPU submission: 1.8ms (absolute) → 4.2x speedup (relative)
 Winner: Google (better speedup despite slower absolute time)
 ```
 
-### Implementing Normalized Scoring
-"""
-
 # %% [markdown]
 """
-Let's implement a helper function to calculate normalized scores for the competition:
-"""
+## 4.6 Understanding Measurement Confidence
 
-# %% nbgrader={"grade": false, "grade_id": "normalized-scoring", "locked": false}
-#| export
-def calculate_normalized_scores(baseline_results: dict, 
-                                optimized_results: dict) -> dict:
-    """
-    Calculate normalized performance metrics for fair competition comparison.
-    
-    This function converts absolute measurements into relative improvements,
-    enabling fair comparison across different hardware platforms.
-    
-    Args:
-        baseline_results: Dict with keys: 'latency', 'memory', 'accuracy'
-        optimized_results: Dict with same keys as baseline_results
-        
-    Returns:
-        Dict with normalized metrics:
-        - speedup: Relative latency improvement (higher is better)
-        - compression_ratio: Relative memory reduction (higher is better)
-        - accuracy_delta: Absolute accuracy change (closer to 0 is better)
-        - efficiency_score: Combined metric balancing all factors
-        
-    Example:
-        >>> baseline = {'latency': 100.0, 'memory': 12.0, 'accuracy': 0.89}
-        >>> optimized = {'latency': 40.0, 'memory': 3.0, 'accuracy': 0.87}
-        >>> scores = calculate_normalized_scores(baseline, optimized)
-        >>> print(f"Speedup: {scores['speedup']:.2f}x")
-        Speedup: 2.50x
-    """
-    # Calculate speedup (higher is better)
-    speedup = baseline_results['latency'] / optimized_results['latency']
-    
-    # Calculate compression ratio (higher is better)
-    compression_ratio = baseline_results['memory'] / optimized_results['memory']
-    
-    # Calculate accuracy delta (closer to 0 is better, negative means degradation)
-    accuracy_delta = optimized_results['accuracy'] - baseline_results['accuracy']
-    
-    # Calculate efficiency score (combined metric)
-    # Penalize accuracy loss: the more accuracy you lose, the lower your score
-    accuracy_penalty = max(1.0, 1.0 - accuracy_delta) if accuracy_delta < 0 else 1.0
-    efficiency_score = (speedup * compression_ratio) / accuracy_penalty
-    
-    return {
-        'speedup': speedup,
-        'compression_ratio': compression_ratio,
-        'accuracy_delta': accuracy_delta,
-        'efficiency_score': efficiency_score,
-        'baseline': baseline_results.copy(),
-        'optimized': optimized_results.copy()
-    }
+Now that you've built the benchmarking infrastructure, let's understand how to interpret results and make valid comparisons.
 
-# %% [markdown]
-"""
-### 🧪 Unit Test: Normalized Scoring
+### Statistical Significance in Benchmarks
 
-**This is a unit test** - it validates that normalized scoring correctly calculates relative improvements.
-"""
+When comparing two models, you need to ensure differences are real, not noise:
 
-# %% nbgrader={"grade": true, "grade_id": "test-normalized-scoring", "locked": true, "points": 1}
-def test_unit_normalized_scoring():
-    """Test normalized scoring calculation."""
-    print("🔬 Unit Test: Normalized Scoring Calculation...")
-    
-    # Test Case 1: Standard optimization (speedup + compression)
-    baseline = {'latency': 100.0, 'memory': 12.0, 'accuracy': 0.89}
-    optimized = {'latency': 40.0, 'memory': 3.0, 'accuracy': 0.87}
-    
-    scores = calculate_normalized_scores(baseline, optimized)
-    
-    assert abs(scores['speedup'] - 2.5) < 0.01, "Speedup calculation incorrect"
-    assert abs(scores['compression_ratio'] - 4.0) < 0.01, "Compression ratio incorrect"
-    assert abs(scores['accuracy_delta'] - (-0.02)) < 0.001, "Accuracy delta incorrect"
-    print("  ✅ Standard optimization scoring works")
-    
-    # Test Case 2: Extreme optimization (high speedup, accuracy loss)
-    optimized_extreme = {'latency': 20.0, 'memory': 1.5, 'accuracy': 0.75}
-    scores_extreme = calculate_normalized_scores(baseline, optimized_extreme)
-    
-    assert scores_extreme['speedup'] > 4.0, "Extreme speedup not detected"
-    assert scores_extreme['accuracy_delta'] < -0.1, "Large accuracy loss not detected"
-    print("  ✅ Extreme optimization scoring works")
-    
-    # Test Case 3: Conservative optimization (minimal changes)
-    optimized_conservative = {'latency': 90.0, 'memory': 11.0, 'accuracy': 0.89}
-    scores_conservative = calculate_normalized_scores(baseline, optimized_conservative)
-    
-    assert abs(scores_conservative['accuracy_delta']) < 0.01, "Accuracy preservation not detected"
-    print("  ✅ Conservative optimization scoring works")
-    
-    # Test Case 4: Accuracy improvement (rare but possible)
-    optimized_better = {'latency': 80.0, 'memory': 10.0, 'accuracy': 0.91}
-    scores_better = calculate_normalized_scores(baseline, optimized_better)
-    
-    assert scores_better['accuracy_delta'] > 0, "Accuracy improvement not detected"
-    print("  ✅ Accuracy improvement scoring works")
-    
-    print("📈 Progress: Normalized Scoring ✓\n")
+```
+Model A: 5.2ms ± 0.3ms (95% CI: [4.9, 5.5])
+Model B: 4.8ms ± 0.4ms (95% CI: [4.4, 5.2])
 
-test_unit_normalized_scoring()
-
-# %% [markdown]
-"""
-### Key Takeaways
-
-1. **Always report relative improvements, not absolute numbers**
-2. **Speedup and compression ratio are the primary metrics**
-3. **Accuracy delta shows the optimization cost**
-4. **Efficiency score balances all factors for All-Around event**
-
-**In Module 20**, you'll use `calculate_normalized_scores()` to generate your competition submission!
-"""
-
-# %% [markdown]
-"""
-## 4.6 Combination Strategies - Preparing for TorchPerf Olympics
-
-You've learned individual optimizations (M14-18). Now it's time to combine them strategically! The order and parameters matter significantly for final performance.
-
-### Why Combination Order Matters
-
-Consider these two strategies:
-- **Strategy A**: Quantize INT8 → Prune 70% → Fuse kernels
-- **Strategy B**: Prune 70% → Quantize INT8 → Fuse kernels
-
-Strategy A might preserve more accuracy because quantization happens first (on the full network), while Strategy B might be faster because pruning reduces what needs to be quantized. The "best" depends on your Olympic event!
+Question: Is Model B actually faster?
+Answer: Confidence intervals overlap → difference might be noise
+         Need more runs or larger difference to claim improvement
+```
 
 ### Ablation Studies: Understanding Individual Contributions
 
@@ -2245,53 +1674,43 @@ Baseline:           Accuracy: 89%, Latency: 45ms, Memory: 12MB
 Conclusion: Quantization provides biggest memory reduction, fusion provides latency boost
 ```
 
-This systematic analysis tells you what to prioritize for each Olympic event!
+This systematic analysis guides optimization decisions with statistical backing.
 
-### Olympic Event Strategies
+### Making Valid Comparisons
 
-**🏃 Latency Sprint**: Minimize inference time
-- Priority: Kernel fusion > KV caching > Quantization > Pruning
-- Risk: Aggressive optimizations may hurt accuracy
-- Tip: Start with proven speed techniques, then add memory techniques if needed
+When benchmarking multiple optimization strategies, ensure you:
+1. **Use the same measurement protocol** for all variants
+2. **Run enough trials** to achieve statistical confidence
+3. **Control for confounding variables** (same hardware, same data, same environment)
+4. **Report confidence intervals** not just point estimates
+5. **Verify differences are statistically significant** before claiming improvements
 
-**🏋️ Memory Challenge**: Minimize model footprint
-- Priority: Quantization > Pruning > Compression
-- Risk: Model quality degradation
-- Tip: Quantize first (4x memory reduction), then prune to meet target
-
-**🎯 Accuracy Contest**: Maximize accuracy within constraints
-- Priority: Minimal optimizations, careful tuning
-- Risk: Not enough optimization to meet constraints
-- Tip: Use high-bit quantization (8-bit), light pruning (30-50%)
-
-**🏋️‍♂️ All-Around**: Best balanced performance
-- Priority: Balanced application of all techniques
-- Risk: Jack of all trades, master of none
-- Tip: Use moderate settings for each technique (INT8, 60% pruning, selective fusion)
-
-**🚀 Extreme Push**: Most aggressive optimization
-- Priority: Maximum of everything
-- Risk: Significant accuracy loss
-- Tip: Start with 4-bit quantization + 90% pruning, verify accuracy threshold
-
-### Example: Combining for All-Around Event
+### Example: Benchmarking Optimization Strategies
 
 ```python
+from tinytorch.benchmarking import Benchmark, BenchmarkResult
 from tinytorch.optimization.quantization import quantize_model
 from tinytorch.optimization.compression import magnitude_prune
-from tinytorch.generation.kv_cache import enable_kv_cache
 
 # Load baseline
 baseline_model = load_baseline("cifar10_cnn")
 
-# Apply balanced optimization strategy
-optimized = baseline_model
+# Create benchmark harness
+benchmark = Benchmark([baseline_model], [{"name": "baseline"}])
 
-# Step 1: Quantize to INT8 (moderate precision)
-optimized = quantize_model(optimized, bits=8)
+# Measure baseline
+baseline_results = benchmark.run_latency_benchmark()
 
-# Step 2: Prune 60% (moderate sparsity)
+# Apply optimization
+optimized = quantize_model(baseline_model, bits=8)
 optimized = magnitude_prune(optimized, sparsity=0.6)
+
+# Measure optimized version
+benchmark_opt = Benchmark([optimized], [{"name": "optimized"}])
+optimized_results = benchmark_opt.run_latency_benchmark()
+
+# Compare with statistical rigor
+# Check if confidence intervals overlap to determine if difference is significant
 
 # Step 3: Enable KV cache for transformers (if applicable)
 if hasattr(optimized, 'transformer_blocks'):
@@ -2435,15 +1854,13 @@ def test_module():
     assert "System Information" in report
     assert "Recommendations" in report
 
-    # Test 4: TinyMLPerf compliance
-    print("  Testing TinyMLPerf compliance...")
-    perf = TinyMLPerf(random_seed=42)
-    perf_results = perf.run_standard_benchmark(models[0], 'keyword_spotting', num_runs=5)
-
-    required_keys = ['accuracy', 'mean_latency_ms', 'compliant', 'target_accuracy']
-    assert all(key in perf_results for key in required_keys)
-    assert 0 <= perf_results['accuracy'] <= 1
-    assert perf_results['mean_latency_ms'] > 0
+    # Test 4: Statistical confidence validation
+    print("  Testing statistical confidence...")
+    # Verify that BenchmarkResult provides confidence intervals
+    single_result = BenchmarkResult("test_metric", [1.0, 2.0, 3.0, 4.0, 5.0])
+    assert hasattr(single_result, 'ci_lower')
+    assert hasattr(single_result, 'ci_upper')
+    assert single_result.ci_lower <= single_result.mean <= single_result.ci_upper
 
     # Test 5: Optimization comparison
     print("  Testing optimization comparison...")
@@ -2505,12 +1922,11 @@ For a CI/CD pipeline that runs 100 benchmarks per day:
 - Accurate config (15s each): _____ minutes total daily
 - What's the key trade-off you're making? [accuracy/precision/development velocity]
 
-### Question 4: TinyMLPerf Compliance Metrics
-You implemented TinyMLPerf-style standardized benchmarks with target thresholds.
-If a model achieves 89% accuracy (target: 90%) and 120ms latency (target: <100ms):
-- Is it compliant? [Yes/No] _____
-- Which constraint is more critical for edge deployment? [accuracy/latency]
-- How would you prioritize optimization? [accuracy first/latency first/balanced]
+### Question 4: Statistical Confidence Intervals
+You implemented BenchmarkResult with confidence intervals for measurements.
+If you run 20 trials and get mean latency 5.2ms with std dev 0.8ms:
+- What's the 95% confidence interval for the true mean? [_____ ms, _____ ms]
+- How many more trials would you need to halve the confidence interval width? _____ total trials
 
 ### Question 5: Optimization Comparison Analysis
 Your compare_optimization_techniques() generates recommendations for different use cases.
@@ -2534,20 +1950,20 @@ Congratulations! You've built a professional benchmarking system that rivals ind
 ### Key Accomplishments
 - Built comprehensive benchmarking infrastructure with BenchmarkResult, Benchmark, and BenchmarkSuite classes
 - Implemented statistical rigor with confidence intervals, variance analysis, and measurement optimization
-- Created TinyMLPerf-style standardized benchmarks for reproducible cross-system comparison
-- Developed optimization comparison workflows that generate actionable recommendations
+- Created reproducible measurement protocols with warmup phases and deterministic runs
+- Developed fair comparison frameworks that control for system noise and variability
 - All tests pass ✅ (validated by `test_module()`)
 
 ### Systems Engineering Insights Gained
 - **Measurement Science**: Statistical significance requires proper sample sizes and variance control
-- **Benchmark Design**: Standardized protocols enable fair comparison across different systems
-- **Trade-off Analysis**: Pareto frontiers reveal optimization opportunities and constraints
+- **Benchmark Design**: Multiple runs and confidence intervals reveal true performance vs noise
+- **Reproducibility**: Fixed seeds, warmup protocols, and environment control ensure valid comparisons
 - **Production Integration**: Automated reporting transforms measurements into engineering decisions
 
-### Ready for Systems Capstone
-Your benchmarking implementation enables the final milestone: a comprehensive systems evaluation comparing CNN vs TinyGPT with quantization, pruning, and performance analysis. This is where all 19 modules come together!
+### Ready for Competition Workflow
+Your benchmarking harness provides the foundation for Module 20, where you'll use these measurement tools in a competition context. The statistical rigor you've built here ensures fair, valid comparisons.
 
 Export with: `tito module complete 19`
 
-**Next**: Milestone 5 (Systems Capstone) will demonstrate the complete ML systems engineering workflow!
+**Next**: Module 20 (Competition & Submission) will show you how to use this benchmarking harness for competition workflows!
 """
