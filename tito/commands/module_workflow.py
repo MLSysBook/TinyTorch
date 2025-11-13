@@ -21,6 +21,7 @@ from .base import BaseCommand
 from .view import ViewCommand
 from .test import TestCommand
 from .export import ExportCommand
+from .module_reset import ModuleResetCommand
 from ..core.exceptions import ModuleNotFoundError
 
 class ModuleWorkflowCommand(BaseCommand):
@@ -84,6 +85,51 @@ class ModuleWorkflowCommand(BaseCommand):
             help='Skip automatic export'
         )
         
+        # RESET command - reset module to clean state
+        reset_parser = subparsers.add_parser(
+            'reset',
+            help='Reset module to clean state (backup + unexport + restore)'
+        )
+        reset_parser.add_argument(
+            'module_number',
+            help='Module number to reset (01, 02, 03, etc.)'
+        )
+        reset_parser.add_argument(
+            '--soft',
+            action='store_true',
+            help='Soft reset: backup + restore (keep exports)'
+        )
+        reset_parser.add_argument(
+            '--hard',
+            action='store_true',
+            help='Hard reset: backup + unexport + restore [DEFAULT]'
+        )
+        reset_parser.add_argument(
+            '--from-git',
+            action='store_true',
+            help='Restore from git HEAD [DEFAULT]'
+        )
+        reset_parser.add_argument(
+            '--restore-backup',
+            metavar='TIMESTAMP',
+            help='Restore from specific backup'
+        )
+        reset_parser.add_argument(
+            '--list-backups',
+            action='store_true',
+            help='List available backups'
+        )
+        reset_parser.add_argument(
+            '--no-backup',
+            action='store_true',
+            help='Skip backup (dangerous)'
+        )
+        reset_parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Skip confirmation'
+        )
+
         # STATUS command - show progress
         status_parser = subparsers.add_parser(
             'status',
@@ -465,6 +511,10 @@ class ModuleWorkflowCommand(BaseCommand):
                     getattr(args, 'skip_tests', False),
                     getattr(args, 'skip_export', False)
                 )
+            elif args.module_command == 'reset':
+                # Delegate to ModuleResetCommand
+                reset_command = ModuleResetCommand(self.config)
+                return reset_command.run(args)
             elif args.module_command == 'status':
                 return self.show_status()
         
@@ -474,7 +524,8 @@ class ModuleWorkflowCommand(BaseCommand):
             "[bold]Core Workflow:[/bold]\n"
             "  [bold green]tito module start 01[/bold green]     - Start working on Module 01 (first time)\n"
             "  [bold green]tito module resume 01[/bold green]    - Resume working on Module 01 (continue)\n"
-            "  [bold green]tito module complete 01[/bold green]  - Complete Module 01 (test + export)\n\n"
+            "  [bold green]tito module complete 01[/bold green]  - Complete Module 01 (test + export)\n"
+            "  [bold yellow]tito module reset 01[/bold yellow]    - Reset Module 01 to clean state (with backup)\n\n"
             "[bold]Smart Defaults:[/bold]\n"
             "  [bold]tito module resume[/bold]        - Resume last worked module\n"
             "  [bold]tito module complete[/bold]      - Complete current module\n"
@@ -486,7 +537,11 @@ class ModuleWorkflowCommand(BaseCommand):
             "  4. [dim]tito module start 02[/dim]     → Begin activations\n"
             "  5. [dim]tito module resume 02[/dim]    → Continue activations later\n\n"
             "[bold]Module States:[/bold]\n"
-            "  ⏳ Not started  🚀 In progress  ✅ Completed",
+            "  ⏳ Not started  🚀 In progress  ✅ Completed\n\n"
+            "[bold]Reset Options:[/bold]\n"
+            "  [dim]tito module reset 01 --list-backups[/dim]   - View available backups\n"
+            "  [dim]tito module reset 01 --soft[/dim]           - Keep package exports\n"
+            "  [dim]tito module reset 01 --restore-backup[/dim] - Restore from backup",
             title="Module Development Workflow",
             border_style="bright_cyan"
         ))

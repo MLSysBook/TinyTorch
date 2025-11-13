@@ -1,5 +1,5 @@
 """
-TinyTorch Interactive Help System
+Tiny🔥Torch Interactive Help System
 
 Provides contextual, progressive guidance for new and experienced users.
 """
@@ -74,11 +74,11 @@ class HelpCommand(BaseCommand):
         
         # Welcome screen
         console.print(Panel.fit(
-            "[bold blue]🚀 Welcome to TinyTorch![/bold blue]\n\n"
+            "[bold blue]🚀 Welcome to Tiny🔥Torch![/bold blue]\n\n"
             "Let's get you started on your ML systems engineering journey.\n"
-            "This quick wizard will help you understand what TinyTorch is\n"
+            "This quick wizard will help you understand what Tiny🔥Torch is\n"
             "and guide you to the right starting point.",
-            title="TinyTorch Onboarding Wizard",
+            title="Tiny🔥Torch Onboarding Wizard",
             border_style="blue"
         ))
         
@@ -385,7 +385,7 @@ class HelpCommand(BaseCommand):
         console = get_console()
         
         console.print(Panel.fit(
-            "[bold blue]👋 Welcome to TinyTorch![/bold blue]\n\n"
+            "[bold blue]👋 Welcome to Tiny🔥Torch![/bold blue]\n\n"
             "You're about to build a complete ML framework from scratch.\n"
             "Here's how to get started:\n\n"
             "[bold cyan]Next Steps:[/bold cyan]\n"
@@ -401,14 +401,14 @@ class HelpCommand(BaseCommand):
         """Detailed getting started help."""
         console = get_console()
         
-        console.print("[bold blue]🚀 Getting Started with TinyTorch[/bold blue]\n")
+        console.print("[bold blue]🚀 Getting Started with Tiny🔥Torch[/bold blue]\n")
         
         # Installation steps
         install_panel = Panel(
             "[bold]1. Environment Setup[/bold]\n"
             "```bash\n"
-            "git clone https://github.com/mlsysbook/TinyTorch.git\n"
-            "cd TinyTorch\n"
+            "git clone https://github.com/mlsysbook/Tiny🔥Torch.git\n"
+            "cd Tiny🔥Torch\n"
             f"python -m venv {self.venv_path}\n"
             f"source {self.venv_path}/bin/activate  # Windows: .venv\\Scripts\\activate\n"
             "pip install -r requirements.txt\n"
