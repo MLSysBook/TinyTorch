@@ -15,7 +15,9 @@ parts:
   - file: usage-paths/classroom-use
     title: "For Instructors"
 
-- caption: Foundation Tier (01-07)
+# Tier captions: Added emojis for visual consistency and quick recognition
+# Foundation (🏗), Architecture (🏛️), Optimization (⏱️), Capstone (🏅)
+- caption: 🏗 Foundation Tier (01-07)
   chapters:
   - file: modules/01_tensor_ABOUT
     title: "01. Tensor"
@@ -32,7 +34,7 @@ parts:
   - file: modules/07_training_ABOUT
     title: "07. Training"
 
-- caption: Architecture Tier (08-13)
+- caption: 🏛️ Architecture Tier (08-13)
   chapters:
   - file: modules/08_dataloader_ABOUT
     title: "08. DataLoader"
@@ -47,7 +49,7 @@ parts:
   - file: modules/13_transformers_ABOUT
     title: "13. Transformers"
 
-- caption: Optimization Tier (14-19)
+- caption: ⏱️ Optimization Tier (14-19)
   chapters:
   - file: modules/14_profiling_ABOUT
     title: "14. Profiling"
@@ -62,7 +64,7 @@ parts:
   - file: modules/19_benchmarking_ABOUT
     title: "19. Benchmarking"
 
-- caption: Capstone Competition
+- caption: 🏅 Capstone Competition
   chapters:
   - file: modules/20_capstone_ABOUT
     title: "20. Torch Olympics"
