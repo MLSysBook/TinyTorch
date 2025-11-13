@@ -1,57 +1,117 @@
 # Community Ecosystem
 
-**Building Together**
+**Learn together, build together, grow together.**
+
+TinyTorch is more than a course—it's a growing community of students, educators, and ML engineers learning systems engineering from first principles.
 
 ---
 
-## Overview
+## Connect Now
 
-TinyTorch is more than just a course—it's a growing community of students, educators, and ML engineers learning systems engineering from first principles.
+### GitHub Discussions (Available Now ✅)
+
+Join conversations with other TinyTorch builders:
+
+**[Visit GitHub Discussions](https://github.com/harvard-edge/TinyTorch/discussions)**
+
+- **Ask questions** about implementations and debugging
+- **Share your projects** and milestone achievements
+- **Help others** with systems thinking questions
+- **Discuss ML systems** engineering and production practices
+
+**Active discussion categories:**
+- Module implementations and debugging
+- Systems performance optimization
+- Career advice for ML engineers
+- Show and tell: Your TinyTorch projects
+
+**Why community matters for TinyTorch:** Unlike watching lectures, building ML systems requires debugging, experimentation, and iteration. The community helps you debug faster, learn trade-offs, stay motivated, and build systems intuition through discussion.
+
+### GitHub Repository (Available Now ✅)
+
+Star, fork, and contribute to TinyTorch:
+
+**[Visit GitHub Repository](https://github.com/harvard-edge/TinyTorch)**
+
+- **Report issues** and bugs
+- **Contribute fixes** and improvements
+- **Improve documentation** and examples
+- **Watch releases** for new features
+
+### Share Your Progress (Available Now ✅)
+
+Help others discover TinyTorch:
+
+- **Twitter/X**: Share your learning journey with #TinyTorch
+- **LinkedIn**: Post about building ML systems from scratch
+- **Reddit**: Share in r/MachineLearning, r/learnmachinelearning
+- **Blog**: Write about your implementations and insights
 
 ---
 
-## Community Platform (Coming Soon)
+## Coming Soon
 
-<div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
-<h3 style="margin: 0 0 1rem 0; color: #1565c0;">Building Community Features</h3>
-<p style="margin: 0; color: #1565c0;">We're creating live community features including activity dashboards, study partner matching, and real-time progress tracking. Stay tuned!</p>
-</div>
+We're building additional community features to enhance your learning experience:
 
-### Planned Features
+### Discord Server (In Development)
 
-**Live Dashboard**
-- Real-time community activity
-- Global learning progress
-- Module completion stats
+Real-time chat and study groups:
+- Live Q&A channels for debugging
+- Tier-based study groups
+- Office hours with educators
+- Project showcase channels
 
-**Connection Hub**
-- Find study partners
-- Join study groups
-- Connect with peers
+### Community Dashboard (Planned)
 
-**Global Reach**
-- See who's learning worldwide
-- Geographic distribution
-- Community milestones
+Track global learning progress:
+- Real-time completion statistics
+- Geographic distribution of learners
+- Milestone achievement tracking
+- Study partner matching
+
+### Torch Olympics Leaderboard (Planned)
+
+Compete in ML systems challenges:
+- Performance benchmarks
+- Memory efficiency competitions
+- Innovation showcases
+- Community recognition
 
 ---
 
-## Get Involved Now
+## For Educators
 
-**Learn Together**
-- Ask questions in [GitHub Discussions](https://github.com/harvard-edge/TinyTorch/discussions)
-- Share your progress and projects
-- Help others debug their implementations
+Teaching TinyTorch in your classroom?
 
-**Contribute**
-- Report bugs and issues on GitHub
-- Improve documentation
-- Submit fixes and optimizations
+**[See Instructor Guide](usage-paths/classroom-use.html)** for:
+- Course syllabus templates
+- Assignment integration
+- Student progress tracking
+- Classroom management tools
 
-**Stay Connected**
-- Star the project on [GitHub](https://github.com/harvard-edge/TinyTorch)
-- Follow development updates
-- Share TinyTorch with others
+---
+
+## Recognition & Showcase
+
+Built something impressive with TinyTorch?
+
+**Share it with the community:**
+- Post in [GitHub Discussions](https://github.com/harvard-edge/TinyTorch/discussions) under "Show and Tell"
+- Tag us on social media with #TinyTorch
+- Submit your project for community showcase (coming soon)
+
+**Exceptional projects may be featured:**
+- On the TinyTorch website
+- In course examples
+- As reference implementations
+
+---
+
+## Stay Updated
+
+**GitHub Watch**: [Enable notifications](https://github.com/harvard-edge/TinyTorch) for releases and updates
+
+**Follow Development**: Check [GitHub Issues](https://github.com/harvard-edge/TinyTorch/issues) for roadmap and upcoming features
 
 ---
 

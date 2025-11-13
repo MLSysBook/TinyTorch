@@ -1,79 +1,76 @@
 # TinyTorch: Build ML Systems from Scratch
 
-<div style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); color: white; padding: 3rem 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
-
-<h2 style="color: white; font-size: 2.5rem; margin: 0 0 1rem 0; font-weight: 700;">
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 
-<p style="font-size: 1.3rem; margin: 0 0 2rem 0; opacity: 0.95;">
-Implement every component of a neural network framework yourself—from tensors to transformers to production optimization—and understand exactly how modern ML systems work.
+<p style="text-align: center; font-size: 1.2rem; margin: 0 auto 2rem auto; max-width: 800px; color: #374151;">
+Build a complete neural network framework from scratch—tensors to transformers—and understand how ML systems really work.
 </p>
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0; text-align: center;">
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">95%+</div>
-    <div style="opacity: 0.9;">MNIST Accuracy</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Your neural networks</div>
-  </div>
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">75%+</div>
-    <div style="opacity: 0.9;">CIFAR-10 Accuracy</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Your CNNs</div>
-  </div>
-  <div>
-    <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
-    <div style="opacity: 0.9;">Your Code</div>
-    <div style="font-size: 0.9rem; opacity: 0.75;">Every implementation</div>
-  </div>
-</div>
-
-<div style="margin-top: 2rem;">
-  <a href="quickstart-guide.html" style="display: inline-block; background: white; color: #1e3a8a; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
+<div style="text-align: center; margin: 2rem 0;">
+  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
-  <a href="chapters/00-introduction.html" style="display: inline-block; background: transparent; color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin: 0 0.5rem;">
-    Learn More
-  </a>
+</div>
+
+## Four-Tier Learning Path
+
+Build ML systems understanding through progressive tiers—from mathematical foundations to competition-ready optimization.
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0 2.5rem 0; max-width: 900px;">
+
+<div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #1976d2;">
+<h3 style="margin: 0 0 0.5rem 0; color: #0d47a1; font-size: 1.1rem; font-weight: 600;">Foundation (01-07)</h3>
+<p style="margin: 0; color: #1565c0; font-size: 0.9rem; line-height: 1.5;">Tensors, autograd, training loops</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #7b1fa2;">
+<h3 style="margin: 0 0 0.5rem 0; color: #4a148c; font-size: 1.1rem; font-weight: 600;">Architecture (08-13)</h3>
+<p style="margin: 0; color: #6a1b9a; font-size: 0.9rem; line-height: 1.5;">Data loading, CNNs, transformers</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #f57c00;">
+<h3 style="margin: 0 0 0.5rem 0; color: #e65100; font-size: 1.1rem; font-weight: 600;">Optimization (14-19)</h3>
+<p style="margin: 0; color: #ef6c00; font-size: 0.9rem; line-height: 1.5;">Profiling, quantization, benchmarking</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #c2185b;">
+<h3 style="margin: 0 0 0.5rem 0; color: #880e4f; font-size: 1.1rem; font-weight: 600;">Torch Olympics (20)</h3>
+<p style="margin: 0; color: #ad1457; font-size: 0.9rem; line-height: 1.5;">Compete in ML systems challenges</p>
 </div>
 
 </div>
 
-## Your Learning Journey
+Each tier unlocks **historical milestones** where you validate implementations by recreating breakthrough moments in ML history. **[View milestone demos](chapters/milestones.html)** to see what you'll build.
 
-Build a complete ML systems framework through three progressive tiers—from mathematical foundations to production optimization—and prove your mastery through historically significant milestones.
+**[Complete course structure](chapters/00-introduction.html)** • **[Daily workflow guide](student-workflow.html)** • **[Join the community](community.html)**
 
-```{mermaid}
-graph TD
-    subgraph Foundation["Foundation Tier (01-07)"]
-        F["Build Mathematical Infrastructure<br/>Tensors → Autograd → Training<br/><br/>Achieve: 95%+ MNIST Accuracy"]
-    end
+## Recreate 70 Years of ML History
 
-    subgraph Architecture["Architecture Tier (08-13)"]
-        A["Implement Modern AI<br/>DataLoader → CNNs → Transformers<br/><br/>Achieve: 75%+ CIFAR-10, Text Generation"]
-    end
+As you progress through tiers, you'll validate your work by recreating historically significant breakthroughs:
 
-    subgraph Optimization["Optimization Tier (14-19)"]
-        O["Deploy Production Systems<br/>Profile → Quantize → Benchmark<br/><br/>Achieve: Sub-100ms Inference"]
-    end
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 1.75rem 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 
-    subgraph Capstone["Capstone (20)"]
-        C["Complete Integration<br/>MLPerf Competition<br/><br/>Compete on Real Hardware"]
-    end
+<div style="max-width: 650px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">
 
-    F --> A
-    A --> O
-    O --> C
+**1957 — Perceptron** • First trainable neural network
 
-    style Foundation fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    style Architecture fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style Optimization fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    style Capstone fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-```
+**1969 — XOR Crisis** • Solved with hidden layers
 
-**Browse complete module details in the sidebar navigation** — organized by tier with clear learning objectives and implementation guides.
+**1986 — Backpropagation** • Multi-layer learning
 
-**See [Complete Course Structure](chapters/00-introduction.html)** for detailed tier breakdowns, time estimates, and career connections.
+**1998 — CNNs** • Spatial intelligence
+
+**2017 — Transformers** • Attention mechanisms
+
+**2018 — Systems** • Performance optimization
+
+</div>
+
+</div>
+
+From Rosenblatt's 1957 Perceptron to modern systems optimization—build and validate every breakthrough yourself. **[Explore milestones](chapters/milestones.html)**
 
 ## Why Build Instead of Use?
 
@@ -109,7 +106,7 @@ output = model(input)
 
 </div>
 
-**Systems Thinking**: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to production reality.
+**Systems Thinking**: TinyTorch emphasizes understanding how components interact—memory hierarchies, computational complexity, and optimization trade-offs—not just isolated algorithms. Every module connects mathematical theory to systems understanding.
 
 **See [Course Philosophy](chapters/00-introduction.html)** for the full origin story and pedagogical approach.
 
@@ -144,30 +141,6 @@ This approach develops not just coding ability, but systems engineering intuitio
 
 **Prerequisites**: Python programming and basic linear algebra (matrix multiplication). No prior ML framework experience required—you'll build your own.
 
-### Start Your Path
-
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
-
-<div style="background: #eff6ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #3b82f6;">
-<h4 style="margin: 0 0 1rem 0; color: #1e40af;">Quick Start</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Get hands-on immediately</p>
-<a href="quickstart-guide.html" style="color: #1e40af; font-weight: 600; text-decoration: none;">15-Minute Setup →</a>
-</div>
-
-<div style="background: #faf5ff; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #9333ea;">
-<h4 style="margin: 0 0 1rem 0; color: #6b21a8;">Learn More</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Understand the approach</p>
-<a href="chapters/00-introduction.html" style="color: #6b21a8; font-weight: 600; text-decoration: none;">Course Philosophy →</a>
-</div>
-
-<div style="background: #f0fdfa; padding: 1.5rem; border-radius: 0.5rem; border: 2px solid #14b8a6;">
-<h4 style="margin: 0 0 1rem 0; color: #115e59;">For Instructors</h4>
-<p style="margin: 0 0 1rem 0; font-size: 0.95rem;">Classroom integration</p>
-<a href="usage-paths/classroom-use.html" style="color: #115e59; font-weight: 600; text-decoration: none;">Teaching Guide →</a>
-</div>
-
-</div>
-
 ## Essential Resources
 
 **Core Documentation**:
@@ -181,11 +154,3 @@ This approach develops not just coding ability, but systems engineering intuitio
 - **[FAQ](faq.md)** — Comparisons with PyTorch, TensorFlow, micrograd
 - **[Testing Framework](testing-framework.md)** — Quality assurance and validation
 - **[Community](community.md)** — Connect with other builders
-
----
-
-**Ready to build?** Start with the [Quick Start Guide](quickstart-guide.html) to go from zero to building neural networks in 15 minutes.
-
-**Want context first?** Read the [Course Introduction](chapters/00-introduction.html) to understand the origin story, philosophy, and complete learning progression.
-
-**Teaching a course?** Review the [Instructor Guide](usage-paths/classroom-use.html) for classroom integration, automated grading, and curriculum planning.

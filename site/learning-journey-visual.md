@@ -58,7 +58,7 @@ flowchart TB
         M19 --> M20[Module 20: Competition]
     end
 
-    M20 --> MS06{{"🏆 M06: 2024 MLPerf<br/>Production System"}}
+    M20 --> MS06{{"🏆 M06: 2024 Torch Olympics<br/>Production System"}}
     MS06 --> Complete([🎓 Complete!<br/>ML Systems Engineer])
 
     style M01 fill:#e3f2fd,stroke:#2196f3,stroke-width:2px

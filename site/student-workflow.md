@@ -97,10 +97,10 @@ Neural network architectures - data loading, CNNs, transformers
 Production optimization - profiling, quantization, benchmarking
 
 **Milestones unlocked:**
-- M06: MLPerf (after Module 18)
+- M06: Torch Olympics (after Module 18)
 
 ### Capstone Competition (Module 20)
-Apply all optimizations in the MLPerf® Edu Competition
+Apply all optimizations in the Torch Olympics Competition
 
 ## Typical Development Session
 

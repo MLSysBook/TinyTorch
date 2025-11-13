@@ -171,7 +171,7 @@ After exporting your modules, **prove what you've built** by running milestone s
 **After Module 08**: Achieve **95%+ accuracy on MNIST** with 1986 backpropagation  
 **After Module 09**: Hit **75%+ on CIFAR-10** with 1998 CNNs  
 **After Module 13**: Generate text with **2017 Transformers**  
-**After Module 18**: Optimize for production with **2018 MLPerf**
+**After Module 18**: Optimize for production with **2018 Torch Olympics**
 
 See [Journey Through ML History](chapters/milestones.md) for complete timeline, requirements, and expected results.
 
