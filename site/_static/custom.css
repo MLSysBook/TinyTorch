@@ -105,11 +105,24 @@ pre.mermaid.align-center {
     color: #000000;
     padding: 0.75rem 1rem;
     text-align: center;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
-    z-index: 1000;
+    z-index: 9999;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     animation: attention-pulse 4s ease-in-out infinite;
+}
+
+/* Push down Jupyter Book header to make room for banner */
+header.bd-header {
+    margin-top: 4rem !important;
+}
+
+/* Add spacing to main content area */
+.bd-container {
+    padding-top: 1rem !important;
 }
 
 /* Add spacing after the banner */
@@ -131,7 +144,7 @@ pre.mermaid.align-center {
     flex-direction: column;  /* Stack title and description vertically */
     flex-wrap: nowrap;
     gap: 0.25rem;
-    padding-right: 3.5rem;  /* Space for buttons */
+    padding-right: 2rem;  /* Space for toggle button */
 }
 
 .wip-banner-title {
@@ -173,7 +186,7 @@ pre.mermaid.align-center {
 
 .wip-banner-toggle {
     position: absolute;
-    right: 2.5rem;
+    right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.1);
@@ -273,7 +286,7 @@ pre.mermaid.align-center {
     .wip-banner-content {
         flex-direction: column;  /* Stack vertically on mobile */
         gap: 0.25rem;
-        padding-right: 3rem;
+        padding-right: 2rem;
     }
 
     .wip-banner-title {
