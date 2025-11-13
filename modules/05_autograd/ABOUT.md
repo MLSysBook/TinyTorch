@@ -415,11 +415,77 @@ print(f"dz/dx with multiple paths: {x.grad}")  # Should be 5.0 ✓
 - **Robotics and Control**: Trajectory optimization uses autodiff to compute gradients of cost functions with respect to control inputs for gradient-based planning
 - **Physics Simulations**: Differentiable physics engines use autodiff for inverse problems like inferring material properties from observed motion
 
-### PyTorch torch.autograd.Function Comparison
-- **Function Architecture**: Your Function classes mirror PyTorch's torch.autograd.Function. Both implement forward() and backward() (apply in your case)
-- **Enhanced Tensor vs Variable**: PyTorch used to have separate Variable wrapper (pre-v0.4) but merged it into Tensor in 2018. Your implementation follows modern PyTorch style
-- **Performance Optimization**: PyTorch implements Function.apply() in C++ with optimized gradient formulas. Your Python implementation demonstrates principles but runs ~100-1000x slower
-- **Memory Pooling**: Production frameworks reuse memory allocations across backward passes. What speedup does this provide?
+### How Your Implementation Maps to PyTorch
+
+**What you just built:**
+```python
+# Your TinyTorch autograd implementation
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.autograd import AddBackward, MulBackward
+
+# Forward pass with gradient tracking
+x = Tensor([[1.0, 2.0]], requires_grad=True)
+w = Tensor([[0.5], [0.7]], requires_grad=True)
+y = x.matmul(w)  # Builds computation graph
+loss = y.mean()
+
+# Backward pass computes gradients
+loss.backward()  # YOUR implementation traverses graph
+print(x.grad)  # Gradients you computed
+print(w.grad)
+```
+
+**How PyTorch does it:**
+```python
+# PyTorch equivalent
+import torch
+
+# Forward pass with gradient tracking
+x = torch.tensor([[1.0, 2.0]], requires_grad=True)
+w = torch.tensor([[0.5], [0.7]], requires_grad=True)
+y = x @ w  # Builds computation graph (same concept)
+loss = y.mean()
+
+# Backward pass computes gradients
+loss.backward()  # PyTorch autograd engine
+print(x.grad)  # Same gradient values
+print(w.grad)
+```
+
+**Key Insight**: Your `Function` classes (AddBackward, MulBackward, MatmulBackward) implement the **exact same gradient computation rules** that PyTorch uses internally. When you call `loss.backward()`, both implementations traverse the computation graph in reverse topological order, applying the chain rule via each Function's backward method.
+
+**What's the SAME?**
+- **Computational graph architecture**: Tensor operations create Function nodes
+- **Gradient computation**: Chain rule via reverse-mode autodiff
+- **API design**: `requires_grad`, `.backward()`, `.grad` attribute
+- **Function pattern**: `forward()` computes output, `backward()` computes gradients
+- **Tensor enhancement**: Gradients stored directly in Tensor (modern PyTorch style, not Variable wrapper)
+
+**What's different in production PyTorch?**
+- **Backend**: C++/CUDA implementation ~100-1000× faster
+- **Memory optimization**: Graph nodes pooled and reused across iterations
+- **Optimized gradients**: Hand-tuned gradient formulas (e.g., fused operations)
+- **Advanced features**: Higher-order gradients, gradient checkpointing, JIT compilation
+
+**Why this matters**: When you debug PyTorch training and encounter `RuntimeError: element 0 of tensors does not require grad`, you understand this is checking the computation graph structure you implemented. When gradients are `None`, you know backward() hasn't been called or the tensor isn't connected to the loss—concepts from YOUR implementation.
+
+**Production usage example**:
+```python
+# PyTorch production code (after TinyTorch)
+import torch
+import torch.nn as nn
+
+model = nn.Linear(784, 10)  # Uses torch.Tensor with requires_grad=True
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+
+# Training loop - same workflow you built
+output = model(input)  # Forward pass builds graph
+loss = nn.CrossEntropyLoss()(output, target)
+loss.backward()  # Backward pass (YOUR implementation's logic)
+optimizer.step()  # Update using .grad (YOUR gradients)
+```
+
+After implementing autograd yourself, you understand that `loss.backward()` traverses the computation graph you built during forward pass, calling each operation's gradient function (AddBackward, MatmulBackward, etc.) in reverse order—exactly like your implementation.
 
 ### Mathematical Foundations
 - **Chain Rule**: ∂f/∂x = (∂f/∂u)(∂u/∂x) for composite functions f(u(x)) - the mathematical foundation of backpropagation

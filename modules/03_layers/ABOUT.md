@@ -1,99 +1,165 @@
 ---
 title: "Layers"
-description: "Neural network layers (Linear, activation layers)"
+description: "Build the fundamental neural network building blocks: Linear layers with weight initialization and Dropout for regularization"
 difficulty: "⭐⭐"
 time_estimate: "4-5 hours"
-prerequisites: []
-next_steps: []
-learning_objectives: []
+prerequisites: ["01_tensor", "02_activations"]
+next_steps: ["04_losses"]
+learning_objectives:
+  - "Understand layer abstractions as composable transformations"
+  - "Implement Linear layers with Xavier initialization"
+  - "Build Dropout regularization for preventing overfitting"
+  - "Master parameter management for gradient-based training"
+  - "Compose layers into multi-layer architectures"
 ---
 
 # 03. Layers
 
-**🏗️ FOUNDATION TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
+**FOUNDATION TIER** | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours
 
 ## Overview
 
-Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.
+Build the fundamental building blocks that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, with learnable parameters that define the transformation. You'll implement Linear layers (the workhorse of deep learning) and Dropout regularization, understanding how these simple abstractions enable arbitrarily complex architectures through composition.
 
 ## Learning Objectives
 
-By completing this module, you will be able to:
+By the end of this module, you will be able to:
 
-1. **Understand layers as mathematical functions** that transform tensors through well-defined operations
-2. **Implement Dense layers** using matrix multiplication and bias addition (`y = Wx + b`)
-3. **Integrate activation functions** to combine linear transformations with nonlinearity
-4. **Compose building blocks** by chaining layers into complete neural network architectures
-5. **Debug layer implementations** using shape analysis and mathematical properties
+- **Understand Layer Abstraction**: Recognize layers as composable functions with parameters, mirroring PyTorch's `torch.nn.Module` design pattern
+- **Implement Linear Transformations**: Build `y = xW + b` with proper Xavier initialization to prevent gradient vanishing/explosion
+- **Master Parameter Management**: Track trainable parameters using `parameters()` method for optimizer integration
+- **Build Dropout Regularization**: Implement training/inference mode switching with proper scaling to prevent overfitting
+- **Analyze Memory Scaling**: Calculate parameter counts and understand how network architecture affects memory footprint
 
-## Why This Matters
+## Build → Use → Reflect
 
-### Production Context
+This module follows TinyTorch's **Build → Use → Reflect** framework:
 
-Layers are the building blocks of every neural network in production:
-
-- **Image Recognition** uses Dense layers for final classification (ResNet, EfficientNet)
-- **Language Models** compose thousands of transformer layers (GPT, BERT, Claude)
-- **Recommendation Systems** stack Dense layers to learn user-item interactions
-- **Autonomous Systems** chain convolutional and Dense layers for perception
-
-### Historical Context
-
-The evolution of layer abstractions enabled modern deep learning:
-
-- **1943**: McCulloch-Pitts neuron - first artificial neuron model
-- **1958**: Rosenblatt's Perceptron - single-layer learning algorithm
-- **1986**: Backpropagation - enabled training multi-layer networks
-- **2012**: AlexNet - proved deep layers (8 layers) revolutionize computer vision
-- **2017**: Transformers - layer composition scaled to 96+ layers in modern LLMs
-
-## Build → Use → Understand
-
-This module follows the foundational pedagogy for building blocks:
-
-1. **Build**: Implement Dense layer class with initialization, forward pass, and parameter management
-2. **Use**: Transform data through layer operations and compose multi-layer networks
-3. **Understand**: Analyze how layer composition creates expressivity and why architecture design matters
+1. **Build**: Implement Linear and Dropout layer classes with proper initialization, forward passes, and parameter tracking
+2. **Use**: Compose layers manually to create multi-layer networks for MNIST digit classification
+3. **Reflect**: Analyze memory scaling, computational complexity, and the trade-offs between model capacity and efficiency
 
 ## Implementation Guide
 
-### Core Layer Implementation
+### Linear Layer: The Neural Network Workhorse
+
+The Linear layer implements the fundamental transformation `y = xW + b`:
+
 ```python
-# Dense layer: fundamental building block
-layer = Dense(input_size=3, output_size=2)
-x = Tensor([[1.0, 2.0, 3.0]])
-y = layer(x)  # Shape transformation: (1, 3) → (1, 2)
+from tinytorch.core.layers import Linear
 
-# With activation functions
-relu = ReLU()
-activated = relu(y)  # Apply nonlinearity
+# Create a linear transformation: 784 input features → 256 output features
+layer = Linear(784, 256)
 
-# Chaining operations
-layer1 = Dense(784, 128)  # Image → hidden
-layer2 = Dense(128, 10)   # Hidden → classes
-activation = ReLU()
+# Forward pass: transform input batch
+x = Tensor(np.random.randn(32, 784))  # 32 images, 784 pixels each
+y = layer(x)  # Output: (32, 256)
 
-# Forward pass composition
-x = Tensor([[1.0, 2.0, 3.0, ...]])  # Input data
-h1 = activation(layer1(x))           # First transformation
-output = layer2(h1)                  # Final prediction
+# Access trainable parameters
+print(f"Weight shape: {layer.weight.shape}")  # (784, 256)
+print(f"Bias shape: {layer.bias.shape}")      # (256,)
+print(f"Total params: {784 * 256 + 256}")     # 200,960 parameters
 ```
 
-### Dense Layer Implementation
-- **Mathematical foundation**: Linear transformation `y = Wx + b`
-- **Weight initialization**: Xavier/Glorot uniform initialization for stable gradients
-- **Bias handling**: Optional bias terms for translation invariance
-- **Shape management**: Automatic handling of batch dimensions and matrix operations
+**Key Design Decisions:**
+- **Xavier Initialization**: Weights scaled by `sqrt(1/in_features)` to maintain gradient flow through deep networks
+- **Parameter Tracking**: `parameters()` method returns list of tensors with `requires_grad=True` for optimizer compatibility
+- **Bias Handling**: Optional bias parameter (`bias=False` for architectures like batch normalization)
 
-### Activation Layer Integration
-- **ReLU integration**: Most common activation for hidden layers
-- **Sigmoid integration**: Probability outputs for binary classification
-- **Tanh integration**: Zero-centered outputs for better optimization
-- **Composition patterns**: Standard ways to combine layers and activations
+### Dropout: Preventing Overfitting
+
+Dropout randomly zeros elements during training to force network robustness:
+
+```python
+from tinytorch.core.layers import Dropout
+
+# Create dropout with 50% probability
+dropout = Dropout(p=0.5)
+
+x = Tensor([1.0, 2.0, 3.0, 4.0])
+
+# Training mode: randomly zero elements and scale by 1/(1-p)
+y_train = dropout(x, training=True)
+# Example output: [2.0, 0.0, 6.0, 0.0] - survivors scaled by 2.0
+
+# Inference mode: pass through unchanged
+y_eval = dropout(x, training=False)
+# Output: [1.0, 2.0, 3.0, 4.0] - no dropout applied
+```
+
+**Why Inverted Dropout?**
+During training, surviving elements are scaled by `1/(1-p)` so that expected values match during inference. This eliminates the need to scale during evaluation, making deployment simpler.
+
+### Layer Composition: Building Neural Networks
+
+Layers compose through sequential application - no container needed:
+
+```python
+from tinytorch.core.layers import Linear, Dropout
+from tinytorch.core.activations import ReLU
+
+# Build 3-layer MNIST classifier manually
+layer1 = Linear(784, 256)
+activation1 = ReLU()
+dropout1 = Dropout(0.5)
+
+layer2 = Linear(256, 128)
+activation2 = ReLU()
+dropout2 = Dropout(0.3)
+
+layer3 = Linear(128, 10)
+
+# Forward pass: explicit composition shows data flow
+def forward(x):
+    x = layer1(x)
+    x = activation1(x)
+    x = dropout1(x, training=True)
+    x = layer2(x)
+    x = activation2(x)
+    x = dropout2(x, training=True)
+    x = layer3(x)
+    return x
+
+# Process batch
+x = Tensor(np.random.randn(32, 784))  # 32 MNIST images
+output = forward(x)  # Shape: (32, 10) - class logits
+
+# Collect all parameters for training
+all_params = layer1.parameters() + layer2.parameters() + layer3.parameters()
+print(f"Total trainable parameters: {len(all_params)}")  # 6 tensors (3 weights, 3 biases)
+```
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you've completed the prerequisite modules:
+
+```bash
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
+
+# Verify Module 01 (Tensor) is complete
+tito test --module tensor
+
+# Verify Module 02 (Activations) is complete
+tito test --module activations
+```
+
+### Development Workflow
+
+1. **Open the development file**: `modules/03_layers/layers_dev.py`
+2. **Implement Linear layer**: Build `__init__` with Xavier initialization, `forward` with matrix multiplication, and `parameters()` method
+3. **Add Dropout layer**: Implement training/inference mode switching with proper mask generation and scaling
+4. **Test layer composition**: Verify manual composition of multi-layer networks with mixed layer types
+5. **Analyze systems behavior**: Run memory analysis to understand parameter scaling with network size
+6. **Export and verify**: `tito module complete 03 && tito test --module layers`
 
 ## Testing
 
-Run the complete test suite to verify your implementation:
+### Comprehensive Test Suite
+
+Run the full test suite to verify layer functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
@@ -104,107 +170,132 @@ python -m pytest tests/ -k layers -v
 ```
 
 ### Test Coverage Areas
-- ✅ **Layer Functionality**: Verify Dense layers perform correct linear transformations
-- ✅ **Weight Initialization**: Ensure proper weight initialization for training stability
-- ✅ **Shape Preservation**: Confirm layers handle batch dimensions correctly
-- ✅ **Activation Integration**: Test seamless combination with activation functions
-- ✅ **Network Composition**: Verify layers can be chained into complete networks
 
-### Inline Testing & Development
-The module includes educational feedback during development:
+- ✅ **Linear Layer Functionality**: Verify `y = xW + b` computation with correct matrix dimensions and broadcasting
+- ✅ **Xavier Initialization**: Ensure weights scaled by `sqrt(1/in_features)` for gradient stability
+- ✅ **Parameter Management**: Confirm `parameters()` returns all trainable tensors with `requires_grad=True`
+- ✅ **Dropout Training Mode**: Validate probabilistic masking with correct `1/(1-p)` scaling
+- ✅ **Dropout Inference Mode**: Verify passthrough behavior without modification during evaluation
+- ✅ **Layer Composition**: Test multi-layer forward passes with mixed layer types
+- ✅ **Edge Cases**: Handle empty batches, single samples, no-bias configurations, and probability boundaries
+
+### Inline Testing & Validation
+
+The module includes comprehensive inline tests with educational feedback:
+
 ```python
 # Example inline test output
-🔬 Unit Test: Dense layer functionality...
-✅ Dense layer computes y = Wx + b correctly
-✅ Weight initialization within expected range
-✅ Output shape matches expected dimensions
-📈 Progress: Dense Layer ✓
+🔬 Unit Test: Linear Layer...
+✅ Linear layer computes y = xW + b correctly
+✅ Weight initialization within expected Xavier range
+✅ Bias initialized to zeros
+✅ Output shape matches expected dimensions (32, 256)
+✅ Parameter list contains weight and bias tensors
+📈 Progress: Linear Layer ✓
 
-# Integration testing
-🔬 Unit Test: Layer composition...
-✅ Multiple layers chain correctly
-✅ Activations integrate seamlessly
+🔬 Unit Test: Dropout Layer...
+✅ Inference mode passes through unchanged
+✅ Training mode zeros ~50% of elements
+✅ Survivors scaled by 1/(1-p) = 2.0
+✅ Zero dropout (p=0.0) preserves all values
+✅ Full dropout (p=1.0) zeros everything
+📈 Progress: Dropout Layer ✓
+
+🔬 Integration Test: Multi-layer Network...
+✅ 3-layer network processes batch: (32, 784) → (32, 10)
+✅ Parameter count: 235,146 parameters across 6 tensors
+✅ All parameters have requires_grad=True
 📈 Progress: Layer Composition ✓
 ```
 
 ### Manual Testing Examples
+
 ```python
 from tinytorch.core.tensor import Tensor
-from layers_dev import Dense
-from activations_dev import ReLU
+from tinytorch.core.layers import Linear, Dropout
+from tinytorch.core.activations import ReLU
 
-# Test basic layer functionality
-layer = Dense(input_size=3, output_size=2)
-x = Tensor([[1.0, 2.0, 3.0]])
+# Test Linear layer forward pass
+layer = Linear(784, 256)
+x = Tensor(np.random.randn(1, 784))  # Single MNIST image
 y = layer(x)
-print(f"Input shape: {x.shape}, Output shape: {y.shape}")
+print(f"Input: {x.shape} → Output: {y.shape}")  # (1, 784) → (1, 256)
 
-# Test layer composition
-layer1 = Dense(3, 4)
-layer2 = Dense(4, 2)
-relu = ReLU()
+# Test parameter counting
+params = layer.parameters()
+total = sum(p.data.size for p in params)
+print(f"Parameters: {total}")  # 200,960
 
-# Forward pass
-h1 = relu(layer1(x))
-output = layer2(h1)
-print(f"Final output: {output.data}")
+# Test Dropout behavior
+dropout = Dropout(0.5)
+x = Tensor(np.ones((1, 100)))
+y_train = dropout(x, training=True)
+y_eval = dropout(x, training=False)
+print(f"Training: ~{np.count_nonzero(y_train.data)} survived")  # ~50
+print(f"Inference: {np.count_nonzero(y_eval.data)} survived")   # 100
+
+# Test composition
+net = lambda x: layer3(dropout2(activation2(layer2(dropout1(activation1(layer1(x)))))))
 ```
 
 ## Systems Thinking Questions
 
 ### Real-World Applications
-- **Computer Vision**: Dense layers process flattened image features in CNNs (like VGG, ResNet final layers)
-- **Natural Language Processing**: Dense layers transform word embeddings in transformers and RNNs
-- **Recommendation Systems**: Dense layers combine user and item features for preference prediction
-- **Scientific Computing**: Dense layers approximate complex functions in physics simulations and engineering
+
+- **Computer Vision**: How do Linear layers in ResNet-50's final classification head transform 2048 feature maps to 1000 class logits? What determines this bottleneck layer's size?
+- **Language Models**: GPT-3 uses Linear layers with 12,288 input features. How much memory do these layers consume, and why does this limit model deployment?
+- **Recommendation Systems**: Netflix uses multi-layer networks with Dropout. How does `p=0.5` affect training time vs model accuracy on sparse user-item interactions?
+- **Edge Deployment**: A mobile CNN has 5 Linear layers totaling 2MB. How do you decide which layers to quantize or prune when targeting 500KB model size?
 
 ### Mathematical Foundations
-- **Linear Transformation**: `y = Wx + b` where W is the weight matrix and b is the bias vector
-- **Matrix Multiplication**: Efficient batch processing through vectorized operations
-- **Weight Initialization**: Xavier/Glorot initialization prevents vanishing/exploding gradients
-- **Function Composition**: Networks as nested function calls: `f3(f2(f1(x)))`
 
-### Neural Network Building Blocks
-- **Modularity**: Layers as reusable components that can be combined in different ways
-- **Standardized Interface**: All layers follow the same input/output pattern for easy composition
-- **Shape Consistency**: Automatic handling of batch dimensions and shape transformations
-- **Nonlinearity**: Activation functions between layers enable learning of complex patterns
+- **Xavier Initialization**: Why does `scale = sqrt(1/fan_in)` preserve gradient variance through layers? What happens in a 20-layer network without proper initialization?
+- **Matrix Multiplication Complexity**: A Linear(1024, 1024) layer with batch size 128 performs how many FLOPs? How does this compare to a Dropout layer on the same tensor?
+- **Dropout Mathematics**: During training with `p=0.5`, what's the expected value of each element? Why must we scale by `1/(1-p)` to match inference behavior?
+- **Parameter Growth**: If you double the hidden layer size from 256 to 512, how many times more parameters do you have in Linear(784, hidden) + Linear(hidden, 10)?
 
-### Implementation Patterns
-- **Class-based Design**: Layers as objects with state (weights) and behavior (forward pass)
-- **Initialization Strategy**: Proper weight initialization for stable training dynamics
-- **Error Handling**: Graceful handling of shape mismatches and invalid inputs
-- **Testing Philosophy**: Comprehensive testing of mathematical properties and edge cases
+### Architecture Design Patterns
 
-## 🎉 Ready to Build?
+- **Layer Width vs Depth**: A 784→512→10 network vs 784→256→256→10 - which has more parameters? Which typically generalizes better and why?
+- **Dropout Placement**: Should you place Dropout before or after activation functions? What's the difference between `Linear → ReLU → Dropout` vs `Linear → Dropout → ReLU`?
+- **Bias Necessity**: When can you safely use `bias=False`? How does batch normalization (Module 09) interact with bias terms?
+- **Composition Philosophy**: We deliberately avoided a Sequential container. What trade-offs do explicit composition and container abstractions make for debugging vs convenience?
 
-You're about to build the fundamental building blocks that power every neural network! Dense layers might seem simple, but they're the workhorses of deep learning—from the final layers of image classifiers to the core components of language models.
+### Performance Characteristics
 
-Understanding how these simple linear transformations compose into complex intelligence is one of the most beautiful insights in machine learning. Take your time, understand the mathematics, and enjoy building the foundation of artificial intelligence!
+- **Memory Hierarchy**: A Linear(4096, 4096) layer has 16M parameters (64MB). Does this fit in L3 cache? How does cache performance affect training speed?
+- **Batch Size Scaling**: Measuring throughput from batch_size=1 to 512, why does samples/sec increase but eventually plateau? What's the bottleneck?
+- **Dropout Overhead**: Profiling shows Dropout adds 2% overhead to training time. Where is this cost - mask generation, element-wise multiply, or memory bandwidth?
+- **Parameter Memory vs Activation Memory**: In a 100-layer network, which dominates memory usage during training? How does gradient checkpointing address this?
 
- 
+## Ready to Build?
 
+You're about to implement the abstractions that power every neural network in production. Linear layers might seem deceptively simple - just matrix multiplication and bias addition - but this simplicity is the foundation of extraordinary complexity. From ResNet's 25 million parameters to GPT-3's 175 billion, every learned transformation ultimately reduces to chains of `y = xW + b`.
+
+Understanding layer composition is crucial for systems thinking. When you see "ResNet-50," you'll know exactly how parameter counts scale with depth. When debugging vanishing gradients, you'll understand why Xavier initialization matters. When deploying to mobile devices, you'll calculate memory footprints in your head.
+
+Take your time with this module. Test each component thoroughly. Analyze the memory patterns. Build the intuition for how these simple building blocks compose into intelligence. This is where deep learning becomes real.
 
 Choose your preferred way to engage with this module:
 
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/04_layers/layers_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/03_layers/layers_dev.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
-```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/04_layers/layers_dev.ipynb
+```{grid-item-card} ⚡ Open in Colab
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/04_layers/layers_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
@@ -221,6 +312,6 @@ Browse the Python source code and understand the implementation.
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/03_activations.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/05_dense.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../modules/02_activations_ABOUT.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../modules/04_losses_ABOUT.html" title="next page">Next Module →</a>
 </div>

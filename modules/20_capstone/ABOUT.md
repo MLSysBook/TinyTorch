@@ -1,279 +1,366 @@
 ---
-title: "MLPerf® Edu Competition - Your Capstone Challenge"
-description: "Apply all optimizations in a standardized MLPerf-inspired educational competition"
-difficulty: 5
-time_estimate: "10-20 hours"
-prerequisites: ["All modules 01-19"]
+title: "Torch Olympics - ML Systems Competition"
+description: "Learn competition workflow: use Benchmark harness to measure performance and generate standardized submissions"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "5-8 hours"
+prerequisites: ["Benchmarking (Module 19)", "Optimization techniques (Modules 14-18)"]
 next_steps: []
 learning_objectives:
-  - "Apply all Optimization Tier techniques to a standardized benchmark"
-  - "Implement either Closed Division (optimize given model) or Open Division (innovate architecture)"
-  - "Generate validated submission with normalized metrics"
-  - "Demonstrate complete ML systems engineering skills"
-  - "Compete fairly across different hardware platforms"
+  - "Understand competition events: Know how different Olympic events (Latency Sprint, Memory Challenge, All-Around) have different constraints and optimization strategies"
+  - "Use Benchmark harness: Apply Module 19's Benchmark class to measure performance with statistical rigor (confidence intervals, multiple runs)"
+  - "Generate submissions: Create standardized submission formats following MLPerf-style industry standards"
+  - "Validate submissions: Check that submissions meet event constraints (accuracy thresholds, latency limits) and flag unrealistic improvements"
+  - "Workflow integration: Understand how benchmarking tools (Module 19) and optimization techniques (Modules 14-18) work together in competition context"
 ---
 
-# 20. MLPerf® Edu Competition
+# 20. TinyTorch Olympics - Competition & Submission
 
-**🏆 CAPSTONE** | Difficulty: ⭐⭐⭐⭐⭐ (5/5 - Ninja Level) | Time: 10-20 hours
+**CAPSTONE PROJECT** | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 5-8 hours
 
 ## Overview
 
-Your capstone challenge: optimize a CIFAR-10 CNN using everything you've learned. Choose between Closed Division (optimize our CNN) or Open Division (design your own). Compete on a level playing field with normalized metrics that account for hardware differences.
+The TinyTorch Olympics capstone teaches you how to participate in professional ML competitions. You've learned benchmarking methodology in Module 19—now apply those tools in a competition workflow. This module focuses on understanding competition events, using the Benchmark harness to measure performance, generating standardized submissions, and validating results meet competition requirements.
+
+**What You Learn**: Competition workflow and submission packaging—how to use benchmarking tools (Module 19) and optimization techniques (Modules 14-18) to create competition-ready submissions following industry standards (MLPerf-style).
+
+**The Focus**: Understanding how professional ML competitions work—from measurement to submission—not building TinyGPT (that's Milestone 05).
 
 ## Learning Objectives
 
-By completing this capstone, you will be able to:
+By the end of this capstone, you will be able to:
 
-1. **Apply all Optimization Tier techniques** (profiling, memoization, quantization, compression, acceleration, benchmarking)
-2. **Implement either Closed Division** (optimize given CNN; pure optimization challenge) or **Open Division** (design novel architecture; innovation challenge)
-3. **Generate validated submission** with standardized metrics, honor code attestation, and GitHub repo
-4. **Demonstrate complete ML systems skills** from implementation through optimization to deployment
-5. **Compete fairly** using normalized metrics (speedup, compression ratio) that work across hardware
+- **Understand Competition Events**: Know how different Olympic events (Latency Sprint, Memory Challenge, All-Around) have different constraints and optimization strategies
+- **Use Benchmark Harness**: Apply Module 19's Benchmark class to measure performance with statistical rigor (confidence intervals, multiple runs)
+- **Generate Submissions**: Create standardized submission formats following MLPerf-style industry standards
+- **Validate Submissions**: Check that submissions meet event constraints (accuracy thresholds, latency limits) and flag unrealistic improvements
+- **Workflow Integration**: Understand how benchmarking tools (Module 19) and optimization techniques (Modules 14-18) work together in competition context
 
-## Why This Matters
+## The Five Olympic Events
 
-### Production Context
+Choose your competition event based on optimization goals:
 
-This competition simulates real ML systems engineering:
+### 🏃 Event 1: Latency Sprint
+**Objective**: Minimize inference latency
+**Constraints**: Accuracy ≥ 85%
+**Strategy Focus**: Operator fusion, quantization, efficient data flow
+**Winner**: Fastest average inference time (with confidence intervals)
 
-- **MLPerf** is the industry standard for ML benchmarking; this follows the same principles
-- **Production optimization** requires choosing what to optimize and measuring impact
-- **Hardware diversity** in production demands normalized comparison metrics
-- **Documentation** of optimization choices matters for team collaboration
+### 🏋️ Event 2: Memory Challenge
+**Objective**: Minimize model memory footprint
+**Constraints**: Accuracy ≥ 85%
+**Strategy Focus**: Quantization, pruning, weight sharing
+**Winner**: Smallest model size maintaining accuracy
 
-### Competition Philosophy
+### 🎯 Event 3: Accuracy Contest
+**Objective**: Maximize model accuracy
+**Constraints**: Latency < 100ms, Memory < 10MB
+**Strategy Focus**: Balanced optimization, selective precision
+**Winner**: Highest accuracy within constraints
 
-This capstone teaches:
-- **Optimization discipline**: Profile first, optimize bottlenecks, measure impact
-- **Trade-off analysis**: Speed vs accuracy vs memory - what matters for your use case?
-- **Fair comparison**: Normalized metrics ensure your M1 MacBook competes fairly with AWS GPU
-- **Real constraints**: Must maintain >70% accuracy; actual production requirement
+### 🏋️‍♂️ Event 4: All-Around
+**Objective**: Best balanced performance
+**Scoring**: Composite score across latency, memory, accuracy
+**Strategy Focus**: Multi-objective optimization, Pareto efficiency
+**Winner**: Highest composite score
 
-## Competition Structure
+### 🚀 Event 5: Extreme Push
+**Objective**: Most aggressive optimization
+**Constraints**: Accuracy ≥ 80% (lower threshold)
+**Strategy Focus**: Maximum compression, aggressive quantization
+**Winner**: Best compression-latency product
 
-### Two Tracks
+## Competition Workflow
 
-**Closed Division - Optimization Challenge**
-- **Task**: Optimize provided CNN architecture
-- **Rules**: Cannot change model architecture, training, or dataset
-- **Focus**: Pure systems optimization (caching, quantization, pruning, acceleration)
-- **Goal**: Maximum speedup with minimal accuracy loss
+This module teaches the workflow of professional ML competitions. You'll learn how to use benchmarking tools (Module 19) to measure performance and generate standardized submissions.
 
-**Open Division - Innovation Challenge**  
-- **Task**: Design your own architecture
-- **Rules**: Can change anything (architecture, training, data augmentation)
-- **Focus**: Novel approaches, architectural innovations, creative solutions
-- **Goal**: Best efficiency score balancing speed, size, and accuracy
+### Stage 1: Understand Competition Events
 
-### Metrics (Both Divisions)
-
-**Normalized for Fair Hardware Comparison:**
-- **Speedup**: your_inference_time / baseline_inference_time (on YOUR hardware)
-- **Compression Ratio**: baseline_params / your_params
-- **Accuracy Delta**: your_accuracy - baseline_accuracy (must be ≥ -5%)
-- **Efficiency Score**: (speedup × compression) / (1 + |accuracy_loss|)
-
-## Implementation Guide
-
-### Step 1: Validate Your Installation
-
-```bash
-tito setup --validate
-# Ensures all modules work before starting
-```
-
-### Step 2: Generate Baseline
+Different Olympic events have different constraints and optimization strategies:
 
 ```python
-from tinytorch.competition import generate_baseline
+from tinytorch.competition import OlympicEvent
 
-# This runs the unoptimized CNN and records your baseline
-baseline = generate_baseline()
-# Saves: baseline_submission.json with your hardware specs
+# Event types
+event = OlympicEvent.LATENCY_SPRINT      # Minimize latency, accuracy ≥ 85%
+event = OlympicEvent.MEMORY_CHALLENGE   # Minimize memory, accuracy ≥ 85%
+event = OlympicEvent.ALL_AROUND         # Best balanced performance
+event = OlympicEvent.EXTREME_PUSH       # Most aggressive, accuracy ≥ 80%
 ```
 
-### Step 3: Choose Your Track
+**Event Constraints:**
+- **Latency Sprint**: Accuracy ≥ 85%, optimize for speed
+- **Memory Challenge**: Accuracy ≥ 85%, optimize for size
+- **All-Around**: Balanced optimization across metrics
+- **Extreme Push**: Accuracy ≥ 80%, maximum optimization
 
-**Option A: Closed Division (Recommended for first-time)**
+### Stage 2: Measure Baseline Performance
+
+Use Module 19's Benchmark harness to measure baseline:
+
 ```python
-from tinytorch.competition import optimize_closed_division
+from tinytorch.benchmarking import Benchmark
 
-# Optimize the provided CNN
-optimized_model = optimize_closed_division(
-    baseline_model,
-    techniques=['kvcaching', 'quantization', 'pruning']
+# Measure baseline performance
+benchmark = Benchmark([baseline_model], [test_data], ["latency", "memory", "accuracy"])
+baseline_results = benchmark.run()
+
+# Results include statistical rigor (confidence intervals)
+print(f"Baseline - Latency: {baseline_results['latency'].mean:.2f}ms")
+print(f"  95% CI: [{baseline_results['latency'].ci_lower:.2f}, {baseline_results['latency'].ci_upper:.2f}]")
+print(f"Baseline - Memory: {baseline_results['memory'].mean:.2f}MB")
+print(f"Baseline - Accuracy: {baseline_results['accuracy'].mean:.2%}")
+```
+
+**Key Insight**: Module 19 provides statistical rigor—multiple runs, confidence intervals, warmup periods. This ensures fair comparison.
+
+### Stage 3: Measure Optimized Performance
+
+Apply optimization techniques (from Modules 14-18), then measure:
+
+```python
+# Apply optimizations (using techniques from Modules 14-18)
+optimized_model = apply_optimizations(baseline_model)
+
+# Measure optimized performance with same Benchmark harness
+optimized_results = benchmark.run()  # Same benchmark, different model
+```
+
+**Fair Comparison**: Same Benchmark harness, same test data, same hardware—ensures apples-to-apples comparison.
+
+### Stage 4: Calculate Normalized Scores
+
+Compute hardware-independent metrics:
+
+```python
+from tinytorch.competition import calculate_normalized_scores
+
+# Convert to normalized scores (hardware-independent)
+scores = calculate_normalized_scores(
+    baseline_results={'latency': 100.0, 'memory': 12.0, 'accuracy': 0.85},
+    optimized_results={'latency': 40.0, 'memory': 3.0, 'accuracy': 0.83}
 )
+
+# Results: speedup=2.5×, compression_ratio=4.0×, accuracy_delta=-0.02
+print(f"Speedup: {scores['speedup']:.2f}×")
+print(f"Compression: {scores['compression_ratio']:.2f}×")
+print(f"Accuracy change: {scores['accuracy_delta']:+.2%}")
 ```
 
-**Option B: Open Division (For advanced students)**
-```python
-from tinytorch.competition import design_open_division
+**Why Normalized**: Speedup ratios work on any hardware. "2.5× faster" is meaningful whether you have M1 Mac or Intel i9.
 
-# Design your own architecture
-my_model = MyCustomCNN(...)
-# Train it
-trained_model = train(my_model, train_loader)
-```
+### Stage 5: Generate Submission
 
-### Step 4: Generate Submission
+Create standardized submission following MLPerf-style format:
 
 ```python
-from tinytorch.competition import generate_submission
+from tinytorch.competition import generate_submission, validate_submission
 
+# Generate submission
 submission = generate_submission(
-    model=optimized_model,
-    division='closed',  # or 'open'
-    github_repo='https://github.com/yourname/tinytorch-submission',
-    techniques_used=['INT8 quantization', '90% magnitude pruning', 'KV caching'],
-    athlete_name='Your Name'
+    baseline_results=baseline_results,
+    optimized_results=optimized_results,
+    event=OlympicEvent.LATENCY_SPRINT,
+    athlete_name="YourName",
+    github_repo="https://github.com/yourname/tinytorch",
+    techniques=["INT8 Quantization", "70% Pruning", "KV Cache"]
 )
 
-# This creates: submission.json with all required fields
+# Validate submission meets requirements
+validation = validate_submission(submission)
+if validation['valid']:
+    print("✅ Submission valid!")
+    print(f"   Checks passed: {len([c for c in validation['checks'] if c['passed']])}")
+else:
+    print("❌ Submission invalid:")
+    for issue in validation['issues']:
+        print(f"   - {issue}")
+
+# Save submission
+import json
+with open('submission.json', 'w') as f:
+    json.dump(submission, f, indent=2)
 ```
 
-### Step 5: Validate and Submit
+**Submission Format**: Includes normalized scores, system info, event constraints, statistical confidence—everything needed for fair competition ranking.
+
+## Getting Started
+
+### Prerequisites
+
+This capstone requires understanding of benchmarking (Module 19) and optimization techniques (Modules 14-18):
 
 ```bash
-# Local validation
-tito submit --file submission.json --validate-only
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
 
-# Official submission (when ready)
-tito submit --file submission.json
+# Required: Benchmarking methodology (Module 19)
+tito test --module benchmarking     # Module 19: Statistical measurement, fair comparison
+
+# Helpful: Optimization techniques (Modules 14-18)
+tito test --module profiling        # Module 14: Find bottlenecks
+tito test --module quantization     # Module 15: Reduce precision
+tito test --module compression      # Module 16: Prune parameters
+tito test --module memoization      # Module 17: Cache computations
+tito test --module acceleration     # Module 18: Operator fusion
 ```
 
-## Submission Requirements
+**Why You Need Module 19:**
+- Module 19 teaches benchmarking methodology (statistical rigor, fair comparison)
+- Module 20 teaches how to use Benchmark harness in competition workflow
+- You use Benchmark class from Module 19 to measure performance
 
-### Required Fields
+**The Focus**: Understanding competition workflow—how to use benchmarking tools to generate submissions—not building models from scratch (that's Milestones 05-06).
 
-- **division**: 'closed' or 'open'
-- **athlete_name**: Your name
-- **github_repo**: Link to your code (public or private with access)
-- **baseline_metrics**: From Step 2
-- **optimized_metrics**: From Step 4
-- **normalized_scores**: Speedup, compression, accuracy delta
-- **techniques_used**: List of optimizations applied
-- **honor_code**: "I certify that this submission follows the rules" 
-- **hardware**: CPU/GPU specs, RAM (for reference, not ranking)
-- **tinytorch_version**: Automatically captured
-- **timestamp**: Automatically captured
+### Development Workflow
 
-### Validation Checks
+1. **Understand Competition Events** (`Stage 1`):
+   - Review OlympicEvent enum and event constraints
+   - Understand how different events require different strategies
+   - Learn event-specific accuracy thresholds
 
-The submission system performs sanity checks:
-- ✅ Speedup between 0.5× and 100× (realistic range)
-- ✅ Compression between 1× and 100× (realistic range)
-- ✅ Accuracy drop < 10% (must maintain reasonable performance)
-- ✅ GitHub repo exists and contains code
-- ✅ Techniques used are documented
-- ✅ No training modifications in Closed Division
+2. **Measure Baseline** (`Stage 2`):
+   - Use Benchmark harness from Module 19 to measure baseline performance
+   - Understand statistical rigor (confidence intervals, multiple runs)
+   - Learn fair comparison protocols
 
-### Honor Code
+3. **Measure Optimized** (`Stage 3`):
+   - Apply optimization techniques (from Modules 14-18)
+   - Use same Benchmark harness to measure optimized performance
+   - Ensure fair comparison (same data, hardware, methodology)
 
-This is an honor-based system with light validation:
-- We trust you followed the rules
-- Automated checks catch accidental errors
-- If something seems wrong, we may ask for clarification
-- GitHub repo allows others to learn from your work
+4. **Calculate Normalized Scores** (`Stage 4`):
+   - Compute hardware-independent metrics (speedup, compression ratio)
+   - Understand why normalized scores enable fair comparison
+   - Learn how to combine multiple metrics
 
-## Example Optimizations (Closed Division)
+5. **Generate Submission** (`Stage 5`):
+   - Create standardized submission format (MLPerf-style)
+   - Validate submission meets event constraints
+   - Understand submission structure and requirements
 
-**Beginner**: 
-- Apply INT8 quantization: ~4× compression, ~2× speedup
-- Result: Speedup=2×, Compression=4×, Efficiency≈8
-
-**Intermediate**:
-- Quantization + 50% pruning: ~8× compression, ~3× speedup
-- Result: Speedup=3×, Compression=8×, Efficiency≈24
-
-**Advanced**:
-- Quantization + 90% pruning + operator fusion: ~40× compression, ~5× speedup
-- Result: Speedup=5×, Compression=40×, Efficiency≈200
+6. **Export and verify**:
+   ```bash
+   tito module complete 20
+   tito test --module capstone
+   ```
 
 ## Testing
 
+### Comprehensive Test Suite
+
+Run the full test suite to verify your competition submission:
+
 ```bash
-# Run everything end-to-end
-cd modules/20_competition
-python competition_dev.py
+# TinyTorch CLI (recommended)
+tito test --module capstone
 
-# Export and test
-tito export 20_competition
-tito test 20_competition
+# Direct pytest execution
+python -m pytest tests/ -k capstone -v
 
-# Generate baseline
-python -c "from tinytorch.competition import generate_baseline; generate_baseline()"
-
-# Validate submission
-tito submit --file submission.json --validate-only
+# Expected output:
+# ✅ test_baseline_establishment - Verifies baseline measurement
+# ✅ test_optimization_pipeline - Tests combined optimizations
+# ✅ test_event_constraints - Validates constraint satisfaction
+# ✅ test_statistical_significance - Ensures improvements are real
+# ✅ test_submission_generation - Verifies report creation
 ```
 
-## Where This Code Lives
+### Test Coverage Areas
 
-```
-tinytorch/
-├── competition/
-│   ├── baseline.py             # Baseline model
-│   ├── submission.py           # Submission generation
-│   └── validate.py             # Validation logic
-└── __init__.py
-
-Generated files:
-- baseline_submission.json      # Your baseline metrics
-- submission.json               # Your final submission
-```
+- ✅ **OlympicEvent Enum**: Event types and constraints work correctly
+- ✅ **Normalized Scoring**: Speedup and compression ratios calculated correctly
+- ✅ **Submission Generation**: Creates valid MLPerf-style submissions
+- ✅ **Submission Validation**: Checks event constraints and flags issues
+- ✅ **Workflow Integration**: Complete workflow demonstration executes
 
 ## Systems Thinking Questions
 
-1. **Optimization Priority**: You have limited time. Profile shows attention=40%, FFN=35%, embedding=15%, other=10%. Where do you start and why?
+### Integration Complexity
 
-2. **Accuracy Trade-off**: Closed Division allows up to 5% accuracy loss. How do you decide what's acceptable? What if you could get 10× speedup for 6% loss?
+**Question 1: Optimization Interaction**
+You apply INT8 quantization (4× memory reduction) followed by 75% pruning (4× parameter reduction). Should you expect 16× total memory reduction?
 
-3. **Hardware Fairness**: Student A has M1 Max, Student B has i5 laptop. Normalized metrics show both achieved 3× speedup. Who optimized better?
+**Answer Structure:**
+- Quantization affects: _____
+- Pruning affects: _____
+- Combined effect: _____
+- Why not multiplicative: _____
 
-4. **Open Division Strategy**: You could design a tiny 100K-param model (fast but potentially less accurate) or optimize a 1M-param model. What's your strategy?
+**Systems Insight**: Quantization reduces bits per parameter (4 bytes → 1 byte). Pruning reduces parameter count (but zero values still stored in dense format). Combined effect depends on sparse matrix representation. For true 16× reduction, need sparse storage format that doesn't store zeros.
 
-5. **Verification Challenge**: How would you verify submissions without running everyone's code? What checks are sufficient?
+### Measurement Validity
 
-## Real-World Connections
+**Question 2: Statistical Significance**
+Your optimized model shows 5% latency improvement with p-value = 0.12. Competitor shows 8% improvement with p-value = 0.02. Who wins?
 
-### MLPerf
+**Systems Insight**: With p=0.12, your 5% could be noise (not statistically significant at α=0.05). Competitor's 8% with p=0.02 is significant. Always report p-values—bigger speedup doesn't mean better if not statistically valid!
 
-This competition mirrors MLPerf principles:
-- Closed Division = MLPerf Closed (fixed model/training)
-- Open Division = MLPerf Open (anything goes)
-- Normalized metrics for fair hardware comparison
-- Honor-based with validation checks
+### Event Strategy
 
-### Industry Applications
+**Question 3: All-Around Optimization**
+For All-Around event, should you: (a) Optimize each metric separately, then combine? (b) Optimize all metrics simultaneously from start?
 
-**Model Deployment Engineer** (your future job):
-- Given: Slow model from research team
-- Goal: Deploy at production scale
-- Constraints: Latency SLA, accuracy requirements, hardware budget
-- Skills: Profiling, optimization, trade-off analysis (this capstone!)
+**Systems Insight**: Simultaneous optimization risks sub-optimal trade-offs. Better strategy: (1) Profile to find bottlenecks, (2) Apply technique targeting worst metric, (3) Re-measure all metrics, (4) Repeat. Iterative refinement with full measurement prevents over-optimization of one metric at expense of others.
 
-**ML Competition Platforms**: Kaggle, DrivenData use similar structures
-- Leaderboards drive innovation
-- Standardized metrics ensure fairness
-- Open sharing advances the field
+### Production Relevance
 
-## What's Next?
+**Question 4: Real-World Connection**
+How does Torch Olympics competition preparation translate to production ML systems work?
 
-**You've completed TinyTorch!** You've built:
-- **Foundation Tier**: All ML building blocks from scratch
-- **Architecture Tier**: Vision and language systems
-- **Optimization Tier**: Production optimization techniques
-- **Capstone**: Real-world ML systems engineering
+**Reflection**: Production deployment requires the exact skills you're practicing: profiling to find bottlenecks, applying targeted optimizations, validating improvements statistically, balancing trade-offs based on constraints (latency SLA, memory budget, accuracy requirements), and documenting decisions. The Olympic events mirror real scenarios: mobile deployment (Memory Challenge), real-time inference (Latency Sprint), high-accuracy requirements (Accuracy Contest).
 
-**Where to go from here:**
-- Deploy your optimized model to production
-- Contribute to open-source ML frameworks
-- Join ML systems research or engineering teams
-- Build the next generation of ML infrastructure
+## Ready for Competition?
+
+This capstone teaches you how professional ML competitions work. You've learned benchmarking methodology in Module 19—now understand how to use those tools in a competition workflow. Module 20 focuses on:
+
+- **Competition Workflow**: How to participate in ML competitions (MLPerf-style)
+- **Submission Packaging**: How to format results for fair comparison and validation
+- **Event Understanding**: How different events require different optimization strategies
+- **Workflow Integration**: How benchmarking tools (Module 19) + optimization techniques (Modules 14-18) work together
+
+**What's Next**: 
+- Build TinyGPT in Milestone 05 (historical achievement)
+- Compete in Torch Olympics (Milestone 06) using this workflow
+- Use `tito olympics submit` to generate your competition entry!
+
+This module teaches workflow and packaging—you use existing tools, not rebuild them. The competition workflow demonstrates how professional ML competitions are structured and participated in.
+
+Choose your preferred way to engage with this capstone:
+
+````{grid} 1 2 3 3
+
+```{grid-item-card} 🚀 Launch Binder
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/20_capstone/capstone_dev.ipynb
+:class-header: bg-light
+
+Run this capstone interactively in your browser. No installation required!
+```
+
+```{grid-item-card} ⚡ Open in Colab
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/20_capstone/capstone_dev.ipynb
+:class-header: bg-light
+
+Use Google Colab for GPU access and cloud compute power.
+```
+
+```{grid-item-card} 📖 View Source
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/20_capstone/capstone.py
+:class-header: bg-light
+
+Browse the Python source code and understand the implementation.
+```
+
+````
+
+```{admonition} 💡 Competition Recommendation
+:class: tip
+**Local development recommended!** This capstone involves extended optimization experiments, profiling sessions, and benchmarking runs. Local setup provides better debugging, faster iteration, and persistent results. Cloud sessions may timeout during long benchmark runs.
+
+**Setup**: `git clone https://github.com/mlsysbook/TinyTorch.git && source bin/activate-tinytorch.sh && cd modules/20_capstone`
+```
 
 ---
 
-**Ready for your capstone challenge?** Open `modules/20_competition/competition_dev.py` and start optimizing!
-
-**Compete. Optimize. Dominate.** 🏆
+<div class="prev-next-area">
+<a class="left-prev" href="../19_benchmarking/ABOUT.html" title="previous page">← Module 19: Benchmarking</a>
+</div>
