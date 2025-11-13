@@ -1,11 +1,17 @@
-# TinyTorch: Tensors to Systems
+<!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework" 
+     for clearer value proposition and action-oriented messaging -->
+<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 1rem 0; font-weight: 700;">
+Build Your Own ML Framework
+</h1>
 
 <h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 
+<!-- Enhanced description: Added "machine learning (ML)" clarification and "under the hood" 
+     to emphasize deep understanding of framework internals -->
 <p style="text-align: center; font-size: 1.2rem; margin: 0 auto 2rem auto; max-width: 800px; color: #374151;">
-Build a complete ML framework from tensors to systems—understand how PyTorch, TensorFlow, and JAX really work.
+Build a complete machine learning (ML) framework from tensors to systems—understand how PyTorch, TensorFlow, and JAX really work under the hood.
 </p>
 
 <div style="text-align: center; margin: 2rem 0;">
@@ -14,29 +20,31 @@ Build a complete ML framework from tensors to systems—understand how PyTorch, 
   </a>
 </div>
 
-## Four-Tier Learning Path
+## Welcome
 
 Build ML systems understanding through progressive tiers—from mathematical foundations to competition-ready optimization.
 
+<!-- Tier cards: Added emojis (🏗 🏛️ ⏱️ 🏅) to match _toc.yml for visual consistency 
+     across navigation and content. Emojis provide quick visual recognition of tier categories. -->
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0 2.5rem 0; max-width: 900px;">
 
 <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #1976d2;">
-<h3 style="margin: 0 0 0.5rem 0; color: #0d47a1; font-size: 1.1rem; font-weight: 600;">Foundation (01-07)</h3>
+<h3 style="margin: 0 0 0.5rem 0; color: #0d47a1; font-size: 1.1rem; font-weight: 600;">🏗 Foundation (01-07)</h3>
 <p style="margin: 0; color: #1565c0; font-size: 0.9rem; line-height: 1.5;">Tensors, autograd, training loops</p>
 </div>
 
 <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #7b1fa2;">
-<h3 style="margin: 0 0 0.5rem 0; color: #4a148c; font-size: 1.1rem; font-weight: 600;">Architecture (08-13)</h3>
+<h3 style="margin: 0 0 0.5rem 0; color: #4a148c; font-size: 1.1rem; font-weight: 600;">🏛️ Architecture (08-13)</h3>
 <p style="margin: 0; color: #6a1b9a; font-size: 0.9rem; line-height: 1.5;">Data loading, CNNs, transformers</p>
 </div>
 
 <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #f57c00;">
-<h3 style="margin: 0 0 0.5rem 0; color: #e65100; font-size: 1.1rem; font-weight: 600;">Optimization (14-19)</h3>
+<h3 style="margin: 0 0 0.5rem 0; color: #e65100; font-size: 1.1rem; font-weight: 600;">⏱️ Optimization (14-19)</h3>
 <p style="margin: 0; color: #ef6c00; font-size: 0.9rem; line-height: 1.5;">Profiling, quantization, benchmarking</p>
 </div>
 
 <div style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%); padding: 1.75rem; border-radius: 0.5rem; border-left: 5px solid #c2185b;">
-<h3 style="margin: 0 0 0.5rem 0; color: #880e4f; font-size: 1.1rem; font-weight: 600;">Torch Olympics (20)</h3>
+<h3 style="margin: 0 0 0.5rem 0; color: #880e4f; font-size: 1.1rem; font-weight: 600;">🏅 Torch Olympics (20)</h3>
 <p style="margin: 0; color: #ad1457; font-size: 0.9rem; line-height: 1.5;">Compete in ML systems challenges</p>
 </div>
 
