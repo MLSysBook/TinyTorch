@@ -1,10 +1,13 @@
 # TinyTorch: Build ML Systems from Scratch
 # Interactive Jupyter Book Configuration
 
-title: "TinyTorch"
+# Branding: Use stylized "Tiny🔥Torch" for public-facing site branding
+# This matches the branding convention for memorable, personality-driven presentation
+title: "Tiny🔥Torch"
 author: "Prof. Vijay Janapa Reddi (Harvard University)"
 copyright: "2025"
-logo: _static/logos/logo-tinytorch-white.png
+# Logo: Updated to use standard logo (replaces white version for better visibility)
+logo: _static/logos/logo-tinytorch.png
 
 # Book description and metadata
 description: >-
@@ -68,7 +71,7 @@ latex:
 bibtex_bibfiles:
   - references.bib
 
-# Sphinx extensions for enhanced functionality  
+# Sphinx extensions for enhanced functionality
 sphinx:
   extra_extensions:
     - sphinxcontrib.mermaid
