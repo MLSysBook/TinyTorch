@@ -26,6 +26,8 @@ exclude_patterns:
   - "**/.venv/**"
   - "**/__pycache__/**"
   - "**/.DS_Store"
+  - "modules/**/*.md"
+  - "!modules/*_ABOUT.md"
 
 # GitHub repository configuration for GitHub Pages
 repository:

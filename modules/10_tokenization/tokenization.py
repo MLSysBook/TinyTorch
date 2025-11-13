@@ -90,21 +90,12 @@ from typing import List, Dict, Tuple, Optional, Set
 import json
 import re
 from collections import defaultdict, Counter
-import sys
-import os
+# Import from TinyTorch package (Module 01 must be completed before Module 10)
+# Note: Tokenization primarily works with Python lists, but Tensor is available for advanced features
+from tinytorch.core.tensor import Tensor
 
-# Import from Module 01 (Tensor) using local path for development
-# Note: Tokenization is mostly independent - Tensor is optional for advanced usage
-module_01_path = os.path.join(os.path.dirname(__file__), '..', '..', '01_tensor')
-if os.path.exists(module_01_path):
-    sys.path.insert(0, module_01_path)
-
-try:
-    from tensor_dev import Tensor
-except ImportError:
-    # Fallback: Tokenization works without Tensor (uses plain Python lists)
-    print("INFO: Tensor not available - using plain lists (tokenization works independently)")
-    Tensor = None  # Set to None, check before use in optional features
+# Constants for memory calculations
+KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
 
 # %% [markdown]
 """
@@ -1040,7 +1031,11 @@ def create_tokenizer(strategy: str = "char", vocab_size: int = 1000, corpus: Lis
         if corpus:
             tokenizer.train(corpus, vocab_size)
     else:
-        raise ValueError(f"Unknown tokenization strategy: {strategy}")
+        raise ValueError(
+            f"Unknown tokenization strategy: '{strategy}'.\n"
+            f"  Available strategies: 'char', 'bpe'.\n"
+            f"  Fix: Use 'char' for character-level or 'bpe' for byte-pair encoding tokenization."
+        )
 
     return tokenizer
     ### END SOLUTION
@@ -1099,7 +1094,7 @@ def analyze_tokenization(texts: List[str], tokenizer: Tokenizer) -> Dict[str, fl
     tokenized_lengths = [len(tokenizer.encode(text)) for text in texts]
 
     stats = {
-        'vocab_size': tokenizer.vocab_size if hasattr(tokenizer, 'vocab_size') else len(tokenizer.vocab),
+        'vocab_size': tokenizer.vocab_size,
         'avg_sequence_length': np.mean(tokenized_lengths),
         'max_sequence_length': max(tokenized_lengths) if tokenized_lengths else 0,
         'total_tokens': len(all_tokens),
@@ -1231,8 +1226,8 @@ def analyze_tokenization_memory():
 
         results.append({
             'corpus': corpus_name,
-            'char_kb': char_peak / 1024,
-            'bpe_kb': bpe_peak / 1024,
+            'char_kb': char_peak / KB_TO_BYTES,
+            'bpe_kb': bpe_peak / KB_TO_BYTES,
             'char_vocab': char_tok.vocab_size,
             'bpe_vocab': len(bpe_tok.vocab)
         })
@@ -1356,7 +1351,7 @@ def analyze_bpe_scaling():
         tokenizer.train(corpus, vocab_size=500)
         train_time = (time.perf_counter() - start) * 1000
 
-        memory_kb = tracemalloc.get_traced_memory()[1] / 1024
+        memory_kb = tracemalloc.get_traced_memory()[1] / KB_TO_BYTES
         tracemalloc.stop()
 
         print(f"{size:<15} {train_time:<20.1f} {len(tokenizer.vocab):<15} {memory_kb:<15.1f}")

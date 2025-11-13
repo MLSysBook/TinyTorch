@@ -11,7 +11,7 @@
 
 TinyTorch follows a simple three-step cycle: **Edit modules → Export to package → Validate with milestones**
 
-**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle, best practices, and troubleshooting.
+See [Student Workflow](student-workflow.md) for the complete development cycle, best practices, and troubleshooting.
 
 ## Understanding Modules vs Checkpoints vs Milestones
 
@@ -27,7 +27,7 @@ TinyTorch follows a simple three-step cycle: **Edit modules → Export to packag
 
 - Located in `milestones/`
 - Run scripts that use YOUR implementations
-- Recreate ML history (1957 Perceptron → 2018 MLPerf)
+- Recreate ML history (1957 Perceptron → 2018 Torch Olympics)
 
 **Checkpoints (21 total)**: Optional progress tracking
 
@@ -35,7 +35,7 @@ TinyTorch follows a simple three-step cycle: **Edit modules → Export to packag
 - Tracks capability mastery
 - Not required for the core workflow
 
-**📖 See [Journey Through ML History](chapters/milestones.html)** for milestone details.
+See [Journey Through ML History](chapters/milestones.md) for milestone details.
 
 </div>
 
@@ -43,7 +43,7 @@ TinyTorch follows a simple three-step cycle: **Edit modules → Export to packag
 
 TinyTorch organizes 20 modules through three pedagogically-motivated tiers: **Foundation** (build mathematical infrastructure), **Architecture** (implement modern AI), and **Optimization** (deploy production systems).
 
-**📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for complete tier breakdown, detailed module descriptions, time estimates, and learning outcomes.
+See [Three-Tier Learning Structure](chapters/00-introduction.md) for complete tier breakdown, detailed module descriptions, time estimates, and learning outcomes.
 
 ## Module Progression Checklist
 
@@ -67,10 +67,10 @@ Track your journey through the 20 modules:
 - [ ] **Module 16**: Compression - Pruning techniques
 - [ ] **Module 17**: Memoization - KV-cache
 - [ ] **Module 18**: Acceleration - Batching strategies
-- [ ] **Module 19**: Benchmarking - MLPerf-style comparison
+- [ ] **Module 19**: Benchmarking - Torch Olympics-style comparison
 - [ ] **Module 20**: Competition - Capstone challenge
 
-**📖 See [Quick Start Guide](quickstart-guide.html)** for immediate hands-on experience with your first module.
+**📖 See [Quick Start Guide](quickstart-guide.md)** for immediate hands-on experience with your first module.
 
 ## Optional: Checkpoint System
 
@@ -82,7 +82,7 @@ tito checkpoint status  # View your progress
 
 This provides 21 capability checkpoints corresponding to modules and validates your understanding. Helpful for self-assessment but **not required** for the core workflow.
 
-**📖 See [Essential Commands](tito-essentials.html)** for checkpoint commands.
+**📖 See [Essential Commands](tito-essentials.md)** for checkpoint commands.
 
 ---
 
@@ -149,6 +149,6 @@ python 01_rosenblatt_forward.py  # Uses YOUR implementation!
 
 **Optional**: Use `tito checkpoint status` to see capability tracking
 
-**📖 See [Student Workflow](student-workflow.html)** for the complete development cycle.
+**📖 See [Student Workflow](student-workflow.md)** for the complete development cycle.
 
 **Approach**: You're building ML systems engineering capabilities through hands-on implementation. Each module adds new functionality to your framework, and milestones prove it works.

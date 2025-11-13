@@ -108,7 +108,7 @@
 
 The TinyTorch course consists of 20 progressive modules organized into learning stages.
 
-**📖 See [Complete Course Structure](../chapters/00-introduction.html#course-structure)** for detailed module descriptions, learning objectives, and prerequisites for each module.
+**📖 See [Complete Course Structure](../chapters/00-introduction.md)** for detailed module descriptions, learning objectives, and prerequisites for each module.
 
 ---
 
@@ -198,9 +198,9 @@ tito nbgrader release 01_setup
 ## Instructor Resources
 
 ### Documentation
-- [Complete Instructor Guide](../instructor-guide.md) - Detailed setup and workflow
-- [Quick Reference Card](../../NBGrader_Quick_Reference.md) - Essential commands
-- Module-specific teaching notes in each chapter
+- Module-specific teaching notes in each ABOUT.md file
+- [Course Structure](../chapters/00-introduction.md) - Full curriculum overview
+- [Student Workflow](../student-workflow.md) - Essential development cycle
 
 ### Support Tools
 - `tito module status --comprehensive` - System health dashboard
@@ -216,10 +216,10 @@ tito nbgrader release 01_setup
 
 ## 📞 Next Steps
 
-1. **📖 Read the [Instructor Guide](../instructor-guide.md)** for complete details
-2. **🚀 Start with Module 0: [Introduction](../chapters/00-introduction.md)** to see the system overview
-3. **💻 Set up your environment** following the guide
-4. **📧 Contact us** for instructor support
+1. **📖 Review [Course Structure](../chapters/00-introduction.md)** for complete curriculum overview
+2. **🚀 Explore [Student Workflow](../student-workflow.md)** to understand the development cycle
+3. **💻 Set up your environment** using the [Quick Start Guide](../quickstart-guide.md)
+4. **📧 Contact us** via GitHub Issues for instructor support
 
 ---
 

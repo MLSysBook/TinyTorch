@@ -67,6 +67,10 @@ from typing import Tuple, Optional, Dict, List
 # Import TinyTorch components from previous modules
 from tinytorch.core.tensor import Tensor
 
+# Constants for memory calculations
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
+
 # %% [markdown]
 """
 ## 🔬 Motivation: Why Memoization Matters for Transformers
@@ -765,7 +769,7 @@ def enable_kv_cache(batch_size: int, max_seq_len: int, num_layers: int,
     Returns:
         KVCache instance ready for use
     
-    Example:
+    EXAMPLE:
         ```python
         # Enable caching for generation
         cache = enable_kv_cache(
@@ -925,11 +929,11 @@ Why? Longer sequences = more redundant computation without cache.
 
 ### The Challenge
 
-We built KV caching in Module 15, but our transformer (Modules 12-13) doesn't know about it!
+We built KV caching in Module 17 (this module), but our transformer (Modules 12-13) doesn't know about it!
 
 **❌ BAD Solution**: Go back and modify Module 12 (MultiHeadAttention)
 - Breaks "forward-only" learning (students shouldn't revisit old modules)
-- Makes Module 12 depend on Module 15 (wrong dependency direction!)
+- Makes Module 12 depend on Module 17 (wrong dependency direction!)
 - Violates clean module boundaries
 
 **✅ GOOD Solution**: Module 17 ADDS caching to existing models without modification!
@@ -1260,7 +1264,7 @@ def disable_kv_cache(model):
     Args:
         model: Model with caching enabled
     
-    Example:
+    EXAMPLE:
         ```python
         cache = enable_kv_cache(model)
         # ... do cached generation ...
@@ -1406,12 +1410,12 @@ def analyze_kvcache_memory():
     for embed_dim, num_layers, seq_len, name in configs:
         # Memory per layer: 2 tensors (K, V) × batch × seq_len × embed_dim × 4 bytes
         batch_size = 1
-        memory_per_layer = 2 * batch_size * seq_len * embed_dim * 4 / (1024**2)  # MB
+        memory_per_layer = 2 * batch_size * seq_len * embed_dim * BYTES_PER_FLOAT32 / MB_TO_BYTES
         total_memory = memory_per_layer * num_layers
 
         # Model parameter memory (approximate)
-        params_per_layer = embed_dim * embed_dim * 4  # QKV projections
-        model_memory = params_per_layer * num_layers * 4 / (1024**2)  # MB
+        params_per_layer = embed_dim * embed_dim * BYTES_PER_FLOAT32  # QKV projections
+        model_memory = params_per_layer * num_layers * BYTES_PER_FLOAT32 / MB_TO_BYTES
 
         overhead_pct = (total_memory / model_memory) * 100 if model_memory > 0 else 0
 
@@ -1716,7 +1720,7 @@ The technique you implemented is mathematically identical to the caching in prod
 
 # %% [markdown]
 """
-## 🎓 Module 15 Complete!
+## 🎓 Module 17 Complete!
 
 You've implemented KV caching - the critical optimization that makes production language models economically viable!
 
@@ -1734,7 +1738,7 @@ You've implemented KV caching - the critical optimization that makes production 
 
 This teaches the critical principle: **Add capabilities forward, never break backward.**
 - Old code keeps working (Module 12 unchanged)
-- New code adds optimization (Module 15 layers on top)
+- New code adds optimization (Module 17 layers on top)
 - Clean separation of concerns (caching is separate from attention logic)
 
 ### Performance Impact

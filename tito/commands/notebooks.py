@@ -45,38 +45,40 @@ class NotebooksCommand(BaseCommand):
     def validate_args(self, args: Namespace) -> None:
         """Validate notebooks command arguments."""
         if args.module:
-            # Look in modules/ subdirectory
-            source_dir = self.config.modules_dir / 'source'
-            if not source_dir.exists():
-                source_dir = self.config.modules_dir
-            module_file = source_dir / args.module / f"{args.module}.py"
-            if not module_file.exists():
+            module_dir = self.config.modules_dir / args.module
+            if not module_dir.exists():
+                raise ModuleNotFoundError(f"Module directory '{args.module}' not found")
+
+            # Find *_dev.py file in the module directory
+            dev_files = list(module_dir.glob('*_dev.py'))
+            if not dev_files:
                 raise ModuleNotFoundError(
-                    f"Module '{args.module}' not found or no {args.module}.py file"
+                    f"No *_dev.py file found in module '{args.module}'"
                 )
     
     def _find_dev_files(self) -> List[Path]:
-        """Find all *.py files in modules directory."""
+        """Find all *_dev.py files in modules directory."""
         dev_files = []
-        # Look in modules/ subdirectory
-        source_dir = self.config.modules_dir / 'source'
-        if not source_dir.exists():
-            # Fallback to modules_dir directly
-            source_dir = self.config.modules_dir
-        
-        for module_dir in source_dir.iterdir():
-            if module_dir.is_dir():
-                dev_py = module_dir / f"{module_dir.name}.py"
-                if dev_py.exists():
-                    dev_files.append(dev_py)
-        return dev_files
+        # Look in modules/ directory
+        modules_dir = self.config.modules_dir
+
+        for module_dir in modules_dir.iterdir():
+            if module_dir.is_dir() and not module_dir.name.startswith('.'):
+                # Look for *_dev.py files in each module directory
+                for py_file in module_dir.glob('*_dev.py'):
+                    dev_files.append(py_file)
+        return sorted(dev_files)
     
     def _convert_file(self, dev_file: Path) -> Tuple[bool, str]:
         """Convert a single Python file to notebook using Jupytext."""
         try:
-            # Use Jupytext to convert Python file to notebook
+            # Use Jupytext from venv to convert Python file to notebook
+            import sys
+            venv_python = Path(sys.executable)
+            jupytext_cmd = venv_python.parent / "jupytext"
+
             result = subprocess.run([
-                "jupytext", "--to", "notebook", str(dev_file)
+                str(jupytext_cmd), "--to", "notebook", str(dev_file)
             ], capture_output=True, text=True, timeout=30, cwd=dev_file.parent)
             
             if result.returncode == 0:
@@ -103,11 +105,9 @@ class NotebooksCommand(BaseCommand):
         
         # Find files to convert
         if args.module:
-            # Look in modules/ subdirectory
-            source_dir = self.config.modules_dir / 'source'
-            if not source_dir.exists():
-                source_dir = self.config.modules_dir
-            dev_files = [source_dir / args.module / f"{args.module}.py"]
+            module_dir = self.config.modules_dir / args.module
+            # Find *_dev.py file(s) in the module directory
+            dev_files = list(module_dir.glob('*_dev.py'))
             self.console.print(f"🔄 Building notebook for module: {args.module}")
         else:
             dev_files = self._find_dev_files()

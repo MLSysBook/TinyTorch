@@ -1,11 +1,11 @@
 """
-Setup command for TinyTorch CLI: First-time environment setup and configuration.
+Setup command for Tiny🔥Torch CLI: First-time environment setup and configuration.
 
 This replaces the old 01_setup module with a proper CLI command that handles:
 - Package installation and virtual environment setup
-- Environment validation and compatibility checking  
+- Environment validation and compatibility checking
 - User profile creation for development tracking
-- Workspace initialization for TinyTorch development
+- Workspace initialization for Tiny🔥Torch development
 """
 
 import subprocess
@@ -26,7 +26,7 @@ from .base import BaseCommand
 from ..core.console import get_console
 
 class SetupCommand(BaseCommand):
-    """First-time setup command for TinyTorch development environment."""
+    """First-time setup command for Tiny🔥Torch development environment."""
     
     @property
     def name(self) -> str:
@@ -60,7 +60,7 @@ class SetupCommand(BaseCommand):
         )
     
     def check_existing_setup(self) -> bool:
-        """Check if TinyTorch is already set up."""
+        """Check if Tiny🔥Torch is already set up."""
         # Check for profile file
         profile_path = self.config.project_root / "profile.json"
         
@@ -77,8 +77,8 @@ class SetupCommand(BaseCommand):
         return has_profile and has_venv
     
     def install_packages(self) -> bool:
-        """Install required packages for TinyTorch development."""
-        self.console.print("📦 Installing TinyTorch dependencies...")
+        """Install required packages for Tiny🔥Torch development."""
+        self.console.print("📦 Installing Tiny🔥Torch dependencies...")
         
         # Essential packages for TinyTorch
         packages = [
@@ -121,26 +121,26 @@ class SetupCommand(BaseCommand):
                     self.console.print(f"[red]Error installing {package}: {e}[/red]")
                     return False
         
-        # Install TinyTorch in development mode
+        # Install Tiny🔥Torch in development mode
         try:
-            self.console.print("🔧 Installing TinyTorch in development mode...")
+            self.console.print("🔧 Installing Tiny🔥Torch in development mode...")
             result = subprocess.run([
                 sys.executable, "-m", "pip", "install", "-e", "."
             ], cwd=self.config.project_root, capture_output=True, text=True)
-            
+
             if result.returncode == 0:
-                self.console.print("✅ TinyTorch installed in development mode")
+                self.console.print("✅ Tiny🔥Torch installed in development mode")
                 return True
             else:
-                self.console.print(f"[red]Failed to install TinyTorch: {result.stderr}[/red]")
+                self.console.print(f"[red]Failed to install Tiny🔥Torch: {result.stderr}[/red]")
                 return False
-                
+
         except Exception as e:
-            self.console.print(f"[red]Error installing TinyTorch: {e}[/red]")
+            self.console.print(f"[red]Error installing Tiny🔥Torch: {e}[/red]")
             return False
     
     def create_virtual_environment(self) -> bool:
-        """Create a virtual environment for TinyTorch development."""
+        """Create a virtual environment for Tiny🔥Torch development."""
         self.console.print("🐍 Setting up virtual environment...")
         
         venv_path = self.config.project_root / ".venv"
@@ -212,7 +212,7 @@ class SetupCommand(BaseCommand):
     
     def create_user_profile(self) -> Dict[str, Any]:
         """Create user profile for development tracking."""
-        self.console.print("👋 Creating your TinyTorch development profile...")
+        self.console.print("👋 Creating your Tiny🔥Torch development profile...")
         
         profile_path = self.config.project_root / "profile.json"
         
@@ -223,7 +223,7 @@ class SetupCommand(BaseCommand):
                     return json.load(f)
         
         # Collect user information
-        name = Prompt.ask("Your name", default="TinyTorch Developer")
+        name = Prompt.ask("Your name", default="Tiny🔥Torch Developer")
         email = Prompt.ask("Your email (optional)", default="dev@tinytorch.local")
         affiliation = Prompt.ask("Your affiliation (university, company, etc.)", default="Independent")
         
@@ -298,7 +298,7 @@ class SetupCommand(BaseCommand):
             return False
     
     def check_tinytorch_package(self) -> bool:
-        """Check if TinyTorch package is installed."""
+        """Check if Tiny🔥Torch package is installed."""
         try:
             import tinytorch
             return True
@@ -308,7 +308,7 @@ class SetupCommand(BaseCommand):
     def print_success_message(self, profile: Dict[str, Any]) -> None:
         """Print success message with next steps."""
         success_text = Text()
-        success_text.append("🎉 TinyTorch setup completed successfully!\n\n", style="bold green")
+        success_text.append("🎉 Tiny🔥Torch setup completed successfully!\n\n", style="bold green")
         success_text.append(f"👋 Welcome, {profile['name']}!\n", style="bold")
         success_text.append(f"📧 Email: {profile['email']}\n", style="dim")
         success_text.append(f"🏢 Affiliation: {profile['affiliation']}\n", style="dim")
@@ -343,17 +343,17 @@ class SetupCommand(BaseCommand):
     def run(self, args: Namespace) -> int:
         """Execute the setup command."""
         self.console.print(Panel(
-            "🔥 TinyTorch First-Time Setup\n\n"
+            "🔥 Tiny🔥Torch First-Time Setup\n\n"
             "This will configure your development environment for building ML systems from scratch.",
-            title="Welcome to TinyTorch!",
+            title="Welcome to Tiny🔥Torch!",
             border_style="bright_green"
         ))
         
         # Check if already set up
         if not args.force and self.check_existing_setup():
-            if not Confirm.ask("TinyTorch appears to be already set up. Continue anyway?"):
+            if not Confirm.ask("Tiny🔥Torch appears to be already set up. Continue anyway?"):
                 self.console.print("✅ Setup cancelled. You're ready to go!")
-                self.console.print("💡 Try: tito 01")
+                self.console.print("💡 Try: tito module start 01")
                 return 0
         
         try:

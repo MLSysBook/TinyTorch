@@ -129,7 +129,16 @@ All contributions must pass:
 ## 📝 Code Standards
 
 ### Module Development
-- **File Format**: Always edit `.py` files, never `.ipynb` directly
+
+**For Students** (using the framework):
+- **File Format**: Edit `*_dev.ipynb` notebooks in Jupyter Lab
+- **Location**: Notebooks are in `modules/NN_name/` directories
+- **Testing**: Run tests inline as you build
+- **Export**: Use `tito module complete N` to export to package
+
+**For Contributors** (improving the framework):
+- **Source Files**: Edit `*_dev.py` files (source of truth)
+- **Notebooks**: Generated from `.py` files using `tito notebooks`
 - **Structure**: Follow the standardized module structure
 - **Testing**: Include immediate testing after each implementation
 - **Systems Analysis**: MANDATORY memory and performance analysis

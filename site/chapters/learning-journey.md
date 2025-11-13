@@ -7,9 +7,9 @@
 ## What This Page Is About
 
 This page tells the **pedagogical story** behind TinyTorch's module progression. While other pages explain:
-- **WHAT you'll build** ([Three-Tier Structure](00-introduction.html)) - organized module breakdown
-- **WHEN in history** ([Milestones](milestones.html)) - recreating ML breakthroughs
-- **WHERE you are** ([Progress Tracking](../learning-progress.html)) - capability checkpoints
+- **WHAT you'll build** ([Three-Tier Structure](00-introduction.md)) - organized module breakdown
+- **WHEN in history** ([Milestones](milestones.md)) - recreating ML breakthroughs
+- **WHERE you are** ([Student Workflow](../student-workflow.md)) - development workflow and progress
 
 This page explains **WHY modules flow this way** - the learning narrative that transforms 20 individual modules into a coherent journey from mathematical foundations to production AI systems.
 
@@ -25,6 +25,22 @@ This page explains **WHY modules flow this way** - the learning narrative that t
 ## The Six-Act Learning Story
 
 TinyTorch's 20 modules follow a carefully crafted six-act narrative arc. Each act represents a fundamental shift in what you're learning and what you can build.
+
+```{mermaid}
+graph LR
+    Act1["Act I: Foundation<br/>01-04<br/>Atomic Components"] --> Act2["Act II: Learning<br/>05-07<br/>Gradient Revolution"]
+    Act2 --> Act3["Act III: Data & Scale<br/>08-09<br/>Real Complexity"]
+    Act3 --> Act4["Act IV: Language<br/>10-13<br/>Sequential Data"]
+    Act4 --> Act5["Act V: Production<br/>14-19<br/>Optimization"]
+    Act5 --> Act6["Act VI: Integration<br/>20<br/>Complete Systems"]
+
+    style Act1 fill:#e3f2fd
+    style Act2 fill:#fff8e1
+    style Act3 fill:#e8f5e9
+    style Act4 fill:#f3e5f5
+    style Act5 fill:#fce4ec
+    style Act6 fill:#fff3e0
+```
 
 ---
 
@@ -211,7 +227,7 @@ You build comprehensive benchmarking tools with precise timing, statistical anal
 
 **Systems Insight**: Benchmarking is a science - proper methodology (warmup, statistical significance, controlling variables) matters as much as the measurements themselves.
 
-**🎯 Act V Achievement**: Production-ready systems competitive in TinyMLPerf benchmarks! Models achieve <100ms inference latency with 4× memory reduction.
+**🎯 Act V Achievement**: Production-ready systems competitive in Torch Olympics benchmarks! Models achieve <100ms inference latency with 4× memory reduction.
 
 **Connection to Act VI**: You have all the pieces - foundation, learning, data, language, optimization. Time to assemble them into a complete AI system.
 
@@ -312,7 +328,7 @@ As you progress through TinyTorch, you advance along **two dimensions simultaneo
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built actually works (historical validation).
 
-**📖 See [Journey Through ML History](milestones.html)** for complete milestone details and how to run them.
+**📖 See [Journey Through ML History](milestones.md)** for complete milestone details and how to run them.
 
 ---
 
@@ -346,7 +362,7 @@ The learning journey also maps to **21 capability checkpoints** you can track:
 - Checkpoint 19: Competitive benchmarking ✓
 - Checkpoint 20: Complete systems ✓
 
-**📖 See [Progress Tracking](../learning-progress.html)** to monitor your capability development.
+See [Student Workflow](../student-workflow.md) for the development workflow and progress tracking.
 
 ---
 
@@ -527,7 +543,7 @@ Typical time estimates (varies by background):
 - Act V → Systems (2024)
 - Act VI → TinyGPT (complete)
 
-**📖 See [Milestones](milestones.html)** for details.
+**📖 See [Milestones](milestones.md)** for details.
 
 ---
 
@@ -543,10 +559,10 @@ Typical time estimates (varies by background):
 </div>
 
 **Related Resources**:
-- **[Three-Tier Structure](00-introduction.html)** - Organized module breakdown with time estimates
-- **[Journey Through ML History](milestones.html)** - Historical milestones you'll recreate
-- **[Progress Tracking](../learning-progress.html)** - Monitor your capability development
-- **[Quick Start Guide](../quickstart-guide.html)** - Hands-on setup and first module
+- **[Three-Tier Structure](00-introduction.md)** - Organized module breakdown with time estimates
+- **[Journey Through ML History](milestones.md)** - Historical milestones you'll recreate
+- **[Student Workflow](../student-workflow.md)** - Development workflow and progress tracking
+- **[Quick Start Guide](../quickstart-guide.md)** - Hands-on setup and first module
 
 ---
 

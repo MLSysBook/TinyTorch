@@ -14,19 +14,19 @@
 
 # %% [markdown]
 """
-# Module 17: Compression - Pruning and Model Compression
+# Module 16: Compression - Pruning and Model Compression
 
-Welcome to Module 17! You're about to build model compression techniques that make neural networks smaller and more efficient while preserving their intelligence.
+Welcome to Module 16! You're about to build model compression techniques that make neural networks smaller and more efficient while preserving their intelligence.
 
 ## 🔗 Prerequisites & Progress
-**You've Built**: Complete optimization pipeline with profiling (14), memoization (15), and quantization (16)
+**You've Built**: Complete optimization pipeline with profiling (14) and quantization (15)
 **You'll Build**: Pruning (magnitude & structured), knowledge distillation, and low-rank approximation
 **You'll Enable**: Compressed models that maintain accuracy while using dramatically less storage and memory
 
 **Connection Map**:
 ```
-Profiling (14) → Quantization (16) → Compression (17) → Acceleration (18)
-(measure size)   (reduce precision)  (remove weights)   (speed up compute)
+Profiling (14) → Quantization (15) → Compression (16) → Memoization (17) → Acceleration (18)
+(measure size)   (reduce precision)  (remove weights)   (cache compute)   (speed up compute)
 ```
 
 ## Learning Objectives
@@ -65,24 +65,14 @@ import copy
 from typing import List, Dict, Any, Tuple, Optional
 import time
 
-# Import from TinyTorch modules
-# Add paths to previous modules for development
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.activations import ReLU
 
-try:
-    # Try production imports first
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.layers import Linear
-    from tinytorch.core.activations import ReLU
-except (ImportError, ModuleNotFoundError):
-    # Fall back to development imports
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-    from tensor_dev import Tensor
-    from layers_dev import Linear
-    from activations_dev import ReLU
+# Constants for memory calculations
+BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
+MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
 # %% [markdown]
 """
@@ -131,7 +121,7 @@ class SimpleModel:
     def forward(self, x):
         """Explicit forward pass through layers."""
         for layer in self.layers:
-            x = layer.forward(x) if hasattr(layer, 'forward') else layer(x)
+            x = layer.forward(x)
         return x
 
     def __call__(self, x):
@@ -141,8 +131,7 @@ class SimpleModel:
         """Collect parameters from all layers."""
         params = []
         for layer in self.layers:
-            if hasattr(layer, 'parameters'):
-                params.extend(layer.parameters())
+            params.extend(layer.parameters())
         return params
 
 # %% [markdown]
@@ -155,11 +144,8 @@ distribution. We'll discover that many weights are tiny and might not matter muc
 
 # %%
 # Profile weight distribution to discover pruning opportunities
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '15_profiling'))
-try:
-    from tinytorch.profiling.profiler import Profiler, analyze_weight_distribution
-except ImportError:
-    from profiler_dev import Profiler
+# Module 14 (Profiling) must be completed before Module 16
+from tinytorch.profiling.profiler import Profiler, analyze_weight_distribution
 
 profiler = Profiler()
 
@@ -172,7 +158,7 @@ profile = profiler.profile_forward_pass(model, input_data)
 
 print("🔬 Profiling Parameter Distribution:\n")
 print(f"   Total parameters: {profile['parameters']:,}")
-print(f"   Model memory: {profile['parameters'] * 4 / 1e6:.1f} MB (FP32)")
+print(f"   Model memory: {profile['parameters'] * BYTES_PER_FLOAT32 / MB_TO_BYTES:.1f} MB (FP32)")
 
 # Analyze weight distribution
 weights = model.weight.data.flatten()
@@ -510,6 +496,7 @@ Global thresholding treats the entire model as one big collection of weights, fi
 """
 
 # %% nbgrader={"grade": false, "grade_id": "magnitude-prune", "solution": true, "schema_version": 3}
+#| export
 def magnitude_prune(model, sparsity=0.9):
     """
     Remove weights with smallest magnitudes to achieve target sparsity.
@@ -675,6 +662,7 @@ Structured sparsity enables real hardware acceleration because:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "structured-prune", "solution": true, "schema_version": 3}
+#| export
 def structured_prune(model, prune_ratio=0.5):
     """
     Remove entire channels/neurons based on L2 norm importance.
@@ -705,8 +693,9 @@ def structured_prune(model, prune_ratio=0.5):
     - Set entire channels to zero (not just individual weights)
     """
     ### BEGIN SOLUTION
+    # All Linear layers have .weight attribute
     for layer in model.layers:
-        if isinstance(layer, Linear) and hasattr(layer, 'weight'):
+        if isinstance(layer, Linear):
             weight = layer.weight.data
 
             # Calculate L2 norm for each output channel (column)
@@ -1350,16 +1339,16 @@ The fundamental challenge in model compression is balancing three competing obje
 """
 ## 8.5 Measuring Compression Impact with Profiler
 
-Now let's use the **Profiler** tool from Module 15 to measure the actual parameter reduction from pruning. This demonstrates the complete workflow: profile baseline (M15) → apply compression (M18) → measure impact (M15+M18).
+Now let's use the **Profiler** tool from Module 14 to measure the actual parameter reduction from pruning. This demonstrates the complete workflow: profile baseline (M14) → apply compression (M16) → measure impact (M14+M16).
 
 This is the production workflow: measure → prune → validate → deploy.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-compression", "solution": true}
-# Import Profiler from Module 15 (already imported above)
+# Import Profiler from Module 14 (already imported above)
 
 def demo_compression_with_profiler():
-    """📊 Demonstrate parameter reduction using Profiler from Module 15."""
+    """📊 Demonstrate parameter reduction using Profiler from Module 14."""
     print("📊 Measuring Compression Impact with Profiler")
     print("=" * 70)
 
@@ -1456,7 +1445,8 @@ def analyze_compression_techniques():
         mag_layers = [Linear(l.weight.shape[0], l.weight.shape[1]) for l in layers]
         for i, layer in enumerate(mag_layers):
             layer.weight = layers[i].weight
-            layer.bias = layers[i].bias if hasattr(layers[i], 'bias') else None
+            # Linear layers always have bias (may be None)
+            layer.bias = layers[i].bias
         mag_model = SimpleModel(*mag_layers)
         magnitude_prune(mag_model, sparsity=0.8)
         mag_sparsity = measure_sparsity(mag_model)
@@ -1469,7 +1459,8 @@ def analyze_compression_techniques():
         struct_layers = [Linear(l.weight.shape[0], l.weight.shape[1]) for l in layers]
         for i, layer in enumerate(struct_layers):
             layer.weight = layers[i].weight
-            layer.bias = layers[i].bias if hasattr(layers[i], 'bias') else None
+            # Linear layers always have bias (may be None)
+            layer.bias = layers[i].bias
         struct_model = SimpleModel(*struct_layers)
         structured_prune(struct_model, prune_ratio=0.5)
         struct_sparsity = measure_sparsity(struct_model)
@@ -1664,11 +1655,12 @@ class CompressionComplete:
     @staticmethod
     def measure_sparsity(model) -> float:
         """Measure the sparsity of a model (fraction of zero weights)."""
+        # SimpleModel has .layers, each layer has .parameters() method
         total_params = 0
         zero_params = 0
         
-        if hasattr(model, 'parameters'):
-            for param in model.parameters():
+        for layer in model.layers:
+            for param in layer.parameters():
                 total_params += param.size
                 zero_params += np.sum(param.data == 0)
         
@@ -1680,11 +1672,12 @@ class CompressionComplete:
         Prune model weights by magnitude (smallest weights set to zero).
         
         Args:
-            model: Model with parameters() method
+            model: SimpleModel with .layers attribute
             sparsity: Fraction of weights to prune (0-1)
         """
-        if hasattr(model, 'parameters'):
-            for param in model.parameters():
+        # SimpleModel has .layers, each layer has .parameters() method
+        for layer in model.layers:
+            for param in layer.parameters():
                 threshold = np.percentile(np.abs(param.data), sparsity * 100)
                 param.data[np.abs(param.data) < threshold] = 0
         
@@ -1696,13 +1689,14 @@ class CompressionComplete:
         Prune entire neurons/channels (structured pruning).
         
         Args:
-            model: Model to prune
+            model: SimpleModel with .layers attribute
             prune_ratio: Fraction of structures to prune (0-1)
         """
-        if hasattr(model, 'parameters'):
-            params = list(model.parameters())
-            if len(params) > 0 and hasattr(params[0], 'data'):
-                weight = params[0]
+        # SimpleModel has .layers, process Linear layers
+        for layer in model.layers:
+            if isinstance(layer, Linear):
+                # Linear layers have .weight attribute with .data
+                weight = layer.weight
                 if len(weight.shape) == 2:  # Linear layer
                     # Prune output neurons
                     neuron_norms = np.linalg.norm(weight.data, axis=0)

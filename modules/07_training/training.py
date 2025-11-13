@@ -74,6 +74,11 @@ from tinytorch.core.layers import Linear
 from tinytorch.core.losses import MSELoss, CrossEntropyLoss
 from tinytorch.core.optimizers import SGD, AdamW
 
+# Constants for learning rate scheduling defaults
+DEFAULT_MAX_LR = 0.1  # Default maximum learning rate for cosine schedule
+DEFAULT_MIN_LR = 0.01  # Default minimum learning rate for cosine schedule
+DEFAULT_TOTAL_EPOCHS = 100  # Default total epochs for learning rate schedule
+
 # %% [markdown]
 """
 ## 🏗️ Part 1: Introduction - What is Training?
@@ -208,7 +213,7 @@ class CosineSchedule:
     HINT: Use np.cos() and np.pi for the cosine calculation
     """
     ### BEGIN SOLUTION
-    def __init__(self, max_lr: float = 0.1, min_lr: float = 0.01, total_epochs: int = 100):
+    def __init__(self, max_lr: float = DEFAULT_MAX_LR, min_lr: float = DEFAULT_MIN_LR, total_epochs: int = DEFAULT_TOTAL_EPOCHS):
         self.max_lr = max_lr
         self.min_lr = min_lr
         self.total_epochs = total_epochs
@@ -704,8 +709,8 @@ class Trainer:
         # Trust optimizer has lr attribute (from Modules 06)
         state['lr'] = self.optimizer.lr
         # Use explicit API for momentum state (Module 06)
-        # This is cleaner and more explicit than hasattr()
-        if hasattr(self.optimizer, 'get_momentum_state'):
+        # All optimizers with momentum support have get_momentum_state() method
+        if hasattr(self.optimizer, 'has_momentum') and self.optimizer.has_momentum():
             momentum_state = self.optimizer.get_momentum_state()
             if momentum_state is not None:
                 state['momentum_buffers'] = momentum_state
@@ -717,9 +722,10 @@ class Trainer:
             # Trust optimizer has lr attribute (from Modules 06)
             self.optimizer.lr = state['lr']
         # Use explicit API for momentum state (Module 06)
-        # This is cleaner and more explicit than hasattr()
-        if 'momentum_buffers' in state and hasattr(self.optimizer, 'set_momentum_state'):
-            self.optimizer.set_momentum_state(state['momentum_buffers'])
+        # All optimizers with momentum support have set_momentum_state() method
+        if 'momentum_buffers' in state:
+            if hasattr(self.optimizer, 'has_momentum') and self.optimizer.has_momentum():
+                self.optimizer.set_momentum_state(state['momentum_buffers'])
 
     def _get_scheduler_state(self):
         """Extract scheduler state for checkpointing."""

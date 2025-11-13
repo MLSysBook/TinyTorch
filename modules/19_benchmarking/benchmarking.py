@@ -15,6 +15,10 @@
 #| default_exp benchmarking.benchmark
 #| export
 
+# Constants for benchmarking defaults
+DEFAULT_WARMUP_RUNS = 5  # Default warmup runs for JIT compilation and cache warming
+DEFAULT_MEASUREMENT_RUNS = 10  # Default measurement runs for statistical significance
+
 # %% [markdown]
 """
 # Module 19: Benchmarking - TorchPerf Olympics Preparation
@@ -164,15 +168,34 @@ Professional benchmarking quantifies and minimizes these uncertainties.
 
 # %%
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
+    # Create a simple DataFrame-like class for when pandas is not available
+    class pd:
+        class DataFrame:
+            def __init__(self, data):
+                self.data = data
+            def __repr__(self):
+                return str(self.data)
 import time
 import statistics
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
 from typing import Dict, List, Tuple, Any, Optional, Callable, Union
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
-import psutil
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
 import platform
 from contextlib import contextmanager
 import warnings
@@ -286,7 +309,11 @@ class BenchmarkResult:
     def __post_init__(self):
         """Compute statistics after initialization."""
         if not self.values:
-            raise ValueError("BenchmarkResult requires at least one measurement")
+            raise ValueError(
+                "BenchmarkResult requires at least one measurement.\n"
+                "  Issue: Cannot compute statistics without any measurements.\n"
+                "  Fix: Ensure benchmark runs produce at least one measurement before creating BenchmarkResult."
+            )
 
         self.mean = statistics.mean(self.values)
         self.std = statistics.stdev(self.values) if len(self.values) > 1 else 0.0
@@ -555,7 +582,7 @@ class Benchmark:
     """
     ### BEGIN SOLUTION
     def __init__(self, models: List[Any], datasets: List[Any],
-                 warmup_runs: int = 5, measurement_runs: int = 10):
+                 warmup_runs: int = DEFAULT_WARMUP_RUNS, measurement_runs: int = DEFAULT_MEASUREMENT_RUNS):
         """Initialize benchmark with models and datasets."""
         self.models = models
         self.datasets = datasets
@@ -571,8 +598,8 @@ class Benchmark:
             'platform': platform.platform(),
             'processor': platform.processor(),
             'python_version': platform.python_version(),
-            'memory_gb': psutil.virtual_memory().total / (1024**3),
-            'cpu_count': psutil.cpu_count()
+            'memory_gb': psutil.virtual_memory().total / (1024**3) if PSUTIL_AVAILABLE else 0.0,
+            'cpu_count': psutil.cpu_count() if PSUTIL_AVAILABLE else 1
         }
 
     def run_latency_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
@@ -583,54 +610,26 @@ class Benchmark:
             model_name = getattr(model, 'name', f'model_{i}')
             
             # Create input tensor for profiling
-            try:
-                from tinytorch.core.tensor import Tensor
-                input_tensor = Tensor(np.random.randn(*input_shape).astype(np.float32))
-            except:
-                # Fallback for simple models
-                input_tensor = np.random.randn(*input_shape).astype(np.float32)
+            from tinytorch.core.tensor import Tensor
+            input_tensor = Tensor(np.random.randn(*input_shape).astype(np.float32))
 
             # Use Profiler to measure latency with proper warmup and iterations
-            try:
-                latency_ms = self.profiler.measure_latency(
-                    model, 
-                    input_tensor,
-                    warmup=self.warmup_runs,
-                    iterations=self.measurement_runs
+            latency_ms = self.profiler.measure_latency(
+                model, 
+                input_tensor,
+                warmup=self.warmup_runs,
+                iterations=self.measurement_runs
+            )
+            
+            # Profiler returns single median value
+            # For BenchmarkResult, we need multiple measurements
+            # Run additional measurements for statistical analysis
+            latencies = []
+            for _ in range(self.measurement_runs):
+                single_latency = self.profiler.measure_latency(
+                    model, input_tensor, warmup=0, iterations=1
                 )
-                
-                # Profiler returns single median value
-                # For BenchmarkResult, we need multiple measurements
-                # Run additional measurements for statistical analysis
-                latencies = []
-                for _ in range(self.measurement_runs):
-                    single_latency = self.profiler.measure_latency(
-                        model, input_tensor, warmup=0, iterations=1
-                    )
-                    latencies.append(single_latency)
-                
-            except:
-                # Fallback: use precise_timer for models that don't support profiler
-                latencies = []
-                for _ in range(self.measurement_runs):
-                    with precise_timer() as timer:
-                        try:
-                            # Educational Note: hasattr() is LEGITIMATE here because:
-                            # 1. Benchmarking framework must work with ANY model type
-                            # 2. Different frameworks use different method names (forward vs predict)
-                            # 3. This is duck-typing for maximum compatibility
-                            # This is the CORRECT use of hasattr() for polymorphic benchmarking
-                            if hasattr(model, 'forward'):
-                                model.forward(input_tensor)
-                            elif hasattr(model, 'predict'):
-                                model.predict(input_tensor)
-                            elif callable(model):
-                                model(input_tensor)
-                            else:
-                                time.sleep(0.001)
-                        except:
-                            time.sleep(0.001 + np.random.normal(0, 0.0001))
-                    latencies.append(timer.elapsed * 1000)
+                latencies.append(single_latency)
 
             results[model_name] = BenchmarkResult(
                 f"{model_name}_latency_ms",
@@ -683,37 +682,15 @@ class Benchmark:
             memory_usages = []
 
             for run in range(self.measurement_runs):
-                try:
-                    # Use Profiler to measure memory
-                    memory_stats = self.profiler.measure_memory(model, input_shape)
-                    # Use peak_memory_mb as the primary metric
-                    memory_used = memory_stats['peak_memory_mb']
-                except:
-                    # Fallback: measure with psutil
-                    process = psutil.Process()
-                    memory_before = process.memory_info().rss / (1024**2)  # MB
-
-                    try:
-                        dummy_input = np.random.randn(*input_shape).astype(np.float32)
-                        if hasattr(model, 'forward'):
-                            model.forward(dummy_input)
-                        elif hasattr(model, 'predict'):
-                            model.predict(dummy_input)
-                        elif callable(model):
-                            model(dummy_input)
-                    except:
-                        pass
-
-                    memory_after = process.memory_info().rss / (1024**2)  # MB
-                    memory_used = max(0, memory_after - memory_before)
-
-                    # If no significant memory change detected, estimate from parameters
-                    if memory_used < 1.0:
-                        try:
-                            param_count = self.profiler.count_parameters(model)
-                            memory_used = param_count * 4 / (1024**2)  # 4 bytes per float32
-                        except:
-                            memory_used = 8 + np.random.normal(0, 1)  # Default estimate
+                # Use Profiler to measure memory
+                memory_stats = self.profiler.measure_memory(model, input_shape)
+                # Use peak_memory_mb as the primary metric
+                memory_used = memory_stats['peak_memory_mb']
+                
+                # If no significant memory change detected, estimate from parameters
+                if memory_used < 1.0:
+                    param_count = self.profiler.count_parameters(model)
+                    memory_used = param_count * 4 / (1024**2)  # 4 bytes per float32
 
                 memory_usages.append(max(0, memory_used))
 
@@ -725,7 +702,7 @@ class Benchmark:
 
         return results
 
-    def compare_models(self, metric: str = "latency") -> pd.DataFrame:
+    def compare_models(self, metric: str = "latency"):
         """Compare models across a specific metric."""
         if metric == "latency":
             results = self.run_latency_benchmark()
@@ -734,7 +711,11 @@ class Benchmark:
         elif metric == "memory":
             results = self.run_memory_benchmark()
         else:
-            raise ValueError(f"Unknown metric: {metric}")
+            raise ValueError(
+                f"Unknown metric: '{metric}'.\n"
+                f"  Available metrics: 'latency', 'memory', 'accuracy'.\n"
+                f"  Fix: Use one of the supported metric names."
+            )
 
         # Convert to DataFrame for easy comparison
         comparison_data = []
@@ -749,7 +730,11 @@ class Benchmark:
                 'count': result.count
             })
 
-        return pd.DataFrame(comparison_data)
+        if PANDAS_AVAILABLE:
+            return pd.DataFrame(comparison_data)
+        else:
+            # Return dict when pandas is not available
+            return {'comparison': comparison_data, 'note': 'pandas not available, returning dict'}
     ### END SOLUTION
 
 def test_unit_benchmark():
@@ -788,9 +773,14 @@ def test_unit_benchmark():
 
     # Test comparison
     comparison_df = benchmark.compare_models("latency")
-    assert len(comparison_df) == 2
-    assert "model" in comparison_df.columns
-    assert "mean" in comparison_df.columns
+    # Handle case when pandas is not available (returns dict instead of DataFrame)
+    if PANDAS_AVAILABLE:
+        assert len(comparison_df) == 2
+        assert "model" in comparison_df.columns
+        assert "mean" in comparison_df.columns
+    else:
+        assert "comparison" in comparison_df
+        assert isinstance(comparison_df, dict)
 
     print("✅ Benchmark works correctly!")
 
@@ -1353,8 +1343,11 @@ class TinyMLPerf:
                              num_runs: int = 100) -> Dict[str, Any]:
         """Run a standardized TinyMLPerf benchmark."""
         if benchmark_name not in self.benchmarks:
-            raise ValueError(f"Unknown benchmark: {benchmark_name}. "
-                           f"Available: {list(self.benchmarks.keys())}")
+            raise ValueError(
+                f"Unknown benchmark: '{benchmark_name}'.\n"
+                f"  Available benchmarks: {list(self.benchmarks.keys())}.\n"
+                f"  Fix: Use one of the supported benchmark names from the list above."
+            )
 
         config = self.benchmarks[benchmark_name]
         print(f"🔬 Running TinyMLPerf {benchmark_name} benchmark...")
@@ -1377,15 +1370,12 @@ class TinyMLPerf:
         warmup_runs = max(1, num_runs // 10)
         print(f"   Warming up ({warmup_runs} runs)...")
         for i in range(warmup_runs):
-            try:
-                if hasattr(model, 'forward'):
-                    model.forward(test_inputs[i])
-                elif hasattr(model, 'predict'):
-                    model.predict(test_inputs[i])
-                elif callable(model):
-                    model(test_inputs[i])
-            except:
-                pass  # Skip if model doesn't support this input
+            if hasattr(model, 'forward'):
+                model.forward(test_inputs[i])
+            elif hasattr(model, 'predict'):
+                model.predict(test_inputs[i])
+            elif callable(model):
+                model(test_inputs[i])
 
         # Measurement phase
         print(f"   Measuring performance ({num_runs} runs)...")
@@ -1420,39 +1410,37 @@ class TinyMLPerf:
             true_labels = np.random.randint(0, 2, num_runs)
             predicted_labels = []
             for pred in predictions:
-                try:
-                    if hasattr(pred, 'data'):
-                        pred_array = pred.data
-                    else:
-                        pred_array = np.array(pred)
+                if hasattr(pred, 'data'):
+                    pred_array = pred.data
+                else:
+                    pred_array = np.array(pred)
 
-                    if len(pred_array.shape) > 1:
-                        pred_array = pred_array.flatten()
+                # Convert to numpy array if needed (handle memoryview objects)
+                if not isinstance(pred_array, np.ndarray):
+                    pred_array = np.array(pred_array)
 
-                    if len(pred_array) >= 2:
-                        predicted_labels.append(1 if pred_array[1] > pred_array[0] else 0)
-                    else:
-                        predicted_labels.append(1 if pred_array[0] > 0.5 else 0)
-                except:
-                    predicted_labels.append(np.random.randint(0, 2))
+                if len(pred_array.shape) > 1:
+                    pred_array = pred_array.flatten()
+
+                if len(pred_array) >= 2:
+                    predicted_labels.append(1 if pred_array[1] > pred_array[0] else 0)
+                else:
+                    predicted_labels.append(1 if pred_array[0] > 0.5 else 0)
         else:
             # Multi-class classification
             num_classes = 10 if benchmark_name == 'image_classification' else 5
             true_labels = np.random.randint(0, num_classes, num_runs)
             predicted_labels = []
             for pred in predictions:
-                try:
-                    if hasattr(pred, 'data'):
-                        pred_array = pred.data
-                    else:
-                        pred_array = np.array(pred)
+                if hasattr(pred, 'data'):
+                    pred_array = pred.data
+                else:
+                    pred_array = np.array(pred)
 
-                    if len(pred_array.shape) > 1:
-                        pred_array = pred_array.flatten()
+                if len(pred_array.shape) > 1:
+                    pred_array = pred_array.flatten()
 
-                    predicted_labels.append(np.argmax(pred_array) % num_classes)
-                except:
-                    predicted_labels.append(np.random.randint(0, num_classes))
+                predicted_labels.append(np.argmax(pred_array) % num_classes)
 
         # Calculate accuracy
         correct_predictions = sum(1 for true, pred in zip(true_labels, predicted_labels) if true == pred)
@@ -2175,9 +2163,10 @@ def test_module():
             return base_acc + np.random.normal(0, 0.02)
 
         def parameters(self):
-            # Simulate parameter count
+            # Simulate parameter count - return Tensor objects for compatibility
+            from tinytorch.core.tensor import Tensor
             param_count = self.characteristics.get('param_count', 1000000)
-            return [np.random.randn(param_count)]
+            return [Tensor(np.random.randn(param_count))]
 
     # Create test model suite
     models = [
