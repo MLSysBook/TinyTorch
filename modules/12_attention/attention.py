@@ -70,6 +70,9 @@ from typing import Optional, Tuple, List
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Linear
 
+# Constants for attention computation
+MASK_VALUE = -1e9  # Large negative value used for attention masking (becomes ~0 after softmax)
+
 # %% [markdown]
 """
 ## Part 1: Introduction - What is Attention?
@@ -296,8 +299,22 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
     ### BEGIN SOLUTION
     # Step 1: Extract dimensions and validate
     batch_size, seq_len, d_model = Q.shape
-    assert K.shape == (batch_size, seq_len, d_model), f"K shape {K.shape} doesn't match Q shape {Q.shape}"
-    assert V.shape == (batch_size, seq_len, d_model), f"V shape {V.shape} doesn't match Q shape {Q.shape}"
+    if K.shape != (batch_size, seq_len, d_model):
+        raise ValueError(
+            f"Shape mismatch in scaled_dot_product_attention: K shape {K.shape} doesn't match Q shape {Q.shape}.\n"
+            f"  Expected: All inputs (Q, K, V) must have shape (batch_size, seq_len, d_model).\n"
+            f"  Q shape: {Q.shape}\n"
+            f"  K shape: {K.shape}\n"
+            f"  Fix: Ensure K has the same shape as Q."
+        )
+    if V.shape != (batch_size, seq_len, d_model):
+        raise ValueError(
+            f"Shape mismatch in scaled_dot_product_attention: V shape {V.shape} doesn't match Q shape {Q.shape}.\n"
+            f"  Expected: All inputs (Q, K, V) must have shape (batch_size, seq_len, d_model).\n"
+            f"  Q shape: {Q.shape}\n"
+            f"  V shape: {V.shape}\n"
+            f"  Fix: Ensure V has the same shape as Q."
+        )
 
     # Step 2: Compute attention scores with explicit loops (educational O(n²) demonstration)
     scores = np.zeros((batch_size, seq_len, seq_len))
@@ -327,14 +344,14 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
                 for i in range(seq_len):
                     for j in range(seq_len):
                         if mask.data[i, j] == 0:  # Zero values indicate masked positions
-                            scores[b, i, j] = -1e9  # Large negative value (effectively -inf)
+                            scores[b, i, j] = MASK_VALUE
         else:
             # 3D mask: batch-specific masks
             for b in range(batch_size):
                 for i in range(seq_len):
                     for j in range(seq_len):
                         if mask.data[b, i, j] == 0:  # Zero values indicate masked positions
-                            scores[b, i, j] = -1e9  # Large negative value (effectively -inf)
+                            scores[b, i, j] = MASK_VALUE
 
     # Step 5: Apply softmax to get attention weights (probability distribution)
     attention_weights = np.zeros_like(scores)
@@ -536,7 +553,13 @@ class MultiHeadAttention:
         - Each projection maps embed_dim → embed_dim
         """
         ### BEGIN SOLUTION
-        assert embed_dim % num_heads == 0, f"embed_dim ({embed_dim}) must be divisible by num_heads ({num_heads})"
+        if embed_dim % num_heads != 0:
+            raise ValueError(
+                f"embed_dim ({embed_dim}) must be divisible by num_heads ({num_heads}).\n"
+                f"  Issue: Multi-head attention splits embed_dim into num_heads heads.\n"
+                f"  Fix: Choose embed_dim and num_heads such that embed_dim % num_heads == 0.\n"
+                f"  Example: embed_dim=512, num_heads=8 works (512/8=64 per head)."
+            )
 
         self.embed_dim = embed_dim
         self.num_heads = num_heads
@@ -588,7 +611,13 @@ class MultiHeadAttention:
         ### BEGIN SOLUTION
         # Step 1: Extract dimensions
         batch_size, seq_len, embed_dim = x.shape
-        assert embed_dim == self.embed_dim, f"Input dim {embed_dim} doesn't match expected {self.embed_dim}"
+        if embed_dim != self.embed_dim:
+            raise ValueError(
+                f"Input dimension mismatch in MultiHeadAttention.forward().\n"
+                f"  Expected: embed_dim={self.embed_dim} (set during initialization)\n"
+                f"  Got: embed_dim={embed_dim} from input shape {x.shape}\n"
+                f"  Fix: Ensure input tensor's last dimension matches the embed_dim used when creating MultiHeadAttention."
+            )
 
         # Step 2: Project to Q, K, V
         Q = self.q_proj.forward(x)  # (batch, seq, embed_dim)

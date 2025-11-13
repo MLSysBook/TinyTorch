@@ -1,5 +1,5 @@
 """
-TinyTorch Community Leaderboard Command
+Tiny🔥Torch Community Leaderboard Command
 
 Inclusive community showcase where everyone belongs, regardless of performance level.
 Celebrates the journey, highlights improvements, and builds community through shared learning.
@@ -48,7 +48,7 @@ class LeaderboardCommand(BaseCommand):
         # Join/Register command (join is primary, register is alias)
         join_parser = subparsers.add_parser(
             'join',
-            help='Join the TinyTorch community (inclusive, welcoming)',
+            help='Join the Tiny🔥Torch community (inclusive, welcoming)',
             aliases=['register']
         )
         join_parser.add_argument(
@@ -95,7 +95,7 @@ class LeaderboardCommand(BaseCommand):
         )
         submit_parser.add_argument(
             '--checkpoint',
-            help='Which TinyTorch checkpoint you completed (e.g., "05", "10", "15")'
+            help='Which Tiny🔥Torch checkpoint you completed (e.g., "05", "10", "15")'
         )
         
         # View command
@@ -188,7 +188,7 @@ class LeaderboardCommand(BaseCommand):
         """Show leaderboard overview and welcome message."""
         self.console.print(Panel(
             Group(
-                Align.center("[bold bright_green]🌟 TinyTorch Community Leaderboard 🌟[/bold bright_green]"),
+                Align.center("[bold bright_green]🌟 Tiny🔥Torch Community Leaderboard 🌟[/bold bright_green]"),
                 "",
                 "[bold]Everyone Welcome![/bold] This is your inclusive community showcase where:",
                 "• [green]Every achievement matters[/green] - 10% accuracy gets the same celebration as 90%",
@@ -249,7 +249,7 @@ class LeaderboardCommand(BaseCommand):
         # Welcome message with community invitation
         self.console.print(Panel(
             Group(
-                Align.center("[bold bright_green]🎉 Welcome to TinyTorch Community! 🎉[/bold bright_green]"),
+                Align.center("[bold bright_green]🎉 Welcome to Tiny🔥Torch Community! 🎉[/bold bright_green]"),
                 "",
                 "Join thousands of ML systems learners from around the world who are:",
                 "• [green]Building neural networks from scratch[/green]",
@@ -568,7 +568,7 @@ class LeaderboardCommand(BaseCommand):
                 "",
                 "[dim]💝 Remember: Every step forward is celebrated here![/dim]",
             ),
-            title=f"🎊 Welcome to TinyTorch, {username}!",
+            title=f"🎊 Welcome to Tiny🔥Torch, {username}!",
             border_style="bright_green",
             padding=(1, 2)
         ))
@@ -877,20 +877,20 @@ class LeaderboardCommand(BaseCommand):
         """Show detailed explanation of the leaderboard system."""
         self.console.print(Panel(
             Group(
-                Align.center("[bold bright_green]🎓 TinyTorch Community Leaderboard Guide 🎓[/bold bright_green]"),
+                Align.center("[bold bright_green]🎓 Tiny🔥Torch Community Leaderboard Guide 🎓[/bold bright_green]"),
                 "",
                 "[bold bright_blue]🌟 What is this?[/bold bright_blue]",
-                "The TinyTorch Community Leaderboard is an [bold]inclusive showcase[/bold] where ML learners",
+                "The Tiny🔥Torch Community Leaderboard is an [bold]inclusive showcase[/bold] where ML learners",
                 "share their journey, celebrate achievements, and support each other's growth.",
                 "",
                 "[bold bright_blue]🚀 What gets submitted?[/bold bright_blue]",
-                "• [green]Model checkpoints[/green] - Your trained TinyTorch models (not PyTorch!)",
+                "• [green]Model checkpoints[/green] - Your trained Tiny🔥Torch models (not PyTorch!)",
                 "• [green]Accuracy results[/green] - Performance on tasks like CIFAR-10, MNIST",
-                "• [green]Learning progress[/green] - Which TinyTorch checkpoints you've completed",
+                "• [green]Learning progress[/green] - Which Tiny🔥Torch checkpoints you've completed",
                 "• [green]Model descriptions[/green] - Your architecture choices and approaches",
                 "",
                 "[bold bright_blue]🔍 How does verification work?[/bold bright_blue]",
-                "• Models must be built with [yellow]TinyTorch[/yellow] (the framework you're learning)",
+                "• Models must be built with [yellow]Tiny🔥Torch[/yellow] (the framework you're learning)",
                 "• We verify checkpoints contain your custom implementations",
                 "• Community review ensures submissions are genuine learning artifacts",
                 "• [dim]Focus is on learning, not gaming the system[/dim]",
@@ -903,7 +903,7 @@ class LeaderboardCommand(BaseCommand):
                 "",
                 "[bold bright_blue]🎯 Getting started:[/bold bright_blue]",
                 "1. [dim]tito leaderboard join[/dim] - Join our welcoming community",
-                "2. Train any model using your TinyTorch implementations",
+                "2. Train any model using your Tiny🔥Torch implementations",
                 "3. [dim]tito leaderboard submit --accuracy 25.3[/dim] - Share your results",
                 "4. [dim]tito leaderboard view[/dim] - See the community progress",
                 "",
@@ -1389,7 +1389,7 @@ class LeaderboardCommand(BaseCommand):
             # User hasn't joined leaderboard yet - show gentle invitation
             self.console.print(Panel(
                 f"[bold green]✨ Great progress on {module_name}! ✨[/bold green]\n\n"
-                f"[yellow]Join the TinyTorch community to track your journey:[/yellow]\n"
+                f"[yellow]Join the Tiny🔥Torch community to track your journey:[/yellow]\n"
                 f"  • Show your progress to the world\n"
                 f"  • Get personalized next step suggestions\n"
                 f"  • Connect with other ML learners\n"

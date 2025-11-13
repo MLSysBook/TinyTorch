@@ -96,7 +96,7 @@ book/
 - Profiling, memoization (KV caching), quantization, compression, acceleration, benchmarking
 
 **Capstone (20):**
-- MLPerf® Edu Competition project
+- Torch Olympics Competition project
 
 ## 🔧 Development
 

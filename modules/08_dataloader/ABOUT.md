@@ -1,332 +1,374 @@
 ---
 title: "DataLoader - Data Pipeline Engineering"
-description: "Build production-grade data loading infrastructure for training at scale"
-difficulty: 3
-time_estimate: "5-6 hours"
+description: "Build production-grade data loading infrastructure for efficient ML training"
+difficulty: "⭐⭐⭐"
+time_estimate: "4-5 hours"
 prerequisites: ["Tensor", "Layers", "Training"]
 next_steps: ["Spatial (CNNs)"]
 learning_objectives:
-  - "Design scalable data pipeline architectures for production ML systems"
-  - "Implement efficient dataset abstractions with batching and streaming"
-  - "Build preprocessing pipelines for normalization and data augmentation"
-  - "Understand memory-efficient data loading patterns for large datasets"
-  - "Apply systems thinking to I/O optimization and throughput engineering"
+  - "Design memory-efficient dataset abstractions for scalable training"
+  - "Implement batching and shuffling for mini-batch gradient descent"
+  - "Master the Python iterator protocol for streaming data pipelines"
+  - "Understand PyTorch's DataLoader architecture and design patterns"
+  - "Analyze trade-offs between batch size, memory usage, and throughput"
 ---
 
 # 08. DataLoader
 
-**🏛️ ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours
+**ARCHITECTURE TIER** | Difficulty: ⭐⭐⭐ (3/4) | Time: 4-5 hours
 
 ## Overview
 
-Build the data engineering infrastructure that feeds neural networks. This module implements production-grade data loading, preprocessing, and batching systems—the critical backbone that enables training on real-world datasets like CIFAR-10.
+This module implements the data loading infrastructure that powers neural network training at scale. You'll build the Dataset/DataLoader abstraction pattern used by PyTorch, TensorFlow, and every major ML framework—implementing batching, shuffling, and memory-efficient iteration from first principles. This is where data engineering meets systems thinking.
 
 ## Learning Objectives
 
-By completing this module, you will be able to:
+By the end of this module, you will be able to:
 
-1. **Design scalable data pipeline architectures** for production ML systems with proper abstractions and interfaces
-2. **Implement efficient dataset abstractions** with batching, shuffling, and streaming for memory-efficient training
-3. **Build preprocessing pipelines** for normalization, augmentation, and transformation with fit-transform patterns
-4. **Understand memory-efficient data loading patterns** for large datasets that don't fit in RAM
-5. **Apply systems thinking** to I/O optimization, caching strategies, and throughput engineering
+- **Design Dataset Abstractions**: Implement the protocol-based interface (`__getitem__`, `__len__`) that separates data storage from data access
+- **Build Efficient DataLoaders**: Create batching and shuffling mechanisms that stream data without loading entire datasets into memory
+- **Master Iterator Patterns**: Understand how Python's `for` loops work under the hood and implement custom iterators
+- **Optimize Data Pipelines**: Analyze throughput bottlenecks and balance batch size against memory constraints
+- **Apply to Real Datasets**: Use your DataLoader with actual image datasets like MNIST and CIFAR-10 in milestone projects
 
-## Why This Matters
+## Build → Use → Optimize
 
-### Production Context
+This module follows TinyTorch's **Build → Use → Optimize** framework:
 
-Every production ML system depends on robust data infrastructure:
-
-- **Netflix** uses sophisticated data pipelines to train recommendation models on billions of viewing records
-- **Tesla** processes terabytes of driving sensor data through efficient loading pipelines for autonomous driving
-- **OpenAI** built custom data loaders to train GPT models on hundreds of billions of tokens
-- **Meta** developed PyTorch's DataLoader (which you're reimplementing) to power research and production
-
-### Historical Context
-
-Data loading evolved from bottleneck to optimized system:
-
-- **Early ML (pre-2010)**: Small datasets fit entirely in memory; data loading was an afterthought
-- **ImageNet Era (2012)**: AlexNet required efficient loading of 1.2M images; preprocessing became critical
-- **Big Data ML (2015+)**: Streaming data pipelines became necessary for datasets too large for memory
-- **Modern Scale (2020+)**: Data loading is now a first-class systems problem with dedicated infrastructure teams
-
-The patterns you're building are the same ones used in production at scale.
-
-## Pedagogical Pattern: Build → Use → Analyze
-
-### 1. Build
-
-Implement from first principles:
-- Dataset abstraction with Python protocols (`__getitem__`, `__len__`)
-- DataLoader with batching, shuffling, and iteration
-- CIFAR-10 dataset loader with binary file parsing
-- Normalizer with fit-transform pattern
-- Memory-efficient streaming for large datasets
-
-### 2. Use
-
-Apply to real problems:
-- Load and preprocess CIFAR-10 (50,000 training images)
-- Create train/test data loaders with proper batching
-- Build preprocessing pipelines for normalization
-- Integrate with training loops from Module 07
-- Measure throughput and identify bottlenecks
-
-### 3. Analyze
-
-Deep-dive into systems behavior:
-- Profile memory usage patterns with different batch sizes
-- Measure I/O throughput and identify disk bottlenecks
-- Compare streaming vs in-memory loading strategies
-- Analyze the impact of shuffling on training dynamics
-- Understand trade-offs between batch size and memory
+1. **Build**: Implement Dataset abstraction, TensorDataset for in-memory data, and DataLoader with batching/shuffling
+2. **Use**: Load synthetic datasets, create train/validation splits, and integrate with training loops
+3. **Optimize**: Profile throughput, analyze memory scaling, and measure shuffle overhead
 
 ## Implementation Guide
 
-### Core Components
+### Dataset Abstraction
 
-**Dataset Abstraction**
+The foundation of all data loading—a protocol-based interface for accessing samples:
+
 ```python
-class Dataset:
-    """Abstract base class for all datasets.
-    
-    Implements Python protocols for indexing and length.
-    Subclasses must implement __getitem__ and __len__.
+from abc import ABC, abstractmethod
+
+class Dataset(ABC):
     """
-    def __getitem__(self, index: int):
-        """Return (data, label) for given index."""
-        raise NotImplementedError
-    
+    Abstract base class defining the dataset interface.
+
+    All datasets must implement:
+    - __len__(): Return total number of samples
+    - __getitem__(idx): Return sample at given index
+
+    This enables Pythonic usage:
+        len(dataset)       # How many samples?
+        dataset[42]        # Get sample 42
+        for x in dataset   # Iterate over all samples
+    """
+
+    @abstractmethod
     def __len__(self) -> int:
-        """Return total number of samples."""
-        raise NotImplementedError
+        """Return total number of samples in dataset."""
+        pass
+
+    @abstractmethod
+    def __getitem__(self, idx: int):
+        """Return sample at given index."""
+        pass
 ```
 
-**DataLoader Implementation**
+**Why This Design:**
+- **Protocol-based**: Uses Python's `__len__` and `__getitem__` for natural syntax
+- **Framework-agnostic**: Same pattern used by PyTorch, TensorFlow, JAX
+- **Separation of concerns**: Decouples *what data exists* from *how to load it*
+- **Enables optimization**: Makes caching, prefetching, and parallel loading possible
+
+### TensorDataset Implementation
+
+When your data fits in memory, TensorDataset provides efficient access:
+
+```python
+class TensorDataset(Dataset):
+    """
+    Dataset for in-memory tensors.
+
+    Wraps multiple tensors with aligned first dimension:
+        features: (N, feature_dim)
+        labels: (N,)
+
+    Returns tuple of tensors for each sample:
+        dataset[i] → (features[i], labels[i])
+    """
+
+    def __init__(self, *tensors):
+        """Store tensors, validate first dimension alignment."""
+        assert len(tensors) > 0
+        first_size = len(tensors[0].data)
+        for tensor in tensors:
+            assert len(tensor.data) == first_size
+        self.tensors = tensors
+
+    def __len__(self) -> int:
+        return len(self.tensors[0].data)
+
+    def __getitem__(self, idx: int):
+        return tuple(Tensor(t.data[idx]) for t in self.tensors)
+```
+
+**Key Features:**
+- **Memory locality**: All data pre-loaded for fast access
+- **Vectorized operations**: No conversion overhead during training
+- **Flexible**: Handles any number of aligned tensors (features, labels, metadata)
+
+### DataLoader with Batching and Shuffling
+
+The core engine that transforms samples into training-ready batches:
+
 ```python
 class DataLoader:
-    """Efficient batch loading with shuffling support.
-    
-    Features:
-    - Automatic batching with configurable batch size
-    - Optional shuffling for training randomization
-    - Drop last batch handling for even batch sizes
-    - Memory-efficient iteration without loading all data
     """
-    def __init__(self, dataset, batch_size=32, shuffle=False, drop_last=False):
+    Efficient batch loader with shuffling support.
+
+    Transforms:
+        Individual samples → Batched tensors
+
+    Features:
+    - Automatic batching with configurable batch_size
+    - Optional shuffling for training randomization
+    - Memory-efficient iteration (one batch at a time)
+    - Handles uneven final batch automatically
+    """
+
+    def __init__(self, dataset: Dataset, batch_size: int, shuffle: bool = False):
         self.dataset = dataset
         self.batch_size = batch_size
         self.shuffle = shuffle
-        self.drop_last = drop_last
-    
+
+    def __len__(self) -> int:
+        """Return number of batches per epoch."""
+        return (len(self.dataset) + self.batch_size - 1) // self.batch_size
+
     def __iter__(self):
-        # Generate indices (shuffled or sequential)
+        """
+        Yield batches of data.
+
+        Algorithm:
+        1. Generate indices [0, 1, ..., N-1]
+        2. Shuffle indices if requested
+        3. Group into chunks of batch_size
+        4. Load samples and collate into batch tensors
+        5. Yield each batch
+        """
         indices = list(range(len(self.dataset)))
+
         if self.shuffle:
-            np.random.shuffle(indices)
-        
-        # Yield batches
+            random.shuffle(indices)
+
         for i in range(0, len(indices), self.batch_size):
             batch_indices = indices[i:i + self.batch_size]
-            if len(batch_indices) < self.batch_size and self.drop_last:
-                continue
-            yield self._get_batch(batch_indices)
+            batch = [self.dataset[idx] for idx in batch_indices]
+            yield self._collate_batch(batch)
+
+    def _collate_batch(self, batch):
+        """Stack individual samples into batch tensors."""
+        num_tensors = len(batch[0])
+        batched_tensors = []
+
+        for tensor_idx in range(num_tensors):
+            tensor_list = [sample[tensor_idx].data for sample in batch]
+            batched_data = np.stack(tensor_list, axis=0)
+            batched_tensors.append(Tensor(batched_data))
+
+        return tuple(batched_tensors)
 ```
 
-**CIFAR-10 Dataset Loader**
-```python
-class CIFAR10Dataset(Dataset):
-    """Load CIFAR-10 dataset with automatic download.
-    
-    CIFAR-10: 60,000 32x32 color images in 10 classes
-    - 50,000 training images
-    - 10,000 test images
-    - Classes: airplane, car, bird, cat, deer, dog, frog, horse, ship, truck
-    """
-    def __init__(self, root='./data', train=True, download=True):
-        self.train = train
-        if download:
-            self._download(root)
-        self.data, self.labels = self._load_batch_files(root, train)
-    
-    def __getitem__(self, index):
-        return self.data[index], self.labels[index]
-    
-    def __len__(self):
-        return len(self.data)
+**The Batching Transformation:**
+
+```
+Individual Samples (from Dataset):
+  dataset[0] → (features: [1, 2, 3], label: 0)
+  dataset[1] → (features: [4, 5, 6], label: 1)
+  dataset[2] → (features: [7, 8, 9], label: 0)
+
+DataLoader Batching (batch_size=2):
+  Batch 1:
+    features: [[1, 2, 3],    ← Shape: (2, 3)
+               [4, 5, 6]]
+    labels: [0, 1]           ← Shape: (2,)
+
+  Batch 2:
+    features: [[7, 8, 9]]    ← Shape: (1, 3) [last batch]
+    labels: [0]              ← Shape: (1,)
 ```
 
-**Preprocessing Pipeline**
-```python
-class Normalizer:
-    """Normalize data using fit-transform pattern.
-    
-    Fits statistics on training data, applies to all splits.
-    Ensures consistent preprocessing across train/val/test.
-    """
-    def fit(self, data):
-        """Compute mean and std from training data."""
-        self.mean = data.mean(axis=0)
-        self.std = data.std(axis=0)
-        return self
-    
-    def transform(self, data):
-        """Apply normalization using fitted statistics."""
-        return (data - self.mean) / (self.std + 1e-8)
-    
-    def fit_transform(self, data):
-        """Fit and transform in one step."""
-        return self.fit(data).transform(data)
+## Getting Started
+
+### Prerequisites
+
+Ensure you understand the foundations:
+
+```bash
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
+
+# Verify prerequisite modules
+tito test --module tensor
+tito test --module layers
+tito test --module training
 ```
 
-### Step-by-Step Implementation
+**Required Knowledge:**
+- Tensor operations and NumPy arrays (Module 01)
+- Neural network basics (Modules 03-04)
+- Training loop structure (Module 07)
+- Python protocols (`__getitem__`, `__len__`, `__iter__`)
 
-1. **Create Dataset Base Class**
-   - Implement `__getitem__` and `__len__` protocols
-   - Define the interface all datasets must follow
-   - Test with simple array-based dataset
+### Development Workflow
 
-2. **Build CIFAR-10 Loader**
-   - Implement download and extraction logic
-   - Parse binary batch files (pickle format)
-   - Reshape data from flat arrays to (3, 32, 32) images
-   - Handle train/test split loading
-
-3. **Implement DataLoader**
-   - Create batching logic with configurable batch size
-   - Add shuffling with random permutation
-   - Implement iterator protocol for Pythonic loops
-   - Handle edge cases (last incomplete batch, empty dataset)
-
-4. **Add Preprocessing**
-   - Build Normalizer with fit-transform pattern
-   - Compute per-channel statistics for RGB images
-   - Apply transformations efficiently across batches
-   - Test normalization correctness (zero mean, unit variance)
-
-5. **Integration Testing**
-   - Load CIFAR-10 and create data loaders
-   - Iterate through batches and verify shapes
-   - Test with actual training loop from Module 07
-   - Measure data loading throughput
+1. **Open the development file**: `modules/08_dataloader/dataloader.py`
+2. **Implement Dataset abstraction**: Define abstract base class with `__len__` and `__getitem__`
+3. **Build TensorDataset**: Create concrete implementation for tensor-based data
+4. **Create DataLoader**: Implement batching, shuffling, and iterator protocol
+5. **Test integration**: Verify with training workflow simulation
+6. **Export and verify**: `tito module complete 08 && tito test --module dataloader`
 
 ## Testing
 
-### Inline Tests (During Development)
+### Comprehensive Test Suite
 
-Run inline tests while building:
+Run the full test suite to verify DataLoader functionality:
+
 ```bash
-cd modules/08_dataloader
-python dataloader_dev.py
+# TinyTorch CLI (recommended)
+tito test --module dataloader
+
+# Direct pytest execution
+python -m pytest tests/ -k dataloader -v
 ```
 
-Expected output:
+### Test Coverage Areas
+
+- ✅ **Dataset Interface**: Abstract base class enforcement, protocol implementation
+- ✅ **TensorDataset**: Tensor alignment validation, indexing correctness
+- ✅ **DataLoader Batching**: Batch shape consistency, handling uneven final batch
+- ✅ **Shuffling**: Randomization correctness, deterministic seeding
+- ✅ **Training Integration**: Complete workflow with train/validation splits
+
+### Inline Testing & Validation
+
+The module includes comprehensive unit tests:
+
+```python
+# Run inline tests during development
+python modules/08_dataloader/dataloader.py
+
+# Expected output:
+🔬 Unit Test: Dataset Abstract Base Class...
+✅ Dataset is properly abstract
+✅ Dataset interface works correctly!
+
+🔬 Unit Test: TensorDataset...
+✅ TensorDataset works correctly!
+
+🔬 Unit Test: DataLoader...
+✅ DataLoader works correctly!
+
+🔬 Unit Test: DataLoader Deterministic Shuffling...
+✅ Deterministic shuffling works correctly!
+
+🔬 Integration Test: Training Workflow...
+✅ Training integration works correctly!
 ```
-Unit Test: Dataset abstraction...
-✅ __getitem__ protocol works correctly
-✅ __len__ returns correct size
-✅ Indexing returns (data, label) tuples
-Progress: Dataset Interface ✓
 
-Unit Test: CIFAR-10 loading...
-✅ Downloaded and extracted 170MB dataset
-✅ Loaded 50,000 training samples
-✅ Sample shape: (3, 32, 32), label range: [0, 9]
-Progress: CIFAR-10 Dataset ✓
+### Manual Testing Examples
 
-Unit Test: DataLoader batching...
-✅ Batch shapes correct: (32, 3, 32, 32)
-✅ Shuffling produces different orderings
-✅ Iteration covers all samples exactly once
-Progress: DataLoader ✓
-```
+```python
+from tinytorch.core.tensor import Tensor
+from tinytorch.data.loader import TensorDataset, DataLoader
 
-### Export and Validate
+# Create synthetic dataset
+features = Tensor([[1, 2], [3, 4], [5, 6], [7, 8]])
+labels = Tensor([0, 1, 0, 1])
+dataset = TensorDataset(features, labels)
 
-After completing the module:
-```bash
-# Export to tinytorch package
-tito export 08_dataloader
+# Create DataLoader with batching
+loader = DataLoader(dataset, batch_size=2, shuffle=True)
 
-# Run integration tests
-tito test 08_dataloader
-```
-
-### Comprehensive Test Coverage
-
-The test suite validates:
-- Dataset interface correctness
-- CIFAR-10 loading and parsing
-- Batch shape consistency
-- Shuffling randomness
-- Memory efficiency
-- Preprocessing accuracy
-
-## Where This Code Lives
-
-```
-tinytorch/
-├── core/
-│   └── dataloader.py          # Your implementation goes here
-└── __init__.py                # Exposes DataLoader, Dataset, etc.
-
-Usage in other modules:
->>> from tinytorch.core.dataloader import DataLoader, CIFAR10Dataset
->>> dataset = CIFAR10Dataset(download=True)
->>> loader = DataLoader(dataset, batch_size=32, shuffle=True)
+# Iterate through batches
+for batch_features, batch_labels in loader:
+    print(f"Batch features shape: {batch_features.shape}")
+    print(f"Batch labels shape: {batch_labels.shape}")
+    # Output: (2, 2) and (2,)
 ```
 
 ## Systems Thinking Questions
 
-1. **Memory vs Throughput Trade-off**: Why does increasing batch size improve GPU utilization but increase memory usage? What's the optimal batch size for a 16GB GPU?
+### Real-World Applications
 
-2. **Shuffling Impact**: How does shuffling affect training dynamics and convergence? Why is it critical for training but not for evaluation?
+- **Image Classification**: How would you design a DataLoader for ImageNet (1.2M images, 150GB)? What if the dataset doesn't fit in RAM?
+- **Language Modeling**: LLM training streams billions of tokens—how does batch size affect memory and throughput for variable-length sequences?
+- **Autonomous Vehicles**: Tesla trains on terabytes of sensor data—how would you handle multi-modal data (camera + LIDAR + GPS) in a DataLoader?
+- **Medical Imaging**: 3D CT scans are too large for GPU memory—what batching strategy would you use for patch extraction?
 
-3. **I/O Bottlenecks**: Your GPU can process 1000 images/sec but your disk reads at 100 images/sec. Where's the bottleneck? How would you fix it?
+### Performance Characteristics
 
-4. **Preprocessing Placement**: Should preprocessing happen in the data loader or in the training loop? What are the trade-offs for CPU vs GPU preprocessing?
+- **Memory Scaling**: Why does doubling batch size double memory usage? What memory components scale with batch size (activations, gradients, optimizer states)?
+- **Throughput Bottleneck**: Your GPU can process 1000 images/sec but disk reads at 100 images/sec—where's the bottleneck? How would you diagnose this?
+- **Shuffle Overhead**: Does shuffling slow down training? Measure the overhead and explain when it becomes significant.
+- **Batch Size Trade-off**: What's the optimal batch size for training ResNet-50 on a 16GB GPU? How would you find it systematically?
 
-5. **Distributed Loading**: If you're training on 8 GPUs, how should you partition the dataset? What challenges arise with shuffling across multiple workers?
+### Data Pipeline Theory
 
-## Real-World Connections
+- **Iterator Protocol**: How does Python's `for` loop work under the hood? What methods must an object implement to be iterable?
+- **Memory Efficiency**: Why can DataLoader handle datasets larger than RAM? What design pattern enables this?
+- **Collation Strategy**: Why do we stack individual samples into batch tensors? What happens if we don't?
+- **Shuffling Impact**: How does shuffling affect gradient estimates and convergence? What happens if you forget to shuffle training data?
 
-### Industry Applications
+## Ready to Build?
 
-**Netflix (Recommendation Systems)**
-- Processes billions of viewing records through custom data pipelines
-- Uses streaming loaders for datasets that don't fit in memory
-- Implements sophisticated batching strategies for negative sampling
+You're about to implement the data loading infrastructure that powers modern AI systems. Understanding how to build efficient, scalable data pipelines is critical for production ML engineering—this isn't just plumbing, it's a first-class systems problem with dedicated engineering teams at major AI labs.
 
-**Autonomous Vehicles (Tesla, Waymo)**
-- Load terabytes of sensor data (camera, LIDAR, radar) for training
-- Use multi-worker data loading to keep GPUs fully utilized
-- Implement real-time preprocessing pipelines for online learning
+Every production training system depends on robust data loaders. Your implementation will follow the exact patterns used by PyTorch's `torch.utils.data.DataLoader` and TensorFlow's `tf.data.Dataset`—the same code running at Meta, Tesla, OpenAI, and every major ML organization.
 
-**Large Language Models (OpenAI, Anthropic)**
-- Stream hundreds of billions of tokens from distributed storage
-- Use custom data loaders optimized for sequence data
-- Implement efficient tokenization and batching for transformers
+Open `/Users/VJ/GitHub/TinyTorch/modules/08_dataloader/dataloader.py` and start building. Take your time with each component, run the inline tests frequently, and think deeply about the memory and throughput trade-offs you're making.
 
-### Research Impact
+Choose your preferred way to engage with this module:
 
-This module teaches patterns from:
-- PyTorch DataLoader (2016): The industry-standard data loading API
-- TensorFlow Dataset API (2017): Google's approach to data pipelines
-- NVIDIA DALI (2019): GPU-accelerated preprocessing for peak throughput
-- WebDataset (2020): Efficient loading from cloud storage
+````{grid} 1 2 3 3
 
-## What's Next?
+```{grid-item-card} 🚀 Launch Binder
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/08_dataloader/dataloader_dev.ipynb
+:class-header: bg-light
 
-In **Module 09: Spatial (CNNs)**, you'll use these data loaders to train convolutional neural networks on CIFAR-10:
+Run this module interactively in your browser. No installation required!
+```
 
-- Apply convolution operations to the RGB images you're loading
-- Use your DataLoader to iterate through 50,000 training samples
-- Achieve >75% accuracy on CIFAR-10 classification
-- Understand how CNNs process spatial data efficiently
+```{grid-item-card} ⚡ Open in Colab
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader_dev.ipynb
+:class-header: bg-light
 
-The data infrastructure you built here becomes critical—training CNNs requires efficient batch loading of image data with proper preprocessing.
+Use Google Colab for GPU access and cloud compute power.
+```
+
+```{grid-item-card} 📖 View Source
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader.py
+:class-header: bg-light
+
+Browse the Python source code and understand the implementation.
+```
+
+````
+
+```{admonition} 💾 Save Your Progress
+:class: tip
+**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
+
+**After completing this module**, you'll apply your DataLoader to real datasets in the milestone projects:
+- **Milestone 03**: Train MLP on MNIST handwritten digits (28×28 images)
+- **Milestone 04**: Train CNN on CIFAR-10 natural images (32×32×3 images)
+
+These milestones include download utilities and preprocessing for production datasets.
+```
 
 ---
 
-**Ready to build production data infrastructure?** Open `modules/08_dataloader/dataloader_dev.py` and start implementing.
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/07_training.html" title="previous page">← Previous Module: Training</a>
+<a class="right-next" href="../chapters/09_spatial.html" title="next page">Next Module: Spatial (CNNs) →</a>
+</div>
