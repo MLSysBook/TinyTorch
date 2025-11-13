@@ -1,21 +1,35 @@
 /**
  * Work-in-Progress Banner JavaScript
- * Handles banner toggle, collapse, and dismiss functionality
+ * Handles banner injection and toggle/collapse functionality
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    const banner = document.getElementById('wip-banner');
+    // Banner injection: Create banner dynamically if not present in HTML
+    // This allows the banner to work even if not included in the page template
+    let banner = document.getElementById('wip-banner');
+    if (!banner) {
+        const bannerHTML = `
+            <div class="wip-banner" id="wip-banner">
+                <div class="wip-banner-content">
+                    <div class="wip-banner-title">
+                        <span class="icon">🚧</span>
+                        <span>Under Construction</span>
+                        <span class="icon">🚧</span>
+                    </div>
+                    <div class="wip-banner-description">
+                        TinyTorch is currently under active development. Public release planned for December 2025. Expect changes and improvements!
+                    </div>
+                </div>
+                <button class="wip-banner-toggle" id="wip-banner-toggle" title="Collapse banner" aria-label="Toggle banner">▲</button>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('afterbegin', bannerHTML);
+        banner = document.getElementById('wip-banner');
+    }
+
     const toggleBtn = document.getElementById('wip-banner-toggle');
-    const closeBtn = document.getElementById('wip-banner-close');
 
     if (!banner) return;
-
-    // Check if banner was previously dismissed
-    const dismissed = localStorage.getItem('wip-banner-dismissed');
-    if (dismissed === 'true') {
-        banner.style.display = 'none';
-        return;
-    }
 
     // Check if banner was previously collapsed
     const collapsed = localStorage.getItem('wip-banner-collapsed');
@@ -43,14 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 toggleBtn.title = 'Expand banner';
                 localStorage.setItem('wip-banner-collapsed', 'true');
             }
-        });
-    }
-
-    // Dismiss banner completely
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            banner.style.display = 'none';
-            localStorage.setItem('wip-banner-dismissed', 'true');
         });
     }
 
