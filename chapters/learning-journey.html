@@ -64,12 +64,20 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/learning-journey';</script>
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Visual Learning Journey" href="../learning-journey-visual.html" />
-    <link rel="prev" title="Course Introduction: ML Systems Engineering Through Implementation" href="00-introduction.html" />
+    <link rel="next" title="Journey Through ML History" href="milestones.html" />
+    <link rel="prev" title="Prerequisites &amp; Self-Assessment" href="../prerequisites.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -172,38 +180,66 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    TinyTorch: Build ML Systems from Scratch
+                    TinyTorch: Tensors to Systems
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../learning-progress.html">Track Your Progress</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/07_training_ABOUT.html">07. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Learning Journey</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../learning-journey-visual.html">Visual Learning Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🌍 Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Progress Tracking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
@@ -510,9 +546,9 @@ document.write(`
 <h2>What This Page Is About<a class="headerlink" href="#what-this-page-is-about" title="Permalink to this heading">#</a></h2>
 <p>This page tells the <strong>pedagogical story</strong> behind TinyTorch’s module progression. While other pages explain:</p>
 <ul class="simple">
-<li><p><strong>WHAT you’ll build</strong> (<span class="xref myst">Three-Tier Structure</span>) - organized module breakdown</p></li>
-<li><p><strong>WHEN in history</strong> (<span class="xref myst">Milestones</span>) - recreating ML breakthroughs</p></li>
-<li><p><strong>WHERE you are</strong> (<span class="xref myst">Progress Tracking</span>) - capability checkpoints</p></li>
+<li><p><strong>WHAT you’ll build</strong> (<a class="reference internal" href="00-introduction.html"><span class="doc std std-doc">Three-Tier Structure</span></a>) - organized module breakdown</p></li>
+<li><p><strong>WHEN in history</strong> (<a class="reference internal" href="milestones.html"><span class="doc std std-doc">Milestones</span></a>) - recreating ML breakthroughs</p></li>
+<li><p><strong>WHERE you are</strong> (<a class="reference internal" href="../student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a>) - development workflow and progress</p></li>
 </ul>
 <p>This page explains <strong>WHY modules flow this way</strong> - the learning narrative that transforms 20 individual modules into a coherent journey from mathematical foundations to production AI systems.</p>
 <section id="how-to-use-this-narrative">
@@ -529,7 +565,21 @@ document.write(`
 <section id="the-six-act-learning-story">
 <h2>The Six-Act Learning Story<a class="headerlink" href="#the-six-act-learning-story" title="Permalink to this heading">#</a></h2>
 <p>TinyTorch’s 20 modules follow a carefully crafted six-act narrative arc. Each act represents a fundamental shift in what you’re learning and what you can build.</p>
-<hr class="docutils" />
+<pre  class="mermaid">
+        graph LR
+    Act1[&quot;Act I: Foundation&lt;br/&gt;01-04&lt;br/&gt;Atomic Components&quot;] --&gt; Act2[&quot;Act II: Learning&lt;br/&gt;05-07&lt;br/&gt;Gradient Revolution&quot;]
+    Act2 --&gt; Act3[&quot;Act III: Data &amp; Scale&lt;br/&gt;08-09&lt;br/&gt;Real Complexity&quot;]
+    Act3 --&gt; Act4[&quot;Act IV: Language&lt;br/&gt;10-13&lt;br/&gt;Sequential Data&quot;]
+    Act4 --&gt; Act5[&quot;Act V: Production&lt;br/&gt;14-19&lt;br/&gt;Optimization&quot;]
+    Act5 --&gt; Act6[&quot;Act VI: Integration&lt;br/&gt;20&lt;br/&gt;Complete Systems&quot;]
+
+    style Act1 fill:#e3f2fd
+    style Act2 fill:#fff8e1
+    style Act3 fill:#e8f5e9
+    style Act4 fill:#f3e5f5
+    style Act5 fill:#fce4ec
+    style Act6 fill:#fff3e0
+    </pre><hr class="docutils" />
 <section id="act-i-foundation-modules-01-04-building-the-atomic-components">
 <h3>Act I: Foundation (Modules 01-04) - Building the Atomic Components<a class="headerlink" href="#act-i-foundation-modules-01-04-building-the-atomic-components" title="Permalink to this heading">#</a></h3>
 <p><strong>The Beginning</strong>: You start with nothing but Python and NumPy. Before you can build intelligence, you need the atoms.</p>
@@ -677,7 +727,7 @@ document.write(`
 <h4>Module 19: Benchmarking - Rigorous Performance Measurement<a class="headerlink" href="#module-19-benchmarking-rigorous-performance-measurement" title="Permalink to this heading">#</a></h4>
 <p>You build comprehensive benchmarking tools with precise timing, statistical analysis, and comparison frameworks. Benchmarks let you compare implementations objectively and measure real-world impact.</p>
 <p><strong>Systems Insight</strong>: Benchmarking is a science - proper methodology (warmup, statistical significance, controlling variables) matters as much as the measurements themselves.</p>
-<p><strong>🎯 Act V Achievement</strong>: Production-ready systems competitive in TinyMLPerf benchmarks! Models achieve &lt;100ms inference latency with 4× memory reduction.</p>
+<p><strong>🎯 Act V Achievement</strong>: Production-ready systems competitive in Torch Olympics benchmarks! Models achieve &lt;100ms inference latency with 4× memory reduction.</p>
 <p><strong>Connection to Act VI</strong>: You have all the pieces - foundation, learning, data, language, optimization. Time to assemble them into a complete AI system.</p>
 </section>
 </section>
@@ -810,7 +860,7 @@ document.write(`
 </table>
 </div>
 <p><strong>Understanding Both Dimensions</strong>: The <strong>Acts</strong> explain WHY you’re building each component (pedagogical progression). The <strong>Milestones</strong> prove WHAT you’ve built actually works (historical validation).</p>
-<p><strong>📖 See <span class="xref myst">Journey Through ML History</span></strong> for complete milestone details and how to run them.</p>
+<p><strong>📖 See <a class="reference internal" href="milestones.html"><span class="doc std std-doc">Journey Through ML History</span></a></strong> for complete milestone details and how to run them.</p>
 </section>
 <hr class="docutils" />
 <section id="journey-vs-capabilities-tracking-your-skills">
@@ -845,7 +895,7 @@ document.write(`
 <li><p>Checkpoint 19: Competitive benchmarking ✓</p></li>
 <li><p>Checkpoint 20: Complete systems ✓</p></li>
 </ul>
-<p><strong>📖 See <span class="xref myst">Progress Tracking</span></strong> to monitor your capability development.</p>
+<p>See <a class="reference internal" href="../student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the development workflow and progress tracking.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -1026,7 +1076,7 @@ Act VI: Systems (Complete integration)
 <li><p>Act V → Systems (2024)</p></li>
 <li><p>Act VI → TinyGPT (complete)</p></li>
 </ul>
-<p><strong>📖 See <span class="xref myst">Milestones</span></strong> for details.</p>
+<p><strong>📖 See <a class="reference internal" href="milestones.html"><span class="doc std std-doc">Milestones</span></a></strong> for details.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -1041,10 +1091,10 @@ Act VI: Systems (Complete integration)
 </div>
 <p><strong>Related Resources</strong>:</p>
 <ul class="simple">
-<li><p><strong><span class="xref myst">Three-Tier Structure</span></strong> - Organized module breakdown with time estimates</p></li>
-<li><p><strong><span class="xref myst">Journey Through ML History</span></strong> - Historical milestones you’ll recreate</p></li>
-<li><p><strong><span class="xref myst">Progress Tracking</span></strong> - Monitor your capability development</p></li>
-<li><p><strong><span class="xref myst">Quick Start Guide</span></strong> - Hands-on setup and first module</p></li>
+<li><p><strong><a class="reference internal" href="00-introduction.html"><span class="doc std std-doc">Three-Tier Structure</span></a></strong> - Organized module breakdown with time estimates</p></li>
+<li><p><strong><a class="reference internal" href="milestones.html"><span class="doc std std-doc">Journey Through ML History</span></a></strong> - Historical milestones you’ll recreate</p></li>
+<li><p><strong><a class="reference internal" href="../student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a></strong> - Development workflow and progress tracking</p></li>
+<li><p><strong><a class="reference internal" href="../quickstart-guide.html"><span class="doc std std-doc">Quick Start Guide</span></a></strong> - Hands-on setup and first module</p></li>
 </ul>
 <hr class="docutils" />
 <p><strong>Remember</strong>: You’re not just learning ML algorithms. You’re building ML systems - from mathematical foundations to production deployment. This journey transforms you from a framework user into a systems engineer who truly understands how modern AI works.</p>
@@ -1083,20 +1133,20 @@ Act VI: Systems (Complete integration)
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="00-introduction.html"
+       href="../prerequisites.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Course Introduction: ML Systems Engineering Through Implementation</p>
+        <p class="prev-next-title">Prerequisites &amp; Self-Assessment</p>
       </div>
     </a>
     <a class="right-next"
-       href="../learning-journey-visual.html"
+       href="milestones.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Visual Learning Journey</p>
+        <p class="prev-next-title">Journey Through ML History</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

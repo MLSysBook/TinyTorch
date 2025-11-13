@@ -1,23 +1,23 @@
-# 🏆 Journey Through ML History
+# Journey Through ML History
 
 **Experience the evolution of AI by rebuilding history's most important breakthroughs with YOUR TinyTorch implementations.**
 
 ---
 
-## 🎯 What Are Milestones?
+## What Are Milestones?
 
 Milestones are **proof-of-mastery demonstrations** that showcase what you can build after completing specific modules. Each milestone recreates a historically significant ML achievement using YOUR implementations.
 
 ### Why This Approach?
 
-- 🧠 **Deep Understanding**: Experience the actual challenges researchers faced
-- 📈 **Progressive Learning**: Each milestone builds on previous foundations
-- 🏆 **Real Achievements**: Not toy examples - these are historically significant breakthroughs
-- 🔧 **Systems Thinking**: Understand WHY each innovation mattered for ML systems
+- **Deep Understanding**: Experience the actual challenges researchers faced
+- **Progressive Learning**: Each milestone builds on previous foundations
+- **Real Achievements**: Not toy examples - these are historically significant breakthroughs
+- **Systems Thinking**: Understand WHY each innovation mattered for ML systems
 
 ---
 
-## 🎯 Two Dimensions of Your Progress
+## Two Dimensions of Your Progress
 
 As you build TinyTorch, you're progressing along **TWO dimensions simultaneously**:
 
@@ -30,7 +30,7 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 **Act V (14-19)**: Production systems - optimization and deployment
 **Act VI (20)**: Complete integration - unified AI systems
 
-**📖 See [The Learning Journey](learning-journey.html)** for the complete pedagogical narrative explaining WHY modules flow this way.
+See [The Learning Journey](learning-journey.md) for the complete pedagogical narrative explaining WHY modules flow this way.
 
 ### Historical Dimension (Milestones): What You CAN Build
 
@@ -39,26 +39,78 @@ As you build TinyTorch, you're progressing along **TWO dimensions simultaneously
 **1986: MLP** - Multi-class vision
 **1998: CNN** - Spatial intelligence
 **2017: Transformers** - Language generation
-**2018: MLPerf** - Production optimization
+**2018: Torch Olympics** - Production optimization
 
 ### How They Connect
 
+```{mermaid}
+graph TB
+    subgraph "Pedagogical Acts (What You're Learning)"
+        A1["Act I: Foundation<br/>Modules 01-04<br/>Atomic Components"]
+        A2["Act II: Learning<br/>Modules 05-07<br/>Gradient Revolution"]
+        A3["Act III: Data & Scale<br/>Modules 08-09<br/>Real-World Complexity"]
+        A4["Act IV: Language<br/>Modules 10-13<br/>Sequential Intelligence"]
+        A5["Act V: Production<br/>Modules 14-19<br/>Optimization"]
+        A6["Act VI: Integration<br/>Module 20<br/>Complete Systems"]
+    end
+
+    subgraph "Historical Milestones (What You Can Build)"
+        M1["1957: Perceptron<br/>Binary Classification"]
+        M2["1969: XOR Crisis<br/>Non-linear Learning"]
+        M3["1986: MLP<br/>Multi-class Vision<br/>95%+ MNIST"]
+        M4["1998: CNN<br/>Spatial Intelligence<br/>75%+ CIFAR-10"]
+        M5["2017: Transformers<br/>Language Generation"]
+        M6["2018: Torch Olympics<br/>Production Speed"]
+    end
+
+    A1 --> M1
+    A2 --> M2
+    A2 --> M3
+    A3 --> M4
+    A4 --> M5
+    A5 --> M6
+
+    style A1 fill:#e3f2fd
+    style A2 fill:#fff8e1
+    style A3 fill:#e8f5e9
+    style A4 fill:#f3e5f5
+    style A5 fill:#fce4ec
+    style A6 fill:#fff3e0
+    style M1 fill:#ffcdd2
+    style M2 fill:#f8bbd0
+    style M3 fill:#e1bee7
+    style M4 fill:#d1c4e9
+    style M5 fill:#c5cae9
+    style M6 fill:#bbdefb
+```
+
 | Learning Act | Unlocked Milestone | Proof of Mastery |
 |--------------|-------------------|------------------|
-| **Act I: Foundation (01-04)** | 🧠 1957 Perceptron | Your Linear layer recreates history |
-| **Act II: Learning (05-07)** | ⚡ 1969 XOR + 🔢 1986 MLP | Your autograd enables training (95%+ MNIST) |
-| **Act III: Data & Scale (08-09)** | 🖼️ 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
-| **Act IV: Language (10-13)** | 🤖 2017 Transformers | Your attention generates coherent text |
-| **Act V: Production (14-18)** | ⚡ 2018 MLPerf | Your optimizations achieve production speed |
-| **Act VI: Integration (19-20)** | 🏆 Benchmarking + Capstone | Your complete framework competes |
+| **Act I: Foundation (01-04)** | 1957 Perceptron | Your Linear layer recreates history |
+| **Act II: Learning (05-07)** | 1969 XOR + 1986 MLP | Your autograd enables training (95%+ MNIST) |
+| **Act III: Data & Scale (08-09)** | 1998 CNN | Your Conv2d achieves 75%+ on CIFAR-10 |
+| **Act IV: Language (10-13)** | 2017 Transformers | Your attention generates coherent text |
+| **Act V: Production (14-18)** | 2018 Torch Olympics | Your optimizations achieve production speed |
+| **Act VI: Integration (19-20)** | Benchmarking + Capstone | Your complete framework competes |
 
 **Understanding Both Dimensions**: The **Acts** explain WHY you're building each component (pedagogical progression). The **Milestones** prove WHAT you've built works (historical validation). Together, they show you're not just completing exercises - you're building something real.
 
 ---
 
-## 📅 The Timeline
+## The Timeline
 
-### 🧠 01. Perceptron (1957) - Rosenblatt
+```{mermaid}
+timeline
+    title Journey Through ML History
+    1957 : Perceptron : Binary classification with gradient descent
+    1969 : XOR Crisis : Hidden layers solve non-linear problems
+    1986 : MLP Revival : Backpropagation enables deep learning
+    1998 : CNN Era : Spatial intelligence for computer vision
+    2017 : Transformers : Attention revolutionizes language AI
+    2018 : Torch Olympics : Production benchmarking and optimization
+```
+
+### 01. Perceptron (1957) - Rosenblatt
 
 **After Modules 02-04**
 
@@ -88,7 +140,7 @@ python 02_rosenblatt_trained.py   # See the solution (trained)
 
 ---
 
-### ⚡ 02. XOR Crisis (1969) - Minsky & Papert
+### 02. XOR Crisis (1969) - Minsky & Papert
 
 **After Modules 02-06**
 
@@ -118,7 +170,7 @@ python 02_xor_solved.py   # Hidden layers solve it!
 
 ---
 
-### 🔢 03. MLP Revival (1986) - Backpropagation Era
+### 03. MLP Revival (1986) - Backpropagation Era
 
 **After Modules 02-08**
 
@@ -148,7 +200,7 @@ python 02_rumelhart_mnist.py       # Full MNIST
 
 ---
 
-### 🖼️ 04. CNN Revolution (1998) - LeCun's Breakthrough
+### 04. CNN Revolution (1998) - LeCun's Breakthrough
 
 **After Modules 02-09** • **🎯 North Star Achievement**
 
@@ -178,7 +230,7 @@ python 02_lecun_cifar10.py     # CIFAR-10 @ 75%+ accuracy
 
 ---
 
-### 🤖 05. Transformer Era (2017) - Attention Revolution
+### 05. Transformer Era (2017) - Attention Revolution
 
 **After Modules 02-13**
 
@@ -208,7 +260,7 @@ python 02_vaswani_dialogue.py    # Multi-turn dialogue
 
 ---
 
-### ⚡ 06. MLPerf Era (2018) - The Optimization Revolution
+### 06. Torch Olympics Era (2018) - The Optimization Revolution
 
 **After Modules 14-18**
 
@@ -216,7 +268,7 @@ python 02_vaswani_dialogue.py    # Multi-turn dialogue
 Profile → Compress → Accelerate
 ```
 
-**The Turning Point**: As models grew larger, MLCommons' MLPerf (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.
+**The Turning Point**: As models grew larger, MLCommons' Torch Olympics (2018) established systematic optimization as a discipline - profiling, compression, and acceleration became essential for deployment.
 
 **What You'll Build**:
 - Performance profiling and bottleneck analysis
@@ -239,7 +291,7 @@ python 03_generation_opts.py    # Speed up inference (cache + batch)
 
 ---
 
-## 🎓 Learning Philosophy
+## Learning Philosophy
 
 ### Progressive Capability Building
 
@@ -263,7 +315,7 @@ Each milestone teaches critical systems thinking:
 
 ---
 
-## 🚀 How to Use Milestones
+## How to Use Milestones
 
 ### 1. Complete Prerequisites
 
@@ -302,7 +354,7 @@ Each milestone includes:
 
 ---
 
-## 🎯 Quick Reference
+## Quick Reference
 
 ### Milestone Prerequisites
 
@@ -313,7 +365,7 @@ Each milestone includes:
 | 03. MLP (1986) | 08 | + Optimizers, Training |
 | 04. CNN (1998) | 09 | + Spatial, DataLoader |
 | 05. Transformer (2017) | 13 | + Tokenization, Embeddings, Attention |
-| 06. MLPerf (2018) | 18 | + Profiling, Quantization, Compression, Memoization, Acceleration |
+| 06. Torch Olympics (2018) | 18 | + Profiling, Quantization, Compression, Memoization, Acceleration |
 
 ### What Each Milestone Proves
 
@@ -324,18 +376,18 @@ Each milestone includes:
 
 ---
 
-## 📚 Further Learning
+## Further Learning
 
 After completing milestones, explore:
 
-- **TinyMLPerf Competition**: Optimize your implementations
+- **Torch Olympics Competition**: Optimize your implementations
 - **Leaderboard**: Compare with other students
 - **Capstone Projects**: Build your own ML applications
 - **Research Papers**: Read the original papers for each milestone
 
 ---
 
-## 🌟 Why This Matters
+## Why This Matters
 
 **Most courses teach you to USE frameworks.**  
 **TinyTorch teaches you to UNDERSTAND them.**

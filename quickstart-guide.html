@@ -64,12 +64,20 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'quickstart-guide';</script>
     <link rel="shortcut icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="TinyTorch for Instructors: Complete ML Systems Course" href="usage-paths/classroom-use.html" />
-    <link rel="prev" title="TinyTorch: Build ML Systems from Scratch" href="intro.html" />
+    <link rel="next" title="Student Workflow" href="student-workflow.html" />
+    <link rel="prev" title="TinyTorch: Tensors to Systems" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -172,38 +180,66 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    TinyTorch: Build ML Systems from Scratch
+                    TinyTorch: Tensors to Systems
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/07_training_ABOUT.html">07. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
-<li class="toctree-l1"><a class="reference internal" href="learning-journey-visual.html">Visual Learning Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🌍 Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits &amp; Acknowledgments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
 </ul>
 
@@ -417,21 +453,21 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-setup">⚡ 2-Minute Setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-first-module-walkthrough">🏗️ 15-Minute First Module Walkthrough</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-setup">2-Minute Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-first-module-walkthrough">15-Minute First Module Walkthrough</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor-foundations">Module 01: Tensor Foundations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-step-module-02-activations">Next Step: Module 02 - Activations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-your-progress">📊 Track Your Progress</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-with-historical-milestones">🏆 Validate with Historical Milestones</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-just-accomplished">🎯 What You Just Accomplished</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-next-steps">🚀 Your Next Steps</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-your-progress">Track Your Progress</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-with-historical-milestones">Validate with Historical Milestones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-just-accomplished">What You Just Accomplished</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-next-steps">Your Next Steps</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-next-actions-choose-one">Immediate Next Actions (Choose One):</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-continued-success">💡 Pro Tips for Continued Success</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#youre-now-a-tinytorch-builder">🌟 You’re Now a TinyTorch Builder!</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-continued-success">Pro Tips for Continued Success</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#youre-now-a-tinytorch-builder">You’re Now a TinyTorch Builder</a></li>
 </ul>
             </nav>
         </div>
@@ -451,7 +487,7 @@ document.write(`
 </div>
 <p><strong>Purpose</strong>: Get hands-on experience building ML systems in 15 minutes. Complete setup verification and build your first neural network component from scratch.</p>
 <section id="minute-setup">
-<h2>⚡ 2-Minute Setup<a class="headerlink" href="#minute-setup" title="Permalink to this heading">#</a></h2>
+<h2>2-Minute Setup<a class="headerlink" href="#minute-setup" title="Permalink to this heading">#</a></h2>
 <p>Let’s get you ready to build ML systems:</p>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 1: One-Command Setup</h4>
@@ -468,12 +504,12 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsys
 </div>
 <p><strong>What this does:</strong></p>
 <ul class="simple">
-<li><p>✅ Creates optimized virtual environment (arm64 on Apple Silicon)</p></li>
-<li><p>✅ Installs all dependencies (NumPy, Jupyter, Rich, PyTorch for validation)</p></li>
-<li><p>✅ Configures TinyTorch in development mode</p></li>
-<li><p>✅ Verifies installation</p></li>
+<li><p>Creates optimized virtual environment (arm64 on Apple Silicon)</p></li>
+<li><p>Installs all dependencies (NumPy, Jupyter, Rich, PyTorch for validation)</p></li>
+<li><p>Configures TinyTorch in development mode</p></li>
+<li><p>Verifies installation</p></li>
 </ul>
-<p><strong>📖 See <span class="xref myst">Essential Commands</span></strong> for detailed workflow and troubleshooting.</p>
+<p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for detailed workflow and troubleshooting.</p>
 </div>
 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #15803d;">Step 2: Verify Setup</h4>
@@ -481,26 +517,35 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsys
 tito<span class="w"> </span>system<span class="w"> </span>doctor
 </pre></div>
 </div>
-<p>You should see all green checkmarks! This confirms your environment is ready for hands-on ML systems building.</p>
-<p><strong>📖 See <span class="xref myst">Essential Commands</span></strong> for verification commands and troubleshooting.</p>
+<p>You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.</p>
+<p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for verification commands and troubleshooting.</p>
 </div>
 </section>
 <section id="minute-first-module-walkthrough">
-<h2>🏗️ 15-Minute First Module Walkthrough<a class="headerlink" href="#minute-first-module-walkthrough" title="Permalink to this heading">#</a></h2>
+<h2>15-Minute First Module Walkthrough<a class="headerlink" href="#minute-first-module-walkthrough" title="Permalink to this heading">#</a></h2>
 <p>Let’s build your first neural network component following the <strong>TinyTorch workflow</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Edit modules → 2. Export to package → 3. Validate with milestones
-</pre></div>
-</div>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete development cycle.</p>
+<pre  class="mermaid">
+        graph TD
+    Start[Clone &amp; Setup] --&gt; Edit[Edit Module&lt;br/&gt;tensor_dev.ipynb]
+    Edit --&gt; Export[Export to Package&lt;br/&gt;tito module complete 01]
+    Export --&gt; Test[Test Import&lt;br/&gt;from tinytorch import Tensor]
+    Test --&gt; Next[Continue to Module 02]
+
+    style Start fill:#e3f2fd
+    style Edit fill:#fffbeb
+    style Export fill:#f0fdf4
+    style Test fill:#fef3c7
+    style Next fill:#f3e5f5
+    </pre><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete development cycle.</p>
 <section id="module-01-tensor-foundations">
 <h3>Module 01: Tensor Foundations<a class="headerlink" href="#module-01-tensor-foundations" title="Permalink to this heading">#</a></h3>
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
-<p><strong>🎯 Learning Goal:</strong> Build N-dimensional arrays - the foundation of all neural networks</p>
-<p><strong>⏱️ Time:</strong> 15 minutes</p>
-<p><strong>💻 Action:</strong> Start with Module 01 to build tensor operations from scratch.</p>
+<p><strong>Learning Goal:</strong> Build N-dimensional arrays - the foundation of all neural networks</p>
+<p><strong>Time:</strong> 15 minutes</p>
+<p><strong>Action:</strong> Start with Module 01 to build tensor operations from scratch.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Edit the module source</span>
-<span class="nb">cd</span><span class="w"> </span>modules/source/01_tensor
-jupyter<span class="w"> </span>lab<span class="w"> </span>01_tensor_dev.py
+<span class="nb">cd</span><span class="w"> </span>modules/01_tensor
+jupyter<span class="w"> </span>lab<span class="w"> </span>tensor_dev.ipynb
 </pre></div>
 </div>
 <p>You’ll implement core tensor operations:</p>
@@ -516,19 +561,19 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </pre></div>
 </div>
 <p>This makes your implementation importable: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">tinytorch</span> <span class="pre">import</span> <span class="pre">Tensor</span></code></p>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete edit → export → validate cycle.</p>
-<p><strong>✅ Achievement Unlocked:</strong> Foundation capability - “Can I create and manipulate the building blocks of ML?”</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
+<p><strong>Achievement Unlocked:</strong> Foundation capability - “Can I create and manipulate the building blocks of ML?”</p>
 </div>
 </section>
 <section id="next-step-module-02-activations">
 <h3>Next Step: Module 02 - Activations<a class="headerlink" href="#next-step-module-02-activations" title="Permalink to this heading">#</a></h3>
 <div style="background: #fdf2f8; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ec4899; margin: 1.5rem 0;">
-<p><strong>🎯 Learning Goal:</strong> Add nonlinearity - the key to neural network intelligence</p>
-<p><strong>⏱️ Time:</strong> 10 minutes</p>
-<p><strong>💻 Action:</strong> Continue with Module 02 to add activation functions.</p>
+<p><strong>Learning Goal:</strong> Add nonlinearity - the key to neural network intelligence</p>
+<p><strong>Time:</strong> 10 minutes</p>
+<p><strong>Action:</strong> Continue with Module 02 to add activation functions.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Edit the module</span>
-<span class="nb">cd</span><span class="w"> </span>modules/source/02_activations
-jupyter<span class="w"> </span>lab<span class="w"> </span>02_activations_dev.py
+<span class="nb">cd</span><span class="w"> </span>modules/02_activations
+jupyter<span class="w"> </span>lab<span class="w"> </span>activations_dev.ipynb
 </pre></div>
 </div>
 <p>You’ll implement essential activation functions:</p>
@@ -543,13 +588,13 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>02_activations_dev.py
 tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">02</span>
 </pre></div>
 </div>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete edit → export → validate cycle.</p>
-<p><strong>✅ Achievement Unlocked:</strong> Intelligence capability - “Can I add nonlinearity to enable learning?”</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
+<p><strong>Achievement Unlocked:</strong> Intelligence capability - “Can I add nonlinearity to enable learning?”</p>
 </div>
 </section>
 </section>
 <section id="track-your-progress">
-<h2>📊 Track Your Progress<a class="headerlink" href="#track-your-progress" title="Permalink to this heading">#</a></h2>
+<h2>Track Your Progress<a class="headerlink" href="#track-your-progress" title="Permalink to this heading">#</a></h2>
 <p>After completing your first modules:</p>
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 <p><strong>Check your new capabilities:</strong> Use the optional checkpoint system to track your progress:</p>
@@ -557,75 +602,75 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </pre></div>
 </div>
 <p>This is helpful for self-assessment but not required for the core workflow.</p>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the essential edit → export → validate cycle, and <span class="xref myst">Track Your Progress</span>** for detailed capability tracking.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the essential edit → export → validate cycle.</p>
 </div>
 </section>
 <section id="validate-with-historical-milestones">
-<h2>🏆 Validate with Historical Milestones<a class="headerlink" href="#validate-with-historical-milestones" title="Permalink to this heading">#</a></h2>
+<h2>Validate with Historical Milestones<a class="headerlink" href="#validate-with-historical-milestones" title="Permalink to this heading">#</a></h2>
 <p>After exporting your modules, <strong>prove what you’ve built</strong> by running milestone scripts:</p>
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 0.5rem; margin: 1.5rem 0; color: white;">
-<p><strong>After Module 07</strong>: Build <strong>Rosenblatt’s 1957 Perceptron</strong> - the first trainable neural network
-<strong>After Module 07</strong>: Solve the <strong>1969 XOR Crisis</strong> with multi-layer networks
-<strong>After Module 08</strong>: Achieve <strong>95%+ accuracy on MNIST</strong> with 1986 backpropagation
-<strong>After Module 09</strong>: Hit <strong>75%+ on CIFAR-10</strong> with 1998 CNNs
-<strong>After Module 13</strong>: Generate text with <strong>2017 Transformers</strong>
-<strong>After Module 18</strong>: Optimize for production with <strong>2018 MLPerf</strong></p>
-<p><strong>📖 See <span class="xref myst">Journey Through ML History</span></strong> for complete timeline, requirements, and expected results.</p>
+<p><strong>After Module 07</strong>: Build <strong>Rosenblatt’s 1957 Perceptron</strong> - the first trainable neural network<br />
+<strong>After Module 07</strong>: Solve the <strong>1969 XOR Crisis</strong> with multi-layer networks<br />
+<strong>After Module 08</strong>: Achieve <strong>95%+ accuracy on MNIST</strong> with 1986 backpropagation<br />
+<strong>After Module 09</strong>: Hit <strong>75%+ on CIFAR-10</strong> with 1998 CNNs<br />
+<strong>After Module 13</strong>: Generate text with <strong>2017 Transformers</strong><br />
+<strong>After Module 18</strong>: Optimize for production with <strong>2018 Torch Olympics</strong></p>
+<p>See <a class="reference internal" href="chapters/milestones.html"><span class="doc std std-doc">Journey Through ML History</span></a> for complete timeline, requirements, and expected results.</p>
 </div>
 <p><strong>The Workflow</strong>: Edit modules → Export with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">N</span></code> → Run milestone scripts to validate</p>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete cycle.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete cycle.</p>
 </section>
 <section id="what-you-just-accomplished">
-<h2>🎯 What You Just Accomplished<a class="headerlink" href="#what-you-just-accomplished" title="Permalink to this heading">#</a></h2>
+<h2>What You Just Accomplished<a class="headerlink" href="#what-you-just-accomplished" title="Permalink to this heading">#</a></h2>
 <p>In 15 minutes, you’ve:</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 <div style="background: #e6fffa; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #26d0ce;">
-<h4 style="margin: 0 0 0.5rem 0; color: #0d9488;">🔧 Setup Complete</h4>
+<h4 style="margin: 0 0 0.5rem 0; color: #0d9488;">Setup Complete</h4>
 <p style="margin: 0; font-size: 0.9rem;">Installed TinyTorch and verified your environment</p>
 </div>
 <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #3b82f6;">
-<h4 style="margin: 0 0 0.5rem 0; color: #1d4ed8;">🧱 Created Foundation</h4>
+<h4 style="margin: 0 0 0.5rem 0; color: #1d4ed8;">Created Foundation</h4>
 <p style="margin: 0; font-size: 0.9rem;">Implemented core tensor operations from scratch</p>
 </div>
 <div style="background: #fefce8; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #eab308;">
-<h4 style="margin: 0 0 0.5rem 0; color: #a16207;">🏆 First Capability</h4>
+<h4 style="margin: 0 0 0.5rem 0; color: #a16207;">First Capability</h4>
 <p style="margin: 0; font-size: 0.9rem;">Earned your first ML systems capability checkpoint</p>
 </div>
 </div>
 </section>
 <section id="your-next-steps">
-<h2>🚀 Your Next Steps<a class="headerlink" href="#your-next-steps" title="Permalink to this heading">#</a></h2>
+<h2>Your Next Steps<a class="headerlink" href="#your-next-steps" title="Permalink to this heading">#</a></h2>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
 <section id="immediate-next-actions-choose-one">
 <h3>Immediate Next Actions (Choose One):<a class="headerlink" href="#immediate-next-actions-choose-one" title="Permalink to this heading">#</a></h3>
-<p><strong>🔥 Continue Building (Recommended):</strong> Begin Module 03 to add layers to your network.</p>
-<p><strong>📚 Master the Workflow:</strong></p>
+<p><strong>Continue Building (Recommended):</strong> Begin Module 03 to add layers to your network.</p>
+<p><strong>Master the Workflow:</strong></p>
 <ul class="simple">
-<li><p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the complete edit → export → validate cycle</p></li>
-<li><p><strong>📖 See <span class="xref myst">Essential Commands</span></strong> for complete TITO command reference</p></li>
-<li><p><strong>📖 See <span class="xref myst">Track Your Progress</span></strong> for the full learning path</p></li>
+<li><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle</p></li>
+<li><p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for complete TITO command reference</p></li>
+<li><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete development cycle</p></li>
 </ul>
-<p><strong>🎓 For Instructors:</strong></p>
+<p><strong>For Instructors:</strong></p>
 <ul class="simple">
-<li><p><strong>📖 See <span class="xref myst">Classroom Setup Guide</span></strong> for NBGrader integration (coming soon)</p></li>
+<li><p>See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="doc std std-doc">Classroom Setup Guide</span></a> for NBGrader integration (coming soon)</p></li>
 </ul>
 </div>
 </section>
 </section>
 <section id="pro-tips-for-continued-success">
-<h2>💡 Pro Tips for Continued Success<a class="headerlink" href="#pro-tips-for-continued-success" title="Permalink to this heading">#</a></h2>
+<h2>Pro Tips for Continued Success<a class="headerlink" href="#pro-tips-for-continued-success" title="Permalink to this heading">#</a></h2>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 <p><strong>The TinyTorch Development Cycle:</strong></p>
 <ol class="arabic simple">
-<li><p>Edit module sources in <code class="docutils literal notranslate"><span class="pre">modules/source/</span></code></p></li>
+<li><p>Edit module sources in <code class="docutils literal notranslate"><span class="pre">modules/NN_name/</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">modules/01_tensor/tensor_dev.ipynb</span></code>)</p></li>
 <li><p>Export with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">N</span></code></p></li>
 <li><p>Validate by running milestone scripts</p></li>
 </ol>
-<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for detailed workflow guide and best practices.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for detailed workflow guide and best practices.</p>
 </div>
 </section>
 <section id="youre-now-a-tinytorch-builder">
-<h2>🌟 You’re Now a TinyTorch Builder!<a class="headerlink" href="#youre-now-a-tinytorch-builder" title="Permalink to this heading">#</a></h2>
+<h2>You’re Now a TinyTorch Builder<a class="headerlink" href="#youre-now-a-tinytorch-builder" title="Permalink to this heading">#</a></h2>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Production ML Systems</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">You've proven you can build ML components from scratch. Time to keep going!</p>
@@ -674,15 +719,15 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">TinyTorch: Build ML Systems from Scratch</p>
+        <p class="prev-next-title">TinyTorch: Tensors to Systems</p>
       </div>
     </a>
     <a class="right-next"
-       href="usage-paths/classroom-use.html"
+       href="student-workflow.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
+        <p class="prev-next-title">Student Workflow</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -702,21 +747,21 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-setup">⚡ 2-Minute Setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-first-module-walkthrough">🏗️ 15-Minute First Module Walkthrough</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-setup">2-Minute Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minute-first-module-walkthrough">15-Minute First Module Walkthrough</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor-foundations">Module 01: Tensor Foundations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-step-module-02-activations">Next Step: Module 02 - Activations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-your-progress">📊 Track Your Progress</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-with-historical-milestones">🏆 Validate with Historical Milestones</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-just-accomplished">🎯 What You Just Accomplished</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-next-steps">🚀 Your Next Steps</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-your-progress">Track Your Progress</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-with-historical-milestones">Validate with Historical Milestones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-just-accomplished">What You Just Accomplished</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-next-steps">Your Next Steps</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-next-actions-choose-one">Immediate Next Actions (Choose One):</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-continued-success">💡 Pro Tips for Continued Success</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#youre-now-a-tinytorch-builder">🌟 You’re Now a TinyTorch Builder!</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-continued-success">Pro Tips for Continued Success</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#youre-now-a-tinytorch-builder">You’re Now a TinyTorch Builder</a></li>
 </ul>
   </nav></div>
 

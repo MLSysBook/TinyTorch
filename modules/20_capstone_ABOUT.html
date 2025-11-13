@@ -1,0 +1,1013 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>20. TinyTorch Olympics - Competition &amp; Submission &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/20_capstone_ABOUT';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Course Introduction: ML Systems Engineering Through Implementation" href="../chapters/00-introduction.html" />
+    <link rel="prev" title="19. Benchmarking - Fair Performance Comparison" href="19_benchmarking_ABOUT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    TinyTorch: Tensors to Systems
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Competition</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">20. Torch Olympics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/modules/20_capstone_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/20_capstone_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/modules/20_capstone_ABOUT.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>20. TinyTorch Olympics - Competition & Submission</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-olympic-events">The Five Olympic Events</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-1-latency-sprint">🏃 Event 1: Latency Sprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-2-memory-challenge">🏋️ Event 2: Memory Challenge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-3-accuracy-contest">🎯 Event 3: Accuracy Contest</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-4-all-around">🏋️‍♂️ Event 4: All-Around</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-5-extreme-push">🚀 Event 5: Extreme Push</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#competition-workflow">Competition Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-1-understand-competition-events">Stage 1: Understand Competition Events</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-2-measure-baseline-performance">Stage 2: Measure Baseline Performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-3-measure-optimized-performance">Stage 3: Measure Optimized Performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-4-calculate-normalized-scores">Stage 4: Calculate Normalized Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-5-generate-submission">Stage 5: Generate Submission</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-complexity">Integration Complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measurement-validity">Measurement Validity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-strategy">Event Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-relevance">Production Relevance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-competition">Ready for Competition?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tinytorch-olympics-competition-submission">
+<h1>20. TinyTorch Olympics - Competition &amp; Submission<a class="headerlink" href="#tinytorch-olympics-competition-submission" title="Permalink to this heading">#</a></h1>
+<p><strong>CAPSTONE PROJECT</strong> | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 5-8 hours</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>The TinyTorch Olympics capstone teaches you how to participate in professional ML competitions. You’ve learned benchmarking methodology in Module 19—now apply those tools in a competition workflow. This module focuses on understanding competition events, using the Benchmark harness to measure performance, generating standardized submissions, and validating results meet competition requirements.</p>
+<p><strong>What You Learn</strong>: Competition workflow and submission packaging—how to use benchmarking tools (Module 19) and optimization techniques (Modules 14-18) to create competition-ready submissions following industry standards (MLPerf-style).</p>
+<p><strong>The Focus</strong>: Understanding how professional ML competitions work—from measurement to submission—not building TinyGPT (that’s Milestone 05).</p>
+</section>
+<section id="learning-objectives">
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this capstone, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Understand Competition Events</strong>: Know how different Olympic events (Latency Sprint, Memory Challenge, All-Around) have different constraints and optimization strategies</p></li>
+<li><p><strong>Use Benchmark Harness</strong>: Apply Module 19’s Benchmark class to measure performance with statistical rigor (confidence intervals, multiple runs)</p></li>
+<li><p><strong>Generate Submissions</strong>: Create standardized submission formats following MLPerf-style industry standards</p></li>
+<li><p><strong>Validate Submissions</strong>: Check that submissions meet event constraints (accuracy thresholds, latency limits) and flag unrealistic improvements</p></li>
+<li><p><strong>Workflow Integration</strong>: Understand how benchmarking tools (Module 19) and optimization techniques (Modules 14-18) work together in competition context</p></li>
+</ul>
+</section>
+<section id="the-five-olympic-events">
+<h2>The Five Olympic Events<a class="headerlink" href="#the-five-olympic-events" title="Permalink to this heading">#</a></h2>
+<p>Choose your competition event based on optimization goals:</p>
+<section id="event-1-latency-sprint">
+<h3>🏃 Event 1: Latency Sprint<a class="headerlink" href="#event-1-latency-sprint" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective</strong>: Minimize inference latency
+<strong>Constraints</strong>: Accuracy ≥ 85%
+<strong>Strategy Focus</strong>: Operator fusion, quantization, efficient data flow
+<strong>Winner</strong>: Fastest average inference time (with confidence intervals)</p>
+</section>
+<section id="event-2-memory-challenge">
+<h3>🏋️ Event 2: Memory Challenge<a class="headerlink" href="#event-2-memory-challenge" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective</strong>: Minimize model memory footprint
+<strong>Constraints</strong>: Accuracy ≥ 85%
+<strong>Strategy Focus</strong>: Quantization, pruning, weight sharing
+<strong>Winner</strong>: Smallest model size maintaining accuracy</p>
+</section>
+<section id="event-3-accuracy-contest">
+<h3>🎯 Event 3: Accuracy Contest<a class="headerlink" href="#event-3-accuracy-contest" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective</strong>: Maximize model accuracy
+<strong>Constraints</strong>: Latency &lt; 100ms, Memory &lt; 10MB
+<strong>Strategy Focus</strong>: Balanced optimization, selective precision
+<strong>Winner</strong>: Highest accuracy within constraints</p>
+</section>
+<section id="event-4-all-around">
+<h3>🏋️‍♂️ Event 4: All-Around<a class="headerlink" href="#event-4-all-around" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective</strong>: Best balanced performance
+<strong>Scoring</strong>: Composite score across latency, memory, accuracy
+<strong>Strategy Focus</strong>: Multi-objective optimization, Pareto efficiency
+<strong>Winner</strong>: Highest composite score</p>
+</section>
+<section id="event-5-extreme-push">
+<h3>🚀 Event 5: Extreme Push<a class="headerlink" href="#event-5-extreme-push" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective</strong>: Most aggressive optimization
+<strong>Constraints</strong>: Accuracy ≥ 80% (lower threshold)
+<strong>Strategy Focus</strong>: Maximum compression, aggressive quantization
+<strong>Winner</strong>: Best compression-latency product</p>
+</section>
+</section>
+<section id="competition-workflow">
+<h2>Competition Workflow<a class="headerlink" href="#competition-workflow" title="Permalink to this heading">#</a></h2>
+<p>This module teaches the workflow of professional ML competitions. You’ll learn how to use benchmarking tools (Module 19) to measure performance and generate standardized submissions.</p>
+<section id="stage-1-understand-competition-events">
+<h3>Stage 1: Understand Competition Events<a class="headerlink" href="#stage-1-understand-competition-events" title="Permalink to this heading">#</a></h3>
+<p>Different Olympic events have different constraints and optimization strategies:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.competition</span><span class="w"> </span><span class="kn">import</span> <span class="n">OlympicEvent</span>
+
+<span class="c1"># Event types</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">OlympicEvent</span><span class="o">.</span><span class="n">LATENCY_SPRINT</span>      <span class="c1"># Minimize latency, accuracy ≥ 85%</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">OlympicEvent</span><span class="o">.</span><span class="n">MEMORY_CHALLENGE</span>   <span class="c1"># Minimize memory, accuracy ≥ 85%</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">OlympicEvent</span><span class="o">.</span><span class="n">ALL_AROUND</span>         <span class="c1"># Best balanced performance</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">OlympicEvent</span><span class="o">.</span><span class="n">EXTREME_PUSH</span>       <span class="c1"># Most aggressive, accuracy ≥ 80%</span>
+</pre></div>
+</div>
+<p><strong>Event Constraints:</strong></p>
+<ul class="simple">
+<li><p><strong>Latency Sprint</strong>: Accuracy ≥ 85%, optimize for speed</p></li>
+<li><p><strong>Memory Challenge</strong>: Accuracy ≥ 85%, optimize for size</p></li>
+<li><p><strong>All-Around</strong>: Balanced optimization across metrics</p></li>
+<li><p><strong>Extreme Push</strong>: Accuracy ≥ 80%, maximum optimization</p></li>
+</ul>
+</section>
+<section id="stage-2-measure-baseline-performance">
+<h3>Stage 2: Measure Baseline Performance<a class="headerlink" href="#stage-2-measure-baseline-performance" title="Permalink to this heading">#</a></h3>
+<p>Use Module 19’s Benchmark harness to measure baseline:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.benchmarking</span><span class="w"> </span><span class="kn">import</span> <span class="n">Benchmark</span>
+
+<span class="c1"># Measure baseline performance</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">Benchmark</span><span class="p">([</span><span class="n">baseline_model</span><span class="p">],</span> <span class="p">[</span><span class="n">test_data</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;latency&quot;</span><span class="p">,</span> <span class="s2">&quot;memory&quot;</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+<span class="n">baseline_results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># Results include statistical rigor (confidence intervals)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Baseline - Latency: </span><span class="si">{</span><span class="n">baseline_results</span><span class="p">[</span><span class="s1">&#39;latency&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  95% CI: [</span><span class="si">{</span><span class="n">baseline_results</span><span class="p">[</span><span class="s1">&#39;latency&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ci_lower</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">baseline_results</span><span class="p">[</span><span class="s1">&#39;latency&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ci_upper</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Baseline - Memory: </span><span class="si">{</span><span class="n">baseline_results</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Baseline - Accuracy: </span><span class="si">{</span><span class="n">baseline_results</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Key Insight</strong>: Module 19 provides statistical rigor—multiple runs, confidence intervals, warmup periods. This ensures fair comparison.</p>
+</section>
+<section id="stage-3-measure-optimized-performance">
+<h3>Stage 3: Measure Optimized Performance<a class="headerlink" href="#stage-3-measure-optimized-performance" title="Permalink to this heading">#</a></h3>
+<p>Apply optimization techniques (from Modules 14-18), then measure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply optimizations (using techniques from Modules 14-18)</span>
+<span class="n">optimized_model</span> <span class="o">=</span> <span class="n">apply_optimizations</span><span class="p">(</span><span class="n">baseline_model</span><span class="p">)</span>
+
+<span class="c1"># Measure optimized performance with same Benchmark harness</span>
+<span class="n">optimized_results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Same benchmark, different model</span>
+</pre></div>
+</div>
+<p><strong>Fair Comparison</strong>: Same Benchmark harness, same test data, same hardware—ensures apples-to-apples comparison.</p>
+</section>
+<section id="stage-4-calculate-normalized-scores">
+<h3>Stage 4: Calculate Normalized Scores<a class="headerlink" href="#stage-4-calculate-normalized-scores" title="Permalink to this heading">#</a></h3>
+<p>Compute hardware-independent metrics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.competition</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_normalized_scores</span>
+
+<span class="c1"># Convert to normalized scores (hardware-independent)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">calculate_normalized_scores</span><span class="p">(</span>
+    <span class="n">baseline_results</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;latency&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">:</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">},</span>
+    <span class="n">optimized_results</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;latency&#39;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="mf">0.83</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Results: speedup=2.5×, compression_ratio=4.0×, accuracy_delta=-0.02</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speedup: </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;speedup&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">×&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compression: </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;compression_ratio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">×&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy change: </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;accuracy_delta&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">+.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Normalized</strong>: Speedup ratios work on any hardware. “2.5× faster” is meaningful whether you have M1 Mac or Intel i9.</p>
+</section>
+<section id="stage-5-generate-submission">
+<h3>Stage 5: Generate Submission<a class="headerlink" href="#stage-5-generate-submission" title="Permalink to this heading">#</a></h3>
+<p>Create standardized submission following MLPerf-style format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.competition</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_submission</span><span class="p">,</span> <span class="n">validate_submission</span>
+
+<span class="c1"># Generate submission</span>
+<span class="n">submission</span> <span class="o">=</span> <span class="n">generate_submission</span><span class="p">(</span>
+    <span class="n">baseline_results</span><span class="o">=</span><span class="n">baseline_results</span><span class="p">,</span>
+    <span class="n">optimized_results</span><span class="o">=</span><span class="n">optimized_results</span><span class="p">,</span>
+    <span class="n">event</span><span class="o">=</span><span class="n">OlympicEvent</span><span class="o">.</span><span class="n">LATENCY_SPRINT</span><span class="p">,</span>
+    <span class="n">athlete_name</span><span class="o">=</span><span class="s2">&quot;YourName&quot;</span><span class="p">,</span>
+    <span class="n">github_repo</span><span class="o">=</span><span class="s2">&quot;https://github.com/yourname/tinytorch&quot;</span><span class="p">,</span>
+    <span class="n">techniques</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;INT8 Quantization&quot;</span><span class="p">,</span> <span class="s2">&quot;70% Pruning&quot;</span><span class="p">,</span> <span class="s2">&quot;KV Cache&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Validate submission meets requirements</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="n">validate_submission</span><span class="p">(</span><span class="n">submission</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;valid&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Submission valid!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Checks passed: </span><span class="si">{</span><span class="nb">len</span><span class="p">([</span><span class="n">c</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">validation</span><span class="p">[</span><span class="s1">&#39;checks&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;passed&#39;</span><span class="p">]])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Submission invalid:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;issues&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   - </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Save submission</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;submission.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">submission</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Submission Format</strong>: Includes normalized scores, system info, event constraints, statistical confidence—everything needed for fair competition ranking.</p>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>This capstone requires understanding of benchmarking (Module 19) and optimization techniques (Modules 14-18):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Required: Benchmarking methodology (Module 19)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>benchmarking<span class="w">     </span><span class="c1"># Module 19: Statistical measurement, fair comparison</span>
+
+<span class="c1"># Helpful: Optimization techniques (Modules 14-18)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>profiling<span class="w">        </span><span class="c1"># Module 14: Find bottlenecks</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>quantization<span class="w">     </span><span class="c1"># Module 15: Reduce precision</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>compression<span class="w">      </span><span class="c1"># Module 16: Prune parameters</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>memoization<span class="w">      </span><span class="c1"># Module 17: Cache computations</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>acceleration<span class="w">     </span><span class="c1"># Module 18: Operator fusion</span>
+</pre></div>
+</div>
+<p><strong>Why You Need Module 19:</strong></p>
+<ul class="simple">
+<li><p>Module 19 teaches benchmarking methodology (statistical rigor, fair comparison)</p></li>
+<li><p>Module 20 teaches how to use Benchmark harness in competition workflow</p></li>
+<li><p>You use Benchmark class from Module 19 to measure performance</p></li>
+</ul>
+<p><strong>The Focus</strong>: Understanding competition workflow—how to use benchmarking tools to generate submissions—not building models from scratch (that’s Milestones 05-06).</p>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Understand Competition Events</strong> (<code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">1</span></code>):</p>
+<ul class="simple">
+<li><p>Review OlympicEvent enum and event constraints</p></li>
+<li><p>Understand how different events require different strategies</p></li>
+<li><p>Learn event-specific accuracy thresholds</p></li>
+</ul>
+</li>
+<li><p><strong>Measure Baseline</strong> (<code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">2</span></code>):</p>
+<ul class="simple">
+<li><p>Use Benchmark harness from Module 19 to measure baseline performance</p></li>
+<li><p>Understand statistical rigor (confidence intervals, multiple runs)</p></li>
+<li><p>Learn fair comparison protocols</p></li>
+</ul>
+</li>
+<li><p><strong>Measure Optimized</strong> (<code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">3</span></code>):</p>
+<ul class="simple">
+<li><p>Apply optimization techniques (from Modules 14-18)</p></li>
+<li><p>Use same Benchmark harness to measure optimized performance</p></li>
+<li><p>Ensure fair comparison (same data, hardware, methodology)</p></li>
+</ul>
+</li>
+<li><p><strong>Calculate Normalized Scores</strong> (<code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">4</span></code>):</p>
+<ul class="simple">
+<li><p>Compute hardware-independent metrics (speedup, compression ratio)</p></li>
+<li><p>Understand why normalized scores enable fair comparison</p></li>
+<li><p>Learn how to combine multiple metrics</p></li>
+</ul>
+</li>
+<li><p><strong>Generate Submission</strong> (<code class="docutils literal notranslate"><span class="pre">Stage</span> <span class="pre">5</span></code>):</p>
+<ul class="simple">
+<li><p>Create standardized submission format (MLPerf-style)</p></li>
+<li><p>Validate submission meets event constraints</p></li>
+<li><p>Understand submission structure and requirements</p></li>
+</ul>
+</li>
+<li><p><strong>Export and verify</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">20</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>capstone
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify your competition submission:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>capstone
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>capstone<span class="w"> </span>-v
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># ✅ test_baseline_establishment - Verifies baseline measurement</span>
+<span class="c1"># ✅ test_optimization_pipeline - Tests combined optimizations</span>
+<span class="c1"># ✅ test_event_constraints - Validates constraint satisfaction</span>
+<span class="c1"># ✅ test_statistical_significance - Ensures improvements are real</span>
+<span class="c1"># ✅ test_submission_generation - Verifies report creation</span>
+</pre></div>
+</div>
+</section>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>OlympicEvent Enum</strong>: Event types and constraints work correctly</p></li>
+<li><p>✅ <strong>Normalized Scoring</strong>: Speedup and compression ratios calculated correctly</p></li>
+<li><p>✅ <strong>Submission Generation</strong>: Creates valid MLPerf-style submissions</p></li>
+<li><p>✅ <strong>Submission Validation</strong>: Checks event constraints and flags issues</p></li>
+<li><p>✅ <strong>Workflow Integration</strong>: Complete workflow demonstration executes</p></li>
+</ul>
+</section>
+</section>
+<section id="systems-thinking-questions">
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<section id="integration-complexity">
+<h3>Integration Complexity<a class="headerlink" href="#integration-complexity" title="Permalink to this heading">#</a></h3>
+<p><strong>Question 1: Optimization Interaction</strong>
+You apply INT8 quantization (4× memory reduction) followed by 75% pruning (4× parameter reduction). Should you expect 16× total memory reduction?</p>
+<p><strong>Answer Structure:</strong></p>
+<ul class="simple">
+<li><p>Quantization affects: _____</p></li>
+<li><p>Pruning affects: _____</p></li>
+<li><p>Combined effect: _____</p></li>
+<li><p>Why not multiplicative: _____</p></li>
+</ul>
+<p><strong>Systems Insight</strong>: Quantization reduces bits per parameter (4 bytes → 1 byte). Pruning reduces parameter count (but zero values still stored in dense format). Combined effect depends on sparse matrix representation. For true 16× reduction, need sparse storage format that doesn’t store zeros.</p>
+</section>
+<section id="measurement-validity">
+<h3>Measurement Validity<a class="headerlink" href="#measurement-validity" title="Permalink to this heading">#</a></h3>
+<p><strong>Question 2: Statistical Significance</strong>
+Your optimized model shows 5% latency improvement with p-value = 0.12. Competitor shows 8% improvement with p-value = 0.02. Who wins?</p>
+<p><strong>Systems Insight</strong>: With p=0.12, your 5% could be noise (not statistically significant at α=0.05). Competitor’s 8% with p=0.02 is significant. Always report p-values—bigger speedup doesn’t mean better if not statistically valid!</p>
+</section>
+<section id="event-strategy">
+<h3>Event Strategy<a class="headerlink" href="#event-strategy" title="Permalink to this heading">#</a></h3>
+<p><strong>Question 3: All-Around Optimization</strong>
+For All-Around event, should you: (a) Optimize each metric separately, then combine? (b) Optimize all metrics simultaneously from start?</p>
+<p><strong>Systems Insight</strong>: Simultaneous optimization risks sub-optimal trade-offs. Better strategy: (1) Profile to find bottlenecks, (2) Apply technique targeting worst metric, (3) Re-measure all metrics, (4) Repeat. Iterative refinement with full measurement prevents over-optimization of one metric at expense of others.</p>
+</section>
+<section id="production-relevance">
+<h3>Production Relevance<a class="headerlink" href="#production-relevance" title="Permalink to this heading">#</a></h3>
+<p><strong>Question 4: Real-World Connection</strong>
+How does Torch Olympics competition preparation translate to production ML systems work?</p>
+<p><strong>Reflection</strong>: Production deployment requires the exact skills you’re practicing: profiling to find bottlenecks, applying targeted optimizations, validating improvements statistically, balancing trade-offs based on constraints (latency SLA, memory budget, accuracy requirements), and documenting decisions. The Olympic events mirror real scenarios: mobile deployment (Memory Challenge), real-time inference (Latency Sprint), high-accuracy requirements (Accuracy Contest).</p>
+</section>
+</section>
+<section id="ready-for-competition">
+<h2>Ready for Competition?<a class="headerlink" href="#ready-for-competition" title="Permalink to this heading">#</a></h2>
+<p>This capstone teaches you how professional ML competitions work. You’ve learned benchmarking methodology in Module 19—now understand how to use those tools in a competition workflow. Module 20 focuses on:</p>
+<ul class="simple">
+<li><p><strong>Competition Workflow</strong>: How to participate in ML competitions (MLPerf-style)</p></li>
+<li><p><strong>Submission Packaging</strong>: How to format results for fair comparison and validation</p></li>
+<li><p><strong>Event Understanding</strong>: How different events require different optimization strategies</p></li>
+<li><p><strong>Workflow Integration</strong>: How benchmarking tools (Module 19) + optimization techniques (Modules 14-18) work together</p></li>
+</ul>
+<p><strong>What’s Next</strong>:</p>
+<ul class="simple">
+<li><p>Build TinyGPT in Milestone 05 (historical achievement)</p></li>
+<li><p>Compete in Torch Olympics (Milestone 06) using this workflow</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">olympics</span> <span class="pre">submit</span></code> to generate your competition entry!</p></li>
+</ul>
+<p>This module teaches workflow and packaging—you use existing tools, not rebuild them. The competition workflow demonstrates how professional ML competitions are structured and participated in.</p>
+<p>Choose your preferred way to engage with this capstone:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this capstone interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/20_capstone/capstone_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab</div>
+<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/20_capstone/capstone_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/20_capstone/capstone.py"></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💡 Competition Recommendation</p>
+<p><strong>Local development recommended!</strong> This capstone involves extended optimization experiments, profiling sessions, and benchmarking runs. Local setup provides better debugging, faster iteration, and persistent results. Cloud sessions may timeout during long benchmark runs.</p>
+<p><strong>Setup</strong>: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/mlsysbook/TinyTorch.git</span> <span class="pre">&amp;&amp;</span> <span class="pre">source</span> <span class="pre">bin/activate-tinytorch.sh</span> <span class="pre">&amp;&amp;</span> <span class="pre">cd</span> <span class="pre">modules/20_capstone</span></code></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../19_benchmarking/ABOUT.html" title="previous page">← Module 19: Benchmarking</a>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./modules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="19_benchmarking_ABOUT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">19. Benchmarking - Fair Performance Comparison</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../chapters/00-introduction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Course Introduction: ML Systems Engineering Through Implementation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-olympic-events">The Five Olympic Events</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-1-latency-sprint">🏃 Event 1: Latency Sprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-2-memory-challenge">🏋️ Event 2: Memory Challenge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-3-accuracy-contest">🎯 Event 3: Accuracy Contest</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-4-all-around">🏋️‍♂️ Event 4: All-Around</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-5-extreme-push">🚀 Event 5: Extreme Push</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#competition-workflow">Competition Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-1-understand-competition-events">Stage 1: Understand Competition Events</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-2-measure-baseline-performance">Stage 2: Measure Baseline Performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-3-measure-optimized-performance">Stage 3: Measure Optimized Performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-4-calculate-normalized-scores">Stage 4: Calculate Normalized Scores</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-5-generate-submission">Stage 5: Generate Submission</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-questions">Systems Thinking Questions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-complexity">Integration Complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measurement-validity">Measurement Validity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-strategy">Event Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-relevance">Production Relevance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-competition">Ready for Competition?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
