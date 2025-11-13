@@ -65,12 +65,14 @@ parts:
 - caption: Capstone Competition
   chapters:
   - file: modules/20_capstone_ABOUT
-    title: "20. MLPerf® Edu Competition"
+    title: "20. Torch Olympics"
 
 - caption: Course Orientation
   chapters:
   - file: chapters/00-introduction
     title: "Course Structure"
+  - file: prerequisites
+    title: "Prerequisites & Resources"
   - file: chapters/learning-journey
     title: "Learning Journey"
   - file: chapters/milestones
@@ -91,5 +93,7 @@ parts:
   chapters:
   - file: community
     title: "Ecosystem"
+  - file: credits
+    title: "Credits & Acknowledgments"
   - file: resources
     title: "Additional Resources"

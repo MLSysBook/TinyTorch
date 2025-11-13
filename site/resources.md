@@ -8,8 +8,7 @@
 While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
 
 **TinyTorch Learning Resources:**
-- See [Track Your Progress](learning-progress.md) for monitoring capability development and learning progression
-- See [Progress Tracking](checkpoint-system.md) for technical details on capability testing
+- See [Student Workflow](student-workflow.md) for development workflow and progress tracking
 - See [Testing Guide](testing-framework.md) for comprehensive testing methodology
 
 ---
@@ -96,7 +95,7 @@ See [Essential Commands](tito-essentials.md) for complete TITO command reference
 
 **Your Next Steps:**
 1. See [Quick Start Guide](quickstart-guide.md) for 15-minute hands-on experience
-2. See [Track Your Progress](learning-progress.md) for understanding capability development
+2. See [Student Workflow](student-workflow.md) for understanding the development workflow
 3. See [Course Introduction](chapters/00-introduction.md) for deep dive into course philosophy
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">

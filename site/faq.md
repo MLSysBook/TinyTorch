@@ -208,7 +208,7 @@ Milestones are historical ML achievements you recreate with YOUR implementations
 - **M03: 1986 MLP** - Backpropagation achieves 95%+ on MNIST
 - **M04: 1998 CNN** - LeNet-style CNN gets 75%+ on CIFAR-10
 - **M05: 2017 Transformer** - GPT-style text generation
-- **M06: 2018 MLPerf** - Production optimization benchmarking
+- **M06: 2018 Torch Olympics** - Production optimization benchmarking
 
 Each milestone proves your framework works by running actual ML experiments.
 
