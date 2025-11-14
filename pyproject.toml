@@ -26,13 +26,15 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/VJ/TinyTorch"
-Repository = "https://github.com/VJ/TinyTorch"
-Issues = "https://github.com/VJ/TinyTorch/issues"
+Homepage = "https://github.com/MLSysBook/TinyTorch"
+Repository = "https://github.com/MLSysBook/TinyTorch"
+Issues = "https://github.com/MLSysBook/TinyTorch/issues"
+
+[project.scripts]
+# Expose CLI as installable console command (`tito`)
+# bin/tito imports from tito.main:main
+tito = "tito.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tinytorch_placeholder*"]
-
-[tool.setuptools.package-dir]
-tinytorch = "tinytorch_placeholder"
+include = ["tinytorch*", "tito*"]
