@@ -17,13 +17,8 @@ Build a complete machine learning (ML) framework from tensors to systems—under
 ```{raw} html
 <!-- Install Command - Compact Claude Code style -->
 <div style="text-align: center; margin: 1.5rem auto 2rem auto;">
-  <div style="margin-bottom: 0.75rem;">
-    <span style="display: inline-block; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #92400e; padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600; border: 1px solid #fbbf24;">
-      🚧 Work in Progress - Alpha Release
-    </span>
-  </div>
   <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.375rem; padding: 0.5rem 1rem; font-family: 'Monaco', 'Menlo', 'Courier New', monospace; font-size: 0.875rem; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-    <span style="color: #94a3b8;">$</span> pip install tinytorch
+    <span style="color: #94a3b8;">$</span> pip install tinytorch <span style="color: #94a3b8; font-style: italic;">(coming soon)</span>
   </div>
 </div>
 
