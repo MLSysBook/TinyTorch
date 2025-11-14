@@ -55,7 +55,9 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
+    <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -172,7 +174,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome
+                    Getting Started
                 </a>
             </li>
         </ul>
@@ -184,6 +186,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/foundation.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
@@ -194,6 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏛️ Architecture Tier (08-13)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/architecture.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
@@ -203,6 +207,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">⏱️ Optimization Tier (14-19)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/optimization.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
@@ -212,6 +217,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
@@ -231,8 +237,8 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits &amp; Acknowledgments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
 </ul>
 
     </div>
@@ -304,7 +310,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/testing-framework.md" target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/testing-framework.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"

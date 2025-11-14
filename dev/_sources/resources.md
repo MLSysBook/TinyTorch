@@ -1,104 +1,83 @@
-# Additional Learning Resources
+# Learning Resources
 
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
-<h2 style="margin: 0 0 1rem 0; color: #495057;">Complement Your TinyTorch Journey</h2>
-<p style="margin: 0; color: #6c757d;">Carefully selected resources for broader context, alternative perspectives, and production tools</p>
-</div>
-
-While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
-
-**TinyTorch Learning Resources:**
-- See [Student Workflow](student-workflow.md) for development workflow and progress tracking
-- See [Testing Guide](testing-framework.md) for comprehensive testing methodology
+**TinyTorch teaches you to *build* ML systems. These resources help you understand the *why* behind what you're building.**
 
 ---
 
-## Academic Courses
+## Companion Textbook
 
 ### Machine Learning Systems
-- **[CS 329S: Machine Learning Systems Design](https://stanford-cs329s.github.io/)** (Stanford)  
-  *Production ML systems, infrastructure, and deployment at scale*
+**[mlsysbook.ai](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard University)
 
-- **[CS 6.S965: TinyML and Efficient Deep Learning](https://hanlab.mit.edu/courses/2024-fall-65940)** (MIT)  
-  *Edge computing, model compression, and efficient ML algorithms*
+<div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 5px solid #1976d2; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+<p style="margin: 0; color: #0d47a1; font-size: 1.05rem; line-height: 1.6;">
+<strong>TinyTorch began as hands-on labs for this textbook.</strong> While TinyTorch can be used standalone, the ML Systems book provides the theoretical depth and production context behind every module you build.
+</p>
+</div>
 
-- **[CS 249r: Tiny Machine Learning](https://sites.google.com/g.harvard.edu/tinyml/home)** (Harvard)  
-  *TinyML systems, edge AI, and resource-constrained machine learning*
+**What it teaches**: Systems engineering for production ML—memory hierarchies, performance optimization, deployment strategies, and the engineering decisions behind modern ML frameworks.
 
-### Deep Learning Foundations
-- **[CS 231n: Convolutional Neural Networks](http://cs231n.stanford.edu/)** (Stanford)  
-  *Computer vision and CNN architectures - complements TinyTorch spatial modules*
+**How it connects to TinyTorch**:
+- TinyTorch modules directly implement concepts from the book's chapters
+- The book explains *why* PyTorch, TensorFlow, and JAX make certain design decisions
+- Together, they provide both hands-on implementation and theoretical understanding
 
-- **[CS 224n: Natural Language Processing](http://web.stanford.edu/class/cs224n/)** (Stanford)  
-  *NLP and transformers - perfect follow-up to TinyTorch attention module*
+**When to use it**: Read in parallel with TinyTorch. When you implement Module 05 (Autograd), read the book's chapter on automatic differentiation to understand the systems engineering behind your code.
 
 ---
 
-## Recommended Books
+## Related Academic Courses
 
-### Systems & Engineering
-- **[Machine Learning Systems](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard)  
-  *Comprehensive systems perspective on ML engineering and optimization - the perfect companion to TinyTorch*
+- **[CS 329S: Machine Learning Systems Design](https://stanford-cs329s.github.io/)** (Stanford)
+  *Production ML systems and deployment*
 
-- **[Designing Machine Learning Systems](https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/)** by Chip Huyen  
-  *Production ML engineering, data pipelines, and system design*
+- **[TinyML and Efficient Deep Learning](https://efficientml.ai)** (MIT 6.5940)
+  *Edge computing, model compression, and efficient ML*
 
-- **[Machine Learning Engineering](https://www.mlebook.com/wiki/doku.php)** by Andriy Burkov  
-  *End-to-end ML project lifecycle and best practices*
+- **[CS 249r: Tiny Machine Learning](https://sites.google.com/g.harvard.edu/tinyml/home)** (Harvard)
+  *TinyML systems and resource-constrained ML*
 
-### Implementation & Theory
-- **[Deep Learning](https://www.deeplearningbook.org/)** by Ian Goodfellow, Yoshua Bengio, Aaron Courville  
-  *Mathematical foundations - the theory behind what you implement in TinyTorch*
+- **[CS 231n: Convolutional Neural Networks](http://cs231n.stanford.edu/)** (Stanford)
+  *Computer vision - complements TinyTorch Modules 08-09*
 
-- **[Hands-On Machine Learning](https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/)** by Aurélien Géron  
+- **[CS 224n: Natural Language Processing](http://web.stanford.edu/class/cs224n/)** (Stanford)
+  *Transformers and NLP - complements TinyTorch Modules 10-13*
+
+---
+
+## Other Textbooks
+
+- **[Deep Learning](https://www.deeplearningbook.org/)** by Goodfellow, Bengio, Courville
+  *Mathematical foundations behind what you implement in TinyTorch*
+
+- **[Hands-On Machine Learning](https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/)** by Aurélien Géron
   *Practical implementations using established frameworks*
 
 ---
 
-## Alternative Implementations
+## Minimal Frameworks
 
-**Different approaches to building ML systems from scratch - see how others tackle the same challenge:**
+**Alternative approaches to building ML from scratch:**
 
-### Minimal Frameworks
-- **[Micrograd](https://github.com/karpathy/micrograd)** by Andrej Karpathy  
-  *Minimal autograd engine in 100 lines. **Micrograd shows you the math, TinyTorch shows you the systems.***
+- **[micrograd](https://github.com/karpathy/micrograd)** by Andrej Karpathy
+  *Autograd in 100 lines. Perfect 2-hour intro before TinyTorch.*
 
-- **[Microtorch](https://github.com/Kipre/microtorch)** by Kipre  
-  *PyTorch-like API in pure Python. **Microtorch focuses on clean API design, TinyTorch emphasizes systems engineering and scalability.***
+- **[nanoGPT](https://github.com/karpathy/nanoGPT)** by Andrej Karpathy
+  *Minimalist GPT implementation. Complements TinyTorch Modules 12-13.*
 
-- **[Tinygrad](https://github.com/geohot/tinygrad)** by George Hotz  
-  *Performance-focused educational framework. **Tinygrad optimizes for speed, TinyTorch optimizes for learning.***
-
-- **[Neural Networks from Scratch](https://nnfs.io/)** by Harrison Kinsley  
-  *Math-heavy implementation approach. **NNFS focuses on algorithms, TinyTorch focuses on systems engineering.***
+- **[tinygrad](https://github.com/geohot/tinygrad)** by George Hotz
+  *Performance-focused educational framework with GPU acceleration.*
 
 ---
 
-## Production Internals
+## Production Framework Internals
 
-### Framework Deep Dives
-- **[PyTorch Internals](http://blog.ezyang.com/2019/05/pytorch-internals/)** by Edward Yang  
-  *How PyTorch actually works under the hood - a great read as see what you built in TinyTorch corresponds to the real PyTorch*
+- **[PyTorch Internals](http://blog.ezyang.com/2019/05/pytorch-internals/)** by Edward Yang
+  *How PyTorch actually works under the hood*
 
-- **[PyTorch Documentation: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.md)**  
-  *Custom operators and autograd functions - apply your TinyTorch knowledge*
+- **[PyTorch: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.md)**
+  *Custom operators and autograd functions*
 
 ---
 
-*Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.*
-
-## Ready to Begin Your Journey?
-
-**Start with the fundamentals and build your way up.**
-
-See [Essential Commands](tito-essentials.md) for complete TITO command reference.
-
-**Your Next Steps:**
-1. See [Quick Start Guide](quickstart-guide.md) for 15-minute hands-on experience
-2. See [Student Workflow](student-workflow.md) for understanding the development workflow
-3. See [Course Introduction](chapters/00-introduction.md) for deep dive into course philosophy
-
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
-<h4 style="margin: 0 0 1rem 0; color: #495057;">Transform from Framework User to Systems Engineer</h4>
-<p style="margin: 0; color: #6c757d;">These external resources complement the hands-on systems building you'll do in TinyTorch</p>
-</div>
+**Ready to start?** See the **[Quick Start Guide](quickstart-guide)** for a 15-minute hands-on introduction.

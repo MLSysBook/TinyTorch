@@ -55,7 +55,9 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/ml-timeline.js"></script>
     <script src="../_static/wip-banner.js"></script>
+    <script src="../_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -68,7 +70,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="01. Tensor" href="../modules/01_tensor_ABOUT.html" />
+    <link rel="next" title="🏗 Foundation Tier (Modules 01-07)" href="../tiers/foundation.html" />
     <link rel="prev" title="Student Workflow" href="../student-workflow.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -172,7 +174,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Welcome
+                    Getting Started
                 </a>
             </li>
         </ul>
@@ -184,6 +186,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/foundation.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/01_tensor_ABOUT.html">01. Tensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/02_activations_ABOUT.html">02. Activations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/03_layers_ABOUT.html">03. Layers</a></li>
@@ -194,6 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏛️ Architecture Tier (08-13)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/architecture.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
@@ -203,6 +207,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">⏱️ Optimization Tier (14-19)</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/optimization.html">📖 Tier Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/14_profiling_ABOUT.html">14. Profiling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/15_quantization_ABOUT.html">15. Quantization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/16_compression_ABOUT.html">16. Compression</a></li>
@@ -212,6 +217,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
@@ -231,8 +237,8 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
     </div>
@@ -304,7 +310,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/usage-paths/classroom-use.md" target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/usage-paths/classroom-use.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -478,7 +484,7 @@ document.write(`
 <h1>TinyTorch for Instructors: Complete ML Systems Course<a class="headerlink" href="#tinytorch-for-instructors-complete-ml-systems-course" title="Permalink to this heading">#</a></h1>
 <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
 <h3 style="margin: 0 0 0.5rem 0; color: #856404;">🚧 Classroom Integration: Coming Soon</h3>
-<p style="margin: 0; color: #856404;">NBGrader integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
+<p style="margin: 0; color: #856404;"><a href="https://nbgrader.readthedocs.io/" style="color: #856404; text-decoration: underline;">NBGrader</a> integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
 <p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Currently available</strong>: Students can use TinyTorch with the standard workflow (edit modules → export → validate with milestones)</p>
 <p style="margin: 0.5rem 0 0 0;"><a href="../student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the current development cycle.</p>
 </div>
@@ -499,7 +505,7 @@ document.write(`
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Three-tier progression</strong> (20 modules) with NBGrader integration</li>
+<li><strong>Three-tier progression</strong> (20 modules) with [NBGrader](https://nbgrader.readthedocs.io/) integration</li>
 <li><strong>Automated grading</strong> for immediate feedback</li>
 <li><strong>Professional CLI tools</strong> for development workflow</li>
 <li><strong>Real datasets</strong> (CIFAR-10, text generation)</li>
@@ -517,7 +523,7 @@ document.write(`
 </div>
 <p><strong>Planned Course Duration:</strong> 14-16 weeks (flexible pacing)
 <strong>Student Outcome:</strong> Complete ML framework supporting vision AND language models</p>
-<p><strong>Current Status:</strong> Students can work through modules individually using the standard workflow. Full classroom integration (NBGrader automation, instructor dashboards) coming soon.</p>
+<p><strong>Current Status:</strong> Students can work through modules individually using the standard workflow. Full classroom integration (<a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> automation, instructor dashboards) coming soon.</p>
 </section>
 <hr class="docutils" />
 <section id="why-tinytorch-for-your-classroom">
@@ -739,11 +745,11 @@ tito nbgrader release 01_setup
       </div>
     </a>
     <a class="right-next"
-       href="../modules/01_tensor_ABOUT.html"
+       href="../tiers/foundation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">01. Tensor</p>
+        <p class="prev-next-title">🏗 Foundation Tier (Modules 01-07)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -43,7 +43,7 @@ tito module complete MODULE_NUMBER
 
 This command:
 - Converts your source files to the `tinytorch/` package
-- Validates NBGrader metadata
+- Validates [NBGrader](https://nbgrader.readthedocs.io/) metadata
 - Makes your implementation available for import
 
 **Example:**
@@ -151,7 +151,7 @@ This is helpful for self-assessment but **not required** for the core workflow. 
 
 ## Instructor Integration (Coming Soon)
 
-TinyTorch supports NBGrader for classroom use. Documentation for instructors using the autograding features will be available in future releases.
+TinyTorch supports [NBGrader](https://nbgrader.readthedocs.io/) for classroom use. Documentation for instructors using the autograding features will be available in future releases.
 
 For now, focus on the student workflow: building your implementations and validating them with milestones.
 
