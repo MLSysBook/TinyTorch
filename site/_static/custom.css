@@ -166,24 +166,24 @@ pre.mermaid.align-center {
 
 /* HTML/foreignObject content - force center alignment */
 .mermaid .nodeLabel,
-.mermaid .label,
-.mermaid foreignObject,
-.mermaid foreignObject > div,
-.mermaid foreignObject > div > div,
-.mermaid foreignObject p,
-.mermaid foreignObject span {
+.mermaid .label {
     text-align: center !important;
-    justify-content: center !important;
-    align-items: center !important;
-    display: flex !important;
-    flex-direction: column !important;
 }
 
 /* Node label container specific */
 .mermaid .nodeLabel {
     padding: 10px 14px !important;
     line-height: 1.4 !important;
-    width: 100% !important;
+}
+
+/* foreignObject elements need special handling */
+.mermaid foreignObject {
+    overflow: visible !important;
+}
+
+.mermaid foreignObject > div {
+    text-align: center !important;
+    display: block !important;
 }
 
 /* Force all label divs and spans to center */
@@ -192,9 +192,6 @@ pre.mermaid.align-center {
 .mermaid .nodeLabel > div,
 .mermaid .nodeLabel > span {
     text-align: center !important;
-    display: block !important;
-    width: 100% !important;
-    margin: 0 auto !important;
 }
 
 /* Mermaid text styling - clean, readable fonts */
