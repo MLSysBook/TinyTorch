@@ -218,7 +218,7 @@ In 15 minutes, you've:
 - See [Student Workflow](student-workflow.md) for the complete development cycle
 
 **For Instructors:**
-- See [Classroom Setup Guide](usage-paths/classroom-use.md) for NBGrader integration (coming soon)
+- See [Classroom Setup Guide](usage-paths/classroom-use.md) for [NBGrader](https://nbgrader.readthedocs.io/) integration (coming soon)
 
 </div>
 
