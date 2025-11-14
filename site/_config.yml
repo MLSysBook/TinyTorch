@@ -35,7 +35,7 @@ exclude_patterns:
 # GitHub repository configuration for GitHub Pages
 repository:
   url: https://github.com/mlsysbook/TinyTorch
-  path_to_book: book
+  path_to_book: site
   branch: main
 
 # HTML output configuration
@@ -53,6 +53,8 @@ html:
   # Custom JavaScript
   extra_js:
     - _static/wip-banner.js
+    - _static/ml-timeline.js
+    - _static/hero-carousel.js
   
   # Favicon configuration
   favicon: "_static/favicon.svg"

@@ -7,10 +7,10 @@ set -e  # Exit on error
 echo "🔥 Building TinyTorch PDF..."
 echo ""
 
-# Check if we're in the book directory
+# Check if we're in the site directory
 if [ ! -f "_config.yml" ]; then
-    echo "❌ Error: Must run from book/ directory"
-    echo "Usage: cd book && ./build_pdf.sh"
+    echo "❌ Error: Must run from site/ directory"
+    echo "Usage: cd site && ./build_pdf.sh"
     exit 1
 fi
 
@@ -51,7 +51,7 @@ if [ -f "_build/latex/tinytorch-course.pdf" ]; then
     PDF_SIZE=$(du -h "_build/latex/tinytorch-course.pdf" | cut -f1)
     echo ""
     echo "✅ PDF build complete!"
-    echo "📄 Output: book/_build/latex/tinytorch-course.pdf"
+    echo "📄 Output: site/_build/latex/tinytorch-course.pdf"
     echo "📊 Size: ${PDF_SIZE}"
     echo ""
     echo "To view the PDF:"
