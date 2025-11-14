@@ -68,22 +68,6 @@ Tinygrad proves educational frameworks can achieve impressive performance. While
 
 ---
 
-## Academic Foundation
-
-### Machine Learning Systems
-**[mlsysbook.ai](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard University)
-
-TinyTorch began as hands-on exercises for the ML Systems textbook. The book's emphasis on systems engineering—memory hierarchies, performance optimization, production deployment—shaped TinyTorch's three-tier structure and systems-focused learning objectives.
-
-**What ML Systems Book teaches**: Comprehensive textbook on production ML systems engineering
-
-**How TinyTorch differs**: TinyTorch is the hands-on implementation companion
-
-**When to use**: Parallel reading with TinyTorch for theoretical depth and production context
-
-**Connection to TinyTorch**: TinyTorch modules directly implement concepts from ML Systems Book chapters
-
----
 
 ## What Makes TinyTorch Unique
 
@@ -97,36 +81,7 @@ TinyTorch combines inspiration from these projects into a comprehensive ML syste
 
 ---
 
-## Recommended Learning Path
 
-For maximum educational value, we recommend:
-
-1. **Start with micrograd** (2 hours) — Understand autograd fundamentals
-2. **Read Deep Learning Book Ch 6** — Mathematical foundations
-3. **Begin TinyTorch** (varies by path) — Build complete ML systems
-4. **Reference ML Systems Book** — Parallel reading for production context
-5. **Explore tinygrad** — Performance optimization and GPU programming
-
-This progression takes you from mathematical foundations → systems implementation → production optimization.
-
----
-
-## Open Source Gratitude
-
-TinyTorch exists because of open source software:
-
-**Core Dependencies:**
-- **NumPy**: Numerical computing foundation
-- **Jupyter**: Interactive development environment
-- **PyTorch**: Reference implementation and validation framework
-- **Rich**: Beautiful CLI interfaces
-
-**Development Tools:**
-- **Jupyter Book**: Documentation and course website
-- **pytest**: Testing infrastructure
-- **GitHub**: Version control and collaboration
-
----
 
 ## Community Contributors
 
