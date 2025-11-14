@@ -79,9 +79,9 @@ class BookCommand(BaseCommand):
         console = self.console
         
         # Check if we're in the right directory
-        if not Path("book").exists():
+        if not Path("site").exists():
             console.print(Panel(
-                "[red]❌ book/ directory not found. Run this command from the TinyTorch root directory.[/red]",
+                "[red]❌ site/ directory not found. Run this command from the TinyTorch root directory.[/red]",
                 title="Error",
                 border_style="red"
             ))
@@ -122,7 +122,7 @@ class BookCommand(BaseCommand):
         console.print("🔄 Generating overview pages from modules...")
         
         try:
-            os.chdir("book")
+            os.chdir("site")
             result = subprocess.run(
                 ["python3", "convert_readmes.py"],
                 capture_output=True,
@@ -155,9 +155,9 @@ class BookCommand(BaseCommand):
         console.print("📝 Verifying book chapters...")
         
         # Check that the chapters directory exists
-        chapters_dir = Path("book/chapters")
+        chapters_dir = Path("site/chapters")
         if not chapters_dir.exists():
-            console.print("[red]❌ book/chapters directory not found[/red]")
+            console.print("[red]❌ site/chapters directory not found[/red]")
             return 1
         
         # Count markdown files in chapters directory
@@ -165,7 +165,7 @@ class BookCommand(BaseCommand):
         if chapter_files:
             console.print(f"✅ Found {len(chapter_files)} chapter files")
         else:
-            console.print("[yellow]⚠️  No chapter files found in book/chapters/[/yellow]")
+            console.print("[yellow]⚠️  No chapter files found in site/chapters/[/yellow]")
         
         return 0
 
@@ -182,7 +182,7 @@ class BookCommand(BaseCommand):
         console.print("📚 Step 2: Building Jupyter Book...")
         
         try:
-            os.chdir("book")
+            os.chdir("site")
             result = subprocess.run(
                 ["jupyter-book", "build", "."],
                 capture_output=True,
@@ -199,7 +199,7 @@ class BookCommand(BaseCommand):
                             console.print(f"🌐 View at: {line.strip()}")
                             break
                 
-                console.print("📁 HTML files available in: book/_build/html/")
+                console.print("📁 HTML files available in: site/_build/html/")
                 return 0
             else:
                 console.print(f"[red]❌ Failed to build book[/red]")
@@ -233,7 +233,7 @@ class BookCommand(BaseCommand):
         console.print("🛑 Press [bold]Ctrl+C[/bold] to stop the server")
         console.print()
         
-        book_dir = Path("book/_build/html")
+        book_dir = Path("site/_build/html")
         if not book_dir.exists():
             console.print("[red]❌ Built book not found. Run with --no-build=False to build first.[/red]")
             return 1
@@ -261,7 +261,7 @@ class BookCommand(BaseCommand):
         console.print("🧹 Cleaning book build files...")
         
         try:
-            os.chdir("book")
+            os.chdir("site")
             result = subprocess.run(
                 ["jupyter-book", "clean", "."],
                 capture_output=True,
