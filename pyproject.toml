@@ -4,35 +4,50 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name="tinytorch"
-version = "0.0.1"
-description = "🚧 TinyTorch: Educational Deep Learning Framework (Coming Soon)"
+version = "0.1.0"
+description = "Build ML Systems from Scratch - Educational Deep Learning Framework"
 readme = "README.md"
 requires-python=">=3.8"
 authors = [
     {name = "Vijay Janapa Reddi", email = "vj@eecs.harvard.edu"}
 ]
-license = "MIT"
+license = {text = "MIT"}
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Education", 
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Education",
 ]
-dependencies = []
+dependencies = [
+    "numpy>=1.24.0,<3.0.0",
+    "rich>=13.0.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "jupytext>=1.16.0",
+    "nbformat>=5.10.0",
+    "jupyter>=1.1.0",
+    "jupyterlab>=4.2.0",
+]
 
 [project.urls]
-Homepage = "https://github.com/VJ/TinyTorch"
-Repository = "https://github.com/VJ/TinyTorch"
-Issues = "https://github.com/VJ/TinyTorch/issues"
+Homepage = "https://github.com/mlsysbook/TinyTorch"
+Repository = "https://github.com/mlsysbook/TinyTorch"
+Documentation = "https://mlsysbook.github.io/TinyTorch/"
+Issues = "https://github.com/mlsysbook/TinyTorch/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tinytorch_placeholder*"]
-
-[tool.setuptools.package-dir]
-tinytorch = "tinytorch_placeholder"
+include = ["tinytorch*"]
+exclude = ["tests*", "modules*", "site*", "docs*", "milestones*", "assignments*", "tito*"]
