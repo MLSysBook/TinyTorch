@@ -2,7 +2,7 @@
 
 <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
 <h3 style="margin: 0 0 0.5rem 0; color: #856404;">🚧 Classroom Integration: Coming Soon</h3>
-<p style="margin: 0; color: #856404;">NBGrader integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
+<p style="margin: 0; color: #856404;"><a href="https://nbgrader.readthedocs.io/" style="color: #856404; text-decoration: underline;">NBGrader</a> integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
 <p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Currently available</strong>: Students can use TinyTorch with the standard workflow (edit modules → export → validate with milestones)</p>
 <p style="margin: 0.5rem 0 0 0;"><a href="../student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the current development cycle.</p>
 </div>
@@ -28,7 +28,7 @@
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Three-tier progression</strong> (20 modules) with NBGrader integration</li>
+<li><strong>Three-tier progression</strong> (20 modules) with [NBGrader](https://nbgrader.readthedocs.io/) integration</li>
 <li><strong>Automated grading</strong> for immediate feedback</li>
 <li><strong>Professional CLI tools</strong> for development workflow</li>
 <li><strong>Real datasets</strong> (CIFAR-10, text generation)</li>
@@ -48,7 +48,7 @@
 **Planned Course Duration:** 14-16 weeks (flexible pacing)
 **Student Outcome:** Complete ML framework supporting vision AND language models
 
-**Current Status:** Students can work through modules individually using the standard workflow. Full classroom integration (NBGrader automation, instructor dashboards) coming soon.
+**Current Status:** Students can work through modules individually using the standard workflow. Full classroom integration ([NBGrader](https://nbgrader.readthedocs.io/) automation, instructor dashboards) coming soon.
 
 ---
 
