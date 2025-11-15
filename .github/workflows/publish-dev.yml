@@ -49,6 +49,15 @@ jobs:
         working-directory: ./site
         run: |
           jupyter-book build . --all
+          # Ensure .nojekyll exists in build output for GitHub Pages
+          # This prevents Jekyll from processing and ignoring _static/ files
+          if [ -f .nojekyll ]; then
+            cp .nojekyll _build/html/.nojekyll
+            echo "✅ Copied .nojekyll to build output"
+          else
+            touch _build/html/.nojekyll
+            echo "✅ Created .nojekyll in build output"
+          fi
           
       - name: Deploy to /dev/ subdirectory
         uses: peaceiris/actions-gh-pages@v3
