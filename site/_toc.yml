@@ -19,6 +19,8 @@ parts:
 # Foundation (🏗), Architecture (🏛️), Optimization (⏱️), Capstone (🏅)
 - caption: 🏗 Foundation Tier (01-07)
   chapters:
+  - file: tiers/foundation
+    title: "📖 Tier Overview"
   - file: modules/01_tensor_ABOUT
     title: "01. Tensor"
   - file: modules/02_activations_ABOUT
@@ -36,6 +38,8 @@ parts:
 
 - caption: 🏛️ Architecture Tier (08-13)
   chapters:
+  - file: tiers/architecture
+    title: "📖 Tier Overview"
   - file: modules/08_dataloader_ABOUT
     title: "08. DataLoader"
   - file: modules/09_spatial_ABOUT
@@ -51,6 +55,8 @@ parts:
 
 - caption: ⏱️ Optimization Tier (14-19)
   chapters:
+  - file: tiers/optimization
+    title: "📖 Tier Overview"
   - file: modules/14_profiling_ABOUT
     title: "14. Profiling"
   - file: modules/15_quantization_ABOUT
@@ -66,6 +72,8 @@ parts:
 
 - caption: 🏅 Capstone Competition
   chapters:
+  - file: tiers/olympics
+    title: "📖 Competition Overview"
   - file: modules/20_capstone_ABOUT
     title: "20. Torch Olympics"
 
@@ -95,7 +103,7 @@ parts:
   chapters:
   - file: community
     title: "Ecosystem"
+  - file: resources
+    title: "Learning Resources"
   - file: credits
     title: "Credits & Acknowledgments"
-  - file: resources
-    title: "Additional Resources"

@@ -2,6 +2,19 @@
 # TinyTorch Site Rebuild Script
 # Cleans and rebuilds the Jupyter Book site
 
+# Ensure we're running in native architecture (not Rosetta)
+# This prevents architecture mismatches with compiled packages
+CURRENT_ARCH=$(arch)
+HARDWARE_ARCH=$(sysctl -n hw.optional.arm64 2>/dev/null || echo "0")
+
+# If we're on Apple Silicon hardware but running under Rosetta, switch to native
+if [[ "$HARDWARE_ARCH" == "1" ]] && [[ "$CURRENT_ARCH" != "arm64" ]] && [[ -d "../.venv" ]]; then
+    if command -v arch &> /dev/null; then
+        echo "⚠️  Warning: Running under $CURRENT_ARCH on Apple Silicon. Switching to native ARM64..."
+        exec arch -arm64 /bin/bash "$0" "$@"
+    fi
+fi
+
 echo "🧹 Cleaning old build..."
 cd site
 rm -rf _build/
@@ -13,6 +26,17 @@ JUPYTER_BOOK=""
 
 # Priority 1: Check for venv jupyter-book (most reliable)
 if [ -f "../.venv/bin/jupyter-book" ]; then
+    # Explicitly use venv Python to ensure architecture consistency
+    VENV_PYTHON="../.venv/bin/python3"
+    if [ -f "$VENV_PYTHON" ]; then
+        # Verify architecture match
+        PYTHON_ARCH=$("$VENV_PYTHON" -c "import platform; print(platform.machine())" 2>/dev/null)
+        SYSTEM_ARCH=$(uname -m)
+        if [ "$PYTHON_ARCH" != "$SYSTEM_ARCH" ]; then
+            echo "⚠️  Architecture mismatch detected (Python: $PYTHON_ARCH, System: $SYSTEM_ARCH)"
+            echo "   Reinstalling packages may be needed: pip install --force-reinstall --no-cache-dir rpds jsonschema"
+        fi
+    fi
     JUPYTER_BOOK="../.venv/bin/jupyter-book"
     echo "Using venv jupyter-book: $JUPYTER_BOOK"
 # Priority 2: Check for system jupyter-book
