@@ -125,19 +125,12 @@ pre.mermaid.align-center {
    MERMAID DIAGRAM STYLING
    ============================================ */
 
-/* Container - remove grey box artifacts */
+/* Container - basic styling only */
 .mermaid {
     margin: 2rem 0 !important;
-    background: transparent !important;
-    border: none !important;
 }
 
-.mermaid svg {
-    overflow: visible !important;
-    background: transparent !important;
-}
-
-/* Remove any default subgraph/cluster backgrounds */
+/* Remove subgraph grey boxes */
 .mermaid .cluster rect,
 .mermaid .cluster-bg,
 .mermaid rect.cluster {
@@ -149,56 +142,6 @@ pre.mermaid.align-center {
 
 .mermaid .cluster-label {
     display: none !important;
-}
-
-/* ============================================
-   TEXT CENTERING - Comprehensive rules
-   ============================================ */
-
-/* SVG text elements - force center anchor */
-.mermaid text,
-.mermaid .node text,
-.mermaid text.nodeLabel,
-.mermaid .label text,
-.mermaid tspan {
-    text-anchor: middle !important;
-}
-
-/* HTML/foreignObject content - force center alignment */
-.mermaid .nodeLabel,
-.mermaid .label {
-    text-align: center !important;
-}
-
-/* Node label container specific */
-.mermaid .nodeLabel {
-    padding: 10px 14px !important;
-    line-height: 1.4 !important;
-}
-
-/* foreignObject elements need special handling */
-.mermaid foreignObject {
-    overflow: visible !important;
-}
-
-.mermaid foreignObject > div {
-    text-align: center !important;
-    display: block !important;
-}
-
-/* Force all label divs and spans to center */
-.mermaid .label > div,
-.mermaid .label > span,
-.mermaid .nodeLabel > div,
-.mermaid .nodeLabel > span {
-    text-align: center !important;
-}
-
-/* Mermaid text styling - clean, readable fonts */
-.mermaid text {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
 }
 
 /* Mermaid labels */
