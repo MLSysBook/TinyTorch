@@ -280,7 +280,7 @@ python rosenblatt_forward.py  # Uses YOUR implementation!
 
 **Current status:**
 - Students can work through modules individually
-- NBGrader integration coming soon for automated grading
+- [NBGrader](https://nbgrader.readthedocs.io/) integration coming soon for automated grading
 - Instructor tooling under development
 
 **📖 See [Classroom Use Guide](usage-paths/classroom-use.md)** for details.

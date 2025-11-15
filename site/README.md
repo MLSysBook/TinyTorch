@@ -11,7 +11,7 @@ This directory contains the TinyTorch course content built with [Jupyter Book](h
 ### Option 1: HTML (Default Website)
 
 ```bash
-cd book
+cd site
 jupyter-book build .
 ```
 
@@ -22,7 +22,7 @@ Output: `_build/html/index.html`
 No LaTeX installation required!
 
 ```bash
-cd book
+cd site
 make install-pdf    # Install dependencies
 make pdf-simple     # Build PDF
 ```
@@ -34,7 +34,7 @@ Output: `_build/tinytorch-course.pdf`
 Requires LaTeX installation (texlive, mactex, etc.)
 
 ```bash
-cd book
+cd site
 make pdf
 ```
 
@@ -71,7 +71,7 @@ See **[PDF_BUILD_GUIDE.md](PDF_BUILD_GUIDE.md)** for:
 ## 🏗️ Structure
 
 ```
-book/
+site/
 ├── _config.yml              # Jupyter Book configuration
 ├── _toc.yml                 # Table of contents
 ├── chapters/                # Course chapters (01-20)
@@ -113,7 +113,7 @@ Visit: http://localhost:8000
 
 ```bash
 pip install sphinx-autobuild
-sphinx-autobuild book book/_build/html
+sphinx-autobuild site site/_build/html
 ```
 
 ## 🤝 Contributing

@@ -6,7 +6,7 @@
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+![Status](https://img.shields.io/badge/status-alpha-orange.svg)
 
 <!-- Activity Badges -->
 ![Last Commit](https://img.shields.io/github/last-commit/MLSysBook/TinyTorch)
