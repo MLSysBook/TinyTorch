@@ -53,12 +53,23 @@ jobs:
         cd site
         jupyter-book clean . || true
         jupyter-book build .
+        # Ensure .nojekyll exists in build output for GitHub Pages
+        # This prevents Jekyll from processing and ignoring _static/ files
+        if [ -f .nojekyll ]; then
+          cp .nojekyll _build/html/.nojekyll
+          echo "✅ Copied .nojekyll to build output"
+        else
+          touch _build/html/.nojekyll
+          echo "✅ Created .nojekyll in build output"
+        fi
         echo "=== Contents of site after build ==="
         ls -la
         echo "=== Contents of _build (if exists) ==="
         ls -la _build/ || echo "_build doesn't exist"
         echo "=== Contents of _build/html (if exists) ==="
         ls -la _build/html/ || echo "_build/html doesn't exist"
+        echo "=== Verifying .nojekyll exists ==="
+        ls -la _build/html/.nojekyll || echo "⚠️  .nojekyll missing!"
 
     - name: Deploy main site to gh-pages branch (root)
       # Only deploy on main branch pushes (not PRs)
