@@ -15,53 +15,50 @@ Build a complete machine learning (ML) framework from tensors to systems—under
 </p>
 
 ```{raw} html
-<!-- Install Command - Compact Claude Code style -->
-<div style="text-align: center; margin: 1.5rem auto 2rem auto;">
-  <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.375rem; padding: 0.5rem 1rem; font-family: 'Monaco', 'Menlo', 'Courier New', monospace; font-size: 0.875rem; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-    <span style="color: #94a3b8;">$</span> pip install tinytorch <span style="color: #94a3b8; font-style: italic;">(coming soon)</span>
-  </div>
-</div>
-
 <!-- Hero GIF Carousel - Compact Design -->
 <div class="hero-carousel-compact">
   <div class="carousel-track">
     <div class="carousel-item active">
       <div class="gif-preview">
-        <div class="preview-icon">🚀</div>
+        <img src="_static/demos/01-clone-setup.gif" alt="Clone & Setup workflow" loading="lazy" />
+        <div class="preview-fallback">💻</div>
       </div>
       <div class="carousel-text">
-        <h4>Setup & First Run</h4>
-        <p>From zero to ready in 2 minutes</p>
+        <h4>Clone & Setup</h4>
+        <p>git clone → ./setup → tito system doctor</p>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">⚙️</div>
+        <img src="_static/demos/02-build-jupyter.gif" alt="Build in Jupyter workflow" loading="lazy" />
+        <div class="preview-fallback">📓</div>
       </div>
       <div class="carousel-text">
-        <h4>Complete a Module</h4>
-        <p>Build → Test → Ship workflow</p>
+        <h4>Build in Jupyter</h4>
+        <p>tito module start 01 → Code → Test inline</p>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">🏆</div>
+        <img src="_static/demos/03-export-tito.gif" alt="Export with TITO workflow" loading="lazy" />
+        <div class="preview-fallback">🛠️</div>
       </div>
       <div class="carousel-text">
-        <h4>Run a Milestone</h4>
-        <p>Your code recreates ML history</p>
+        <h4>Export with TITO</h4>
+        <p>tito module complete → Your code becomes tinytorch/</p>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">💡</div>
+        <img src="_static/demos/04-validate-history.gif" alt="Validate with History workflow" loading="lazy" />
+        <div class="preview-fallback">🏆</div>
       </div>
       <div class="carousel-text">
-        <h4>The "Aha!" Moment</h4>
-        <p>You built this, not imported it</p>
+        <h4>Validate with History</h4>
+        <p>tito milestone run 03 → 1986 MLP uses YOUR code</p>
       </div>
     </div>
   </div>
