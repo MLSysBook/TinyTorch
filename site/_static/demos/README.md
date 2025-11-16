@@ -40,23 +40,26 @@ terminalizer --version
 
 ### Configuration
 
-All configs use:
+All demo configs inherit settings from `base-config.yml`:
 - **Dimensions:** 120 columns × 30 rows (wider format fills carousel nicely)
 - **Theme:** Vibrant color scheme with good contrast
 - **Font:** Monaco/Lucida Console monospace at 12px
 - **Quality:** 100% for crisp, clean output
 
+**Note:** Terminalizer doesn't support config inheritance. `base-config.yml` serves as the reference/source of truth. To change styling across all demos, update `base-config.yml` then manually sync to individual `*.yml` files.
+
 ## Files
 
 ```
 site/_static/demos/
-├── 01-clone-setup.yml          # Terminalizer config: Clone & Setup
+├── base-config.yml             # Shared config (source of truth for styling)
+├── 01-clone-setup.yml          # Demo config: Clone & Setup
 ├── 01-clone-setup.gif          # Generated GIF
-├── 02-build-jupyter.yml        # Terminalizer config: Build in Jupyter
+├── 02-build-jupyter.yml        # Demo config: Build in Jupyter
 ├── 02-build-jupyter.gif        # Generated GIF
-├── 03-export-tito.yml          # Terminalizer config: Export with TITO
+├── 03-export-tito.yml          # Demo config: Export with TITO
 ├── 03-export-tito.gif          # Generated GIF
-├── 04-validate-history.yml     # Terminalizer config: Validate with History
+├── 04-validate-history.yml     # Demo config: Validate with History
 ├── 04-validate-history.gif     # Generated GIF
 ├── render-all.sh               # Script to regenerate all GIFs
 └── README.md                   # This file
