@@ -1,0 +1,44 @@
+#!/bin/bash
+# Compile TinyTorch LaTeX paper to PDF
+
+cd "$(dirname "$0")"
+
+# Check if pdflatex is available
+if ! command -v pdflatex &> /dev/null; then
+    echo "Error: pdflatex not found"
+    echo "Please install MacTeX: brew install --cask mactex"
+    echo "Or install BasicTeX: brew install --cask basictex"
+    exit 1
+fi
+
+echo "Compiling paper.tex..."
+
+# First pass
+pdflatex -interaction=nonstopmode paper.tex
+
+# BibTeX pass
+if command -v bibtex &> /dev/null; then
+    bibtex paper
+fi
+
+# Second pass (resolve references)
+pdflatex -interaction=nonstopmode paper.tex
+
+# Third pass (final cleanup)
+pdflatex -interaction=nonstopmode paper.tex
+
+# Check if PDF was created
+if [ -f paper.pdf ]; then
+    echo "✓ PDF created successfully: paper.pdf"
+    echo "✓ Opening PDF..."
+    open paper.pdf
+else
+    echo "✗ PDF compilation failed"
+    echo "Check paper.log for errors"
+    exit 1
+fi
+
+# Clean up auxiliary files (optional)
+# rm -f paper.aux paper.log paper.bbl paper.blg paper.out
+
+echo "✓ Compilation complete!"
