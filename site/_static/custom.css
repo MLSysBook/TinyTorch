@@ -1030,8 +1030,8 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 .carousel-track {
     position: relative;
     width: 100%;
-    height: 410px;
-    overflow: hidden;
+    min-height: 500px;
+    overflow: visible;
 }
 
 .carousel-item {
@@ -1104,10 +1104,12 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 .carousel-text {
     text-align: center;
     width: 100%;
+    margin-top: 1rem;
+    padding: 0 1rem;
 }
 
 .carousel-text h4 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
@@ -1115,10 +1117,11 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 }
 
 .carousel-text p {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #64748b;
     margin: 0;
     line-height: 1.6;
+    font-family: 'Monaco', 'Menlo', monospace;
 }
 
 .carousel-nav {
@@ -1209,19 +1212,20 @@ html[data-theme="dark"] .indicator.active {
     }
 
     .gif-preview {
-        height: 250px;
+        height: auto;
     }
 
     .carousel-text h4 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
     .carousel-text p {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
     }
 
     .carousel-track {
-        height: 350px;
+        min-height: 400px;
+        overflow: visible;
     }
 }
 
