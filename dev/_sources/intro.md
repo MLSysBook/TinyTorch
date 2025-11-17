@@ -1,10 +1,16 @@
 <!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework"
      for clearer value proposition and action-oriented messaging -->
-<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 1rem 0; font-weight: 700;">
+<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework
 </h1>
 
-<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
+<p style="text-align: center; margin: 0 0 1.5rem 0;">
+<a href="https://mlsysbook.ai" target="_blank" class="textbook-link" style="color: #64748b; font-size: 0.95rem; text-decoration: none; border-bottom: 1px solid #cbd5e1; transition: all 0.2s ease;">
+Hands-on labs for the <span style="font-weight: 600; color: #475569;">Machine Learning Systems</span> textbook
+</a>
+</p>
+
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 1.5rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 
@@ -15,72 +21,47 @@ Build a complete machine learning (ML) framework from tensors to systems—under
 </p>
 
 ```{raw} html
-<!-- Install Command - Compact Claude Code style -->
-<div style="text-align: center; margin: 1.5rem auto 2rem auto;">
-  <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.375rem; padding: 0.5rem 1rem; font-family: 'Monaco', 'Menlo', 'Courier New', monospace; font-size: 0.875rem; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-    <span style="color: #94a3b8;">$</span> pip install tinytorch <span style="color: #94a3b8; font-style: italic;">(coming soon)</span>
-  </div>
-</div>
-
 <!-- Hero GIF Carousel - Compact Design -->
 <div class="hero-carousel-compact">
   <div class="carousel-track">
     <div class="carousel-item active">
       <div class="gif-preview">
-        <div class="preview-icon">🚀</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Setup & First Run</h4>
-        <p>From zero to ready in 2 minutes</p>
+        <img src="_static/demos/01-clone-setup.gif" alt="Clone & Setup workflow" loading="lazy" />
+        <div class="preview-fallback">💻</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">⚙️</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Complete a Module</h4>
-        <p>Build → Test → Ship workflow</p>
+        <img src="_static/demos/02-build-jupyter.gif" alt="Build in Jupyter workflow" loading="lazy" />
+        <div class="preview-fallback">📓</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">🏆</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Run a Milestone</h4>
-        <p>Your code recreates ML history</p>
+        <img src="_static/demos/03-export-tito.gif" alt="Export with TITO workflow" loading="lazy" />
+        <div class="preview-fallback">🛠️</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">💡</div>
-      </div>
-      <div class="carousel-text">
-        <h4>The "Aha!" Moment</h4>
-        <p>You built this, not imported it</p>
+        <img src="_static/demos/04-validate-history.gif" alt="Validate with History workflow" loading="lazy" />
+        <div class="preview-fallback">🏆</div>
       </div>
     </div>
   </div>
 
   <div class="carousel-nav">
     <button class="nav-arrow prev" onclick="moveCarousel(-1)">←</button>
-    <div class="carousel-indicators">
-      <span class="indicator active" onclick="currentSlide(0)"></span>
-      <span class="indicator" onclick="currentSlide(1)"></span>
-      <span class="indicator" onclick="currentSlide(2)"></span>
-      <span class="indicator" onclick="currentSlide(3)"></span>
-    </div>
     <button class="nav-arrow next" onclick="moveCarousel(1)">→</button>
   </div>
 </div>
 ```
 
 <div style="text-align: center; margin: 2rem 0;">
-  <a href="quickstart-guide" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
 </div>

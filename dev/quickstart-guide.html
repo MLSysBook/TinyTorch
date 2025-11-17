@@ -57,6 +57,7 @@
     <script src="_static/togglebutton.js"></script>
     <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/sidebar-link.js"></script>
     <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
@@ -186,7 +187,7 @@ window.addEventListener("load", () => mermaid.run());
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
@@ -228,7 +229,7 @@ window.addEventListener("load", () => mermaid.run());
 <li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
@@ -236,13 +237,16 @@ window.addEventListener("load", () => mermaid.run());
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
@@ -515,7 +519,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsys
 <li><p>Configures TinyTorch in development mode</p></li>
 <li><p>Verifies installation</p></li>
 </ul>
-<p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for detailed workflow and troubleshooting.</p>
+<p>See <a class="reference internal" href="tito/overview.html"><span class="doc std std-doc">TITO CLI Reference</span></a> for detailed workflow and troubleshooting.</p>
 </div>
 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #15803d;">Step 2: Verify Setup</h4>
@@ -524,7 +528,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </pre></div>
 </div>
 <p>You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.</p>
-<p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for verification commands and troubleshooting.</p>
+<p>See <a class="reference internal" href="tito/modules.html"><span class="doc std std-doc">Module Workflow</span></a> for detailed commands and <a class="reference internal" href="tito/troubleshooting.html"><span class="doc std std-doc">Troubleshooting</span></a> if needed.</p>
 </div>
 </section>
 <section id="minute-first-module-walkthrough">
@@ -653,8 +657,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <p><strong>Master the Workflow:</strong></p>
 <ul class="simple">
 <li><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle</p></li>
-<li><p>See <a class="reference internal" href="tito-essentials.html"><span class="doc std std-doc">Essential Commands</span></a> for complete TITO command reference</p></li>
-<li><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete development cycle</p></li>
+<li><p>See <a class="reference internal" href="tito/overview.html"><span class="doc std std-doc">TITO CLI Reference</span></a> for complete command reference</p></li>
 </ul>
 <p><strong>For Instructors:</strong></p>
 <ul class="simple">
@@ -681,7 +684,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Production ML Systems</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">You've proven you can build ML components from scratch. Time to keep going!</p>
 <a href="chapters/03-activations.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">Continue Building →</a>
-<a href="tito-essentials.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Master Commands →</a>
+<a href="tito/overview.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">TITO CLI Reference →</a>
 </div>
 <hr class="docutils" />
 <p><strong>What makes TinyTorch different:</strong> You’re not just learning <em>about</em> neural networks—you’re building them from fundamental mathematical operations. Every line of code you write builds toward complete ML systems mastery.</p>

@@ -57,6 +57,7 @@
     <script src="_static/togglebutton.js"></script>
     <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/sidebar-link.js"></script>
     <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
@@ -187,7 +188,7 @@ window.addEventListener("load", () => mermaid.run());
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
@@ -229,7 +230,7 @@ window.addEventListener("load", () => mermaid.run());
 <li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
@@ -237,13 +238,16 @@ window.addEventListener("load", () => mermaid.run());
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
@@ -481,10 +485,15 @@ document.write(`
                   
   <!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework"
      for clearer value proposition and action-oriented messaging -->
-<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 1rem 0; font-weight: 700;">
+<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework
 </h1>
-<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
+<p style="text-align: center; margin: 0 0 1.5rem 0;">
+<a href="https://mlsysbook.ai" target="_blank" class="textbook-link" style="color: #64748b; font-size: 0.95rem; text-decoration: none; border-bottom: 1px solid #cbd5e1; transition: all 0.2s ease;">
+Hands-on labs for the <span style="font-weight: 600; color: #475569;">Machine Learning Systems</span> textbook
+</a>
+</p>
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 1.5rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 <!-- Enhanced description: Added "machine learning (ML)" clarification and "under the hood"
@@ -492,69 +501,44 @@ Don't just import it. Build it.
 <p style="text-align: center; font-size: 1.2rem; margin: 0 auto 2rem auto; max-width: 800px; color: #374151;">
 Build a complete machine learning (ML) framework from tensors to systems—understand how PyTorch, TensorFlow, and JAX really work under the hood.
 </p>
-<!-- Install Command - Compact Claude Code style -->
-<div style="text-align: center; margin: 1.5rem auto 2rem auto;">
-  <div style="display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.375rem; padding: 0.5rem 1rem; font-family: 'Monaco', 'Menlo', 'Courier New', monospace; font-size: 0.875rem; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-    <span style="color: #94a3b8;">$</span> pip install tinytorch <span style="color: #94a3b8; font-style: italic;">(coming soon)</span>
-  </div>
-</div>
-
 <!-- Hero GIF Carousel - Compact Design -->
 <div class="hero-carousel-compact">
   <div class="carousel-track">
     <div class="carousel-item active">
       <div class="gif-preview">
-        <div class="preview-icon">🚀</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Setup & First Run</h4>
-        <p>From zero to ready in 2 minutes</p>
+        <img src="_static/demos/01-clone-setup.gif" alt="Clone & Setup workflow" loading="lazy" />
+        <div class="preview-fallback">💻</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">⚙️</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Complete a Module</h4>
-        <p>Build → Test → Ship workflow</p>
+        <img src="_static/demos/02-build-jupyter.gif" alt="Build in Jupyter workflow" loading="lazy" />
+        <div class="preview-fallback">📓</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">🏆</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Run a Milestone</h4>
-        <p>Your code recreates ML history</p>
+        <img src="_static/demos/03-export-tito.gif" alt="Export with TITO workflow" loading="lazy" />
+        <div class="preview-fallback">🛠️</div>
       </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
-        <div class="preview-icon">💡</div>
-      </div>
-      <div class="carousel-text">
-        <h4>The "Aha!" Moment</h4>
-        <p>You built this, not imported it</p>
+        <img src="_static/demos/04-validate-history.gif" alt="Validate with History workflow" loading="lazy" />
+        <div class="preview-fallback">🏆</div>
       </div>
     </div>
   </div>
 
   <div class="carousel-nav">
     <button class="nav-arrow prev" onclick="moveCarousel(-1)">←</button>
-    <div class="carousel-indicators">
-      <span class="indicator active" onclick="currentSlide(0)"></span>
-      <span class="indicator" onclick="currentSlide(1)"></span>
-      <span class="indicator" onclick="currentSlide(2)"></span>
-      <span class="indicator" onclick="currentSlide(3)"></span>
-    </div>
     <button class="nav-arrow next" onclick="moveCarousel(1)">→</button>
   </div>
 </div><div style="text-align: center; margin: 2rem 0;">
-  <a href="quickstart-guide" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
 </div>
