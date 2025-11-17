@@ -25,7 +25,6 @@ Build a complete machine learning (ML) framework from tensors to systems—under
       </div>
       <div class="carousel-text">
         <h4>Clone & Setup</h4>
-        <p>git clone → ./setup → tito system doctor</p>
       </div>
     </div>
 
@@ -36,7 +35,6 @@ Build a complete machine learning (ML) framework from tensors to systems—under
       </div>
       <div class="carousel-text">
         <h4>Build in Jupyter</h4>
-        <p>tito module start 01 → Code → Test inline</p>
       </div>
     </div>
 
@@ -47,7 +45,6 @@ Build a complete machine learning (ML) framework from tensors to systems—under
       </div>
       <div class="carousel-text">
         <h4>Export with TITO</h4>
-        <p>tito module complete → Your code becomes tinytorch/</p>
       </div>
     </div>
 
@@ -58,7 +55,6 @@ Build a complete machine learning (ML) framework from tensors to systems—under
       </div>
       <div class="carousel-text">
         <h4>Validate with History</h4>
-        <p>tito milestone run 03 → 1986 MLP uses YOUR code</p>
       </div>
     </div>
   </div>
