@@ -7,7 +7,7 @@ config:
   cwd: /tmp
   env:
     recording: true
-  cols: 160
+  cols: 100
   rows: 24
   repeat: 0
   quality: 100
@@ -29,7 +29,7 @@ config:
       opacity: 0.9
   cursorStyle: block
   fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
-  fontSize: 12
+  fontSize: 14
   lineHeight: 1
   letterSpacing: 0
   theme:

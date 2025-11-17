@@ -2,8 +2,8 @@
 # This file contains common settings used across all workflow demos
 
 config:
-  # Terminal dimensions - wider format for carousel
-  cols: 160
+  # Terminal dimensions - optimized for carousel
+  cols: 100
   rows: 24
 
   # Quality and performance
@@ -31,7 +31,7 @@ config:
   # Cursor and font settings
   cursorStyle: block
   fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
-  fontSize: 12
+  fontSize: 14
   lineHeight: 1
   letterSpacing: 0
 
