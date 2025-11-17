@@ -105,27 +105,27 @@ records:
   - delay: 600
     content: "\e[1;36m╭──────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m🔍 Checking prerequisites...\e[0m                            \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m🔍 Checking prerequisites...                                                                    \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 01: Tensor\e[0m                                    \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 01: Tensor                                                                             \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 02: Activations\e[0m                               \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 02: Activations                                                                        \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 03: Layers\e[0m                                    \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 03: Layers                                                                             \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 04: Losses\e[0m                                    \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 04: Losses                                                                             \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 05: Autograd\e[0m                                  \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 05: Autograd                                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 06: Optimizers\e[0m                                \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 06: Optimizers                                                                         \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Module 07: Training\e[0m                                  \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Module 07: Training                                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m╰──────────────────────────────────────────────────────────────────────────────────────────────────╯\e[0m\r\n"
   - delay: 800
@@ -133,15 +133,15 @@ records:
   - delay: 600
     content: "\e[1;36m╭──────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m📊 Dataset:\e[0m MNIST (60k train, 10k test)                 \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m📊 Dataset: MNIST (60k train, 10k test)                                                         \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m🏗️  Model:\e[0m 784 → 128 → 64 → 10                          \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m🏗️  Model: 784 → 128 → 64 → 10                                                                 \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m⚙️  Using:\e[0m YOUR TinyTorch implementation                \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m⚙️  Using: YOUR TinyTorch implementation                                                        \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m╰──────────────────────────────────────────────────────────────────────────────────────────────────╯\e[0m\r\n"
   - delay: 800
@@ -181,13 +181,13 @@ records:
   - delay: 600
     content: "\e[1;36m╭──────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Test Accuracy: 96.3%\e[0m                                 \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Test Accuracy: 96.3%                                                                          \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m✅ Threshold Met: >95% (1986 baseline)\e[0m                 \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  ✅ Threshold Met: >95% (1986 baseline)                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m╰──────────────────────────────────────────────────────────────────────────────────────────────────╯\e[0m\r\n"
   - delay: 800
@@ -195,37 +195,37 @@ records:
   - delay: 600
     content: "\e[1;36m╭──────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m🎉 Milestone 03: MLP (1986) COMPLETE!\e[0m                  \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m🎉 Milestone 03: MLP (1986) COMPLETE!                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  You've recreated Rumelhart's breakthrough using         \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  You've recreated Rumelhart's breakthrough using                                                 \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  YOUR OWN implementation of:                              \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  YOUR OWN implementation of:                                                                     \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Tensor operations                                    \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Tensor operations                                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Activation functions                                 \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Activation functions                                                                        \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Neural network layers                                \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Neural network layers                                                                       \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Backpropagation                                      \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Backpropagation                                                                             \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Gradient descent optimization                        \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Gradient descent optimization                                                               \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32m💡 You didn't import it. You BUILT it.\e[0m                 \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  💡 You didn't import it. You BUILT it.                                                          \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33mNext milestone:\e[0m tito milestone run 04                  \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33mNext milestone: tito milestone run 04                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;90m(CNN Revolution - 1998)\e[0m                                \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;90m(CNN Revolution - 1998)                                                                         \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m╰──────────────────────────────────────────────────────────────────────────────────────────────────╯\e[0m\r\n"
   - delay: 2000

@@ -103,25 +103,25 @@ records:
   - delay: 600
     content: "\e[1;36m╭──────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m📓 Opening module in Jupyter Lab...\e[0m                     \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m📓 Opening module in Jupyter Lab...                                                             \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;32mBuild the foundation:\e[0m                                   \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  Build the foundation:                                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Implement Tensor class                              \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Implement Tensor class                                                                      \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Array operations (add, mul, reshape)               \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Array operations (add, mul, reshape)                                                        \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m    • Broadcasting & indexing                            \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m    • Broadcasting & indexing                                                                     \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;36mTest inline, iterate fast 🚀\e[0m                            \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  Test inline, iterate fast 🚀                                                                    \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m                                                           \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m                                                                                                  \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m╰──────────────────────────────────────────────────────────────────────────────────────────────────╯\e[0m\r\n"
   - delay: 800
@@ -141,11 +141,11 @@ records:
   - delay: 400
     content: "\e[1;36m┌─────────────────────────────────────────────────────────┐\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m💡 Tip:\e[0m Code → Run tests → See results instantly   \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m💡 Tip: Code → Run tests → See results instantly                                                \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m💡 NBGrader:\e[0m Automated feedback as you code       \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m💡 NBGrader: Automated feedback as you code                                                     \e[1;36m│\e[0m\r\n"
   - delay: 100
-    content: "\e[1;36m│\e[0m  \e[1;33m💡 When done:\e[0m tito module complete 01              \e[1;36m│\e[0m\r\n"
+    content: "\e[1;36m│\e[0m  \e[1;33m💡 When done: tito module complete 01                                                           \e[1;36m│\e[0m\r\n"
   - delay: 100
     content: "\e[1;36m└─────────────────────────────────────────────────────────┘\e[0m\r\n"
   - delay: 2000
