@@ -3,8 +3,8 @@
 
 config:
   # Terminal dimensions - wider format for carousel
-  cols: 120
-  rows: 30
+  cols: 160
+  rows: 24
 
   # Quality and performance
   quality: 100

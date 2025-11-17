@@ -7,8 +7,8 @@ config:
   cwd: /tmp
   env:
     recording: true
-  cols: 120
-  rows: 30
+  cols: 160
+  rows: 24
   repeat: 0
   quality: 100
   frameDelay: auto
@@ -57,7 +57,7 @@ records:
   - delay: 500
     content: "\e[?2004h"
   - delay: 100
-    content: "$ "
+    content: "\e[1;32m$\e[0m "
   - delay: 800
     content: "g"
   - delay: 100
@@ -179,9 +179,9 @@ records:
   - delay: 200
     content: "Resolving deltas: 100% (1547/1547), done.\r\n"
   - delay: 800
-    content: "\e[?2004h$ "
+    content: "\e[?2004h\e[1;32m$\e[0m "
   - delay: 400
-    content: "c"
+    content: "\e[1;36mc\e[0m"
   - delay: 100
     content: "d"
   - delay: 100

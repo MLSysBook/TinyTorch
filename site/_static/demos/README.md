@@ -41,7 +41,7 @@ terminalizer --version
 ### Configuration
 
 All demo configs inherit settings from `base-config.yml`:
-- **Dimensions:** 120 columns × 30 rows (wider format fills carousel nicely)
+- **Dimensions:** 160 columns × 24 rows (wider format fills carousel nicely)
 - **Theme:** Vibrant color scheme with good contrast
 - **Font:** Monaco/Lucida Console monospace at 12px
 - **Quality:** 100% for crisp, clean output
