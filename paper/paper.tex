@@ -96,7 +96,7 @@
 
 % Abstract - REVISED: Reframed as design contribution
 \begin{abstract}
-Machine learning education traditionally focuses on using frameworks like PyTorch and TensorFlow, leaving students unprepared for the systems-level challenges of ML engineering: memory management, performance optimization, and production deployment. We present \textbf{TinyTorch}, a pure-Python educational framework \emph{designed to} teach ML as systems engineering from first principles. TinyTorch introduces two novel pedagogical contributions: (1) \textbf{progressive disclosure via monkey-patching}, where dormant features in the \texttt{Tensor} class activate across modules to enable early interface exposure while managing cognitive load, and (2) \textbf{systems-first integration}, where memory profiling, FLOPs analysis, and computational complexity are taught from Module 01 rather than advanced electives. Our 4-phase curriculum (Foundation $\rightarrow$ Training Systems $\rightarrow$ Modern Architectures $\rightarrow$ Production Systems) spans 20 modules and 60--80 hours, taking students from tensor operations to production-ready CNNs validated against historical milestones like CIFAR-10 classification at 75\%+ accuracy. TinyTorch includes automated assessment via NBGrader and comprehensive testing infrastructure, enabling adoption by educators and empirical evaluation by researchers. \emph{This paper presents a design contribution}---the pedagogical patterns and curriculum architecture---with empirical classroom validation planned for Fall 2025. The complete framework is open-source and available for community use.
+Machine learning education traditionally focuses on using frameworks like PyTorch and TensorFlow, leaving students unprepared for the systems-level challenges of ML engineering: memory management, performance optimization, and production deployment. We present \textbf{TinyTorch}, a pure-Python educational framework \emph{designed to} teach ML as systems engineering from first principles. TinyTorch introduces three novel pedagogical contributions: (1) \textbf{progressive disclosure via monkey-patching}, where dormant features in the \texttt{Tensor} class activate across modules to enable early interface exposure while managing cognitive load, (2) \textbf{systems-first integration}, where memory profiling, FLOPs analysis, and computational complexity are taught from Module 01 rather than advanced electives, and (3) \textbf{historical milestone validation}, where students recreate 70 years of ML breakthroughs (1957 Perceptron through 2024 production systems) using exclusively their own code, providing objective correctness validation and intrinsic motivation. Our 4-phase curriculum spans 20 modules and 60--80 hours, building a production-organized package (\texttt{tinytorch.nn.Conv2d}) with automated assessment infrastructure (NBGrader). \emph{This paper presents a design contribution}---the pedagogical patterns and curriculum architecture---with empirical classroom validation planned for Fall 2025. The complete framework is open-source and available for community use.
 \end{abstract}
 
 \noindent\textbf{Keywords:} machine learning education, systems education, educational frameworks, ML engineering, progressive disclosure, autograd, constructionism, design-based research
@@ -488,6 +488,96 @@ CIFAR-10 epoch (LeNet) & 12 min & 8 sec & 90$\times$ \\
 \end{table}
 
 This slowness is pedagogically valuable (productive failure~\cite{kapur2008productive}): students experience performance problems before learning optimizations, making vectorization meaningful rather than abstract.
+
+\subsection{Historical Milestone Validation}
+\label{subsec:milestones}
+
+TinyTorch validates curriculum correctness through \textbf{historical milestone recreation}: students recreate seminal ML breakthroughs spanning 1957--2024 using exclusively their own implemented code. Unlike traditional programming assignments with unit tests, milestones require students to achieve historical accuracy benchmarks, validating that implementations work correctly on real tasks.
+
+\subsubsection{Milestone System Design}
+
+Each milestone:
+\begin{enumerate}
+\item \textbf{Historical grounding}: Recreates actual breakthrough (Rosenblatt's Perceptron, LeCun's LeNet, Vaswani's Transformer)
+\item \textbf{Zero external dependencies}: Uses \emph{only} student-implemented TinyTorch code (no PyTorch/TensorFlow)
+\item \textbf{Objective validation}: Success measured by achieving task-appropriate performance
+\item \textbf{Architectural comparison}: Demonstrates why new architecture improved over predecessors
+\end{enumerate}
+
+The curriculum includes 6 milestones:
+
+\begin{enumerate}
+\item \textbf{1957 Perceptron} (after Module 04): Train Rosenblatt's original single-layer perceptron on linearly separable classification
+\item \textbf{1969 XOR Solution} (after Module 07): Solve Minsky's ``impossible'' XOR problem with multi-layer perceptrons, proving critics wrong
+\item \textbf{1986 MLP Revival} (after Module 08): Handwritten digit recognition demonstrating backpropagation's power
+\item \textbf{1998 CNN Revolution} (after Module 09): Image classification showing convolutional architectures' advantage over MLPs on same dataset
+\item \textbf{2017 Transformer Era} (after Module 13): Language generation with attention-based architecture
+\item \textbf{2024 Systems Age} (after Module 20): Production-optimized system demonstrating quantization, compression, and acceleration
+\end{enumerate}
+
+\subsubsection{Pedagogical Impact}
+
+Historical milestones transform abstract exercises into meaningful achievements. Rather than ``implement this function,'' students ``recreate the breakthrough that proved Minsky wrong about neural networks.'' Early pilot feedback suggests this narrative framing increases intrinsic motivation: participants reported experiencing milestones as ``unlocking achievements'' and ``proving historical results myself.''
+
+Milestones instantiate Bruner's spiral curriculum~\cite{bruner1960process}: students train neural networks 6 times with increasing sophistication. The XOR milestone revisits Perceptron training with added hidden layers. The CNN milestone revisits digit classification with spatial operations. Each iteration deepens understanding while maintaining motivation through historical progression.
+
+\subsubsection{Correctness Validation}
+
+Milestones serve dual purpose: pedagogical motivation \emph{and} implementation validation. If student-implemented CNNs successfully classify natural images, convolution, pooling, and backpropagation all work correctly. If transformer generation produces coherent text, attention mechanisms, positional embeddings, and autoregressive sampling all function properly. This objective validation complements unit tests: tests verify individual functions work, milestones verify the complete system works on real tasks.
+
+The architectural comparison requirement reinforces learning. Milestone 4 requires training both MLP and CNN on identical CIFAR-10 data, demonstrating CNNs' architectural advantage. Students don't just read ``CNNs work better''---they measure the improvement themselves, understanding \emph{why} spatial operations help through direct experimentation.
+
+\subsection{Automated Assessment Infrastructure}
+
+TinyTorch integrates NBGrader~\cite{blank2019nbgrader} for scalable automated assessment. Each module contains:
+
+\begin{itemize}
+\item \textbf{Solution cells}: Scaffolded implementations with grade metadata
+\item \textbf{Test cells}: Locked autograded tests preventing modification
+\item \textbf{Immediate feedback}: Students validate correctness locally before submission
+\item \textbf{Point allocation}: Reflects pedagogical priorities (Module 05 Autograd: 100 points; Module 01 Tensor: 60 points)
+\end{itemize}
+
+This infrastructure enables deployment in MOOCs and large classrooms where manual grading proves infeasible. Instructors configure NBGrader to collect submissions, execute tests in sandboxed environments, and generate grade reports automatically.
+
+\textbf{Important caveat}: NBGrader scaffolding exists but remains unvalidated at scale (\Cref{sec:discussion}). Automated assessment validity requires empirical investigation: Do tests measure conceptual understanding or syntax correctness? We scope this as ``curriculum with autograding infrastructure'' rather than ``validated assessment system.''
+
+\subsection{Production Package Organization}
+
+Unlike tutorial-style notebooks creating isolated code, TinyTorch modules export to production package structure matching PyTorch's API organization. Module 01 exports to \texttt{tinytorch.core.tensor}, Module 09 to \texttt{tinytorch.nn.conv}, enabling professional import patterns:
+
+\begin{lstlisting}[caption={Student code becomes importable package},label=lst:package-imports,float=t]
+# After completing Module 09, students write:
+from tinytorch.nn import Conv2d, MaxPool2d
+from tinytorch.core import Tensor
+
+# Their implementations work like PyTorch:
+conv = Conv2d(in_channels=3, out_channels=16,
+              kernel_size=3, padding=1)
+x = Tensor(np.random.randn(32, 3, 32, 32))
+out = conv(x)  # Student-implemented convolution!
+\end{lstlisting}
+
+This design bridges educational and professional contexts. Students aren't ``solving exercises''---they're building a framework they could ship. The package structure reinforces systems thinking: understanding how \texttt{torch.nn.Conv2d} relates to \texttt{torch.Tensor} requires grasping module organization, not just individual algorithms.
+
+Export happens via nbdev~\cite{howard2020fastai} directives (\texttt{\#| default\_exp core.tensor}) embedded in module notebooks. Students work in Jupyter's interactive environment while TinyTorch maintains source-of-truth in version-controlled Python files, enabling professional development workflows (Git, code review, CI/CD) within pedagogical context.
+
+\subsection{Explicit Knowledge Integration}
+
+Every module begins with a \textbf{Connection Map} showing prerequisite modules, current module focus, and enabled future capabilities. This addresses Collins et al.'s cognitive apprenticeship~\cite{collins1989cognitive} by making expert knowledge structures visible:
+
+\begin{lstlisting}[caption={Module 05 Connection Map},label=lst:connection-map,float=t]
+## Prerequisites & Progress
+You've Built: Tensor, activations, layers, losses
+You'll Build: Autograd system
+You'll Enable: Training loops, optimizers
+
+Connection Map:
+Modules 01-04 → Autograd → Training (06-07)
+(forward pass)   (backward)  (learning loops)
+\end{lstlisting}
+
+Connection maps transform isolated modules into coherent curriculum. Students see \emph{why} each module matters before implementation begins, reducing ``I don't see the point'' disengagement. Early feedback suggests these maps help students maintain big-picture understanding while working through implementation details.
 
 \section{Discussion and Limitations}
 \label{sec:discussion}
