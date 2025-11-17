@@ -96,7 +96,7 @@
 
 % Abstract - REVISED: Reframed as design contribution
 \begin{abstract}
-Machine learning education traditionally focuses on using frameworks like PyTorch and TensorFlow, leaving students unprepared for the systems-level challenges of ML engineering: memory management, performance optimization, and production deployment. We present \textbf{TinyTorch}, a pure-Python educational framework \emph{designed to} teach ML as systems engineering from first principles. TinyTorch introduces three novel pedagogical contributions: (1) \textbf{progressive disclosure via monkey-patching}, where dormant features in the \texttt{Tensor} class activate across modules to enable early interface exposure while managing cognitive load, (2) \textbf{systems-first integration}, where memory profiling, FLOPs analysis, and computational complexity are taught from Module 01 rather than advanced electives, and (3) \textbf{historical milestone validation}, where students recreate 70 years of ML breakthroughs (1957 Perceptron through 2024 production systems) using exclusively their own code, providing objective correctness validation and intrinsic motivation. Our 4-phase curriculum spans 20 modules and 60--80 hours, building a production-organized package (\texttt{tinytorch.nn.Conv2d}) with automated assessment infrastructure (NBGrader). \emph{This paper presents a design contribution}---the pedagogical patterns and curriculum architecture---with empirical classroom validation planned for Fall 2025. The complete framework is open-source and available for community use.
+Machine learning education traditionally focuses on using frameworks like PyTorch and TensorFlow, leaving students unprepared for the systems-level challenges of ML engineering: memory management, performance optimization, and production deployment. We present \textbf{TinyTorch}, an educational framework introducing three novel pedagogical patterns for teaching ML systems from first principles: (1) \textbf{progressive disclosure via monkey-patching}---dormant features in the \texttt{Tensor} class activate across modules, enabling early interface exposure while managing cognitive load, (2) \textbf{systems-first integration}---memory profiling, FLOPs analysis, and computational complexity taught from Module 01 rather than deferred to advanced electives, and (3) \textbf{historical milestone validation}---students recreate 70 years of ML breakthroughs (1957 Perceptron $\rightarrow$ 2024 production systems) using exclusively their own code for objective correctness validation and intrinsic motivation. The 20-module curriculum (60--80 hours) builds a production-organized package with automated assessment infrastructure. \emph{This paper presents pedagogical patterns and curriculum design}---not empirical evaluation---with classroom validation planned for Fall 2025. The complete open-source framework enables educators to adopt these patterns and researchers to conduct empirical studies.
 \end{abstract}
 
 \noindent\textbf{Keywords:} machine learning education, systems education, educational frameworks, ML engineering, progressive disclosure, autograd, constructionism, design-based research
@@ -111,6 +111,31 @@ Consider two students who have completed traditional ML coursework. Both can der
 This gap between framework users and systems engineers reflects a deeper pedagogical challenge. Traditional ML curricula treat systems concerns---memory management, computational complexity, performance optimization---as advanced topics relegated to separate ``ML Systems'' electives that students encounter, if at all, in their final undergraduate year. By then, students have formed mental models that divorce ML algorithms from their computational reality. They understand gradients abstractly but not gradient memory footprint. They know attention mechanisms mathematically but not their $O(N^2)$ scaling implications.
 
 Can we teach ML as systems engineering from first principles? Can students learn memory profiling alongside tensor operations, computational complexity alongside convolutions, optimization trade-offs alongside model training? We answer these questions affirmatively through TinyTorch: a complete 20-module curriculum where students build every component of a production ML framework from scratch---from tensors to transformers to optimization---with systems awareness embedded from Module 01 onwards.
+
+\subsection{Is TinyTorch Right for You?}
+
+TinyTorch serves a specific pedagogical niche: transitioning from framework \emph{users} to framework \emph{engineers}. Before committing 60--80 hours, assess fit:
+
+\textbf{You should use TinyTorch if you:}
+\begin{itemize}
+\item Have completed introductory ML (understand what neural networks do)
+\item Want to understand framework internals (how PyTorch/TensorFlow work)
+\item Plan ML systems research or infrastructure engineering careers
+\item Debug production ML systems and need deeper systems knowledge
+\item Completed fast.ai or similar and want next-level understanding
+\end{itemize}
+
+\textbf{You should NOT use TinyTorch if you:}
+\begin{itemize}
+\item Haven't trained neural networks (take CS231n or fast.ai first)
+\item Need GPU/distributed training skills immediately (use PyTorch tutorials)
+\item Want fastest path to building ML applications (use high-level frameworks)
+\item Prefer learning by building projects over understanding internals
+\end{itemize}
+
+\textbf{Course Positioning:} TinyTorch complements algorithm-focused ML courses. Take \emph{after} CS231n (to understand systems), \emph{before} advanced ML systems courses (to build foundation), or \emph{parallel to} production ML roles (to debug effectively).
+
+\textbf{Time Investment:} 60--80 hours over 3--4 weeks (intensive) or 1 semester (5 hours/week). Completion enables deeper PyTorch understanding, production debugging skills, and ML systems research foundation.
 
 \subsection{Our Approach: Systems-First Framework Construction}
 
@@ -350,6 +375,40 @@ Students transition from ``models that train'' to ``systems that deploy.'' Quant
 
 \textbf{Total Learning Investment}: 60--80 hours over one semester at 5 hours/week.
 
+\subsection{Course Integration Models}
+\label{subsec:integration}
+
+TinyTorch supports three deployment models for different institutional contexts:
+
+\textbf{Model 1: Standalone 4-Credit Course (14 weeks)}
+\begin{itemize}
+\item \textbf{Structure}: 2 lectures/week (theory, design patterns) + 1 lab/week (implementation)
+\item \textbf{Coverage}: All 20 modules + 6 milestones
+\item \textbf{Assessment}: Weekly module submissions (NBGrader), 3 milestone checkpoints (Perceptron, MNIST, CIFAR-10), final capstone project
+\item \textbf{Prerequisites}: CS231n or equivalent ML course, intermediate Python
+\item \textbf{Target}: Junior/senior elective for students pursuing ML systems careers
+\end{itemize}
+
+\textbf{Model 2: Half-Semester Module in Existing ML Course (7 weeks)}
+\begin{itemize}
+\item \textbf{Structure}: Replace ``PyTorch tutorial'' weeks with TinyTorch implementation
+\item \textbf{Coverage}: Modules 01--09 (Foundation + Training + CNNs), Milestones 1--4
+\item \textbf{Assessment}: 4 module submissions, 1 milestone (CIFAR-10 CNN)
+\item \textbf{Integration}: Students use TinyTorch for course projects after Module 09
+\item \textbf{Benefit}: Deeper understanding enables better project debugging
+\end{itemize}
+
+\textbf{Model 3: Optional Deep-Dive Track (Self-Paced)}
+\begin{itemize}
+\item \textbf{Structure}: Supplementary materials for motivated students
+\item \textbf{Coverage}: Student-selected modules (e.g., Modules 05, 09, 12 for core concepts)
+\item \textbf{Assessment}: Optional extra credit via milestone completion
+\item \textbf{Use Case}: Honors sections, independent study, grad student preparation
+\item \textbf{Benefit}: Differentiation for students seeking ML engineering roles
+\end{itemize}
+
+\textbf{Instructor Resources Needed}: Lecture slides for Models 1--2 remain future work. Current release provides module notebooks, NBGrader tests, and milestone validation scripts. Instructors adopt Model 3 most readily (no lecture preparation required).
+
 \section{Progressive Disclosure via Monkey-Patching}
 \label{sec:progressive}
 
@@ -583,6 +642,44 @@ Connection maps transform isolated modules into coherent curriculum. Students se
 \label{sec:discussion}
 
 Building TinyTorch revealed insights about systems-first ML education. This section reflects on design lessons, acknowledges scope boundaries honestly, and outlines concrete empirical validation plans.
+
+\subsection{Scope: What's NOT Covered}
+\label{subsec:scope}
+
+TinyTorch prioritizes framework internals understanding over production ML completeness. Critical production skills \textbf{explicitly omitted}:
+
+\textbf{GPU Programming and Hardware Acceleration:}
+\begin{itemize}
+\item CUDA programming (kernel optimization, memory hierarchies, tensor cores)
+\item Mixed precision training (FP16/BF16/INT8 with gradient scaling)
+\item Hardware-specific optimization (TPUs, Apple Neural Engine)
+\end{itemize}
+
+\textbf{Distributed Training:}
+\begin{itemize}
+\item Data parallelism (DistributedDataParallel, gradient synchronization)
+\item Model parallelism (pipeline parallelism, tensor parallelism)
+\item Large-scale training (FSDP, DeepSpeed, Megatron-LM)
+\end{itemize}
+
+\textbf{Production Deployment and Serving:}
+\begin{itemize}
+\item Model compilation (TorchScript, ONNX, TensorRT)
+\item Serving infrastructure (batching, load balancing, latency optimization)
+\item MLOps tooling (experiment tracking, model versioning, A/B testing)
+\end{itemize}
+
+\textbf{Advanced Systems Techniques:}
+\begin{itemize}
+\item Gradient checkpointing (trading computation for memory)
+\item Operator fusion and graph compilation
+\item Flash Attention and memory-efficient attention variants
+\item Dynamic vs static computation graphs
+\end{itemize}
+
+\textbf{Rationale}: These topics require substantial additional complexity (parallel programming, hardware knowledge, deployment infrastructure) orthogonal to framework internals. Students completing TinyTorch should pursue GPU/distributed training through PyTorch tutorials, NVIDIA Deep Learning Institute, or advanced ML systems courses.
+
+\textbf{Positioning}: TinyTorch teaches \emph{framework internals as foundation} for GPU/distributed work, not replacement. Complete production ML engineer preparation requires: TinyTorch (internals) → PyTorch Distributed (GPU/multi-node) → deployment courses (serving) → on-the-job experience.
 
 \subsection{Design Insights}
 
