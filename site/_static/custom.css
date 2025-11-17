@@ -1125,27 +1125,34 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 }
 
 .carousel-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 1rem;
+    z-index: 10;
 }
 
 .nav-arrow {
-    background: #e2e8f0;
+    background: rgba(226, 232, 240, 0.95);
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: #475569;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    pointer-events: auto;
 }
 
 .nav-arrow:hover {
