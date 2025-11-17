@@ -18,6 +18,21 @@ nav.bd-links a[href="intro.html"],
     display: none !important;
 }
 
+/* Textbook link in main content */
+.bd-content p a[href*="mlsysbook.ai"],
+.bd-content p a.textbook-link {
+    color: #64748b;
+    text-decoration: none;
+    border-bottom: 1px solid #cbd5e1;
+    transition: all 0.2s ease;
+}
+
+.bd-content p a[href*="mlsysbook.ai"]:hover,
+.bd-content p a.textbook-link:hover {
+    color: #1e293b;
+    border-bottom-color: #1e293b;
+}
+
 /* Tier card hover effects */
 .tier-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
@@ -1022,6 +1037,7 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
    ============================================ */
 
 .hero-carousel-compact {
+    position: relative;
     max-width: 1100px;
     margin: 2.5rem auto 3rem auto;
     padding: 0 2rem;
@@ -1030,7 +1046,7 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 .carousel-track {
     position: relative;
     width: 100%;
-    min-height: 420px;
+    height: 450px;
     overflow: visible;
 }
 
@@ -1042,6 +1058,7 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
     display: none;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
+    z-index: 1;
 }
 
 .carousel-item.active {
@@ -1125,11 +1142,15 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 }
 
 .carousel-nav {
+    position: absolute;
+    top: 405px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    margin-top: 1rem;
+    z-index: 100;
 }
 
 .nav-arrow {
@@ -1208,25 +1229,67 @@ html[data-theme="dark"] .indicator.active {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    /* Make logo visible and prominent on mobile */
+    .navbar-brand {
+        display: flex !important;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+    .navbar-brand img {
+        max-height: 50px !important;
+        width: auto;
+    }
+
+    /* Ensure main content headings are visible above carousel */
+    .bd-content h1 {
+        font-size: 2rem !important;
+        margin-top: 1rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .bd-content h2 {
+        font-size: 1.5rem !important;
+        margin: 1rem 0 !important;
+    }
+
+    .bd-content > p {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Carousel adjustments */
     .hero-carousel-compact {
         padding: 0 1rem;
+        margin: 1.5rem auto 2rem auto;
     }
 
     .gif-preview {
         height: auto;
+        border-radius: 6px;
     }
 
-    .carousel-text h4 {
-        font-size: 1.25rem;
-    }
-
-    .carousel-text p {
-        font-size: 0.85rem;
+    .gif-preview img {
+        border-radius: 4px;
     }
 
     .carousel-track {
-        min-height: 400px;
+        height: 350px;
         overflow: visible;
+    }
+
+    .carousel-nav {
+        top: 330px;
+    }
+
+    .nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .carousel-item.active {
+        gap: 1rem;
     }
 }
 

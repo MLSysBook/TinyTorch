@@ -1,10 +1,16 @@
 <!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework"
      for clearer value proposition and action-oriented messaging -->
-<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 1rem 0; font-weight: 700;">
+<h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework
 </h1>
 
-<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0 1rem 0; font-weight: 700;">
+<p style="text-align: center; margin: 0 0 1.5rem 0;">
+<a href="https://mlsysbook.ai" target="_blank" class="textbook-link" style="color: #64748b; font-size: 0.95rem; text-decoration: none; border-bottom: 1px solid #cbd5e1; transition: all 0.2s ease;">
+Hands-on labs for the <span style="font-weight: 600; color: #475569;">Machine Learning Systems</span> textbook
+</a>
+</p>
+
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 1.5rem 0 1rem 0; font-weight: 700;">
 Don't just import it. Build it.
 </h2>
 
@@ -23,18 +29,12 @@ Build a complete machine learning (ML) framework from tensors to systems—under
         <img src="_static/demos/01-clone-setup.gif" alt="Clone & Setup workflow" loading="lazy" />
         <div class="preview-fallback">💻</div>
       </div>
-      <div class="carousel-text">
-        <h4>Clone & Setup</h4>
-      </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
         <img src="_static/demos/02-build-jupyter.gif" alt="Build in Jupyter workflow" loading="lazy" />
         <div class="preview-fallback">📓</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Build in Jupyter</h4>
       </div>
     </div>
 
@@ -43,18 +43,12 @@ Build a complete machine learning (ML) framework from tensors to systems—under
         <img src="_static/demos/03-export-tito.gif" alt="Export with TITO workflow" loading="lazy" />
         <div class="preview-fallback">🛠️</div>
       </div>
-      <div class="carousel-text">
-        <h4>Export with TITO</h4>
-      </div>
     </div>
 
     <div class="carousel-item">
       <div class="gif-preview">
         <img src="_static/demos/04-validate-history.gif" alt="Validate with History workflow" loading="lazy" />
         <div class="preview-fallback">🏆</div>
-      </div>
-      <div class="carousel-text">
-        <h4>Validate with History</h4>
       </div>
     </div>
   </div>
@@ -67,7 +61,7 @@ Build a complete machine learning (ML) framework from tensors to systems—under
 ```
 
 <div style="text-align: center; margin: 2rem 0;">
-  <a href="quickstart-guide" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+  <a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 0.875rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
     Start Building in 15 Minutes →
   </a>
 </div>

@@ -18,6 +18,8 @@ config:
     style:
       boxShadow: none
       margin: 0px
+      fontSize: 20px
+      fontWeight: bold
 
   watermark:
     imagePath: null
