@@ -61,17 +61,17 @@ Build a complete machine learning (ML) framework from tensors to systems—under
         <p>tito milestone run 03 → 1986 MLP uses YOUR code</p>
       </div>
     </div>
+  </div>
 
-    <div class="carousel-nav">
-      <button class="nav-arrow prev" onclick="moveCarousel(-1)">←</button>
-      <div class="carousel-indicators">
-        <span class="indicator active" onclick="currentSlide(0)"></span>
-        <span class="indicator" onclick="currentSlide(1)"></span>
-        <span class="indicator" onclick="currentSlide(2)"></span>
-        <span class="indicator" onclick="currentSlide(3)"></span>
-      </div>
-      <button class="nav-arrow next" onclick="moveCarousel(1)">→</button>
+  <div class="carousel-nav">
+    <button class="nav-arrow prev" onclick="moveCarousel(-1)">←</button>
+    <div class="carousel-indicators">
+      <span class="indicator active" onclick="currentSlide(0)"></span>
+      <span class="indicator" onclick="currentSlide(1)"></span>
+      <span class="indicator" onclick="currentSlide(2)"></span>
+      <span class="indicator" onclick="currentSlide(3)"></span>
     </div>
+    <button class="nav-arrow next" onclick="moveCarousel(1)">→</button>
   </div>
 </div>
 ```
