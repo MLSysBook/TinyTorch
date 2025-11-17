@@ -55,6 +55,7 @@ html:
     - _static/wip-banner.js
     - _static/ml-timeline.js
     - _static/hero-carousel.js
+    - _static/sidebar-link.js
   
   # Favicon configuration
   favicon: "_static/favicon.svg"
