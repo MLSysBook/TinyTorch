@@ -29,6 +29,8 @@ class StatusCommand(BaseCommand):
         return "Check status of all modules"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
+        parser.add_argument("--progress", action="store_true", help="Show user progress (modules + milestones) - DEFAULT")
+        parser.add_argument("--files", action="store_true", help="Show file structure and module status")
         parser.add_argument("--details", action="store_true", help="Show detailed file structure")
         parser.add_argument("--metadata", action="store_true", help="Show module metadata information")
         parser.add_argument("--test-status", action="store_true", help="Include test execution status (slower)")
@@ -86,14 +88,137 @@ class StatusCommand(BaseCommand):
 
     def run(self, args: Namespace) -> int:
         console = self.console
-        
+
         # Handle comprehensive analysis mode
         if args.comprehensive:
             return self._run_comprehensive_analysis()
-        
-        # Standard status check mode
+
+        # Handle progress view (default if no flags, or --progress)
+        if not args.files and not args.details and not args.metadata and not args.test_status:
+            return self._run_progress_view()
+
+        if args.progress:
+            return self._run_progress_view()
+
+        # Standard file status check mode
         return self._run_standard_status(args)
     
+    def _run_progress_view(self) -> int:
+        """Show unified user progress view (modules + milestones)."""
+        console = self.console
+        import json
+        from datetime import datetime
+
+        # Load progress data
+        progress_file = Path(".tito") / "progress.json"
+        milestones_file = Path(".tito") / "milestones.json"
+
+        # Load module progress
+        if progress_file.exists():
+            progress_data = json.loads(progress_file.read_text())
+            completed_modules = progress_data.get("completed_modules", [])
+            completion_dates = progress_data.get("completion_dates", {})
+        else:
+            completed_modules = []
+            completion_dates = {}
+
+        # Load milestone achievements
+        if milestones_file.exists():
+            milestones_data = json.loads(milestones_file.read_text())
+            completed_milestones = milestones_data.get("completed_milestones", [])
+            milestone_dates = milestones_data.get("completion_dates", {})
+        else:
+            completed_milestones = []
+            milestone_dates = {}
+
+        # Calculate progress percentages
+        total_modules = 20
+        total_milestones = 6
+        modules_percent = int((len(completed_modules) / total_modules) * 100)
+        milestones_percent = int((len(completed_milestones) / total_milestones) * 100)
+
+        # Create summary panel
+        summary_text = Text()
+        summary_text.append(f"📦 Modules Completed: ", style="bold")
+        summary_text.append(f"{len(completed_modules)}/{total_modules} ({modules_percent}%)\n", style="cyan")
+        summary_text.append(f"🏆 Milestones Achieved: ", style="bold")
+        summary_text.append(f"{len(completed_milestones)}/{total_milestones} ({milestones_percent}%)\n\n", style="magenta")
+
+        # Last activity
+        all_dates = list(completion_dates.values()) + list(milestone_dates.values())
+        if all_dates:
+            latest_date = max(all_dates)
+            summary_text.append("📍 Last Activity: ", style="bold")
+            summary_text.append(f"{latest_date}\n", style="dim")
+
+        console.print(Panel(
+            summary_text,
+            title="📊 TinyTorch Progress",
+            border_style="bright_cyan"
+        ))
+
+        # Module Progress Table
+        if completed_modules:
+            console.print("\n[bold]Module Progress:[/bold]")
+            for i in range(1, total_modules + 1):
+                mod_num = i
+                if mod_num in completed_modules:
+                    module_name = self._get_module_name(mod_num)
+                    console.print(f"  [green]✅ {mod_num:02d} {module_name}[/green]")
+                elif i <= len(completed_modules) + 3:  # Show next few modules
+                    module_name = self._get_module_name(mod_num)
+                    console.print(f"  [dim]🔒 {mod_num:02d} {module_name}[/dim]")
+
+        # Milestone Achievements
+        if completed_milestones or (completed_modules and len(completed_modules) >= 1):
+            console.print("\n[bold]Milestone Achievements:[/bold]")
+            milestone_names = {
+                "01": "Perceptron (1957)",
+                "02": "Backpropagation (1986)",
+                "03": "MLP Revival (1986)",
+                "04": "CNN Revolution (1998)",
+                "05": "Transformer Era (2017)",
+                "06": "MLPerf (2018)"
+            }
+            for mid in ["01", "02", "03", "04", "05", "06"]:
+                if mid in completed_milestones:
+                    console.print(f"  [magenta]✅ {mid} - {milestone_names[mid]}[/magenta]")
+                else:
+                    # Check if ready
+                    prereqs_met = self._check_milestone_prereqs(mid, completed_modules)
+                    if prereqs_met:
+                        console.print(f"  [yellow]🎯 {mid} - {milestone_names[mid]} [Ready!][/yellow]")
+                    else:
+                        console.print(f"  [dim]🔒 {mid} - {milestone_names[mid]}[/dim]")
+
+        console.print()
+        return 0
+
+    def _get_module_name(self, module_num: int) -> str:
+        """Get module name from number."""
+        module_names = {
+            1: "Tensor", 2: "Activations", 3: "Layers", 4: "Losses",
+            5: "Autograd", 6: "Optimizers", 7: "Training", 8: "DataLoader",
+            9: "Convolutions", 10: "Normalization", 11: "Tokenization",
+            12: "Embeddings", 13: "Attention", 14: "Transformers",
+            15: "Profiling", 16: "Quantization", 17: "Compression",
+            18: "Memoization", 19: "Benchmarking", 20: "Capstone"
+        }
+        return module_names.get(module_num, "Unknown")
+
+    def _check_milestone_prereqs(self, milestone_id: str, completed_modules: list) -> bool:
+        """Check if milestone prerequisites are met."""
+        prereqs = {
+            "01": [1],
+            "02": [1, 2, 3, 4, 5],
+            "03": [1, 2, 3, 4, 5, 6, 7],
+            "04": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "05": [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14],
+            "06": [1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 16, 19]
+        }
+        required = prereqs.get(milestone_id, [])
+        return all(mod in completed_modules for mod in required)
+
     def _run_comprehensive_analysis(self) -> int:
         """Run comprehensive system health dashboard."""
         console = self.console
