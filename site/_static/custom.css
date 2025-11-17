@@ -1030,7 +1030,7 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 .carousel-track {
     position: relative;
     width: 100%;
-    min-height: 500px;
+    min-height: 420px;
     overflow: visible;
 }
 
