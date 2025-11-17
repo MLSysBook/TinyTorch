@@ -137,7 +137,7 @@ tito checkpoint status
 tito system info
 ```
 
-For complete command documentation, see [TITO Essentials](tito-essentials.md).
+For complete command documentation, see [TITO CLI Reference](tito/overview.md).
 
 ## Checkpoint System (Optional)
 

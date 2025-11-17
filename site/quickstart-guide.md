@@ -32,7 +32,7 @@ source activate.sh
 - Configures TinyTorch in development mode
 - Verifies installation
 
-See [Essential Commands](tito-essentials.md) for detailed workflow and troubleshooting.
+See [TITO CLI Reference](tito/overview.md) for detailed workflow and troubleshooting.
 
 </div>
 
@@ -46,7 +46,7 @@ tito system doctor
 
 You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.
 
-See [Essential Commands](tito-essentials.md) for verification commands and troubleshooting.
+See [Module Workflow](tito/modules.md) for detailed commands and [Troubleshooting](tito/troubleshooting.md) if needed.
 
 </div>
 
@@ -214,8 +214,7 @@ In 15 minutes, you've:
 
 **Master the Workflow:**
 - See [Student Workflow](student-workflow.md) for the complete edit → export → validate cycle
-- See [Essential Commands](tito-essentials.md) for complete TITO command reference
-- See [Student Workflow](student-workflow.md) for the complete development cycle
+- See [TITO CLI Reference](tito/overview.md) for complete command reference
 
 **For Instructors:**
 - See [Classroom Setup Guide](usage-paths/classroom-use.md) for [NBGrader](https://nbgrader.readthedocs.io/) integration (coming soon)
@@ -241,7 +240,7 @@ See [Student Workflow](student-workflow.md) for detailed workflow guide and best
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Production ML Systems</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">You've proven you can build ML components from scratch. Time to keep going!</p>
 <a href="chapters/03-activations.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">Continue Building →</a>
-<a href="tito-essentials.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Master Commands →</a>
+<a href="tito/overview.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">TITO CLI Reference →</a>
 </div>
 
 ---

@@ -6,7 +6,7 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
-- caption: Getting Started
+- caption: 🚀 Getting Started
   chapters:
   - file: quickstart-guide
     title: "Quick Start Guide"
@@ -77,7 +77,7 @@ parts:
   - file: modules/20_capstone_ABOUT
     title: "20. Torch Olympics"
 
-- caption: Course Orientation
+- caption: 🧭 Course Orientation
   chapters:
   - file: chapters/00-introduction
     title: "Course Structure"
@@ -90,16 +90,22 @@ parts:
   - file: faq
     title: "FAQ"
 
-- caption: Using TinyTorch
+- caption: 🛠️ TITO CLI Reference
   chapters:
-  - file: tito-essentials
-    title: "Essential Commands"
+  - file: tito/overview
+    title: "Command Overview"
+  - file: tito/modules
+    title: "Module Workflow"
+  - file: tito/milestones
+    title: "Milestone System"
+  - file: tito/data
+    title: "Progress & Data"
+  - file: tito/troubleshooting
+    title: "Troubleshooting"
   - file: datasets
     title: "Datasets Guide"
-  - file: testing-framework
-    title: "Testing Guide"
 
-- caption: Community
+- caption: 🤝 Community
   chapters:
   - file: community
     title: "Ecosystem"
