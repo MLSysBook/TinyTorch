@@ -500,7 +500,7 @@ Mod & Tier & Module Name & ML Concept & Systems Concept \\
 \midrule
 \multicolumn{5}{l}{\textbf{��️ Architecture Tier (08-13)}} \\
 08 & Arch & DataLoader & Batching, shuffling, Dataset abstraction & Iterator protocol, batch collation, memory layout \\
-09 & Arch & Spatial (CNNs) & Conv2d, kernels, strides, pooling & $O(C_{out} \times H \times W \times C_{in} \times K^2)$ complexity \\
+09 & Arch & Spatial (CNNs) & Conv2d, kernels, strides, pooling & $O(B \times C_{out} \times H_{out} \times W_{out} \times C_{in} \times K_h \times K_w)$ complexity \\
 10 & Arch & Tokenization & BPE, vocabulary, encoding & Vocabulary management, OOV handling \\
 11 & Arch & Embeddings & Token/position embeddings & Lookup tables, gradient through indices \\
 12 & Arch & Attention & Scaled dot-product attention & $O(N^2)$ memory scaling, sequence length impact \\
@@ -566,7 +566,7 @@ A common failure pattern illustrates this: students implement \texttt{Linear.for
 Module 09 (Convolutions) integration exemplifies this: convolution must work with Module 05's autograd (gradient flow through kernels), Module 06's optimizers (parameter updates), and Module 07's training loop (forward-backward cycles) simultaneously. Students discover that ``passing unit tests'' $\neq$ ``works in the system'' when their Conv2d produces correct outputs but crashes during \texttt{loss.backward()} because they forgot to track intermediate activations for gradient computation. This debugging mirrors professional ML engineering: isolated correctness is insufficient; system integration reveals interface failures.
 
 \paragraph{Reflect: Systems Analysis Questions}
-Each module concludes with systems reasoning prompts measuring conceptual understanding beyond syntactic correctness. Memory analysis questions ask students to calculate footprints (``A (256, 256) Conv2d layer with 64 input and 128 output channels requires how much memory?''). Complexity analysis prompts probe asymptotic understanding (``Why is attention $O(N^2)$? Demonstrate by doubling sequence length and measuring memory growth.''). Design trade-off questions assess engineering judgment (``Adam uses 3$\times$ parameter memory but converges faster than SGD. When is this trade-off worth it?''). These open-ended questions assess transfer~\citep{perkins1992transfer}---can students apply learned concepts to novel scenarios not seen in exercises?
+Each module concludes with systems reasoning prompts measuring conceptual understanding beyond syntactic correctness. Memory analysis questions ask students to calculate footprints (``A (256, 256) Conv2d layer with 64 input and 128 output channels requires how much memory?''). Complexity analysis prompts probe asymptotic understanding (``Why is attention $O(N^2)$? Demonstrate by doubling sequence length and measuring memory growth.''). Design trade-off questions assess engineering judgment (``Adam requires 2$\times$ optimizer state memory (momentum and variance) but converges faster than SGD. When is the 4$\times$ total training memory trade-off worth it?''). These open-ended questions assess transfer~\citep{perkins1992transfer}---can students apply learned concepts to novel scenarios not seen in exercises?
 
 \subsection{Milestone Arcs}
 
@@ -741,7 +741,7 @@ Industry surveys show ML engineers spending more time on memory optimization and
 
 \subsection{Memory Profiling}
 
-Where traditional frameworks abstract away memory concerns, TinyTorch makes memory footprint calculation explicit (\Cref{lst:tensor-memory}). Students' first assignment calculates memory for MNIST (60,000 $\times$ 784 $\times$ 4 bytes = 188 MB) and ImageNet (1.2M $\times$ 224$\times$224$\times$3 $\times$ 4 bytes = 716 GB).
+Where traditional frameworks abstract away memory concerns, TinyTorch makes memory footprint calculation explicit (\Cref{lst:tensor-memory}). Students' first assignment calculates memory for MNIST (60,000 $\times$ 784 $\times$ 4 bytes = 188 MB) and ImageNet (1.2M $\times$ 224$\times$224$\times$3 $\times$ 4 bytes = 723 GB).
 
 This memory-first pedagogy transforms student questions:
 \begin{itemize}
