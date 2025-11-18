@@ -184,7 +184,7 @@ Walk through ML history by rebuilding its greatest breakthroughs with YOUR TinyT
 
 Understanding the difference between using a framework and building one is the difference between being limited by tools and being empowered to create them.
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 3rem 0 2.5rem 0; max-width: 1100px;">
+<div class="comparison-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin: 3rem 0 2.5rem 0; max-width: 1100px;">
 
 <div style="background: #fef2f2; padding: 2rem; border-radius: 0.5rem; border-left: 4px solid #ef4444;">
 <h3 style="margin: 0 0 1.25rem 0; color: #991b1b; font-size: 1.15rem;">Traditional ML Education</h3>
