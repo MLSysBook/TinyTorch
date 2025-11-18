@@ -412,6 +412,7 @@ TinyTorch occupies a distinct pedagogical niche through its \textbf{bottom-up, s
 \centering
 \caption{Framework comparison: Educational vs. Production}
 \label{tab:framework-comparison}
+\resizebox{\textwidth}{!}{%
 \small
 \renewcommand{\arraystretch}{1.4}
 \setlength{\tabcolsep}{7pt}
@@ -434,6 +435,7 @@ PyTorch & Production ML & Complete (GPU, distributed, deployment) & Advanced (im
 TensorFlow & Production ML & Complete (GPU, distributed, deployment, mobile) & Advanced (implicit) & Deploy at scale \\
 \bottomrule
 \end{tabularx}
+}
 \end{table*}
 
 TinyTorch differs from educational frameworks through systems-first integration and from production frameworks through pedagogical transparency:
@@ -469,6 +471,7 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 \centering
 \caption{Module-by-module ML and Systems concepts (embedded from the start)}
 \label{tab:objectives}
+\resizebox{\textwidth}{!}{%
 \small
 \renewcommand{\arraystretch}{1.4}
 \setlength{\tabcolsep}{7pt}
@@ -512,6 +515,7 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 20 & Capstone & AI Olympics & Complete production system & MLPerf-style competition, leaderboard \\
 \bottomrule
 \end{tabularx}
+}
 \end{table*}
 
 \begin{lstlisting}[caption={Tensor with memory profiling from Module 01.},label=lst:tensor-memory,float=t]
@@ -784,6 +788,7 @@ Students calculate: CIFAR-10 batch (128, 3, 32, 32) through 32-filter 5$\times$5
 \centering
 \caption{Runtime comparison: TinyTorch vs PyTorch (CPU). Pure Python implementations with explicit loops are 100--10,000$\times$ slower, making performance costs visible and optimization meaningful.}
 \label{tab:performance}
+\resizebox{\columnwidth}{!}{%
 \small
 \begin{tabular}{@{}lrrr@{}}
 \toprule
@@ -794,6 +799,7 @@ Operation & TinyTorch & PyTorch & Ratio \\
 \texttt{softmax} (10K elem) & 6 ms & 0.05 ms & 134$\times$ \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \subsection{Phase 3: Optimizing Systems Through Measurement-Driven Iteration}
