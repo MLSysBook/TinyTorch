@@ -138,8 +138,8 @@
   \fontsize{26}{32}\selectfont\bfseries
   Tiny\emoji{fire}Torch\\[0.3em]
   \fontsize{14}{17}\selectfont\normalfont
-  A Framework for Learning ML Systems from Scratch,\\[0.2em]
-  from Tensors to Systems
+  Build Your Own Machine Learning Framework\\[0.2em]
+  From Tensors to Systems
 }
 \author{
   \fontsize{10}{12}\selectfont
@@ -274,76 +274,74 @@ The curriculum follows the compiler course model: students build a complete syst
 \begin{figure}[t]
 \centering
 \small
-\begin{tikzpicture}[node distance=0.8cm and 1.2cm, every node/.style={font=\scriptsize}]
+\begin{tikzpicture}[node distance=1.0cm and 1.8cm, every node/.style={font=\scriptsize}]
 % Foundation tier
-\node[draw,rectangle,fill=blue!20] (M01) {01 Tensor};
-\node[draw,rectangle,fill=blue!20,below=of M01] (M02) {02 Activations};
-\node[draw,rectangle,fill=blue!20,below=of M02] (M03) {03 Layers};
-\node[draw,rectangle,fill=blue!20,below=of M03] (M04) {04 Losses};
-\node[draw,rectangle,fill=orange!30,below=of M04] (M05) {05 Autograd};
-\node[draw,rectangle,fill=blue!20,below=of M05] (M06) {06 Optimizers};
-\node[draw,rectangle,fill=blue!20,below=of M06] (M07) {07 Training};
+\node[draw,rectangle,fill=blue!20,minimum width=1.8cm] (M01) {01 Tensor};
+\node[draw,rectangle,fill=blue!20,below=of M01,minimum width=1.8cm] (M02) {02 Activations};
+\node[draw,rectangle,fill=blue!20,below=of M02,minimum width=1.8cm] (M03) {03 Layers};
+\node[draw,rectangle,fill=blue!20,below=of M03,minimum width=1.8cm] (M04) {04 Losses};
+\node[draw,rectangle,fill=orange!30,below=of M04,minimum width=1.8cm] (M05) {05 Autograd};
+\node[draw,rectangle,fill=blue!20,below=of M05,minimum width=1.8cm] (M06) {06 Optimizers};
+\node[draw,rectangle,fill=blue!20,below=of M06,minimum width=1.8cm] (M07) {07 Training};
 
 % Architecture tier
-\node[draw,rectangle,fill=purple!20,right=of M01] (M08) {08 DataLoader};
-\node[draw,rectangle,fill=purple!20,below=of M08] (M09) {09 CNNs};
-\node[draw,rectangle,fill=purple!20,below=of M09] (M10) {10 Tokenization};
-\node[draw,rectangle,fill=purple!20,below=of M10] (M11) {11 Embeddings};
-\node[draw,rectangle,fill=purple!20,below=of M11] (M12) {12 Attention};
-\node[draw,rectangle,fill=purple!20,below=of M12] (M13) {13 Transformers};
+\node[draw,rectangle,fill=purple!20,right=of M01,minimum width=1.8cm] (M08) {08 DataLoader};
+\node[draw,rectangle,fill=purple!20,below=of M08,minimum width=1.8cm] (M09) {09 CNNs};
+\node[draw,rectangle,fill=purple!20,below=of M09,minimum width=1.8cm] (M10) {10 Tokenization};
+\node[draw,rectangle,fill=purple!20,below=of M10,minimum width=1.8cm] (M11) {11 Embeddings};
+\node[draw,rectangle,fill=purple!20,below=of M11,minimum width=1.8cm] (M12) {12 Attention};
+\node[draw,rectangle,fill=purple!20,below=of M12,minimum width=1.8cm] (M13) {13 Transformers};
 
 % Optimization tier
-\node[draw,rectangle,fill=green!20,right=of M08] (M14) {14 Profiling};
-\node[draw,rectangle,fill=green!20,below=of M14] (M15) {15 Quantization};
-\node[draw,rectangle,fill=green!20,below=of M15] (M16) {16 Compression};
-\node[draw,rectangle,fill=green!20,below=of M16] (M17) {17 Memoization};
-\node[draw,rectangle,fill=green!20,below=of M17] (M18) {18 Acceleration};
-\node[draw,rectangle,fill=green!20,below=of M18] (M19) {19 Benchmarking};
-\node[draw,rectangle,fill=red!30,below=of M19] (M20) {20 Olympics};
+\node[draw,rectangle,fill=green!20,right=of M08,minimum width=1.8cm] (M14) {14 Profiling};
+\node[draw,rectangle,fill=green!20,below=of M14,minimum width=1.8cm] (M15) {15 Quantization};
+\node[draw,rectangle,fill=green!20,below=of M15,minimum width=1.8cm] (M16) {16 Compression};
+\node[draw,rectangle,fill=green!20,below=of M16,minimum width=1.8cm] (M17) {17 Memoization};
+\node[draw,rectangle,fill=green!20,below=of M17,minimum width=1.8cm] (M18) {18 Acceleration};
+\node[draw,rectangle,fill=green!20,below=of M18,minimum width=1.8cm] (M19) {19 Benchmarking};
+\node[draw,rectangle,fill=red!30,below=of M19,minimum width=1.8cm] (M20) {20 Olympics};
 
-% Arrows - Foundation connections
+% Arrows - Foundation connections (straight lines within column)
 \draw[->] (M01) -- (M02);
-\draw[->] (M01) -- (M03);
-\draw[->] (M01) -- (M04);
-\draw[->] (M01) -- (M08);
 \draw[->] (M02) -- (M03);
 \draw[->] (M03) -- (M04);
-\draw[->] (M01) -- (M05);
+\draw[->] (M04) -- (M05);
 \draw[->] (M05) -- (M06);
 \draw[->] (M06) -- (M07);
-\draw[->] (M03) -- (M06);
-\draw[->] (M04) -- (M07);
 
-% Architecture connections
+% Architecture connections (straight lines within column)
 \draw[->] (M08) -- (M09);
-\draw[->] (M08) -- (M10);
-\draw[->] (M01) -- (M09);
-\draw[->] (M03) -- (M09);
-\draw[->] (M05) -- (M09);
+\draw[->] (M09) -- (M10);
 \draw[->] (M10) -- (M11);
-\draw[->] (M01) -- (M11);
 \draw[->] (M11) -- (M12);
-\draw[->] (M03) -- (M12);
-\draw[->] (M05) -- (M12);
 \draw[->] (M12) -- (M13);
-\draw[->] (M02) -- (M13);
-\draw[->] (M11) -- (M13);
 
-% Optimization connections
+% Optimization connections (straight lines within column)
 \draw[->] (M14) -- (M15);
-\draw[->] (M14) -- (M16);
-\draw[->] (M14) -- (M17);
-\draw[->] (M15) -- (M18);
-\draw[->] (M16) -- (M18);
+\draw[->] (M15) -- (M16);
+\draw[->] (M16) -- (M17);
 \draw[->] (M17) -- (M18);
 \draw[->] (M18) -- (M19);
 \draw[->] (M19) -- (M20);
 
-% Cross-tier connections
-\draw[->,dashed] (M07) -- (M09);
-\draw[->,dashed] (M07) -- (M13);
-\draw[->,dashed] (M09) -- (M14);
-\draw[->,dashed] (M13) -- (M14);
+% Cross-tier connections (use bent arrows to avoid overlaps)
+\draw[->,bend left=10] (M01) to (M08);
+\draw[->,bend left=15] (M01) to (M09);
+\draw[->,bend left=10] (M03) to (M09);
+\draw[->,bend left=15] (M05) to (M09);
+\draw[->,bend left=15] (M01) to (M11);
+\draw[->,bend left=10] (M03) to (M12);
+\draw[->,bend left=15] (M05) to (M12);
+\draw[->,bend left=10] (M02) to (M13);
+\draw[->,bend left=15] (M11) to (M13);
+
+% Training to architectures
+\draw[->,dashed,bend left=10] (M07) to (M09);
+\draw[->,dashed,bend left=15] (M07) to (M13);
+
+% Architectures to optimization
+\draw[->,dashed,bend left=10] (M09) to (M14);
+\draw[->,dashed,bend left=15] (M13) to (M14);
 
 \end{tikzpicture}
 \caption{Module dependency flow: How components connect across tiers. Foundation modules (blue) enable architectures (purple), which are optimized (green), culminating in the capstone competition (red). Dotted lines show cross-tier integration.}
@@ -645,11 +643,11 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 \begin{figure*}[t]
 \centering
 \begin{tikzpicture}[
-    scale=0.85,
+    scale=0.9,
     every node/.style={font=\scriptsize},
     module/.style={rectangle, draw, fill=blue!20, minimum width=1.2cm, minimum height=0.8cm},
-    dormant/.style={rectangle, draw=gray!60, fill=gray!20, text=gray!70},
-    active/.style={rectangle, draw=orange!80, fill=orange!30, text=black, font=\scriptsize\bfseries}
+    dormant/.style={rectangle, draw=gray!60, fill=gray!20, text=gray!70, minimum width=1.6cm, minimum height=0.5cm},
+    active/.style={rectangle, draw=orange!80, fill=orange!30, text=black, font=\scriptsize\bfseries, minimum width=1.6cm, minimum height=0.5cm}
 ]
 
 % Timeline axis
@@ -658,53 +656,53 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 % Module markers
 \foreach \x/\label in {1/01, 3.5/03, 6/05, 8.5/09, 11/13, 13.5/20} {
     \draw (\x, 0.1) -- (\x, -0.1);
-    \node[below, font=\tiny] at (\x, -0.2) {\texttt{M\label}};
+    \node[below, font=\tiny] at (\x, -0.3) {\texttt{M\label}};
 }
 
-% Feature layers - stacked above timeline
+% Feature layers - stacked above timeline with increased spacing
 % Layer 1: Basic Tensor (always present)
-\node[active] at (1, 1.5) {\texttt{.data}};
-\node[active] at (2.5, 1.5) {\texttt{.shape}};
+\node[active] at (1.5, 1.5) {\texttt{.data}};
+\node[active] at (3.5, 1.5) {\texttt{.shape}};
 \draw[orange!80, thick] (0.3, 1.5) -- (13.7, 1.5);
 \node[left, font=\tiny] at (0.2, 1.5) {Core};
 
-% Layer 2: Dormant until Module 05
-\node[dormant] at (1, 2.5) {\texttt{.requires\_grad}};
-\draw[gray!60, thick, dashed] (0.3, 2.5) -- (5.5, 2.5);
-\node[active] at (7, 2.5) {\texttt{.requires\_grad}};
-\draw[orange!80, thick] (6.3, 2.5) -- (13.7, 2.5);
-\node[left, font=\tiny] at (0.2, 2.5) {Gradient};
+% Layer 2: Gradient features - increased vertical spacing
+\node[dormant] at (1.5, 2.7) {\texttt{.requires\_grad}};
+\draw[gray!60, thick, dashed] (0.3, 2.7) -- (5.5, 2.7);
+\node[active] at (7.5, 2.7) {\texttt{.requires\_grad}};
+\draw[orange!80, thick] (6.3, 2.7) -- (13.7, 2.7);
+\node[left, font=\tiny] at (0.2, 2.7) {Gradient};
 
-\node[dormant] at (2.5, 3.2) {\texttt{.grad}};
-\draw[gray!60, thick, dashed] (0.3, 3.2) -- (5.5, 3.2);
-\node[active] at (7, 3.2) {\texttt{.grad}};
-\draw[orange!80, thick] (6.3, 3.2) -- (13.7, 3.2);
+\node[dormant] at (3.0, 3.6) {\texttt{.grad}};
+\draw[gray!60, thick, dashed] (0.3, 3.6) -- (5.5, 3.6);
+\node[active] at (7.5, 3.6) {\texttt{.grad}};
+\draw[orange!80, thick] (6.3, 3.6) -- (13.7, 3.6);
 
-\node[dormant] at (1.5, 3.9) {\texttt{.backward()}};
-\draw[gray!60, thick, dashed] (0.3, 3.9) -- (5.5, 3.9);
-\node[active] at (7, 3.9) {\texttt{.backward()}};
-\draw[orange!80, thick] (6.3, 3.9) -- (13.7, 3.9);
+\node[dormant] at (2.0, 4.5) {\texttt{.backward()}};
+\draw[gray!60, thick, dashed] (0.3, 4.5) -- (5.5, 4.5);
+\node[active] at (7.5, 4.5) {\texttt{.backward()}};
+\draw[orange!80, thick] (6.3, 4.5) -- (13.7, 4.5);
 
 % Activation marker at Module 05
-\node[draw, fill=yellow!30, circle, font=\tiny\bfseries, minimum size=0.7cm] at (6, 4.8) {ACTIVATE};
-\draw[thick, ->] (6, 4.6) -- (6, 4.1);
+\node[draw, fill=yellow!30, circle, font=\tiny\bfseries, minimum size=0.8cm] at (6, 5.5) {ACTIVATE};
+\draw[thick, ->] (6, 5.2) -- (6, 4.7);
 
-% Annotations
-\node[align=center, font=\tiny] at (3, 5.5) {
+% Annotations - adjusted positions to avoid overlap
+\node[align=center, font=\tiny] at (3, 6.5) {
     \textbf{Modules 01-04:}\\
     Features visible but dormant\\
     \texttt{.backward()} is no-op
 };
 
-\node[align=center, font=\tiny] at (10, 5.5) {
+\node[align=center, font=\tiny] at (10, 6.5) {
     \textbf{Modules 05-20:}\\
     Autograd fully active\\
     Gradients flow automatically
 };
 
 % Legend
-\node[dormant, minimum width=0.9cm, minimum height=0.4cm] at (2, -1.3) {Dormant};
-\node[active, minimum width=0.9cm, minimum height=0.4cm] at (4.5, -1.3) {Active};
+\node[dormant, minimum width=1.0cm, minimum height=0.4cm] at (2.5, -1.5) {Dormant};
+\node[active, minimum width=1.0cm, minimum height=0.4cm] at (5.5, -1.5) {Active};
 
 \end{tikzpicture}
 \caption{Progressive activation of Tensor gradient features. Dormant placeholders (gray, dashed) exist from Module 01. Module 05 activates full autograd functionality (orange, solid) via runtime method enhancement.}
