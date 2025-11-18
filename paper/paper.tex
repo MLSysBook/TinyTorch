@@ -578,11 +578,11 @@ Each module concludes with systems reasoning prompts measuring conceptual unders
 
 \subsection{Milestone Arcs}
 
-TinyTorch validates curriculum correctness through \textbf{historical milestone recreation}: students recreate seminal ML breakthroughs spanning 1957--2024 using exclusively their own implemented code. Unlike traditional programming assignments with unit tests, milestones require students to achieve historical accuracy benchmarks, validating that implementations work correctly on real tasks.
+\paragraph{Why Milestones Matter} Milestones serve dual pedagogical and validation purposes that differentiate TinyTorch from traditional programming assignments. First, \textbf{pedagogical motivation through historical framing}: Rather than ``implement this function,'' students ``recreate the breakthrough that proved Minsky wrong about neural networks,'' connecting implementation work to historically significant results. This instantiates Bruner's spiral curriculum~\citep{bruner1960process}---students train neural networks 6 times with increasing sophistication, each iteration deepening understanding through historical progression from 1957 (Perceptron) through 2024 (production-optimized systems).
 
-Each milestone: (1) recreates actual breakthroughs (Rosenblatt's Perceptron, LeCun's LeNet, Vaswani's Transformer), (2) uses \emph{only} student-implemented TinyTorch code (no PyTorch/TensorFlow), (3) validates success through task-appropriate performance, and (4) demonstrates architectural comparisons showing why new approaches improved over predecessors.
+Second, \textbf{implementation validation beyond unit tests}: Milestones differ from modules pedagogically---modules teach components, milestones validate that components \emph{compose} into functional systems. Students who pass all Module 01--07 unit tests might still fail Milestone 3 (MLP Revival) if their training loop doesn't properly orchestrate forward passes, loss computation, and backpropagation. This mirrors professional ML engineering: individual functions may work, but the system fails due to integration bugs. If student-implemented CNNs successfully classify natural images, convolution, pooling, and backpropagation all work correctly together; if transformers generate coherent text, attention mechanisms integrate properly. Milestone success is measured by achieving performance in the ballpark of historical benchmarks (CNNs with reasonable CIFAR-10 accuracy, transformers generating coherent text), not matching exact published accuracies---the goal is demonstrating implementations work correctly on real tasks, validating framework correctness.
 
-The curriculum includes six milestones spanning multiple modules, each requiring progressively more components from the growing framework:
+\paragraph{The Six Historical Milestones} The curriculum includes six milestones spanning 1957--2024, each requiring progressively more components from the growing framework:
 
 \begin{enumerate}
 \item \textbf{1957 Perceptron} (after Module 04): Train Rosenblatt's original single-layer perceptron on linearly separable classification. Students import \texttt{from tinytorch.core import Tensor; from tinytorch.nn import Linear, Sigmoid}---their framework now supports single-layer networks.
@@ -598,11 +598,7 @@ The curriculum includes six milestones spanning multiple modules, each requiring
 \item \textbf{2024 MLPerf Benchmark Era} (after Module 20): Production-optimized system integrating all 20 modules, inspired by MLPerf~\citep{reddi2020mlperf}. Students import from every module: \texttt{from tinytorch.nn import Transformer; from tinytorch.optim import Adam; from tinytorch.profiling import profile\_memory}---demonstrating quantization, compression, and acceleration for 10$\times$ faster inference and 4$\times$ smaller models.
 \end{enumerate}
 
-Milestones differ from modules pedagogically: modules teach components, milestones validate that components \emph{compose} into functional systems. Students who pass all Module 01--07 unit tests might still fail Milestone 3 if their training loop doesn't properly orchestrate forward passes, loss computation, and backpropagation. This mirrors professional ML engineering: individual functions may work, but the system fails due to integration bugs.
-
-Historical framing transforms abstract exercises into meaningful achievements. Rather than ``implement this function,'' students ``recreate the breakthrough that proved Minsky wrong about neural networks,'' connecting implementation work to historically significant results. Milestones instantiate Bruner's spiral curriculum~\citep{bruner1960process}: students train neural networks 6 times with increasing sophistication, each iteration deepening understanding through historical progression.
-
-Milestones serve dual purpose: pedagogical motivation \emph{and} implementation validation. If student-implemented CNNs successfully classify natural images, convolution, pooling, and backpropagation all work correctly. If transformer generation produces coherent text, attention mechanisms work properly. This objective validation complements unit tests: tests verify individual functions work, milestones verify the complete system works on real tasks. Milestone success is measured by achieving performance in the ballpark of historical benchmarks (CNNs achieving reasonable CIFAR-10 accuracy, transformers generating coherent text), not matching exact published accuracies---the goal is demonstrating implementations work correctly on real tasks, validating framework correctness.
+Each milestone: (1) recreates actual breakthroughs using exclusively student code, (2) uses \emph{only} TinyTorch implementations (no PyTorch/TensorFlow), (3) validates success through task-appropriate performance, and (4) demonstrates architectural comparisons showing why new approaches improved over predecessors.
 
 \section{Progressive Disclosure}
 \label{sec:progressive}
@@ -745,9 +741,9 @@ Similarly, TensorFlow 2.0 integrated eager execution by default \citep{tensorflo
 \section{Systems-First Integration}
 \label{sec:systems}
 
-Industry surveys show ML engineers spending more time on memory optimization and debugging than hyperparameter tuning, yet most curricula defer systems thinking to senior electives. TinyTorch applies situated cognition \citep{lave1991situated} by integrating memory profiling and FLOPs analysis from Module 01.
+Industry surveys show ML engineers spending more time on memory optimization and debugging than hyperparameter tuning, yet most curricula defer systems thinking to senior electives. TinyTorch applies situated cognition \citep{lave1991situated} by integrating systems awareness from Module 01 through a three-phase progression: (1) \textbf{understanding memory} through explicit profiling, (2) \textbf{analyzing complexity} through transparent implementations, and (3) \textbf{optimizing systems} through measurement-driven iteration. This mirrors professional ML engineering workflow: measure resource requirements, understand computational costs, then optimize bottlenecks.
 
-\subsection{Memory Profiling}
+\subsection{Phase 1: Understanding Memory Through Profiling}
 
 Where traditional frameworks abstract away memory concerns, TinyTorch makes memory footprint calculation explicit (\Cref{lst:tensor-memory}). Students' first assignment calculates memory for MNIST (60,000 $\times$ 784 $\times$ 4 bytes = 188 MB) and ImageNet (1.2M $\times$ 224$\times$224$\times$3 $\times$ 4 bytes = 723 GB).
 
@@ -760,7 +756,7 @@ This memory-first pedagogy transforms student questions:
 
 Students learn to distinguish parameter memory (model weights) from optimizer state memory (Adam's 2$\times$ for momentum and variance) from activation memory (often 10--100$\times$ larger than parameters). This decomposition enables accurate capacity planning for training runs.
 
-\subsection{Computational Complexity}
+\subsection{Phase 2: Analyzing Complexity Through Transparent Implementations}
 
 Module 09 introduces convolution with seven explicit nested loops (\Cref{lst:conv-explicit}), making $O(B \times C_{\text{out}} \times H_{\text{out}} \times W_{\text{out}} \times C_{\text{in}} \times K_h \times K_w)$ complexity visible and countable.
 
@@ -792,13 +788,11 @@ This explicit implementation illustrates TinyTorch's pedagogical philosophy: \te
 
 Students calculate: CIFAR-10 batch (128, 3, 32, 32) through 32-filter 5$\times$5 convolution: $128 \times 32 \times 28 \times 28 \times 3 \times 5 \times 5 = 86.7$M multiply-accumulate operations. This concrete measurement motivates Module 18's vectorization (10--100$\times$ speedup) and explains why CNNs require hardware acceleration.
 
-\subsection{Performance Benchmarks}
-
-\Cref{tab:performance} validates the ``100--1000$\times$ slower than PyTorch'' claim through actual measurements (reviewer feedback: add concrete benchmarks).
+\paragraph{Experiencing Performance Reality} \Cref{tab:performance} shows TinyTorch's deliberate slowness compared to PyTorch---100--1000$\times$ slower through pure Python implementations. This slowness is pedagogically valuable (productive failure \citep{kapur2008productive}): students experience performance problems before learning optimizations, making vectorization meaningful rather than abstract. When students measure their Conv2d taking 8.4 seconds per CIFAR batch versus PyTorch's 0.09 seconds, they understand \emph{why} production frameworks obsess over implementation details.
 
 \begin{table}[t]
 \centering
-\caption{Runtime comparison: TinyTorch vs PyTorch (CPU)}
+\caption{Runtime comparison: TinyTorch vs PyTorch (CPU).}
 \label{tab:performance}
 \small
 \begin{tabular}{@{}lrrr@{}}
@@ -814,9 +808,7 @@ CIFAR-10 epoch (LeNet) & 12 min & 8 sec & 90$\times$ \\
 \end{tabular}
 \end{table}
 
-This slowness is pedagogically valuable (productive failure \citep{kapur2008productive}): students experience performance problems before learning optimizations, making vectorization meaningful rather than abstract.
-
-\subsection{Optimization Tier: Production Systems Thinking}
+\subsection{Phase 3: Optimizing Systems Through Measurement-Driven Iteration}
 
 The Optimization Tier (Modules 14--19) transforms systems-first pedagogy from \emph{analysis} (``How much memory does this use?'') into \emph{optimization} (``How do I reduce memory by 4$\times$?''). Where foundation modules taught calculating footprints and counting FLOPs, optimization modules teach systematic improvement through profiling-driven iteration.
 
