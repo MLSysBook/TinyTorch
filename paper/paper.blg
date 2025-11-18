@@ -3,6 +3,8 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: paper.aux
 The style file: plainnat.bst
 Database file #1: references.bib
+Warning--empty year in banbury2021benchmarking
+Warning--empty year in banbury2021benchmarking
 Warning--empty year in collins1989cognitive
 Warning--empty year in collins1989cognitive
 Warning--empty year in roberthalf2024talent
@@ -17,6 +19,11 @@ Warning--empty year in lave1991situated
 Warning--empty year in lecun1998gradient
 Warning--empty year in lecun1998gradient
 Warning--can't use both author and editor fields in meadows2008thinking
+Warning--empty journal in micikevicius2018mixed
+Warning--empty year in micikevicius2018mixed
+Warning--empty year in micikevicius2018mixed
+Warning--empty year in patterson2021carbon
+Warning--empty year in patterson2021carbon
 Warning--can't use both volume and number fields in chakkaravarthy2023astrasim
 Warning--empty year in chakkaravarthy2023astrasim
 Warning--empty year in chakkaravarthy2023astrasim
@@ -30,6 +37,9 @@ Warning--empty year in rumelhart1986learning
 Warning--empty year in rumelhart1986learning
 Warning--empty year in astrasimsim2020
 Warning--empty year in astrasimsim2020
+Warning--empty journal in strubell2019energy
+Warning--empty year in strubell2019energy
+Warning--empty year in strubell2019energy
 Warning--empty year in sweller1988cognitive
 Warning--empty year in sweller1988cognitive
 Warning--empty year in vaswani2017attention
@@ -41,43 +51,43 @@ Warning--empty year in zhang2021dive
 Warning--empty year in zhang2021dive
 You've used 37 entries,
             2773 wiz_defined-function locations,
-            866 strings with 14773 characters,
-and the built_in function-call counts, 22204 in all, are:
-= -- 1870
-> -- 1872
-< -- 27
-+ -- 632
-- -- 594
-* -- 1998
-:= -- 3557
+            874 strings with 23762 characters,
+and the built_in function-call counts, 50306 in all, are:
+= -- 3560
+> -- 6924
+< -- 25
++ -- 2316
+- -- 2278
+* -- 5403
+:= -- 8608
 add.period$ -- 165
 call.type$ -- 37
-change.case$ -- 307
+change.case$ -- 869
 chr.to.int$ -- 36
-cite$ -- 110
-duplicate$ -- 772
-empty$ -- 1375
-format.name$ -- 647
-if$ -- 4513
+cite$ -- 120
+duplicate$ -- 762
+empty$ -- 1359
+format.name$ -- 2329
+if$ -- 9551
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 30
-newline$ -- 240
-num.names$ -- 152
-pop$ -- 691
+missing$ -- 29
+newline$ -- 242
+num.names$ -- 150
+pop$ -- 1821
 preamble$ -- 1
-purify$ -- 271
+purify$ -- 833
 quote$ -- 0
-skip$ -- 657
+skip$ -- 1205
 stack$ -- 0
-substring$ -- 416
-swap$ -- 93
+substring$ -- 441
+swap$ -- 90
 text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 387
-warning$ -- 36
-while$ -- 146
+type$ -- 392
+warning$ -- 46
+while$ -- 147
 width$ -- 0
-write$ -- 562
-(There were 36 warnings)
+write$ -- 557
+(There were 46 warnings)
