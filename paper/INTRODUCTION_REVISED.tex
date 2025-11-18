@@ -1,0 +1,229 @@
+% REVISED INTRODUCTION SECTION
+% Original: Lines 191-423 in paper.tex
+% Revision Date: 2025-11-17
+% Revised by: Academic Writer (coordinated by Research Coordinator)
+
+\section{Introduction}
+
+Machine learning systems have emerged as a distinct discipline requiring specialized education---just as computers became sufficiently complex to warrant computer engineering curricula integrating hardware and software. This integration is not merely additive but transformative: students who understand \emph{how} frameworks work internally can debug production failures, optimize deployment pipelines, and make architectural decisions that algorithm-focused education alone cannot provide.
+
+\textbf{What Students Learn: From Framework Users to Framework Engineers.}
+Traditional ML education teaches students to use frameworks as black boxes. TinyTorch inverts this: students build the internals themselves. \Cref{fig:code-comparison} illustrates this transformation---students who complete TinyTorch understand \emph{how} frameworks work internally, enabling them to debug production systems, optimize deployments, and make architectural decisions.
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+\centering
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,frame=single]
+import torch.nn as nn
+import torch.optim as optim
+
+model = nn.Linear(784, 10)
+optimizer = optim.Adam(
+    model.parameters(), lr=0.001)
+loss_fn = nn.CrossEntropyLoss()
+
+for epoch in range(10):
+    for x, y in dataloader:
+        pred = model(x)
+        loss = loss_fn(pred, y)
+        loss.backward()  # Magic?
+        optimizer.step()  # How?
+\end{lstlisting}
+\subcaption{PyTorch: Using frameworks as black boxes}
+\label{lst:pytorch-usage}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+\centering
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,frame=single]
+class Linear:
+    def __init__(self, in_features, out):
+        self.weight = Tensor.randn(out, in_features)
+        self.bias = Tensor.zeros(out)
+
+    def forward(self, x):
+        return x @ self.weight.T + self.bias
+
+class Adam:
+    def __init__(self, params, lr=0.001):
+        self.params = params
+        self.lr = lr
+        # 3× memory: weights + momentum + variance
+        self.m = [Tensor.zeros_like(p)
+                  for p in params]
+        self.v = [Tensor.zeros_like(p)
+                  for p in params]
+
+    def step(self):
+        for p, m, v in zip(self.params, self.m, self.v):
+            m = 0.9*m + 0.1*p.grad
+            v = 0.999*v + 0.001*p.grad**2
+            p.data -= self.lr * m / (v.sqrt()+1e-8)
+\end{lstlisting}
+\subcaption{TinyTorch: Understanding internals}
+\label{lst:tinytorch-build}
+\end{subfigure}
+\caption{Learning progression: From framework users to framework engineers. (a) Traditional ML education: students use PyTorch's high-level APIs without understanding internals. (b) TinyTorch education: students build the internals themselves, learning that Adam uses 3× parameter memory (weights + momentum + variance), understanding computational complexity, and developing systems thinking.}
+\label{fig:code-comparison}
+\end{figure*}
+
+This gap between framework users and systems engineers reflects a deeper pedagogical challenge. Traditional ML curricula treat systems concerns---memory management, computational complexity, performance optimization---as advanced topics relegated to separate ``ML Systems'' electives that students encounter, if at all, in their final undergraduate year. By then, students have formed mental models that divorce ML algorithms from their computational reality. They understand gradients abstractly but not gradient memory footprint. They know attention mechanisms mathematically but not their $O(N^2)$ scaling implications.
+
+Can we teach ML as systems engineering from first principles? Can students learn memory profiling alongside tensor operations, computational complexity alongside convolutions, optimization trade-offs alongside model training? We answer these questions affirmatively through TinyTorch: a complete 20-module curriculum where students build every component of a production ML framework from scratch---from tensors to transformers to optimization---with systems awareness embedded from Module 01 onwards.
+
+
+\textbf{How Modules Connect: Building Systems Piece-by-Piece.}
+TinyTorch follows the compiler course model: students build a complete system module-by-module. \Cref{fig:module-flow} illustrates how modules integrate---tensors (01) enable activations (02) and layers (03), which feed into autograd (05), which powers optimizers (06) and training (07). This piece-by-piece construction creates systems thinking through direct experience of component integration, mirroring how parsers connect to instruction selection, which connects to register allocation in compiler courses.
+
+\begin{figure}[t]
+\centering
+\small
+\begin{tikzpicture}[node distance=0.8cm and 1.2cm, every node/.style={font=\scriptsize}]
+% Foundation tier
+\node[draw,rectangle,fill=blue!20] (M01) {01 Tensor};
+\node[draw,rectangle,fill=blue!20,below=of M01] (M02) {02 Activations};
+\node[draw,rectangle,fill=blue!20,below=of M02] (M03) {03 Layers};
+\node[draw,rectangle,fill=blue!20,below=of M03] (M04) {04 Losses};
+\node[draw,rectangle,fill=orange!30,below=of M04] (M05) {05 Autograd};
+\node[draw,rectangle,fill=blue!20,below=of M05] (M06) {06 Optimizers};
+\node[draw,rectangle,fill=blue!20,below=of M06] (M07) {07 Training};
+
+% Architecture tier
+\node[draw,rectangle,fill=purple!20,right=of M01] (M08) {08 DataLoader};
+\node[draw,rectangle,fill=purple!20,below=of M08] (M09) {09 CNNs};
+\node[draw,rectangle,fill=purple!20,below=of M09] (M10) {10 Tokenization};
+\node[draw,rectangle,fill=purple!20,below=of M10] (M11) {11 Embeddings};
+\node[draw,rectangle,fill=purple!20,below=of M11] (M12) {12 Attention};
+\node[draw,rectangle,fill=purple!20,below=of M12] (M13) {13 Transformers};
+
+% Optimization tier
+\node[draw,rectangle,fill=green!20,right=of M08] (M14) {14 Profiling};
+\node[draw,rectangle,fill=green!20,below=of M14] (M15) {15 Quantization};
+\node[draw,rectangle,fill=green!20,below=of M15] (M16) {16 Compression};
+\node[draw,rectangle,fill=green!20,below=of M16] (M17) {17 Memoization};
+\node[draw,rectangle,fill=green!20,below=of M17] (M18) {18 Acceleration};
+\node[draw,rectangle,fill=green!20,below=of M18] (M19) {19 Benchmarking};
+\node[draw,rectangle,fill=red!30,below=of M19] (M20) {20 Olympics};
+
+% Arrows - Foundation connections
+\draw[->] (M01) -- (M02);
+\draw[->] (M01) -- (M03);
+\draw[->] (M01) -- (M04);
+\draw[->] (M01) -- (M08);
+\draw[->] (M02) -- (M03);
+\draw[->] (M03) -- (M04);
+\draw[->] (M01) -- (M05);
+\draw[->] (M05) -- (M06);
+\draw[->] (M06) -- (M07);
+\draw[->] (M03) -- (M06);
+\draw[->] (M04) -- (M07);
+
+% Architecture connections
+\draw[->] (M08) -- (M09);
+\draw[->] (M08) -- (M10);
+\draw[->] (M01) -- (M09);
+\draw[->] (M03) -- (M09);
+\draw[->] (M05) -- (M09);
+\draw[->] (M10) -- (M11);
+\draw[->] (M01) -- (M11);
+\draw[->] (M11) -- (M12);
+\draw[->] (M03) -- (M12);
+\draw[->] (M05) -- (M12);
+\draw[->] (M12) -- (M13);
+\draw[->] (M02) -- (M13);
+\draw[->] (M11) -- (M13);
+
+% Optimization connections
+\draw[->] (M14) -- (M15);
+\draw[->] (M14) -- (M16);
+\draw[->] (M14) -- (M17);
+\draw[->] (M15) -- (M18);
+\draw[->] (M16) -- (M18);
+\draw[->] (M17) -- (M18);
+\draw[->] (M18) -- (M19);
+\draw[->] (M19) -- (M20);
+
+% Cross-tier connections
+\draw[->,dashed] (M07) -- (M09);
+\draw[->,dashed] (M07) -- (M13);
+\draw[->,dashed] (M09) -- (M14);
+\draw[->,dashed] (M13) -- (M14);
+
+\end{tikzpicture}
+\caption{Module dependency flow: How components connect across tiers. Foundation modules (blue) enable architectures (purple), which are optimized (green), culminating in the capstone competition (red). Dotted lines show cross-tier integration.}
+\label{fig:module-flow}
+\end{figure}
+
+TinyTorch serves students transitioning from framework \emph{users} to framework \emph{engineers}: those who have completed introductory ML courses and want to understand framework internals, those planning ML systems research or infrastructure careers, or practitioners debugging production systems. Students needing immediate GPU/distributed training skills are better served by PyTorch tutorials; those preferring project-based application building will find high-level frameworks more appropriate. The curriculum supports flexible pacing: intensive completion (weeks), semester integration, or self-paced professional development.
+
+TinyTorch introduces three pedagogical innovations:
+
+\textbf{1. Progressive Disclosure via Monkey-Patching.}
+Students encounter a single \texttt{Tensor} class throughout the curriculum, but its capabilities expand progressively through runtime enhancement. Module 01 introduces \texttt{Tensor} with dormant gradient features (\texttt{.requires\_grad}, \texttt{.grad}, \texttt{.backward()}) that remain inactive until Module 05 activates them via monkey-patching---dynamically modifying the class at runtime to enable automatic differentiation (\Cref{lst:progressive}). This design teaches real framework evolution patterns---matching PyTorch 2.0's enhanced Tensor design---while managing cognitive load through phased complexity introduction.
+
+\begin{lstlisting}[caption={Progressive disclosure pattern},label=lst:progressive,float=t]
+# Module 01: Dormant features
+class Tensor:
+    def __init__(self, data, requires_grad=False):
+        self.data = np.array(data)
+        self.requires_grad = requires_grad  # Dormant
+        self.grad = None  # Dormant
+
+    def backward(self):
+        pass  # No-op until Module 05
+
+# Module 05: Activation via monkey-patching
+enable_autograd()  # Enhances Tensor class
+# Now gradients work throughout framework
+\end{lstlisting}
+
+Unlike educational frameworks that introduce separate classes for gradients or use deprecated patterns like PyTorch's old Variable wrapper, progressive disclosure maintains a single mental model while teaching production framework architecture.
+
+\textbf{2. Systems-First Integration.}
+Systems thinking---reasoning about memory, complexity, and performance as first-class concerns---is embedded throughout the curriculum, not deferred to advanced electives. Every module integrates memory profiling, computational complexity analysis, and performance reasoning as foundational concepts. Module 01 introduces \texttt{memory\_footprint()} methods before matrix multiplication. Module 09 implements convolution with seven explicit nested loops that make $O(B \times C_{\text{out}} \times H_{\text{out}} \times W_{\text{out}} \times C_{\text{in}} \times K_h \times K_w)$ complexity visible and countable. Module 17 quantizes models from FP32 to INT8 while measuring the accuracy-memory-speed triangle. Students calculate ``How much VRAM for this model?'' in Module 03, not as optional ``deployment course'' content but as integral to understanding neural network layers.
+
+This systems-first approach transforms student mental models: they shift from ``CNNs detect edges'' (algorithmic thinking) to ``CNNs perform 86M operations per forward pass'' (systems thinking). Memory profiling becomes reflexive---when implementing new layers, students automatically ask ``How much memory do parameters require? What about activations?'' These questions emerge naturally because systems concerns are woven into every module, not isolated in separate courses.
+
+This approach rejects the traditional separation of algorithmic understanding from systems awareness. Students cannot complete tensor operations without analyzing memory, cannot implement convolution without counting FLOPs, cannot choose optimizers without understanding that Adam requires 3$\times$ \emph{parameter} memory compared to SGD (note: activation memory typically dominates, but the parameter memory difference matters for optimizer state management).
+
+\textbf{3. Historical Milestone Validation.}
+Students validate implementations by recreating 70 years of ML history: Rosenblatt's 1957 Perceptron (Module 03), Minsky's XOR challenge solution (Module 05), Rumelhart's 1986 MNIST classifier (Module 07), LeCun's 1998 CIFAR-10 CNN achieving 75\%+ accuracy (Module 09), Vaswani's 2017 transformer for text generation (Module 13), and modern optimization competitions (Module 20). These are not toy demonstrations but historically significant achievements rebuilt entirely with student-written code using only NumPy.
+
+Each milestone serves dual purposes: proof of implementation correctness (if you match historical performance, your code works) and motivation through authentic accomplishment. The milestones create concrete capability checkpoints that validate cumulative understanding---broken implementations produce random accuracy, revealing gaps immediately.
+
+\paragraph{Contributions}
+
+This paper makes the following contributions:
+
+\begin{enumerate}
+\item \textbf{Theoretical Framework}: Application of constructionism, productive failure, and threshold concepts to ML systems education, demonstrating how established learning theories guide design choices (\Cref{sec:related}).
+
+\item \textbf{Production-Aligned Learning Path}: 20-module curriculum spanning basic tensors through modern architectures (CNNs, transformers, quantization) with explicit connections to PyTorch and TensorFlow patterns (\Cref{sec:curriculum}).
+
+\item \textbf{Progressive Disclosure Pattern}: A pedagogical technique using monkey-patching to reveal framework complexity gradually while maintaining a single mental model, designed to manage cognitive load by partitioning element interactivity across modules (\Cref{sec:progressive}). Empirical validation of cognitive load reduction is planned for Fall 2025 deployment.
+
+\item \textbf{Systems-First Curriculum Design}: Integration of memory profiling, computational complexity, and performance analysis from foundational modules through advanced topics, replacing the traditional separation of algorithmic and systems courses (\Cref{sec:systems}).
+
+\item \textbf{Replicable Educational Artifact}: Complete open-source curriculum design enabling educator adoption and empirical evaluation by researchers (Throughout).
+\end{enumerate}
+
+\emph{Important scope note}: This paper presents a \textbf{design contribution}---pedagogical patterns, curriculum architecture, and theoretical grounding---not an empirical evaluation of learning outcomes. We provide the design rationale and implementation; rigorous classroom evaluation is planned for Fall 2025 deployment (\Cref{sec:discussion}).
+
+\paragraph{Positioning and Broader Impact}
+
+TinyTorch complements existing educational frameworks (micrograd, MiniTorch, d2l.ai, fast.ai) through its unique combination of complete framework construction with embedded systems awareness. Detailed positioning relative to these frameworks appears in \Cref{sec:related}.
+
+\textbf{When to use TinyTorch}:
+\begin{itemize}
+\item After fast.ai (user $\rightarrow$ engineer transition)
+\item Before CS231n (foundation for understanding PyTorch deeply)
+\item As standalone systems course (complement algorithm-focused ML)
+\item For students pursuing ML systems research or infrastructure roles
+\end{itemize}
+
+The broader impact extends beyond individual student learning. For CS educators, TinyTorch provides replicable curriculum patterns worth empirical investigation. For ML practitioners, it offers framework internals education that may transfer to PyTorch/TensorFlow debugging and optimization. For CS education researchers, it presents novel pedagogical patterns---progressive disclosure via monkey-patching, systems-first integration, constructionist framework building---worth studying empirically.
+
+\paragraph{Paper Organization}
+
+\Cref{sec:related} positions TinyTorch relative to existing frameworks and learning theory. \Cref{sec:curriculum,sec:progressive,sec:systems} present curriculum architecture, progressive disclosure patterns, and systems-first integration. \Cref{sec:discussion,sec:conclusion} discuss limitations, future work, and implications for ML education.

@@ -1,0 +1,246 @@
+\begin{thebibliography}{29}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[~(1958)]{rosenblatt1958perceptron}
+F~, ROSENBLATT.
+\newblock The perceptron: a probabilistic model for information storage and
+  organization in the brain.
+\newblock \emph{Psychological review}, 65\penalty0 (6):\penalty0 386--408,
+  1958.
+\newblock ISSN 0033-295X.
+\newblock \doi{10.1037/h0042519}.
+
+\bibitem[Burstein et~al.(1992)Burstein, Henry, Collison, Marczak, Sligar,
+  Watson, Marquez, Abbasalizad-Farhangi, Abbasi, Abd-Allah,
+  et~al.]{perkins1992transfer}
+R~Burstein, NJ~Henry, ML~Collison, LB~Marczak, A~Sligar, S~Watson, N~Marquez,
+  M~Abbasalizad-Farhangi, M~Abbasi, F~Abd-Allah, et~al.
+\newblock Mapping 123 million neonatal, infant and child deaths between 2000
+  and 2017.
+\newblock \emph{Nature}, 574\penalty0 (7778):\penalty0 353--358, 1992.
+\newblock ISSN 0028-0836.
+\newblock \doi{10.1038/s41586-019-1545-0}.
+
+\bibitem[Chen and Zheng(2022)]{chen2022dlsyscourse}
+Tianqi Chen and Zico Zheng.
+\newblock Cs 10-414/614: Deep learning systems, 2022.
+\newblock URL \url{https://dlsyscourse.org/}.
+
+\bibitem[Collins et~al.()Collins, Brown, and Newman]{collins1989cognitive}
+Allan Collins, John~Seely Brown, and Susan~E. Newman.
+\newblock Cognitive apprenticeship: Teaching the crafts of reading, writing,
+  and mathematics.
+\newblock In \emph{Knowing, Learning, and Instruction}, pages 453--494.
+  Routledge.
+\newblock ISBN 9781315044408.
+\newblock \doi{10.4324/9781315044408-14}.
+\newblock URL \url{https://doi.org/10.4324/9781315044408-14}.
+
+\bibitem[Frolli et~al.(1960)Frolli, Cerciello, Ciotola, Ricci, Esposito, and
+  Sica]{bruner1960process}
+A~Frolli, F~Cerciello, S~Ciotola, MC~Ricci, C~Esposito, and LS~Sica.
+\newblock Narrative approach and mentalization.
+\newblock \emph{Behavioral sciences (Basel, Switzerland)}, 13\penalty0 (12),
+  1960.
+\newblock ISSN 2076-328X.
+\newblock \doi{10.3390/bs13120994}.
+
+\bibitem[Hotz and contributors(2023)]{hotz2023tinygrad}
+George Hotz and contributors.
+\newblock tinygrad: A simple and powerful neural network framework, 2023.
+\newblock URL \url{https://github.com/tinygrad/tinygrad}.
+
+\bibitem[Howard and Gugger()]{howard2020fastai}
+Jeremy Howard and Sylvain Gugger.
+\newblock Fastai: A layered api for deep learning.
+\newblock \emph{Information}, 11\penalty0 (2):\penalty0 108.
+\newblock ISSN 2078-2489.
+\newblock \doi{10.3390/info11020108}.
+\newblock URL \url{https://doi.org/10.3390/info11020108}.
+
+\bibitem[Johnson et~al.(2016)Johnson, Karpathy, and Fei-Fei]{johnson2016cs231n}
+Justin Johnson, Andrej Karpathy, and Li~Fei-Fei.
+\newblock Cs231n: Convolutional neural networks for visual recognition, 2016.
+\newblock URL \url{http://cs231n.stanford.edu/}.
+
+\bibitem[Jupyter et~al.()Jupyter, Blank, Bourgin, Brown, Bussonnier, Frederic,
+  Granger, Griffiths, Hamrick, Kelley, Pacer, Page, Pérez, Ragan-Kelley,
+  Suchow, and Willing]{blank2019nbgrader}
+Project Jupyter, Douglas Blank, David Bourgin, Alexander Brown, Matthias
+  Bussonnier, Jonathan Frederic, Brian Granger, Thomas Griffiths, Jessica
+  Hamrick, Kyle Kelley, M~Pacer, Logan Page, Fernando Pérez, Benjamin
+  Ragan-Kelley, Jordan Suchow, and Carol Willing.
+\newblock nbgrader: A tool for creating and grading assignments in the jupyter
+  notebook.
+\newblock \emph{Journal of Open Source Education}, 2\penalty0 (11):\penalty0
+  32.
+\newblock ISSN 2577-3569.
+\newblock \doi{10.21105/jose.00032}.
+\newblock URL \url{https://doi.org/10.21105/jose.00032}.
+
+\bibitem[Kapur()]{kapur2008productive}
+Manu Kapur.
+\newblock Productive failure.
+\newblock \emph{Cognition and Instruction}, 26\penalty0 (3):\penalty0 379--424.
+\newblock ISSN 0737-0008,1532-690X.
+\newblock \doi{10.1080/07370000802212669}.
+\newblock URL \url{https://doi.org/10.1080/07370000802212669}.
+
+\bibitem[Karpathy(2022)]{karpathy2022micrograd}
+Andrej Karpathy.
+\newblock micrograd: A tiny scalar-valued autograd engine and neural net
+  library, 2022.
+\newblock URL \url{https://github.com/karpathy/micrograd}.
+
+\bibitem[Krizhevsky and Hinton(2009)]{krizhevsky2009cifar}
+Alex Krizhevsky and Geoffrey Hinton.
+\newblock Learning multiple layers of features from tiny images.
+\newblock Technical report, University of Toronto, 2009.
+
+\bibitem[Lave and Wenger()]{lave1991situated}
+Jean Lave and Etienne Wenger.
+\newblock \emph{Situated Learning}.
+\newblock Cambridge University Press.
+\newblock ISBN 9780521413084,9780521423748,9780511815355.
+\newblock \doi{10.1017/cbo9780511815355}.
+\newblock URL \url{https://doi.org/10.1017/cbo9780511815355}.
+
+\bibitem[Lecun et~al.()Lecun, Bottou, Bengio, and Haffner]{lecun1998gradient}
+Y.~Lecun, L.~Bottou, Y.~Bengio, and P.~Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324.
+\newblock ISSN 0018-9219.
+\newblock \doi{10.1109/5.726791}.
+\newblock URL \url{https://doi.org/10.1109/5.726791}.
+
+\bibitem[Meyer and Land(2003)]{meyer2003threshold}
+Jan H.~F. Meyer and Ray Land.
+\newblock Threshold concepts and troublesome knowledge: Linkages to ways of
+  thinking and practising within the disciplines.
+\newblock In C.~Rust, editor, \emph{Improving Student Learning: Theory and
+  Practice Ten Years On}, pages 412--424. Oxford Centre for Staff and Learning
+  Development, Oxford, 2003.
+
+\bibitem[Rashidi et~al.()Rashidi, Sridharan, Srinivasan, and
+  Krishna]{chakkaravarthy2023astrasim}
+Saeed Rashidi, Srinivas Sridharan, Sudarshan Srinivasan, and Tushar Krishna.
+\newblock Astra-sim: Enabling sw/hw co-design exploration for distributed dl
+  training platforms.
+\newblock In \emph{2020 IEEE International Symposium on Performance Analysis of
+  Systems and Software (ISPASS)}, volume~43, pages 81--92. IEEE.
+\newblock \doi{10.1109/ispass48437.2020.00018}.
+\newblock URL \url{https://doi.org/10.1109/ispass48437.2020.00018}.
+
+\bibitem[Reddi()]{reddi2024mlsysbook}
+Vijay~Janapa Reddi.
+\newblock Mlsysbook.ai: Principles and practices of machine learning systems
+  engineering.
+\newblock In \emph{2024 International Conference on Hardware/Software Codesign
+  and System Synthesis (CODES+ISSS)}, pages 41--42. IEEE, IEEE.
+\newblock \doi{10.1109/codes-isss60120.2024.00015}.
+\newblock URL \url{https://doi.org/10.1109/codes-isss60120.2024.00015}.
+
+\bibitem[Reddi et~al.({\natexlab{a}})Reddi, Cheng, Kanter, Mattson,
+  Schmuelling, Wu, Anderson, Breughe, Charlebois, Chou,
+  et~al.]{reddi2020mlperf}
+Vijay~Janapa Reddi, Christine Cheng, David Kanter, Peter Mattson, Guenther
+  Schmuelling, Carole-Jean Wu, Brian Anderson, Maximilien Breughe, Mark
+  Charlebois, William Chou, et~al.
+\newblock Mlperf inference benchmark.
+\newblock \emph{arXiv preprint arXiv:1911.02549}, {\natexlab{a}}.
+\newblock URL \url{http://arxiv.org/abs/1911.02549v2}.
+
+\bibitem[Reddi et~al.({\natexlab{b}})Reddi, Plancher, Kennedy, Moroney, Warden,
+  Agarwal, Banbury, Banzi, Bennett, Brown, Chitlangia, Ghosal, Grafman, Jaeger,
+  Krishnan, Lam, Leiker, Mann, Mazumder, Pajak, Ramaprasad, Smith, Stewart, and
+  Tingley]{banbury2021widening}
+Vijay~Janapa Reddi, Brian Plancher, Susan Kennedy, Laurence Moroney, Pete
+  Warden, Anant Agarwal, Colby Banbury, Massimo Banzi, Matthew Bennett,
+  Benjamin Brown, Sharad Chitlangia, Radhika Ghosal, Sarah Grafman, Rupert
+  Jaeger, Srivatsan Krishnan, Maximilian Lam, Daniel Leiker, Cara Mann, Mark
+  Mazumder, Dominic Pajak, Dhilan Ramaprasad, J.~Evan Smith, Matthew Stewart,
+  and Dustin Tingley.
+\newblock Widening access to applied machine learning with tinyml.
+\newblock \emph{arXiv preprint arXiv:2106.04008}, {\natexlab{b}}.
+\newblock URL \url{http://arxiv.org/abs/2106.04008v2}.
+
+\bibitem[Rumelhart et~al.()Rumelhart, Hinton, and
+  Williams]{rumelhart1986learning}
+David~E. Rumelhart, Geoffrey~E. Hinton, and Ronald~J. Williams.
+\newblock Learning representations by back-propagating errors.
+\newblock \emph{Nature}, 323\penalty0 (6088):\penalty0 533--536.
+\newblock ISSN 0028-0836,1476-4687.
+\newblock \doi{10.1038/323533a0}.
+\newblock URL \url{https://doi.org/10.1038/323533a0}.
+
+\bibitem[Rush(2020)]{schneider2020minitorch}
+Sasha Rush.
+\newblock Minitorch: A diy teaching library for machine learning engineers,
+  2020.
+\newblock URL \url{https://minitorch.github.io/}.
+
+\bibitem[Samajdar et~al.()Samajdar, Joseph, Zhu, Whatmough, Mattina, and
+  Krishna]{astrasimsim2020}
+Ananda Samajdar, Jan~Moritz Joseph, Yuhao Zhu, Paul Whatmough, Matthew Mattina,
+  and Tushar Krishna.
+\newblock A systematic methodology for characterizing scalability of dnn
+  accelerators using scale-sim.
+\newblock In \emph{2020 IEEE International Symposium on Performance Analysis of
+  Systems and Software (ISPASS)}, pages 1--14. IEEE.
+\newblock \doi{10.1109/ispass48437.2020.00016}.
+\newblock URL \url{https://doi.org/10.1109/ispass48437.2020.00016}.
+
+\bibitem[Sweller()]{sweller1988cognitive}
+John Sweller.
+\newblock Cognitive load during problem solving: Effects on learning.
+\newblock \emph{Cognitive Science}, 12\penalty0 (2):\penalty0 257--285.
+\newblock ISSN 0364-0213,1551-6709.
+\newblock \doi{10.1207/s15516709cog1202\_4}.
+\newblock URL \url{https://doi.org/10.1207/s15516709cog1202\_4}.
+
+\bibitem[Team(2018)]{pytorch04release}
+PyTorch Team.
+\newblock Pytorch 0.4.0 release notes: Tensor and variable merge, 2018.
+\newblock URL \url{https://github.com/pytorch/pytorch/releases/tag/v0.4.0}.
+
+\bibitem[Team(2019)]{tensorflow20}
+TensorFlow Team.
+\newblock Tensorflow 2.0: Easy model building with keras and eager execution,
+  2019.
+\newblock URL \url{https://www.tensorflow.org/guide/effective\_tf2}.
+
+\bibitem[Vaswani et~al.()Vaswani, Shazeer, Parmar, Uszkoreit, Jones, N.Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan
+  N.Gomez, Lukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock URL \url{https://doi.org/10.65215/pc26a033}.
+
+\bibitem[Williams et~al.()Williams, Waterman, and
+  Patterson]{williams2009roofline}
+Samuel Williams, Andrew Waterman, and David Patterson.
+\newblock Roofline.
+\newblock \emph{Communications of the ACM}, 52\penalty0 (4):\penalty0 65--76.
+\newblock ISSN 0001-0782,1557-7317.
+\newblock \doi{10.1145/1498765.1498785}.
+\newblock URL \url{https://doi.org/10.1145/1498765.1498785}.
+
+\bibitem[Wooster and Papert()]{papert1980mindstorms}
+Judith~S. Wooster and Seymour Papert.
+\newblock Mindstorms: Children, computers, and powerful ideas.
+\newblock \emph{The English Journal}, 71\penalty0 (8):\penalty0 60.
+\newblock ISSN 0013-8274.
+\newblock \doi{10.2307/816450}.
+\newblock URL \url{https://doi.org/10.2307/816450}.
+
+\bibitem[Zhang et~al.(2021)Zhang, Lipton, 0003, and Smola]{zhang2021dive}
+Aston Zhang, Zachary~C. Lipton, Mu~Li 0003, and Alexander~J. Smola.
+\newblock Dive into deep learning., 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.11342}.
+
+\end{thebibliography}

@@ -1,20 +1,21 @@
 #!/bin/bash
 # Compile TinyTorch LaTeX paper to PDF
+# Uses LuaLaTeX for emoji support
 
 cd "$(dirname "$0")"
 
-# Check if pdflatex is available
-if ! command -v pdflatex &> /dev/null; then
-    echo "Error: pdflatex not found"
+# Check if lualatex is available
+if ! command -v lualatex &> /dev/null; then
+    echo "Error: lualatex not found"
     echo "Please install MacTeX: brew install --cask mactex"
     echo "Or install BasicTeX: brew install --cask basictex"
     exit 1
 fi
 
-echo "Compiling paper.tex..."
+echo "Compiling paper.tex with LuaLaTeX (for emoji support)..."
 
 # First pass
-pdflatex -interaction=nonstopmode paper.tex
+lualatex -interaction=nonstopmode paper.tex
 
 # BibTeX pass
 if command -v bibtex &> /dev/null; then
@@ -22,10 +23,10 @@ if command -v bibtex &> /dev/null; then
 fi
 
 # Second pass (resolve references)
-pdflatex -interaction=nonstopmode paper.tex
+lualatex -interaction=nonstopmode paper.tex
 
 # Third pass (final cleanup)
-pdflatex -interaction=nonstopmode paper.tex
+lualatex -interaction=nonstopmode paper.tex
 
 # Check if PDF was created
 if [ -f paper.pdf ]; then
