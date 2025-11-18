@@ -41,43 +41,43 @@ Warning--empty year in zhang2021dive
 Warning--empty year in zhang2021dive
 You've used 37 entries,
             2773 wiz_defined-function locations,
-            874 strings with 23748 characters,
-and the built_in function-call counts, 50365 in all, are:
-= -- 3573
-> -- 6924
-< -- 25
-+ -- 2316
-- -- 2278
-* -- 5394
-:= -- 8619
-add.period$ -- 167
+            869 strings with 14909 characters,
+and the built_in function-call counts, 22494 in all, are:
+= -- 1894
+> -- 1919
+< -- 26
++ -- 647
+- -- 609
+* -- 2040
+:= -- 3606
+add.period$ -- 166
 call.type$ -- 37
-change.case$ -- 869
+change.case$ -- 313
 chr.to.int$ -- 36
 cite$ -- 110
-duplicate$ -- 769
+duplicate$ -- 772
 empty$ -- 1375
-format.name$ -- 2329
-if$ -- 9580
+format.name$ -- 662
+if$ -- 4567
 int.to.chr$ -- 2
 int.to.str$ -- 1
 missing$ -- 29
-newline$ -- 243
-num.names$ -- 150
-pop$ -- 1803
+newline$ -- 241
+num.names$ -- 152
+pop$ -- 695
 preamble$ -- 1
-purify$ -- 833
+purify$ -- 276
 quote$ -- 0
-skip$ -- 1220
+skip$ -- 664
 stack$ -- 0
-substring$ -- 441
+substring$ -- 416
 swap$ -- 93
 text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 392
 warning$ -- 36
-while$ -- 147
+while$ -- 146
 width$ -- 0
-write$ -- 566
+write$ -- 564
 (There were 36 warnings)
