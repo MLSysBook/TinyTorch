@@ -21,6 +21,12 @@ Colby~R. Banbury, Vijay~Janapa Reddi, Max Lam, William Fu, Amin Fazel, Jeremy
 \newblock \emph{arXiv preprint arXiv:2003.04821}, 2021.
 \newblock URL \url{https://arxiv.org/abs/2003.04821}.
 
+\bibitem[Bruner(1960)]{bruner1960process}
+Jerome~S. Bruner.
+\newblock \emph{The Process of Education}.
+\newblock Harvard University Press, Cambridge, MA, 1960.
+\newblock ISBN 9780674710016.
+
 \bibitem[Chen and Zheng(2022)]{chen2022dlsyscourse}
 Tianqi Chen and Zico Zheng.
 \newblock Cs 10-414/614: Deep learning systems, 2022.
@@ -35,15 +41,6 @@ Allan Collins, John~Seely Brown, and Susan~E. Newman.
 \newblock ISBN 9781315044408.
 \newblock \doi{10.4324/9781315044408-14}.
 \newblock URL \url{https://doi.org/10.4324/9781315044408-14}.
-
-\bibitem[Frolli et~al.(1960)Frolli, Cerciello, Ciotola, Ricci, Esposito, and
-  Sica]{bruner1960process}
-A~Frolli, F~Cerciello, S~Ciotola, MC~Ricci, C~Esposito, and LS~Sica.
-\newblock Narrative approach and mentalization.
-\newblock \emph{Behavioral sciences (Basel, Switzerland)}, 13\penalty0 (12),
-  1960.
-\newblock ISSN 2076-328X.
-\newblock \doi{10.3390/bs13120994}.
 
 \bibitem[Heffernan()]{roberthalf2024talent}
 Margaret Heffernan.

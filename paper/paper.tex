@@ -144,13 +144,13 @@
   From Tensors to Systems
 }
 \author{
-  \fontsize{10}{12}\selectfont
+  \fontsize{12}{12}\selectfont
   Vijay Janapa Reddi\\
-  \fontsize{10}{12}\selectfont
+  \fontsize{12}{12}\selectfont
   Harvard University\\
-  \fontsize{10}{12}\selectfont
+  \fontsize{12}{12}\selectfont
   Cambridge, MA, USA\\[1.5em]
-  \fontsize{8}{12}\selectfont
+  \fontsize{10}{12}\selectfont
   \textcolor{gray!70}{\texttt{\href{https://www.tinytorch.ai}{tinytorch.ai}}}
 }
 
@@ -162,13 +162,13 @@
 \thispagestyle{plain}
 \maketitle
 
-% Abstract - REVISED: Research-focused for arXiv
+% Abstract - REVISED: Curriculum design focus
 \begin{abstract}
 Machine learning education typically teaches framework usage without exposing internals, leaving students unable to debug gradient flows, profile memory bottlenecks, or understand optimization tradeoffs. TinyTorch addresses this gap through a build-from-scratch curriculum where students implement PyTorch's core components—tensors, autograd, optimizers, and neural networks—to gain framework transparency.
 
-We contribute three pedagogical patterns for teaching ML as systems engineering. \textbf{Progressive disclosure} activates dormant tensor features across modules through monkey-patching, modeling how frameworks evolve from separate abstractions to unified interfaces. \textbf{Systems-first curriculum} embeds memory profiling and complexity analysis from the start rather than treating them as advanced topics. \textbf{Historical milestone validation} recreates nearly 70 years of ML breakthroughs (1958 Perceptron through modern transformers) using exclusively student-implemented code to validate correctness.
+We present the design and implementation of three pedagogical patterns for teaching ML as systems engineering. \textbf{Progressive disclosure} activates dormant tensor features across modules through monkey-patching, modeling how frameworks evolve from separate abstractions to unified interfaces. \textbf{Systems-first curriculum} embeds memory profiling and complexity analysis from the start rather than treating them as advanced topics. \textbf{Historical milestone validation} recreates nearly 70 years of ML breakthroughs (1958 Perceptron through modern transformers) using exclusively student-implemented code to validate correctness. These patterns are grounded in established learning theory but represent testable design hypotheses whose learning outcomes require empirical validation.
 
-The 20-module curriculum (60--80 hours) provides complete open-source implementation for institutional adoption or self-paced learning at \texttt{tinytorch.ai}.
+The 20-module curriculum (60--80 hours) provides complete open-source infrastructure for institutional adoption or self-paced learning at \texttt{tinytorch.ai}.
 \end{abstract}
 
 
@@ -256,13 +256,15 @@ class Adam:
                   for p in params]
 
     def step(self):
-        for p, m, v in zip(self.params,
-                           self.m, 
-                           self.v):
-            m = 0.9*m + 0.1*p.grad
-            v = 0.999*v + 0.001*p.grad**2
-            p.data -= (self.lr * m /
-                       (v.sqrt() + 1e-8))
+        for i, p in enumerate(
+                self.params):
+            self.m[i] = (0.9*self.m[i] +
+                        0.1*p.grad)
+            self.v[i] = (0.999*self.v[i] +
+                        0.001*p.grad**2)
+            p.data -= (self.lr *
+                self.m[i] /
+                (self.v[i].sqrt() + 1e-8))
 \end{lstlisting}
 \subcaption{TinyTorch: Understanding internals}
 \label{lst:tinytorch-build}
@@ -534,7 +536,7 @@ class Tensor:
 Students build the mathematical core enabling neural networks to learn. Systems thinking begins immediately---Module 01 introduces \texttt{memory\_footprint()} before matrix multiplication (\Cref{lst:tensor-memory}), making memory a first-class concept. The tier progresses through tensors, activations, layers, and losses to automatic differentiation (Module 05)---where dormant gradient features activate through progressive disclosure (\Cref{sec:progressive}). Students implement optimizers (Module 06), discovering Adam's memory trade-offs through direct measurement (\Cref{sec:systems}). The training loop (Module 07) integrates all components. By tier completion, students recreate three historical milestones: \citet{rosenblatt1958perceptron}'s Perceptron, Minsky and Papert's XOR solution, and \citet{rumelhart1986learning}'s backpropagation achieving 95\%+ on MNIST. Students calculate memory before operations: ``Matrix multiplication A @ B where both are (1000, 1000) FP32 requires 12MB peak memory: 4MB for A, 4MB for B, and 4MB for the output.'' This reasoning becomes automatic.
 
 \textbf{Tier 2: Architectures (Modules 08--13).}
-Students apply foundation knowledge to modern architectures for vision and language. Module 08 introduces the Dataset abstraction pattern (implementing \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} protocols) and DataLoader with batch collation, teaching how PyTorch's data pipeline transforms individual samples into batched tensors through the iterator protocol. TinyTorch ships with two custom educational datasets that install with the repository: \textbf{TinyDigits} (5,000 grayscale handwritten digits, curated from public digit datasets) and \textbf{TinyTalks} (3,000 synthetically-generated conversational Q\&A pairs). These datasets are deliberately small and offline-first: they require no network connectivity during training, consume minimal storage ($<$50MB combined), and train in minutes on CPU-only hardware. This design ensures accessibility for students in regions with limited internet infrastructure, institutional computer labs with restricted network access, and developing countries where cloud-based datasets create barriers to ML education.
+Students apply foundation knowledge to modern architectures for vision and language. Module 08 introduces the Dataset abstraction pattern (implementing \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} protocols) and DataLoader with batch collation, teaching how PyTorch's data pipeline transforms individual samples into batched tensors through the iterator protocol. While Module 07 implements basic training loops with manual batching (simple iteration over pre-batched arrays), Module 08 refactors this into production-quality data loading---a pedagogical pattern of ``make it work, then make it right.'' Students first understand training mechanics (forward pass, loss, backward, update), then learn proper data pipeline engineering. TinyTorch ships with two custom educational datasets that install with the repository: \textbf{TinyDigits} (5,000 grayscale handwritten digits, curated from public digit datasets) and \textbf{TinyTalks} (3,000 synthetically-generated conversational Q\&A pairs). These datasets are deliberately small and offline-first: they require no network connectivity during training, consume minimal storage ($<$50MB combined), and train in minutes on CPU-only hardware. This design ensures accessibility for students in regions with limited internet infrastructure, institutional computer labs with restricted network access, and developing countries where cloud-based datasets create barriers to ML education.
 
 The tier then branches into two paths. \textbf{Vision} implements Conv2d with seven explicit nested loops making $O(C_{out} \times H \times W \times C_{in} \times K^2)$ complexity visible before optimization. Students discover weight sharing's dramatic efficiency through direct comparison: Conv2d(3$\rightarrow$32, kernel=3) requires 896 parameters while an equivalent dense layer needs 98,336 parameters (3072 input features $\times$ 32 outputs + 32 bias terms)---a 109$\times$ reduction demonstrating how inductive biases enable CNNs to learn spatial patterns without brute-force parameterization. This enables Milestone 4 (1998 CNN Revolution) with 75\%+ CIFAR-10 accuracy~\citep{krizhevsky2009cifar,lecun1998gradient}.
 
@@ -717,6 +719,8 @@ This design serves three pedagogical purposes: (1) \textbf{Early interface famil
 Progressive disclosure is hypothesized to manage cognitive load through two competing mechanisms. First, early API familiarity may reduce future cognitive load when features activate (students already know the interface). Second, dormant features visible from Module 01 may create split-attention effects requiring students to track ``not yet functional'' components \citep{sweller1988cognitive}. Whether the net effect reduces or increases cognitive load requires empirical measurement through dual-task methodology or cognitive load self-report scales. The pattern's primary validated benefit is forward compatibility---Module 01 code continues working when autograd activates---rather than proven cognitive load reduction. Empirical testing planned for Fall 2025 will measure actual cognitive load impact across both mechanisms.
 
 The pattern also instantiates threshold concept pedagogy \citep{meyer2003threshold}: autograd is transformative and troublesome. By making it visible early (dormant) but activatable later, students may cross this threshold when cognitively ready, though empirical evidence of this progression is needed.
+
+\noindent\textbf{Implementation Choice: Monkey-Patching vs. Inheritance.} Alternative designs include inheritance (\texttt{TensorV1}/\texttt{TensorV2}) or composition. We chose monkey-patching for three pedagogical reasons: (1) \textbf{Unified mental model}---students work with one \texttt{Tensor} class throughout, not switching between versions; (2) \textbf{Historical accuracy}---models PyTorch 0.4's Variable-Tensor merger via runtime consolidation rather than design-time hierarchy; (3) \textbf{Forward compatibility demonstration}---Module 01 code continues working unchanged when features activate, teaching interface stability principles. The software engineering trade-off (global state modification) is explicitly discussed in Module 05's reflection questions, making students aware of both the pedagogical benefit and production code concerns.
 
 \subsection{Production Framework Alignment}
 
@@ -979,6 +983,8 @@ TinyTorch teaches framework internals as foundation for GPU and distributed work
 \textbf{Energy consumption}: While TinyTorch covers optimization techniques with significant energy implications (quantization achieving 4$\times$ compression, pruning enabling 10$\times$ model shrinkage), the curriculum does not explicitly measure or quantify energy consumption for students. The optimization modules discuss memory reduction and computational efficiency, implicitly touching on energy-saving benefits, but lack direct energy profiling tools or measurements. This omission means students understand that quantization reduces model size and pruning decreases computation, but may not connect these optimizations to concrete energy savings (joules/inference, watt-hours/training epoch). Future iterations could integrate energy profiling libraries or simulation tools to make energy efficiency an explicit learning objective alongside memory and latency optimization, particularly relevant for edge deployment and sustainable ML practices.
 
 \textbf{Language}: Materials exist exclusively in English. Modular structure facilitates translation; community contributions welcome.
+
+\textbf{Type hints and modern Python practices}: Current code examples omit type annotations (e.g., \texttt{def forward(self, x: Tensor) -> Tensor:}) to reduce visual complexity for students learning ML concepts simultaneously. While this prioritizes pedagogical clarity, it means students don't practice type-driven development increasingly standard in production ML codebases. Future iterations could introduce type hints progressively: omitting them in early modules (01-05) during foundational concept learning, then adding them in optimization modules (14-18) where interface contracts become critical for performance engineering. This mirrors how production teams adopt typing gradually. Alternative approach: optional typed variants of modules for advanced students or professional training contexts.
 
 \section{Future Work}
 \label{sec:future-work}
