@@ -121,13 +121,25 @@ except ImportError as e:
         "   Original error: " + str(e)
     ) from e
 
-# Sequential is a simple container - define it here since it's not exported from Module 03
+# Sequential container - TESTING UTILITY ONLY (not part of progressive building)
+# NOTE: Sequential is NOT part of the educational curriculum - it's a utility for testing compression
+# Students should use explicit layer composition in their own code, not Sequential
 class Sequential:
     """
-    Sequential container for model compression.
+    Minimal Sequential container for testing compression techniques.
     
-    Simple container that chains layers together.
-    This is a utility class for testing compression techniques.
+    ⚠️ EDUCATIONAL NOTE: This is a TESTING UTILITY ONLY.
+    Students should NOT use Sequential in their own code - they should compose
+    layers explicitly to understand data flow:
+    
+    # ❌ DON'T DO THIS (hides learning):
+    model = Sequential(Linear(10, 5), Linear(5, 2))
+    
+    # ✅ DO THIS (explicit, educational):
+    layer1 = Linear(10, 5)
+    layer2 = Linear(5, 2)
+    x = layer1.forward(x)
+    x = layer2.forward(x)
     """
     def __init__(self, *layers):
         self.layers = list(layers)
