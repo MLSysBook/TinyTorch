@@ -772,22 +772,20 @@ This explicit implementation illustrates TinyTorch's pedagogical philosophy: \te
 
 Students calculate: CIFAR-10 batch (128, 3, 32, 32) through 32-filter 5$\times$5 convolution: $128 \times 32 \times 28 \times 28 \times 3 \times 5 \times 5 = 241$M multiply-accumulate operations. This concrete measurement motivates Module 18's vectorization (10--100$\times$ speedup) and explains why CNNs require hardware acceleration.
 
-\noindent\textbf{Experiencing Performance Reality.} \Cref{tab:performance} shows TinyTorch's deliberate slowness compared to PyTorch---100--1000$\times$ slower through pure Python implementations. This slowness is pedagogically valuable (productive failure \citep{kapur2008productive}): students experience performance problems before learning optimizations, making vectorization meaningful rather than abstract. When students measure their Conv2d taking 8.4 seconds per CIFAR batch versus PyTorch's 0.09 seconds, they understand \emph{why} production frameworks obsess over implementation details.
+\noindent\textbf{Experiencing Performance Reality.} \Cref{tab:performance} shows TinyTorch's deliberate slowness compared to PyTorch---100--10,000$\times$ slower through pure Python implementations. This slowness is pedagogically valuable (productive failure \citep{kapur2008productive}): students experience performance problems before learning optimizations, making vectorization meaningful rather than abstract. When students measure their Conv2d taking 97 seconds per CIFAR batch versus PyTorch's 10 milliseconds, they understand \emph{why} production frameworks obsess over implementation details.
 
 \begin{table}[t]
 \centering
-\caption{Runtime comparison: TinyTorch vs PyTorch (CPU).}
+\caption{Runtime comparison: TinyTorch vs PyTorch (CPU). Pure Python implementations with explicit loops are 100--10,000$\times$ slower, making performance costs visible and optimization meaningful.}
 \label{tab:performance}
 \small
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Operation & TinyTorch & PyTorch & Ratio \\
 \midrule
-\texttt{matmul} (1K$\times$1K) & 890 ms & 2.1 ms & 424$\times$ \\
-\texttt{conv2d} (CIFAR batch) & 8.4 s & 0.09 s & 93$\times$ \\
-\texttt{softmax} (10K elem) & 45 ms & 0.12 ms & 375$\times$ \\
-\midrule
-CIFAR-10 epoch (LeNet) & 12 min & 8 sec & 90$\times$ \\
+\texttt{matmul} (1K$\times$1K) & 1.0 s & 0.9 ms & 1,090$\times$ \\
+\texttt{conv2d} (CIFAR batch) & 97 s & 10 ms & 10,017$\times$ \\
+\texttt{softmax} (10K elem) & 6 ms & 0.05 ms & 134$\times$ \\
 \bottomrule
 \end{tabular}
 \end{table}
