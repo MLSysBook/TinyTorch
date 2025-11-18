@@ -1,0 +1,77 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--empty year in collins1989cognitive
+Warning--empty year in collins1989cognitive
+Warning--empty year in howard2020fastai
+Warning--empty year in howard2020fastai
+Warning--empty year in blank2019nbgrader
+Warning--empty year in blank2019nbgrader
+Warning--empty year in kapur2008productive
+Warning--empty year in kapur2008productive
+Warning--empty year in lave1991situated
+Warning--empty year in lave1991situated
+Warning--empty year in lecun1998gradient
+Warning--empty year in lecun1998gradient
+Warning--can't use both volume and number fields in chakkaravarthy2023astrasim
+Warning--empty year in chakkaravarthy2023astrasim
+Warning--empty year in chakkaravarthy2023astrasim
+Warning--empty year in reddi2024mlsysbook
+Warning--empty year in reddi2024mlsysbook
+Warning--empty year in reddi2020mlperf
+Warning--empty year in banbury2021widening
+Warning--empty year in rumelhart1986learning
+Warning--empty year in rumelhart1986learning
+Warning--empty year in astrasimsim2020
+Warning--empty year in astrasimsim2020
+Warning--empty year in sweller1988cognitive
+Warning--empty year in sweller1988cognitive
+Warning--empty year in vaswani2017attention
+Warning--empty year in williams2009roofline
+Warning--empty year in williams2009roofline
+Warning--empty year in papert1980mindstorms
+Warning--empty year in papert1980mindstorms
+You've used 29 entries,
+            2773 wiz_defined-function locations,
+            822 strings with 12291 characters,
+and the built_in function-call counts, 16343 in all, are:
+= -- 1437
+> -- 1225
+< -- 21
++ -- 415
+- -- 385
+* -- 1454
+:= -- 2584
+add.period$ -- 136
+call.type$ -- 29
+change.case$ -- 213
+chr.to.int$ -- 28
+cite$ -- 88
+duplicate$ -- 595
+empty$ -- 1090
+format.name$ -- 428
+if$ -- 3352
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 20
+newline$ -- 197
+num.names$ -- 118
+pop$ -- 473
+preamble$ -- 1
+purify$ -- 184
+quote$ -- 0
+skip$ -- 486
+stack$ -- 0
+substring$ -- 385
+swap$ -- 72
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 314
+warning$ -- 30
+while$ -- 120
+width$ -- 0
+write$ -- 454
+(There were 30 warnings)
