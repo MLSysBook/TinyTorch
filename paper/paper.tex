@@ -411,7 +411,7 @@ Educational frameworks teaching ML internals occupy different points in the scop
 
 \textbf{tinygrad}~\citep{hotz2023tinygrad} positions itself between micrograd's simplicity and PyTorch's production capabilities, providing a complete framework (tensor library, IR, compiler, JIT) that emphasizes hackability and transparency. Unlike opaque production frameworks, tinygrad makes ``the entire compiler and IR visible,'' enabling students to understand deep learning compilation internals. While pedagogically valuable through its inspectable design, tinygrad assumes significant background: students must navigate compiler concepts, multiple hardware backends, and production-level architecture without scaffolded progression or automated assessment infrastructure.
 
-\textbf{Stanford CS231n}~\citep{johnson2016cs231n} and \textbf{CMU Deep Learning Systems (CS 10-414)}~\citep{chen2022dlsyscourse} represent university courses that include implementation components. CS231n's assignments involve NumPy implementations of CNNs, backpropagation, and optimization algorithms, providing hands-on experience with neural network internals. However, assignments are isolated exercises rather than cumulative framework construction, and systems concerns (memory profiling, complexity analysis) are not embedded from the start. CMU's DL Systems course explicitly targets ML systems engineering, covering automatic differentiation, GPU programming, distributed training, and deployment---representing the production systems knowledge TinyTorch provides conceptual foundations for. Where CMU assumes graduate-level systems background and focuses on GPU/distributed implementation, TinyTorch provides CPU-based conceptual foundations accessible to undergraduates, serving as prerequisite preparation.
+\textbf{Stanford CS231n}~\citep{johnson2016cs231n}, \textbf{CMU Deep Learning Systems (CS 10-414)}~\citep{chen2022dlsyscourse}, and \textbf{Harvard TinyML}~\citep{banbury2021widening} represent university courses that include implementation components with different systems emphases. CS231n's assignments involve NumPy implementations of CNNs, backpropagation, and optimization algorithms, providing hands-on experience with neural network internals. However, assignments are isolated exercises rather than cumulative framework construction, and systems concerns (memory profiling, complexity analysis) are not embedded from the start. CMU's DL Systems course explicitly targets ML systems engineering, covering automatic differentiation, GPU programming, distributed training, and deployment---representing the production systems knowledge TinyTorch provides conceptual foundations for. Harvard's TinyML Professional Certificate focuses on deploying ML to resource-constrained embedded devices (microcontrollers with KB-scale memory), teaching TensorFlow Lite for Microcontrollers through Arduino-based projects. While TinyML emphasizes hardware constraints and embedded deployment (achieving systems thinking through resource limitations), TinyTorch focuses on framework internals and algorithmic understanding (achieving systems thinking through implementation transparency). TinyML students learn \emph{how to optimize for} hardware constraints; TinyTorch students learn \emph{why frameworks work} internally. These approaches complement rather than compete: TinyML prepares students for edge deployment, TinyTorch for framework engineering and infrastructure development.
 
 \textbf{Dive into Deep Learning (d2l.ai)}~\citep{zhang2021dive} and \textbf{fast.ai}~\citep{howard2020fastai} represent comprehensive ML education but with different pedagogical emphases than framework construction. d2l.ai provides interactive implementations across multiple frameworks (PyTorch, JAX, TensorFlow, MXNet/NumPy) through executable notebooks, teaching algorithmic foundations alongside practical coding. The NumPy implementation track includes from-scratch implementations of key algorithms, though these are presented as educational demonstrations rather than components of a cumulative framework students build. With adoption across 500 universities globally, it excels at algorithmic understanding through framework usage. fast.ai's distinctive top-down pedagogy starts with practical applications before foundations, using layered APIs that provide high-level abstractions while enabling deeper exploration through PyTorch. Both resources assume cloud computing access (AWS, Google Colab, SageMaker) for GPU-based training, though provide various deployment options.
 
@@ -429,7 +429,7 @@ TinyTorch's pedagogical design draws on established learning theories validated 
 
 \subsection{Positioning and Unique Contributions}
 
-TinyTorch occupies a distinct pedagogical niche: post-fast.ai (for students ready to transition from users to engineers), pre-systems-research (providing foundations before production ML courses), and complementary to algorithm courses (adding systems thinking to mathematical foundations). The curriculum's unique combination---complete framework construction with embedded systems awareness, grounded in learning theory---addresses gaps in existing educational approaches.
+TinyTorch occupies a distinct pedagogical niche through its \textbf{bottom-up, systems-first approach}. Unlike top-down pedagogies (fast.ai: start with applications, descend to details) or algorithm-focused curricula (d2l.ai: master theory through framework usage), TinyTorch employs bottom-up framework construction: students build core abstractions first (tensors, autograd, layers), then compose them into architectures (CNNs, transformers), finally optimizing for production constraints (quantization, compression). This grounds systems thinking in direct implementation rather than abstract instruction. The curriculum serves students post-introductory-ML (ready to transition from framework users to engineers), pre-systems-research (providing foundations before production ML courses like CMU DL Systems), and complementary to algorithm courses (adding systems awareness to mathematical foundations).
 
 \Cref{tab:framework-comparison} positions TinyTorch relative to both educational frameworks (micrograd, MiniTorch, tinygrad) and production frameworks (PyTorch, TensorFlow), clarifying that TinyTorch serves as pedagogical bridge between understanding frameworks and using them professionally.
 
@@ -524,7 +524,7 @@ Mod & Tier & Module Name & ML Concept & Systems Concept \\
 \end{tabular}
 \end{table*}
 
-\begin{lstlisting}[caption={Tensor with memory profiling from Module 01},label=lst:tensor-memory,float=t]
+\begin{lstlisting}[caption={Tensor with memory profiling from Module 01.},label=lst:tensor-memory,float=t]
 class Tensor:
     def __init__(self, data):
         self.data = np.array(data, dtype=np.float32)
@@ -615,7 +615,7 @@ Traditional ML education faces a pedagogical dilemma: students need to understan
 
 TinyTorch's \texttt{Tensor} class includes gradient-related attributes from Module 01, but they remain dormant until Module 05 activates them through monkey-patching (\Cref{lst:dormant-tensor,lst:activation}).
 
-\begin{lstlisting}[caption={Module 01: Dormant gradient features},label=lst:dormant-tensor,float=t]
+\begin{lstlisting}[caption={Module 01: Dormant gradient features.},label=lst:dormant-tensor,float=t]
 # Module 01: Foundation Tensor
 class Tensor:
     def __init__(self, data, requires_grad=False):
@@ -634,7 +634,7 @@ class Tensor:
         return Tensor(self.data * other.data)
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Module 05: Autograd activation},label=lst:activation,float=t]
+\begin{lstlisting}[caption={Module 05: Autograd activation.},label=lst:activation,float=t]
 def enable_autograd():
     """Monkey-patch Tensor with gradients"""
     def backward(self, gradient=None):
@@ -764,7 +764,7 @@ Students learn to distinguish parameter memory (model weights) from optimizer st
 
 Module 09 introduces convolution with seven explicit nested loops (\Cref{lst:conv-explicit}), making $O(B \times C_{\text{out}} \times H_{\text{out}} \times W_{\text{out}} \times C_{\text{in}} \times K_h \times K_w)$ complexity visible and countable.
 
-\begin{lstlisting}[caption={Explicit convolution showing 7-nested complexity},label=lst:conv-explicit,float=t]
+\begin{lstlisting}[caption={Explicit convolution showing 7-nested complexity.},label=lst:conv-explicit,float=t]
 def conv2d_explicit(input, weight):
     """7 nested loops - see the complexity!
     input: (B, C_in, H, W)
@@ -865,7 +865,7 @@ TinyTorch supports three deployment environments: \textbf{JupyterHub} (instituti
 
 \textbf{NBGrader Module Structure Example}: Each module uses NBGrader markdown cells to define assessment points and structure. For example, Module 01's memory profiling exercise:
 
-\begin{lstlisting}[caption={NBGrader markdown cell defining assessment structure},label=lst:nbgrader-example,float=t]
+\begin{lstlisting}[caption={NBGrader markdown cell defining assessment structure.},label=lst:nbgrader-example,float=t]
 ### BEGIN QUESTION
 name: tensor_memory
 points: 2
@@ -905,7 +905,7 @@ Unlike tutorial-style notebooks creating isolated code, TinyTorch modules export
 
 As students complete modules, their framework accumulates capabilities. After Module 03, students can import and use layers; after Module 05, autograd enables training; after Module 09, CNNs become available. This progressive accumulation creates tangible evidence of progress---students see their framework grow from basic tensors to a complete ML system. \Cref{lst:progressive-imports} illustrates how imports expand as modules are completed:
 
-\begin{lstlisting}[caption={Progressive imports: Framework capabilities grow module-by-module},label=lst:progressive-imports,float=t]
+\begin{lstlisting}[caption={Progressive imports: Framework capabilities grow module-by-module.},label=lst:progressive-imports,float=t]
 # After Module 01: Basic tensors
 from tinytorch.core import Tensor
 
@@ -925,7 +925,7 @@ Export happens via nbdev \citep{howard2020fastai} directives (\texttt{\#| defaul
 
 Every module begins with a \textbf{Connection Map} showing prerequisite modules, current module focus, and enabled future capabilities. This addresses Collins et al.'s cognitive apprenticeship \citep{collins1989cognitive} by making expert knowledge structures visible:
 
-\begin{lstlisting}[caption={Module 05 Connection Map},label=lst:connection-map,float=t]
+\begin{lstlisting}[caption={Module 05 connection map.},label=lst:connection-map,float=t]
 ## Prerequisites & Progress
 You've Built: Tensor, activations, layers, losses
 You'll Build: Autograd system
