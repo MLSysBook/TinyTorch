@@ -19,16 +19,18 @@
   title = {tinygrad: A simple and powerful neural network framework},
   year = {2023},
   publisher = {GitHub},
-  url = {https://github.com/tinygrad/tinygrad}
+  url = {https://github.com/tinygrad/tinygrad},
 }
 
-@misc{zhang2021dive,
-  author = {Zhang, Aston and Lipton, Zachary C. and 0003, Mu Li and Smola, Alexander J.},
-  title = {Dive into Deep Learning.},
+@article{zhang2021dive,
+  url = {http://arxiv.org/abs/2106.11342v5},
+  title = {Dive into Deep Learning},
+  date = {2021-06-21},
+  primaryclass = {cs.LG},
+  author = {Zhang, Aston and Lipton, Zachary C. and Li, Mu and Smola, Alexander J.},
+  archiveprefix = {arXiv},
   journal = {CoRR},
   volume = {abs/2106.11342},
-  year = {2021},
-  url = {https://arxiv.org/abs/2106.11342},
   source = {DBLP},
   publisher = {Cambridge University Press},
 }
@@ -75,9 +77,16 @@
   title = {Mind in Society},
 }
 
-@book{bruner1960process,
-  author = {Bruner, Jerome S.},
-  title = {The Process of Education},
+@article{bruner1960process,
+  author = {Frolli, A and Cerciello, F and Ciotola, S and Ricci, MC and Esposito, C and Sica, LS},
+  title = {Narrative Approach and Mentalization.},
+  volume = {13},
+  number = {12},
+  issn = {2076-328X},
+  essn = {2076-328X},
+  doi = {10.3390/bs13120994},
+  journal = {Behavioral sciences (Basel, Switzerland)},
+  source = {PubMed},
   year = {1960},
   publisher = {Harvard University Press},
   address = {Cambridge, MA},
@@ -135,31 +144,32 @@
 }
 
 @misc{pytorch04release,
-  author = {PyTorch Team},
+  author = {Team, PyTorch},
   title = {PyTorch 0.4.0 Release Notes: Tensor and Variable Merge},
   year = {2018},
   url = {https://github.com/pytorch/pytorch/releases/tag/v0.4.0},
 }
 
 @misc{tensorflow20,
-  author = {TensorFlow Team},
+  author = {Team, TensorFlow},
   title = {TensorFlow 2.0: Easy model building with Keras and eager execution},
   year = {2019},
   url = {https://www.tensorflow.org/guide/effective\_tf2},
 }
 
 @article{rosenblatt1958perceptron,
-  author = {, ROSENBLATT, F},
-  title = {The perceptron: a probabilistic model for information storage and organization in the brain.},
-  volume = {65},
   number = {6},
-  pages = {386--408},
-  issn = {0033-295X},
   doi = {10.1037/h0042519},
-  journal = {Psychological review},
-  source = {PubMed},
-  year = {1958},
-  publisher = {American Psychological Association},
+  pages = {386--408},
+  source = {Crossref},
+  volume = {65},
+  author = {Rosenblatt, F.},
+  date = {1958},
+  url = {https://doi.org/10.1037/h0042519},
+  issn = {1939-1471,0033-295X},
+  journal = {Psychological Review},
+  publisher = {American Psychological Association (APA)},
+  title = {The perceptron: A probabilistic model for information storage and organization in the brain.},
 }
 
 @article{rumelhart1986learning,
@@ -262,7 +272,7 @@
   url = {http://arxiv.org/abs/1911.02549v2},
   date = {2019-11-06},
   title = {MLPerf Inference Benchmark},
-  author = {Reddi, Vijay Janapa and Cheng, Christine and Kanter, David and Mattson, Peter and Schmuelling, Guenther and Wu, Carole-Jean and Anderson, Brian and Breughe, Maximilien and Charlebois, Mark and Chou, William and others},
+  author = {Reddi, Vijay Janapa and Cheng, Christine and Kanter, David and Mattson, Peter and Schmuelling, Guenther and Wu, Carole-Jean and Anderson, Brian and Breughe, Maximilien and Charlebois, Mark and Chou, William and Chukka, Ramesh and Coleman, Cody and Davis, Sam and Deng, Pan and Diamos, Greg and Duke, Jared and Fick, Dave and Gardner, J. Scott and Hubara, Itay and Idgunji, Sachin and Jablin, Thomas B. and Jiao, Jeff and John, Tom St. and Kanwar, Pankaj and Lee, David and Liao, Jeffery and Lokhmotov, Anton and Massa, Francisco and Meng, Peng and Micikevicius, Paulius and Osborne, Colin and Pekhimenko, Gennady and Rajan, Arun Tejusve Raghunath and Sequeira, Dilip and Sirasao, Ashish and Sun, Fei and Tang, Hanlin and Thomson, Michael and Wei, Frank and Wu, Ephrem and Xu, Lingjie and Yamada, Koichi and Yu, Bing and Yuan, George and Zhong, Aaron and Zhang, Peizhao and Zhou, Yuchen},
   primaryclass = {cs.LG},
   archiveprefix = {arXiv},
   journal = {arXiv preprint arXiv:1911.02549},
@@ -310,12 +320,14 @@
 
 @article{baydin2018automatic,
   author = {Baydin, Atilim Gunes and Pearlmutter, Barak A. and Radul, Alexey Andreyevich and Siskind, Jeffrey Mark},
-  title = {Automatic differentiation in machine learning: a survey},
-  journal = {Journal of Machine Learning Research},
+  title = {Automatic Differentiation in Machine Learning: a Survey.},
+  journal = {J. Mach. Learn. Res.},
   volume = {18},
+  pages = {153:1-153:43},
+  year = {2017},
+  url = {https://jmlr.org/papers/v18/17-468.html},
+  source = {DBLP},
   number = {153},
-  pages = {1--43},
-  year = {2018},
 }
 
 @inproceedings{chen2018tvm,
@@ -342,9 +354,17 @@
   year = {2022},
 }
 
-@incollection{perkins1992transfer,
-  author = {Perkins, David N. and Salomon, Gavriel},
-  title = {Transfer of Learning},
+@article{perkins1992transfer,
+  author = {Burstein, R and Henry, NJ and Collison, ML and Marczak, LB and Sligar, A and Watson, S and Marquez, N and Abbasalizad-Farhangi, M and Abbasi, M and Abd-Allah, F and Abdoli, A and Abdollahi, M and Abdollahpour, I and Abdulkader, RS and Abrigo, MRM and Acharya, D and Adebayo, OM and Adekanmbi, V and Adham, D and Afshari, M and Aghaali, M and Ahmadi, K and Ahmadi, M and Ahmadpour, E and Ahmed, R and Akal, CG and Akinyemi, JO and Alahdab, F and Alam, N and Alamene, GM and Alene, KA and Alijanzadeh, M and Alinia, C and Alipour, V and Aljunid, SM and Almalki, MJ and Al-Mekhlafi, HM and Altirkawi, K and Alvis-Guzman, N and Amegah, AK and Amini, S and Amit, AML and Anbari, Z and Androudi, S and Anjomshoa, M and Ansari, F and Antonio, CAT and Arabloo, J and Arefi, Z and Aremu, O and Armoon, B and Arora, A and Artaman, A and Asadi, A and Asadi-Aliabadi, M and Ashraf-Ganjouei, A and Assadi, R and Ataeinia, B and Atre, SR and Quintanilla, BPA and Ayanore, MA and Azari, S and Babaee, E and Babazadeh, A and Badawi, A and Bagheri, S and Bagherzadeh, M and Baheiraei, N and Balouchi, A and Barac, A and Bassat, Q and Baune, BT and Bayati, M and Bedi, N and Beghi, E and Behzadifar, M and Behzadifar, M and Belay, YB and Bell, B and Bell, ML and Berbada, DA and Bernstein, RS and Bhattacharjee, NV and Bhattarai, S and Bhutta, ZA and Bijani, A and Bohlouli, S and Breitborde, NJK and Britton, G and Browne, AJ and Nagaraja, SB and Busse, R and Butt, ZA and Car, J and Cárdenas, R and Castañeda-Orjuela, CA and Cerin, E and Chanie, WF and Chatterjee, P and Chu, DT and Cooper, C and Costa, VM and Dalal, K and Dandona, L and Dandona, R and Daoud, F and Daryani, A and Das Gupta, R and Davis, I and Davis Weaver, N and Davitoiu, DV and De Neve, JW and Demeke, FM and Demoz, GT and Deribe, K and Desai, R and Deshpande, A and Desyibelew, HD and Dey, S and Dharmaratne, SD and Dhimal, M and Diaz, D and Doshmangir, L and Duraes, AR and Dwyer-Lindgren, L and Earl, L and Ebrahimi, R and Ebrahimpour, S and Effiong, A and Eftekhari, A and Ehsani-Chimeh, E and El Sayed, I and El Sayed Zaki, M and El Tantawi, M and El-Khatib, Z and Emamian, MH and Enany, S and Eskandarieh, S and Eyawo, O and Ezalarab, M and Faramarzi, M and Fareed, M and Faridnia, R and Faro, A and Fazaeli, AA and Fazlzadeh, M and Fentahun, N and Fereshtehnejad, SM and Fernandes, JC and Filip, I and Fischer, F and Foigt, NA and Foroutan, M and Francis, JM and Fukumoto, T and Fullman, N and Gallus, S and Gebre, DG and Gebrehiwot, TT and Gebremeskel, GG and Gessner, BD and Geta, B and Gething, PW and Ghadimi, R and Ghadiri, K and Ghajarzadeh, M and Ghashghaee, A and Gill, PS and Gill, TK and Golding, N and Gomes, NGM and Gona, PN and Gopalani, SV and Gorini, G and Goulart, BNG and Graetz, N and Greaves, F and Green, MS and Guo, Y and Haj-Mirzaian, A and Haj-Mirzaian, A and Hall, BJ and Hamidi, S and Haririan, H and Haro, JM and Hasankhani, M and Hasanpoor, E and Hasanzadeh, A and Hassankhani, H and Hassen, HY and Hegazy, MI and Hendrie, D and Heydarpour, F and Hird, TR and Hoang, CL and Hollerich, G and Rad, EH and Hoseini-Ghahfarokhi, M and Hossain, N and Hosseini, M and Hosseinzadeh, M and Hostiuc, M and Hostiuc, S and Househ, M and Hsairi, M and Ilesanmi, OS and Imani-Nasab, MH and Iqbal, U and Irvani, SSN and Islam, N and Islam, SMS and Jürisson, M and Balalami, NJ and Jalali, A and Javidnia, J and Jayatilleke, AU and Jenabi, E and Ji, JS and Jobanputra, YB and Johnson, K and Jonas, JB and Shushtari, ZJ and Jozwiak, JJ and Kabir, A and Kahsay, A and Kalani, H and Kalhor, R and Karami, M and Karki, S and Kasaeian, A and Kassebaum, NJ and Keiyoro, PN and Kemp, GR and Khabiri, R and Khader, YS and Khafaie, MA and Khan, EA and Khan, J and Khan, MS and Khang, YH and Khatab, K and Khater, A and Khater, MM and Khatony, A and Khazaei, M and Khazaei, S and Khazaei-Pool, M and Khubchandani, J and Kianipour, N and Kim, YJ and Kimokoti, RW and Kinyoki, DK and Kisa, A and Kisa, S and Kolola, T and Kosen, S and Koul, PA and Koyanagi, A and Kraemer, MUG and Krishan, K and Krohn, KJ and Kugbey, N and Kumar, GA and Kumar, M and Kumar, P and Kuupiel, D and Lacey, B and Lad, SD and Lami, FH and Larsson, AO and Lee, PH and Leili, M and Levine, AJ and Li, S and Lim, LL and Listl, S and Longbottom, J and Lopez, JCF and Lorkowski, S and Magdeldin, S and Abd El Razek, HM and Abd El Razek, MM and Majeed, A and Maleki, A and Malekzadeh, R and Malta, DC and Mamun, AA and Manafi, N and Manda, AL and Mansourian, M and Martins-Melo, FR and Masaka, A and Massenburg, BB and Maulik, PK and Mayala, BK and Mazidi, M and McKee, M and Mehrotra, R and Mehta, KM and Meles, GG and Mendoza, W and Menezes, RG and Meretoja, A and Meretoja, TJ and Mestrovic, T and Miller, TR and Miller-Petrie, MK and Mills, EJ and Milne, GJ and Mini, GK and Mir, SM and Mirjalali, H and Mirrakhimov, EM and Mohamadi, E and Mohammad, DK and Darwesh, AM and Mezerji, NMG and Mohammed, AS and Mohammed, S and Mokdad, AH and Molokhia, M and Monasta, L and Moodley, Y and Moosazadeh, M and Moradi, G and Moradi, M and Moradi, Y and Moradi-Lakeh, M and Moradinazar, M and Moraga, P and Morawska, L and Mosapour, A and Mousavi, SM and Mueller, UO and Muluneh, AG and Mustafa, G and Nabavizadeh, B and Naderi, M and Nagarajan, AJ and Nahvijou, A and Najafi, F and Nangia, V and Ndwandwe, DE and Neamati, N and Negoi, I and Negoi, RI and Ngunjiri, JW and Thi Nguyen, HL and Nguyen, LH and Nguyen, SH and Nielsen, KR and Ningrum, DNA and Nirayo, YL and Nixon, MR and Nnaji, CA and Nojomi, M and Noroozi, M and Nosratnejad, S and Noubiap, JJ and Motlagh, SN and Ofori-Asenso, R and Ogbo, FA and Oladimeji, KE and Olagunju, AT and Olfatifar, M and Olum, S and Olusanya, BO and Oluwasanu, MM and Onwujekwe, OE and Oren, E and Ortega-Altamirano, DDV and Ortiz, A and Osarenotor, O and Osei, FB and Osgood-Zimmerman, AE and Otstavnov, SS and Owolabi, MO and , P, A M and Pagheh, AS and Pakhale, S and Panda-Jonas, S and Pandey, A and Park, EK and Parsian, H and Pashaei, T and Patel, SK and Pepito, VCF and Pereira, A and Perkins, S and Pickering, BV and Pilgrim, T and Pirestani, M and Piroozi, B and Pirsaheb, M and Plana-Ripoll, O and Pourjafar, H and Puri, P and Qorbani, M and Quintana, H and Rabiee, M and Rabiee, N and Radfar, A and Rafiei, A and Rahim, F and Rahimi, Z and Rahimi-Movaghar, V and Rahimzadeh, S and Rajati, F and Raju, SB and Ramezankhani, A and Ranabhat, CL and Rasella, D and Rashedi, V and Rawal, L and Reiner, RC, Jr and Renzaho, AMN and Rezaei, S and Rezapour, A and Riahi, SM and Ribeiro, AI and Roever, L and Roro, EM and Roser, M and Roshandel, G and Roshani, D and Rostami, A and Rubagotti, E and Rubino, S and Sabour, S and Sadat, N and Sadeghi, E and Saeedi, R and Safari, Y and Safari-Faramani, R and Safdarian, M and Sahebkar, A and Salahshoor, MR and Salam, N and Salamati, P and Salehi, F and Zahabi, SS and Salimi, Y and Salimzadeh, H and Salomon, JA and Sambala, EZ and Samy, AM and Santric Milicevic, MM and Jose, BPS and Saraswathy, SYI and Sarmiento-Suárez, R and Sartorius, B and Sathian, B and Saxena, S and Sbarra, AN and Schaeffer, LE and Schwebel, DC and Sepanlou, SG and Seyedmousavi, S and Shaahmadi, F and Shaikh, MA and Shams-Beyranvand, M and Shamshirian, A and Shamsizadeh, M and Sharafi, K and Sharif, M and Sharif-Alhoseini, M and Sharifi, H and Sharma, J and Sharma, R and Sheikh, A and Shields, C and Shigematsu, M and Shiri, R and Shiue, I and Shuval, K and Siddiqi, TJ and Silva, JP and Singh, JA and Sinha, DN and Sisay, MM and Sisay, S and Sliwa, K and Smith, DL and Somayaji, R and Soofi, M and Soriano, JB and Sreeramareddy, CT and Sudaryanto, A and Sufiyan, MB and Sykes, BL and Sylaja, PN and Tabarés-Seisdedos, R and Tabb, KM and Tabuchi, T and Taveira, N and Temsah, MH and Terkawi, AS and Tessema, ZT and Thankappan, KR and Thirunavukkarasu, S and To, QG and Tovani-Palone, MR and Tran, BX and Tran, KB and Ullah, I and Usman, MS and Uthman, OA and Vahedian-Azimi, A and Valdez, PR and van Boven, JFM and Vasankari, TJ and Vasseghian, Y and Veisani, Y and Venketasubramanian, N and Violante, FS and Vladimirov, SK and Vlassov, V and Vos, T and Vu, GT and Vujcic, IS and Waheed, Y and Wakefield, J and Wang, H and Wang, Y and Wang, YP and Ward, JL and Weintraub, RG and Weldegwergs, KG and Weldesamuel, GT and Westerman, R and Wiysonge, CS and Wondafrash, DZ and Woyczynski, L and Wu, AM and Xu, G and Yadegar, A and Yamada, T and Yazdi-Feyzabadi, V and Yilgwan, CS and Yip, P and Yonemoto, N and Lebni, JY and Younis, MZ and Yousefifard, M and Yousof, HSA and Yu, C and Yusefzadeh, H and Zabeh, E and Moghadam, TZ and Bin Zaman, S and Zamani, M and Zandian, H and Zangeneh, A and Zerfu, TA and Zhang, Y and Ziapour, A and Zodpey, S and Murray, CJL and Hay, SI},
+  title = {Mapping 123 million neonatal, infant and child deaths between 2000 and 2017.},
+  volume = {574},
+  number = {7778},
+  pages = {353--358},
+  issn = {0028-0836},
+  essn = {1476-4687},
+  doi = {10.1038/s41586-019-1545-0},
+  journal = {Nature},
+  source = {PubMed},
   booktitle = {International Encyclopedia of Education},
   editor = {Husen, Torsten and Postlethwaite, T. Neville},
   year = {1992},
@@ -419,28 +439,32 @@
 }
 
 @book{guzdial2015learner,
+  doi = {10.1007/978-3-031-02216-6},
+  source = {Crossref},
   author = {Guzdial, Mark},
-  title = {Learner-Centered Design of Computing Education: Research on Computing for Everyone},
+  subtitle = {Research on Computing for Everyone},
+  date = {2016},
+  isbn = {9783031010880,9783031022166},
+  url = {https://doi.org/10.1007/978-3-031-02216-6},
+  issn = {1946-7680,1946-7699},
+  publisher = {Springer International Publishing},
+  title = {Learner-Centered Design of Computing Education},
   journal = {Synthesis Lectures on Human-Centered Informatics},
-  year = {2015},
-  doi = {10.2200/S00684ED1V01Y201511HCI033},
-  url = {https://doi.org/10.2200/S00684ED1V01Y201511HCI033},
-  source = {DBLP},
-  publisher = {Morgan \& Claypool Publishers},
   series = {Synthesis Lectures on Human-Centered Informatics},
 }
 
 @inproceedings{porter2013multi,
-  author = {0001, Leo Porter and Lee, Cynthia Bailey and Simon, Beth and Cutts, Quintin I. and Zingaro, Daniel},
-  title = {Experience report: a multi-classroom report on the value of peer instruction.},
-  journal = {ITiCSE},
-  pages = {138--142},
-  year = {2011},
   doi = {10.1145/1999747.1999788},
+  pages = {138--142},
+  source = {Crossref},
+  author = {Porter, Leo and Bailey Lee, Cynthia and Simon, Beth and Cutts, Quintin and Zingaro, Daniel},
+  subtitle = {a multi-classroom report on the value of peer instruction},
+  date = {2011-06-27},
   url = {https://doi.org/10.1145/1999747.1999788},
-  source = {DBLP},
-  booktitle = {Proceeding of the 44th ACM Technical Symposium on Computer Science Education (SIGCSE)},
+  booktitle = {Proceedings of the 16th annual joint conference on Innovation and technology in computer science education},
   publisher = {ACM},
+  title = {Experience report},
+  journal = {ITiCSE},
 }
 
 @book{fincher2004computer,
@@ -488,10 +512,10 @@
 }
 
 @misc{keller2025ai,
-  author = {{Keller Executive Search}},
+  author = {Keller Executive Search},
   title = {AI \& Machine-Learning Talent Gap 2025},
   year = {2025},
-  url = {https://www.kellerexecutivesearch.com/intelligence/ai-machine-learning-talent-gap-2025/}
+  url = {https://www.kellerexecutivesearch.com/intelligence/ai-machine-learning-talent-gap-2025/},
 }
 
 @book{meadows2008thinking,
@@ -513,11 +537,13 @@
 }
 
 @misc{roberthalf2024talent,
-  author = {{Robert Half}},
-  title = {New Robert Half Research Reveals Severity of the Technology Skills Gap Amid Talent Shortage},
-  year = {2024},
-  month = {May},
-  url = {https://press.roberthalf.com/2024-05-08-New-Robert-Half-Research-Reveals-Severity-of-the-Technology-Skills-Gap-Amid-Talent-Shortage}
+  doi = {10.64628/ab.waecqna7u},
+  source = {Crossref},
+  author = {Heffernan, Margaret},
+  date = {2024-12-13},
+  url = {https://doi.org/10.64628/ab.waecqna7u},
+  publisher = {The Conversation},
+  title = {Earning half the minimum wage: new report reveals pressures on artists to sustain creative life},
 }
 
 @misc{chen2022dlsyscourse,
