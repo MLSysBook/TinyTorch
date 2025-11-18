@@ -426,10 +426,8 @@ pytest tests/
 - **[NBGrader Workflow](book/instructor-guide.md)** - Automated grading setup
 - **[System Architecture](book/system-architecture.md)** - Technical overview
 
-### 🛠️ For Developers
-- **[Agent Coordination](.claude/guidelines/AGENT_COORDINATION.md)** - Development workflow
-- **[Module Development](.claude/guidelines/MODULE_DEVELOPMENT.md)** - Creating new modules
-- **[Testing Standards](.claude/guidelines/TESTING_STANDARDS.md)** - Quality assurance
+### 🛠️ For Developers and Agents
+- **[Developers and Agents Coordination](.cursor/rules/development-workflow.md)** - Complete workflow rules for Developers and Agents
 
 ## TinyMLPerf Competition & Leaderboard
 
