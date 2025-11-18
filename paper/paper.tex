@@ -182,9 +182,13 @@
 \thispagestyle{plain}
 \maketitle
 
-% Abstract - REVISED: Reframed as design contribution
+% Abstract - REVISED: Research-focused for arXiv
 \begin{abstract}
-\textbf{For PyTorch users and ML practitioners}: TinyTorch teaches framework internals by having you build PyTorch's core components from scratch—understanding why \texttt{loss.backward()} works, why Adam's optimizer state requires 2$\times$ parameter memory (momentum + variance), and why attention scales $O(N^2)$. \textbf{For ML systems researchers}: We present three pedagogical patterns for teaching ML as systems engineering. First, \textbf{progressive disclosure via monkey-patching}\footnote{Monkey-patching: runtime modification of class methods to add functionality.} activates dormant \texttt{Tensor} features across modules, modeling how PyTorch evolved from separate Variable/Tensor classes to unified interfaces. Second, \textbf{systems-first integration} embeds memory profiling, FLOPs analysis, and complexity reasoning from Module 01 rather than deferring to electives. Third, \textbf{historical milestone validation} recreates 70 years of ML breakthroughs (1957 Perceptron through 2024 optimized systems) using exclusively student-implemented code. The 20-module curriculum (60--80 hours) builds a PyTorch-inspired package organization enabling insights into framework design choices, debugging skills for gradient flows and memory issues, and systems thinking for optimization trade-offs. Complete open-source implementation available for self-paced learning or institutional adoption. \textbf{Scope}: This paper presents curriculum design and pedagogical patterns; claims about learning outcomes (cognitive load reduction, debugging improvement, systems thinking development) remain empirical hypotheses requiring controlled validation.
+Machine learning education typically teaches framework usage without exposing internals, leaving students unable to debug gradient flows, profile memory bottlenecks, or understand optimization tradeoffs. TinyTorch addresses this gap through a build-from-scratch curriculum where students implement PyTorch's core components—tensors, autograd, optimizers, and neural networks—to gain framework transparency.
+
+We contribute three pedagogical patterns for teaching ML as systems engineering. \textbf{Progressive disclosure} activates dormant tensor features across modules through runtime method enhancement, modeling how frameworks evolve from separate abstractions to unified interfaces. \textbf{Systems-first curriculum} embeds memory profiling and complexity analysis from Module 01 rather than treating them as advanced topics. \textbf{Historical milestone validation} recreates 70 years of ML breakthroughs (1957 Perceptron through modern transformers) using exclusively student-implemented code to validate correctness.
+
+The 20-module curriculum (60--80 hours) provides complete open-source implementation for institutional adoption or self-paced learning at \texttt{tinytorch.ai}.
 \end{abstract}
 
 
@@ -193,9 +197,9 @@
 
 Machine learning systems have emerged as a distinct discipline requiring specialized education—just as computers became sufficiently complex to warrant computer engineering curricula integrating hardware and software. This integration is not merely additive but transformative: students who understand \emph{how} frameworks work internally can debug gradient flow issues, diagnose memory bottlenecks, and make architecture-performance tradeoffs that algorithm-only education cannot provide.
 
-\textbf{What you'll learn from TinyTorch}: By building PyTorch's core components from scratch, you gain (1) \textbf{framework internals knowledge}—understanding why \texttt{loss.backward()} traverses computational graphs, why Adam's optimizer state requires 2$\times$ parameter memory (momentum + variance buffers, resulting in 4$\times$ total for training when including weights and gradients), and why attention mechanisms scale $O(N^2)$ with sequence length; (2) \textbf{debugging skills}—diagnosing gradient flow breaks, memory profiling OOM errors, and tracing performance bottlenecks through implementation understanding; and (3) \textbf{systems thinking}—calculating memory footprints before operations, reasoning about computational complexity, and navigating accuracy-speed-memory tradeoffs in optimization.
+\textbf{Learning Outcomes}: By building PyTorch's core components from scratch, students gain (1) \textbf{framework internals knowledge}—understanding why \texttt{loss.backward()} traverses computational graphs, why Adam's optimizer state requires 2$\times$ parameter memory (momentum + variance buffers, resulting in 4$\times$ total for training when including weights and gradients), and why attention mechanisms scale $O(N^2)$ with sequence length; (2) \textbf{debugging skills}—diagnosing gradient flow breaks, memory profiling OOM errors, and tracing performance bottlenecks through implementation understanding; and (3) \textbf{systems thinking}—calculating memory footprints before operations, reasoning about computational complexity, and navigating accuracy-speed-memory tradeoffs in optimization.
 
-Traditional ML coursework teaches students to \emph{use} frameworks like PyTorch as black boxes. Students learn to call \texttt{loss.backward()} without understanding computational graph traversal, instantiate optimizers without knowing their memory costs, and deploy models without profiling resource requirements. TinyTorch inverts this: you build the internals first, gaining transparency that transfers to production framework usage.
+Traditional ML coursework teaches students to \emph{use} frameworks like PyTorch as black boxes. Students learn to call \texttt{loss.backward()} without understanding computational graph traversal, instantiate optimizers without knowing their memory costs, and deploy models without profiling resource requirements. TinyTorch inverts this: students build the internals first, gaining transparency that transfers to production framework usage.
 
 We present TinyTorch, a hands-on companion to the \emph{Machine Learning Systems} textbook~\citep{reddi2024mlsysbook}, providing practical implementation experience alongside theoretical foundations. While the textbook establishes principles of ML systems engineering, TinyTorch enables students to build those systems from scratch. The curriculum inverts traditional pedagogy: instead of using frameworks as abstractions, students construct the internals themselves, implementing every component from tensors to transformers using only NumPy. \Cref{fig:code-comparison} illustrates this transformation from framework users to framework engineers.
 
@@ -283,7 +287,7 @@ class Adam:
 \subcaption{TinyTorch: Understanding internals}
 \label{lst:tinytorch-build}
 \end{subfigure}
-\caption{Learning progression: From framework users to framework engineers. (a) PyTorch and (b) TensorFlow: students use high-level APIs without understanding internals. (c) TinyTorch: students build the internals themselves, learning that Adam's optimizer state requires 2$\times$ parameter memory (momentum + variance), understanding computational complexity, and developing systems thinking.}
+\caption{Learning progression from framework users to engineers. (a-b) PyTorch/TensorFlow: high-level API usage. (c) TinyTorch: building internals reveals optimizer memory costs, computational complexity, and systems constraints.}
 \label{fig:code-comparison}
 \end{figure*}
 
@@ -466,7 +470,7 @@ Empirical validation of learning outcomes remains future work (\Cref{sec:discuss
 \section{Curriculum Architecture}
 \label{sec:curriculum}
 
-Having positioned TinyTorch relative to existing frameworks and learning theories, we now describe the curriculum structure that realizes these pedagogical principles. This section presents the 20-module learning path, explaining how theoretical foundations translate into concrete instructional design.
+This section presents the 20-module curriculum structure, organized into four tiers that progressively build a complete ML framework.
 
 Traditional ML education presents algorithms sequentially without revealing how components integrate into working systems. TinyTorch addresses this through a 4-phase curriculum architecture where students build a complete ML framework progressively, with each module enforcing prerequisite mastery.
 
@@ -716,7 +720,7 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 \node[active, minimum width=0.9cm, minimum height=0.4cm] at (4.5, -1.3) {Active};
 
 \end{tikzpicture}
-\caption{Progressive disclosure of \texttt{Tensor} capabilities across modules. Gradient-related features (\texttt{.requires\_grad}, \texttt{.grad}, \texttt{.backward()}) exist from Module 01 as no-op placeholders (gray, dashed). Module 05 replaces these placeholders with working implementations via monkey-patching (orange, solid), enabling autograd throughout the framework. Students work with a single \texttt{Tensor} interface, but capabilities expand progressively as functionality is incrementally added.}
+\caption{Progressive activation of Tensor gradient features. Dormant placeholders (gray, dashed) exist from Module 01. Module 05 activates full autograd functionality (orange, solid) via runtime method enhancement.}
 \label{fig:progressive-timeline}
 \end{figure*}
 
