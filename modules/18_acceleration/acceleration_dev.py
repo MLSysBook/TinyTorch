@@ -126,47 +126,58 @@ Real-world performance wins:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-import", "solution": true}
-# Import required dependencies
-### BEGIN SOLUTION
-# Import tensor from our implementation
-import sys
-import os
-sys.path.append('/Users/VJ/GitHub/TinyTorch')
+"""
+## 🔗 Module Dependencies
+
+This module REQUIRES completion of:
+- Module 01 (Tensor): Foundation data structure we optimize
+- Module 03 (Layers): Linear layers for vectorization
+- Module 14 (Profiling): Profiler for measuring improvements
+
+**Progressive Building**:
+```
+Module 01 (Tensor) ──> [This Module: Optimize Tensor operations]
+Module 03 (Layers) ──> [This Module: Optimize Linear layers]
+Module 14 (Profiling) ──> [This Module: Measure improvements]
+```
+
+**What You've Built**:
+- Module 01: Tensor (what we optimize)
+- Module 03: Linear layers (uses optimized ops)
+- Module 14: Profiling (measure improvements)
+
+**What This Module Adds**:
+- Vectorized operations (SIMD optimization)
+- Kernel fusion (memory efficiency)
+- Mixed precision training (memory/speed)
+
+**To verify dependencies are met, run**:
+    python -c "from tinytorch.core.tensor import Tensor; print('✅ Module 01 ready')"
+    python -c "from tinytorch.core.layers import Linear; print('✅ Module 03 ready')"
+    python -c "from tinytorch.profiling.profiler import Profiler; print('✅ Module 14 ready')"
+"""
+
+# Direct imports from previous modules - these MUST exist
+# If imports fail, students will get clear educational errors
+try:
+    from tinytorch.core.tensor import Tensor  # Module 01: What we optimize
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 18 (Acceleration) requires Module 01 (Tensor) to be completed first.\n"
+        "   This module optimizes Tensor operations - you need Tensor to exist first!\n"
+        "   Please complete Module 01 first, then run 'tito module complete 01'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
 try:
-    # Import from the modules directory structure
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("tensor_dev", "/Users/VJ/GitHub/TinyTorch/modules/01_tensor/tensor_dev.py")
-    tensor_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(tensor_module)
-    Tensor = tensor_module.Tensor
-except ImportError:
-    # Fallback for testing
-    class Tensor:
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data, dtype=np.float32)
-            self.shape = self.data.shape
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def __add__(self, other):
-            return Tensor(self.data + other.data)
-
-        def __mul__(self, other):
-            return Tensor(self.data * other.data)
-
-        def matmul(self, other):
-            return Tensor(np.dot(self.data, other.data))
-
-        def reshape(self, *shape):
-            return Tensor(self.data.reshape(shape))
-
-        def sum(self, axis=None):
-            return Tensor(self.data.sum(axis=axis))
-
-        def backward(self):
-            pass
-### END SOLUTION
+    from tinytorch.core.layers import Linear  # Module 03: Uses optimized ops
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 18 (Acceleration) requires Module 03 (Layers) to be completed first.\n"
+        "   This module optimizes Linear layer operations.\n"
+        "   Please complete Module 03 first, then run 'tito module complete 03'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
 # %% [markdown]
 """

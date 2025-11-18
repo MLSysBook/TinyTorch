@@ -75,160 +75,98 @@ import numpy as np
 import math
 from typing import Optional, List
 
-# Import from previous modules - following proper dependency chain
-# Note: Actual imports happen in try/except blocks below with fallback implementations
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Linear
-# MultiHeadAttention import happens in try/except below
+"""
+## 🔗 Module Dependencies
 
-# For development, we'll use minimal implementations if imports fail
+This module REQUIRES completion of:
+- Module 01 (Tensor): Foundation data structure
+- Module 02 (Activations): GELU activation function
+- Module 03 (Layers): Linear layer for projections
+- Module 11 (Embeddings): Embedding and PositionalEncoding
+- Module 12 (Attention): MultiHeadAttention mechanism
+
+**Progressive Building**:
+```
+Module 01 (Tensor) ──┐
+                     ├──> Module 03 (Layers) ──┐
+Module 02 (Activations) ──┘                    ├──> Module 12 (Attention) ──┐
+                                               │                              ├──> Module 13 (Transformers)
+Module 11 (Embeddings) ───────────────────────┘                              │
+                                                                              │
+Module 02 (GELU) ───────────────────────────────────────────────────────────┘
+```
+
+**What You've Built**:
+- Module 01: Tensor (data structure)
+- Module 02: Activations including GELU
+- Module 03: Linear layers (building blocks)
+- Module 11: Embeddings (token and positional)
+- Module 12: MultiHeadAttention (core mechanism)
+
+**What This Module Adds**:
+- TransformerBlock (combines attention + MLP + normalization)
+- Complete GPT architecture
+- Autoregressive generation
+
+**To verify dependencies are met, run**:
+    python -c "from tinytorch.core.tensor import Tensor; print('✅ Module 01 ready')"
+    python -c "from tinytorch.core.activations import GELU; print('✅ Module 02 ready')"
+    python -c "from tinytorch.core.layers import Linear; print('✅ Module 03 ready')"
+    python -c "from tinytorch.text.embeddings import Embedding; print('✅ Module 11 ready')"
+    python -c "from tinytorch.core.attention import MultiHeadAttention; print('✅ Module 12 ready')"
+"""
+
+# Direct imports from previous modules - these MUST exist
+# If imports fail, students will get clear educational errors
 try:
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    print("Warning: Using minimal Tensor implementation for development")
-    class Tensor:
-        """Minimal Tensor class for transformer development."""
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data)
-            self.shape = self.data.shape
-            self.size = self.data.size
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def __add__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data + other.data)
-            return Tensor(self.data + other)
-
-        def __mul__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data * other.data)
-            return Tensor(self.data * other)
-
-        def matmul(self, other):
-            return Tensor(np.dot(self.data, other.data))
-
-        def sum(self, axis=None, keepdims=False):
-            return Tensor(self.data.sum(axis=axis, keepdims=keepdims))
-
-        def mean(self, axis=None, keepdims=False):
-            return Tensor(self.data.mean(axis=axis, keepdims=keepdims))
-
-        def reshape(self, *shape):
-            return Tensor(self.data.reshape(shape))
-
-        def __repr__(self):
-            return f"Tensor(data={self.data}, shape={self.shape})"
-
-try:
-    from tinytorch.core.layers import Linear
-except ImportError:
-    class Linear:
-        """Minimal Linear layer for development."""
-        def __init__(self, in_features, out_features, bias=True):
-            std = math.sqrt(2.0 / (in_features + out_features))
-            self.weight = Tensor(np.random.normal(0, std, (in_features, out_features)))
-            self.bias = Tensor(np.zeros(out_features)) if bias else None
-
-        def forward(self, x):
-            output = x.matmul(self.weight)
-            if self.bias is not None:
-                output = output + self.bias
-            return output
-
-        def parameters(self):
-            params = [self.weight]
-            if self.bias is not None:
-                params.append(self.bias)
-            return params
+    from tinytorch.core.tensor import Tensor  # Module 01: Foundation
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 13 (Transformers) requires Module 01 (Tensor) to be completed first.\n"
+        "   This module builds on the Tensor class you created in Module 01.\n"
+        "   Please complete Module 01 first, then run 'tito module complete 01'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
 try:
-    from tinytorch.core.attention import MultiHeadAttention
-except ImportError:
-    class MultiHeadAttention:
-        """Minimal MultiHeadAttention for development."""
-        def __init__(self, embed_dim, num_heads):
-            assert embed_dim % num_heads == 0
-            self.embed_dim = embed_dim
-            self.num_heads = num_heads
-            self.head_dim = embed_dim // num_heads
-
-            self.q_proj = Linear(embed_dim, embed_dim)
-            self.k_proj = Linear(embed_dim, embed_dim)
-            self.v_proj = Linear(embed_dim, embed_dim)
-            self.out_proj = Linear(embed_dim, embed_dim)
-
-        def forward(self, query, key, value, mask=None):
-            batch_size, seq_len, embed_dim = query.shape
-
-            # Linear projections
-            Q = self.q_proj.forward(query)
-            K = self.k_proj.forward(key)
-            V = self.v_proj.forward(value)
-
-            # Reshape for multi-head attention
-            Q = Q.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-            K = K.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-            V = V.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-
-            # Transpose to (batch_size, num_heads, seq_len, head_dim)
-            Q = Tensor(np.transpose(Q.data, (0, 2, 1, 3)))
-            K = Tensor(np.transpose(K.data, (0, 2, 1, 3)))
-            V = Tensor(np.transpose(V.data, (0, 2, 1, 3)))
-
-            # Scaled dot-product attention
-            scores = Tensor(np.matmul(Q.data, np.transpose(K.data, (0, 1, 3, 2))))
-            scores = scores * (1.0 / math.sqrt(self.head_dim))
-
-            # Apply causal mask for autoregressive generation
-            if mask is not None:
-                scores = Tensor(scores.data + mask.data)
-
-            # Softmax
-            attention_weights = self._softmax(scores)
-
-            # Apply attention to values
-            out = Tensor(np.matmul(attention_weights.data, V.data))
-
-            # Transpose back and reshape
-            out = Tensor(np.transpose(out.data, (0, 2, 1, 3)))
-            out = out.reshape(batch_size, seq_len, embed_dim)
-
-            # Final linear projection
-            return self.out_proj.forward(out)
-
-        def _softmax(self, x):
-            """Numerically stable softmax."""
-            exp_x = Tensor(np.exp(x.data - np.max(x.data, axis=-1, keepdims=True)))
-            return Tensor(exp_x.data / np.sum(exp_x.data, axis=-1, keepdims=True))
-
-        def parameters(self):
-            params = []
-            params.extend(self.q_proj.parameters())
-            params.extend(self.k_proj.parameters())
-            params.extend(self.v_proj.parameters())
-            params.extend(self.out_proj.parameters())
-            return params
+    from tinytorch.core.layers import Linear  # Module 03: Building blocks
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 13 (Transformers) requires Module 03 (Layers) to be completed first.\n"
+        "   Transformers use Linear layers for projections.\n"
+        "   Please complete Module 03 first, then run 'tito module complete 03'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
 try:
-    from tinytorch.core.embeddings import Embedding
-except ImportError:
-    class Embedding:
-        """Minimal Embedding layer for development."""
-        def __init__(self, vocab_size, embed_dim):
-            self.vocab_size = vocab_size
-            self.embed_dim = embed_dim
-            self.weight = Tensor(np.random.normal(0, 0.02, (vocab_size, embed_dim)))
+    from tinytorch.core.attention import MultiHeadAttention  # Module 12: Core mechanism
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 13 (Transformers) requires Module 12 (Attention) to be completed first.\n"
+        "   Transformers are built around MultiHeadAttention.\n"
+        "   Please complete Module 12 first, then run 'tito module complete 12'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
-        def forward(self, indices):
-            return Tensor(self.weight.data[indices.data.astype(int)])
+try:
+    from tinytorch.core.activations import GELU  # Module 02: Activation function
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 13 (Transformers) requires Module 02 (Activations) to be completed first.\n"
+        "   Transformers use GELU activation in MLP layers.\n"
+        "   Please complete Module 02 first, then run 'tito module complete 02'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
-        def parameters(self):
-            return [self.weight]
-
-def gelu(x):
-    """GELU activation function."""
-    return Tensor(0.5 * x.data * (1 + np.tanh(np.sqrt(2 / np.pi) * (x.data + 0.044715 * x.data**3))))
+try:
+    from tinytorch.text.embeddings import Embedding, PositionalEncoding  # Module 11: Embeddings
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 13 (Transformers) requires Module 11 (Embeddings) to be completed first.\n"
+        "   Transformers need token and positional embeddings.\n"
+        "   Please complete Module 11 first, then run 'tito module complete 11'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
 # %% [markdown]
 """
@@ -757,6 +695,7 @@ class MLP:
         # Two-layer feed-forward network
         self.linear1 = Linear(embed_dim, hidden_dim)
         self.linear2 = Linear(hidden_dim, embed_dim)
+        self.gelu = GELU()  # GELU activation from Module 02
         ### END SOLUTION
 
     def forward(self, x):
@@ -773,14 +712,14 @@ class MLP:
         COMPUTATION FLOW:
         x -> Linear -> GELU -> Linear -> output
 
-        HINT: GELU activation is implemented above as a function
+        HINT: Use self.gelu.forward() to apply GELU activation
         """
         ### BEGIN SOLUTION
         # First linear layer with expansion
         hidden = self.linear1.forward(x)
 
-        # GELU activation
-        hidden = gelu(hidden)
+        # GELU activation (from Module 02)
+        hidden = self.gelu.forward(hidden)
 
         # Second linear layer back to original size
         output = self.linear2.forward(hidden)

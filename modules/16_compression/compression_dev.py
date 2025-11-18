@@ -65,66 +65,70 @@ import copy
 from typing import List, Dict, Any, Tuple, Optional
 import time
 
-# Import from previous modules
-# Note: In the full package, these would be imports like:
-# from tinytorch.core.tensor import Tensor
-# from tinytorch.core.layers import Linear
-# For development, we'll create minimal implementations
+"""
+## 🔗 Module Dependencies
 
-class Tensor:
-    """Minimal Tensor class for compression development - imports from Module 01 in practice."""
-    def __init__(self, data, requires_grad=False):
-        self.data = np.array(data)
-        self.shape = self.data.shape
-        self.size = self.data.size
-        self.requires_grad = requires_grad
-        self.grad = None
+This module REQUIRES completion of:
+- Module 01 (Tensor): Foundation data structure for weight storage
+- Module 03 (Layers): Linear layer structure that we compress
+- Module 15 (Quantization): Related optimization technique
 
-    def __add__(self, other):
-        if isinstance(other, Tensor):
-            return Tensor(self.data + other.data)
-        return Tensor(self.data + other)
+**Progressive Building**:
+```
+Module 01 (Tensor) ──┐
+                     ├──> Module 03 (Layers) ──┐
+Module 02 (Activations) ──┘                    ├──> Module 16 (Compression)
+                                               │
+Module 15 (Quantization) ────────────────────┘
+```
 
-    def __mul__(self, other):
-        if isinstance(other, Tensor):
-            return Tensor(self.data * other.data)
-        return Tensor(self.data * other)
+**What You've Built**:
+- Module 01: Tensor (what we compress)
+- Module 03: Linear layers (what we prune)
+- Module 15: Quantization (complementary optimization)
 
-    def matmul(self, other):
-        return Tensor(np.dot(self.data, other.data))
+**What This Module Adds**:
+- Pruning techniques (remove weights)
+- Knowledge distillation (compress knowledge)
+- Low-rank approximation (compress matrices)
+- Sparsity measurement
 
-    def abs(self):
-        return Tensor(np.abs(self.data))
+**To verify dependencies are met, run**:
+    python -c "from tinytorch.core.tensor import Tensor; print('✅ Module 01 ready')"
+    python -c "from tinytorch.core.layers import Linear; print('✅ Module 03 ready')"
+    python -c "from tinytorch.optimization.quantization import quantize_model; print('✅ Module 15 ready')"
+"""
 
-    def sum(self, axis=None):
-        return Tensor(self.data.sum(axis=axis))
+# Direct imports from previous modules - these MUST exist
+# If imports fail, students will get clear educational errors
+try:
+    from tinytorch.core.tensor import Tensor  # Module 01: Foundation
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 16 (Compression) requires Module 01 (Tensor) to be completed first.\n"
+        "   This module compresses Tensor weights - you need Tensor to exist first!\n"
+        "   Please complete Module 01 first, then run 'tito module complete 01'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
-    def __repr__(self):
-        return f"Tensor(shape={self.shape})"
+try:
+    from tinytorch.core.layers import Linear  # Module 03: What we compress
+except ImportError as e:
+    raise ImportError(
+        "❌ Module 16 (Compression) requires Module 03 (Layers) to be completed first.\n"
+        "   This module prunes Linear layer weights - you need Linear layers first!\n"
+        "   Please complete Module 03 first, then run 'tito module complete 03'.\n"
+        "   Original error: " + str(e)
+    ) from e
 
-class Linear:
-    """Minimal Linear layer for compression development - imports from Module 03 in practice."""
-    def __init__(self, in_features, out_features, bias=True):
-        self.in_features = in_features
-        self.out_features = out_features
-        # Initialize with He initialization
-        self.weight = Tensor(np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features))
-        self.bias = Tensor(np.zeros(out_features)) if bias else None
-
-    def forward(self, x):
-        output = x.matmul(self.weight)
-        if self.bias is not None:
-            output = output + self.bias
-        return output
-
-    def parameters(self):
-        params = [self.weight]
-        if self.bias is not None:
-            params.append(self.bias)
-        return params
-
+# Sequential is a simple container - define it here since it's not exported from Module 03
 class Sequential:
-    """Minimal Sequential container for model compression."""
+    """
+    Sequential container for model compression.
+    
+    Simple container that chains layers together.
+    This is a utility class for testing compression techniques.
+    """
     def __init__(self, *layers):
         self.layers = list(layers)
 

@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{37}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -9,6 +9,17 @@
 Alfred~V. Aho, Monica~S. Lam, Ravi Sethi, and Jeffrey~D. Ullman.
 \newblock \emph{Compilers: Principles, Techniques, and Tools}.
 \newblock Addison-Wesley, Boston, MA, 2nd edition, 2006.
+
+\bibitem[Banbury et~al.(2021)Banbury, Reddi, Lam, Fu, Fazel, Holleman, Huang,
+  Hurtado, Kanter, Lokhmotov, Patterson, Pau, Seo, Sieracki, Thakker, Verhelst,
+  and Yadav]{banbury2021benchmarking}
+Colby~R. Banbury, Vijay~Janapa Reddi, Max Lam, William Fu, Amin Fazel, Jeremy
+  Holleman, Xinyuan Huang, Robert Hurtado, David Kanter, Anton Lokhmotov, David
+  Patterson, Danilo Pau, Jae-sun Seo, Jeff Sieracki, Urmish Thakker, Marian
+  Verhelst, and Poonam Yadav.
+\newblock Benchmarking tinyml systems: Challenges and direction.
+\newblock \emph{arXiv preprint arXiv:2003.04821}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2003.04821}.
 
 \bibitem[Burstein et~al.(1992)Burstein, Henry, Collison, Marczak, Sligar,
   Watson, Marquez, Abbasalizad-Farhangi, Abbasi, Abd-Allah, Abdoli, Abdollahi,
@@ -290,6 +301,24 @@ Jan H.~F. Meyer and Ray Land.
   Practice Ten Years On}, pages 412--424. Oxford Centre for Staff and Learning
   Development, Oxford, 2003.
 
+\bibitem[Micikevicius et~al.(2018)Micikevicius, Narang, Alben, Diamos, Elsen,
+  Garcia, Ginsburg, Houston, Kuchaiev, Venkatesh, and
+  Wu]{micikevicius2018mixed}
+Paulius Micikevicius, Sharan Narang, Jonah Alben, Gregory Diamos, Erich Elsen,
+  David Garcia, Boris Ginsburg, Michael Houston, Oleksii Kuchaiev, Ganesh
+  Venkatesh, and Hao Wu.
+\newblock Mixed precision training.
+\newblock In \emph{International Conference on Learning Representations}, 2018.
+\newblock URL \url{https://arxiv.org/abs/1710.03740}.
+
+\bibitem[Patterson et~al.(2021)Patterson, Gonzalez, Le, Liang, Munguia,
+  Rothchild, So, Texier, and Dean]{patterson2021carbon}
+David Patterson, Joseph Gonzalez, Quoc Le, Chen Liang, Lluis-Miquel Munguia,
+  Daniel Rothchild, David So, Maud Texier, and Jeff Dean.
+\newblock Carbon emissions and large neural network training.
+\newblock \emph{arXiv preprint arXiv:2104.10350}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2104.10350}.
+
 \bibitem[Rashidi et~al.()Rashidi, Sridharan, Srinivasan, and
   Krishna]{chakkaravarthy2023astrasim}
 Saeed Rashidi, Srinivas Sridharan, Sudarshan Srinivasan, and Tushar Krishna.
@@ -383,6 +412,15 @@ Keller~Executive Search.
 \newblock Ai \& machine-learning talent gap 2025, 2025.
 \newblock URL
   \url{https://www.kellerexecutivesearch.com/intelligence/ai-machine-learning-talent-gap-2025/}.
+
+\bibitem[Strubell et~al.(2019)Strubell, Ganesh, and
+  McCallum]{strubell2019energy}
+Emma Strubell, Ananya Ganesh, and Andrew McCallum.
+\newblock Energy and policy considerations for deep learning in nlp.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics}, pages 3645--3650, Florence, Italy, 2019.
+  Association for Computational Linguistics.
+\newblock URL \url{https://arxiv.org/abs/1906.02243}.
 
 \bibitem[Sweller()]{sweller1988cognitive}
 John Sweller.
