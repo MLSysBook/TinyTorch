@@ -234,11 +234,13 @@ model.fit(dataloader, epochs=10)
 class Linear:
     def __init__(self, in_features,
                  out):
+        # Memory: out × in_features × 4B
         self.weight = Tensor.randn(
             out, in_features)
         self.bias = Tensor.zeros(out)
 
     def forward(self, x):
+        # O(batch × in × out) FLOPs
         return (x @ self.weight.T +
                 self.bias)
 
@@ -249,6 +251,7 @@ class Adam:
         self.lr = lr
         # 2× optimizer state:
         # momentum + variance
+        # Why 2× memory vs SGD?
         self.m = [Tensor.zeros_like(p)
                   for p in params]
         self.v = [Tensor.zeros_like(p)
@@ -257,10 +260,12 @@ class Adam:
     def step(self):
         for i, p in enumerate(
                 self.params):
+            # Exponential moving avg
             self.m[i] = (0.9*self.m[i] +
                         0.1*p.grad)
             self.v[i] = (0.999*self.v[i] +
                         0.001*p.grad**2)
+            # Per-parameter adaptive lr
             p.data -= (self.lr *
                 self.m[i] /
                 (self.v[i].sqrt() + 1e-8))
@@ -591,6 +596,7 @@ Each milestone: (1) recreates actual breakthroughs using exclusively student cod
 
 \noindent\textbf{Quantitative Success Criteria:}
 To ensure reproducibility and clear learning objectives, each milestone defines explicit success thresholds balancing historical plausibility (recognizing pure-Python performance limits) with pedagogical validation (ensuring implementations are functionally correct, not just syntactically complete):
+
 \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
     \item \textbf{M03 (1958 Perceptron)}: 100\% accuracy on 4-point XOR-like linearly separable problem, demonstrating basic gradient descent convergence.
     \item \textbf{M06 (1969 XOR Solution)}: 100\% accuracy on XOR classification within 20 epochs, proving multi-layer networks solve non-linear problems.
@@ -1026,6 +1032,7 @@ TinyTorch's CPU-only design prioritizes pedagogical transparency, but students b
 While TinyTorch's design is grounded in established learning theory (cognitive load~\citep{sweller1988cognitive}, progressive disclosure, cognitive apprenticeship~\citep{collins1989cognitive}), its pedagogical effectiveness requires empirical validation through controlled classroom studies. We commit to the following validation roadmap:
 
 \noindent\textbf{Phase 1: Pilot Deployment (Fall 2025, $n=30$--50 students)}
+
 \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
     \item \textbf{Institutions}: Deploy at 2--3 universities in introductory ML systems courses as primary hands-on framework alongside theory lectures.
     \item \textbf{Cognitive load measurement}: Paas Mental Effort Rating Scale~\citep{paas1992training} administered after Modules 05 (autograd) and 09 (CNNs) to test progressive disclosure hypothesis---does dormant feature activation reduce cognitive load compared to introducing autograd as separate framework?
@@ -1034,6 +1041,7 @@ While TinyTorch's design is grounded in established learning theory (cognitive l
 \end{itemize}
 
 \noindent\textbf{Phase 2: Comparative Study (Spring 2026, $n=100$--150 students)}
+
 \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
     \item \textbf{Design}: Randomized controlled trial comparing TinyTorch (systems-first, build-from-scratch) versus PyTorch-only (application-first, use-existing-frameworks) versus lecture-only (control) across 3 sections of same ML course with identical theory content.
     \item \textbf{Conceptual understanding}: ML systems concept inventory (adapted from program visualization assessment~\citep{sorva2012visual} for systems thinking) administered pre-course and post-course, measuring understanding of autograd mechanics, memory profiling, computational complexity, and optimization tradeoffs.
@@ -1042,6 +1050,7 @@ While TinyTorch's design is grounded in established learning theory (cognitive l
 \end{itemize}
 
 \noindent\textbf{Phase 3: Longitudinal Tracking (2026--2027, $n=200$+ students)}
+
 \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
     \item \textbf{Retention}: Re-administer concept inventory at 6 months and 12 months post-course to measure long-term retention of systems thinking---does implementation-based learning persist better than lecture-based learning?
     \item \textbf{Advanced course performance}: Track TinyTorch cohort versus control group performance in subsequent ML systems courses (e.g., CMU Deep Learning Systems~\citep{chen2022dlsyscourse}, distributed training courses) to measure preparation effectiveness.
