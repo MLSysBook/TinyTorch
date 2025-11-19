@@ -5,7 +5,6 @@ Enhanced Test command for TinyTorch CLI: runs both inline and external tests.
 import subprocess
 import sys
 import re
-import importlib.util
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional, Any

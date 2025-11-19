@@ -76,9 +76,9 @@ TinyTorch/
 │   ├── 12_attention/     # Module 12: Multi-head attention
 │   ├── 13_transformers/  # Module 13: Complete transformer blocks
 │   ├── 14_profiling/     # Module 14: Performance analysis
-│   ├── 15_memoization/   # Module 15: KV-cache/memoization
-│   ├── 16_quantization/  # Module 16: Model compression
-│   ├── 17_compression/   # Module 17: Pruning & distillation
+│   ├── 15_quantization/  # Module 15: Model compression (precision reduction)
+│   ├── 16_compression/   # Module 16: Pruning & distillation
+│   ├── 17_memoization/   # Module 17: KV-cache/memoization
 │   ├── 18_acceleration/  # Module 18: Hardware optimization
 │   ├── 19_benchmarking/  # Module 19: Performance measurement
 │   └── 20_capstone/      # Module 20: Complete ML systems
@@ -147,9 +147,15 @@ tito module view 01_tensor
 
 **That's it!** The setup script handles:
 - ✅ Virtual environment creation (arm64 on Apple Silicon)
-- ✅ All dependencies (NumPy, Jupyter, Rich, etc.)
+- ✅ All required dependencies (NumPy, Rich, PyYAML, pytest, jupytext)
 - ✅ TinyTorch package installation in development mode
 - ✅ Architecture detection and optimization
+
+**Optional Dependencies** (for visualization and advanced features):
+- `matplotlib` - For plotting in Modules 17, 19, 20 (optional)
+- `jupyter` - For interactive development (optional)
+
+**Note**: Memory profiling uses Python's built-in `tracemalloc` module (standard library). System information uses `os.cpu_count()` and `platform` module (standard library). No external system monitoring dependencies required!
 
 ## Learning Journey
 
@@ -204,10 +210,11 @@ Profile, optimize, and benchmark ML systems
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 15 | Memoization | Computational reuse via KV-caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
-| 16 | Acceleration | Hardware optimization + cache-friendly algorithms | **Cache hierarchies**, memory access patterns, **vectorization vs loops** |
-| 17 | Quantization | Model compression + precision reduction | **Precision trade-offs** (FP32→INT8), memory reduction, accuracy preservation |
-| 18 | Compression | Pruning + knowledge distillation | **Sparsity patterns**, parameter reduction, **compression ratios** |
+| 14 | Profiling | Performance analysis + bottleneck detection | **Memory profiling**, FLOP counting, **Amdahl's Law**, performance measurement |
+| 15 | Quantization | Model compression + precision reduction | **Precision trade-offs** (FP32→INT8), memory reduction, accuracy preservation |
+| 16 | Compression | Pruning + knowledge distillation | **Sparsity patterns**, parameter reduction, **compression ratios** |
+| 17 | Memoization | Computational reuse via KV-caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
+| 18 | Acceleration | Hardware optimization + cache-friendly algorithms | **Cache hierarchies**, memory access patterns, **vectorization vs loops** |
 | 19 | Benchmarking | Performance measurement + TinyMLPerf competition | **Competitive optimization**, relative performance metrics, innovation scoring |
 | 20 | Capstone | Complete end-to-end ML systems project | **Integration**, production deployment, **real-world ML engineering** |
 

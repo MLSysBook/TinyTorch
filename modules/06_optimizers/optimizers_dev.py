@@ -1228,7 +1228,6 @@ def analyze_optimizer_convergence_behavior():
 # def import_previous_module(module_name: str, component_name: str):
 #     import sys
 #     import os
-#     sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
 #     module = __import__(f"{module_name.split('_')[1]}_dev")
 #     return getattr(module, component_name)
 
@@ -1257,11 +1256,11 @@ def test_module():
     # Test realistic neural network optimization scenario
     print("🔬 Integration Test: Multi-layer Network Optimization...")
 
-    # Import components from previous modules using standardized helper
-    Tensor = import_previous_module('01_tensor', 'Tensor')
-    Linear = import_previous_module('03_layers', 'Linear')
-    ReLU = import_previous_module('02_activations', 'ReLU')
-    MSELoss = import_previous_module('04_losses', 'MSELoss')
+    # Import components from previous modules (explicit imports)
+    from tinytorch.core.tensor import Tensor  # Module 01: Foundation
+    from tinytorch.core.layers import Linear  # Module 03: Layers
+    from tinytorch.core.activations import ReLU  # Module 02: Activations
+    from tinytorch.core.losses import MSELoss  # Module 04: Losses
 
     # Create parameters for a 2-layer network
     # Layer 1: 3 inputs -> 4 hidden
