@@ -64,7 +64,6 @@ from tinytorch.optimization.acceleration import vectorized_matmul, fused_gelu, M
 import numpy as np
 import time
 from typing import Dict, List, Tuple, Optional, Any, Union
-import warnings
 
 # %% [markdown]
 """
