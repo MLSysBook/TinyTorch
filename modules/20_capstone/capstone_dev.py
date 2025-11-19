@@ -192,11 +192,9 @@ This capstone demonstrates the complete workflow of professional ML competitions
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
 import numpy as np
-import time
 import json
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
-import matplotlib.pyplot as plt
 
 # Import competition and benchmarking modules
 ### BEGIN SOLUTION

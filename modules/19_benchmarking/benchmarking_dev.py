@@ -156,10 +156,8 @@ import tracemalloc
 from typing import Dict, List, Tuple, Any, Optional, Callable, Union
 from dataclasses import dataclass, field
 from pathlib import Path
-import json
 import platform
 from contextlib import contextmanager
-import warnings
 
 # Optional dependency for visualization only
 try:
