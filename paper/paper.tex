@@ -620,7 +620,18 @@ Second, \textbf{implementation validation beyond unit tests}: Milestones differ 
 Each milestone: (1) recreates actual breakthroughs using exclusively student code, (2) uses \emph{only} TinyTorch implementations (no PyTorch/TensorFlow), (3) validates success through task-appropriate performance, and (4) demonstrates architectural comparisons showing why new approaches improved over predecessors.
 
 \noindent\textbf{Validation Approach:}
-While milestones provide pedagogical motivation through historical framing, they simultaneously serve a technical validation purpose: demonstrating implementation correctness through real-world task performance. Milestone success validates implementation correctness, not performance optimization. Students demonstrate functional implementations through task-appropriate results: simple problems converge (Perceptron solves linearly separable tasks, MLPs solve XOR), complex datasets show learning (MNIST/CIFAR-10 accuracy substantially exceeds random baselines), and generative models produce coherent outputs (Transformers generate meaningful text continuations). Performance differs from published state-of-the-art due to pure-Python constraints, but correctness matters more than speed---if a student's CNN learns meaningful CIFAR-10 features, their convolution, pooling, and backpropagation implementations compose correctly into a functional vision system. This approach mirrors professional debugging: implementations prove correct by solving real tasks, not by passing synthetic unit tests alone.
+While milestones provide pedagogical motivation through historical framing, they simultaneously serve a technical validation purpose: demonstrating implementation correctness through real-world task performance. Success criteria for each milestone:
+
+\begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
+    \item \textbf{M03 (1958 Perceptron)}: Solves linearly separable problems (e.g., 4-point OR/AND tasks), demonstrating basic gradient descent convergence.
+    \item \textbf{M06 (1969 XOR Solution)}: Solves XOR classification, proving multi-layer networks handle non-linear problems that single layers cannot.
+    \item \textbf{M07 (1986 MLP Revival)}: Achieves strong MNIST digit classification accuracy, validating backpropagation through all layers of deep networks.
+    \item \textbf{M10 (1998 LeNet CNN)}: Demonstrates meaningful CIFAR-10 learning (substantially better than random 10\% baseline), showing convolutional feature extraction works correctly.
+    \item \textbf{M13 (2017 Transformer)}: Generates coherent multi-token text continuations on TinyTalks dataset, demonstrating functional attention mechanisms and autoregressive generation.
+    \item \textbf{M20 (2024 AI Olympics)}: Student-selected challenge across Vision/Language/Speed/Compression tracks with self-defined success metrics, demonstrating production systems integration.
+\end{itemize}
+
+Performance targets differ from published state-of-the-art due to pure-Python constraints (no GPU acceleration, simplified architectures). Correctness matters more than speed: if a student's CNN learns meaningful CIFAR-10 features, their convolution, pooling, and backpropagation implementations compose correctly into a functional vision system. This approach mirrors professional debugging where implementations prove correct by solving real tasks, not by passing synthetic unit tests alone.
 
 \section{Progressive Disclosure}
 \label{sec:progressive}
@@ -840,7 +851,7 @@ This tier introduces three fundamental optimization concepts that complete the s
 
 The Optimization Tier completes the systems-first integration arc: students who calculate memory in Module 01, count FLOPs in Module 09, and optimize deployment in Modules 14--19 are designed to develop reflexive systems thinking. When encountering new ML techniques, the curriculum aims to train them to automatically ask: ``How much memory? What's the computational complexity? What are the trade-offs?'' Whether this design successfully makes these questions automatic rather than afterthoughts requires empirical validation.
 
-\section{Deployment and Infrastructure}
+\section{Course Deployment}
 \label{sec:deployment}
 
 Translating curriculum design into effective classroom practice requires addressing integration models, infrastructure accessibility, and student support structures. This section presents deployment patterns validated through pilot implementations and institutional feedback.
@@ -857,6 +868,19 @@ TinyTorch supports three deployment models for different institutional contexts,
 \textbf{Model 3: Team Onboarding} addresses industry use cases where ML teams want members to understand PyTorch internals. Companies can use TinyTorch for: new hire bootcamps (2--3 week intensive), internal training programs (distributed over quarters), or debugging workshops (focused modules like 05 Autograd, 12 Attention). The framework's PyTorch-inspired package structure and systems-first approach prepare engineers for understanding production frameworks and optimization workflows.
 
 \textbf{Available Resources}: Current release provides module notebooks, NBGrader test suites, milestone validation scripts, and connection maps. Lecture slides for institutional courses remain future work (\Cref{sec:future-work}), though self-paced learning requires no additional materials beyond the modules themselves.
+
+\subsection{Tier-Based Curriculum Configurations}
+\label{subsec:tier-configs}
+
+TinyTorch's three-tier architecture (Foundation, Architecture, Optimization) enables flexible deployment matching diverse course objectives and time constraints. Instructors can deploy complete tiers or selectively focus on specific learning goals:
+
+\textbf{Configuration 1: Foundation Only (Modules 01--07).} Students build core framework internals from scratch: tensors, activations, layers, losses, autograd, optimizers, and training loops. This 30--40 hour configuration suits introductory ML systems courses, undergraduate capstone projects, or bootcamp modules focusing on framework fundamentals. Students complete Milestones 1--3 (Perceptron, XOR, MLP Revival) demonstrating functional autograd and training infrastructure. Upon completion, students understand \texttt{loss.backward()} mechanics, can debug gradient flow, and profile memory usage. Ideal for courses prioritizing systems fundamentals over architectural breadth.
+
+\textbf{Configuration 2: Foundation + Architecture (Modules 01--13).} Extends Configuration 1 with modern deep learning architectures: datasets/dataloaders, convolution, pooling, embeddings, attention, and transformers. This 50--65 hour configuration enables comprehensive ML systems courses or graduate-level deep learning seminars. Students complete Milestones 4--5 (CNN Revolution, Transformer Era) demonstrating working vision and language models. Upon completion, students implement production architectures from scratch, understand memory scaling ($O(N^2)$ attention), and recognize architectural tradeoffs (109$\times$ parameter efficiency from Conv2d weight sharing). Suitable for semester-long courses covering both internals and modern ML.
+
+\textbf{Configuration 3: Optimization Focus (Modules 14--19 only).} Students import pre-built \texttt{tinytorch.nn} and \texttt{tinytorch.optim} packages from Configurations 1--2, implementing only production optimization techniques: profiling, quantization, compression, memoization, acceleration, and benchmarking. This 15--25 hour configuration targets production ML courses, TinyML workshops, or edge deployment seminars where students already understand framework basics but need systems optimization depth. Students complete Milestone 6 (MLPerf-inspired benchmark) demonstrating 10$\times$ speedup and 4$\times$ compression. Upon completion, students optimize existing models for deployment constraints. Addresses key pedagogical limitation: students interested in quantization shouldn't need to re-implement autograd first.
+
+These configurations support "build what you're learning, import what you need" pedagogy. Configuration 3 students focus on optimization while treating Foundation/Architecture as trusted dependencies, mirroring professional practice where engineers specialize rather than rebuilding entire stacks. Discussion (\Cref{subsec:flexibility}) examines pedagogical rationale for these configurations.
 
 \subsection{Infrastructure and Accessibility}
 \label{subsec:infrastructure}
@@ -1077,6 +1101,10 @@ Three pedagogical contributions enable this transformation. \textbf{Progressive 
 \textbf{For educators and bootcamp instructors}: TinyTorch supports flexible integration---self-paced learning requiring zero infrastructure (students run locally on laptops), institutional courses with automated NBGrader assessment, or industry team onboarding for ML engineers transitioning from application development to systems work. The modular structure enables selective adoption: foundation tier only (Modules 01--07, teaching core concepts), architecture focus (adding CNNs and Transformers through Module 13), or complete systems coverage (all 20 modules including optimization and deployment). No GPU access required, no cloud credits needed, no infrastructure barriers.
 
 The complete codebase, curriculum materials, and assessment infrastructure are openly available at \texttt{tinytorch.ai} under permissive open-source licensing. We invite the global ML education community to adopt TinyTorch in courses, contribute curriculum improvements, translate materials for international accessibility, fork for domain-specific variants (quantum ML, robotics, edge AI), and empirically evaluate whether implementation-based pedagogy achieves its promise. The difference between engineers who know \emph{what} ML systems do and engineers who understand \emph{why} they work begins with understanding what's inside \texttt{loss.backward()}---and TinyTorch makes that understanding accessible to everyone.
+
+\section*{Acknowledgments}
+
+Coming soon.
 
 % Bibliography
 \bibliographystyle{plainnat}
