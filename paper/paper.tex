@@ -41,6 +41,24 @@
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 
+% Caption styling - bold labels, small font, proper spacing
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  justification=justified,
+  singlelinecheck=false,
+  skip=8pt
+}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+\captionsetup[lstlisting]{
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  skip=8pt
+}
+
 % Section spacing - tighter for two-column format
 \titlespacing*{\section}{0pt}{0.8\baselineskip}{0.5\baselineskip}
 \titlespacing*{\subsection}{0pt}{0.6\baselineskip}{0.4\baselineskip}
@@ -422,7 +440,7 @@ TinyTorch occupies a distinct pedagogical niche through its \textbf{bottom-up, s
 
 \begin{table*}[tp]
 \centering
-\caption{Framework comparison: Educational vs. Production}
+\caption{Framework comparison positions TinyTorch's pedagogical role. Educational frameworks (micrograd, MiniTorch, tinygrad) prioritize learning over production use. Production frameworks (PyTorch, TensorFlow) prioritize performance and scalability. TinyTorch bridges both: students learn framework internals through implementation, then transfer that knowledge to production frameworks with deeper systems understanding.}
 \label{tab:framework-comparison}
 \small
 \renewcommand{\arraystretch}{1.4}
@@ -479,7 +497,7 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 
 \begin{table*}[p]
 \centering
-\caption{Module-by-module ML and Systems concepts (embedded from the start)}
+\caption{Module progression integrates ML algorithms with systems concepts from the start. Each module teaches both "what" (ML technique) and "how much" (memory/compute costs). Foundation tier (M01-07) establishes core operations with explicit resource tracking. Architecture tier (M08-13) applies these foundations to CNNs and transformers. Optimization tier (M14-19) adds production concerns: profiling, quantization, deployment. This dual-concept approach ensures students never learn algorithms without understanding their systems implications.}
 \label{tab:objectives}
 \resizebox{\textwidth}{!}{%
 \small
