@@ -675,16 +675,16 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 \begin{tikzpicture}[
     scale=0.9,
     every node/.style={font=\scriptsize},
-    dormant/.style={rectangle, draw=gray!60, fill=gray!20, text=gray!70, minimum width=1.6cm, minimum height=0.5cm},
-    active/.style={rectangle, draw=orange!80, fill=orange!30, text=black, font=\scriptsize\bfseries, minimum width=1.6cm, minimum height=0.5cm}
+    dormant/.style={rectangle, draw=gray!70, fill=gray!20, text=gray!70, minimum width=2.0cm, minimum height=0.5cm, anchor=east},
+    active/.style={rectangle, draw=orange!80, fill=orange!30, text=black, font=\scriptsize\bfseries, minimum width=2.0cm, minimum height=0.5cm, anchor=west}
 ]
 
 % Timeline axis
 \draw[thick, ->] (0,0) -- (14,0) node[right, font=\scriptsize] {Modules};
 
-% Module boundaries as vertical lines
+% Module boundaries as vertical lines (darker)
 \foreach \x/\label in {1/01, 3.5/03, 6/05, 8.5/09, 11/13, 13.5/20} {
-    \draw[gray!40, dotted] (\x, 0) -- (\x, 5.5);
+    \draw[gray!60, dotted] (\x, 0) -- (\x, 5.5);
     \node[below, font=\tiny] at (\x, -0.3) {\texttt{M\label}};
 }
 
@@ -692,25 +692,24 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 \draw[red!60, very thick] (6, 0) -- (6, 5.5);
 \node[above, font=\scriptsize\bfseries, red!70] at (6, 5.7) {ACTIVATE};
 
-% Feature layers - stacked with vertical alignment at Module 05
-% Layer 1: Core features (always active)
-\node[active] at (1.5, 1.0) {\texttt{.data}};
-\node[active] at (3.5, 1.0) {\texttt{.shape}};
+% Feature layers - dormant boxes end AT M05, active boxes start AT M05
+% Layer 1: Core features (always active - span both sides)
+\node[active, minimum width=4.0cm, anchor=center] at (3.5, 1.0) {\texttt{.data}, \texttt{.shape}};
 \node[left, font=\tiny] at (0.2, 1.0) {Core};
 
-% Layer 2: Gradient features - transition at Module 05
+% Layer 2: Gradient features - boxes meet exactly at x=6 (Module 05 line)
 % .requires_grad
-\node[dormant] at (2.25, 2.2) {\texttt{.requires\_grad}};
-\node[active] at (8.5, 2.2) {\texttt{.requires\_grad}};
+\node[dormant] at (6, 2.2) {\texttt{.requires\_grad}};
+\node[active] at (6, 2.2) {\texttt{.requires\_grad}};
 \node[left, font=\tiny] at (0.2, 2.2) {Gradient};
 
 % .grad
-\node[dormant] at (2.75, 3.1) {\texttt{.grad}};
-\node[active] at (8.5, 3.1) {\texttt{.grad}};
+\node[dormant] at (6, 3.1) {\texttt{.grad}};
+\node[active] at (6, 3.1) {\texttt{.grad}};
 
 % .backward()
-\node[dormant] at (2.0, 4.0) {\texttt{.backward()}};
-\node[active] at (8.5, 4.0) {\texttt{.backward()}};
+\node[dormant] at (6, 4.0) {\texttt{.backward()}};
+\node[active] at (6, 4.0) {\texttt{.backward()}};
 
 % Annotations - positioned at top
 \node[align=center, font=\tiny, text width=4.5cm] at (3, 6.5) {
@@ -726,8 +725,8 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 };
 
 % Legend
-\node[dormant, minimum width=1.0cm, minimum height=0.4cm] at (2.5, -1.2) {Dormant};
-\node[active, minimum width=1.0cm, minimum height=0.4cm] at (5.5, -1.2) {Active};
+\node[dormant, minimum width=1.0cm, minimum height=0.4cm, anchor=center] at (2.5, -1.2) {Dormant};
+\node[active, minimum width=1.0cm, minimum height=0.4cm, anchor=center] at (5.5, -1.2) {Active};
 
 \end{tikzpicture}
 \caption{Progressive disclosure manages cognitive load through runtime feature activation. From Module 01, students see the complete Tensor API including gradient methods (\texttt{.backward()}, \texttt{.grad}, \texttt{.requires\_grad}), but these features remain dormant (gray, dashed)—they exist as placeholders that return gracefully. In Module 05, runtime method enhancement activates full autograd functionality (orange, solid) without breaking earlier code. This creates three learning benefits: (1) students learn the complete API early, avoiding interface surprise later; (2) Module 01 code continues working unchanged when autograd activates, demonstrating forward compatibility; (3) visible but inactive features create curiosity-driven questions ("Why does \texttt{.backward()} exist if we can't use it yet?") that motivate curriculum progression.}
