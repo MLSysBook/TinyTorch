@@ -192,6 +192,7 @@ The 20-module curriculum (estimated 60--80 hours) provides complete open-source 
 
 % Main content
 \section{Introduction}
+\label{sec:intro}
 
 Machine learning deployment faces a critical workforce bottleneck: industry surveys indicate significant demand-supply imbalances for ML systems engineers~\citep{roberthalf2024talent,keller2025ai}, with surveys suggesting that a substantial portion of executives cite talent shortage as their primary barrier to AI adoption~\citep{keller2025ai}.
 
@@ -479,7 +480,7 @@ TinyTorch differs from educational frameworks through systems-first integration 
 
 Empirical validation of learning outcomes remains future work (\Cref{sec:discussion}), but design grounding in established theory (constructionism, cognitive apprenticeship, productive failure, threshold concepts) provides theoretical justification for pedagogical choices.
 
-\section{Curriculum Architecture}
+\section{The TinyTorch Curriculum}
 \label{sec:curriculum}
 
 This section presents the 20-module curriculum structure, organized into four tiers that progressively build a complete ML framework.
@@ -596,6 +597,7 @@ Module 09 (Convolutions) integration exemplifies this: convolution must work wit
 Each module concludes with systems reasoning prompts measuring conceptual understanding beyond syntactic correctness. Memory analysis questions ask students to calculate footprints (``A (256, 256) Conv2d layer with 64 input and 128 output channels requires how much memory?''). Complexity analysis prompts probe asymptotic understanding (``Why is attention $O(N^2)$? Demonstrate by doubling sequence length and measuring memory growth.''). Design trade-off questions assess engineering judgment (``Adam requires 2$\times$ optimizer state memory (momentum and variance) but converges faster than SGD. When is the 4$\times$ total training memory trade-off worth it?''). These open-ended questions assess transfer~\citep{perkins1992transfer}---can students apply learned concepts to novel scenarios not seen in exercises?
 
 \subsection{Milestone Arcs}
+\label{subsec:milestones}
 
 \noindent\textbf{Why Milestones Matter.} Milestones serve dual pedagogical and validation purposes that differentiate TinyTorch from traditional programming assignments. First, \textbf{pedagogical motivation through historical framing}: Rather than ``implement this function,'' students ``recreate the breakthrough that proved Minsky wrong about neural networks,'' connecting implementation work to historically significant results. This instantiates Bruner's spiral curriculum~\citep{bruner1960process}---students train neural networks 6 times with increasing sophistication, each iteration deepening understanding through historical progression from 1958 (Perceptron) through 2024 (production-optimized systems).
 
