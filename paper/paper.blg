@@ -49,45 +49,45 @@ Warning--empty year in papert1980mindstorms
 Warning--empty year in papert1980mindstorms
 Warning--empty year in zhang2021dive
 Warning--empty year in zhang2021dive
-You've used 37 entries,
+You've used 39 entries,
             2773 wiz_defined-function locations,
-            874 strings with 23762 characters,
-and the built_in function-call counts, 50306 in all, are:
-= -- 3560
-> -- 6924
-< -- 25
-+ -- 2316
-- -- 2278
-* -- 5403
-:= -- 8608
-add.period$ -- 165
-call.type$ -- 37
-change.case$ -- 869
-chr.to.int$ -- 36
-cite$ -- 120
-duplicate$ -- 762
-empty$ -- 1359
-format.name$ -- 2329
-if$ -- 9551
+            879 strings with 15131 characters,
+and the built_in function-call counts, 22733 in all, are:
+= -- 1917
+> -- 1884
+< -- 29
++ -- 638
+- -- 598
+* -- 2045
+:= -- 3643
+add.period$ -- 169
+call.type$ -- 39
+change.case$ -- 314
+chr.to.int$ -- 38
+cite$ -- 124
+duplicate$ -- 796
+empty$ -- 1410
+format.name$ -- 653
+if$ -- 4599
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 29
-newline$ -- 242
-num.names$ -- 150
-pop$ -- 1821
+missing$ -- 31
+newline$ -- 250
+num.names$ -- 158
+pop$ -- 719
 preamble$ -- 1
-purify$ -- 833
+purify$ -- 277
 quote$ -- 0
-skip$ -- 1205
+skip$ -- 667
 stack$ -- 0
-substring$ -- 441
-swap$ -- 90
+substring$ -- 445
+swap$ -- 92
 text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 392
+type$ -- 409
 warning$ -- 46
-while$ -- 147
+while$ -- 153
 width$ -- 0
-write$ -- 557
+write$ -- 579
 (There were 46 warnings)
