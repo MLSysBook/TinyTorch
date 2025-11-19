@@ -95,6 +95,18 @@ assignments/submitted/
 # Logs
 *.log
 
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
 # Database
 *.db
 *.sqlite
