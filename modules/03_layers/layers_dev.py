@@ -777,8 +777,8 @@ def test_module():
     # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
-    # Import real activation from module 02 using standardized helper
-    ReLU = import_previous_module('02_activations', 'ReLU')
+    # Import ReLU from Module 02 (already imported at top of file)
+    # ReLU is available from: from tinytorch.core.activations import ReLU
 
     # Build individual layers for manual composition
     layer1 = Linear(784, 128)

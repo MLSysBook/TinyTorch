@@ -69,9 +69,6 @@ This module builds on previous TinyTorch components. Here's what we need and why
 - **Tensor** (Module 01): Foundation for all loss computations
 - **Linear** (Module 03): For testing loss functions with realistic predictions  
 - **ReLU** (Module 02): For building test networks that generate realistic outputs
-
-**Integration Helper:**
-The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
@@ -81,17 +78,10 @@ The `import_previous_module()` function below helps us cleanly import components
 import numpy as np
 from typing import Optional
 
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
-
-# Import from tinytorch package
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Linear
-from tinytorch.core.activations import ReLU
+# Import dependencies from previous modules
+from tinytorch.core.tensor import Tensor  # Module 01: Foundation
+from tinytorch.core.layers import Linear  # Module 03: Layers
+from tinytorch.core.activations import ReLU  # Module 02: Activations
 
 # %% [markdown]
 r"""

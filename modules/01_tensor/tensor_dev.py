@@ -1476,7 +1476,6 @@ Every layer in a neural network - from simple MLPs to complex transformers - use
 # def import_previous_module(module_name: str, component_name: str):
 #     import sys
 #     import os
-#     sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
 #     module = __import__(f"{module_name.split('_')[1]}_dev")
 #     return getattr(module, component_name)
 

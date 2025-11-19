@@ -40,6 +40,9 @@ dev = [
     "jupyter>=1.1.0",
     "jupyterlab>=4.2.0",
 ]
+visualization = [
+    "matplotlib>=3.9.0",  # For plotting in Modules 17, 19, 20
+]
 
 [project.urls]
 Homepage = "https://github.com/mlsysbook/TinyTorch"

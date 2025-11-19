@@ -168,37 +168,59 @@ Professional benchmarking quantifies and minimizes these uncertainties.
 
 # %%
 import numpy as np
-try:
-    import pandas as pd
-    PANDAS_AVAILABLE = True
-except ImportError:
-    PANDAS_AVAILABLE = False
-    # Create a simple DataFrame-like class for when pandas is not available
-    class pd:
-        class DataFrame:
-            def __init__(self, data):
-                self.data = data
-            def __repr__(self):
-                return str(self.data)
 import time
 import statistics
+import os
+import tracemalloc
+from typing import Dict, List, Tuple, Any, Optional, Callable, Union
+from dataclasses import dataclass, field
+from pathlib import Path
+import json
+import platform
+from contextlib import contextmanager
+import warnings
+
+# Optional dependency for visualization only
 try:
     import matplotlib.pyplot as plt
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
-from typing import Dict, List, Tuple, Any, Optional, Callable, Union
-from dataclasses import dataclass, field
-from pathlib import Path
-import json
-try:
-    import psutil
-    PSUTIL_AVAILABLE = True
-except ImportError:
-    PSUTIL_AVAILABLE = False
-import platform
-from contextlib import contextmanager
-import warnings
+    # Create minimal fallback for when matplotlib is not available
+    class plt:
+        @staticmethod
+        def subplots(*args, **kwargs):
+            return None, None
+        @staticmethod
+        def figure(*args, **kwargs):
+            return None
+        @staticmethod
+        def scatter(*args, **kwargs):
+            pass
+        @staticmethod
+        def annotate(*args, **kwargs):
+            pass
+        @staticmethod
+        def xlabel(*args, **kwargs):
+            pass
+        @staticmethod
+        def ylabel(*args, **kwargs):
+            pass
+        @staticmethod
+        def title(*args, **kwargs):
+            pass
+        @staticmethod
+        def grid(*args, **kwargs):
+            pass
+        @staticmethod
+        def tight_layout(*args, **kwargs):
+            pass
+        @staticmethod
+        def savefig(*args, **kwargs):
+            pass
+        @staticmethod
+        def show(*args, **kwargs):
+            pass
 
 # Import Profiler from Module 14 for measurement reuse
 from tinytorch.profiling.profiler import Profiler
@@ -593,14 +615,15 @@ class Benchmark:
         # Use Profiler from Module 14 for measurements
         self.profiler = Profiler()
 
-        # System information for metadata
+        # System information for metadata (using Python standard library)
         self.system_info = {
             'platform': platform.platform(),
             'processor': platform.processor(),
             'python_version': platform.python_version(),
-            'memory_gb': psutil.virtual_memory().total / (1024**3) if PSUTIL_AVAILABLE else 0.0,
-            'cpu_count': psutil.cpu_count() if PSUTIL_AVAILABLE else 1
+            'cpu_count': os.cpu_count() or 1,  # os.cpu_count() can return None
         }
+        # Note: System total memory not available via standard library
+        # Process memory measurement uses tracemalloc (via Profiler)
 
     def run_latency_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
         """Benchmark model inference latency using Profiler."""
@@ -717,7 +740,8 @@ class Benchmark:
                 f"  Fix: Use one of the supported metric names."
             )
 
-        # Convert to DataFrame for easy comparison
+        # Return structured list of dicts for easy comparison
+        # (No pandas dependency - students can convert to DataFrame if needed)
         comparison_data = []
         for model_name, result in results.items():
             comparison_data.append({
@@ -730,11 +754,7 @@ class Benchmark:
                 'count': result.count
             })
 
-        if PANDAS_AVAILABLE:
-            return pd.DataFrame(comparison_data)
-        else:
-            # Return dict when pandas is not available
-            return {'comparison': comparison_data, 'note': 'pandas not available, returning dict'}
+        return comparison_data
     ### END SOLUTION
 
 def test_unit_benchmark():
@@ -771,16 +791,13 @@ def test_unit_benchmark():
     assert len(memory_results) == 2
     assert all(result.mean >= 0 for result in memory_results.values())
 
-    # Test comparison
-    comparison_df = benchmark.compare_models("latency")
-    # Handle case when pandas is not available (returns dict instead of DataFrame)
-    if PANDAS_AVAILABLE:
-        assert len(comparison_df) == 2
-        assert "model" in comparison_df.columns
-        assert "mean" in comparison_df.columns
-    else:
-        assert "comparison" in comparison_df
-        assert isinstance(comparison_df, dict)
+    # Test comparison (returns list of dicts, not DataFrame)
+    comparison_data = benchmark.compare_models("latency")
+    assert len(comparison_data) == 2
+    assert isinstance(comparison_data, list)
+    assert all(isinstance(item, dict) for item in comparison_data)
+    assert "model" in comparison_data[0]
+    assert "mean" in comparison_data[0]
 
     print("✅ Benchmark works correctly!")
 
@@ -946,6 +963,10 @@ class BenchmarkSuite:
         if not self.results:
             print("No results to plot. Run benchmark first.")
             return
+        
+        if not MATPLOTLIB_AVAILABLE:
+            print("⚠️ matplotlib not available - skipping plots. Install with: pip install matplotlib")
+            return
 
         fig, axes = plt.subplots(2, 2, figsize=(15, 12))
         fig.suptitle('ML Model Benchmark Results', fontsize=16, fontweight='bold')
@@ -998,6 +1019,10 @@ class BenchmarkSuite:
 
     def plot_pareto_frontier(self, x_metric: str = 'latency', y_metric: str = 'accuracy'):
         """Plot Pareto frontier for two competing objectives."""
+        if not MATPLOTLIB_AVAILABLE:
+            print("⚠️ matplotlib not available - skipping plots. Install with: pip install matplotlib")
+            return
+            
         if x_metric not in self.results or y_metric not in self.results:
             print(f"Missing data for {x_metric} or {y_metric}")
             return

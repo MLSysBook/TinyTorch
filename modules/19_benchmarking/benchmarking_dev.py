@@ -149,20 +149,61 @@ Professional benchmarking quantifies and minimizes these uncertainties.
 
 # %%
 import numpy as np
-import pandas as pd
 import time
 import statistics
-import matplotlib.pyplot as plt
+import os
+import tracemalloc
 from typing import Dict, List, Tuple, Any, Optional, Callable, Union
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
-import psutil
 import platform
 from contextlib import contextmanager
 import warnings
 
-# Import Profiler from Module 15 for measurement reuse
+# Optional dependency for visualization only
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    # Create minimal fallback for when matplotlib is not available
+    class plt:
+        @staticmethod
+        def subplots(*args, **kwargs):
+            return None, None
+        @staticmethod
+        def figure(*args, **kwargs):
+            return None
+        @staticmethod
+        def scatter(*args, **kwargs):
+            pass
+        @staticmethod
+        def annotate(*args, **kwargs):
+            pass
+        @staticmethod
+        def xlabel(*args, **kwargs):
+            pass
+        @staticmethod
+        def ylabel(*args, **kwargs):
+            pass
+        @staticmethod
+        def title(*args, **kwargs):
+            pass
+        @staticmethod
+        def grid(*args, **kwargs):
+            pass
+        @staticmethod
+        def tight_layout(*args, **kwargs):
+            pass
+        @staticmethod
+        def savefig(*args, **kwargs):
+            pass
+        @staticmethod
+        def show(*args, **kwargs):
+            pass
+
+# Import Profiler from Module 14 for measurement reuse
 from tinytorch.profiling.profiler import Profiler
 
 # %% [markdown]
@@ -532,14 +573,15 @@ class Benchmark:
         # Use Profiler from Module 15 for measurements
         self.profiler = Profiler()
 
-        # System information for metadata
+        # System information for metadata (using Python standard library)
         self.system_info = {
             'platform': platform.platform(),
             'processor': platform.processor(),
             'python_version': platform.python_version(),
-            'memory_gb': psutil.virtual_memory().total / (1024**3),
-            'cpu_count': psutil.cpu_count()
+            'cpu_count': os.cpu_count() or 1,  # os.cpu_count() can return None
         }
+        # Note: System total memory not available via standard library
+        # Process memory measurement uses tracemalloc (via Profiler)
 
     def run_latency_benchmark(self, input_shape: Tuple[int, ...] = (1, 28, 28)) -> Dict[str, BenchmarkResult]:
         """Benchmark model inference latency using Profiler."""
@@ -650,9 +692,9 @@ class Benchmark:
                     # Use peak_memory_mb as the primary metric
                     memory_used = memory_stats['peak_memory_mb']
                 except:
-                    # Fallback: measure with psutil
-                    process = psutil.Process()
-                    memory_before = process.memory_info().rss / (1024**2)  # MB
+                    # Fallback: use tracemalloc (Python standard library) for memory measurement
+                    tracemalloc.start()
+                    baseline_memory = tracemalloc.get_traced_memory()[0] / (1024**2)  # MB
 
                     try:
                         dummy_input = np.random.randn(*input_shape).astype(np.float32)
@@ -665,8 +707,9 @@ class Benchmark:
                     except:
                         pass
 
-                    memory_after = process.memory_info().rss / (1024**2)  # MB
-                    memory_used = max(0, memory_after - memory_before)
+                    peak_memory = tracemalloc.get_traced_memory()[1] / (1024**2)  # MB
+                    tracemalloc.stop()
+                    memory_used = max(0, peak_memory - baseline_memory)
 
                     # If no significant memory change detected, estimate from parameters
                     if memory_used < 1.0:
@@ -686,8 +729,13 @@ class Benchmark:
 
         return results
 
-    def compare_models(self, metric: str = "latency") -> pd.DataFrame:
-        """Compare models across a specific metric."""
+    def compare_models(self, metric: str = "latency") -> List[Dict[str, Any]]:
+        """
+        Compare models across a specific metric.
+        
+        Returns a list of dictionaries, one per model, with comparison metrics.
+        This keeps dependencies minimal - students can convert to DataFrame if needed.
+        """
         if metric == "latency":
             results = self.run_latency_benchmark()
         elif metric == "accuracy":
@@ -697,7 +745,8 @@ class Benchmark:
         else:
             raise ValueError(f"Unknown metric: {metric}")
 
-        # Convert to DataFrame for easy comparison
+        # Return structured list of dicts for easy comparison
+        # (No pandas dependency - students can convert to DataFrame if needed)
         comparison_data = []
         for model_name, result in results.items():
             comparison_data.append({
@@ -710,7 +759,7 @@ class Benchmark:
                 'count': result.count
             })
 
-        return pd.DataFrame(comparison_data)
+        return comparison_data
     ### END SOLUTION
 
 def test_unit_benchmark():
@@ -747,11 +796,13 @@ def test_unit_benchmark():
     assert len(memory_results) == 2
     assert all(result.mean >= 0 for result in memory_results.values())
 
-    # Test comparison
-    comparison_df = benchmark.compare_models("latency")
-    assert len(comparison_df) == 2
-    assert "model" in comparison_df.columns
-    assert "mean" in comparison_df.columns
+    # Test comparison (returns list of dicts, not DataFrame)
+    comparison_data = benchmark.compare_models("latency")
+    assert len(comparison_data) == 2
+    assert isinstance(comparison_data, list)
+    assert all(isinstance(item, dict) for item in comparison_data)
+    assert "model" in comparison_data[0]
+    assert "mean" in comparison_data[0]
 
     print("✅ Benchmark works correctly!")
 
@@ -916,6 +967,10 @@ class BenchmarkSuite:
         if not self.results:
             print("No results to plot. Run benchmark first.")
             return
+        
+        if not MATPLOTLIB_AVAILABLE:
+            print("⚠️ matplotlib not available - skipping plots. Install with: pip install matplotlib")
+            return
 
         fig, axes = plt.subplots(2, 2, figsize=(15, 12))
         fig.suptitle('ML Model Benchmark Results', fontsize=16, fontweight='bold')
@@ -968,6 +1023,10 @@ class BenchmarkSuite:
 
     def plot_pareto_frontier(self, x_metric: str = 'latency', y_metric: str = 'accuracy'):
         """Plot Pareto frontier for two competing objectives."""
+        if not MATPLOTLIB_AVAILABLE:
+            print("⚠️ matplotlib not available - skipping plots. Install with: pip install matplotlib")
+            return
+            
         if x_metric not in self.results or y_metric not in self.results:
             print(f"Missing data for {x_metric} or {y_metric}")
             return

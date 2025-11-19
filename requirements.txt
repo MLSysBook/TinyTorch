@@ -33,7 +33,7 @@ nbformat>=5.10.0
 # Optional Dependencies (Uncomment if needed)
 # ============================================================================
 
-# Visualization for milestone examples
+# Visualization for milestone examples and benchmarking (Modules 17, 19, 20)
 # matplotlib>=3.9.0
 
 # Jupyter for interactive development

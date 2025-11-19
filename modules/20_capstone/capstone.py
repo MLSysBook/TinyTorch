@@ -250,18 +250,21 @@ from tinytorch.profiling.profiler import Profiler
 
 # Module 17: Quantization
 from tinytorch.optimization.quantization import quantize_model
-# QuantizedLinear may not be exported - check if needed
+# QuantizedLinear is an optional advanced feature (may not be exported)
+# This is acceptable - quantize_model is the main API, QuantizedLinear is internal
 try:
     from tinytorch.optimization.quantization import QuantizedLinear
 except ImportError:
-    QuantizedLinear = None  # Not available
+    # QuantizedLinear is optional - quantize_model() is the main API
+    QuantizedLinear = None
 
 # Module 18: Compression
-# Note: These functions may need to be exported first
+# These are optional advanced features (may not be exported)
+# NOTE: These are OPTIONAL - students can use quantize_model() without them
 try:
     from tinytorch.optimization.compression import magnitude_prune, structured_prune
 except ImportError:
-    # Functions may not be exported yet - handle gracefully
+    # Compression functions are optional - quantize_model() is sufficient for competition
     magnitude_prune = None
     structured_prune = None
 
