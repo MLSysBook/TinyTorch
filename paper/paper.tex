@@ -363,7 +363,7 @@ The curriculum follows the compiler course model~\citep{aho2006compilers}: stude
 
 \end{tikzpicture}%
 }
-\caption{Module dependency flow: How components connect across tiers. Foundation modules (blue) enable architectures (purple), which are optimized (green), culminating in the capstone competition (red). Dotted lines show cross-tier integration.}
+\caption{Module dependency flow shows how students build a complete ML framework incrementally. Foundation modules (blue, M01-07) provide core tensor operations and training infrastructure. These enable architecture modules (purple, M08-13) where students implement CNNs and transformers using only their own code. Optimization modules (green, M14-19) teach production concerns: profiling, quantization, and deployment. Solid arrows show direct dependencies (e.g., autograd M05 requires tensors M01); dotted lines show cross-tier integration (e.g., benchmarking M19 requires all architectures). This structure mirrors compiler courses: each module builds on previous work, creating systems thinking through component integration.}
 \label{fig:module-flow}
 \end{figure}
 
@@ -738,7 +738,7 @@ print(x.grad)  # [6.0] - dy/dx = 2x
 \node[active, minimum width=1.0cm, minimum height=0.4cm] at (5.5, -1.5) {Active};
 
 \end{tikzpicture}
-\caption{Progressive activation of Tensor gradient features. Dormant placeholders (gray, dashed) exist from Module 01. Module 05 activates full autograd functionality (orange, solid) via runtime method enhancement.}
+\caption{Progressive disclosure manages cognitive load through runtime feature activation. From Module 01, students see the complete Tensor API including gradient methods (\texttt{.backward()}, \texttt{.grad}, \texttt{.requires\_grad}), but these features remain dormant (gray, dashed)—they exist as placeholders that return gracefully. In Module 05, runtime method enhancement activates full autograd functionality (orange, solid) without breaking earlier code. This creates three learning benefits: (1) students learn the complete API early, avoiding interface surprise later; (2) Module 01 code continues working unchanged when autograd activates, demonstrating forward compatibility; (3) visible but inactive features create curiosity-driven questions ("Why does \texttt{.backward()} exist if we can't use it yet?") that motivate curriculum progression.}
 \label{fig:progressive-timeline}
 \end{figure*}
 
