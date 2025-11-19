@@ -62,8 +62,6 @@ from tinytorch.core.activations import ReLU, Sigmoid  # Module 02 - intelligence
 #| export
 
 import numpy as np
-import sys
-import os
 
 # Import dependencies from tinytorch package
 from tinytorch.core.tensor import Tensor
