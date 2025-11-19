@@ -165,7 +165,13 @@ MODULE_STATUS_SUMMARY.md
 **/*_FINDINGS.md
 **/*_PLAN.md
 **/*_COMPARISON.md
+**/*_REVIEW*.md
+**/*_MATRIX.md
+**/*_INVENTORY.md
+**/*_ASSESSMENT.md
 **/VERIFY_*.py
+**/NEW_CITATIONS.bib
+**/proposed_figures.tex
 progress.json
 modules/HASATTR_*.md
 
