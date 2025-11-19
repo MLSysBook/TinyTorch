@@ -61,7 +61,6 @@ from tinytorch.generation.kv_cache import KVCache, enable_kv_cache
 #| export
 
 import numpy as np
-import time
 from typing import Tuple, Optional, Dict, List
 
 # Import TinyTorch components from previous modules
