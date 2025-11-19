@@ -191,7 +191,10 @@ We present TinyTorch, a 20-module curriculum where students build PyTorch's core
 import torch.nn as nn
 import torch.optim as optim
 
+# How much memory?
 model = nn.Linear(784, 10)
+# Why does Adam need more memory
+# than SGD?
 optimizer = optim.Adam(
     model.parameters(), lr=0.001)
 loss_fn = nn.CrossEntropyLoss()
@@ -202,6 +205,7 @@ for epoch in range(10):
         loss = loss_fn(pred, y)
         loss.backward()   # Magic?
         optimizer.step()  # How?
+        # What cost? How fast?
 \end{lstlisting}
 \subcaption{PyTorch: Using frameworks as black boxes}
 \label{lst:pytorch-usage}
@@ -212,16 +216,20 @@ for epoch in range(10):
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize,frame=single]
 import tensorflow as tf
 
+# What's happening inside?
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(10, 
+    tf.keras.layers.Dense(10,
         input_shape=(784,))
 ])
+# Why Adam over SGD?
+# Memory cost?
 model.compile(
     optimizer='adam',
     loss='sparse_categorical_crossentropy')
 
 model.fit(dataloader, epochs=10)
 # How does it work?
+# What's the complexity?
 \end{lstlisting}
 \subcaption{TensorFlow: High-level abstractions}
 \label{lst:tensorflow-usage}
