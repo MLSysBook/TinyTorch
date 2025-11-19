@@ -619,18 +619,18 @@ Second, \textbf{implementation validation beyond unit tests}: Milestones differ 
 
 Each milestone: (1) recreates actual breakthroughs using exclusively student code, (2) uses \emph{only} TinyTorch implementations (no PyTorch/TensorFlow), (3) validates success through task-appropriate performance, and (4) demonstrates architectural comparisons showing why new approaches improved over predecessors.
 
-\noindent\textbf{Quantitative Success Criteria:}
-To ensure reproducibility and clear learning objectives, each milestone defines explicit success thresholds balancing historical plausibility (recognizing pure-Python performance limits) with pedagogical validation (ensuring implementations are functionally correct, not just syntactically complete):
+\noindent\textbf{Success Validation:}
+Each milestone validates implementation correctness through task-appropriate performance (not state-of-the-art results). Success criteria balance historical plausibility with pedagogical validation---implementations must be functionally correct, not just syntactically complete:
 
 \begin{itemize}[leftmargin=*, itemsep=1pt, parsep=0pt]
-    \item \textbf{M03 (1958 Perceptron)}: 100\% accuracy on 4-point XOR-like linearly separable problem, demonstrating basic gradient descent convergence.
-    \item \textbf{M06 (1969 XOR Solution)}: 100\% accuracy on XOR classification within 20 epochs, proving multi-layer networks solve non-linear problems.
-    \item \textbf{M07 (1986 MLP Revival)}: 95\%+ accuracy on MNIST digit classification within 10 epochs, validating backpropagation implementation correctness.
-    \item \textbf{M10 (1998 LeNet CNN)}: 70\%+ accuracy on CIFAR-10 after training, showing convolutional feature learning works correctly despite performance limitations.
-    \item \textbf{M13 (2017 Transformer)}: Perplexity $<$10 on TinyTalks validation set, generating coherent 20-token text continuations demonstrating functional attention mechanisms.
-    \item \textbf{M20 (2024 AI Olympics)}: Student-selected challenge across Vision/Language/Speed/Compression tracks with self-defined success metrics approved by instructor, demonstrating production systems integration.
+    \item \textbf{M03 (1958 Perceptron)}: Solves linearly separable problems (e.g., 4-point OR/AND tasks), demonstrating basic gradient descent convergence.
+    \item \textbf{M06 (1969 XOR Solution)}: Solves XOR classification, proving multi-layer networks handle non-linear problems that single layers cannot.
+    \item \textbf{M07 (1986 MLP Revival)}: Achieves strong MNIST digit classification accuracy, validating backpropagation through all layers of deep networks.
+    \item \textbf{M10 (1998 LeNet CNN)}: Demonstrates meaningful CIFAR-10 learning (substantially better than random 10\% baseline), showing convolutional feature extraction works correctly.
+    \item \textbf{M13 (2017 Transformer)}: Generates coherent multi-token text continuations on TinyTalks dataset, demonstrating functional attention mechanisms and autoregressive generation.
+    \item \textbf{M20 (2024 AI Olympics)}: Student-selected challenge across Vision/Language/Speed/Compression tracks with self-defined success metrics, demonstrating production systems integration.
 \end{itemize}
-These thresholds differ from published state-of-the-art results due to pure-Python constraints (no GPU acceleration, simplified architectures), but achieving them demonstrates implementation correctness---if a student's CNN reaches 70\% CIFAR-10 accuracy, their convolution, pooling, and backpropagation implementations compose correctly into a functional vision system.
+Performance targets differ from published state-of-the-art due to pure-Python constraints (no GPU acceleration, simplified architectures). Correctness matters more than speed: if a student's CNN learns meaningful CIFAR-10 features, their convolution, pooling, and backpropagation implementations compose correctly into a functional vision system.
 
 \section{Progressive Disclosure}
 \label{sec:progressive}
