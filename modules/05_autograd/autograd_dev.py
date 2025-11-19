@@ -64,8 +64,6 @@ Let's build the gradient engine that makes neural networks learn! 🚀
 
 import numpy as np
 from typing import Optional, List, Tuple
-import sys
-import os
 
 from tinytorch.core.tensor import Tensor
 
