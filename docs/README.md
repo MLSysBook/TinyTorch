@@ -11,21 +11,14 @@ This directory contains essential documentation for TinyTorch development and us
 ## 🔧 Development Documentation
 
 - **`tinytorch-assumptions.md`** - **CRITICAL**: TinyTorch complexity framework and implementation guidelines
-- **`tinytorch-textbook-alignment.md`** - Alignment with ML systems textbooks
 
 ### Development Standards
 - **`development/module-rules.md`** - Module development standards and patterns
-- **`development/nbgrader-standardized-testing.md`** - Testing standards
-- **`development/nbgrader-testing-template.md`** - Testing templates
 
 ### NBGrader Integration
 - **`nbgrader/NBGrader_Quick_Reference.md`** - Daily use commands and workflow
 - **`nbgrader/NBGRADER_STYLE_GUIDE.md`** - Style guide for NBGrader cells
 - **`nbgrader/NBGrader_Text_Response_Technical_Implementation.md`** - Technical implementation details
-
-## 📦 Archive
-
-The `archive/` directory contains historical documentation that's no longer actively maintained but preserved for reference.
 
 ---
 
