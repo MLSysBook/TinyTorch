@@ -476,7 +476,7 @@ TinyTorch differs from educational frameworks through systems-first integration 
 
 Empirical validation of learning outcomes remains future work (\Cref{sec:discussion}), but design grounding in established theory (constructionism, cognitive apprenticeship, productive failure, threshold concepts) provides theoretical justification for pedagogical choices.
 
-\section{TinyTorch Architecture}
+\section{Module Design \& Architecture}
 \label{sec:curriculum}
 
 This section presents the 20-module curriculum structure, organized into four tiers that progressively build a complete ML framework.
@@ -497,7 +497,7 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 \label{tab:objectives}
 \resizebox{\textwidth}{!}{%
 \small
-\renewcommand{\arraystretch}{1.4}
+\renewcommand{\arraystretch}{1.55}
 \setlength{\tabcolsep}{7pt}
 \begin{tabularx}{\textwidth}{@{}cl>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
@@ -505,38 +505,38 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Foundation Tier (01--07)}} \\
 \addlinespace[2pt]
-01 & Fnd & Tensor & Multidimensional arrays, broadcasting & Memory footprint (nbytes), FP32 storage \\
-02 & Fnd & Activations & ReLU, Sigmoid, Softmax & Numerical stability (exp overflow), vectorization \\
-03 & Fnd & Layers & Linear, parameter initialization & Parameter memory vs activation memory \\
-04 & Fnd & Losses & Cross-entropy, MSE & Stability (log(0) handling), gradient flow \\
-05 & Fnd & Autograd & Computational graphs, backprop & Gradient memory, optimizer state (2$\times$ for Adam) \\
-06 & Fnd & Optimizers & SGD, Momentum, Adam & Memory-speed tradeoffs, update rules \\
-07 & Fnd & Training Loop & Epoch/batch iteration & Forward/backward memory lifecycle \\
+01 & Fnd & Tensor & Multidimensional arrays, broadcasting & Memory footprint (nbytes), dtype sizes, contiguous layout \\
+02 & Fnd & Activations & ReLU, Sigmoid, Tanh, GELU, Softmax & Numerical stability (exp overflow), vectorization \\
+03 & Fnd & Layers & Linear, Xavier initialization & Parameter vs activation memory, weight layout \\
+04 & Fnd & Losses & Cross-entropy, MSE, log-sum-exp trick & Numerical stability (log(0)), gradient magnitude \\
+05 & Fnd & Autograd & Computational graphs, chain rule, backprop & Gradient memory (2$\times$ momentum, 3$\times$ Adam) \\
+06 & Fnd & Optimizers & SGD, Momentum, Adam, AdamW & Optimizer state memory, in-place updates \\
+07 & Fnd & Training & Cosine scheduling, gradient clipping & Peak memory lifecycle, checkpoint tradeoffs \\
 \addlinespace[2pt]
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Architecture Tier (08--13)}} \\
 \addlinespace[2pt]
-08 & Arch & DataLoader & Batching, shuffling, Dataset abstraction & Iterator protocol, batch collation, memory layout \\
-09 & Arch & Spatial (CNNs) & Conv2d, kernels, strides, pooling & $O(B \!\times\! C_{\text{out}} \!\times\! H_{\text{out}} \!\times\! W_{\text{out}} \!\times\! C_{\text{in}} \!\times\! K_h \!\times\! K_w)$ complexity \\
-10 & Arch & Tokenization & BPE (Byte Pair Encoding), vocabulary, encoding & Vocabulary management, OOV handling \\
-11 & Arch & Embeddings & Token/position embeddings & Lookup tables, gradient through indices \\
-12 & Arch & Attention & Scaled dot-product attention & $O(N^2)$ memory scaling, sequence length impact \\
-13 & Arch & Transformers & Multi-head, encoder/decoder & Quadratic memory, KV caching strategies \\
+08 & Arch & DataLoader & Dataset abstraction, batching, shuffling & Iterator protocol, batch collation overhead \\
+09 & Arch & Spatial (CNNs) & Conv2d, pooling, padding, stride & im2col expansion, 7-loop $O(B \!\times\! C \!\times\! H \!\times\! W \!\times\! K^2)$ \\
+10 & Arch & Tokenization & BPE, vocabulary, special tokens & Vocab size$\leftrightarrow$sequence length tradeoff \\
+11 & Arch & Embeddings & Token + positional (sinusoidal/learned) & Sparse gradient updates, embedding table memory \\
+12 & Arch & Attention & Scaled dot-product, causal masking & $O(N^2)$ memory, attention score materialization \\
+13 & Arch & Transformers & Multi-head attention, LayerNorm, MLP & KV cache sizing, per-layer memory profile \\
 \addlinespace[2pt]
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Optimization Tier (14--19)}} \\
 \addlinespace[2pt]
-14 & Opt & Profiling & Time, memory, FLOPs analysis & Bottleneck identification, measurement overhead \\
-15 & Opt & Quantization & INT8, dynamic/static quant & 4$\times$ model size reduction, accuracy-speed tradeoff \\
-16 & Opt & Compression & Pruning, distillation & 10$\times$ model shrinkage, minimal accuracy loss \\
-17 & Opt & Memoization & KV-cache for transformers & 10--100$\times$ inference speedup via caching \\
-18 & Opt & Acceleration & Vectorization, parallelization & 10--100$\times$ speedup via NumPy optimization \\
-19 & Opt & Benchmarking & Statistical testing, comparisons & Rigorous performance measurement \\
+14 & Opt & Profiling & Time/memory/FLOPs measurement & Bottleneck identification, measurement overhead \\
+15 & Opt & Quantization & INT8, scale/zero-point calibration & 4$\times$ compression, quantization error propagation \\
+16 & Opt & Compression & Magnitude pruning, knowledge distillation & Sparsity patterns, teacher-student memory \\
+17 & Opt & Memoization & KV-cache for autoregressive generation & $O(n^2)$$\rightarrow$$O(n)$ caching, memory-compute tradeoff \\
+18 & Opt & Acceleration & Vectorization, memory access patterns & Cache locality, SIMD utilization \\
+19 & Opt & Benchmarking & Statistical comparison, multiple runs & Confidence intervals, warm-up protocols \\
 \addlinespace[2pt]
 \midrule
-\multicolumn{5}{@{}l}{\textbf{AI Olympics (20)}} \\
+\multicolumn{5}{@{}l}{\textbf{Olympics (20)}} \\
 \addlinespace[2pt]
-20 & Capstone & AI Olympics & Complete production system & MLPerf-style competition, leaderboard \\
+20 & Cap & Olympics & End-to-end optimized system & MLPerf-style metrics, Pareto optimization \\
 \bottomrule
 \end{tabularx}
 }
@@ -770,7 +770,7 @@ Similarly, TensorFlow 2.0 integrated eager execution by default \citep{tensorflo
 
 Having established TinyTorch's systems-first architecture (\Cref{sec:curriculum}), this section details how systems awareness manifests through a three-phase progression: (1) \textbf{understanding memory} through explicit profiling, (2) \textbf{analyzing complexity} through transparent implementations, and (3) \textbf{optimizing systems} through measurement-driven iteration. This progression applies situated cognition \citep{lave1991situated} by mirroring professional ML engineering workflow: measure resource requirements, understand computational costs, then optimize bottlenecks.
 
-\subsection{Phase 1: Understanding Memory Through Profiling}
+\subsection{Phase 1: Understanding and Characterizing Memory Usage}
 
 Where traditional frameworks abstract away memory concerns, TinyTorch makes memory footprint calculation explicit (\Cref{lst:tensor-memory}). Students' first assignment calculates memory for MNIST (60,000 $\times$ 784 $\times$ 4 bytes $\approx$ 180 MB) and ImageNet (1.2M $\times$ 224$\times$224$\times$3 $\times$ 4 bytes $\approx$ 670 GB).
 
@@ -1102,7 +1102,7 @@ The complete codebase, curriculum materials, and assessment infrastructure are o
 
 \section*{Acknowledgments}
 
-Coming soon.
+Colby Banbury.
 
 % Bibliography
 \bibliographystyle{plainnat}
