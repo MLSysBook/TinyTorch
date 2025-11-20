@@ -64,25 +64,27 @@ Based on research into MLPerf, SPEC benchmarks, and educational ML frameworks, h
 3. **Progressive**: Run milestones as students complete modules
 4. **Transparency**: Show what's reference vs student code
 
-## Recommendation
+## Final Decision
 
-**✅ Your Original Vision is Correct!**
+**✅ Keep Current Baseline Approach**
 
-**Milestone-based setup validation with reference fallback**:
-- ✅ Aligns with MLPerf/SPEC practices
-- ✅ Follows educational framework best practices
-- ✅ Creates better student experience
-- ✅ Provides meaningful baseline results
+After analysis, we decided to keep the current fast baseline approach (~1 second) rather than milestone-based validation:
 
-**Implementation**:
-1. Add reference fallback to milestones (PyTorch if `tinytorch.*` fails)
-2. Run milestones at setup with reference implementation
-3. Generate normalized baseline results
-4. Students later run with THEIR code and compare
+**Why**:
+- ✅ Fast setup validation (no time concerns)
+- ✅ Doesn't require student code
+- ✅ Normalized to reference system (SPEC-style)
+- ✅ Meaningful baseline results
+- ✅ Perfect for "Hello World" moment
+
+**Milestones stay separate**:
+- Run as students complete modules
+- Optional for community submission
+- Better for progressive validation
+
+See `BASELINE_SUBMISSION_DESIGN.md` for complete design rationale.
 
 ## Conclusion
 
-**Expert consensus**: Milestone-based validation with reference fallback is the right approach for educational ML frameworks. It aligns with industry standards (MLPerf, SPEC) and educational best practices.
-
-**Your original idea was correct!** The challenge is implementation, not concept.
+**Expert research validated**: Both approaches (quick baseline and milestone-based) align with industry standards. We chose quick baseline for practical reasons (speed, simplicity) while maintaining educational best practices.
 
