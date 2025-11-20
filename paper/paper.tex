@@ -196,7 +196,7 @@ Unlike algorithmic ML—where automated tools increasingly handle model architec
 
 Current ML education creates this gap by separating algorithms from systems. Students learn to implement gradient descent without measuring memory consumption, build attention mechanisms without profiling $O(N^2)$ costs, and train models without understanding optimizer state overhead. Introductory courses use high-level APIs (PyTorch, Keras) that abstract away implementation details, while advanced electives teach systems concepts (memory management, performance optimization) in isolation from ML frameworks. This pedagogical divide produces graduates who can \emph{use} \texttt{loss.backward()} but cannot explain how computational graphs enable reverse-mode differentiation, or who understand transformers mathematically but miss that KV caching trades $O(N^2)$ memory for $O(N)$ recomputation.
 
-We present TinyTorch, a 20-module curriculum where students build PyTorch's core components from scratch using only NumPy: tensors, automatic differentiation, optimizers, CNNs, transformers, and production optimization techniques. Students transition from framework \emph{users} to framework \emph{engineers} by implementing the internals that high-level APIs deliberately hide. As a hands-on companion to the \emph{Machine Learning Systems} textbook~\citep{reddi2024mlsysbook}, TinyTorch transforms tacit systems knowledge into explicit pedagogy: students don't just learn \emph{that} Conv2d achieves 109$\times$ parameter efficiency over dense layers, they \emph{implement} sliding window convolution and \emph{measure} the difference directly through profiling code they wrote. \Cref{fig:code-comparison} contrasts this bottom-up approach with traditional top-down API usage.
+We present TinyTorch, a 20-module curriculum where students build PyTorch's core components from scratch using only NumPy: tensors, automatic differentiation, optimizers, CNNs, transformers, and production optimization techniques. Students transition from framework \emph{users} to framework \emph{engineers} by implementing the internals that high-level APIs deliberately hide. As a hands-on companion to the \emph{Machine Learning Systems} textbook~\citep{reddi2024mlsysbook}, TinyTorch transforms tacit systems knowledge into explicit pedagogy: students don't just learn \emph{that} Conv2d achieves 109$\times$ parameter efficiency over dense layers, they \emph{implement} sliding window convolution and \emph{measure} the difference directly through profiling code they wrote. \Cref{fig:code-comparison} illustrates this progression: from PyTorch's black-box APIs, through building internals like optimizers, to training transformers where every import is student-implemented code.
 
 \begin{figure*}[t]
 \centering
@@ -222,7 +222,8 @@ for epoch in range(10):
         loss.backward()  # Magic?
         optimizer.step() # How?
 \end{lstlisting}
-\subcaption{PyTorch: Black box usage}
+\vspace{0.3em}
+\centering\subcaption{PyTorch: Black box usage}
 \label{lst:pytorch-usage}
 \end{subfigure}
 \end{minipage}
@@ -254,7 +255,8 @@ class Adam:
                 self.m[i] / \
                 (self.v[i].sqrt()+1e-8)
 \end{lstlisting}
-\subcaption{TinyTorch: Build internals}
+\vspace{0.3em}
+\centering\subcaption{TinyTorch: Build internals}
 \label{lst:tinytorch-build}
 \end{subfigure}
 \end{minipage}
@@ -281,7 +283,8 @@ for batch in DataLoader(data):
     opt.step()       # You built this
     # You understand WHY it works
 \end{lstlisting}
-\subcaption{TinyTorch: The culmination}
+\vspace{0.3em}
+\centering\subcaption{TinyTorch: The culmination}
 \label{lst:tinytorch-culmination}
 \end{subfigure}
 \end{minipage}
