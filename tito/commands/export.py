@@ -461,7 +461,7 @@ class ExportCommand(BaseCommand):
             self.console.print(f"[red]❌ Python file not found: {dev_file}[/red]")
             return False
         
-        notebook_file = module_path / f"{short_name}_dev.ipynb"
+        notebook_file = module_path / f"{short_name}.ipynb"
         
         # Always regenerate notebook from Python file (Python is source of truth)
         self.console.print(f"[dim]📄 Source: {dev_file.name} → Target: {notebook_file.name}[/dim]")
@@ -581,7 +581,7 @@ class ExportCommand(BaseCommand):
                 
                 # Always convert Python file to notebook (Python file is source of truth)
                 short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
-                notebook_file = module_path / f"{short_name}_dev.ipynb"
+                notebook_file = module_path / f"{short_name}.ipynb"
                 
                 console.print(f"📝 Converting {module_name} Python file to notebook...")
                 if not self._convert_py_to_notebook(module_path):

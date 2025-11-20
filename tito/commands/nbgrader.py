@@ -384,17 +384,12 @@ class NBGraderCommand(BaseCommand):
         else:
             short_name = module_name
         
-        # Look for regular version first, then enhanced as fallback
-        dev_file = None
-        for suffix in ["", "_enhanced"]:
-            potential_file = module_dir / f"{short_name}_dev{suffix}.py"
-            if potential_file.exists():
-                dev_file = potential_file
-                break
+        # Look for module Python file
+        dev_file = module_dir / f"{short_name}.py"
         
-        if not dev_file:
+        if not dev_file.exists():
             console.print(f"❌ Module file not found in: {module_dir}")
-            console.print(f"   Looking for: {short_name}.py or {short_name}_dev_enhanced.py")
+            console.print(f"   Looking for: {short_name}.py")
             return False
         
         # Convert to notebook and generate assignment
