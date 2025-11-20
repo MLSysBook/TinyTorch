@@ -1227,6 +1227,14 @@ html[data-theme="dark"] .indicator.active {
     background: #3b82f6;
 }
 
+/* Comparison grid responsive wrapping - stack on tablets and smaller */
+@media (max-width: 1024px) {
+    .comparison-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     /* Make logo visible and prominent on mobile */
@@ -1258,10 +1266,11 @@ html[data-theme="dark"] .indicator.active {
         margin-bottom: 1.5rem !important;
     }
 
-    /* Stack comparison grid vertically on mobile */
+    /* Stack comparison grid vertically on mobile - tighter spacing */
     .comparison-grid {
         grid-template-columns: 1fr !important;
         gap: 1.5rem !important;
+        margin: 2rem 0 1.5rem 0 !important;
     }
 
     /* Carousel adjustments */
