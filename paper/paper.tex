@@ -110,8 +110,37 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.97,0.97,0.97}
 
+% Style for TinyTorch code (light background)
 \lstdefinestyle{pythonstyle}{
     backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\scriptsize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Python,
+    frame=single,
+    rulecolor=\color{black!30},
+    xleftmargin=10pt,
+    xrightmargin=5pt,
+    aboveskip=8pt,
+    belowskip=8pt
+}
+
+% Style for PyTorch/TensorFlow code (slightly darker background to distinguish)
+\definecolor{pytorchbg}{rgb}{0.92,0.92,0.95}
+\lstdefinestyle{pytorchstyle}{
+    backgroundcolor=\color{pytorchbg},
     commentstyle=\color{codegreen},
     keywordstyle=\color{blue},
     numberstyle=\tiny\color{codegray},
@@ -204,7 +233,7 @@ We present TinyTorch, a 20-module curriculum where students build PyTorch's core
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pytorchstyle]
 import torch.nn as nn
 import torch.optim as optim
 
@@ -224,7 +253,7 @@ for epoch in range(10):
         optimizer.step() # How?
 \end{lstlisting}
 \vspace{0.3em}
-\centering\subcaption{PyTorch: Black box usage}
+\subcaption{PyTorch: Black box usage}
 \label{lst:pytorch-usage}
 \end{subfigure}
 \end{minipage}
@@ -232,7 +261,7 @@ for epoch in range(10):
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pythonstyle]
 class Adam:
     def __init__(self, params,
                  lr=0.001):
@@ -257,7 +286,7 @@ class Adam:
                 (self.v[i].sqrt()+1e-8)
 \end{lstlisting}
 \vspace{0.3em}
-\centering\subcaption{TinyTorch: Build internals}
+\subcaption{TinyTorch: Build internals}
 \label{lst:tinytorch-build}
 \end{subfigure}
 \end{minipage}
@@ -265,7 +294,7 @@ class Adam:
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pythonstyle]
 # After 20 modules: train
 # transformers with YOUR code
 from tinytorch.nn import (
@@ -285,7 +314,7 @@ for batch in DataLoader(data):
     # You understand WHY it works
 \end{lstlisting}
 \vspace{0.3em}
-\centering\subcaption{TinyTorch: The culmination}
+\subcaption{TinyTorch: The culmination}
 \label{lst:tinytorch-culmination}
 \end{subfigure}
 \end{minipage}
