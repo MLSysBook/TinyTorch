@@ -21,6 +21,9 @@ help:
 
 html:
 	@echo "🌐 Building HTML version..."
+	@echo "📓 Preparing notebooks for launch buttons..."
+	@./prepare_notebooks.sh || echo "⚠️  Notebook preparation skipped (tito not available)"
+	@echo ""
 	jupyter-book build .
 
 pdf:

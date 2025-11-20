@@ -43,12 +43,12 @@ We've wrapped NBGrader behind simple `tito grade` commands so you don't need to 
 ### **1. Prepare Assignments**
 ```bash
 # Generate instructor version (with solutions)
-tito grade generate 01_setup
+tito grade generate 01_tensor
 
 # Create student version (solutions removed)
-tito grade release 01_setup
+tito grade release 01_tensor
 
-# Student version will be in: release/tinytorch/01_setup/
+# Student version will be in: release/tinytorch/01_tensor/
 ```
 
 ### **2. Distribute to Students**
@@ -65,25 +65,25 @@ tito grade release 01_setup
 ### **3. Collect Submissions**
 ```bash
 # Collect all students
-tito grade collect 01_setup
+tito grade collect 01_tensor
 
 # Or specific student
-tito grade collect 01_setup --student student_id
+tito grade collect 01_tensor --student student_id
 ```
 
 ### **4. Auto-Grade**
 ```bash
 # Grade all submissions
-tito grade autograde 01_setup
+tito grade autograde 01_tensor
 
 # Grade specific student
-tito grade autograde 01_setup --student student_id
+tito grade autograde 01_tensor --student student_id
 ```
 
 ### **5. Manual Review**
 ```bash
 # Open grading interface (browser-based)
-tito grade manual 01_setup
+tito grade manual 01_tensor
 
 # This launches a web interface for:
 # - Reviewing ML Systems question responses
@@ -94,7 +94,7 @@ tito grade manual 01_setup
 ### **6. Generate Feedback**
 ```bash
 # Create feedback files for students
-tito grade feedback 01_setup
+tito grade feedback 01_tensor
 ```
 
 ### **7. Export Grades**
@@ -103,7 +103,7 @@ tito grade feedback 01_setup
 tito grade export
 
 # Or specific module
-tito grade export --module 01_setup --output grades_module01.csv
+tito grade export --module 01_tensor --output grades_module01.csv
 ```
 
 ## 📊 Grading Components
@@ -138,17 +138,12 @@ tito grade export --module 01_setup --output grades_module01.csv
 
 ## 📚 Module Teaching Notes
 
-### **Module 01: Setup**
-- **Focus**: Environment configuration, systems thinking mindset
-- **Key Concept**: Development environments matter for ML systems
-- **Common Issues**: Virtual environment confusion
-
-### **Module 02: Tensor**
+### **Module 01: Tensor**
 - **Focus**: Memory layout, data structures
 - **Key Concept**: Understanding memory is crucial for ML performance
 - **Demo**: Show memory profiling, copying behavior
 
-### **Module 03: Activations**
+### **Module 02: Activations**
 - **Focus**: Vectorization, numerical stability
 - **Key Concept**: Small details matter at scale
 - **Demo**: Gradient vanishing/exploding

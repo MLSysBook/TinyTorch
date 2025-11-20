@@ -1,10 +1,8 @@
 # TinyTorch for Instructors: Complete ML Systems Course
 
-<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
-<h3 style="margin: 0 0 0.5rem 0; color: #856404;">🚧 Classroom Integration: Coming Soon</h3>
-<p style="margin: 0; color: #856404;"><a href="https://nbgrader.readthedocs.io/" style="color: #856404; text-decoration: underline;">NBGrader</a> integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
-<p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Currently available</strong>: Students can use TinyTorch with the standard workflow (edit modules → export → validate with milestones)</p>
-<p style="margin: 0.5rem 0 0 0;"><a href="../student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the current development cycle.</p>
+<div style="background: #d4edda; border: 1px solid #28a745; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
+<h3 style="margin: 0 0 0.5rem 0; color: #155724;">✅ Classroom Integration Available</h3>
+<p style="margin: 0; color: #155724;">TinyTorch includes complete <a href="https://nbgrader.readthedocs.io/" style="color: #155724; text-decoration: underline; font-weight: bold;">NBGrader</a> integration with automated grading workflows. See the <a href="../instructor-guide.html" style="color: #155724; font-weight: bold;">Complete Instructor Guide</a> for setup, grading rubrics, and sample solutions.</p>
 </div>
 
 <div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
@@ -36,7 +34,7 @@
 </div>
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Complete instructor guide</strong> with setup & grading (coming soon)</li>
+<li><strong>Complete instructor guide</strong> with setup & grading ([available now](../instructor-guide.html))</li>
 <li><strong>Flexible pacing</strong> (14-18 weeks depending on depth)</li>
 <li><strong>Industry practices</strong> (Git, testing, documentation)</li>
 <li><strong>Academic foundation</strong> from university research</li>
@@ -48,7 +46,7 @@
 **Planned Course Duration:** 14-16 weeks (flexible pacing)
 **Student Outcome:** Complete ML framework supporting vision AND language models
 
-**Current Status:** Students can work through modules individually using the standard workflow. Full classroom integration ([NBGrader](https://nbgrader.readthedocs.io/) automation, instructor dashboards) coming soon.
+**Current Status:** Complete NBGrader integration available! See the [Instructor Guide](../instructor-guide.html) for setup, grading workflows, and sample solutions.
 
 ---
 
@@ -159,8 +157,8 @@ tito module status --comprehensive
 <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #dee2e6;">
 <h4 style="color: #495057; margin: 0 0 0.5rem 0;">3️⃣ First Assignment (10 min)</h4>
 <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85rem; margin: 0.5rem 0;">
-tito nbgrader generate 01_setup<br>
-tito nbgrader release 01_setup
+tito nbgrader generate 01_tensor<br>
+tito nbgrader release 01_tensor
 </div>
 <p style="font-size: 0.9rem; margin: 0; color: #6c757d;">Ready to distribute to students!</p>
 </div>
@@ -169,6 +167,7 @@ tito nbgrader release 01_setup
 
 <div style="text-align: center; margin-top: 1.5rem;">
 <a href="../instructor-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">📖 Complete Instructor Guide</a>
+<a href="ta-guide.html" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">👥 TA Guide</a>
 <a href="../testing-framework.html" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">🧪 Testing Framework Guide</a>
 </div>
 
@@ -197,7 +196,9 @@ tito nbgrader release 01_setup
 
 ## Instructor Resources
 
-### Documentation
+### Essential Documentation
+- **[Complete Instructor Guide](../instructor-guide.md)** - 30-minute setup, grading rubrics, sample solutions, common errors
+- **[TA Guide](ta-guide.md)** - Common student errors, debugging strategies, office hour patterns
 - Module-specific teaching notes in each ABOUT.md file
 - [Course Structure](../chapters/00-introduction.md) - Full curriculum overview
 - [Student Workflow](../student-workflow.md) - Essential development cycle

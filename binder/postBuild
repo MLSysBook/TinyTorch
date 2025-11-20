@@ -1,0 +1,20 @@
+#!/bin/bash
+# Binder postBuild script
+# This runs after the environment is set up to install TinyTorch
+
+set -e
+
+echo "🔧 Installing TinyTorch package..."
+pip install -e .
+
+echo "✅ TinyTorch installation complete!"
+echo ""
+echo "📚 Available resources:"
+echo "   - TinyTorch modules: modules/"
+echo "   - Course assignments: assignments/"
+echo "   - Milestone examples: milestones/"
+echo ""
+echo "🚀 Start exploring with:"
+echo "   - jupyter lab"
+echo "   - Or open notebooks directly from the file browser"
+

@@ -14,6 +14,12 @@ parts:
     title: "Student Workflow"
   - file: usage-paths/classroom-use
     title: "For Instructors"
+  - file: instructor-guide
+    title: "Instructor Guide"
+  - file: usage-paths/ta-guide
+    title: "TA Guide"
+  - file: usage-paths/team-onboarding
+    title: "Team Onboarding"
 
 # Tier captions: Added emojis for visual consistency and quick recognition
 # Foundation (🏗), Architecture (🏛️), Optimization (⏱️), Capstone (🏅)
