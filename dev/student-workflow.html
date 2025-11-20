@@ -57,6 +57,7 @@
     <script src="_static/togglebutton.js"></script>
     <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/marimo-badges.js"></script>
     <script src="_static/sidebar-link.js"></script>
     <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -482,6 +483,9 @@ window.addEventListener("load", initFullscreen);
 <li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -769,7 +773,17 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-development-session">Typical Development Session</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tito-commands-reference">TITO Commands Reference</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-system-optional">Checkpoint System (Optional)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-integration-coming-soon">Instructor Integration (Coming Soon)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-platform-options">Notebook Platform Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#online-notebooks-viewing-exploration">Online Notebooks (Viewing &amp; Exploration)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#local-setup-required-for-full-package">Local Setup (Required for Full Package)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#community-benchmarking">Community &amp; Benchmarking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join-the-community">Join the Community</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-your-progress">Benchmark Your Progress</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-integration">Instructor Integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
 </ul>
             </nav>
@@ -917,6 +931,10 @@ tito<span class="w"> </span>checkpoint<span class="w"> </span>status
 
 <span class="c1"># System information</span>
 tito<span class="w"> </span>system<span class="w"> </span>info
+
+<span class="c1"># Join community and benchmark</span>
+tito<span class="w"> </span>community<span class="w"> </span>join
+tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
 </pre></div>
 </div>
 <p>For complete command documentation, see <a class="reference internal" href="tito/overview.html"><span class="doc std std-doc">TITO CLI Reference</span></a>.</p>
@@ -929,9 +947,83 @@ tito<span class="w"> </span>system<span class="w"> </span>info
 </div>
 <p>This is helpful for self-assessment but <strong>not required</strong> for the core workflow. The essential cycle remains: edit → export → validate.</p>
 </section>
-<section id="instructor-integration-coming-soon">
-<h2>Instructor Integration (Coming Soon)<a class="headerlink" href="#instructor-integration-coming-soon" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch supports <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> for classroom use. Documentation for instructors using the autograding features will be available in future releases.</p>
+<section id="notebook-platform-options">
+<h2>Notebook Platform Options<a class="headerlink" href="#notebook-platform-options" title="Permalink to this heading">#</a></h2>
+<p>TinyTorch notebooks work with multiple platforms, but <strong>important distinction</strong>:</p>
+<section id="online-notebooks-viewing-exploration">
+<h3>Online Notebooks (Viewing &amp; Exploration)<a class="headerlink" href="#online-notebooks-viewing-exploration" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Jupyter/MyBinder</strong>: Click “Launch Binder” on any notebook page - great for viewing</p></li>
+<li><p><strong>Google Colab</strong>: Click “Launch Colab” for GPU access - good for exploration</p></li>
+<li><p><strong>Marimo</strong>: Click “🍃 Open in Marimo” for reactive notebooks - excellent for learning</p></li>
+</ul>
+<p><strong>⚠️ Important</strong>: Online notebooks are for <strong>viewing and learning</strong>. They don’t have the full TinyTorch package installed, so you can’t:</p>
+<ul class="simple">
+<li><p>Run milestone validation scripts</p></li>
+<li><p>Import from <code class="docutils literal notranslate"><span class="pre">tinytorch.*</span></code> modules</p></li>
+<li><p>Execute full experiments</p></li>
+<li><p>Use the complete CLI tools</p></li>
+</ul>
+</section>
+<section id="local-setup-required-for-full-package">
+<h3>Local Setup (Required for Full Package)<a class="headerlink" href="#local-setup-required-for-full-package" title="Permalink to this heading">#</a></h3>
+<p><strong>To actually build and experiment</strong>, you need a <strong>local installation</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone and setup locally</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsysbook/TinyTorch.git
+<span class="nb">cd</span><span class="w"> </span>TinyTorch
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># Install TinyTorch package</span>
+</pre></div>
+</div>
+<p><strong>Why local?</strong></p>
+<ul class="simple">
+<li><p>✅ Full <code class="docutils literal notranslate"><span class="pre">tinytorch.*</span></code> package available</p></li>
+<li><p>✅ Run milestone validation scripts</p></li>
+<li><p>✅ Use <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI commands</p></li>
+<li><p>✅ Execute complete experiments</p></li>
+<li><p>✅ Export modules to package</p></li>
+<li><p>✅ Full development workflow</p></li>
+</ul>
+<p><strong>Note for NBGrader assignments</strong>: Submit <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files (not Marimo’s <code class="docutils literal notranslate"><span class="pre">.py</span></code> format) to preserve grading metadata.</p>
+</section>
+</section>
+<section id="community-benchmarking">
+<h2>Community &amp; Benchmarking<a class="headerlink" href="#community-benchmarking" title="Permalink to this heading">#</a></h2>
+<section id="join-the-community">
+<h3>Join the Community<a class="headerlink" href="#join-the-community" title="Permalink to this heading">#</a></h3>
+<p>After completing setup, join the global TinyTorch community:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Join with optional information</span>
+tito<span class="w"> </span>community<span class="w"> </span>join
+
+<span class="c1"># View your profile and progress</span>
+tito<span class="w"> </span>community<span class="w"> </span>profile
+
+<span class="c1"># Update your information</span>
+tito<span class="w"> </span>community<span class="w"> </span>update
+</pre></div>
+</div>
+<p><strong>Privacy:</strong> All information is optional. Data is stored locally in <code class="docutils literal notranslate"><span class="pre">.tinytorch/</span></code> directory. See <span class="xref myst">Community Guide</span> for details.</p>
+</section>
+<section id="benchmark-your-progress">
+<h3>Benchmark Your Progress<a class="headerlink" href="#benchmark-your-progress" title="Permalink to this heading">#</a></h3>
+<p>Validate your setup and track performance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quick baseline benchmark (after setup)</span>
+tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
+
+<span class="c1"># Full capstone benchmarks (after Module 20)</span>
+tito<span class="w"> </span>benchmark<span class="w"> </span>capstone<span class="w"> </span>--track<span class="w"> </span>all
+</pre></div>
+</div>
+<p><strong>Baseline Benchmark:</strong> Quick validation that your setup works correctly - your “Hello World” moment!</p>
+<p><strong>Capstone Benchmark:</strong> Full performance evaluation across speed, compression, accuracy, and efficiency tracks.</p>
+<p>See <span class="xref myst">Community Guide</span> for complete community and benchmarking features.</p>
+</section>
+</section>
+<section id="instructor-integration">
+<h2>Instructor Integration<a class="headerlink" href="#instructor-integration" title="Permalink to this heading">#</a></h2>
+<p>TinyTorch supports <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> for classroom use. See the <a class="reference internal" href="usage-paths/classroom-use.html"><span class="doc std std-doc">Instructor Guide</span></a> for complete setup and grading workflows.</p>
 <p>For now, focus on the student workflow: building your implementations and validating them with milestones.</p>
 </section>
 <section id="whats-next">
@@ -1026,7 +1118,17 @@ tito<span class="w"> </span>system<span class="w"> </span>info
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-development-session">Typical Development Session</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tito-commands-reference">TITO Commands Reference</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-system-optional">Checkpoint System (Optional)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-integration-coming-soon">Instructor Integration (Coming Soon)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-platform-options">Notebook Platform Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#online-notebooks-viewing-exploration">Online Notebooks (Viewing &amp; Exploration)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#local-setup-required-for-full-package">Local Setup (Required for Full Package)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#community-benchmarking">Community &amp; Benchmarking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join-the-community">Join the Community</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-your-progress">Benchmark Your Progress</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-integration">Instructor Integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whats-next">What’s Next?</a></li>
 </ul>
   </nav></div>

@@ -57,6 +57,7 @@
     <script src="_static/togglebutton.js"></script>
     <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/marimo-badges.js"></script>
     <script src="_static/sidebar-link.js"></script>
     <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -482,6 +483,9 @@ window.addEventListener("load", initFullscreen);
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -820,6 +824,31 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p>You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.</p>
 <p>See <a class="reference internal" href="tito/modules.html"><span class="doc std std-doc">Module Workflow</span></a> for detailed commands and <a class="reference internal" href="tito/troubleshooting.html"><span class="doc std std-doc">Troubleshooting</span></a> if needed.</p>
 </div>
+<div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
+<h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 3: Join the Community & Benchmark</h4>
+<p>After setup, join the global TinyTorch community and validate your setup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Join the community (optional)</span>
+tito<span class="w"> </span>community<span class="w"> </span>join
+
+<span class="c1"># Run baseline benchmark to validate setup</span>
+tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
+</pre></div>
+</div>
+<p><strong>Community Features:</strong></p>
+<ul class="simple">
+<li><p>Join with optional information (country, institution, course type)</p></li>
+<li><p>Track your progress automatically</p></li>
+<li><p>See your cohort (Fall 2024, Spring 2025, etc.)</p></li>
+<li><p>All data stored locally in <code class="docutils literal notranslate"><span class="pre">.tinytorch/</span></code> directory</p></li>
+</ul>
+<p><strong>Baseline Benchmark:</strong></p>
+<ul class="simple">
+<li><p>Quick validation that everything works</p></li>
+<li><p>Your “Hello World” moment!</p></li>
+<li><p>Generates score and saves results locally</p></li>
+</ul>
+<p>See <span class="xref myst">Community Guide</span> for complete features.</p>
+</div>
 </section>
 <section id="minute-first-module-walkthrough">
 <h2>15-Minute First Module Walkthrough<a class="headerlink" href="#minute-first-module-walkthrough" title="Permalink to this heading">#</a></h2>
@@ -951,7 +980,12 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </ul>
 <p><strong>For Instructors:</strong></p>
 <ul class="simple">
-<li><p>See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="doc std std-doc">Classroom Setup Guide</span></a> for <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> integration (coming soon)</p></li>
+<li><p>See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="doc std std-doc">Classroom Setup Guide</span></a> for <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> integration</p></li>
+</ul>
+<p><strong>Notebook Platforms:</strong></p>
+<ul class="simple">
+<li><p><strong>Online (Viewing)</strong>: Jupyter/MyBinder, Google Colab, Marimo - great for exploring notebooks</p></li>
+<li><p><strong>⚠️ Important</strong>: Online notebooks are for <strong>viewing only</strong>. For full package experiments, milestone validation, and CLI tools, you need <strong>local installation</strong> (see <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a>)</p></li>
 </ul>
 </div>
 </section>

@@ -1,0 +1,1044 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Teaching Assistant Guide for TinyTorch &#8212; Tiny🔥Torch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/ml-timeline.js"></script>
+    <script src="../_static/wip-banner.js"></script>
+    <script src="../_static/marimo-badges.js"></script>
+    <script src="../_static/sidebar-link.js"></script>
+    <script src="../_static/hero-carousel.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage-paths/ta-guide';</script>
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Team Onboarding Guide: TinyTorch for Industry" href="team-onboarding.html" />
+    <link rel="prev" title="👩‍🏫 TinyTorch Instructor Guide" href="../instructor-guide.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-tinytorch.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Getting Started
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classroom-use.html">For Instructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="team-onboarding.html">Team Onboarding</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/foundation.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏛️ Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/architecture.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⏱️ Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/optimization.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tiers/olympics.html">📖 Competition Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits &amp; Acknowledgments</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/usage-paths/ta-guide.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fusage-paths/ta-guide.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/usage-paths/ta-guide.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Teaching Assistant Guide for TinyTorch</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ta-preparation">🎯 TA Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#critical-modules-for-deep-familiarity">Critical Modules for Deep Familiarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-process">Preparation Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-student-errors">🐛 Common Student Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-05-autograd">Module 05: Autograd</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-gradient-shape-mismatches">Error 1: Gradient Shape Mismatches</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-disconnected-computational-graph">Error 2: Disconnected Computational Graph</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-3-broadcasting-failures">Error 3: Broadcasting Failures</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-09-cnns-spatial">Module 09: CNNs (Spatial)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-index-out-of-bounds">Error 1: Index Out of Bounds</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-memory-issues">Error 2: Memory Issues</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-13-transformers">Module 13: Transformers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-attention-scaling-issues">Error 1: Attention Scaling Issues</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-positional-encoding-errors">Error 2: Positional Encoding Errors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-strategies">🔧 Debugging Strategies</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structured-debugging-questions">Structured Debugging Questions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#productive-vs-unproductive-struggle">Productive vs Unproductive Struggle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-provide-scaffolding">When to Provide Scaffolding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#office-hour-patterns">📊 Office Hour Patterns</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-demand-spikes">Expected Demand Spikes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-channels">Support Channels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-support">🎓 Grading Support</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-review-focus-areas">Manual Review Focus Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubrics">Grading Rubrics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-tips">💡 Teaching Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encourage-exploration">1. Encourage Exploration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-production">2. Connect to Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-systems-visible">3. Make Systems Visible</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-confidence">4. Build Confidence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">📚 Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-improvement">🔄 Continuous Improvement</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedback-collection">Feedback Collection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ta-training">TA Training</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="teaching-assistant-guide-for-tinytorch">
+<h1>Teaching Assistant Guide for TinyTorch<a class="headerlink" href="#teaching-assistant-guide-for-tinytorch" title="Permalink to this heading">#</a></h1>
+<p>Complete guide for TAs supporting TinyTorch courses, covering common student errors, debugging strategies, and effective support techniques.</p>
+<section id="ta-preparation">
+<h2>🎯 TA Preparation<a class="headerlink" href="#ta-preparation" title="Permalink to this heading">#</a></h2>
+<section id="critical-modules-for-deep-familiarity">
+<h3>Critical Modules for Deep Familiarity<a class="headerlink" href="#critical-modules-for-deep-familiarity" title="Permalink to this heading">#</a></h3>
+<p>TAs should develop deep familiarity with modules where students commonly struggle:</p>
+<ol class="arabic simple">
+<li><p><strong>Module 05: Autograd</strong> - Most conceptually challenging</p></li>
+<li><p><strong>Module 09: CNNs (Spatial)</strong> - Complex nested loops and memory patterns</p></li>
+<li><p><strong>Module 13: Transformers</strong> - Attention mechanisms and scaling</p></li>
+</ol>
+</section>
+<section id="preparation-process">
+<h3>Preparation Process<a class="headerlink" href="#preparation-process" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Complete modules yourself</strong> - Implement all three critical modules</p></li>
+<li><p><strong>Introduce bugs intentionally</strong> - Understand common error patterns</p></li>
+<li><p><strong>Practice debugging</strong> - Work through error scenarios</p></li>
+<li><p><strong>Review student submissions</strong> - Familiarize yourself with common mistakes</p></li>
+</ol>
+</section>
+</section>
+<section id="common-student-errors">
+<h2>🐛 Common Student Errors<a class="headerlink" href="#common-student-errors" title="Permalink to this heading">#</a></h2>
+<section id="module-05-autograd">
+<h3>Module 05: Autograd<a class="headerlink" href="#module-05-autograd" title="Permalink to this heading">#</a></h3>
+<section id="error-1-gradient-shape-mismatches">
+<h4>Error 1: Gradient Shape Mismatches<a class="headerlink" href="#error-1-gradient-shape-mismatches" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: <code class="docutils literal notranslate"><span class="pre">ValueError:</span> <span class="pre">shapes</span> <span class="pre">don't</span> <span class="pre">match</span> <span class="pre">for</span> <span class="pre">gradient</span></code>
+<strong>Common Cause</strong>: Incorrect gradient accumulation or shape handling
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Check gradient shapes match parameter shapes</p></li>
+<li><p>Verify gradient accumulation logic</p></li>
+<li><p>Look for broadcasting issues</p></li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong: Gradient shape mismatch</span>
+<span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span>  <span class="c1"># grad might be wrong shape</span>
+
+<span class="c1"># Right: Ensure shapes match</span>
+<span class="k">assert</span> <span class="n">grad</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">param</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span>
+</pre></div>
+</div>
+</section>
+<section id="error-2-disconnected-computational-graph">
+<h4>Error 2: Disconnected Computational Graph<a class="headerlink" href="#error-2-disconnected-computational-graph" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: Gradients are None or zero
+<strong>Common Cause</strong>: Operations not tracked in computational graph
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Verify <code class="docutils literal notranslate"><span class="pre">requires_grad=True</span></code> on input tensors</p></li>
+<li><p>Check that operations create new Tensor objects</p></li>
+<li><p>Ensure backward() is called on leaf nodes</p></li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrong: Graph disconnected</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># requires_grad=False by default</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">y</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># No gradients!</span>
+
+<span class="c1"># Right: Enable gradient tracking</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">y</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># Gradients flow correctly</span>
+</pre></div>
+</div>
+</section>
+<section id="error-3-broadcasting-failures">
+<h4>Error 3: Broadcasting Failures<a class="headerlink" href="#error-3-broadcasting-failures" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: Shape errors during backward pass
+<strong>Common Cause</strong>: Incorrect handling of broadcasted operations
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Understand NumPy broadcasting rules</p></li>
+<li><p>Check gradient accumulation for broadcasted dimensions</p></li>
+<li><p>Verify gradient shapes match original tensor shapes</p></li>
+</ul>
+</section>
+</section>
+<section id="module-09-cnns-spatial">
+<h3>Module 09: CNNs (Spatial)<a class="headerlink" href="#module-09-cnns-spatial" title="Permalink to this heading">#</a></h3>
+<section id="error-1-index-out-of-bounds">
+<h4>Error 1: Index Out of Bounds<a class="headerlink" href="#error-1-index-out-of-bounds" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: <code class="docutils literal notranslate"><span class="pre">IndexError</span></code> in convolution loops
+<strong>Common Cause</strong>: Incorrect padding or stride calculations
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Verify output shape calculations</p></li>
+<li><p>Check padding logic</p></li>
+<li><p>Test with small examples first</p></li>
+</ul>
+</section>
+<section id="error-2-memory-issues">
+<h4>Error 2: Memory Issues<a class="headerlink" href="#error-2-memory-issues" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: Out of memory errors
+<strong>Common Cause</strong>: Creating unnecessary intermediate arrays
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Profile memory usage</p></li>
+<li><p>Look for unnecessary copies</p></li>
+<li><p>Optimize loop structure</p></li>
+</ul>
+</section>
+</section>
+<section id="module-13-transformers">
+<h3>Module 13: Transformers<a class="headerlink" href="#module-13-transformers" title="Permalink to this heading">#</a></h3>
+<section id="error-1-attention-scaling-issues">
+<h4>Error 1: Attention Scaling Issues<a class="headerlink" href="#error-1-attention-scaling-issues" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: Attention weights don’t sum to 1
+<strong>Common Cause</strong>: Missing softmax or incorrect scaling
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Verify softmax is applied</p></li>
+<li><p>Check scaling factor (1/sqrt(d_k))</p></li>
+<li><p>Test attention weights sum to 1</p></li>
+</ul>
+</section>
+<section id="error-2-positional-encoding-errors">
+<h4>Error 2: Positional Encoding Errors<a class="headerlink" href="#error-2-positional-encoding-errors" title="Permalink to this heading">#</a></h4>
+<p><strong>Symptom</strong>: Model doesn’t learn positional information
+<strong>Common Cause</strong>: Incorrect positional encoding implementation
+<strong>Debugging Strategy</strong>:</p>
+<ul class="simple">
+<li><p>Verify sinusoidal patterns</p></li>
+<li><p>Check encoding is added correctly</p></li>
+<li><p>Test with simple sequences</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="debugging-strategies">
+<h2>🔧 Debugging Strategies<a class="headerlink" href="#debugging-strategies" title="Permalink to this heading">#</a></h2>
+<section id="structured-debugging-questions">
+<h3>Structured Debugging Questions<a class="headerlink" href="#structured-debugging-questions" title="Permalink to this heading">#</a></h3>
+<p>When students ask for help, guide them with questions rather than giving answers:</p>
+<ol class="arabic simple">
+<li><p><strong>What error message are you seeing?</strong></p>
+<ul class="simple">
+<li><p>Read the full traceback</p></li>
+<li><p>Identify the specific line causing the error</p></li>
+</ul>
+</li>
+<li><p><strong>What did you expect to happen?</strong></p>
+<ul class="simple">
+<li><p>Clarify their mental model</p></li>
+<li><p>Identify misconceptions</p></li>
+</ul>
+</li>
+<li><p><strong>What actually happened?</strong></p>
+<ul class="simple">
+<li><p>Compare expected vs actual</p></li>
+<li><p>Look for patterns</p></li>
+</ul>
+</li>
+<li><p><strong>What have you tried?</strong></p>
+<ul class="simple">
+<li><p>Avoid repeating failed approaches</p></li>
+<li><p>Build on their attempts</p></li>
+</ul>
+</li>
+<li><p><strong>Can you test with a simpler case?</strong></p>
+<ul class="simple">
+<li><p>Reduce complexity</p></li>
+<li><p>Isolate the problem</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="productive-vs-unproductive-struggle">
+<h3>Productive vs Unproductive Struggle<a class="headerlink" href="#productive-vs-unproductive-struggle" title="Permalink to this heading">#</a></h3>
+<p><strong>Productive Struggle</strong> (encourage):</p>
+<ul class="simple">
+<li><p>Trying different approaches</p></li>
+<li><p>Making incremental progress</p></li>
+<li><p>Understanding error messages</p></li>
+<li><p>Passing additional tests over time</p></li>
+</ul>
+<p><strong>Unproductive Frustration</strong> (intervene):</p>
+<ul class="simple">
+<li><p>Repeated identical errors</p></li>
+<li><p>Random code changes</p></li>
+<li><p>Unable to articulate the problem</p></li>
+<li><p>No progress after 30+ minutes</p></li>
+</ul>
+</section>
+<section id="when-to-provide-scaffolding">
+<h3>When to Provide Scaffolding<a class="headerlink" href="#when-to-provide-scaffolding" title="Permalink to this heading">#</a></h3>
+<p>Offer scaffolding modules when students reach unproductive frustration:</p>
+<ul class="simple">
+<li><p><strong>Before Autograd</strong>: Numerical gradient checking module</p></li>
+<li><p><strong>Before Tensor Autograd</strong>: Scalar autograd module</p></li>
+<li><p><strong>Before CNNs</strong>: Simple 1D convolution exercises</p></li>
+</ul>
+</section>
+</section>
+<section id="office-hour-patterns">
+<h2>📊 Office Hour Patterns<a class="headerlink" href="#office-hour-patterns" title="Permalink to this heading">#</a></h2>
+<section id="expected-demand-spikes">
+<h3>Expected Demand Spikes<a class="headerlink" href="#expected-demand-spikes" title="Permalink to this heading">#</a></h3>
+<p><strong>Module 05 (Autograd)</strong>: Highest demand</p>
+<ul class="simple">
+<li><p>Schedule additional TA capacity</p></li>
+<li><p>Pre-record debugging walkthroughs</p></li>
+<li><p>Create FAQ document</p></li>
+</ul>
+<p><strong>Module 09 (CNNs)</strong>: High demand</p>
+<ul class="simple">
+<li><p>Focus on memory profiling</p></li>
+<li><p>Loop optimization strategies</p></li>
+<li><p>Padding/stride calculations</p></li>
+</ul>
+<p><strong>Module 13 (Transformers)</strong>: Moderate-high demand</p>
+<ul class="simple">
+<li><p>Attention mechanism debugging</p></li>
+<li><p>Positional encoding issues</p></li>
+<li><p>Scaling problems</p></li>
+</ul>
+</section>
+<section id="support-channels">
+<h3>Support Channels<a class="headerlink" href="#support-channels" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Synchronous</strong>: Office hours, lab sessions</p></li>
+<li><p><strong>Asynchronous</strong>: Discussion forums, email</p></li>
+<li><p><strong>Self-service</strong>: Common errors documentation, FAQ</p></li>
+</ol>
+</section>
+</section>
+<section id="grading-support">
+<h2>🎓 Grading Support<a class="headerlink" href="#grading-support" title="Permalink to this heading">#</a></h2>
+<section id="manual-review-focus-areas">
+<h3>Manual Review Focus Areas<a class="headerlink" href="#manual-review-focus-areas" title="Permalink to this heading">#</a></h3>
+<p>While NBGrader automates 70-80% of assessment, focus manual review on:</p>
+<ol class="arabic simple">
+<li><p><strong>Code Clarity and Design Choices</strong></p>
+<ul class="simple">
+<li><p>Is code readable?</p></li>
+<li><p>Are design decisions justified?</p></li>
+<li><p>Is the implementation clean?</p></li>
+</ul>
+</li>
+<li><p><strong>Edge Case Handling</strong></p>
+<ul class="simple">
+<li><p>Does code handle edge cases?</p></li>
+<li><p>Are there appropriate checks?</p></li>
+<li><p>Is error handling present?</p></li>
+</ul>
+</li>
+<li><p><strong>Computational Complexity Analysis</strong></p>
+<ul class="simple">
+<li><p>Do students understand complexity?</p></li>
+<li><p>Can they analyze their code?</p></li>
+<li><p>Do they recognize bottlenecks?</p></li>
+</ul>
+</li>
+<li><p><strong>Memory Profiling Insights</strong></p>
+<ul class="simple">
+<li><p>Do students understand memory usage?</p></li>
+<li><p>Can they identify memory issues?</p></li>
+<li><p>Do they optimize appropriately?</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="grading-rubrics">
+<h3>Grading Rubrics<a class="headerlink" href="#grading-rubrics" title="Permalink to this heading">#</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">INSTRUCTOR.md</span></code> for detailed grading rubrics for:</p>
+<ul class="simple">
+<li><p>ML Systems Thinking questions</p></li>
+<li><p>Code quality assessment</p></li>
+<li><p>Systems analysis evaluation</p></li>
+</ul>
+</section>
+</section>
+<section id="teaching-tips">
+<h2>💡 Teaching Tips<a class="headerlink" href="#teaching-tips" title="Permalink to this heading">#</a></h2>
+<section id="encourage-exploration">
+<h3>1. Encourage Exploration<a class="headerlink" href="#encourage-exploration" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Let students try different approaches</p></li>
+<li><p>Support learning from mistakes</p></li>
+<li><p>Celebrate incremental progress</p></li>
+</ul>
+</section>
+<section id="connect-to-production">
+<h3>2. Connect to Production<a class="headerlink" href="#connect-to-production" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Reference PyTorch equivalents</p></li>
+<li><p>Discuss real-world debugging scenarios</p></li>
+<li><p>Share production war stories</p></li>
+</ul>
+</section>
+<section id="make-systems-visible">
+<h3>3. Make Systems Visible<a class="headerlink" href="#make-systems-visible" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Profile memory usage together</p></li>
+<li><p>Analyze computational complexity</p></li>
+<li><p>Visualize computational graphs</p></li>
+</ul>
+</section>
+<section id="build-confidence">
+<h3>4. Build Confidence<a class="headerlink" href="#build-confidence" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Acknowledge when students are on the right track</p></li>
+<li><p>Validate their understanding</p></li>
+<li><p>Provide encouragement during struggle</p></li>
+</ul>
+</section>
+</section>
+<section id="resources">
+<h2>📚 Resources<a class="headerlink" href="#resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><a class="reference external" href="http://INSTRUCTOR.md">INSTRUCTOR.md</a></strong>: Complete instructor guide with grading rubrics</p></li>
+<li><p><strong>Common Errors</strong>: This document (expanded as needed)</p></li>
+<li><p><strong>Module Documentation</strong>: Each module’s <a class="reference external" href="http://ABOUT.md">ABOUT.md</a> file</p></li>
+<li><p><strong>Student Forums</strong>: Community discussion areas</p></li>
+</ul>
+</section>
+<section id="continuous-improvement">
+<h2>🔄 Continuous Improvement<a class="headerlink" href="#continuous-improvement" title="Permalink to this heading">#</a></h2>
+<section id="feedback-collection">
+<h3>Feedback Collection<a class="headerlink" href="#feedback-collection" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Track common errors in office hours</p></li>
+<li><p>Document new error patterns</p></li>
+<li><p>Update this guide regularly</p></li>
+<li><p>Share insights with instructor team</p></li>
+</ul>
+</section>
+<section id="ta-training">
+<h3>TA Training<a class="headerlink" href="#ta-training" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Regular TA meetings</p></li>
+<li><p>Share debugging strategies</p></li>
+<li><p>Review student submissions together</p></li>
+<li><p>Practice debugging sessions</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Last Updated</strong>: November 2024<br />
+<strong>For Questions</strong>: See <a class="reference external" href="http://INSTRUCTOR.md">INSTRUCTOR.md</a> or contact course instructor</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./usage-paths"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../instructor-guide.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">👩‍🏫 TinyTorch Instructor Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="team-onboarding.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Team Onboarding Guide: TinyTorch for Industry</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ta-preparation">🎯 TA Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#critical-modules-for-deep-familiarity">Critical Modules for Deep Familiarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-process">Preparation Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-student-errors">🐛 Common Student Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-05-autograd">Module 05: Autograd</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-gradient-shape-mismatches">Error 1: Gradient Shape Mismatches</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-disconnected-computational-graph">Error 2: Disconnected Computational Graph</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-3-broadcasting-failures">Error 3: Broadcasting Failures</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-09-cnns-spatial">Module 09: CNNs (Spatial)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-index-out-of-bounds">Error 1: Index Out of Bounds</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-memory-issues">Error 2: Memory Issues</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-13-transformers">Module 13: Transformers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-1-attention-scaling-issues">Error 1: Attention Scaling Issues</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#error-2-positional-encoding-errors">Error 2: Positional Encoding Errors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-strategies">🔧 Debugging Strategies</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structured-debugging-questions">Structured Debugging Questions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#productive-vs-unproductive-struggle">Productive vs Unproductive Struggle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-provide-scaffolding">When to Provide Scaffolding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#office-hour-patterns">📊 Office Hour Patterns</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-demand-spikes">Expected Demand Spikes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-channels">Support Channels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-support">🎓 Grading Support</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-review-focus-areas">Manual Review Focus Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubrics">Grading Rubrics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-tips">💡 Teaching Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encourage-exploration">1. Encourage Exploration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-production">2. Connect to Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-systems-visible">3. Make Systems Visible</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-confidence">4. Build Confidence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">📚 Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-improvement">🔄 Continuous Improvement</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedback-collection">Feedback Collection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ta-training">TA Training</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
