@@ -49,23 +49,35 @@ class NotebooksCommand(BaseCommand):
             if not module_dir.exists():
                 raise ModuleNotFoundError(f"Module directory '{args.module}' not found")
 
-            # Find *_dev.py file in the module directory
-            dev_files = list(module_dir.glob('*_dev.py'))
-            if not dev_files:
+            # Find module Python file in the module directory
+            # Extract short name from module directory name
+            if args.module.startswith(tuple(f"{i:02d}_" for i in range(100))):
+                short_name = args.module[3:]  # Remove "00_" prefix
+            else:
+                short_name = args.module
+            dev_file = module_dir / f"{short_name}.py"
+            if not dev_file.exists():
                 raise ModuleNotFoundError(
-                    f"No *_dev.py file found in module '{args.module}'"
+                    f"No module file found in module '{args.module}'. Expected: {dev_file.name}"
                 )
     
     def _find_dev_files(self) -> List[Path]:
-        """Find all *_dev.py files in modules directory."""
+        """Find all module Python files in modules directory."""
         dev_files = []
         # Look in modules/ directory
         modules_dir = self.config.modules_dir
 
         for module_dir in modules_dir.iterdir():
             if module_dir.is_dir() and not module_dir.name.startswith('.'):
-                # Look for *_dev.py files in each module directory
-                for py_file in module_dir.glob('*_dev.py'):
+                # Extract short name from module directory name
+                module_name = module_dir.name
+                if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+                    short_name = module_name[3:]  # Remove "00_" prefix
+                else:
+                    short_name = module_name
+                # Look for module Python file (without _dev suffix)
+                py_file = module_dir / f"{short_name}.py"
+                if py_file.exists():
                     dev_files.append(py_file)
         return sorted(dev_files)
     
@@ -106,8 +118,17 @@ class NotebooksCommand(BaseCommand):
         # Find files to convert
         if args.module:
             module_dir = self.config.modules_dir / args.module
-            # Find *_dev.py file(s) in the module directory
-            dev_files = list(module_dir.glob('*_dev.py'))
+            # Extract short name from module directory name
+            module_name = args.module
+            if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+                short_name = module_name[3:]  # Remove "00_" prefix
+            else:
+                short_name = module_name
+            dev_file = module_dir / f"{short_name}.py"
+            if dev_file.exists():
+                dev_files = [dev_file]
+            else:
+                dev_files = []
             self.console.print(f"🔄 Building notebook for module: {args.module}")
         else:
             dev_files = self._find_dev_files()
