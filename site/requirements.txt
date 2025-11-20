@@ -1,8 +1,9 @@
-# TinyTorch Course Dependencies for Binder/Colab
+# TinyTorch Course Dependencies for Site Documentation Builds
+# Note: For Binder/Colab environments, see binder/requirements.txt
 # Keep synchronized with main requirements.txt
 
 # Core numerical computing
-numpy>=1.21.0,<2.0.0
+numpy>=1.24.0,<3.0.0
 matplotlib>=3.5.0
 
 # Data handling

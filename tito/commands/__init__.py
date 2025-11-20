@@ -20,6 +20,8 @@ from .status import StatusCommand
 from .clean import CleanCommand
 from .nbgrader import NBGraderCommand
 from .book import BookCommand
+from .benchmark import BenchmarkCommand
+from .community import CommunityCommand
 
 # Command groups
 from .system import SystemCommand
@@ -41,6 +43,8 @@ __all__ = [
     'CleanCommand',
     'NBGraderCommand',
     'BookCommand',
+    'BenchmarkCommand',
+    'CommunityCommand',
     # Command groups
     'SystemCommand',
     'ModuleWorkflowCommand',

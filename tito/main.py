@@ -44,6 +44,8 @@ from .commands.milestone import MilestoneCommand
 from .commands.leaderboard import LeaderboardCommand
 from .commands.olympics import OlympicsCommand
 from .commands.setup import SetupCommand
+from .commands.benchmark import BenchmarkCommand
+from .commands.community import CommunityCommand
 
 # Configure logging
 logging.basicConfig(
@@ -76,6 +78,8 @@ class TinyTorchCLI:
             'milestone': MilestoneCommand,
             'leaderboard': LeaderboardCommand,
             'olympics': OlympicsCommand,
+            'benchmark': BenchmarkCommand,
+            'community': CommunityCommand,
             # Convenience commands
             'notebooks': NotebooksCommand,
             'export': ExportCommand,

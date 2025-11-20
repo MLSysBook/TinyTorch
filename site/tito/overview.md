@@ -86,6 +86,31 @@
 
 **See**: [Progress & Data Management](data.md) for complete details
 
+### Community Commands
+
+**Purpose**: Join the global TinyTorch community and track your progress
+
+| Command | Description | Guide |
+|---------|-------------|-------|
+| `tito community join` | Join the community (optional info) | [Community Guide](../community.html) |
+| `tito community update` | Update your community profile | [Community Guide](../community.html) |
+| `tito community profile` | View your community profile | [Community Guide](../community.html) |
+| `tito community stats` | View community statistics | [Community Guide](../community.html) |
+| `tito community leave` | Remove your community profile | [Community Guide](../community.html) |
+
+**See**: [Community Guide](../community.html) for complete details
+
+### Benchmark Commands
+
+**Purpose**: Validate setup and measure performance
+
+| Command | Description | Guide |
+|---------|-------------|-------|
+| `tito benchmark baseline` | Quick setup validation ("Hello World") | [Community Guide](../community.html) |
+| `tito benchmark capstone` | Full Module 20 performance evaluation | [Community Guide](../community.html) |
+
+**See**: [Community Guide](../community.html) for complete details
+
 ---
 
 ## Command Groups by Task

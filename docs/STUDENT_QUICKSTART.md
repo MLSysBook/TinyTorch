@@ -31,10 +31,10 @@ tito system doctor
 ### 2️⃣ **Start Your First Module**
 ```bash
 # View the first module
-tito module view 01_setup
+tito module view 01_tensor
 
 # Or open the notebook directly
-jupyter notebook modules/01_setup/setup_dev.ipynb
+jupyter notebook modules/01_tensor/tensor_dev.py
 ```
 
 ## 📚 Learning Path
@@ -44,7 +44,7 @@ Each module builds on the previous one:
 
 | Module | What You'll Build | Capability Unlocked |
 |--------|------------------|---------------------|
-| 01 Setup | Development environment | Configure TinyTorch |
+| 01 Tensor | Core data structure | Manipulate ML building blocks |
 | 02 Tensor | Core data structure | Manipulate ML building blocks |
 | 03 Activations | Non-linearity functions | Add intelligence to networks |
 | 04 Layers | Neural network layers | Build network components |

@@ -61,21 +61,63 @@ Real-time chat and study groups:
 - Office hours with educators
 - Project showcase channels
 
-### Community Dashboard (Planned)
+### Community Dashboard (Available Now ✅)
 
-Track global learning progress:
-- Real-time completion statistics
-- Geographic distribution of learners
-- Milestone achievement tracking
-- Study partner matching
+Join the global TinyTorch community and see your progress:
 
-### Torch Olympics Leaderboard (Planned)
+```bash
+# Join the community
+tito community join
 
-Compete in ML systems challenges:
-- Performance benchmarks
-- Memory efficiency competitions
-- Innovation showcases
-- Community recognition
+# View your profile
+tito community profile
+
+# Update your progress
+tito community update
+
+# View community statistics
+tito community stats
+```
+
+**Features:**
+- **Anonymous profiles** - Join with optional information (country, institution, course type)
+- **Cohort identification** - See your cohort (Fall 2024, Spring 2025, etc.)
+- **Progress tracking** - Automatic milestone and module completion tracking
+- **Privacy-first** - All data stored locally in `.tinytorch/` directory
+- **Opt-in sharing** - You control what information to share
+
+**Privacy:** All fields are optional. We use anonymous UUIDs (no personal names). Data is stored locally in your project directory. See [Privacy Policy](../docs/PRIVACY_DATA_RETENTION.md) for details.
+
+### Benchmark & Performance Tracking (Available Now ✅)
+
+Validate your setup and track performance improvements:
+
+```bash
+# Quick setup validation (after initial setup)
+tito benchmark baseline
+
+# Full capstone benchmarks (after Module 20)
+tito benchmark capstone
+
+# Submit results to community (optional)
+# Prompts automatically after benchmarks complete
+```
+
+**Baseline Benchmark:**
+- Validates your setup is working correctly
+- Quick "Hello World" moment after setup
+- Tests: tensor operations, matrix multiply, forward pass
+- Generates score (0-100) and saves results locally
+
+**Capstone Benchmark:**
+- Full performance evaluation after Module 20
+- Tracks: speed, compression, accuracy, efficiency
+- Uses Module 19's Benchmark harness for statistical rigor
+- Generates comprehensive results for submission
+
+**Submission:** After benchmarks complete, you'll be prompted to submit results (optional). Submissions are saved locally and can be shared with the community.
+
+See [TITO CLI Reference](tito/overview.html) for complete command documentation.
 
 ---
 

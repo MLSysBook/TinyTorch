@@ -42,6 +42,10 @@ echo "🧹 Cleaning previous builds..."
 jupyter-book clean . --all || true
 echo ""
 
+# Prepare notebooks (for consistency, though PDF doesn't need launch buttons)
+echo "📓 Preparing notebooks..."
+./prepare_notebooks.sh || echo "⚠️  Notebook preparation skipped"
+
 # Build PDF via LaTeX
 echo "📚 Building LaTeX/PDF (this may take a few minutes)..."
 jupyter-book build . --builder pdflatex

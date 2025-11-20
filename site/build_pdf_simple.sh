@@ -39,6 +39,10 @@ echo "🧹 Cleaning previous builds..."
 jupyter-book clean . --all || true
 echo ""
 
+# Prepare notebooks (for consistency, though PDF doesn't need launch buttons)
+echo "📓 Preparing notebooks..."
+./prepare_notebooks.sh || echo "⚠️  Notebook preparation skipped"
+
 # Build PDF via HTML
 echo "📚 Building PDF from HTML (this may take a few minutes)..."
 echo "ℹ️  First run will download Chromium browser (~170MB)"

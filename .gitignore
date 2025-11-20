@@ -87,10 +87,13 @@ site/.venv/
 book/_build/
 site/_build/
 
-# NBGrader
+# NBGrader - assignments are dynamically generated via 'tito nbgrader generate'
+# Only ignore student submissions and grading outputs, not source/release (for now)
 assignments/autograded/
 assignments/feedback/
 assignments/submitted/
+# Note: assignments/source/ and assignments/release/ are kept in git for now
+# but should be regenerated with 'tito nbgrader generate' when modules change
 
 # Logs
 *.log

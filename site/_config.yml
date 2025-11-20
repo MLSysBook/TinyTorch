@@ -56,6 +56,7 @@ html:
     - _static/ml-timeline.js
     - _static/hero-carousel.js
     - _static/sidebar-link.js
+    - _static/marimo-badges.js
   
   # Favicon configuration
   favicon: "_static/favicon.svg"
