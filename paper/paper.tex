@@ -115,7 +115,7 @@
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{blue},
-    numberstyle=\tiny\color{codegray},
+    numberstyle=\fontsize{5}{6}\selectfont\color{codegray},
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\scriptsize,
     breakatwhitespace=false,
@@ -123,7 +123,7 @@
     captionpos=b,
     keepspaces=true,
     numbers=left,
-    numbersep=5pt,
+    numbersep=3pt,
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
@@ -131,10 +131,10 @@
     language=Python,
     frame=single,
     rulecolor=\color{black!30},
-    xleftmargin=10pt,
-    xrightmargin=5pt,
-    aboveskip=8pt,
-    belowskip=8pt
+    xleftmargin=5pt,
+    xrightmargin=3pt,
+    aboveskip=4pt,
+    belowskip=4pt
 }
 
 % Style for PyTorch/TensorFlow code (slightly darker background to distinguish)
@@ -143,7 +143,7 @@
     backgroundcolor=\color{pytorchbg},
     commentstyle=\color{codegreen},
     keywordstyle=\color{blue},
-    numberstyle=\tiny\color{codegray},
+    numberstyle=\fontsize{5}{6}\selectfont\color{codegray},
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\scriptsize,
     breakatwhitespace=false,
@@ -151,7 +151,7 @@
     captionpos=b,
     keepspaces=true,
     numbers=left,
-    numbersep=5pt,
+    numbersep=3pt,
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
@@ -159,10 +159,10 @@
     language=Python,
     frame=single,
     rulecolor=\color{black!30},
-    xleftmargin=10pt,
-    xrightmargin=5pt,
-    aboveskip=8pt,
-    belowskip=8pt
+    xleftmargin=5pt,
+    xrightmargin=3pt,
+    aboveskip=4pt,
+    belowskip=4pt
 }
 
 \lstset{style=pythonstyle}
@@ -233,7 +233,7 @@ We present TinyTorch, a 20-module curriculum where students build PyTorch's core
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pytorchstyle]
+\begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pytorchstyle]
 import torch.nn as nn
 import torch.optim as optim
 
@@ -252,7 +252,7 @@ for epoch in range(10):
         loss.backward()  # Magic?
         optimizer.step() # How?
 \end{lstlisting}
-\vspace{0.3em}
+\vspace{0.15em}
 \subcaption{PyTorch: Black box usage}
 \label{lst:pytorch-usage}
 \end{subfigure}
@@ -261,7 +261,7 @@ for epoch in range(10):
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pythonstyle]
+\begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pythonstyle]
 class Adam:
     def __init__(self, params,
                  lr=0.001):
@@ -285,7 +285,7 @@ class Adam:
                 self.m[i] / \
                 (self.v[i].sqrt()+1e-8)
 \end{lstlisting}
-\vspace{0.3em}
+\vspace{0.15em}
 \subcaption{TinyTorch: Build internals}
 \label{lst:tinytorch-build}
 \end{subfigure}
@@ -294,7 +294,7 @@ class Adam:
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single,style=pythonstyle]
+\begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pythonstyle]
 # After 20 modules: train
 # transformers with YOUR code
 from tinytorch.nn import (
@@ -313,7 +313,7 @@ for batch in DataLoader(data):
     opt.step()       # You built this
     # You understand WHY it works
 \end{lstlisting}
-\vspace{0.3em}
+\vspace{0.15em}
 \subcaption{TinyTorch: The culmination}
 \label{lst:tinytorch-culmination}
 \end{subfigure}
