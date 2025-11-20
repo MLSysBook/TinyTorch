@@ -106,6 +106,7 @@ assignments/submitted/
 *.toc
 *.lof
 *.lot
+*.pdf
 
 # Database
 *.db
