@@ -200,74 +200,37 @@ We present TinyTorch, a 20-module curriculum where students build PyTorch's core
 
 \begin{figure*}[t]
 \centering
-\begin{minipage}[b]{0.48\textwidth}
+\begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,frame=single]
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
 import torch.nn as nn
 import torch.optim as optim
 
 # How much memory?
 model = nn.Linear(784, 10)
-# Why does Adam need more memory
-# than SGD?
+# Why does Adam need more
+# memory than SGD?
 optimizer = optim.Adam(
-    model.parameters(), lr=0.001)
+    model.parameters())
 loss_fn = nn.CrossEntropyLoss()
 
 for epoch in range(10):
     for x, y in dataloader:
         pred = model(x)
         loss = loss_fn(pred, y)
-        loss.backward()   # Magic?
-        optimizer.step()  # How?
-        # What cost? How fast?
+        loss.backward()  # Magic?
+        optimizer.step() # How?
 \end{lstlisting}
-\subcaption{PyTorch: Using frameworks as black boxes}
+\subcaption{PyTorch: Black box usage}
 \label{lst:pytorch-usage}
-\end{subfigure}
-\vspace{0.5em}
-\begin{subfigure}[b]{\textwidth}
-\centering
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,frame=single]
-import tensorflow as tf
-
-# What's happening inside?
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(10,
-        input_shape=(784,))
-])
-# Why Adam over SGD?
-# Memory cost?
-model.compile(
-    optimizer='adam',
-    loss='sparse_categorical_crossentropy')
-
-model.fit(dataloader, epochs=10)
-# How does it work?
-# What's the complexity?
-\end{lstlisting}
-\subcaption{TensorFlow: High-level abstractions}
-\label{lst:tensorflow-usage}
 \end{subfigure}
 \end{minipage}
 \hfill
-\begin{subfigure}[b]{0.48\textwidth}
+\begin{minipage}[b]{0.32\textwidth}
+\begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,frame=single]
-class Linear:
-    def __init__(self, in_features,
-                 out):
-        # Memory: out × in_features × 4B
-        self.weight = Tensor.randn(
-            out, in_features)
-        self.bias = Tensor.zeros(out)
-
-    def forward(self, x):
-        # O(batch × in × out) FLOPs
-        return (x @ self.weight.T +
-                self.bias)
-
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
 class Adam:
     def __init__(self, params,
                  lr=0.001):
@@ -275,29 +238,54 @@ class Adam:
         self.lr = lr
         # 2× optimizer state:
         # momentum + variance
-        # Why 2× memory vs SGD?
-        self.m = [Tensor.zeros_like(p)
+        self.m = [zeros_like(p)
                   for p in params]
-        self.v = [Tensor.zeros_like(p)
+        self.v = [zeros_like(p)
                   for p in params]
 
     def step(self):
         for i, p in enumerate(
                 self.params):
-            # Exponential moving avg
-            self.m[i] = (0.9*self.m[i] +
-                        0.1*p.grad)
-            self.v[i] = (0.999*self.v[i] +
-                        0.001*p.grad**2)
-            # Per-parameter adaptive lr
-            p.data -= (self.lr *
-                self.m[i] /
-                (self.v[i].sqrt() + 1e-8))
+            self.m[i] = 0.9*self.m[i] \
+                      + 0.1*p.grad
+            self.v[i] = 0.999*self.v[i] \
+                      + 0.001*p.grad**2
+            p.data -= self.lr * \
+                self.m[i] / \
+                (self.v[i].sqrt()+1e-8)
 \end{lstlisting}
-\subcaption{TinyTorch: Understanding internals}
+\subcaption{TinyTorch: Build internals}
 \label{lst:tinytorch-build}
 \end{subfigure}
-\caption{Learning progression from framework users to engineers. (a-b) PyTorch/TensorFlow: high-level API usage. (c) TinyTorch: building internals reveals optimizer memory costs, computational complexity, and systems constraints.}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.32\textwidth}
+\begin{subfigure}[b]{\textwidth}
+\centering
+\begin{lstlisting}[basicstyle=\ttfamily\tiny,frame=single]
+# After 20 modules: train
+# transformers with YOUR code
+from tinytorch.nn import (
+    Transformer, Embedding)
+from tinytorch.optim import Adam
+from tinytorch.data import DataLoader
+
+model = Transformer(
+    vocab=1000, d_model=64,
+    n_heads=4, n_layers=2)
+opt = Adam(model.parameters())
+
+for batch in DataLoader(data):
+    loss = model(batch.x, batch.y)
+    loss.backward()  # You built this
+    opt.step()       # You built this
+    # You understand WHY it works
+\end{lstlisting}
+\subcaption{TinyTorch: The culmination}
+\label{lst:tinytorch-culmination}
+\end{subfigure}
+\end{minipage}
+\caption{From framework user to engineer. (a) PyTorch: high-level APIs hide internals. (b) TinyTorch: students implement components like Adam, understanding memory costs and update rules. (c) After completing 20 modules, students train transformers using exclusively their own code---every import is something they built.}
 \label{fig:code-comparison}
 \end{figure*}
 
