@@ -105,17 +105,20 @@
 }
 
 % Python code highlighting
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.5,0}
+\definecolor{codegray}{rgb}{0.4,0.4,0.4}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+
+% Helper command for line numbers
+\newcommand{\boxednumber}[1]{\makebox[0.85em][r]{\fontsize{4.5}{5}\selectfont\ttfamily\color{codegray}#1}}
 
 % Style for TinyTorch code (light background)
 \lstdefinestyle{pythonstyle}{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{blue},
-    numberstyle=\fontsize{5}{6}\selectfont\color{codegray},
+    numberstyle=\boxednumber,
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\scriptsize,
     breakatwhitespace=false,
@@ -123,18 +126,19 @@
     captionpos=b,
     keepspaces=true,
     numbers=left,
-    numbersep=3pt,
+    numbersep=4pt,
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
     tabsize=2,
     language=Python,
     frame=single,
-    rulecolor=\color{black!30},
-    xleftmargin=5pt,
+    framerule=0.5pt,
+    rulecolor=\color{black!20},
+    xleftmargin=3pt,
     xrightmargin=3pt,
-    aboveskip=4pt,
-    belowskip=4pt
+    aboveskip=5pt,
+    belowskip=5pt
 }
 
 % Style for PyTorch/TensorFlow code (slightly darker background to distinguish)
@@ -143,7 +147,7 @@
     backgroundcolor=\color{pytorchbg},
     commentstyle=\color{codegreen},
     keywordstyle=\color{blue},
-    numberstyle=\fontsize{5}{6}\selectfont\color{codegray},
+    numberstyle=\boxednumber,
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\scriptsize,
     breakatwhitespace=false,
@@ -151,18 +155,19 @@
     captionpos=b,
     keepspaces=true,
     numbers=left,
-    numbersep=3pt,
+    numbersep=4pt,
     showspaces=false,
     showstringspaces=false,
     showtabs=false,
-    tabsize=2,
+    tabsize=1,
+    basewidth=0.48em,
     language=Python,
     frame=single,
     rulecolor=\color{black!30},
-    xleftmargin=5pt,
-    xrightmargin=3pt,
-    aboveskip=4pt,
-    belowskip=4pt
+    xleftmargin=3pt,
+    xrightmargin=5pt,
+    aboveskip=6pt,
+    belowskip=6pt
 }
 
 \lstset{style=pythonstyle}
@@ -212,7 +217,7 @@
 
 % Abstract - REVISED: Curriculum design focus
 \begin{abstract}
-Machine learning education typically teaches framework usage without exposing internals, leaving students unable to debug gradient flows, profile memory bottlenecks, or understand optimization tradeoffs. TinyTorch addresses this gap through a build-from-scratch curriculum where students implement PyTorch's core components—tensors, autograd, optimizers, and neural networks—to gain framework transparency. We present the design and implementation of three pedagogical design patterns for teaching ML as systems engineering. \textbf{Progressive disclosure} gradually reveals complexity: tensor gradient features exist from Module 01 but activate in Module 05, managing cognitive load while maintaining a unified mental model. \textbf{Systems-first curriculum} embeds memory profiling and complexity analysis from the start rather than treating them as advanced topics. \textbf{Historical milestone validation} recreates nearly 70 years of ML breakthroughs (1958 Perceptron through modern transformers) using exclusively student-implemented code to validate correctness. These patterns are grounded in established learning theory (situated cognition, cognitive load theory, cognitive apprenticeship) but represent testable design hypotheses whose learning outcomes require empirical validation. The 20-module curriculum (estimated 60--80 hours) provides complete open-source infrastructure for institutional adoption or self-paced learning at \texttt{tinytorch.ai}.
+Machine learning systems engineering requires understanding framework internals: why optimizers consume memory, when computational complexity becomes prohibitive, how to navigate accuracy-latency-memory tradeoffs. Yet current ML education separates algorithms from systems—students learn gradient descent without measuring memory, attention mechanisms without profiling costs, training without understanding optimizer overhead. This divide leaves graduates unable to debug production failures or make informed engineering decisions. We present TinyTorch, a build-from-scratch curriculum where students implement PyTorch's core components (tensors, autograd, optimizers, neural networks) to gain framework transparency. Three pedagogical patterns address the gap: \textbf{progressive disclosure} gradually reveals complexity (gradient features exist from Module 01, activate in Module 05); \textbf{systems-first curriculum} embeds memory profiling from the start; \textbf{historical milestone validation} recreates 70 years of ML breakthroughs using exclusively student-implemented code. These patterns are grounded in learning theory (situated cognition, cognitive load theory) but represent testable hypotheses requiring empirical validation. The 20-module curriculum (60--80 hours) provides complete open-source infrastructure at \texttt{tinytorch.ai}.
 \end{abstract}
 
 
@@ -220,37 +225,43 @@ Machine learning education typically teaches framework usage without exposing in
 \section{Introduction}
 \label{sec:intro}
 
-Machine learning deployment faces a critical workforce bottleneck: industry surveys indicate significant demand-supply imbalances for ML systems engineers~\citep{roberthalf2024talent,keller2025ai}, with surveys suggesting that a substantial portion of executives cite talent shortage as their primary barrier to AI adoption~\citep{keller2025ai}.
+In ``The Bitter Lesson,'' Rich Sutton observes that the history of artificial intelligence teaches a counterintuitive truth: general methods that leverage computation ultimately defeat cleverly-designed, domain-specific approaches~\citep{sutton2019bitter}. Deep learning surpassed handcrafted features in computer vision. Large language models outperformed linguistic rule systems. AlphaZero mastered games through self-play rather than encoded heuristics. A fundamental driver behind each breakthrough is computational efficiency---the ability to effectively scale learning systems to leverage available hardware. Yet while we have learned this lesson algorithmically, building ever-larger models that demonstrate its truth, we have not embedded it pedagogically. Our educational systems continue to separate the teaching of machine learning algorithms from the systems knowledge required to achieve computational scale.
 
-Unlike algorithmic ML—where automated tools increasingly handle model architecture search and hyperparameter tuning—systems engineering remains bottlenecked by tacit knowledge that resists automation: understanding \emph{why} Adam requires 2$\times$ optimizer state memory, \emph{when} attention's $O(N^2)$ scaling becomes prohibitive, \emph{how} to navigate accuracy-latency-memory tradeoffs in production systems. These engineering judgment calls depend on mental models of framework internals~\citep{meadows2008thinking}, traditionally acquired through years of debugging PyTorch or TensorFlow rather than formal instruction.
+This pedagogical gap creates a systems efficiency crisis. Modern ML models often fail not from algorithmic limitations but from hitting computational walls. Transformer attention mechanisms scale as $O(N^2)$ with sequence length~\citep{vaswani2017attention}, causing memory exhaustion before accuracy plateaus. Distributed training requires understanding gradient synchronization overhead that can eliminate parallel speedup. Production deployments crash from subtle memory leaks in tensor caching and reference cycles. The paradox is stark---we know empirically that scale wins, that computational efficiency enables the breakthroughs Sutton documents, yet we do not teach students how to achieve this scale. They can train models but cannot explain why gradient accumulation reduces memory usage or when activation checkpointing becomes necessary.
 
-Current ML education creates this gap by separating algorithms from systems. Students learn to implement gradient descent without measuring memory consumption, build attention mechanisms without profiling $O(N^2)$ costs, and train models without understanding optimizer state overhead. Introductory courses use high-level APIs (PyTorch, Keras) that abstract away implementation details, while advanced electives teach systems concepts (memory management, performance optimization) in isolation from ML frameworks. This pedagogical divide produces graduates who can \emph{use} \texttt{loss.backward()} but cannot explain how computational graphs enable reverse-mode differentiation, or who understand transformers mathematically but miss that KV caching trades $O(N^2)$ memory for $O(N)$ recomputation.
+This crisis directly impacts the ML workforce. Industry surveys indicate significant demand-supply imbalances for ML systems engineers~\citep{roberthalf2024talent,keller2025ai}, with surveys suggesting that a substantial portion of executives cite talent shortage as their primary barrier to AI adoption~\citep{keller2025ai}. These are not the scientists who invent new architectures but the engineers who make existing architectures computationally viable---who understand when mixed precision training preserves accuracy, how gradient checkpointing trades compute for memory, and why distributed training introduces synchronization bottlenecks. They are often the bottleneck to realizing the promise of computational scaling that enables general methods to triumph.
 
-We present TinyTorch, a 20-module curriculum where students build PyTorch's core components from scratch using only NumPy: tensors, automatic differentiation, optimizers, CNNs, transformers, and production optimization techniques. Students transition from framework \emph{users} to framework \emph{engineers} by implementing the internals that high-level APIs deliberately hide. As a hands-on companion to the \emph{Machine Learning Systems} textbook~\citep{reddi2024mlsysbook}, TinyTorch transforms tacit systems knowledge into explicit pedagogy: students don't just learn \emph{that} Conv2d achieves 109$\times$ parameter efficiency over dense layers, they \emph{implement} sliding window convolution and \emph{measure} the difference directly through profiling code they wrote. \Cref{fig:code-comparison} illustrates this progression: from PyTorch's black-box APIs, through building internals like optimizers, to training transformers where every import is student-implemented code.
+The knowledge these engineers need is fundamentally about systems mental models. Understanding \emph{why} Adam requires $2\times$ optimizer state memory requires visualizing optimizer state buffers. Predicting \emph{when} batch sizes must shrink to fit GPU memory requires internalizing memory hierarchy latencies. Navigating accuracy-latency-memory tradeoffs in production systems requires understanding collective communication patterns and their overhead~\citep{meadows2008thinking}. This tacit systems knowledge---how frameworks manage memory, schedule operations, and optimize execution---cannot be developed through high-level API usage alone. It emerges from building these systems, from implementing tensor operations that reveal memory access patterns, from constructing computational graphs that expose optimization opportunities.
+
+Current ML education often fails to develop these mental models through a strict separation: algorithms courses teach backpropagation mathematics while systems courses teach distributed computing, with limited bridges between them. Students learn gradient descent's convergence properties but not its memory footprint. They implement neural networks using framework APIs but never see how those APIs translate to memory allocations and kernel launches. They can mathematically derive the chain rule but cannot explain how \texttt{autograd} implements it efficiently through dynamic graph construction and topological traversal. This separation leaves students unprepared for the systems engineering roles industry desperately needs.
+
+We present TinyTorch, a 20-module curriculum that teaches machine learning as computational systems engineering by building a PyTorch-compatible framework from pure Python primitives. Designed as a hands-on companion to the \emph{Machine Learning Systems} textbook~\citep{reddi2024mlsysbook}, TinyTorch makes systems efficiency tangible---students implement tensor operations while measuring memory consumption, build autograd while profiling computational graphs, create optimizers while tracking state overhead. Each module reinforces insights inspired by the systems imperative the Bitter Lesson reveals: computational efficiency, not algorithmic cleverness alone, drives ML progress. Students don't just learn \emph{that} Conv2d achieves 109$\times$ parameter efficiency over dense layers, they \emph{implement} sliding window convolution and \emph{measure} the difference directly through profiling code they wrote. \Cref{fig:code-comparison} illustrates this progression: from PyTorch's black-box APIs, through building internals like optimizers, to training transformers where every import is student-implemented code.
 
 \begin{figure*}[t]
 \centering
+\hfill
 \begin{minipage}[b]{0.32\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
-\begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pytorchstyle]
+\begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pythonstyle]
 import torch.nn as nn
 import torch.optim as optim
 
 # How much memory?
 model = nn.Linear(784, 10)
+
 # Why does Adam need more
 # memory than SGD?
 optimizer = optim.Adam(
-    model.parameters())
+              model.parameters())
 loss_fn = nn.CrossEntropyLoss()
 
 for epoch in range(10):
-    for x, y in dataloader:
-        pred = model(x)
-        loss = loss_fn(pred, y)
-        loss.backward()  # Magic?
-        optimizer.step() # How?
+  for x, y in dataloader:
+    pred = model(x)
+    loss = loss_fn(pred, y)
+    loss.backward()  # Magic?
+    optimizer.step() # How?
 \end{lstlisting}
 \vspace{0.15em}
 \subcaption{PyTorch: Black box usage}
@@ -258,32 +269,33 @@ for epoch in range(10):
 \end{subfigure}
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.32\textwidth}
+\begin{minipage}[b]{0.31\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
 \begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pythonstyle]
 class Adam:
-    def __init__(self, params,
-                 lr=0.001):
-        self.params = params
-        self.lr = lr
-        # 2× optimizer state:
-        # momentum + variance
-        self.m = [zeros_like(p)
-                  for p in params]
-        self.v = [zeros_like(p)
-                  for p in params]
+  def __init__(self, params,
+               lr=0.001):
+    self.params = params
+    self.lr = lr
+    # 2× optimizer state:
+    # momentum + variance
+    self.m = [zeros_like(p)
+              for p in params]
+    self.v = [zeros_like(p)
+              for p in params]
 
-    def step(self):
-        for i, p in enumerate(
-                self.params):
-            self.m[i] = 0.9*self.m[i] \
-                      + 0.1*p.grad
-            self.v[i] = 0.999*self.v[i] \
-                      + 0.001*p.grad**2
-            p.data -= self.lr * \
-                self.m[i] / \
-                (self.v[i].sqrt()+1e-8)
+  def step(self):
+    for i, p in enumerate(
+            self.params):
+      self.m[i] = 0.9*self.m[i]
+                + 0.1*p.grad
+      self.v[i] = 0.99*self.v[i]
+                + 0.001
+                * p.grad**2
+      p.data -= self.lr *
+        self.m[i] /
+        (self.v[i].sqrt()+1e-8)
 \end{lstlisting}
 \vspace{0.15em}
 \subcaption{TinyTorch: Build internals}
@@ -291,40 +303,41 @@ class Adam:
 \end{subfigure}
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.32\textwidth}
+\begin{minipage}[b]{0.3\textwidth}
 \begin{subfigure}[b]{\textwidth}
 \centering
 \begin{lstlisting}[basicstyle=\fontsize{6}{7}\selectfont\ttfamily,frame=single,style=pythonstyle]
-# After 20 modules: train
+# After Module 13: train
 # transformers with YOUR code
 from tinytorch.nn import (
-    Transformer, Embedding)
+  Transformer, Embedding)
 from tinytorch.optim import Adam
 from tinytorch.data import DataLoader
 
 model = Transformer(
-    vocab=1000, d_model=64,
-    n_heads=4, n_layers=2)
-opt = Adam(model.parameters())
+ vocab=1000, d_model=64,
+ n_heads=4, n_layers=2)
+ opt = Adam(model.parameters())
 
 for batch in DataLoader(data):
-    loss = model(batch.x, batch.y)
-    loss.backward()  # You built this
-    opt.step()       # You built this
-    # You understand WHY it works
+  loss = model(batch.x, 
+               batch.y)
+  loss.backward() # Yours!
+  opt.step()      # Yours!
+  # You understand WHY it works
+  # because you built it all!
 \end{lstlisting}
 \vspace{0.15em}
 \subcaption{TinyTorch: The culmination}
 \label{lst:tinytorch-culmination}
 \end{subfigure}
 \end{minipage}
-\caption{From framework user to engineer. (a) PyTorch: high-level APIs hide internals. (b) TinyTorch: students implement components like Adam, understanding memory costs and update rules. (c) After completing 20 modules, students train transformers using exclusively their own code---every import is something they built.}
+\hfill
+\caption{From framework user to engineer. (a) PyTorch: high-level APIs hide internals. (b) TinyTorch: students implement components like Adam, understanding memory costs and update rules. (c) After Module 13, students train transformers using exclusively their own code---every import is something they built.}
 \label{fig:code-comparison}
 \end{figure*}
 
-The curriculum addresses three fundamental pedagogical challenges: teaching systems thinking \emph{alongside} ML fundamentals rather than in separate electives (\Cref{sec:systems}), managing cognitive load when teaching both algorithms and implementation (\Cref{sec:progressive}), and validating that bottom-up implementation produces working systems (\Cref{subsec:milestones}). The following sections detail how TinyTorch's design addresses each challenge.
-
-The curriculum follows the compiler course model~\citep{aho2006compilers}: students build a complete system module-by-module, experiencing how components integrate through direct implementation. \Cref{fig:module-flow} illustrates the dependency structure—tensors (Module 01) enable activations (02) and layers (03), which feed into autograd (05), which powers optimizers (06) and training (07). This incremental construction mirrors how compiler courses connect lexical analysis to parsing to code generation, creating systems thinking through component integration. Each completed module becomes immediately usable: after Module 03, students can build neural networks; after Module 05, automatic differentiation enables training; after Module 13, transformers support language modeling.
+Building systems knowledge alongside ML fundamentals presents three pedagogical challenges: teaching systems thinking early without overwhelming beginners (\Cref{sec:systems}), managing cognitive load when teaching both algorithms and implementation (\Cref{sec:progressive}), and validating student understanding through concrete milestones (\Cref{subsec:milestones}). TinyTorch addresses these through curriculum design inspired by compiler courses~\citep{aho2006compilers}---students build a complete system incrementally, with each module adding functionality while maintaining a working implementation. \Cref{fig:module-flow} illustrates this progression: tensors (Module 01) enable activations (02) and layers (03), which feed into autograd (05), powering optimizers (06) and training (07). Each completed module becomes immediately usable: after Module 03, students build neural networks; after Module 05, automatic differentiation enables training; after Module 13, transformers support language modeling. This structure enables students to construct mental models gradually while seeing immediate results.
 
 \begin{figure}[t]
 \centering
@@ -406,14 +419,14 @@ The curriculum follows the compiler course model~\citep{aho2006compilers}: stude
 
 TinyTorch serves students transitioning from framework \emph{users} to framework \emph{engineers}: those who have completed introductory ML courses (e.g., CS229, fast.ai) and want to understand PyTorch internals, those planning ML systems research or infrastructure careers, or practitioners debugging production deployment issues. The curriculum assumes NumPy proficiency and basic neural network familiarity but teaches framework architecture from first principles. Students needing immediate GPU/distributed training skills are better served by PyTorch tutorials; those preferring project-based application building will find high-level frameworks more appropriate. The 20-module structure supports flexible pacing: intensive completion (estimated 2-3 weeks at full-time pace), semester integration (parallel with lectures), or self-paced professional development.
 
-This paper makes three primary contributions:
+This paper makes three contributions, each inspired by the systems imperative the Bitter Lesson reveals:
 
 \begin{enumerate}
-\item \textbf{Systems-First Curriculum Architecture}: A 20-module learning path integrating memory profiling, computational complexity, and performance analysis from Module 01 onwards, replacing traditional algorithm-systems separation. Students discover systems constraints through direct measurement rather than abstract instruction (\Cref{sec:curriculum,sec:systems}). This architecture directly addresses the workforce gap by making tacit systems knowledge explicit through hands-on implementation. Grounded in situated cognition~\citep{lave1991situated} and constructionism~\citep{papert1980mindstorms}, with systems thinking pedagogy informed by established frameworks~\citep{meadows2008thinking}.
+\item \textbf{Systems-First Curriculum Architecture} (\Cref{sec:curriculum,sec:systems}): A 20-module learning path integrating memory profiling, computational complexity, and performance analysis from Module 01 onwards. Students discover systems constraints through direct measurement rather than abstract instruction. Grounded in situated cognition~\citep{lave1991situated} and constructionism~\citep{papert1980mindstorms}.
 
-\item \textbf{Progressive Disclosure Pattern}: To make systems-first learning tractable, we introduce a pedagogical technique using monkey-patching (runtime method replacement) to reveal \texttt{Tensor} complexity gradually while maintaining a unified mental model (\Cref{sec:progressive}). This enables forward-compatible code where Module 01 implementations continue working when autograd activates in Module 05. Grounded in cognitive load theory~\citep{sweller1988cognitive} and cognitive apprenticeship~\citep{collins1989cognitive}.
+\item \textbf{Progressive Disclosure Pattern} (\Cref{sec:progressive}): A scaffolding technique using monkey-patching to reveal \texttt{Tensor} complexity gradually while maintaining a unified mental model. Module 01 implementations continue working when autograd activates in Module 05. Grounded in cognitive load theory~\citep{sweller1988cognitive} and cognitive apprenticeship~\citep{collins1989cognitive}.
 
-\item \textbf{Open Educational Infrastructure}: Both innovations are validated through a complete open-source curriculum with NBGrader assessment infrastructure~\citep{blank2019nbgrader}, three integration models (self-paced learning, institutional courses, team onboarding), historical milestone validation (1958 Perceptron through 2024 optimized transformers), and PyTorch-inspired package architecture. This infrastructure enables community adoption, curricular adaptation, and empirical research into ML systems pedagogy effectiveness (\Cref{sec:curriculum,sec:deployment,sec:discussion}).
+\item \textbf{Open Educational Infrastructure} (\Cref{sec:curriculum,sec:deployment,sec:discussion}): Complete open-source curriculum with NBGrader assessment~\citep{blank2019nbgrader}, historical milestone validation, and PyTorch-inspired package architecture enabling community adoption and empirical research.
 \end{enumerate}
 
 \noindent\textbf{Scope:} These contributions represent demonstrated design patterns and complete educational infrastructure grounded in established learning theory. The curriculum's technical correctness is validated through historical milestone recreation (students train CNNs targeting 75\%+ CIFAR-10 accuracy using exclusively their own implementations). Learning outcome claims—that systems-first integration improves debugging skills, that progressive disclosure reduces cognitive load, that graduates achieve production readiness faster—remain testable hypotheses requiring empirical validation through controlled classroom studies. We detail specific research questions and measurement methodologies in \Cref{sec:discussion}.
@@ -553,20 +566,20 @@ TinyTorch organizes modules into three progressive tiers plus a capstone competi
 
 \begin{lstlisting}[caption={Tensor with memory profiling from Module 01.},label=lst:tensor-memory,float=t]
 class Tensor:
-    def __init__(self, data):
-        self.data = np.array(data, dtype=np.float32)
-        self.shape = self.data.shape
+  def __init__(self, data):
+    self.data = np.array(data, dtype=np.float32)
+    self.shape = self.data.shape
 
-    def memory_footprint(self):
-        """Calculate exact memory in bytes"""
-        return self.data.nbytes
+  def memory_footprint(self):
+    """Calculate exact memory in bytes"""
+    return self.data.nbytes
 
-    def __matmul__(self, other):
-        if self.shape[-1] != other.shape[0]:
-            raise ValueError(
-                f"Shape mismatch: {self.shape} @ {other.shape}"
-            )
-        return Tensor(self.data @ other.data)
+  def __matmul__(self, other):
+    if self.shape[-1] != other.shape[0]:
+      raise ValueError(
+        f"Shape mismatch: {self.shape} @ {other.shape}"
+      )
+    return Tensor(self.data @ other.data)
 \end{lstlisting}
 
 \textbf{Tier 1: Foundation (Modules 01--07).}
@@ -652,38 +665,38 @@ TinyTorch's \texttt{Tensor} class includes gradient-related attributes from Modu
 \begin{lstlisting}[caption={Module 01: Dormant gradient features.},label=lst:dormant-tensor,float=t]
 # Module 01: Foundation Tensor
 class Tensor:
-    def __init__(self, data, requires_grad=False):
-        self.data = np.array(data, dtype=np.float32)
-        self.shape = self.data.shape
-        # Gradient features - dormant
-        self.requires_grad = requires_grad
-        self.grad = None
-        self._backward = None
+  def __init__(self, data, requires_grad=False):
+    self.data = np.array(data, dtype=np.float32)
+    self.shape = self.data.shape
+    # Gradient features - dormant
+    self.requires_grad = requires_grad
+    self.grad = None
+    self._backward = None
 
-    def backward(self, gradient=None):
-        """No-op until Module 05"""
-        pass
+  def backward(self, gradient=None):
+    """No-op until Module 05"""
+    pass
 
-    def __mul__(self, other):
-        return Tensor(self.data * other.data)
+  def __mul__(self, other):
+    return Tensor(self.data * other.data)
 \end{lstlisting}
 
 \begin{lstlisting}[caption={Module 05: Autograd activation.},label=lst:activation,float=t]
 def enable_autograd():
-    """Monkey-patch Tensor with gradients"""
-    def backward(self, gradient=None):
-        if gradient is None:
-            gradient = np.ones_like(self.data)
-        if self.grad is None:
-            self.grad = gradient
-        else:
-            self.grad += gradient
-        if self._backward is not None:
-            self._backward(gradient)
+  """Monkey-patch Tensor with gradients"""
+  def backward(self, gradient=None):
+    if gradient is None:
+      gradient = np.ones_like(self.data)
+    if self.grad is None:
+      self.grad = gradient
+    else:
+      self.grad += gradient
+    if self._backward is not None:
+      self._backward(gradient)
 
-    # Monkey-patch: replace methods
-    Tensor.backward = backward
-    print("Autograd activated!")
+  # Monkey-patch: replace methods
+  Tensor.backward = backward
+  print("Autograd activated!")
 
 # Module 05 usage
 enable_autograd()
@@ -796,26 +809,26 @@ Module 09 introduces convolution with seven explicit nested loops (\Cref{lst:con
 
 \begin{lstlisting}[caption={Explicit convolution showing 7-nested complexity.},label=lst:conv-explicit,float=t]
 def conv2d_explicit(input, weight):
-    """7 nested loops - see the complexity!
-    input: (B, C_in, H, W)
-    weight: (C_out, C_in, K_h, K_w)"""
-    B, C_in, H, W = input.shape
-    C_out, _, K_h, K_w = weight.shape
-    H_out, W_out = H - K_h + 1, W - K_w + 1
-    output = np.zeros((B, C_out, H_out, W_out))
+  """7 nested loops - see the complexity!
+  input: (B, C_in, H, W)
+  weight: (C_out, C_in, K_h, K_w)"""
+  B, C_in, H, W = input.shape
+  C_out, _, K_h, K_w = weight.shape
+  H_out, W_out = H - K_h + 1, W - K_w + 1
+  output = np.zeros((B, C_out, H_out, W_out))
 
-    # Count: 1,2,3,4,5,6,7 loops
-    for b in range(B):
-        for c_out in range(C_out):
-            for h in range(H_out):
-                for w in range(W_out):
-                    for c_in in range(C_in):
-                        for kh in range(K_h):
-                            for kw in range(K_w):
-                                output[b,c_out,h,w] += \
-                                    input[b,c_in,h+kh,w+kw] * \
-                                    weight[c_out,c_in,kh,kw]
-    return output
+  # Count: 1,2,3,4,5,6,7 loops
+  for b in range(B):
+    for c_out in range(C_out):
+      for h in range(H_out):
+        for w in range(W_out):
+          for c_in in range(C_in):
+            for kh in range(K_h):
+              for kw in range(K_w):
+                output[b,c_out,h,w] += \
+                  input[b,c_in,h+kh,w+kw] * \
+                  weight[c_out,c_in,kh,kw]
+  return output
 \end{lstlisting}
 
 This explicit implementation illustrates TinyTorch's pedagogical philosophy of minimal NumPy reliance until concepts are established. While the curriculum builds on NumPy as foundational infrastructure (array storage, broadcasting, element-wise operations), optimized operations like matrix multiplication appear only after students understand computational complexity through explicit loops. Module 03 introduces linear layers with manual weight-input multiplication loops before Module 08 introduces NumPy's \texttt{@} operator; Module 09 teaches convolution through seven nested loops before Module 18 vectorizes with NumPy operations. This progression ensures students understand \emph{what} operations do (and their complexity) before learning \emph{how} to optimize them. Pure Python transparency enables this pedagogical sequencing: students can inspect every operation without navigating compiled C extensions or CUDA kernels.
@@ -915,10 +928,10 @@ TinyTorch supports three deployment environments: \textbf{JupyterHub} (instituti
 # }
 
 def memory_footprint(self):
-    """Calculate tensor memory in bytes"""
-    ### BEGIN SOLUTION
-    return self.data.nbytes
-    ### END SOLUTION
+  """Calculate tensor memory in bytes"""
+  ### BEGIN SOLUTION
+  return self.data.nbytes
+  ### END SOLUTION
 \end{lstlisting}
 
 This scaffolding~\citep{vygotsky1978mind} makes educational objectives explicit while enabling automated grading. The \texttt{name} field identifies the exercise, \texttt{points} assigns weight, and the description provides context before students see code cells.
