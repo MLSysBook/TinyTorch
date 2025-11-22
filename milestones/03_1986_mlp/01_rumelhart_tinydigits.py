@@ -58,6 +58,8 @@ from tinytorch.data.loader import TensorDataset, DataLoader
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.live import Live
+from rich.text import Text
 from rich import box
 
 console = Console()
@@ -374,51 +376,59 @@ def train_mlp():
         "train_accuracy": [],
         "test_accuracy": []
     }
-    
-    for epoch in range(epochs):
-        epoch_loss = 0.0
-        batch_count = 0
-        
-        for batch_images, batch_labels in train_loader:
-            # Forward pass
-            logits = model(batch_images)
-            loss = loss_fn(logits, batch_labels)
-            
-            # Backward pass
-            loss.backward()
-            
-            # Update weights
-            optimizer.step()
-            optimizer.zero_grad()
-            
-            epoch_loss += loss.data
-            batch_count += 1
-        
-        avg_loss = epoch_loss / batch_count
-        
-        # Evaluate on both train and test to detect overfitting
-        train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
-        test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
-        
-        history["train_loss"].append(avg_loss)
-        history["train_accuracy"].append(train_acc)
-        history["test_accuracy"].append(test_acc)
-        
-        if initial_loss is None:
-            initial_loss = avg_loss
-        
-        # Print progress every 5 epochs
-        if (epoch + 1) % 5 == 0:
-            gap = train_acc - test_acc
-            gap_indicator = "⚠️" if gap > 10 else "✓"
-            console.print(
-                f"Epoch {epoch+1:2d}/{epochs}  "
-                f"Loss: {avg_loss:.4f}  "
-                f"Train: {train_acc:.1f}%  "
-                f"Test: {test_acc:.1f}%  "
-                f"{gap_indicator} Gap: {gap:.1f}%"
-            )
-    
+
+    # Use Live display with spinner for real-time feedback
+    with Live(console=console, refresh_per_second=10) as live:
+        for epoch in range(epochs):
+            epoch_loss = 0.0
+            batch_count = 0
+
+            for batch_images, batch_labels in train_loader:
+                # Forward pass
+                logits = model(batch_images)
+                loss = loss_fn(logits, batch_labels)
+
+                # Backward pass
+                loss.backward()
+
+                # Update weights
+                optimizer.step()
+                optimizer.zero_grad()
+
+                epoch_loss += loss.data
+                batch_count += 1
+
+                # Update spinner with current batch progress
+                spinner_text = Text()
+                spinner_text.append("⠋ ", style="cyan")
+                spinner_text.append(f"Epoch {epoch+1:2d}/{epochs}  Batch {batch_count}/{len(train_loader)}")
+                live.update(spinner_text)
+
+            avg_loss = epoch_loss / batch_count
+
+            # Evaluate on both train and test to detect overfitting
+            train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
+            test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
+
+            history["train_loss"].append(avg_loss)
+            history["train_accuracy"].append(train_acc)
+            history["test_accuracy"].append(test_acc)
+
+            if initial_loss is None:
+                initial_loss = avg_loss
+
+            # Print progress every 5 epochs
+            if (epoch + 1) % 5 == 0:
+                gap = train_acc - test_acc
+                gap_indicator = "⚠️" if gap > 10 else "✓"
+                live.console.print(
+                    f"Epoch {epoch+1:2d}/{epochs}  "
+                    f"Loss: {avg_loss:.4f}  "
+                    f"Train: {train_acc:.1f}%  "
+                    f"Test: {test_acc:.1f}%  "
+                    f"{gap_indicator} Gap: {gap:.1f}%"
+                )
+
     console.print("\n[green]✅ Training Complete![/green]")
     
     final_train_acc = history["train_accuracy"][-1]

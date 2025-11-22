@@ -40,6 +40,9 @@ from tinytorch import Tensor, Linear, Sigmoid, BinaryCrossEntropyLoss, SGD
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.live import Live
+from rich.spinner import Spinner
+from rich.text import Text
 from rich import box
 
 console = Console()
@@ -107,40 +110,48 @@ def generate_data(n_samples=100, seed=None):
 
 def train_perceptron(model, X, y, epochs=100, lr=0.1):
     """Train the perceptron using SGD."""
-    
+
     # Setup training components
     loss_fn = BinaryCrossEntropyLoss()
     optimizer = SGD(model.parameters(), lr=lr)
-    
+
     console.print("\n[bold cyan]🔥 Starting Training...[/bold cyan]\n")
-    
+
     history = {"loss": [], "accuracy": []}
-    
-    for epoch in range(epochs):
-        # Forward pass
-        predictions = model(X)
-        loss = loss_fn(predictions, y)
-        
-        # Backward pass
-        loss.backward()
-        
-        # Update weights
-        optimizer.step()
-        optimizer.zero_grad()
-        
-        # Calculate accuracy
-        pred_classes = (predictions.data > 0.5).astype(int)
-        accuracy = (pred_classes == y.data).mean()
-        
-        history["loss"].append(loss.data.item())
-        history["accuracy"].append(accuracy)
-        
-        # Print progress every 10 epochs
-        if (epoch + 1) % 10 == 0:
-            console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
-    
+
+    # Use Live display with spinner for real-time feedback
+    with Live(console=console, refresh_per_second=10) as live:
+        for epoch in range(epochs):
+            # Forward pass
+            predictions = model(X)
+            loss = loss_fn(predictions, y)
+
+            # Backward pass
+            loss.backward()
+
+            # Update weights
+            optimizer.step()
+            optimizer.zero_grad()
+
+            # Calculate accuracy
+            pred_classes = (predictions.data > 0.5).astype(int)
+            accuracy = (pred_classes == y.data).mean()
+
+            history["loss"].append(loss.data.item())
+            history["accuracy"].append(accuracy)
+
+            # Update spinner with current progress
+            spinner_text = Text()
+            spinner_text.append("⠋ ", style="cyan")
+            spinner_text.append(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
+            live.update(spinner_text)
+
+            # Print progress every 10 epochs
+            if (epoch + 1) % 10 == 0:
+                live.console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
+
     console.print("\n[bold green]✅ Training Complete![/bold green]\n")
-    
+
     return history
 
 
