@@ -37,10 +37,28 @@ Character-level transformer models for text generation:
 
 ## Milestone Structure
 
-This milestone uses **progressive generation tasks** with 2 scripts:
+This milestone uses **progressive difficulty** with 3 scripts:
+
+### ⭐ 00_vaswani_attention_proof.py (START HERE!)
+**Purpose:** PROVE your attention mechanism works
+
+- **Dataset:** Auto-generated sequences (no files needed!)
+- **Task:** Reverse sequences `[1,2,3,4] → [4,3,2,1]`
+- **From Paper:** "Attention is All You Need" validation task
+- **Training Time:** ~30 seconds
+- **Expected:** 95%+ accuracy
+- **Key Learning:** "My attention is computing relationships!"
+
+**Why This Is THE Test:**
+- IMPOSSIBLE without attention working
+- Trains in 30 seconds (instant gratification!)
+- Binary pass/fail (95%+ or broken)
+- Proves Q·K·V computation works
+
+**🎯 Run this FIRST to verify your attention before complex tasks!**
 
 ### 01_vaswani_generation.py
-**Purpose:** Prove transformers work on Q&A
+**Purpose:** Apply attention to real language (Q&A)
 
 - **Dataset:** TinyTalks (17.5 KB, 5 difficulty levels)
 - **Task:** Learn to answer questions (Q: ... A: ...)
