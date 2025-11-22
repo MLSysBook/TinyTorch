@@ -795,6 +795,72 @@ class EmbeddingBackward(Function):
 
         return (grad_weight,)
 
+
+class SliceBackward(Function):
+    """
+    Gradient computation for tensor slicing/indexing operations.
+    
+    **Mathematical Rule:** If Y = X[key], then:
+    - ∂Loss/∂X[key] = grad_output
+    - ∂Loss/∂X[other positions] = 0
+    
+    **Key Insight:** Slicing is a masking operation. The backward
+    places gradients back into the original tensor positions, with
+    zeros everywhere else.
+    
+    **Applications:** Positional encodings, sequence slicing, batch selection,
+    attention masking in transformers.
+    
+    **Examples:**
+    >>> x = Tensor([1, 2, 3, 4, 5], requires_grad=True)
+    >>> y = x[:3]  # Slice first 3 elements
+    >>> loss = y.sum()
+    >>> loss.backward()
+    >>> # x.grad = [1, 1, 1, 0, 0] - gradients only for sliced positions
+    """
+
+    def __init__(self, tensor, key):
+        """
+        Args:
+            tensor: Original tensor being sliced
+            key: Slicing key (index, slice, tuple of slices, etc.)
+        """
+        super().__init__(tensor)
+        self.key = key
+        self.original_shape = tensor.shape
+
+    def apply(self, grad_output):
+        """
+        Compute gradient for slicing operation.
+        
+        Args:
+            grad_output: Gradient flowing backward from sliced output
+            
+        Returns:
+            Tuple with single gradient for input tensor
+            
+        **Mathematical Foundation:**
+        - Slicing extracts a subset of elements
+        - Backward scatters gradients back to original positions
+        - Unsliced positions receive zero gradient
+        
+        **Example:**
+        If X = [a, b, c, d, e] and Y = X[1:4] = [b, c, d]
+        Then dL/dX = [0, dL/db, dL/dc, dL/dd, 0]
+        """
+        tensor, = self.saved_tensors
+        grad_input = None
+
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            # Create gradient array with same shape as original tensor
+            grad_input = np.zeros(self.original_shape, dtype=np.float32)
+            
+            # Place gradients back into the sliced positions
+            # This is the inverse of the forward slicing operation
+            grad_input[self.key] = grad_output
+
+        return (grad_input,)
+
 # %% nbgrader={"grade": false, "grade_id": "reshape-backward", "solution": true}
 #| export
 class ReshapeBackward(Function):

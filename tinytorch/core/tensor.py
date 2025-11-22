@@ -291,6 +291,33 @@ class Tensor:
         return result
         ### END SOLUTION
 
+
+    def __getitem__(self, key):
+        """
+        Enable indexing and slicing operations on Tensors.
+        
+        Allows Tensors to be indexed like NumPy arrays.
+        
+        Examples:
+            >>> x = Tensor([1, 2, 3, 4, 5])
+            >>> x[0]           # Single element
+            >>> x[:3]          # Slice: [1, 2, 3]
+            >>> x[1:4]         # Range: [2, 3, 4]
+        """
+        ### BEGIN SOLUTION
+        # Perform the indexing on underlying NumPy array
+        result_data = self.data[key]
+        
+        # Ensure result is always an array (even for scalar indexing)
+        if not isinstance(result_data, np.ndarray):
+            result_data = np.array(result_data)
+        
+        # Create new Tensor with sliced data
+        # Note: Gradient tracking will be added by Module 05 (Autograd)
+        result = Tensor(result_data, requires_grad=self.requires_grad)
+        return result
+        ### END SOLUTION
+
     def transpose(self, dim0=None, dim1=None):
         """
         Transpose tensor dimensions.

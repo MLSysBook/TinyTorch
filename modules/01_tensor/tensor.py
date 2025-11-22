@@ -468,6 +468,68 @@ class Tensor:
         ### END SOLUTION
 
     # nbgrader={"grade": false, "grade_id": "shape-ops", "solution": true}
+    # %% nbgrader={"grade": false, "grade_id": "getitem-impl", "solution": true}
+    def __getitem__(self, key):
+        """
+        Enable indexing and slicing operations on Tensors.
+        
+        This allows Tensors to be indexed like NumPy arrays while preserving
+        gradient computation capabilities (when autograd is enabled in Module 05).
+        
+        TODO: Implement tensor indexing/slicing with gradient support
+        
+        APPROACH:
+        1. Use NumPy's indexing to slice the underlying data
+        2. Create new Tensor with sliced data
+        3. Preserve requires_grad flag
+        4. Store backward function (if autograd enabled - Module 05)
+        
+        EXAMPLES:
+        >>> x = Tensor([1, 2, 3, 4, 5])
+        >>> x[0]           # Single element: Tensor(1)
+        >>> x[:3]          # Slice: Tensor([1, 2, 3])
+        >>> x[1:4]         # Range: Tensor([2, 3, 4])
+        >>> 
+        >>> y = Tensor([[1, 2, 3], [4, 5, 6]])
+        >>> y[0]           # Row: Tensor([1, 2, 3])
+        >>> y[:, 1]        # Column: Tensor([2, 5])
+        >>> y[0, 1:3]      # Mixed: Tensor([2, 3])
+        
+        GRADIENT BEHAVIOR (Module 05):
+        - Slicing preserves gradient flow
+        - Gradients flow back to original positions
+        - Example: x[:3].backward() updates x.grad[:3]
+        
+        HINTS:
+        - NumPy handles the indexing: self.data[key]
+        - Result is always a Tensor (even single elements)
+        - Preserve requires_grad for gradient tracking
+        """
+        ### BEGIN SOLUTION
+        # Perform the indexing on underlying NumPy array
+        result_data = self.data[key]
+        
+        # Ensure result is always an array (even for scalar indexing)
+        if not isinstance(result_data, np.ndarray):
+            result_data = np.array(result_data)
+        
+        # Create new Tensor with sliced data
+        result = Tensor(result_data, requires_grad=self.requires_grad)
+        
+        # If gradients are tracked and autograd is available, attach backward function
+        # Note: This will be used by Module 05 (Autograd)
+        if self.requires_grad:
+            # Check if SliceBackward exists (added in Module 05)
+            try:
+                from tinytorch.core.autograd import SliceBackward
+                result._grad_fn = SliceBackward(self, key)
+            except (ImportError, AttributeError):
+                # Autograd not yet available - gradient tracking will be added in Module 05
+                pass
+        
+        return result
+        ### END SOLUTION
+
     def reshape(self, *shape):
         """
         Reshape tensor to new dimensions.
