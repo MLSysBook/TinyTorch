@@ -886,6 +886,7 @@ def enable_autograd():
     _original_sub = Tensor.__sub__
     _original_mul = Tensor.__mul__
     _original_div = Tensor.__truediv__
+    _original_getitem = Tensor.__getitem__
 
     # These methods are also guaranteed from Module 01 - trust Single Tensor Class
     _original_matmul = Tensor.matmul
@@ -1032,6 +1033,23 @@ def enable_autograd():
 
         return result
 
+    def tracked_getitem(self, key):
+        """
+        Indexing/slicing with gradient tracking.
+        
+        Enhances the original __getitem__ method to build computation graphs
+        when requires_grad=True for the input.
+        """
+        # Call original __getitem__ from Module 01
+        result = _original_getitem(self, key)
+
+        # Track gradient if needed
+        if self.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = SliceBackward(self, key)
+
+        return result
+
     def sum_op(self, axis=None, keepdims=False):
         """
         Sum operation with gradient tracking.
@@ -1130,6 +1148,7 @@ def enable_autograd():
     Tensor.__sub__ = tracked_sub
     Tensor.__mul__ = tracked_mul
     Tensor.__truediv__ = tracked_div
+    Tensor.__getitem__ = tracked_getitem
     Tensor.matmul = tracked_matmul
     Tensor.transpose = tracked_transpose
     Tensor.reshape = tracked_reshape
