@@ -36,21 +36,22 @@ from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.live import Live
+from rich.text import Text
 from rich import box
 
 # Add paths for local development
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
 # Import TinyTorch components
-from tinytorch import Tensor, SGD, CrossEntropyLoss, enable_autograd
+from tinytorch import Tensor, SGD, CrossEntropyLoss
 from tinytorch.core.spatial import Conv2d, MaxPool2d
 from tinytorch.core.layers import Linear, ReLU
 from tinytorch.data.loader import DataLoader, TensorDataset
 
 console = Console()
 
-# Enable gradient tracking
-enable_autograd()
+# Note: Autograd is automatically enabled when tinytorch is imported
 
 
 # ============================================================================
@@ -314,35 +315,43 @@ def train_cnn():
     
     # Training loop
     history = {
-        "train_loss": [], 
+        "train_loss": [],
         "test_accuracy": [],
         "train_accuracy": []  # Track training accuracy to detect overfitting
     }
     start_time = time.time()
-    
-    for epoch in range(epochs):
-        # Train
-        train_loss = train_epoch(model, train_loader, criterion, optimizer)
-        
-        # Evaluate on both train and test
-        train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
-        test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
-        
-        history["train_loss"].append(train_loss)
-        history["train_accuracy"].append(train_acc)
-        history["test_accuracy"].append(test_acc)
-        
-        if (epoch + 1) % 5 == 0:  # Print every 5 epochs
-            gap = train_acc - test_acc
-            gap_indicator = "⚠️" if gap > 10 else "✓"
-            console.print(
-                f"Epoch {epoch+1:3d}/{epochs}  "
-                f"Loss: {train_loss:.4f}  "
-                f"Train: {train_acc:.1f}%  "
-                f"Test: {test_acc:.1f}%  "
-                f"{gap_indicator} Gap: {gap:.1f}%"
-            )
-    
+
+    # Use Live display with spinner for real-time feedback
+    with Live(console=console, refresh_per_second=10) as live:
+        for epoch in range(epochs):
+            # Update spinner before training
+            spinner_text = Text()
+            spinner_text.append("⠋ ", style="cyan")
+            spinner_text.append(f"Epoch {epoch+1:3d}/{epochs}  Training...")
+            live.update(spinner_text)
+
+            # Train
+            train_loss = train_epoch(model, train_loader, criterion, optimizer)
+
+            # Evaluate on both train and test
+            train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
+            test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
+
+            history["train_loss"].append(train_loss)
+            history["train_accuracy"].append(train_acc)
+            history["test_accuracy"].append(test_acc)
+
+            if (epoch + 1) % 5 == 0:  # Print every 5 epochs
+                gap = train_acc - test_acc
+                gap_indicator = "⚠️" if gap > 10 else "✓"
+                live.console.print(
+                    f"Epoch {epoch+1:3d}/{epochs}  "
+                    f"Loss: {train_loss:.4f}  "
+                    f"Train: {train_acc:.1f}%  "
+                    f"Test: {test_acc:.1f}%  "
+                    f"{gap_indicator} Gap: {gap:.1f}%"
+                )
+
     training_time = time.time() - start_time
     
     console.print("\n" + "─" * 70 + "\n")
