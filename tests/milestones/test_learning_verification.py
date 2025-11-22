@@ -688,9 +688,9 @@ def test_cnn_learning():
         x = relu2(x)
         # No second pooling - would create 0x0!
         
-        # Flatten and classify
+        # Flatten and classify (using Tensor.reshape to preserve autograd)
         batch_size = x.shape[0]
-        x = Tensor(x.data.reshape(batch_size, -1))
+        x = x.reshape(batch_size, -1)
         x = fc(x)
         return x
     
@@ -709,6 +709,7 @@ def test_cnn_learning():
     epochs = 15
     loss_history = []
     test_acc_history = []
+    conv_grad_mean = 0.0  # Track conv gradient magnitude
     
     console.print("\n🔬 Training CNN on TinyDigits...")
     
@@ -724,9 +725,11 @@ def test_cnn_learning():
             # Backward pass
             loss.backward()
             
-            # Check gradients on first batch
+            # Check gradients on first batch (before zero_grad clears them!)
             if epoch == 0 and batch_count == 0:
                 grad_stats = check_gradient_flow(params)
+                # Also capture conv gradient magnitude before it gets zeroed
+                conv_grad_mean = np.abs(conv1.weight.grad.data).mean() if conv1.weight.grad is not None else 0.0
             
             # Update weights
             optimizer.step()
@@ -779,8 +782,7 @@ def test_cnn_learning():
         f"{grad_stats['params_with_grad']}/{grad_stats['total_params']}",
         "✅ PASS" if grad_stats['params_with_grad'] == grad_stats['total_params'] else "❌ FAIL"
     )
-    # Check convolutional gradients exist
-    conv_grad_mean = np.abs(conv1.weight.grad.data).mean() if conv1.weight.grad is not None else 0.0
+    # Check convolutional gradients exist (captured during training before zero_grad)
     table.add_row(
         "Conv Gradients",
         f"{conv_grad_mean:.6f}",
