@@ -66,6 +66,7 @@ from typing import List, Optional, Tuple
 
 # Import from previous modules - following dependency chain
 from tinytorch.core.tensor import Tensor
+from tinytorch.core.autograd import EmbeddingBackward
 
 # Constants for memory calculations
 BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
@@ -303,10 +304,12 @@ class Embedding:
         embedded = self.weight.data[indices.data.astype(int)]
 
         # Create result tensor with gradient tracking
-        # Note: Gradient computation handled by autograd system (Module 05)
-        # The embedding lookup is differentiable through the weight matrix
         result = Tensor(embedded, requires_grad=self.weight.requires_grad)
-
+        
+        # Attach backward function for gradient computation (following TinyTorch protocol)
+        if result.requires_grad:
+            result._grad_fn = EmbeddingBackward(self.weight, indices)
+        
         return result
 
     def __call__(self, indices: Tensor) -> Tensor:
