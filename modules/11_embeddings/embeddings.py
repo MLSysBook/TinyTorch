@@ -480,17 +480,21 @@ class PositionalEncoding:
                 f"Embedding dimension mismatch: expected {self.embed_dim}, got {embed_dim}"
             )
 
-        # Get position embeddings for this sequence length (slice using .data for efficiency)
-        pos_embeddings_data = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
-
-        # Broadcast to match batch dimension: (1, seq_len, embed_dim)
-        pos_embeddings_data = pos_embeddings_data[np.newaxis, :, :]
+        # Slice position embeddings for this sequence length using Tensor slicing
+        # This now preserves gradient flow (as of Module 01 update with __getitem__)
+        pos_embeddings = self.position_embeddings[:seq_len]  # (seq_len, embed_dim) - gradients preserved!
         
-        # Wrap in Tensor to preserve requires_grad
-        pos_embeddings = Tensor(pos_embeddings_data, requires_grad=self.position_embeddings.requires_grad)
+        # Reshape to add batch dimension: (1, seq_len, embed_dim)
+        # Need to use .data for reshaping temporarily, then wrap in Tensor
+        pos_data = pos_embeddings.data[np.newaxis, :, :]
+        pos_embeddings_batched = Tensor(pos_data, requires_grad=pos_embeddings.requires_grad)
+        
+        # Copy gradient function if it exists (to preserve backward connection)
+        if hasattr(pos_embeddings, '_grad_fn') and pos_embeddings._grad_fn is not None:
+            pos_embeddings_batched._grad_fn = pos_embeddings._grad_fn
 
-        # Add positional information using Tensor operation to preserve gradients!
-        result = x + pos_embeddings
+        # Add positional information - gradients flow through both x and pos_embeddings!
+        result = x + pos_embeddings_batched
 
         return result
 
@@ -900,7 +904,8 @@ class EmbeddingLayer:
         """
         # Handle 1D input by adding batch dimension
         if len(tokens.shape) == 1:
-            tokens = Tensor(tokens.data[np.newaxis, :])  # (1, seq_len)
+            # NOTE: Tensor reshape preserves gradients
+            tokens = tokens.reshape(1, -1)
             squeeze_batch = True
         else:
             squeeze_batch = False
@@ -910,25 +915,31 @@ class EmbeddingLayer:
 
         # Scale embeddings if requested (transformer convention)
         if self.scale_embeddings:
-            token_embeds = Tensor(token_embeds.data * math.sqrt(self.embed_dim))
+            scale_factor = math.sqrt(self.embed_dim)
+            token_embeds = token_embeds * scale_factor  # Use Tensor multiplication to preserve gradients
 
         # Add positional encoding
         if self.pos_encoding_type == 'learned':
             # Use learnable positional encoding
             output = self.pos_encoding.forward(token_embeds)
         elif self.pos_encoding_type == 'sinusoidal':
-            # Use fixed sinusoidal encoding
+            # Use fixed sinusoidal encoding (not learnable)
             batch_size, seq_len, embed_dim = token_embeds.shape
-            pos_embeddings = self.pos_encoding.data[:seq_len]  # (seq_len, embed_dim)
-            pos_embeddings = pos_embeddings[np.newaxis, :, :]  # (1, seq_len, embed_dim)
-            output = Tensor(token_embeds.data + pos_embeddings)
+            pos_embeddings = self.pos_encoding[:seq_len]  # Slice using Tensor slicing
+            
+            # Reshape to add batch dimension
+            pos_data = pos_embeddings.data[np.newaxis, :, :]
+            pos_embeddings_batched = Tensor(pos_data, requires_grad=False)  # Sinusoidal are fixed
+            
+            output = token_embeds + pos_embeddings_batched
         else:
             # No positional encoding
             output = token_embeds
 
         # Remove batch dimension if it was added
         if squeeze_batch:
-            output = Tensor(output.data[0])  # (seq_len, embed_dim)
+            # Use Tensor slicing (now supported in Module 01)
+            output = output[0]
 
         return output
 
