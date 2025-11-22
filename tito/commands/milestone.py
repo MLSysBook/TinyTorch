@@ -59,9 +59,9 @@ MILESTONE_SCRIPTS = {
         "name": "MLP Revival (1986)",
         "year": 1986,
         "title": "Backpropagation Breakthrough",
-        "script": "milestones/03_1986_mlp/02_rumelhart_mnist.py",
+        "script": "milestones/03_1986_mlp/01_rumelhart_tinydigits.py",
         "required_modules": [1, 2, 3, 4, 5, 6, 7],
-        "description": "Train deep networks on MNIST",
+        "description": "Train deep networks on TinyDigits",
         "historical_context": "Rumelhart, Hinton & Williams (Nature, 1986)",
         "emoji": "🎓"
     },
@@ -81,7 +81,7 @@ MILESTONE_SCRIPTS = {
         "name": "Transformer Era (2017)",
         "year": 2017,
         "title": "Attention is All You Need",
-        "script": "milestones/05_2017_transformer/01_vaswani_generation.py",
+        "script": "milestones/05_2017_transformer/03_quickdemo.py",
         "required_modules": list(range(1, 14)),
         "description": "Build transformer with self-attention",
         "historical_context": "Vaswani et al. revolutionized NLP",
@@ -946,43 +946,55 @@ class MilestoneCommand(BaseCommand):
             ))
             return 1
 
-        # Check prerequisites (unless skipped)
-        completed_modules = []
+        # Check prerequisites and validate exports/tests (unless skipped)
         if not args.skip_checks:
             console.print(f"\n[bold cyan]🔍 Checking prerequisites for Milestone {milestone_id}...[/bold cyan]\n")
 
-            # Load module completion status
-            progress_file = Path(".tito") / "progress.json"
-            if progress_file.exists():
-                try:
-                    with open(progress_file, 'r') as f:
-                        progress_data = json.load(f)
-                        completed_modules = progress_data.get("completed_modules", [])
-                except (json.JSONDecodeError, IOError):
-                    pass
-
-            # Check each required module
-            missing_modules = []
-            for module_num in milestone["required_modules"]:
-                if module_num in completed_modules:
-                    console.print(f"  [green]✓[/green] Module {module_num:02d} - complete")
-                else:
-                    console.print(f"  [red]✗[/red] Module {module_num:02d} - NOT complete")
-                    missing_modules.append(module_num)
-
-            if missing_modules:
+            # Use unified progress tracker
+            from ..core.progress_tracker import ProgressTracker
+            from ..core.milestone_validator import MilestoneValidator
+            from .export import ExportCommand
+            from .test import TestCommand
+            
+            tracker = ProgressTracker(self.config.project_root)
+            validator = MilestoneValidator(self.config.project_root, console)
+            export_cmd = ExportCommand(self.config)
+            test_cmd = TestCommand(self.config)
+            
+            # Check if modules are completed
+            all_complete, missing_modules = validator.check_prerequisites(milestone_id, tracker)
+            
+            if not all_complete:
                 console.print(Panel(
                     f"[bold yellow]❌ Missing Required Modules[/bold yellow]\n\n"
                     f"[yellow]Milestone {milestone_id} requires modules: {', '.join(f'{m:02d}' for m in milestone['required_modules'])}[/yellow]\n"
                     f"[red]Missing: {', '.join(f'{m:02d}' for m in missing_modules)}[/red]\n\n"
                     f"[cyan]Complete the missing modules first:[/cyan]\n" +
-                    "\n".join(f"[dim]  tito module start {m:02d}[/dim]" for m in missing_modules[:3]),
+                    "\n".join(f"[dim]  tito module complete {m:02d}[/dim]" for m in missing_modules[:3]),
                     title="Prerequisites Not Met",
                     border_style="yellow"
                 ))
                 return 1
-
-            console.print(f"\n[green]✅ All prerequisites met![/green]\n")
+            
+            console.print(f"[green]✅ All required modules completed![/green]\n")
+            
+            # Validate that all modules are exported and tested
+            console.print(f"[bold cyan]🔧 Validating exports and tests...[/bold cyan]\n")
+            success, failed = validator.validate_and_export_modules(milestone_id, export_cmd, test_cmd)
+            
+            if not success:
+                console.print(Panel(
+                    f"[bold red]❌ Validation Failed[/bold red]\n\n"
+                    f"[yellow]Some required modules failed export or tests:[/yellow]\n"
+                    f"[red]{', '.join(failed)}[/red]\n\n"
+                    f"[cyan]Fix the issues and try again:[/cyan]\n"
+                    f"[dim]  tito module complete XX[/dim] - Re-export and test modules",
+                    title="Validation Failed",
+                    border_style="red"
+                ))
+                return 1
+            
+            console.print(f"\n[green]✅ All modules exported and tested! Ready to run milestone.[/green]\n")
 
             # Test imports work
             console.print("[bold cyan]🧪 Testing YOUR implementations...[/bold cyan]\n")
@@ -1034,7 +1046,11 @@ class MilestoneCommand(BaseCommand):
             padding=(1, 2)
         ))
 
-        input("\n[yellow]Press Enter to begin...[/yellow] ")
+        try:
+            input("\n[yellow]Press Enter to begin...[/yellow] ")
+        except EOFError:
+            # Non-interactive mode, proceed automatically
+            pass
 
         # Run the milestone script
         console.print(f"\n[bold green]🚀 Starting Milestone {milestone_id}...[/bold green]\n")
@@ -1052,6 +1068,14 @@ class MilestoneCommand(BaseCommand):
             if result.returncode == 0:
                 # Success! Mark milestone as complete
                 self._mark_milestone_complete(milestone_id)
+                
+                # Also update unified progress tracker
+                try:
+                    from ..core.progress_tracker import ProgressTracker
+                    tracker = ProgressTracker(self.config.project_root)
+                    tracker.mark_milestone_completed(milestone_id)
+                except Exception:
+                    pass  # Non-critical
 
                 console.print(Panel(
                     f"[bold green]🏆 MILESTONE ACHIEVED![/bold green]\n\n"
@@ -1073,6 +1097,21 @@ class MilestoneCommand(BaseCommand):
                     next_milestone = MILESTONE_SCRIPTS[next_id]
                     console.print(f"\n[bold yellow]🎯 What's Next:[/bold yellow]")
                     console.print(f"[dim]Milestone {next_id}: {next_milestone['name']} ({next_milestone['year']})[/dim]")
+
+                    # Get completed modules for checking next milestone
+                    progress_file = Path(".tito") / "progress.json"
+                    completed_modules = []
+                    if progress_file.exists():
+                        try:
+                            with open(progress_file, 'r') as f:
+                                progress_data = json.load(f)
+                                for mod in progress_data.get("completed_modules", []):
+                                    try:
+                                        completed_modules.append(int(mod.split("_")[0]))
+                                    except (ValueError, IndexError):
+                                        pass
+                        except (json.JSONDecodeError, IOError):
+                            pass
 
                     # Check if unlocked
                     missing = [m for m in next_milestone["required_modules"] if m not in completed_modules]
