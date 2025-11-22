@@ -560,11 +560,9 @@ def train_tinytalks_gpt(model, dataset, optimizer, criterion, epochs=20, batch_s
         test_prompts: Optional list of questions to test during training
     """
     from tinytorch.core.tensor import Tensor
-    from tinytorch.core.autograd import enable_autograd
-    
-    # Enable autograd
-    enable_autograd()
-    
+
+    # Note: Autograd is automatically enabled when tinytorch is imported
+
     console.print("\n[bold cyan]Starting Training...[/bold cyan]")
     console.print(f"  Epochs: {epochs}")
     console.print(f"  Batch size: {batch_size}")
