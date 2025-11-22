@@ -64,6 +64,8 @@ import numpy as np
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+from rich.live import Live
+from rich.text import Text
 from rich import box
 
 # Add project root to path
@@ -160,40 +162,50 @@ class XORNetwork:
 def train_network(model, X, y, epochs=500, lr=0.5):
     """
     Train multi-layer network on XOR.
-    
+
     This WILL succeed - hidden layers solve the problem!
     """
     loss_fn = BinaryCrossEntropyLoss()
     optimizer = SGD(model.parameters(), lr=lr)
-    
+
     console.print("\n[bold cyan]🔥 Training Multi-Layer Network...[/bold cyan]")
     console.print("[dim](This will work - hidden layers solve XOR!)[/dim]\n")
-    
+
     history = {"loss": [], "accuracy": []}
-    
-    for epoch in range(epochs):
-        # Forward pass
-        predictions = model(X)
-        loss = loss_fn(predictions, y)
-        
-        # Backward pass (through hidden layers!)
-        loss.backward()
-        
-        # Update weights
-        optimizer.step()
-        optimizer.zero_grad()
-        
-        # Calculate accuracy
-        pred_classes = (predictions.data > 0.5).astype(int)
-        accuracy = (pred_classes == y.data).mean()
-        
-        history["loss"].append(loss.data.item())
-        history["accuracy"].append(accuracy)
-        
-        # Print progress every 100 epochs
-        if (epoch + 1) % 100 == 0:
-            console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
-    
+
+    # Use Live display with spinner for real-time feedback
+    with Live(console=console, refresh_per_second=10) as live:
+        for epoch in range(epochs):
+            # Forward pass
+            predictions = model(X)
+            loss = loss_fn(predictions, y)
+
+            # Backward pass (through hidden layers!)
+            loss.backward()
+
+            # Update weights
+            optimizer.step()
+            optimizer.zero_grad()
+
+            # Calculate accuracy
+            pred_classes = (predictions.data > 0.5).astype(int)
+            accuracy = (pred_classes == y.data).mean()
+
+            history["loss"].append(loss.data.item())
+            history["accuracy"].append(accuracy)
+
+            # Update spinner with current progress
+            spinner_text = Text()
+            spinner_text.append("⠋ ", style="cyan")
+            spinner_text.append(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
+            live.update(spinner_text)
+
+            # Print progress every 100 epochs
+            if (epoch + 1) % 100 == 0:
+                live.console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
+
+    console.print("\n[green]✅ Training Complete - XOR Solved![/green]")
+
     return history
 
 
