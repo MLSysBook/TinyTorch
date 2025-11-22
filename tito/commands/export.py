@@ -71,10 +71,11 @@ class ExportCommand(BaseCommand):
         else:
             short_name = module_name
         
+        # Use regular .py file (has complete exports)
         dev_file = module_path / f"{short_name}.py"
         if not dev_file.exists():
             return "unknown"
-        
+
         try:
             with open(dev_file, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -456,11 +457,12 @@ class ExportCommand(BaseCommand):
         module_name = module_path.name
         short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
         
+        # Use regular .py file (has complete exports)
         dev_file = module_path / f"{short_name}.py"
         if not dev_file.exists():
-            self.console.print(f"[red]❌ Python file not found: {dev_file}[/red]")
+            self.console.print(f"[red]❌ Python file not found: {short_name}.py[/red]")
             return False
-        
+
         notebook_file = module_path / f"{short_name}.ipynb"
         
         # Always regenerate notebook from Python file (Python is source of truth)
@@ -492,10 +494,10 @@ class ExportCommand(BaseCommand):
             else:
                 self.console.print(f"[dim]🔧 Using system jupytext: {jupytext_path}[/dim]")
             
-            self.console.print(f"[dim]⚙️  Running: {jupytext_path} --to ipynb {dev_file.name}[/dim]")
-            
+            self.console.print(f"[dim]⚙️  Running: {jupytext_path} --to ipynb {dev_file.name} --output {notebook_file.name}[/dim]")
+
             result = subprocess.run([
-                jupytext_path, "--to", "ipynb", str(dev_file)
+                jupytext_path, "--to", "ipynb", str(dev_file), "--output", str(notebook_file)
             ], capture_output=True, text=True, cwd=project_root)
             
             if result.returncode == 0:
@@ -729,26 +731,11 @@ class ExportCommand(BaseCommand):
             return 1
     
     def _auto_enable_protection(self, console):
-        """🛡️ Automatically enable basic file protection after export."""
-        try:
-            import stat
-            
-            # Silently set core files to read-only (basic protection)
-            tinytorch_core = Path("tinytorch/core")
-            if tinytorch_core.exists():
-                protected_count = 0
-                for py_file in tinytorch_core.glob("*.py"):
-                    try:
-                        # Make file read-only
-                        py_file.chmod(stat.S_IREAD | stat.S_IRGRP | stat.S_IROTH)
-                        protected_count += 1
-                    except OSError:
-                        # Ignore permission errors, just continue
-                        pass
-                
-                if protected_count > 0:
-                    console.print(f"[dim]🛡️  Auto-protected {protected_count} core files from editing[/dim]")
-            
-        except Exception:
-            # Silently fail - protection is nice-to-have, not critical
-            pass 
+        """🛡️ Automatically enable basic file protection after export.
+
+        NOTE: Auto-protection is disabled to prevent permission issues during development.
+        Students who want protection can run 'tito protect --enable' manually.
+        """
+        # Disabled - causes permission errors on subsequent exports
+        # Students can manually enable protection with 'tito protect --enable'
+        pass
