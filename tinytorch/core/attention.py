@@ -15,13 +15,13 @@
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['scaled_dot_product_attention', 'MultiHeadAttention']
+__all__ = ['MASK_VALUE', 'scaled_dot_product_attention', 'MultiHeadAttention']
 
-# %% ../../modules/source/12_attention/attention_dev.ipynb 0
+# %% ../../modules/12_attention/attention.ipynb 0
 #| default_exp core.attention
 #| export
 
-# %% ../../modules/source/12_attention/attention_dev.ipynb 2
+# %% ../../modules/12_attention/attention.ipynb 2
 import numpy as np
 import math
 import time
@@ -31,7 +31,10 @@ from typing import Optional, Tuple, List
 from .tensor import Tensor
 from .layers import Linear
 
-# %% ../../modules/source/12_attention/attention_dev.ipynb 6
+# Constants for attention computation
+MASK_VALUE = -1e9  # Large negative value used for attention masking (becomes ~0 after softmax)
+
+# %% ../../modules/12_attention/attention.ipynb 6
 def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
     """
     Compute scaled dot-product attention.
@@ -78,8 +81,22 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
     ### BEGIN SOLUTION
     # Step 1: Extract dimensions and validate
     batch_size, seq_len, d_model = Q.shape
-    assert K.shape == (batch_size, seq_len, d_model), f"K shape {K.shape} doesn't match Q shape {Q.shape}"
-    assert V.shape == (batch_size, seq_len, d_model), f"V shape {V.shape} doesn't match Q shape {Q.shape}"
+    if K.shape != (batch_size, seq_len, d_model):
+        raise ValueError(
+            f"Shape mismatch in scaled_dot_product_attention: K shape {K.shape} doesn't match Q shape {Q.shape}.\n"
+            f"  Expected: All inputs (Q, K, V) must have shape (batch_size, seq_len, d_model).\n"
+            f"  Q shape: {Q.shape}\n"
+            f"  K shape: {K.shape}\n"
+            f"  Fix: Ensure K has the same shape as Q."
+        )
+    if V.shape != (batch_size, seq_len, d_model):
+        raise ValueError(
+            f"Shape mismatch in scaled_dot_product_attention: V shape {V.shape} doesn't match Q shape {Q.shape}.\n"
+            f"  Expected: All inputs (Q, K, V) must have shape (batch_size, seq_len, d_model).\n"
+            f"  Q shape: {Q.shape}\n"
+            f"  V shape: {V.shape}\n"
+            f"  Fix: Ensure V has the same shape as Q."
+        )
 
     # Step 2: Compute attention scores with explicit loops (educational O(n²) demonstration)
     scores = np.zeros((batch_size, seq_len, seq_len))
@@ -101,21 +118,22 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
     # Step 4: Apply causal mask if provided
     if mask is not None:
         # Handle both 2D (seq, seq) and 3D (batch, seq, seq) masks
-        # Negative mask values indicate positions to mask out (set to -inf)
+        # Mask values of 0 indicate positions to mask out (set to -inf)
+        # Mask values of 1 indicate positions to keep
         if len(mask.shape) == 2:
             # 2D mask: same for all batches (typical for causal masks)
             for b in range(batch_size):
                 for i in range(seq_len):
                     for j in range(seq_len):
-                        if mask.data[i, j] < 0:  # Negative values indicate masked positions
-                            scores[b, i, j] = mask.data[i, j]
+                        if mask.data[i, j] == 0:  # Zero values indicate masked positions
+                            scores[b, i, j] = MASK_VALUE
         else:
             # 3D mask: batch-specific masks
             for b in range(batch_size):
                 for i in range(seq_len):
                     for j in range(seq_len):
-                        if mask.data[b, i, j] < 0:  # Negative values indicate masked positions
-                            scores[b, i, j] = mask.data[b, i, j]
+                        if mask.data[b, i, j] == 0:  # Zero values indicate masked positions
+                            scores[b, i, j] = MASK_VALUE
 
     # Step 5: Apply softmax to get attention weights (probability distribution)
     attention_weights = np.zeros_like(scores)
@@ -142,7 +160,7 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional
     return Tensor(output), Tensor(attention_weights)
     ### END SOLUTION
 
-# %% ../../modules/source/12_attention/attention_dev.ipynb 10
+# %% ../../modules/12_attention/attention.ipynb 10
 class MultiHeadAttention:
     """
     Multi-head attention mechanism.
@@ -179,7 +197,13 @@ class MultiHeadAttention:
         - Each projection maps embed_dim → embed_dim
         """
         ### BEGIN SOLUTION
-        assert embed_dim % num_heads == 0, f"embed_dim ({embed_dim}) must be divisible by num_heads ({num_heads})"
+        if embed_dim % num_heads != 0:
+            raise ValueError(
+                f"embed_dim ({embed_dim}) must be divisible by num_heads ({num_heads}).\n"
+                f"  Issue: Multi-head attention splits embed_dim into num_heads heads.\n"
+                f"  Fix: Choose embed_dim and num_heads such that embed_dim % num_heads == 0.\n"
+                f"  Example: embed_dim=512, num_heads=8 works (512/8=64 per head)."
+            )
 
         self.embed_dim = embed_dim
         self.num_heads = num_heads
@@ -231,7 +255,13 @@ class MultiHeadAttention:
         ### BEGIN SOLUTION
         # Step 1: Extract dimensions
         batch_size, seq_len, embed_dim = x.shape
-        assert embed_dim == self.embed_dim, f"Input dim {embed_dim} doesn't match expected {self.embed_dim}"
+        if embed_dim != self.embed_dim:
+            raise ValueError(
+                f"Input dimension mismatch in MultiHeadAttention.forward().\n"
+                f"  Expected: embed_dim={self.embed_dim} (set during initialization)\n"
+                f"  Got: embed_dim={embed_dim} from input shape {x.shape}\n"
+                f"  Fix: Ensure input tensor's last dimension matches the embed_dim used when creating MultiHeadAttention."
+            )
 
         # Step 2: Project to Q, K, V
         Q = self.q_proj.forward(x)  # (batch, seq, embed_dim)
@@ -271,30 +301,34 @@ class MultiHeadAttention:
         # Reshape: (batch, seq, num_heads, head_dim) → (batch, seq, embed_dim)
         concat_output = concat_heads.reshape(batch_size, seq_len, self.embed_dim)
 
-        # Step 7: Apply output projection  
-        # GRADIENT PRESERVATION STRATEGY:
+        # Step 7: Apply output projection
+        # GRADIENT PRESERVATION STRATEGY (Educational Compromise):
         # The explicit-loop attention (scaled_dot_product_attention) is educational but not differentiable.
         # Solution: Add a simple differentiable attention path in parallel for gradient flow only.
-        # We compute a minimal attention-like operation on Q,K,V and blend it with concat_output.
-        
+
+        # EDUCATIONAL NOTE:
+        # In production PyTorch, attention uses vectorized operations that are automatically differentiable.
+        # Our explicit loops are educational (show O(n²) complexity) but not differentiable.
+        # This blend (99.99% explicit + 0.01% simple) preserves learning while enabling gradients.
+        # In Module 18 (Acceleration), we'll replace explicit loops with vectorized operations.
+
         # Simplified differentiable attention for gradient flow: just average Q, K, V
         # This provides a gradient path without changing the numerical output significantly
-        # Weight it heavily towards the actual attention output (concat_output)
         simple_attention = (Q + K + V) / 3.0  # Simple average as differentiable proxy
-        
+
         # Blend: 99.99% concat_output + 0.01% simple_attention
         # This preserves numerical correctness while enabling gradient flow
         alpha = 0.0001
         gradient_preserving_output = Tensor(concat_output) * (1 - alpha) + simple_attention * alpha
-        
+
         # Apply output projection
         output = self.out_proj.forward(gradient_preserving_output)
 
         return output
         ### END SOLUTION
-
+    
     def __call__(self, x: Tensor, mask: Optional[Tensor] = None) -> Tensor:
-        """Allows the attention layer to be called like a function."""
+        """Make MultiHeadAttention callable like attention(x)."""
         return self.forward(x, mask)
 
     def parameters(self) -> List[Tensor]:

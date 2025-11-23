@@ -332,8 +332,10 @@ def main():
     seq_len = 6
     embed_dim = 32
     num_heads = 4
-    lr = 0.005
-    epochs = 30
+    lr = 0.001
+    epochs = 100
+    train_size = 500
+    test_size = 200
     
     console.print(Panel(
         f"[bold]Hyperparameters[/bold]\n"
@@ -350,8 +352,8 @@ def main():
     
     # Generate data
     console.print("📊 Generating reversal dataset...")
-    train_data = generate_reversal_dataset(num_samples=150, seq_len=seq_len, vocab_size=vocab_size)
-    test_data = generate_reversal_dataset(num_samples=50, seq_len=seq_len, vocab_size=vocab_size)
+    train_data = generate_reversal_dataset(num_samples=train_size, seq_len=seq_len, vocab_size=vocab_size)
+    test_data = generate_reversal_dataset(num_samples=test_size, seq_len=seq_len, vocab_size=vocab_size)
     console.print(f"  ✓ Training samples: {len(train_data)}")
     console.print(f"  ✓ Test samples: {len(test_data)}\n")
     

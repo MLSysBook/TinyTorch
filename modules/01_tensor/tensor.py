@@ -266,33 +266,12 @@ class Tensor:
     """
 
     def __init__(self, data, requires_grad=False):
-        """
-        Create a new tensor from data.
-
-        TODO: Initialize tensor attributes
-
-        APPROACH:
-        1. Convert data to NumPy array - handles lists, scalars, etc.
-        2. Store shape and size for quick access
-        3. Set up gradient tracking (dormant until Module 05)
-
-        EXAMPLE:
-        >>> tensor = Tensor([1, 2, 3])
-        >>> print(tensor.data)
-        [1 2 3]
-        >>> print(tensor.shape)
-        (3,)
-
-        HINT: np.array() handles type conversion automatically
-        """
+        """Create a new tensor from data."""
         ### BEGIN SOLUTION
-        # Core tensor data - always present
-        self.data = np.array(data, dtype=np.float32)  # Consistent float32 for ML
+        self.data = np.array(data, dtype=np.float32)
         self.shape = self.data.shape
         self.size = self.data.size
         self.dtype = self.data.dtype
-
-        # Gradient features (dormant until Module 05)
         self.requires_grad = requires_grad
         self.grad = None
         ### END SOLUTION
@@ -309,479 +288,144 @@ class Tensor:
     def numpy(self):
         """Return the underlying NumPy array."""
         return self.data
-
-    # %% nbgrader={"grade": false, "grade_id": "addition-impl", "solution": true}
+    
     def __add__(self, other):
-        """
-        Add two tensors element-wise with broadcasting support.
-
-        TODO: Implement tensor addition with automatic broadcasting
-
-        APPROACH:
-        1. Handle both Tensor and scalar inputs
-        2. Use NumPy's broadcasting for automatic shape alignment
-        3. Return new Tensor with result (don't modify self)
-
-        EXAMPLE:
-        >>> a = Tensor([1, 2, 3])
-        >>> b = Tensor([4, 5, 6])
-        >>> result = a + b
-        >>> print(result.data)
-        [5. 7. 9.]
-
-        BROADCASTING EXAMPLE:
-        >>> matrix = Tensor([[1, 2], [3, 4]])  # Shape: (2, 2)
-        >>> vector = Tensor([10, 20])          # Shape: (2,)
-        >>> result = matrix + vector           # Broadcasting: (2,2) + (2,) → (2,2)
-        >>> print(result.data)
-        [[11. 22.]
-         [13. 24.]]
-
-        HINTS:
-        - Use isinstance() to check if other is a Tensor
-        - NumPy handles broadcasting automatically with +
-        - Always return a new Tensor, don't modify self
-        - Preserve gradient tracking for future modules
-        """
+        """Add two tensors element-wise with broadcasting support."""
         ### BEGIN SOLUTION
         if isinstance(other, Tensor):
-            # Tensor + Tensor: let NumPy handle broadcasting
             return Tensor(self.data + other.data)
         else:
-            # Tensor + scalar: NumPy broadcasts automatically
             return Tensor(self.data + other)
         ### END SOLUTION
-
-    # %% nbgrader={"grade": false, "grade_id": "subtraction-impl", "solution": true}
+    
     def __sub__(self, other):
-        """
-        Subtract two tensors element-wise.
-
-        Common use: Centering data (x - mean), computing differences for loss functions.
-        """
+        """Subtract two tensors element-wise."""
         ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data - other.data)
         else:
             return Tensor(self.data - other)
         ### END SOLUTION
-
-    # %% nbgrader={"grade": false, "grade_id": "multiplication-impl", "solution": true}
+    
     def __mul__(self, other):
-        """
-        Multiply two tensors element-wise (NOT matrix multiplication).
-
-        Common use: Scaling features, applying masks, gating mechanisms in neural networks.
-        Note: This is * operator, not @ (which will be matrix multiplication).
-        """
+        """Multiply two tensors element-wise (NOT matrix multiplication)."""
         ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data * other.data)
         else:
             return Tensor(self.data * other)
         ### END SOLUTION
-
-    # %% nbgrader={"grade": false, "grade_id": "division-impl", "solution": true}
+    
     def __truediv__(self, other):
-        """
-        Divide two tensors element-wise.
-
-        Common use: Normalization (x / std), converting counts to probabilities.
-        """
+        """Divide two tensors element-wise."""
         ### BEGIN SOLUTION
         if isinstance(other, Tensor):
             return Tensor(self.data / other.data)
         else:
             return Tensor(self.data / other)
         ### END SOLUTION
-
-    # nbgrader={"grade": false, "grade_id": "matmul-impl", "solution": true}
+    
     def matmul(self, other):
-        """
-        Matrix multiplication of two tensors.
-
-        TODO: Implement matrix multiplication using np.dot with proper validation
-
-        APPROACH:
-        1. Validate inputs are Tensors
-        2. Check dimension compatibility (inner dimensions must match)
-        3. Use np.dot for optimized computation
-        4. Return new Tensor with result
-
-        EXAMPLE:
-        >>> a = Tensor([[1, 2], [3, 4]])  # 2×2
-        >>> b = Tensor([[5, 6], [7, 8]])  # 2×2
-        >>> result = a.matmul(b)          # 2×2 result
-        >>> # Result: [[1×5+2×7, 1×6+2×8], [3×5+4×7, 3×6+4×8]] = [[19, 22], [43, 50]]
-
-        SHAPE RULES:
-        - (M, K) @ (K, N) → (M, N)  ✓ Valid
-        - (M, K) @ (J, N) → Error   ✗ K ≠ J
-
-        COMPLEXITY: O(M×N×K) for (M×K) @ (K×N) matrices
-
-        HINTS:
-        - np.dot handles the optimization for us
-        - Check self.shape[-1] == other.shape[-2] for compatibility
-        - Provide clear error messages for debugging
-        """
+        """Matrix multiplication of two tensors."""
         ### BEGIN SOLUTION
         if not isinstance(other, Tensor):
             raise TypeError(f"Expected Tensor for matrix multiplication, got {type(other)}")
-
-        # Handle edge cases
         if self.shape == () or other.shape == ():
-            # Scalar multiplication
             return Tensor(self.data * other.data)
-
-        # For matrix multiplication, we need at least 1D tensors
         if len(self.shape) == 0 or len(other.shape) == 0:
             return Tensor(self.data * other.data)
-
-        # Check dimension compatibility for matrix multiplication
         if len(self.shape) >= 2 and len(other.shape) >= 2:
             if self.shape[-1] != other.shape[-2]:
                 raise ValueError(
                     f"Cannot perform matrix multiplication: {self.shape} @ {other.shape}. "
-                    f"Inner dimensions must match: {self.shape[-1]} ≠ {other.shape[-2]}. "
-                    f"💡 HINT: For (M,K) @ (K,N) → (M,N), the K dimensions must be equal."
+                    f"Inner dimensions must match: {self.shape[-1]} ≠ {other.shape[-2]}"
                 )
-        elif len(self.shape) == 1 and len(other.shape) == 2:
-            # Vector @ Matrix
-            if self.shape[0] != other.shape[0]:
-                raise ValueError(
-                    f"Cannot multiply vector {self.shape} with matrix {other.shape}. "
-                    f"Vector length {self.shape[0]} must match matrix rows {other.shape[0]}."
-                )
-        elif len(self.shape) == 2 and len(other.shape) == 1:
-            # Matrix @ Vector
-            if self.shape[1] != other.shape[0]:
-                raise ValueError(
-                    f"Cannot multiply matrix {self.shape} with vector {other.shape}. "
-                    f"Matrix columns {self.shape[1]} must match vector length {other.shape[0]}."
-                )
-
-        # Perform optimized matrix multiplication
-        # Use np.matmul (not np.dot) for proper batched matrix multiplication with 3D+ tensors
         result_data = np.matmul(self.data, other.data)
         return Tensor(result_data)
         ### END SOLUTION
-
-    # nbgrader={"grade": false, "grade_id": "shape-ops", "solution": true}
-    # %% nbgrader={"grade": false, "grade_id": "getitem-impl", "solution": true}
+    
     def __getitem__(self, key):
-        """
-        Enable indexing and slicing operations on Tensors.
-        
-        This allows Tensors to be indexed like NumPy arrays while preserving
-        gradient computation capabilities (when autograd is enabled in Module 05).
-        
-        TODO: Implement tensor indexing/slicing with gradient support
-        
-        APPROACH:
-        1. Use NumPy's indexing to slice the underlying data
-        2. Create new Tensor with sliced data
-        3. Preserve requires_grad flag
-        4. Store backward function (if autograd enabled - Module 05)
-        
-        EXAMPLES:
-        >>> x = Tensor([1, 2, 3, 4, 5])
-        >>> x[0]           # Single element: Tensor(1)
-        >>> x[:3]          # Slice: Tensor([1, 2, 3])
-        >>> x[1:4]         # Range: Tensor([2, 3, 4])
-        >>> 
-        >>> y = Tensor([[1, 2, 3], [4, 5, 6]])
-        >>> y[0]           # Row: Tensor([1, 2, 3])
-        >>> y[:, 1]        # Column: Tensor([2, 5])
-        >>> y[0, 1:3]      # Mixed: Tensor([2, 3])
-        
-        GRADIENT BEHAVIOR (Module 05):
-        - Slicing preserves gradient flow
-        - Gradients flow back to original positions
-        - Example: x[:3].backward() updates x.grad[:3]
-        
-        HINTS:
-        - NumPy handles the indexing: self.data[key]
-        - Result is always a Tensor (even single elements)
-        - Preserve requires_grad for gradient tracking
-        """
+        """Enable indexing and slicing operations on Tensors."""
         ### BEGIN SOLUTION
-        # Perform the indexing on underlying NumPy array
         result_data = self.data[key]
-        
-        # Ensure result is always an array (even for scalar indexing)
         if not isinstance(result_data, np.ndarray):
             result_data = np.array(result_data)
-        
-        # Create new Tensor with sliced data
         result = Tensor(result_data, requires_grad=self.requires_grad)
-        
-        # If gradients are tracked and autograd is available, attach backward function
-        # Note: This will be used by Module 05 (Autograd)
-        if self.requires_grad:
-            # Check if SliceBackward exists (added in Module 05)
-            try:
-                from tinytorch.core.autograd import SliceBackward
-                result._grad_fn = SliceBackward(self, key)
-            except (ImportError, AttributeError):
-                # Autograd not yet available - gradient tracking will be added in Module 05
-                pass
-        
         return result
         ### END SOLUTION
-
+    
     def reshape(self, *shape):
-        """
-        Reshape tensor to new dimensions.
-
-        TODO: Implement tensor reshaping with validation
-
-        APPROACH:
-        1. Handle different calling conventions: reshape(2, 3) vs reshape((2, 3))
-        2. Validate total elements remain the same
-        3. Use NumPy's reshape for the actual operation
-        4. Return new Tensor (keep immutability)
-
-        EXAMPLE:
-        >>> tensor = Tensor([1, 2, 3, 4, 5, 6])  # Shape: (6,)
-        >>> reshaped = tensor.reshape(2, 3)      # Shape: (2, 3)
-        >>> print(reshaped.data)
-        [[1. 2. 3.]
-         [4. 5. 6.]]
-
-        COMMON USAGE:
-        >>> # Flatten for MLP input
-        >>> image = Tensor(np.random.rand(3, 32, 32))  # (channels, height, width)
-        >>> flattened = image.reshape(-1)              # (3072,) - all pixels in vector
-        >>>
-        >>> # Prepare batch for convolution
-        >>> batch = Tensor(np.random.rand(32, 784))    # (batch, features)
-        >>> images = batch.reshape(32, 1, 28, 28)      # (batch, channels, height, width)
-
-        HINTS:
-        - Handle both reshape(2, 3) and reshape((2, 3)) calling styles
-        - Check np.prod(new_shape) == self.size for validation
-        - Use descriptive error messages for debugging
-        """
+        """Reshape tensor to new dimensions."""
         ### BEGIN SOLUTION
-        # Handle both reshape(2, 3) and reshape((2, 3)) calling conventions
         if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
             new_shape = tuple(shape[0])
         else:
             new_shape = shape
-
-        # Handle -1 for automatic dimension inference (like NumPy)
         if -1 in new_shape:
             if new_shape.count(-1) > 1:
-                raise ValueError(
-                    "Can only specify one unknown dimension with -1.\n"
-                    "  Issue: Reshape allows one -1 to auto-calculate that dimension.\n"
-                    "  Fix: Specify only one -1 in the new_shape tuple."
-                )
-
-            # Calculate the unknown dimension
+                raise ValueError("Can only specify one unknown dimension with -1")
             known_size = 1
             unknown_idx = new_shape.index(-1)
             for i, dim in enumerate(new_shape):
                 if i != unknown_idx:
                     known_size *= dim
-
             unknown_dim = self.size // known_size
             new_shape = list(new_shape)
             new_shape[unknown_idx] = unknown_dim
             new_shape = tuple(new_shape)
-
-        # Validate total elements remain the same
         if np.prod(new_shape) != self.size:
             raise ValueError(
-                f"Cannot reshape tensor of size {self.size} to shape {new_shape}. "
-                f"Total elements must match: {self.size} ≠ {np.prod(new_shape)}. "
-                f"💡 HINT: Make sure new_shape dimensions multiply to {self.size}"
+                f"Cannot reshape tensor of size {self.size} to shape {new_shape}"
             )
-
-        # Reshape the data (NumPy handles the memory layout efficiently)
         reshaped_data = np.reshape(self.data, new_shape)
-        # Preserve gradient tracking from the original tensor (important for autograd!)
         result = Tensor(reshaped_data, requires_grad=self.requires_grad)
         return result
         ### END SOLUTION
-
+    
     def transpose(self, dim0=None, dim1=None):
-        """
-        Transpose tensor dimensions.
-
-        TODO: Implement tensor transposition
-
-        APPROACH:
-        1. Handle default case (transpose last two dimensions)
-        2. Handle specific dimension swapping
-        3. Use NumPy's transpose with proper axis specification
-        4. Return new Tensor
-
-        EXAMPLE:
-        >>> matrix = Tensor([[1, 2, 3], [4, 5, 6]])  # (2, 3)
-        >>> transposed = matrix.transpose()          # (3, 2)
-        >>> print(transposed.data)
-        [[1. 4.]
-         [2. 5.]
-         [3. 6.]]
-
-        NEURAL NETWORK USAGE:
-        >>> # Weight matrix transpose for backward pass
-        >>> W = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])  # (3, 2)
-        >>> W_T = W.transpose()  # (2, 3) - for gradient computation
-        >>>
-        >>> # Attention mechanism
-        >>> Q = Tensor([[1, 2], [3, 4]])  # queries (2, 2)
-        >>> K = Tensor([[5, 6], [7, 8]])  # keys (2, 2)
-        >>> attention_scores = Q.matmul(K.transpose())  # Q @ K^T
-
-        HINTS:
-        - Default: transpose last two dimensions (most common case)
-        - Use np.transpose() with axes parameter
-        - Handle 1D tensors gracefully (transpose is identity)
-        """
+        """Transpose tensor dimensions."""
         ### BEGIN SOLUTION
         if dim0 is None and dim1 is None:
-            # Default: transpose last two dimensions
             if len(self.shape) < 2:
-                # For 1D tensors, transpose is identity operation
                 return Tensor(self.data.copy())
             else:
-                # Transpose last two dimensions (most common in ML)
                 axes = list(range(len(self.shape)))
                 axes[-2], axes[-1] = axes[-1], axes[-2]
                 transposed_data = np.transpose(self.data, axes)
         else:
-            # Specific dimensions to transpose
             if dim0 is None or dim1 is None:
-                raise ValueError(
-                    "Both dim0 and dim1 must be specified for specific dimension transpose.\n"
-                    "  Issue: transpose(dim0, dim1) requires both dimension indices.\n"
-                    "  Fix: Provide both dim0 and dim1, e.g., tensor.transpose(0, 1)."
-                )
-
-            # Validate dimensions exist
-            if dim0 >= len(self.shape) or dim1 >= len(self.shape) or dim0 < 0 or dim1 < 0:
-                raise ValueError(
-                    f"Dimension out of range for tensor with shape {self.shape}. "
-                    f"Got dim0={dim0}, dim1={dim1}, but tensor has {len(self.shape)} dimensions."
-                )
-
-            # Create axes list and swap the specified dimensions
+                raise ValueError("Both dim0 and dim1 must be specified")
             axes = list(range(len(self.shape)))
             axes[dim0], axes[dim1] = axes[dim1], axes[dim0]
             transposed_data = np.transpose(self.data, axes)
-
-        # Preserve requires_grad for gradient tracking (Module 05 will add _grad_fn)
         result = Tensor(transposed_data, requires_grad=self.requires_grad)
         return result
         ### END SOLUTION
-
-    # nbgrader={"grade": false, "grade_id": "reduction-ops", "solution": true}
+    
     def sum(self, axis=None, keepdims=False):
-        """
-        Sum tensor along specified axis.
-
-        TODO: Implement tensor sum with axis control
-
-        APPROACH:
-        1. Use NumPy's sum with axis parameter
-        2. Handle axis=None (sum all elements) vs specific axis
-        3. Support keepdims to maintain shape for broadcasting
-        4. Return new Tensor with result
-
-        EXAMPLE:
-        >>> tensor = Tensor([[1, 2], [3, 4]])
-        >>> total = tensor.sum()          # Sum all elements: 10
-        >>> col_sum = tensor.sum(axis=0)  # Sum columns: [4, 6]
-        >>> row_sum = tensor.sum(axis=1)  # Sum rows: [3, 7]
-
-        NEURAL NETWORK USAGE:
-        >>> # Batch loss computation
-        >>> batch_losses = Tensor([0.1, 0.3, 0.2, 0.4])  # Individual losses
-        >>> total_loss = batch_losses.sum()               # Total: 1.0
-        >>> avg_loss = batch_losses.mean()                # Average: 0.25
-        >>>
-        >>> # Global average pooling
-        >>> feature_maps = Tensor(np.random.rand(32, 256, 7, 7))  # (batch, channels, h, w)
-        >>> global_features = feature_maps.sum(axis=(2, 3))       # (batch, channels)
-
-        HINTS:
-        - np.sum handles all the complexity for us
-        - axis=None sums all elements (returns scalar)
-        - axis=0 sums along first dimension, axis=1 along second, etc.
-        - keepdims=True preserves dimensions for broadcasting
-        """
+        """Sum tensor along specified axis."""
         ### BEGIN SOLUTION
         result = np.sum(self.data, axis=axis, keepdims=keepdims)
         return Tensor(result)
         ### END SOLUTION
-
-    # %% nbgrader={"grade": false, "grade_id": "mean-impl", "solution": true}
+    
     def mean(self, axis=None, keepdims=False):
-        """
-        Compute mean of tensor along specified axis.
-
-        Common usage: Batch normalization, loss averaging, global pooling.
-        """
+        """Compute mean of tensor along specified axis."""
         ### BEGIN SOLUTION
         result = np.mean(self.data, axis=axis, keepdims=keepdims)
         return Tensor(result)
         ### END SOLUTION
-
-    # %% nbgrader={"grade": false, "grade_id": "max-impl", "solution": true}
+    
     def max(self, axis=None, keepdims=False):
-        """
-        Find maximum values along specified axis.
-
-        Common usage: Max pooling, finding best predictions, activation clipping.
-        """
+        """Find maximum values along specified axis."""
         ### BEGIN SOLUTION
         result = np.max(self.data, axis=axis, keepdims=keepdims)
         return Tensor(result)
         ### END SOLUTION
-
-    # nbgrader={"grade": false, "grade_id": "gradient-placeholder", "solution": true}
+    
     def backward(self):
-        """
-        Compute gradients (implemented in Module 05: Autograd).
-
-        TODO: Placeholder implementation for gradient computation
-
-        STUDENT NOTE:
-        This method exists but does nothing until Module 05: Autograd.
-        Don't worry about it for now - focus on the basic tensor operations.
-
-        In Module 05, we'll implement:
-        - Gradient computation via chain rule
-        - Automatic differentiation
-        - Backpropagation through operations
-        - Computation graph construction
-
-        FUTURE IMPLEMENTATION PREVIEW:
-        ```python
-        def backward(self, gradient=None):
-            # Module 05 will implement:
-            # 1. Set gradient for this tensor
-            # 2. Propagate to parent operations
-            # 3. Apply chain rule recursively
-            # 4. Accumulate gradients properly
-            pass
-        ```
-
-        CURRENT BEHAVIOR:
-        >>> x = Tensor([1, 2, 3], requires_grad=True)
-        >>> y = x * 2
-        >>> y.sum().backward()  # Calls this method - does nothing
-        >>> print(x.grad)      # Still None
-        None
-        """
+        """Compute gradients (implemented in Module 05: Autograd)."""
         ### BEGIN SOLUTION
-        # Placeholder - will be implemented in Module 05
-        # For now, just ensure it doesn't crash when called
-        # This allows students to experiment with gradient syntax
-        # without getting confusing errors about missing methods
         pass
         ### END SOLUTION
 
