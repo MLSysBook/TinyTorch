@@ -707,9 +707,9 @@ def test_cnn_learning():
     
     # Create DataLoader
     train_dataset = TensorDataset(train_images, train_labels)
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)  # Match MLP batch size for fair comparison
     
-    epochs = 15
+    epochs = 25  # Same epochs and batch size as MLP for fair comparison
     loss_history = []
     test_acc_history = []
     conv_grad_mean = 0.0  # Track conv gradient magnitude

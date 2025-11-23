@@ -294,7 +294,11 @@ class ModuleWorkflowCommand(BaseCommand):
         # Step 3: Update progress tracking
         self.update_progress(normalized, module_name)
         
-        # Step 4: Show next steps
+        # Step 4: Check for milestone unlocks
+        if success:
+            self._check_milestone_unlocks(module_name)
+        
+        # Step 5: Show next steps
         self.show_next_steps(normalized)
         
         return 0 if success else 1
@@ -547,3 +551,25 @@ class ModuleWorkflowCommand(BaseCommand):
         ))
         
         return 0
+    
+    def _check_milestone_unlocks(self, module_name: str) -> None:
+        """Check if completing this module unlocks any milestones."""
+        try:
+            # Import milestone tracker
+            import sys
+            from pathlib import Path as PathLib
+            milestone_tracker_path = PathLib(__file__).parent.parent.parent / "tests" / "milestones"
+            if str(milestone_tracker_path) not in sys.path:
+                sys.path.insert(0, str(milestone_tracker_path))
+            
+            from milestone_tracker import check_module_export
+            
+            # Let milestone tracker handle everything
+            check_module_export(module_name, console=self.console)
+        
+        except ImportError:
+            # Milestone tracker not available, skip silently
+            pass
+        except Exception as e:
+            # Don't fail the workflow if milestone checking fails
+            self.console.print(f"[dim]Note: Could not check milestone unlocks: {e}[/dim]")
