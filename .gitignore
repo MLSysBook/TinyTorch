@@ -181,3 +181,9 @@ modules/HASATTR_*.md
 
 # Generated development notebooks (built from *_dev.py source files)
 modules/*/*_dev.ipynb
+
+# AI development files (keep locally)
+.claude/
+
+# Site build artifacts
+site/_build/
