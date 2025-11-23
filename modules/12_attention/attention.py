@@ -682,6 +682,10 @@ class MultiHeadAttention:
 
         return output
         ### END SOLUTION
+    
+    def __call__(self, x: Tensor, mask: Optional[Tensor] = None) -> Tensor:
+        """Make MultiHeadAttention callable like attention(x)."""
+        return self.forward(x, mask)
 
     def parameters(self) -> List[Tensor]:
         """
