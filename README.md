@@ -16,7 +16,7 @@
 
 > 📢 **December 2024 Release** - TinyTorch is ready for community review! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions. **Seeking feedback on pedagogy, implementation quality, and learning progression.** Student version tooling exists but is untested. This release focuses on validating the educational content before classroom deployment.
 > 
-> 🎯 **For Reviewers**: Read the [📚 Jupyter Book](https://mlsysbook.github.io/TinyTorch/) to evaluate pedagogy. Clone the repo to run implementations. See [STUDENT_VERSION_TOOLING.md](STUDENT_VERSION_TOOLING.md) for classroom deployment plans.
+> 🎯 **For Reviewers**: Read the [📚 Jupyter Book](https://mlsysbook.github.io/TinyTorch/) to evaluate pedagogy. Clone the repo to run implementations. See [INSTRUCTOR.md](INSTRUCTOR.md) for classroom deployment and grading strategies.
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
@@ -429,14 +429,15 @@ pytest tests/
 - **[Module READMEs](/modules/)** - Individual module documentation
 
 ### 👨‍🏫 For Instructors
-- **[Instructor Guide](instructor/README.md)** - Complete teaching resources
-- **[NBGrader Workflow](book/instructor-guide.md)** - Automated grading setup
-- **[System Architecture](book/system-architecture.md)** - Technical overview
+- **[Instructor Guide](INSTRUCTOR.md)** - Complete teaching resources
+- **[TA Guide](TA_GUIDE.md)** - Teaching assistant preparation and common student errors
+- **[Team Onboarding](docs/TEAM_ONBOARDING.md)** - Getting started as an instructor or TA
+- **[NBGrader Integration](docs/nbgrader/)** - Automated grading setup and style guide
 
 ### 🛠️ For Developers
-- **[Agent Coordination](.claude/guidelines/AGENT_COORDINATION.md)** - Development workflow
-- **[Module Development](.claude/guidelines/MODULE_DEVELOPMENT.md)** - Creating new modules
-- **[Testing Standards](.claude/guidelines/TESTING_STANDARDS.md)** - Quality assurance
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to TinyTorch
+- **[Module Development](docs/development/module-rules.md)** - Creating and maintaining modules
+- **[Privacy & Data](docs/PRIVACY_DATA_RETENTION.md)** - Data handling policies
 
 ## TinyMLPerf Competition & Leaderboard
 
@@ -494,7 +495,7 @@ Modern ML education accepts that solutions are findable (Chegg, Course Hero, Dis
 **✅ Honor codes** (trust students to learn honestly)  
 **✅ Focus on journey** (building > having built)
 
-See [STUDENT_VERSION_TOOLING.md](STUDENT_VERSION_TOOLING.md) for classroom deployment strategies.
+See [INSTRUCTOR.md](INSTRUCTOR.md) for classroom deployment strategies and academic integrity approaches.
 
 ### Honor Code
 
