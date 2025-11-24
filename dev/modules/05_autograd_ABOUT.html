@@ -1052,7 +1052,19 @@ document.write(`
 <span class="c1"># Core operation for neural network weight gradients</span>
 </pre></div>
 </div>
+<hr class="docutils" />
+<p><strong>✓ CHECKPOINT 1: Computational Graph Construction Complete</strong></p>
+<p>You’ve implemented the Function base class and gradient rules for core operations:</p>
+<ul class="simple">
+<li><p>✅ Function base class with apply() method</p></li>
+<li><p>✅ AddBackward, MulBackward, MatmulBackward, SumBackward</p></li>
+<li><p>✅ Understanding of chain rule for each operation</p></li>
+</ul>
+<p><strong>What you can do now</strong>: Build computation graphs during forward pass that track operation dependencies.</p>
+<p><strong>Next milestone</strong>: Enhance Tensor class to automatically call these Functions during backward pass.</p>
+<p><strong>Progress</strong>: ~40% through Module 05 (~3-4 hours) | Still to come: Tensor.backward() implementation (~4-6 hours)</p>
 </section>
+<hr class="docutils" />
 <section id="enhanced-tensor-with-backward-method">
 <h3>Enhanced Tensor with backward() Method<a class="headerlink" href="#enhanced-tensor-with-backward-method" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">enable_autograd</span><span class="p">():</span>
@@ -1134,8 +1146,21 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;W2.grad shape: </span><span class="si">{</span><span class="n">W2</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (2, 1)</span>
 </pre></div>
 </div>
+<hr class="docutils" />
+<p><strong>✓ CHECKPOINT 2: Automatic Differentiation Working</strong></p>
+<p>You’ve completed the core autograd implementation:</p>
+<ul class="simple">
+<li><p>✅ Function classes with gradient computation rules</p></li>
+<li><p>✅ Enhanced Tensor with backward() method</p></li>
+<li><p>✅ Computational graph traversal in reverse order</p></li>
+<li><p>✅ Gradient accumulation and propagation</p></li>
+</ul>
+<p><strong>What you can do now</strong>: Train any neural network by calling loss.backward() to compute all parameter gradients automatically.</p>
+<p><strong>Next milestone</strong>: Apply autograd to complete networks in Module 06 (Optimizers) and Module 07 (Training).</p>
+<p><strong>Progress</strong>: ~80% through Module 05 (~7-8 hours) | Still to come: Testing &amp; systems analysis (~1-2 hours)</p>
 </section>
 </section>
+<hr class="docutils" />
 <section id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
 <section id="prerequisites">

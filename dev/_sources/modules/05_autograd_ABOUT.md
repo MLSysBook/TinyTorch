@@ -194,6 +194,23 @@ class MatmulBackward(Function):
 # Core operation for neural network weight gradients
 ```
 
+---
+
+**✓ CHECKPOINT 1: Computational Graph Construction Complete**
+
+You've implemented the Function base class and gradient rules for core operations:
+- ✅ Function base class with apply() method
+- ✅ AddBackward, MulBackward, MatmulBackward, SumBackward
+- ✅ Understanding of chain rule for each operation
+
+**What you can do now**: Build computation graphs during forward pass that track operation dependencies.
+
+**Next milestone**: Enhance Tensor class to automatically call these Functions during backward pass.
+
+**Progress**: ~40% through Module 05 (~3-4 hours) | Still to come: Tensor.backward() implementation (~4-6 hours)
+
+---
+
 ### Enhanced Tensor with backward() Method
 ```python
 def enable_autograd():
@@ -273,6 +290,24 @@ print(f"W1.grad shape: {W1.grad.shape}")  # (3, 2)
 print(f"b1.grad shape: {b1.grad.shape}")  # (1, 2)
 print(f"W2.grad shape: {W2.grad.shape}")  # (2, 1)
 ```
+
+---
+
+**✓ CHECKPOINT 2: Automatic Differentiation Working**
+
+You've completed the core autograd implementation:
+- ✅ Function classes with gradient computation rules
+- ✅ Enhanced Tensor with backward() method
+- ✅ Computational graph traversal in reverse order
+- ✅ Gradient accumulation and propagation
+
+**What you can do now**: Train any neural network by calling loss.backward() to compute all parameter gradients automatically.
+
+**Next milestone**: Apply autograd to complete networks in Module 06 (Optimizers) and Module 07 (Training).
+
+**Progress**: ~80% through Module 05 (~7-8 hours) | Still to come: Testing & systems analysis (~1-2 hours)
+
+---
 
 ## Getting Started
 
