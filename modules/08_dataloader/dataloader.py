@@ -1190,6 +1190,8 @@ def test_training_integration():
 
     print("✅ Training integration works correctly!")
 
+if __name__ == "__main__":
+    test_training_integration()
 
 # %% [markdown]
 """
@@ -1200,7 +1202,8 @@ Final validation that everything works together correctly.
 
 # %%
 def test_module():
-    """
+    """🧪 Module Test: Complete Integration
+
     Comprehensive test of entire module functionality.
 
     This final test runs before module summary to ensure:
