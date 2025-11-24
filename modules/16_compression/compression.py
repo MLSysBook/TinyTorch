@@ -431,7 +431,8 @@ def test_unit_measure_sparsity():
 
     print("✅ measure_sparsity works correctly!")
 
-test_unit_measure_sparsity()
+if __name__ == "__main__":
+    test_unit_measure_sparsity()
 
 # %% [markdown]
 """
@@ -587,7 +588,8 @@ def test_unit_magnitude_prune():
 
     print("✅ magnitude_prune works correctly!")
 
-test_unit_magnitude_prune()
+if __name__ == "__main__":
+    test_unit_magnitude_prune()
 
 # %% [markdown]
 """
@@ -759,7 +761,8 @@ def test_unit_structured_prune():
 
     print("✅ structured_prune works correctly!")
 
-test_unit_structured_prune()
+if __name__ == "__main__":
+    test_unit_structured_prune()
 
 # %% [markdown]
 """
@@ -906,7 +909,8 @@ def test_unit_low_rank_approximate():
 
     print("✅ low_rank_approximate works correctly!")
 
-test_unit_low_rank_approximate()
+if __name__ == "__main__":
+    test_unit_low_rank_approximate()
 
 # %% [markdown]
 """
@@ -1154,7 +1158,8 @@ def test_unit_knowledge_distillation():
 
     print("✅ knowledge_distillation works correctly!")
 
-test_unit_knowledge_distillation()
+if __name__ == "__main__":
+    test_unit_knowledge_distillation()
 
 # %% [markdown]
 """
@@ -1322,7 +1327,8 @@ def test_unit_compress_model():
 
     print("✅ compress_model works correctly!")
 
-test_unit_compress_model()
+if __name__ == "__main__":
+    test_unit_compress_model()
 
 # %% [markdown]
 """
@@ -1526,7 +1532,8 @@ Final validation that all compression techniques work together correctly.
 
 # %%
 def test_module():
-    """
+    """🧪 Module Test: Complete Integration
+
     Comprehensive test of entire compression module functionality.
 
     This final test runs before module summary to ensure:
