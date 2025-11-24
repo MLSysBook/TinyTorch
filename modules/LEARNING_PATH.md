@@ -15,7 +15,7 @@
 
 ## Overview: 4 Phases, 20 Modules, 6 Milestones
 
-**Total Time**: 60-80 hours (3-4 weeks at 20 hrs/week)
+**Total Time**: 100-130 hours (5-7 weeks at 20 hrs/week)
 **Prerequisites**: Python, NumPy basics, basic linear algebra
 **Tools**: Just Python + NumPy + Jupyter notebooks
 
@@ -23,7 +23,7 @@
 
 ## Phase 1: FOUNDATION (Modules 01-04)
 **Goal**: Build the fundamental data structures and operations
-**Time**: 10-12 hours | **Difficulty**: ⭐⭐ Beginner-friendly
+**Time**: 14-19 hours | **Difficulty**: ⭐-⭐⭐ Beginner-friendly
 
 ```
 ┌──────────┐      ┌──────────────┐      ┌─────────┐      ┌─────────┐
@@ -34,31 +34,31 @@
 │ • Data   │      │ • Sigmoid    │      │ • Module│      │ • Cross │
 │ • Ops    │      │ • Softmax    │      │ • Params│      │   Entropy│
 └──────────┘      └──────────────┘      └─────────┘      └─────────┘
-  2-3 hrs           1.5-2 hrs            2-3 hrs          2-3 hrs
-   ⭐⭐              ⭐⭐                  ⭐⭐⭐            ⭐⭐⭐
+  4-6 hrs           3-4 hrs              4-5 hrs          3-4 hrs
+    ⭐                ⭐⭐                  ⭐⭐              ⭐⭐
 ```
 
 ### Module Details
 
-**Module 01: Tensor** (2-3 hours, ⭐⭐)
+**Module 01: Tensor** (4-6 hours, ⭐)
 - Build the foundation: n-dimensional arrays with operations
 - Implement: shape, reshape, indexing, broadcasting
 - Operations: add, multiply, matmul, transpose
 - Why it matters: Everything in ML is tensor operations
 
-**Module 02: Activations** (1.5-2 hours, ⭐⭐)
+**Module 02: Activations** (3-4 hours, ⭐⭐)
 - Add non-linearity: ReLU, Sigmoid, Softmax
 - Understand: Why neural networks need activations
 - Implement: Forward passes for each activation
 - Why it matters: Without activations, networks are just linear algebra
 
-**Module 03: Layers** (2-3 hours, ⭐⭐⭐)
+**Module 03: Layers** (4-5 hours, ⭐⭐)
 - Build neural network components: Linear layers
 - Implement: nn.Module system, Parameter class
 - Create: Weight initialization, layer composition
 - Why it matters: Foundation for all network architectures
 
-**Module 04: Losses** (2-3 hours, ⭐⭐⭐)
+**Module 04: Losses** (3-4 hours, ⭐⭐)
 - Measure performance: MSE and CrossEntropy
 - Understand: How to quantify model errors
 - Implement: Loss calculation and aggregation
@@ -78,7 +78,7 @@
 
 ## Phase 2: TRAINING SYSTEMS (Modules 05-08)
 **Goal**: Make your networks learn from data
-**Time**: 14-18 hours | **Difficulty**: ⭐⭐⭐ Core ML concepts
+**Time**: 24-31 hours | **Difficulty**: ⭐⭐⭐-⭐⭐⭐⭐ Core ML concepts
 
 ```
 ┌──────────┐      ┌────────────┐      ┌──────────┐      ┌────────────┐
@@ -89,8 +89,8 @@
 │ • Forward│      │ • Momentum │      │ • Epochs │      │ • Shuffling│
 │ • Backward│     │ • Adam     │      │ • Eval   │      │ • Pipeline │
 └──────────┘      └────────────┘      └──────────┘      └────────────┘
-  3-4 hrs          3-4 hrs             4-5 hrs           3-4 hrs
-  ⭐⭐⭐⭐          ⭐⭐⭐⭐             ⭐⭐⭐⭐           ⭐⭐⭐
+ 8-10 hrs          6-8 hrs             6-8 hrs           4-5 hrs
+ ⭐⭐⭐⭐          ⭐⭐⭐⭐             ⭐⭐⭐⭐           ⭐⭐⭐
      │                 │                  │                  │
      └─────────────────┴──────────────────┴──────────────────┘
                     ALL BUILD ON TENSOR (Module 01)
@@ -98,25 +98,25 @@
 
 ### Module Details
 
-**Module 05: Autograd** (3-4 hours, ⭐⭐⭐⭐) **CRITICAL MODULE**
+**Module 05: Autograd** (8-10 hours, ⭐⭐⭐⭐) **CRITICAL MODULE**
 - Implement automatic differentiation: The magic of modern ML
 - Build: Computational graph, gradient tracking
 - Implement: backward() for all operations
 - Why it matters: This IS machine learning - without gradients, no training
 
-**Module 06: Optimizers** (3-4 hours, ⭐⭐⭐⭐)
+**Module 06: Optimizers** (6-8 hours, ⭐⭐⭐⭐)
 - Update weights intelligently: SGD, Momentum, Adam
 - Understand: Learning rates, momentum, adaptive methods
 - Implement: Parameter updates, state management
 - Why it matters: How networks actually improve over time
 
-**Module 07: Training** (4-5 hours, ⭐⭐⭐⭐) **CRITICAL MODULE**
+**Module 07: Training** (6-8 hours, ⭐⭐⭐⭐) **CRITICAL MODULE**
 - Complete training loops: The full ML pipeline
 - Implement: Epochs, batches, forward/backward passes
 - Add: Metrics tracking, model evaluation
 - Why it matters: This is where everything comes together
 
-**Module 08: DataLoader** (3-4 hours, ⭐⭐⭐)
+**Module 08: DataLoader** (4-5 hours, ⭐⭐⭐)
 - Efficient data handling: Batching, shuffling, pipelines
 - Implement: Batch creation, data iteration
 - Optimize: Memory efficiency, preprocessing
@@ -146,7 +146,7 @@
 
 ## Phase 3: ADVANCED ARCHITECTURES (Modules 09-13)
 **Goal**: Build modern CV and NLP architectures
-**Time**: 20-25 hours | **Difficulty**: ⭐⭐⭐⭐ Advanced concepts
+**Time**: 26-33 hours | **Difficulty**: ⭐⭐⭐-⭐⭐⭐⭐ Advanced concepts
 
 ```
 ┌──────────┐      ┌───────────────┐      ┌─────────────┐
@@ -157,8 +157,8 @@
 │ • Pool2d │      │ • Vocab       │      │ • Position  │
 │ • CNNs   │      │ • Encoding    │      │ • Learned   │
 └──────────┘      └───────────────┘      └─────────────┘
-  5-6 hrs          4-5 hrs                3-4 hrs
- ⭐⭐⭐⭐⭐         ⭐⭐⭐⭐               ⭐⭐⭐⭐
+  6-8 hrs          4-5 hrs                4-5 hrs
+  ⭐⭐⭐            ⭐⭐                    ⭐⭐
      │                  │                      │
      │                  └──────────┬───────────┘
      │                             ▼
@@ -170,8 +170,8 @@
      │            │ • Multi  │      │ • Decoder    │
      │            │   -Head  │      │ • Complete   │
      │            └──────────┘      └──────────────┘
-     │              4-5 hrs           6-8 hrs
-     │             ⭐⭐⭐⭐⭐          ⭐⭐⭐⭐⭐
+     │              5-6 hrs           6-8 hrs
+     │              ⭐⭐⭐             ⭐⭐⭐⭐
      │                  │                  │
      └──────────────────┴──────────────────┘
               ALL USE AUTOGRAD (Module 05)
@@ -179,31 +179,31 @@
 
 ### Module Details
 
-**Module 09: Spatial Operations** (5-6 hours, ⭐⭐⭐⭐⭐) **CRITICAL MODULE**
+**Module 09: Spatial Operations** (6-8 hours, ⭐⭐⭐) **CRITICAL MODULE**
 - Convolutional Neural Networks: Modern computer vision
 - Implement: Conv2d (with 6 nested loops!), MaxPool2d
 - Understand: Why CNNs revolutionized image processing
 - Why it matters: The foundation of modern computer vision
 
-**Module 10: Tokenization** (4-5 hours, ⭐⭐⭐⭐)
+**Module 10: Tokenization** (4-5 hours, ⭐⭐)
 - Text preprocessing: From strings to numbers
 - Implement: Byte-Pair Encoding (BPE), vocabulary building
 - Understand: How transformers see language
 - Why it matters: Can't process text without tokenization
 
-**Module 11: Embeddings** (3-4 hours, ⭐⭐⭐⭐)
+**Module 11: Embeddings** (4-5 hours, ⭐⭐)
 - Convert tokens to vectors: Token and positional embeddings
 - Implement: Embedding lookup, sinusoidal position encoding
 - Understand: How models represent meaning
 - Why it matters: Foundation for all language models
 
-**Module 12: Attention** (4-5 hours, ⭐⭐⭐⭐⭐) **CRITICAL MODULE**
+**Module 12: Attention** (5-6 hours, ⭐⭐⭐) **CRITICAL MODULE**
 - The transformer revolution: Multi-head self-attention
 - Implement: Q, K, V projections, scaled dot-product attention
 - Understand: Why attention changed everything
 - Why it matters: The core of GPT, BERT, and all modern LLMs
 
-**Module 13: Transformers** (6-8 hours, ⭐⭐⭐⭐⭐) **CRITICAL MODULE**
+**Module 13: Transformers** (6-8 hours, ⭐⭐⭐⭐) **CRITICAL MODULE**
 - Complete transformer architecture: GPT-style models
 - Implement: Encoder/decoder blocks, layer norm, residuals
 - Build: Full transformer from components
@@ -235,7 +235,7 @@
 
 ## Phase 4: PRODUCTION SYSTEMS (Modules 14-20)
 **Goal**: Optimize and deploy ML systems at scale
-**Time**: 18-22 hours | **Difficulty**: ⭐⭐⭐⭐⭐ Systems engineering
+**Time**: 36-47 hours | **Difficulty**: ⭐⭐⭐-⭐⭐⭐⭐ Systems engineering
 
 ```
 ┌──────────┐      ┌──────────────┐      ┌──────────────┐
@@ -246,8 +246,8 @@
 │ • Memory │      │ • Calibrate  │      │ • Distill    │
 │ • FLOPs  │      │ • Compress   │      │ • Sparse     │
 └──────────┘      └──────────────┘      └──────────────┘
-  3-4 hrs          5-6 hrs                4-5 hrs
-  ⭐⭐⭐⭐          ⭐⭐⭐⭐⭐              ⭐⭐⭐⭐⭐
+  5-6 hrs          5-6 hrs                5-6 hrs
+  ⭐⭐⭐            ⭐⭐⭐                  ⭐⭐⭐
 
        ▼                 ▼                     ▼
 
@@ -259,49 +259,49 @@
 │ • Reuse  │      │ • Hardware   │      │ • Report │      │   System │
 │ • Speedup│      │ • Parallel   │      │ • Analyze│      │ • Deploy │
 └──────────┘      └──────────────┘      └──────────┘      └──────────┘
-  3-4 hrs          3-4 hrs               3-4 hrs          4-6 hrs
-  ⭐⭐⭐⭐          ⭐⭐⭐⭐              ⭐⭐⭐⭐          ⭐⭐⭐⭐⭐
+  4-5 hrs          6-8 hrs               5-6 hrs          5-8 hrs
+  ⭐⭐⭐            ⭐⭐⭐                 ⭐⭐⭐            ⭐⭐⭐⭐
 ```
 
 ### Module Details
 
-**Module 14: Profiling** (3-4 hours, ⭐⭐⭐⭐)
+**Module 14: Profiling** (5-6 hours, ⭐⭐⭐)
 - Measure everything: Time, memory, FLOPs
 - Implement: Profiling decorators, bottleneck analysis
 - Understand: Where computation actually happens
 - Why it matters: Can't optimize what you don't measure
 
-**Module 15: Quantization** (5-6 hours, ⭐⭐⭐⭐⭐)
+**Module 15: Quantization** (5-6 hours, ⭐⭐⭐)
 - Compress models: Float32 → INT8
 - Implement: Quantization, calibration, dequantization
 - Achieve: 4× smaller models, faster inference
 - Why it matters: Deploy models on edge devices
 
-**Module 16: Compression** (4-5 hours, ⭐⭐⭐⭐⭐)
+**Module 16: Compression** (5-6 hours, ⭐⭐⭐)
 - Shrink models: Pruning and distillation
 - Implement: Weight pruning, knowledge distillation
 - Achieve: 10× smaller models with minimal accuracy loss
 - Why it matters: Mobile ML and resource-constrained deployment
 
-**Module 17: Memoization** (3-4 hours, ⭐⭐⭐⭐)
+**Module 17: Memoization** (4-5 hours, ⭐⭐⭐)
 - Cache computations: KV-cache for transformers
 - Implement: Memoization decorators, cache management
 - Optimize: 10-100× speedup for inference
 - Why it matters: How production LLMs run efficiently
 
-**Module 18: Acceleration** (3-4 hours, ⭐⭐⭐⭐)
+**Module 18: Acceleration** (6-8 hours, ⭐⭐⭐)
 - Hardware optimization: Vectorization, parallelization
 - Implement: NumPy tricks, batch processing
 - Achieve: 10-100× speedups
 - Why it matters: Production systems need speed
 
-**Module 19: Benchmarking** (3-4 hours, ⭐⭐⭐⭐)
+**Module 19: Benchmarking** (5-6 hours, ⭐⭐⭐)
 - Compare implementations: Rigorous performance testing
 - Implement: Benchmark suite, statistical analysis
 - Report: Scientific measurements
 - Why it matters: Engineering decisions need data
 
-**Module 20: Capstone** (4-6 hours, ⭐⭐⭐⭐⭐) **FINAL PROJECT**
+**Module 20: Capstone** (5-8 hours, ⭐⭐⭐⭐) **FINAL PROJECT**
 - Build complete system: End-to-end ML pipeline
 - Integrate: All 19 modules into production-ready system
 - Deploy: Real application with optimization
@@ -366,17 +366,17 @@ OPTIMIZATION BRANCH
 ┌──────────────────┬──────────┬──────────┬──────────┬──────────┐
 │ Experience Level │ Phase 1  │ Phase 2  │ Phase 3  │ Phase 4  │
 ├──────────────────┼──────────┼──────────┼──────────┼──────────┤
-│ Beginner         │ 12-15h   │ 18-22h   │ 25-30h   │ 22-26h   │
+│ Beginner         │ 17-23h   │ 29-37h   │ 31-40h   │ 43-56h   │
 │ (New to ML)      │          │          │          │          │
 ├──────────────────┼──────────┼──────────┼──────────┼──────────┤
-│ Intermediate     │ 10-12h   │ 14-18h   │ 20-25h   │ 18-22h   │
+│ Intermediate     │ 14-19h   │ 24-31h   │ 26-33h   │ 36-47h   │
 │ (Used PyTorch)   │          │          │          │          │
 ├──────────────────┼──────────┼──────────┼──────────┼──────────┤
-│ Advanced         │  8-10h   │ 12-15h   │ 18-22h   │ 16-20h   │
+│ Advanced         │ 11-15h   │ 19-25h   │ 21-26h   │ 29-38h   │
 │ (Built models)   │          │          │          │          │
 └──────────────────┴──────────┴──────────┴──────────┴──────────┘
 
-Total Time: 60-80 hours (Intermediate) | 3-4 weeks at 20 hrs/week
+Total Time: 100-130 hours (Intermediate) | 5-7 weeks at 20 hrs/week
 ```
 
 ---
@@ -409,7 +409,7 @@ Total Time: 60-80 hours (Intermediate) | 3-4 weeks at 20 hrs/week
 
 ## Suggested Learning Paths
 
-### Fast Track (Core ML Only) - 40 hours
+### Fast Track (Core ML Only) - 64 hours
 Focus on the essentials to build and train networks:
 ```
 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09
@@ -418,7 +418,7 @@ Focus on the essentials to build and train networks:
 Milestones: Perceptron → XOR → MNIST → CIFAR-10
 ```
 
-### NLP Focus - 55 hours
+### NLP Focus - 85 hours
 Core + Language models:
 ```
 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08
@@ -429,7 +429,7 @@ Core + Language models:
 Milestones: All ML history + Transformer Era
 ```
 
-### Systems Engineering Path - Full 75 hours
+### Systems Engineering Path - Full 100-130 hours
 Everything + optimization:
 ```
 Complete all 20 modules
