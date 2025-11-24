@@ -1,7 +1,7 @@
 ---
 title: "Tokenization - Text to Numerical Sequences"
 description: "Build character-level and BPE tokenizers that convert text into token sequences for language models"
-difficulty: 2
+difficulty: "⭐⭐"
 time_estimate: "4-5 hours"
 prerequisites: ["Tensor"]
 next_steps: ["Embeddings"]

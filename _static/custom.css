@@ -18,6 +18,21 @@ nav.bd-links a[href="intro.html"],
     display: none !important;
 }
 
+/* Textbook link in main content */
+.bd-content p a[href*="mlsysbook.ai"],
+.bd-content p a.textbook-link {
+    color: #64748b;
+    text-decoration: none;
+    border-bottom: 1px solid #cbd5e1;
+    transition: all 0.2s ease;
+}
+
+.bd-content p a[href*="mlsysbook.ai"]:hover,
+.bd-content p a.textbook-link:hover {
+    color: #1e293b;
+    border-bottom-color: #1e293b;
+}
+
 /* Tier card hover effects */
 .tier-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
@@ -1022,16 +1037,17 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
    ============================================ */
 
 .hero-carousel-compact {
+    position: relative;
     max-width: 1100px;
-    margin: 2.5rem auto;
+    margin: 2.5rem auto 3rem auto;
     padding: 0 2rem;
 }
 
 .carousel-track {
     position: relative;
     width: 100%;
-    height: 410px;
-    overflow: hidden;
+    height: 450px;
+    overflow: visible;
 }
 
 .carousel-item {
@@ -1042,6 +1058,7 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
     display: none;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
+    z-index: 1;
 }
 
 .carousel-item.active {
@@ -1055,19 +1072,45 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 
 .gif-preview {
     width: 100%;
-    height: 320px;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    border: 2px solid #cbd5e1;
-    border-radius: 12px;
+    height: auto;
+    background: #1e1e1e;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .gif-preview:hover {
-    transform: scale(1.005);
+    transform: scale(1.002);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.gif-preview img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+}
+
+.preview-fallback {
+    font-size: 6rem;
+    opacity: 0.5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.gif-preview img:not([src=""]) + .preview-fallback,
+.gif-preview img[src]:not([src=""]) + .preview-fallback {
+    display: none;
 }
 
 .preview-icon {
@@ -1078,10 +1121,12 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 .carousel-text {
     text-align: center;
     width: 100%;
+    margin-top: 1rem;
+    padding: 0 1rem;
 }
 
 .carousel-text h4 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
@@ -1089,33 +1134,39 @@ html[data-theme="dark"] .ml-timeline-popup-metric-value {
 }
 
 .carousel-text p {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #64748b;
     margin: 0;
     line-height: 1.6;
+    font-family: 'Monaco', 'Menlo', monospace;
 }
 
 .carousel-nav {
+    position: absolute;
+    top: 405px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    gap: 1rem;
+    z-index: 100;
 }
 
 .nav-arrow {
     background: #e2e8f0;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #475569;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .nav-arrow:hover {
@@ -1176,26 +1227,84 @@ html[data-theme="dark"] .indicator.active {
     background: #3b82f6;
 }
 
+/* Comparison grid responsive wrapping - stack on tablets and smaller */
+@media (max-width: 1024px) {
+    .comparison-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
+    /* Make logo visible and prominent on mobile */
+    .navbar-brand {
+        display: flex !important;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+    .navbar-brand img {
+        max-height: 50px !important;
+        width: auto;
+    }
+
+    /* Ensure main content headings are visible above carousel */
+    .bd-content h1 {
+        font-size: 2rem !important;
+        margin-top: 1rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .bd-content h2 {
+        font-size: 1.5rem !important;
+        margin: 1rem 0 !important;
+    }
+
+    .bd-content > p {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Stack comparison grid vertically on mobile - tighter spacing */
+    .comparison-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        margin: 2rem 0 1.5rem 0 !important;
+    }
+
+    /* Carousel adjustments */
     .hero-carousel-compact {
         padding: 0 1rem;
+        margin: 1.5rem auto 2rem auto;
     }
 
     .gif-preview {
-        height: 250px;
+        height: auto;
+        border-radius: 6px;
     }
 
-    .carousel-text h4 {
-        font-size: 1.5rem;
-    }
-
-    .carousel-text p {
-        font-size: 0.95rem;
+    .gif-preview img {
+        border-radius: 4px;
     }
 
     .carousel-track {
         height: 350px;
+        overflow: visible;
+    }
+
+    .carousel-nav {
+        top: 330px;
+    }
+
+    .nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .carousel-item.active {
+        gap: 1rem;
     }
 }
 

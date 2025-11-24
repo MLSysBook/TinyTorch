@@ -135,9 +135,13 @@ tito checkpoint status
 
 # System information
 tito system info
+
+# Join community and benchmark
+tito community join
+tito benchmark baseline
 ```
 
-For complete command documentation, see [TITO Essentials](tito-essentials.md).
+For complete command documentation, see [TITO CLI Reference](tito/overview.md).
 
 ## Checkpoint System (Optional)
 
@@ -149,9 +153,84 @@ tito checkpoint status  # View completion tracking
 
 This is helpful for self-assessment but **not required** for the core workflow. The essential cycle remains: edit → export → validate.
 
-## Instructor Integration (Coming Soon)
+## Notebook Platform Options
 
-TinyTorch supports [NBGrader](https://nbgrader.readthedocs.io/) for classroom use. Documentation for instructors using the autograding features will be available in future releases.
+TinyTorch notebooks work with multiple platforms, but **important distinction**:
+
+### Online Notebooks (Viewing & Exploration)
+- **Jupyter/MyBinder**: Click "Launch Binder" on any notebook page - great for viewing
+- **Google Colab**: Click "Launch Colab" for GPU access - good for exploration
+- **Marimo**: Click "🍃 Open in Marimo" for reactive notebooks - excellent for learning
+
+**⚠️ Important**: Online notebooks are for **viewing and learning**. They don't have the full TinyTorch package installed, so you can't:
+- Run milestone validation scripts
+- Import from `tinytorch.*` modules
+- Execute full experiments
+- Use the complete CLI tools
+
+### Local Setup (Required for Full Package)
+**To actually build and experiment**, you need a **local installation**:
+
+```bash
+# Clone and setup locally
+git clone https://github.com/mlsysbook/TinyTorch.git
+cd TinyTorch
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .  # Install TinyTorch package
+```
+
+**Why local?**
+- ✅ Full `tinytorch.*` package available
+- ✅ Run milestone validation scripts
+- ✅ Use `tito` CLI commands
+- ✅ Execute complete experiments
+- ✅ Export modules to package
+- ✅ Full development workflow
+
+**Note for NBGrader assignments**: Submit `.ipynb` files (not Marimo's `.py` format) to preserve grading metadata.
+
+## Community & Benchmarking
+
+### Join the Community
+
+After completing setup, join the global TinyTorch community:
+
+```bash
+# Join with optional information
+tito community join
+
+# View your profile and progress
+tito community profile
+
+# Update your information
+tito community update
+```
+
+**Privacy:** All information is optional. Data is stored locally in `.tinytorch/` directory. See [Community Guide](community.html) for details.
+
+### Benchmark Your Progress
+
+Validate your setup and track performance:
+
+```bash
+# Quick baseline benchmark (after setup)
+tito benchmark baseline
+
+# Full capstone benchmarks (after Module 20)
+tito benchmark capstone --track all
+```
+
+**Baseline Benchmark:** Quick validation that your setup works correctly - your "Hello World" moment!
+
+**Capstone Benchmark:** Full performance evaluation across speed, compression, accuracy, and efficiency tracks.
+
+See [Community Guide](community.html) for complete community and benchmarking features.
+
+## Instructor Integration
+
+TinyTorch supports [NBGrader](https://nbgrader.readthedocs.io/) for classroom use. See the [Instructor Guide](usage-paths/classroom-use.md) for complete setup and grading workflows.
 
 For now, focus on the student workflow: building your implementations and validating them with milestones.
 

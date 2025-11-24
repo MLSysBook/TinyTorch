@@ -57,6 +57,8 @@
     <script src="_static/togglebutton.js"></script>
     <script src="_static/ml-timeline.js"></script>
     <script src="_static/wip-banner.js"></script>
+    <script src="_static/marimo-badges.js"></script>
+    <script src="_static/sidebar-link.js"></script>
     <script src="_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
@@ -71,7 +73,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Learning Resources" href="resources.html" />
-    <link rel="prev" title="Testing Framework" href="testing-framework.html" />
+    <link rel="prev" title="TinyTorch Datasets" href="datasets.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -178,11 +180,14 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -220,7 +225,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
@@ -228,13 +233,16 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
@@ -459,8 +467,8 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-soon">Coming Soon</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discord-server-in-development">Discord Server (In Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community-dashboard-planned">Community Dashboard (Planned)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#torch-olympics-leaderboard-planned">Torch Olympics Leaderboard (Planned)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community-dashboard-available-now">Community Dashboard (Available Now ✅)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-performance-tracking-available-now">Benchmark &amp; Performance Tracking (Available Now ✅)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-educators">For Educators</a></li>
@@ -539,25 +547,61 @@ document.write(`
 <li><p>Project showcase channels</p></li>
 </ul>
 </section>
-<section id="community-dashboard-planned">
-<h3>Community Dashboard (Planned)<a class="headerlink" href="#community-dashboard-planned" title="Permalink to this heading">#</a></h3>
-<p>Track global learning progress:</p>
+<section id="community-dashboard-available-now">
+<h3>Community Dashboard (Available Now ✅)<a class="headerlink" href="#community-dashboard-available-now" title="Permalink to this heading">#</a></h3>
+<p>Join the global TinyTorch community and see your progress:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Join the community</span>
+tito<span class="w"> </span>community<span class="w"> </span>join
+
+<span class="c1"># View your profile</span>
+tito<span class="w"> </span>community<span class="w"> </span>profile
+
+<span class="c1"># Update your progress</span>
+tito<span class="w"> </span>community<span class="w"> </span>update
+
+<span class="c1"># View community statistics</span>
+tito<span class="w"> </span>community<span class="w"> </span>stats
+</pre></div>
+</div>
+<p><strong>Features:</strong></p>
 <ul class="simple">
-<li><p>Real-time completion statistics</p></li>
-<li><p>Geographic distribution of learners</p></li>
-<li><p>Milestone achievement tracking</p></li>
-<li><p>Study partner matching</p></li>
+<li><p><strong>Anonymous profiles</strong> - Join with optional information (country, institution, course type)</p></li>
+<li><p><strong>Cohort identification</strong> - See your cohort (Fall 2024, Spring 2025, etc.)</p></li>
+<li><p><strong>Progress tracking</strong> - Automatic milestone and module completion tracking</p></li>
+<li><p><strong>Privacy-first</strong> - All data stored locally in <code class="docutils literal notranslate"><span class="pre">.tinytorch/</span></code> directory</p></li>
+<li><p><strong>Opt-in sharing</strong> - You control what information to share</p></li>
 </ul>
+<p><strong>Privacy:</strong> All fields are optional. We use anonymous UUIDs (no personal names). Data is stored locally in your project directory. See <span class="xref myst">Privacy Policy</span> for details.</p>
 </section>
-<section id="torch-olympics-leaderboard-planned">
-<h3>Torch Olympics Leaderboard (Planned)<a class="headerlink" href="#torch-olympics-leaderboard-planned" title="Permalink to this heading">#</a></h3>
-<p>Compete in ML systems challenges:</p>
+<section id="benchmark-performance-tracking-available-now">
+<h3>Benchmark &amp; Performance Tracking (Available Now ✅)<a class="headerlink" href="#benchmark-performance-tracking-available-now" title="Permalink to this heading">#</a></h3>
+<p>Validate your setup and track performance improvements:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quick setup validation (after initial setup)</span>
+tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
+
+<span class="c1"># Full capstone benchmarks (after Module 20)</span>
+tito<span class="w"> </span>benchmark<span class="w"> </span>capstone
+
+<span class="c1"># Submit results to community (optional)</span>
+<span class="c1"># Prompts automatically after benchmarks complete</span>
+</pre></div>
+</div>
+<p><strong>Baseline Benchmark:</strong></p>
 <ul class="simple">
-<li><p>Performance benchmarks</p></li>
-<li><p>Memory efficiency competitions</p></li>
-<li><p>Innovation showcases</p></li>
-<li><p>Community recognition</p></li>
+<li><p>Validates your setup is working correctly</p></li>
+<li><p>Quick “Hello World” moment after setup</p></li>
+<li><p>Tests: tensor operations, matrix multiply, forward pass</p></li>
+<li><p>Generates score (0-100) and saves results locally</p></li>
 </ul>
+<p><strong>Capstone Benchmark:</strong></p>
+<ul class="simple">
+<li><p>Full performance evaluation after Module 20</p></li>
+<li><p>Tracks: speed, compression, accuracy, efficiency</p></li>
+<li><p>Uses Module 19’s Benchmark harness for statistical rigor</p></li>
+<li><p>Generates comprehensive results for submission</p></li>
+</ul>
+<p><strong>Submission:</strong> After benchmarks complete, you’ll be prompted to submit results (optional). Submissions are saved locally and can be shared with the community.</p>
+<p>See <span class="xref myst">TITO CLI Reference</span> for complete command documentation.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -630,12 +674,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="testing-framework.html"
+       href="datasets.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Testing Framework</p>
+        <p class="prev-next-title">TinyTorch Datasets</p>
       </div>
     </a>
     <a class="right-next"
@@ -671,8 +715,8 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-soon">Coming Soon</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discord-server-in-development">Discord Server (In Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community-dashboard-planned">Community Dashboard (Planned)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#torch-olympics-leaderboard-planned">Torch Olympics Leaderboard (Planned)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community-dashboard-available-now">Community Dashboard (Available Now ✅)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-performance-tracking-available-now">Benchmark &amp; Performance Tracking (Available Now ✅)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-educators">For Educators</a></li>

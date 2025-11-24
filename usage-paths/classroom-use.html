@@ -57,6 +57,8 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/ml-timeline.js"></script>
     <script src="../_static/wip-banner.js"></script>
+    <script src="../_static/marimo-badges.js"></script>
+    <script src="../_static/sidebar-link.js"></script>
     <script src="../_static/hero-carousel.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
@@ -70,7 +72,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="🏗 Foundation Tier (Modules 01-07)" href="../tiers/foundation.html" />
+    <link rel="next" title="👩‍🏫 TinyTorch Instructor Guide" href="../instructor-guide.html" />
     <link rel="prev" title="Student Workflow" href="../student-workflow.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -178,11 +180,14 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">For Instructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ta-guide.html">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="team-onboarding.html">Team Onboarding</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -220,7 +225,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../tiers/olympics.html">📖 Competition Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Course Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../prerequisites.html">Prerequisites &amp; Resources</a></li>
@@ -228,13 +233,16 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../chapters/milestones.html">Historical Milestones</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using TinyTorch</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tito/troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../datasets.html">Datasets Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Community</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../community.html">Ecosystem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
@@ -463,7 +471,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-resources">Instructor Resources</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-documentation">Essential Documentation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools">Support Tools</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community">Community</a></li>
 </ul>
@@ -482,11 +490,9 @@ document.write(`
                   
   <section id="tinytorch-for-instructors-complete-ml-systems-course">
 <h1>TinyTorch for Instructors: Complete ML Systems Course<a class="headerlink" href="#tinytorch-for-instructors-complete-ml-systems-course" title="Permalink to this heading">#</a></h1>
-<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
-<h3 style="margin: 0 0 0.5rem 0; color: #856404;">🚧 Classroom Integration: Coming Soon</h3>
-<p style="margin: 0; color: #856404;"><a href="https://nbgrader.readthedocs.io/" style="color: #856404; text-decoration: underline;">NBGrader</a> integration and instructor tooling are under active development. Full documentation and automated grading workflows will be available in future releases.</p>
-<p style="margin: 0.5rem 0 0 0; color: #856404;"><strong>Currently available</strong>: Students can use TinyTorch with the standard workflow (edit modules → export → validate with milestones)</p>
-<p style="margin: 0.5rem 0 0 0;"><a href="../student-workflow.html" style="color: #856404; font-weight: bold;">📖 See Student Workflow</a> for the current development cycle.</p>
+<div style="background: #d4edda; border: 1px solid #28a745; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0;">
+<h3 style="margin: 0 0 0.5rem 0; color: #155724;">✅ Classroom Integration Available</h3>
+<p style="margin: 0; color: #155724;">TinyTorch includes complete <a href="https://nbgrader.readthedocs.io/" style="color: #155724; text-decoration: underline; font-weight: bold;">NBGrader</a> integration with automated grading workflows. See the <a href="../instructor-guide.html" style="color: #155724; font-weight: bold;">Complete Instructor Guide</a> for setup, grading rubrics, and sample solutions.</p>
 </div>
 <div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
 <strong>📖 Course Vision:</strong> This page describes the planned TinyTorch classroom experience.<br>
@@ -513,7 +519,7 @@ document.write(`
 </div>
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Complete instructor guide</strong> with setup & grading (coming soon)</li>
+<li><strong>Complete instructor guide</strong> with setup & grading ([available now](../instructor-guide.html))</li>
 <li><strong>Flexible pacing</strong> (14-18 weeks depending on depth)</li>
 <li><strong>Industry practices</strong> (Git, testing, documentation)</li>
 <li><strong>Academic foundation</strong> from university research</li>
@@ -523,7 +529,7 @@ document.write(`
 </div>
 <p><strong>Planned Course Duration:</strong> 14-16 weeks (flexible pacing)
 <strong>Student Outcome:</strong> Complete ML framework supporting vision AND language models</p>
-<p><strong>Current Status:</strong> Students can work through modules individually using the standard workflow. Full classroom integration (<a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> automation, instructor dashboards) coming soon.</p>
+<p><strong>Current Status:</strong> Complete NBGrader integration available! See the <span class="xref myst">Instructor Guide</span> for setup, grading workflows, and sample solutions.</p>
 </section>
 <hr class="docutils" />
 <section id="why-tinytorch-for-your-classroom">
@@ -623,14 +629,15 @@ tito module status --comprehensive
 <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #dee2e6;">
 <h4 style="color: #495057; margin: 0 0 0.5rem 0;">3️⃣ First Assignment (10 min)</h4>
 <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85rem; margin: 0.5rem 0;">
-tito nbgrader generate 01_setup<br>
-tito nbgrader release 01_setup
+tito nbgrader generate 01_tensor<br>
+tito nbgrader release 01_tensor
 </div>
 <p style="font-size: 0.9rem; margin: 0; color: #6c757d;">Ready to distribute to students!</p>
 </div>
 </div>
 <div style="text-align: center; margin-top: 1.5rem;">
 <a href="../instructor-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">📖 Complete Instructor Guide</a>
+<a href="ta-guide.html" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">👥 TA Guide</a>
 <a href="../testing-framework.html" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">🧪 Testing Framework Guide</a>
 </div>
 </div>
@@ -666,9 +673,11 @@ tito nbgrader release 01_setup
 <hr class="docutils" />
 <section id="instructor-resources">
 <h2>Instructor Resources<a class="headerlink" href="#instructor-resources" title="Permalink to this heading">#</a></h2>
-<section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">#</a></h3>
+<section id="essential-documentation">
+<h3>Essential Documentation<a class="headerlink" href="#essential-documentation" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
+<li><p><strong><a class="reference internal" href="../instructor-guide.html"><span class="doc std std-doc">Complete Instructor Guide</span></a></strong> - 30-minute setup, grading rubrics, sample solutions, common errors</p></li>
+<li><p><strong><a class="reference internal" href="ta-guide.html"><span class="doc std std-doc">TA Guide</span></a></strong> - Common student errors, debugging strategies, office hour patterns</p></li>
 <li><p>Module-specific teaching notes in each <a class="reference external" href="http://ABOUT.md">ABOUT.md</a> file</p></li>
 <li><p><a class="reference internal" href="../chapters/00-introduction.html"><span class="doc std std-doc">Course Structure</span></a> - Full curriculum overview</p></li>
 <li><p><a class="reference internal" href="../student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> - Essential development cycle</p></li>
@@ -745,11 +754,11 @@ tito nbgrader release 01_setup
       </div>
     </a>
     <a class="right-next"
-       href="../tiers/foundation.html"
+       href="../instructor-guide.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">🏗 Foundation Tier (Modules 01-07)</p>
+        <p class="prev-next-title">👩‍🏫 TinyTorch Instructor Guide</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -781,7 +790,7 @@ tito nbgrader release 01_setup
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-resources">Instructor Resources</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-documentation">Essential Documentation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools">Support Tools</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community">Community</a></li>
 </ul>

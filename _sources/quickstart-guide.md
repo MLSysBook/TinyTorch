@@ -32,7 +32,7 @@ source activate.sh
 - Configures TinyTorch in development mode
 - Verifies installation
 
-See [Essential Commands](tito-essentials.md) for detailed workflow and troubleshooting.
+See [TITO CLI Reference](tito/overview.md) for detailed workflow and troubleshooting.
 
 </div>
 
@@ -46,7 +46,35 @@ tito system doctor
 
 You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.
 
-See [Essential Commands](tito-essentials.md) for verification commands and troubleshooting.
+See [Module Workflow](tito/modules.md) for detailed commands and [Troubleshooting](tito/troubleshooting.md) if needed.
+
+</div>
+
+<div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
+<h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 3: Join the Community & Benchmark</h4>
+
+After setup, join the global TinyTorch community and validate your setup:
+
+```bash
+# Join the community (optional)
+tito community join
+
+# Run baseline benchmark to validate setup
+tito benchmark baseline
+```
+
+**Community Features:**
+- Join with optional information (country, institution, course type)
+- Track your progress automatically
+- See your cohort (Fall 2024, Spring 2025, etc.)
+- All data stored locally in `.tinytorch/` directory
+
+**Baseline Benchmark:**
+- Quick validation that everything works
+- Your "Hello World" moment!
+- Generates score and saves results locally
+
+See [Community Guide](community.html) for complete features.
 
 </div>
 
@@ -214,11 +242,14 @@ In 15 minutes, you've:
 
 **Master the Workflow:**
 - See [Student Workflow](student-workflow.md) for the complete edit → export → validate cycle
-- See [Essential Commands](tito-essentials.md) for complete TITO command reference
-- See [Student Workflow](student-workflow.md) for the complete development cycle
+- See [TITO CLI Reference](tito/overview.md) for complete command reference
 
 **For Instructors:**
-- See [Classroom Setup Guide](usage-paths/classroom-use.md) for [NBGrader](https://nbgrader.readthedocs.io/) integration (coming soon)
+- See [Classroom Setup Guide](usage-paths/classroom-use.md) for [NBGrader](https://nbgrader.readthedocs.io/) integration
+
+**Notebook Platforms:**
+- **Online (Viewing)**: Jupyter/MyBinder, Google Colab, Marimo - great for exploring notebooks
+- **⚠️ Important**: Online notebooks are for **viewing only**. For full package experiments, milestone validation, and CLI tools, you need **local installation** (see [Student Workflow](student-workflow.md))
 
 </div>
 
@@ -241,7 +272,7 @@ See [Student Workflow](student-workflow.md) for detailed workflow guide and best
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Production ML Systems</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">You've proven you can build ML components from scratch. Time to keep going!</p>
 <a href="chapters/03-activations.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">Continue Building →</a>
-<a href="tito-essentials.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Master Commands →</a>
+<a href="tito/overview.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">TITO CLI Reference →</a>
 </div>
 
 ---

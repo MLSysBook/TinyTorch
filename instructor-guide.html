@@ -1,0 +1,1470 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>👩‍🏫 TinyTorch Instructor Guide &#8212; Tiny🔥Torch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/ml-timeline.js"></script>
+    <script src="_static/wip-banner.js"></script>
+    <script src="_static/marimo-badges.js"></script>
+    <script src="_static/sidebar-link.js"></script>
+    <script src="_static/hero-carousel.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'instructor-guide';</script>
+    <link rel="shortcut icon" href="_static/favicon.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Teaching Assistant Guide for TinyTorch" href="usage-paths/ta-guide.html" />
+    <link rel="prev" title="TinyTorch for Instructors: Complete ML Systems Course" href="usage-paths/classroom-use.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-tinytorch.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="_static/logo-tinytorch.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Getting Started
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/foundation.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/04_losses_ABOUT.html">04. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/05_autograd_ABOUT.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/07_training_ABOUT.html">07. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏛️ Architecture Tier (08-13)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/architecture.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/12_attention_ABOUT.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/13_transformers_ABOUT.html">13. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⏱️ Optimization Tier (14-19)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/optimization.html">📖 Tier Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/17_memoization_ABOUT.html">17. Memoization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Capstone Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Course Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites &amp; Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/learning-journey.html">Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/milestones.html">Historical Milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ TITO CLI Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito/overview.html">Command Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/modules.html">Module Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/milestones.html">Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/data.html">Progress &amp; Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tito/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🤝 Community</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="community.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits &amp; Acknowledgments</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/instructor-guide.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Finstructor-guide.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/instructor-guide.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>👩‍🏫 TinyTorch Instructor Guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-overview">🎯 Course Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-setup">🛠️ Instructor Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-setup"><strong>1. Initial Setup</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-installation"><strong>2. Verify Installation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-workflow">📝 Assignment Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-with-tito-cli"><strong>Simplified with Tito CLI</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-assignments"><strong>1. Prepare Assignments</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribute-to-students"><strong>2. Distribute to Students</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-submissions"><strong>3. Collect Submissions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grade"><strong>4. Auto-Grade</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-review"><strong>5. Manual Review</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-feedback"><strong>6. Generate Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-grades"><strong>7. Export Grades</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-components">📊 Grading Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-graded-70"><strong>Auto-Graded (70%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-graded-30"><strong>Manually Graded (30%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubric-for-ml-systems-questions"><strong>Grading Rubric for ML Systems Questions</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-solutions-for-grading-calibration">📋 Sample Solutions for Grading Calibration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor-memory-footprint">Module 01: Tensor - Memory Footprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-05-autograd-backward-pass">Module 05: Autograd - Backward Pass</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-09-spatial-convolution-implementation">Module 09: Spatial - Convolution Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-12-attention-scaled-dot-product-attention">Module 12: Attention - Scaled Dot-Product Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-guidelines-using-sample-solutions">Grading Guidelines Using Sample Solutions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-teaching-notes">📚 Module Teaching Notes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor"><strong>Module 01: Tensor</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-02-activations"><strong>Module 02: Activations</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-04-05-layers-networks"><strong>Module 04-05: Layers &amp; Networks</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-06-07-spatial-attention"><strong>Module 06-07: Spatial &amp; Attention</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-08-11-training-pipeline"><strong>Module 08-11: Training Pipeline</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-12-15-production"><strong>Module 12-15: Production</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-16-tinygpt"><strong>Module 16: TinyGPT</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-progress">📈 Tracking Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-progress"><strong>Individual Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#class-overview"><strong>Class Overview</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-struggling-students"><strong>Identify Struggling Students</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-tips">💡 Teaching Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#emphasize-building-over-theory"><strong>1. Emphasize Building Over Theory</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-production-systems"><strong>2. Connect to Production Systems</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-performance-visible"><strong>3. Make Performance Visible</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encourage-systems-questions"><strong>4. Encourage Systems Questions</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">🔧 Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-student-issues"><strong>Common Student Issues</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nbgrader-issues"><strong>NBGrader Issues</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-schedule-16-weeks">📊 Sample Schedule (16 Weeks)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-strategy">🎓 Assessment Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-assessment-70"><strong>Continuous Assessment (70%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#projects-30"><strong>Projects (30%)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">📚 Additional Resources</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tinytorch-instructor-guide">
+<h1>👩‍🏫 TinyTorch Instructor Guide<a class="headerlink" href="#tinytorch-instructor-guide" title="Permalink to this heading">#</a></h1>
+<p>Complete guide for teaching ML Systems Engineering with TinyTorch.</p>
+<section id="course-overview">
+<h2>🎯 Course Overview<a class="headerlink" href="#course-overview" title="Permalink to this heading">#</a></h2>
+<p>TinyTorch teaches ML systems engineering through building, not just using. Students construct a complete ML framework from tensors to transformers, understanding memory, performance, and scaling at each step.</p>
+</section>
+<section id="instructor-setup">
+<h2>🛠️ Instructor Setup<a class="headerlink" href="#instructor-setup" title="Permalink to this heading">#</a></h2>
+<section id="initial-setup">
+<h3><strong>1. Initial Setup</strong><a class="headerlink" href="#initial-setup" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone and setup</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MLSysBook/TinyTorch.git
+<span class="nb">cd</span><span class="w"> </span>TinyTorch
+
+<span class="c1"># Virtual environment (MANDATORY)</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+
+<span class="c1"># Install with instructor tools</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>nbgrader
+
+<span class="c1"># Setup grading infrastructure</span>
+tito<span class="w"> </span>grade<span class="w"> </span>setup
+</pre></div>
+</div>
+</section>
+<section id="verify-installation">
+<h3><strong>2. Verify Installation</strong><a class="headerlink" href="#verify-installation" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
+<span class="c1"># Should show all green checkmarks</span>
+
+tito<span class="w"> </span>grade
+<span class="c1"># Should show available grade commands</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="assignment-workflow">
+<h2>📝 Assignment Workflow<a class="headerlink" href="#assignment-workflow" title="Permalink to this heading">#</a></h2>
+<section id="simplified-with-tito-cli">
+<h3><strong>Simplified with Tito CLI</strong><a class="headerlink" href="#simplified-with-tito-cli" title="Permalink to this heading">#</a></h3>
+<p>We’ve wrapped NBGrader behind simple <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">grade</span></code> commands so you don’t need to learn NBGrader’s complex interface.</p>
+</section>
+<section id="prepare-assignments">
+<h3><strong>1. Prepare Assignments</strong><a class="headerlink" href="#prepare-assignments" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate instructor version (with solutions)</span>
+tito<span class="w"> </span>grade<span class="w"> </span>generate<span class="w"> </span>01_tensor
+
+<span class="c1"># Create student version (solutions removed)</span>
+tito<span class="w"> </span>grade<span class="w"> </span>release<span class="w"> </span>01_tensor
+
+<span class="c1"># Student version will be in: release/tinytorch/01_tensor/</span>
+</pre></div>
+</div>
+</section>
+<section id="distribute-to-students">
+<h3><strong>2. Distribute to Students</strong><a class="headerlink" href="#distribute-to-students" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Option A: GitHub Classroom (recommended)</span>
+<span class="c1"># 1. Create assignment repository from TinyTorch</span>
+<span class="c1"># 2. Remove solutions from modules</span>
+<span class="c1"># 3. Students clone and work</span>
+
+<span class="c1"># Option B: Direct distribution</span>
+<span class="c1"># Share the release/ directory contents</span>
+</pre></div>
+</div>
+</section>
+<section id="collect-submissions">
+<h3><strong>3. Collect Submissions</strong><a class="headerlink" href="#collect-submissions" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collect all students</span>
+tito<span class="w"> </span>grade<span class="w"> </span>collect<span class="w"> </span>01_tensor
+
+<span class="c1"># Or specific student</span>
+tito<span class="w"> </span>grade<span class="w"> </span>collect<span class="w"> </span>01_tensor<span class="w"> </span>--student<span class="w"> </span>student_id
+</pre></div>
+</div>
+</section>
+<section id="auto-grade">
+<h3><strong>4. Auto-Grade</strong><a class="headerlink" href="#auto-grade" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Grade all submissions</span>
+tito<span class="w"> </span>grade<span class="w"> </span>autograde<span class="w"> </span>01_tensor
+
+<span class="c1"># Grade specific student</span>
+tito<span class="w"> </span>grade<span class="w"> </span>autograde<span class="w"> </span>01_tensor<span class="w"> </span>--student<span class="w"> </span>student_id
+</pre></div>
+</div>
+</section>
+<section id="manual-review">
+<h3><strong>5. Manual Review</strong><a class="headerlink" href="#manual-review" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open grading interface (browser-based)</span>
+tito<span class="w"> </span>grade<span class="w"> </span>manual<span class="w"> </span>01_tensor
+
+<span class="c1"># This launches a web interface for:</span>
+<span class="c1"># - Reviewing ML Systems question responses</span>
+<span class="c1"># - Adding feedback comments</span>
+<span class="c1"># - Adjusting auto-grades</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-feedback">
+<h3><strong>6. Generate Feedback</strong><a class="headerlink" href="#generate-feedback" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create feedback files for students</span>
+tito<span class="w"> </span>grade<span class="w"> </span>feedback<span class="w"> </span>01_tensor
+</pre></div>
+</div>
+</section>
+<section id="export-grades">
+<h3><strong>7. Export Grades</strong><a class="headerlink" href="#export-grades" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export all grades to CSV</span>
+tito<span class="w"> </span>grade<span class="w"> </span><span class="nb">export</span>
+
+<span class="c1"># Or specific module</span>
+tito<span class="w"> </span>grade<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--module<span class="w"> </span>01_tensor<span class="w"> </span>--output<span class="w"> </span>grades_module01.csv
+</pre></div>
+</div>
+</section>
+</section>
+<section id="grading-components">
+<h2>📊 Grading Components<a class="headerlink" href="#grading-components" title="Permalink to this heading">#</a></h2>
+<section id="auto-graded-70">
+<h3><strong>Auto-Graded (70%)</strong><a class="headerlink" href="#auto-graded-70" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Code implementation correctness</p></li>
+<li><p>Test passing</p></li>
+<li><p>Function signatures</p></li>
+<li><p>Output validation</p></li>
+</ul>
+</section>
+<section id="manually-graded-30">
+<h3><strong>Manually Graded (30%)</strong><a class="headerlink" href="#manually-graded-30" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>ML Systems Thinking questions (3 per module)</p></li>
+<li><p>Each question: 10 points</p></li>
+<li><p>Focus on understanding, not perfection</p></li>
+</ul>
+</section>
+<section id="grading-rubric-for-ml-systems-questions">
+<h3><strong>Grading Rubric for ML Systems Questions</strong><a class="headerlink" href="#grading-rubric-for-ml-systems-questions" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Points</p></th>
+<th class="head"><p>Criteria</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>9-10</p></td>
+<td><p>Demonstrates deep understanding, references specific code, discusses systems implications</p></td>
+</tr>
+<tr class="row-odd"><td><p>7-8</p></td>
+<td><p>Good understanding, some code references, basic systems thinking</p></td>
+</tr>
+<tr class="row-even"><td><p>5-6</p></td>
+<td><p>Surface understanding, generic response, limited systems perspective</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-4</p></td>
+<td><p>Attempted but misses key concepts</p></td>
+</tr>
+<tr class="row-even"><td><p>0-2</p></td>
+<td><p>No attempt or completely off-topic</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>What to Look For:</strong></p>
+<ul class="simple">
+<li><p>References to actual implemented code</p></li>
+<li><p>Memory/performance analysis</p></li>
+<li><p>Scaling considerations</p></li>
+<li><p>Production system comparisons</p></li>
+<li><p>Understanding of trade-offs</p></li>
+</ul>
+</section>
+</section>
+<section id="sample-solutions-for-grading-calibration">
+<h2>📋 Sample Solutions for Grading Calibration<a class="headerlink" href="#sample-solutions-for-grading-calibration" title="Permalink to this heading">#</a></h2>
+<p>This section provides sample solutions to help calibrate grading standards. Use these as reference points when evaluating student submissions.</p>
+<section id="module-01-tensor-memory-footprint">
+<h3>Module 01: Tensor - Memory Footprint<a class="headerlink" href="#module-01-tensor-memory-footprint" title="Permalink to this heading">#</a></h3>
+<p><strong>Excellent Solution (9-10 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">memory_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate tensor memory in bytes.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span>
+</pre></div>
+</div>
+<p><strong>Why Excellent</strong>:</p>
+<ul class="simple">
+<li><p>Concise and correct</p></li>
+<li><p>Uses NumPy’s built-in <code class="docutils literal notranslate"><span class="pre">nbytes</span></code> property</p></li>
+<li><p>Clear docstring</p></li>
+<li><p>Handles all tensor shapes correctly</p></li>
+</ul>
+<p><strong>Good Solution (7-8 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">memory_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate memory usage.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">itemsize</span>
+</pre></div>
+</div>
+<p><strong>Why Good</strong>:</p>
+<ul class="simple">
+<li><p>Correct implementation</p></li>
+<li><p>Manually calculates (shows understanding)</p></li>
+<li><p>Works but less efficient than using <code class="docutils literal notranslate"><span class="pre">nbytes</span></code></p></li>
+<li><p>Minor: docstring could be more specific</p></li>
+</ul>
+<p><strong>Acceptable Solution (5-6 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">memory_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">*=</span> <span class="n">dim</span>
+    <span class="k">return</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># Assumes float32</span>
+</pre></div>
+</div>
+<p><strong>Why Acceptable</strong>:</p>
+<ul class="simple">
+<li><p>Correct logic but hardcoded dtype size</p></li>
+<li><p>Works for float32 but fails for other dtypes</p></li>
+<li><p>Shows understanding of memory calculation</p></li>
+<li><p>Missing proper dtype handling</p></li>
+</ul>
+</section>
+<section id="module-05-autograd-backward-pass">
+<h3>Module 05: Autograd - Backward Pass<a class="headerlink" href="#module-05-autograd-backward-pass" title="Permalink to this heading">#</a></h3>
+<p><strong>Excellent Solution (9-10 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Backward pass through computational graph.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gradient</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span>
+    
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Compute gradients for inputs</span>
+        <span class="n">input_grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span>
+        
+        <span class="c1"># Propagate to input tensors</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_grads</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">input_tensor</span><span class="p">,</span> <span class="n">input_grad</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_grads</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">input_tensor</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                    <span class="n">input_tensor</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">input_grad</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">input_grads</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Excellent</strong>:</p>
+<ul class="simple">
+<li><p>Handles both scalar and tensor gradients</p></li>
+<li><p>Properly checks <code class="docutils literal notranslate"><span class="pre">requires_grad</span></code> before propagating</p></li>
+<li><p>Handles tuple returns from grad_fn</p></li>
+<li><p>Clear variable names and structure</p></li>
+</ul>
+<p><strong>Good Solution (7-8 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">gradient</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="p">:</span>
+        <span class="n">grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">inp</span><span class="p">,</span> <span class="n">grad</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">grads</span><span class="p">):</span>
+            <span class="n">inp</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Good</strong>:</p>
+<ul class="simple">
+<li><p>Correct logic</p></li>
+<li><p>Missing <code class="docutils literal notranslate"><span class="pre">requires_grad</span></code> check (minor issue)</p></li>
+<li><p>Assumes grads is always iterable (may fail for single input)</p></li>
+<li><p>Works for most cases but less robust</p></li>
+</ul>
+<p><strong>Acceptable Solution (5-6 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grad_fn</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">grad</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Why Acceptable</strong>:</p>
+<ul class="simple">
+<li><p>Basic backward pass works</p></li>
+<li><p>Only handles single input (fails for multi-input operations)</p></li>
+<li><p>Missing None gradient handling</p></li>
+<li><p>Shows understanding but incomplete</p></li>
+</ul>
+</section>
+<section id="module-09-spatial-convolution-implementation">
+<h3>Module 09: Spatial - Convolution Implementation<a class="headerlink" href="#module-09-spatial-convolution-implementation" title="Permalink to this heading">#</a></h3>
+<p><strong>Excellent Solution (9-10 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Forward pass with explicit loops for clarity.&quot;&quot;&quot;</span>
+    <span class="n">batch_size</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">out_height</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">out_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">out_height</span><span class="p">,</span> <span class="n">out_width</span><span class="p">))</span>
+    
+    <span class="c1"># Apply padding</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">),</span> 
+                      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Explicit convolution loops</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">oc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">oh</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_height</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">ow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_width</span><span class="p">):</span>
+                    <span class="n">h_start</span> <span class="o">=</span> <span class="n">oh</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
+                    <span class="n">w_start</span> <span class="o">=</span> <span class="n">ow</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
+                    <span class="n">h_end</span> <span class="o">=</span> <span class="n">h_start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span>
+                    <span class="n">w_end</span> <span class="o">=</span> <span class="n">w_start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span>
+                    
+                    <span class="n">window</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">:,</span> <span class="n">h_start</span><span class="p">:</span><span class="n">h_end</span><span class="p">,</span> <span class="n">w_start</span><span class="p">:</span><span class="n">w_end</span><span class="p">]</span>
+                    <span class="n">output</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">oc</span><span class="p">,</span> <span class="n">oh</span><span class="p">,</span> <span class="n">ow</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                        <span class="n">window</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">oc</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="n">oc</span><span class="p">]</span>
+                    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Excellent</strong>:</p>
+<ul class="simple">
+<li><p>Clear output shape calculation</p></li>
+<li><p>Proper padding handling</p></li>
+<li><p>Explicit loops make O(kernel_size²) complexity visible</p></li>
+<li><p>Correct gradient tracking setup</p></li>
+<li><p>Well-structured and readable</p></li>
+</ul>
+<p><strong>Good Solution (7-8 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">out_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">H</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">out_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">W</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">out_h</span><span class="p">,</span> <span class="n">out_w</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">oc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_h</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_w</span><span class="p">):</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">oc</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                        <span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">:,</span> <span class="n">h</span><span class="p">:</span><span class="n">h</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span><span class="n">w</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">]</span> 
+                        <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">oc</span><span class="p">]</span>
+                    <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="n">oc</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Good</strong>:</p>
+<ul class="simple">
+<li><p>Correct implementation</p></li>
+<li><p>Missing padding support (works only for padding=0)</p></li>
+<li><p>Less clear variable names</p></li>
+<li><p>Missing requires_grad propagation</p></li>
+</ul>
+<p><strong>Acceptable Solution (5-6 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Acceptable</strong>:</p>
+<ul class="simple">
+<li><p>Basic convolution works</p></li>
+<li><p>Hardcoded kernel_size=3 (not general)</p></li>
+<li><p>No stride or padding support</p></li>
+<li><p>Shows understanding but incomplete</p></li>
+</ul>
+</section>
+<section id="module-12-attention-scaled-dot-product-attention">
+<h3>Module 12: Attention - Scaled Dot-Product Attention<a class="headerlink" href="#module-12-attention-scaled-dot-product-attention" title="Permalink to this heading">#</a></h3>
+<p><strong>Excellent Solution (9-10 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scaled dot-product attention with numerical stability.&quot;&quot;&quot;</span>
+    <span class="c1"># Compute attention scores</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span>
+    
+    <span class="c1"># Apply mask if provided</span>
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e9</span><span class="p">)</span>
+    
+    <span class="c1"># Softmax with numerical stability</span>
+    <span class="n">exp_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">exp_scores</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Apply attention to values</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">attention_weights</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">attention_weights</span>
+</pre></div>
+</div>
+<p><strong>Why Excellent</strong>:</p>
+<ul class="simple">
+<li><p>Proper scaling factor (1/√d_k)</p></li>
+<li><p>Numerical stability with max subtraction</p></li>
+<li><p>Mask handling</p></li>
+<li><p>Returns both output and attention weights</p></li>
+<li><p>Clear and well-documented</p></li>
+</ul>
+<p><strong>Good Solution (7-8 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Good</strong>:</p>
+<ul class="simple">
+<li><p>Correct implementation</p></li>
+<li><p>Missing numerical stability (may overflow)</p></li>
+<li><p>Missing mask support</p></li>
+<li><p>Works but less robust</p></li>
+</ul>
+<p><strong>Acceptable Solution (5-6 points)</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Why Acceptable</strong>:</p>
+<ul class="simple">
+<li><p>Basic attention mechanism</p></li>
+<li><p>Missing scaling factor</p></li>
+<li><p>Missing numerical stability</p></li>
+<li><p>Incorrect softmax (should be per-row)</p></li>
+</ul>
+</section>
+<section id="grading-guidelines-using-sample-solutions">
+<h3>Grading Guidelines Using Sample Solutions<a class="headerlink" href="#grading-guidelines-using-sample-solutions" title="Permalink to this heading">#</a></h3>
+<p><strong>When Evaluating Student Code</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>Correctness First</strong>: Does it pass all tests?</p>
+<ul class="simple">
+<li><p>If no: Maximum 6 points (even if well-written)</p></li>
+<li><p>If yes: Proceed to quality evaluation</p></li>
+</ul>
+</li>
+<li><p><strong>Code Quality</strong>:</p>
+<ul class="simple">
+<li><p><strong>Excellent (9-10)</strong>: Production-ready, handles edge cases, well-documented</p></li>
+<li><p><strong>Good (7-8)</strong>: Correct and functional, minor improvements possible</p></li>
+<li><p><strong>Acceptable (5-6)</strong>: Works but incomplete or has issues</p></li>
+</ul>
+</li>
+<li><p><strong>Systems Thinking</strong>:</p>
+<ul class="simple">
+<li><p><strong>Excellent</strong>: Discusses memory, performance, scaling implications</p></li>
+<li><p><strong>Good</strong>: Some systems awareness</p></li>
+<li><p><strong>Acceptable</strong>: Focuses only on correctness</p></li>
+</ul>
+</li>
+<li><p><strong>Common Patterns</strong>:</p>
+<ul class="simple">
+<li><p>Look for: Proper error handling, edge case consideration, documentation</p></li>
+<li><p>Red flags: Hardcoded values, missing checks, unclear variable names</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Remember</strong>: These are calibration examples. Adjust based on your course level and learning objectives. The goal is consistent evaluation, not perfection.</p>
+</section>
+</section>
+<section id="module-teaching-notes">
+<h2>📚 Module Teaching Notes<a class="headerlink" href="#module-teaching-notes" title="Permalink to this heading">#</a></h2>
+<section id="module-01-tensor">
+<h3><strong>Module 01: Tensor</strong><a class="headerlink" href="#module-01-tensor" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Memory layout, data structures</p></li>
+<li><p><strong>Key Concept</strong>: Understanding memory is crucial for ML performance</p></li>
+<li><p><strong>Demo</strong>: Show memory profiling, copying behavior</p></li>
+</ul>
+</section>
+<section id="module-02-activations">
+<h3><strong>Module 02: Activations</strong><a class="headerlink" href="#module-02-activations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Vectorization, numerical stability</p></li>
+<li><p><strong>Key Concept</strong>: Small details matter at scale</p></li>
+<li><p><strong>Demo</strong>: Gradient vanishing/exploding</p></li>
+</ul>
+</section>
+<section id="module-04-05-layers-networks">
+<h3><strong>Module 04-05: Layers &amp; Networks</strong><a class="headerlink" href="#module-04-05-layers-networks" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Composition, parameter management</p></li>
+<li><p><strong>Key Concept</strong>: Building blocks combine into complex systems</p></li>
+<li><p><strong>Project</strong>: Build a small CNN</p></li>
+</ul>
+</section>
+<section id="module-06-07-spatial-attention">
+<h3><strong>Module 06-07: Spatial &amp; Attention</strong><a class="headerlink" href="#module-06-07-spatial-attention" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Algorithmic complexity, memory patterns</p></li>
+<li><p><strong>Key Concept</strong>: O(N²) operations become bottlenecks</p></li>
+<li><p><strong>Demo</strong>: Profile attention memory usage</p></li>
+</ul>
+</section>
+<section id="module-08-11-training-pipeline">
+<h3><strong>Module 08-11: Training Pipeline</strong><a class="headerlink" href="#module-08-11-training-pipeline" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: End-to-end system integration</p></li>
+<li><p><strong>Key Concept</strong>: Many components must work together</p></li>
+<li><p><strong>Project</strong>: Train a real model</p></li>
+</ul>
+</section>
+<section id="module-12-15-production">
+<h3><strong>Module 12-15: Production</strong><a class="headerlink" href="#module-12-15-production" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Deployment, optimization, monitoring</p></li>
+<li><p><strong>Key Concept</strong>: Academic vs production requirements</p></li>
+<li><p><strong>Demo</strong>: Model compression, deployment</p></li>
+</ul>
+</section>
+<section id="module-16-tinygpt">
+<h3><strong>Module 16: TinyGPT</strong><a class="headerlink" href="#module-16-tinygpt" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus</strong>: Framework generalization</p></li>
+<li><p><strong>Key Concept</strong>: 70% component reuse from vision to language</p></li>
+<li><p><strong>Capstone</strong>: Build a working language model</p></li>
+</ul>
+</section>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By course end, students should be able to:</p>
+<ol class="arabic simple">
+<li><p><strong>Build</strong> complete ML systems from scratch</p></li>
+<li><p><strong>Analyze</strong> memory usage and computational complexity</p></li>
+<li><p><strong>Debug</strong> performance bottlenecks</p></li>
+<li><p><strong>Optimize</strong> for production deployment</p></li>
+<li><p><strong>Understand</strong> framework design decisions</p></li>
+<li><p><strong>Apply</strong> systems thinking to ML problems</p></li>
+</ol>
+</section>
+<section id="tracking-progress">
+<h2>📈 Tracking Progress<a class="headerlink" href="#tracking-progress" title="Permalink to this heading">#</a></h2>
+<section id="individual-progress">
+<h3><strong>Individual Progress</strong><a class="headerlink" href="#individual-progress" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check specific student progress</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w"> </span>--student<span class="w"> </span>student_id
+</pre></div>
+</div>
+</section>
+<section id="class-overview">
+<h3><strong>Class Overview</strong><a class="headerlink" href="#class-overview" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export all checkpoint achievements</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--output<span class="w"> </span>class_progress.csv
+</pre></div>
+</div>
+</section>
+<section id="identify-struggling-students">
+<h3><strong>Identify Struggling Students</strong><a class="headerlink" href="#identify-struggling-students" title="Permalink to this heading">#</a></h3>
+<p>Look for:</p>
+<ul class="simple">
+<li><p>Missing checkpoint achievements</p></li>
+<li><p>Low scores on ML Systems questions</p></li>
+<li><p>Incomplete module submissions</p></li>
+</ul>
+</section>
+</section>
+<section id="teaching-tips">
+<h2>💡 Teaching Tips<a class="headerlink" href="#teaching-tips" title="Permalink to this heading">#</a></h2>
+<section id="emphasize-building-over-theory">
+<h3><strong>1. Emphasize Building Over Theory</strong><a class="headerlink" href="#emphasize-building-over-theory" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Have students type every line of code</p></li>
+<li><p>Run tests immediately after implementation</p></li>
+<li><p>Break and fix things intentionally</p></li>
+</ul>
+</section>
+<section id="connect-to-production-systems">
+<h3><strong>2. Connect to Production Systems</strong><a class="headerlink" href="#connect-to-production-systems" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Show PyTorch/TensorFlow equivalents</p></li>
+<li><p>Discuss real-world bottlenecks</p></li>
+<li><p>Share production war stories</p></li>
+</ul>
+</section>
+<section id="make-performance-visible">
+<h3><strong>3. Make Performance Visible</strong><a class="headerlink" href="#make-performance-visible" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use profilers liberally</span>
+<span class="k">with</span> <span class="n">TimeProfiler</span><span class="p">(</span><span class="s2">&quot;operation&quot;</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">expensive_operation</span><span class="p">()</span>
+    
+<span class="c1"># Show memory usage</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memory: </span><span class="si">{</span><span class="n">get_memory_usage</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="encourage-systems-questions">
+<h3><strong>4. Encourage Systems Questions</strong><a class="headerlink" href="#encourage-systems-questions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>“What would break at 1B parameters?”</p></li>
+<li><p>“How would you distributed this?”</p></li>
+<li><p>“What’s the bottleneck here?”</p></li>
+</ul>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>🔧 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">#</a></h2>
+<section id="common-student-issues">
+<h3><strong>Common Student Issues</strong><a class="headerlink" href="#common-student-issues" title="Permalink to this heading">#</a></h3>
+<p><strong>Environment Problems</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student fix:</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor
+tito<span class="w"> </span>system<span class="w"> </span>reset
+</pre></div>
+</div>
+<p><strong>Module Import Errors</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rebuild package</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all
+</pre></div>
+</div>
+<p><strong>Test Failures</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detailed test output</span>
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">test</span><span class="w"> </span>MODULE<span class="w"> </span>--verbose
+</pre></div>
+</div>
+</section>
+<section id="nbgrader-issues">
+<h3><strong>NBGrader Issues</strong><a class="headerlink" href="#nbgrader-issues" title="Permalink to this heading">#</a></h3>
+<p><strong>Database Locked</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clear NBGrader database</span>
+rm<span class="w"> </span>gradebook.db
+tito<span class="w"> </span>grade<span class="w"> </span>setup
+</pre></div>
+</div>
+<p><strong>Missing Submissions</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check submission directory</span>
+ls<span class="w"> </span>submitted/*/MODULE/
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sample-schedule-16-weeks">
+<h2>📊 Sample Schedule (16 Weeks)<a class="headerlink" href="#sample-schedule-16-weeks" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Week</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Focus</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>01 Tensor</p></td>
+<td><p>Data Structures, Memory</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>02 Activations</p></td>
+<td><p>Non-linearity Functions</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>03 Layers</p></td>
+<td><p>Neural Network Components</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>04 Losses</p></td>
+<td><p>Optimization Objectives</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>05 Autograd</p></td>
+<td><p>Automatic Differentiation</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>06 Optimizers</p></td>
+<td><p>Training Algorithms</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>07 Training</p></td>
+<td><p>Complete Training Loop</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Midterm Project</p></td>
+<td><p>Build and Train Network</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>08 DataLoader</p></td>
+<td><p>Data Pipeline</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>09 Spatial</p></td>
+<td><p>Convolutions, CNNs</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>10 Tokenization</p></td>
+<td><p>Text Processing</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>11 Embeddings</p></td>
+<td><p>Word Representations</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>12 Attention</p></td>
+<td><p>Attention Mechanisms</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>13 Transformers</p></td>
+<td><p>Transformer Architecture</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>14-19 Optimization</p></td>
+<td><p>Profiling, Quantization, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>20 Capstone</p></td>
+<td><p>Torch Olympics Competition</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="assessment-strategy">
+<h2>🎓 Assessment Strategy<a class="headerlink" href="#assessment-strategy" title="Permalink to this heading">#</a></h2>
+<section id="continuous-assessment-70">
+<h3><strong>Continuous Assessment (70%)</strong><a class="headerlink" href="#continuous-assessment-70" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Module completion: 4% each × 16 = 64%</p></li>
+<li><p>Checkpoint achievements: 6%</p></li>
+</ul>
+</section>
+<section id="projects-30">
+<h3><strong>Projects (30%)</strong><a class="headerlink" href="#projects-30" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Midterm: Build and train CNN (15%)</p></li>
+<li><p>Final: Extend TinyGPT (15%)</p></li>
+</ul>
+</section>
+</section>
+<section id="additional-resources">
+<h2>📚 Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://mlsysbook.ai">MLSys Book</a> - Companion textbook</p></li>
+<li><p><a class="reference external" href="https://github.com/MLSysBook/TinyTorch/discussions">Course Discussions</a></p></li>
+<li><p><a class="reference external" href="https://github.com/MLSysBook/TinyTorch/issues">Issue Tracker</a></p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Need help? Open an issue or contact the TinyTorch team!</strong></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="usage-paths/classroom-use.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="usage-paths/ta-guide.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Teaching Assistant Guide for TinyTorch</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-overview">🎯 Course Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-setup">🛠️ Instructor Setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-setup"><strong>1. Initial Setup</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-installation"><strong>2. Verify Installation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-workflow">📝 Assignment Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-with-tito-cli"><strong>Simplified with Tito CLI</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-assignments"><strong>1. Prepare Assignments</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribute-to-students"><strong>2. Distribute to Students</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-submissions"><strong>3. Collect Submissions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grade"><strong>4. Auto-Grade</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-review"><strong>5. Manual Review</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-feedback"><strong>6. Generate Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-grades"><strong>7. Export Grades</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-components">📊 Grading Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-graded-70"><strong>Auto-Graded (70%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-graded-30"><strong>Manually Graded (30%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubric-for-ml-systems-questions"><strong>Grading Rubric for ML Systems Questions</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-solutions-for-grading-calibration">📋 Sample Solutions for Grading Calibration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor-memory-footprint">Module 01: Tensor - Memory Footprint</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-05-autograd-backward-pass">Module 05: Autograd - Backward Pass</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-09-spatial-convolution-implementation">Module 09: Spatial - Convolution Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-12-attention-scaled-dot-product-attention">Module 12: Attention - Scaled Dot-Product Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-guidelines-using-sample-solutions">Grading Guidelines Using Sample Solutions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-teaching-notes">📚 Module Teaching Notes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-01-tensor"><strong>Module 01: Tensor</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-02-activations"><strong>Module 02: Activations</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-04-05-layers-networks"><strong>Module 04-05: Layers &amp; Networks</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-06-07-spatial-attention"><strong>Module 06-07: Spatial &amp; Attention</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-08-11-training-pipeline"><strong>Module 08-11: Training Pipeline</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-12-15-production"><strong>Module 12-15: Production</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-16-tinygpt"><strong>Module 16: TinyGPT</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-progress">📈 Tracking Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-progress"><strong>Individual Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#class-overview"><strong>Class Overview</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-struggling-students"><strong>Identify Struggling Students</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teaching-tips">💡 Teaching Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#emphasize-building-over-theory"><strong>1. Emphasize Building Over Theory</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connect-to-production-systems"><strong>2. Connect to Production Systems</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-performance-visible"><strong>3. Make Performance Visible</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#encourage-systems-questions"><strong>4. Encourage Systems Questions</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">🔧 Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-student-issues"><strong>Common Student Issues</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nbgrader-issues"><strong>NBGrader Issues</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-schedule-16-weeks">📊 Sample Schedule (16 Weeks)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-strategy">🎓 Assessment Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-assessment-70"><strong>Continuous Assessment (70%)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#projects-30"><strong>Projects (30%)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">📚 Additional Resources</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
