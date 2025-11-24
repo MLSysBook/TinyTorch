@@ -1,7 +1,7 @@
 ---
 title: "Embeddings - Token to Vector Representations"
 description: "Build embedding layers that convert discrete tokens to dense, learnable vector representations powering modern NLP"
-difficulty: 2
+difficulty: "⭐⭐"
 time_estimate: "4-5 hours"
 prerequisites: ["Tensor", "Tokenization"]
 next_steps: ["Attention"]

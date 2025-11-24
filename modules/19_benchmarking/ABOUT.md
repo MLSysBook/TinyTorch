@@ -1,7 +1,7 @@
 ---
 title: "Benchmarking - Fair Performance Comparison"
 description: "Statistical rigor and standardized metrics for optimization validation"
-difficulty: 3
+difficulty: "⭐⭐⭐"
 time_estimate: "5-6 hours"
 prerequisites: ["Profiling", "All optimization techniques"]
 next_steps: ["Competition (Capstone)"]
