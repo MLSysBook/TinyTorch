@@ -8,7 +8,7 @@ TinyTorch follows a simple three-step cycle:
 
 ```{mermaid}
 graph LR
-    A[Edit Modules<br/>modules/NN_name/] --> B[Export to Package<br/>tito module complete N]
+    A[Work in Notebooks<br/>modules/NN_name.ipynb] --> B[Export to Package<br/>tito module complete N]
     B --> C[Validate with Milestones<br/>Run milestone scripts]
     C --> A
 
@@ -24,7 +24,7 @@ Work on module notebooks in `modules/`:
 ```bash
 # Example: Working on Module 03 (Layers)
 cd modules/03_layers
-jupyter lab layers_dev.ipynb
+jupyter lab 03_layers.ipynb
 ```
 
 Each module is a Jupyter notebook that you edit interactively. You'll:
