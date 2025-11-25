@@ -271,7 +271,7 @@ Ensure you understand transformers and profiling:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
 tito test --module transformers

@@ -13,7 +13,7 @@ PyYAML>=6.0
 rich>=13.0.0
 
 # Jupyter Book for building documentation
-jupyter-book>=0.15.0,<1.0.0
+jupyter-book>=1.0.0,<2.0.0
 
 # Jupyter environment
 jupyter>=1.0.0

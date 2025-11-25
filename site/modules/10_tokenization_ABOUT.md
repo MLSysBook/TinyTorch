@@ -1,1 +1,1 @@
-../../modules/10_tokenization/ABOUT.md
+../../src/10_tokenization/ABOUT.md

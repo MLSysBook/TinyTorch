@@ -1,1 +1,1 @@
-../../modules/12_attention/ABOUT.md
+../../src/12_attention/ABOUT.md

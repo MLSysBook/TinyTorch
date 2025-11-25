@@ -257,7 +257,7 @@ Ensure you understand compression foundations:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
 tito test --module quantization

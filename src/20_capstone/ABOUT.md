@@ -191,7 +191,7 @@ This capstone requires understanding of benchmarking (Module 19) and optimizatio
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Required: Benchmarking methodology (Module 19)
 tito test --module benchmarking     # Module 19: Statistical measurement, fair comparison
@@ -356,7 +356,7 @@ Browse the Python source code and understand the implementation.
 :class: tip
 **Local development recommended!** This capstone involves extended optimization experiments, profiling sessions, and benchmarking runs. Local setup provides better debugging, faster iteration, and persistent results. Cloud sessions may timeout during long benchmark runs.
 
-**Setup**: `git clone https://github.com/mlsysbook/TinyTorch.git && source bin/activate-tinytorch.sh && cd modules/20_capstone`
+**Setup**: `git clone https://github.com/mlsysbook/TinyTorch.git && source scripts/activate-tinytorch && cd modules/20_capstone`
 ```
 
 ---

@@ -425,7 +425,7 @@ Ensure you understand the foundations from previous modules:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules (all modules 1-13)
 tito test --module tensor
