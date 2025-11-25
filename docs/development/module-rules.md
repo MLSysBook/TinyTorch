@@ -3,9 +3,16 @@
 **Version**: 2.0  
 **Date**: January 2025  
 **Status**: Complete Reference Guide  
-**Reference Implementation**: `modules/08_optimizers/optimizers_dev.py`
+**Reference Implementation**: `src/08_optimizers/08_optimizers.py`
 
 This document defines the complete set of rules, patterns, and conventions for developing TinyTorch modules. Instead of maintaining separate documentation, **use `08_optimizers` as your reference implementation** - it follows all current patterns perfectly.
+
+## Development Structure
+
+**Key Paths:**
+- **Source**: `src/NN_modulename/NN_modulename.py` ← Developers edit here
+- **Generated**: `modules/NN_modulename/NN_modulename.ipynb` ← Auto-generated for students
+- **Package**: `tinytorch/` ← Auto-generated package code
 
 ## 📚 Educational Philosophy
 
@@ -25,18 +32,24 @@ Each module follows this pedagogical pattern:
 ## 📁 File Structure and Organization
 
 ### 1. **File Naming Convention**
+
+**Developer Workflow (Source):**
+```
+src/NN_modulename/
+├── NN_modulename.py           # SOURCE OF TRUTH (developers edit)
+├── module.yaml                # Module configuration
+├── ABOUT.md                   # Module documentation
+└── README.md                  # Optional additional docs
+```
+
+**Student Workflow (Generated):**
 ```
 modules/NN_modulename/
-├── modulename_dev.py          # Main development file (Python source)
-├── modulename_dev.ipynb       # Generated notebook (temporary)
-├── module.yaml                # Module configuration
-├── README.md                  # Module documentation
-└── tests/                     # External tests (if any)
-    └── test_modulename.py
+└── NN_modulename.ipynb        # AUTO-GENERATED notebook (students use)
 ```
 
 ### 2. **File Format: Jupytext Percent Format**
-All `*_dev.py` files MUST use Jupytext percent format:
+All source Python files in `src/` MUST use Jupytext percent format:
 
 ```python
 # ---
@@ -49,6 +62,12 @@ All `*_dev.py` files MUST use Jupytext percent format:
 #       jupytext_version: 1.17.1
 # ---
 ```
+
+**Build Process:**
+1. Developer edits `src/NN_name/NN_name.py`
+2. Run `tito source export NN_name`
+3. Generates `modules/NN_name/NN_name.ipynb` (notebook)
+4. Exports to `tinytorch/` (package code)
 
 ## 🏗️ Module Template Structure
 
