@@ -6,23 +6,13 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
+# Getting Started - Consolidated single entry point
 - caption: 🚀 Getting Started
   chapters:
-  - file: quickstart-guide
-    title: "Quick Start Guide"
-  - file: student-workflow
-    title: "Student Workflow"
-  - file: usage-paths/classroom-use
-    title: "For Instructors"
-  - file: instructor-guide
-    title: "Instructor Guide"
-  - file: usage-paths/ta-guide
-    title: "TA Guide"
-  - file: usage-paths/team-onboarding
-    title: "Team Onboarding"
+  - file: getting-started
+    title: "Complete Guide"
 
-# Tier captions: Added emojis for visual consistency and quick recognition
-# Foundation (🏗), Architecture (🏛️), Optimization (⏱️), Capstone (🏅)
+# Foundation Tier - Collapsible section
 - caption: 🏗 Foundation Tier (01-07)
   chapters:
   - file: tiers/foundation
@@ -42,6 +32,7 @@ parts:
   - file: modules/07_training_ABOUT
     title: "07. Training"
 
+# Architecture Tier - Collapsible section
 - caption: 🏛️ Architecture Tier (08-13)
   chapters:
   - file: tiers/architecture
@@ -59,6 +50,7 @@ parts:
   - file: modules/13_transformers_ABOUT
     title: "13. Transformers"
 
+# Optimization Tier - Collapsible section
 - caption: ⏱️ Optimization Tier (14-19)
   chapters:
   - file: tiers/optimization
@@ -76,6 +68,7 @@ parts:
   - file: modules/19_benchmarking_ABOUT
     title: "19. Benchmarking"
 
+# Capstone Competition - Collapsible section
 - caption: 🏅 Capstone Competition
   chapters:
   - file: tiers/olympics
@@ -83,6 +76,7 @@ parts:
   - file: modules/20_capstone_ABOUT
     title: "20. Torch Olympics"
 
+# Course Orientation - Collapsible section
 - caption: 🧭 Course Orientation
   chapters:
   - file: chapters/00-introduction
@@ -96,6 +90,7 @@ parts:
   - file: faq
     title: "FAQ"
 
+# TITO CLI Reference - Collapsible section
 - caption: 🛠️ TITO CLI Reference
   chapters:
   - file: tito/overview
@@ -111,6 +106,7 @@ parts:
   - file: datasets
     title: "Datasets Guide"
 
+# Community - Collapsible section
 - caption: 🤝 Community
   chapters:
   - file: community

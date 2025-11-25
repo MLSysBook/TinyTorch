@@ -125,11 +125,11 @@ See [TITO CLI Reference](tito/overview.html) for complete command documentation.
 
 Teaching TinyTorch in your classroom?
 
-**[See Instructor Guide](usage-paths/classroom-use.html)** for:
-- Course syllabus templates
-- Assignment integration
-- Student progress tracking
-- Classroom management tools
+**[See Getting Started - For Instructors](getting-started.html#instructors)** for:
+- Complete 30-minute instructor setup
+- NBGrader integration and grading workflows
+- Assignment generation and distribution
+- Student progress tracking and classroom management
 
 ---
 
