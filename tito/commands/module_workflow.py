@@ -336,15 +336,15 @@ class ModuleWorkflowCommand(BaseCommand):
         """Export module to the TinyTorch package."""
         try:
             # Use the new source command for exporting
-            from .source import SourceCommand
+            from .src import SrcCommand
             
             fake_args = Namespace()
-            fake_args.source_command = 'export'  # Subcommand
+            fake_args.src_command = 'export'  # Subcommand
             fake_args.modules = [module_name]     # List of modules to export
             fake_args.test_checkpoint = False
             
-            source_command = SourceCommand(self.config)
-            return source_command.run(fake_args)
+            src_command = SrcCommand(self.config)
+            return src_command.run(fake_args)
             
         except Exception as e:
             self.console.print(f"[red]Error exporting module: {e}[/red]")

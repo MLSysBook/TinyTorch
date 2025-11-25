@@ -27,7 +27,7 @@ from .commands.info import InfoCommand
 from .commands.test import TestCommand
 from .commands.doctor import DoctorCommand
 from .commands.export import ExportCommand
-from .commands.source import SourceCommand
+from .commands.src import SrcCommand
 from .commands.reset import ResetCommand
 from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
@@ -73,7 +73,7 @@ class TinyTorchCLI:
             # Hierarchical command groups
             'system': SystemCommand,
             'module': ModuleWorkflowCommand,
-            'source': SourceCommand,
+            'src': SrcCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,

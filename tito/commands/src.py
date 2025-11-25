@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 from .base import BaseCommand
 from .checkpoint import CheckpointSystem
 
-class SourceCommand(BaseCommand):
+class SrcCommand(BaseCommand):
     # Module to checkpoint mapping - defines which checkpoint is triggered after each module
     MODULE_TO_CHECKPOINT = {
         # Direct mapping: Module NN → Checkpoint NN for intuitive workflow
@@ -48,17 +48,17 @@ class SourceCommand(BaseCommand):
 
     @property
     def name(self) -> str:
-        return "source"
+        return "src"
 
     @property
     def description(self) -> str:
-        return "Source file workflow: export src/ to modules/ and tinytorch/"
+        return "Developer workflow: export src/ to modules/ and tinytorch/"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add source workflow arguments with subcommands."""
         # Add subcommands for source operations
         subparsers = parser.add_subparsers(
-            dest='source_command',
+            dest='src_command',
             help='Source file operations'
         )
         
@@ -596,7 +596,7 @@ class SourceCommand(BaseCommand):
         logger.info("Starting source command")
         
         # Handle subcommands
-        if not hasattr(args, 'source_command') or args.source_command is None:
+        if not hasattr(args, 'src_command') or args.src_command is None:
             console.print(Panel("[yellow]Please specify a subcommand: export or test[/yellow]\n\n"
                               "[dim]Examples:[/dim]\n"
                               "[dim]  tito source export 01_tensor[/dim]\n"
@@ -605,12 +605,12 @@ class SourceCommand(BaseCommand):
                               title="Missing Subcommand", border_style="yellow"))
             return 1
         
-        if args.source_command == 'export':
+        if args.src_command == 'export':
             return self._handle_export(args, console)
-        elif args.source_command == 'test':
+        elif args.src_command == 'test':
             return self._handle_test(args, console)
         else:
-            console.print(f"[red]Unknown subcommand: {args.source_command}[/red]")
+            console.print(f"[red]Unknown subcommand: {args.src_command}[/red]")
             return 1
     
     def _handle_export(self, args: Namespace, console) -> int:
