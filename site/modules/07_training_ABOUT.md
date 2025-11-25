@@ -1,1 +1,1 @@
-../../modules/07_training/ABOUT.md
+../../src/07_training/ABOUT.md

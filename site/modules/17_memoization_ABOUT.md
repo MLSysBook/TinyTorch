@@ -1,1 +1,1 @@
-../../modules/17_memoization/ABOUT.md
+../../src/17_memoization/ABOUT.md
