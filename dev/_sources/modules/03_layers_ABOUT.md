@@ -137,7 +137,7 @@ Ensure you've completed the prerequisite modules:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify Module 01 (Tensor) is complete
 tito test --module tensor

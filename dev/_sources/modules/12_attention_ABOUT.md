@@ -303,7 +303,7 @@ Ensure you understand these foundations:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
 tito test --module tensor      # Matrix operations (matmul, transpose)

@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>08. DataLoader &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/08_dataloader_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="09. Spatial Operations" href="09_spatial_ABOUT.html" />
@@ -170,7 +165,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -276,9 +282,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -436,9 +442,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -499,14 +505,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="dataloader">
-<h1>08. DataLoader<a class="headerlink" href="#dataloader" title="Permalink to this heading">#</a></h1>
+<h1>08. DataLoader<a class="headerlink" href="#dataloader" title="Link to this heading">#</a></h1>
 <p><strong>ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 4-5 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>This module implements the data loading infrastructure that powers neural network training at scale. You’ll build the Dataset/DataLoader abstraction pattern used by PyTorch, TensorFlow, and every major ML framework—implementing batching, shuffling, and memory-efficient iteration from first principles. This is where data engineering meets systems thinking.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Design Dataset Abstractions</strong>: Implement the protocol-based interface (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">__len__</span></code>) that separates data storage from data access</p></li>
@@ -517,7 +523,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-optimize">
-<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement Dataset abstraction, TensorDataset for in-memory data, and DataLoader with batching/shuffling</p></li>
@@ -526,9 +532,9 @@ document.write(`
 </ol>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="dataset-abstraction">
-<h3>Dataset Abstraction<a class="headerlink" href="#dataset-abstraction" title="Permalink to this heading">#</a></h3>
+<h3>Dataset Abstraction<a class="headerlink" href="#dataset-abstraction" title="Link to this heading">#</a></h3>
 <p>The foundation of all data loading—a protocol-based interface for accessing samples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -566,7 +572,7 @@ document.write(`
 </ul>
 </section>
 <section id="tensordataset-implementation">
-<h3>TensorDataset Implementation<a class="headerlink" href="#tensordataset-implementation" title="Permalink to this heading">#</a></h3>
+<h3>TensorDataset Implementation<a class="headerlink" href="#tensordataset-implementation" title="Link to this heading">#</a></h3>
 <p>When your data fits in memory, TensorDataset provides efficient access:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TensorDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -603,7 +609,7 @@ document.write(`
 </ul>
 </section>
 <section id="dataloader-with-batching-and-shuffling">
-<h3>DataLoader with Batching and Shuffling<a class="headerlink" href="#dataloader-with-batching-and-shuffling" title="Permalink to this heading">#</a></h3>
+<h3>DataLoader with Batching and Shuffling<a class="headerlink" href="#dataloader-with-batching-and-shuffling" title="Link to this heading">#</a></h3>
 <p>The core engine that transforms samples into training-ready batches:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DataLoader</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -682,12 +688,12 @@ DataLoader Batching (batch_size=2):
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you understand the foundations:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
@@ -704,7 +710,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/08_dataloader/dataloader.py</span></code></p></li>
 <li><p><strong>Implement Dataset abstraction</strong>: Define abstract base class with <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code></p></li>
@@ -716,9 +722,9 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify DataLoader functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>dataloader
@@ -729,7 +735,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>Dataset Interface</strong>: Abstract base class enforcement, protocol implementation</p></li>
 <li><p>✅ <strong>TensorDataset</strong>: Tensor alignment validation, indexing correctness</p></li>
@@ -739,32 +745,32 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-validation">
-<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive unit tests:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Run inline tests during development
-python modules/08_dataloader/dataloader.py
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run inline tests during development</span>
+<span class="n">python</span> <span class="n">modules</span><span class="o">/</span><span class="mi">08</span><span class="n">_dataloader</span><span class="o">/</span><span class="n">dataloader</span><span class="o">.</span><span class="n">py</span>
 
-# Expected output:
-🔬 Unit Test: Dataset Abstract Base Class...
-✅ Dataset is properly abstract
-✅ Dataset interface works correctly!
+<span class="c1"># Expected output:</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Dataset</span> <span class="n">Abstract</span> <span class="n">Base</span> <span class="n">Class</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Dataset</span> <span class="ow">is</span> <span class="n">properly</span> <span class="n">abstract</span>
+<span class="err">✅</span> <span class="n">Dataset</span> <span class="n">interface</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Unit Test: TensorDataset...
-✅ TensorDataset works correctly!
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">TensorDataset</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">TensorDataset</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Unit Test: DataLoader...
-✅ DataLoader works correctly!
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">DataLoader</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">DataLoader</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Unit Test: DataLoader Deterministic Shuffling...
-✅ Deterministic shuffling works correctly!
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">DataLoader</span> <span class="n">Deterministic</span> <span class="n">Shuffling</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Deterministic</span> <span class="n">shuffling</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Integration Test: Training Workflow...
-✅ Training integration works correctly!
+<span class="err">🔬</span> <span class="n">Integration</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Training</span> <span class="n">Workflow</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Training</span> <span class="n">integration</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.data.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDataset</span><span class="p">,</span> <span class="n">DataLoader</span>
 
@@ -786,9 +792,9 @@ python modules/08_dataloader/dataloader.py
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Image Classification</strong>: How would you design a DataLoader for ImageNet (1.2M images, 150GB)? What if the dataset doesn’t fit in RAM?</p></li>
 <li><p><strong>Language Modeling</strong>: LLM training streams billions of tokens—how does batch size affect memory and throughput for variable-length sequences?</p></li>
@@ -797,7 +803,7 @@ python modules/08_dataloader/dataloader.py
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory Scaling</strong>: Why does doubling batch size double memory usage? What memory components scale with batch size (activations, gradients, optimizer states)?</p></li>
 <li><p><strong>Throughput Bottleneck</strong>: Your GPU can process 1000 images/sec but disk reads at 100 images/sec—where’s the bottleneck? How would you diagnose this?</p></li>
@@ -806,7 +812,7 @@ python modules/08_dataloader/dataloader.py
 </ul>
 </section>
 <section id="data-pipeline-theory">
-<h3>Data Pipeline Theory<a class="headerlink" href="#data-pipeline-theory" title="Permalink to this heading">#</a></h3>
+<h3>Data Pipeline Theory<a class="headerlink" href="#data-pipeline-theory" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Iterator Protocol</strong>: How does Python’s <code class="docutils literal notranslate"><span class="pre">for</span></code> loop work under the hood? What methods must an object implement to be iterable?</p></li>
 <li><p><strong>Memory Efficiency</strong>: Why can DataLoader handle datasets larger than RAM? What design pattern enables this?</p></li>
@@ -816,7 +822,7 @@ python modules/08_dataloader/dataloader.py
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the data loading infrastructure that powers modern AI systems. Understanding how to build efficient, scalable data pipelines is critical for production ML engineering—this isn’t just plumbing, it’s a first-class systems problem with dedicated engineering teams at major AI labs.</p>
 <p>Every production training system depends on robust data loaders. Your implementation will follow the exact patterns used by PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code> and TensorFlow’s <code class="docutils literal notranslate"><span class="pre">tf.data.Dataset</span></code>—the same code running at Meta, Tesla, OpenAI, and every major ML organization.</p>
 <p>Open <code class="docutils literal notranslate"><span class="pre">/Users/VJ/GitHub/TinyTorch/modules/08_dataloader/dataloader.py</span></code> and start building. Take your time with each component, run the inline tests frequently, and think deeply about the memory and throughput trade-offs you’re making.</p>
@@ -830,7 +836,7 @@ python modules/08_dataloader/dataloader.py
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/08_dataloader/dataloader_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/08_dataloader/dataloader_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/08_dataloader/dataloader_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -839,7 +845,7 @@ python modules/08_dataloader/dataloader.py
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -848,7 +854,7 @@ python modules/08_dataloader/dataloader.py
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/08_dataloader/dataloader.py</span></a></div>
 </div>
 </div>
 </div>

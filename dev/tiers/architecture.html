@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>🏛️ Architecture Tier (Modules 08-13) &#8212; Tiny🔥Torch</title>
   
@@ -29,45 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -434,7 +424,12 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tiers/architecture';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="08. DataLoader" href="../modules/08_dataloader_ABOUT.html" />
@@ -535,7 +530,18 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -641,9 +647,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -801,9 +807,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -858,11 +864,11 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="architecture-tier-modules-08-13">
-<h1>🏛️ Architecture Tier (Modules 08-13)<a class="headerlink" href="#architecture-tier-modules-08-13" title="Permalink to this heading">#</a></h1>
+<h1>🏛️ Architecture Tier (Modules 08-13)<a class="headerlink" href="#architecture-tier-modules-08-13" title="Link to this heading">#</a></h1>
 <p><strong>Build modern neural architectures—from computer vision to language models.</strong></p>
 <hr class="docutils" />
 <section id="what-youll-learn">
-<h2>What You’ll Learn<a class="headerlink" href="#what-youll-learn" title="Permalink to this heading">#</a></h2>
+<h2>What You’ll Learn<a class="headerlink" href="#what-youll-learn" title="Link to this heading">#</a></h2>
 <p>The Architecture tier teaches you how to build the neural network architectures that power modern AI. You’ll implement CNNs for computer vision, transformers for language understanding, and the data loading infrastructure needed to train on real datasets.</p>
 <p><strong>By the end of this tier, you’ll understand:</strong></p>
 <ul class="simple">
@@ -875,7 +881,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="module-progression">
-<h2>Module Progression<a class="headerlink" href="#module-progression" title="Permalink to this heading">#</a></h2>
+<h2>Module Progression<a class="headerlink" href="#module-progression" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         graph TB
     F[🏗 Foundation&lt;br/&gt;Tensor, Autograd, Training]
@@ -905,9 +911,9 @@ document.write(`
     </pre></section>
 <hr class="docutils" />
 <section id="module-details">
-<h2>Module Details<a class="headerlink" href="#module-details" title="Permalink to this heading">#</a></h2>
+<h2>Module Details<a class="headerlink" href="#module-details" title="Link to this heading">#</a></h2>
 <section id="dataloader-efficient-data-pipelines">
-<h3>08. DataLoader - Efficient Data Pipelines<a class="headerlink" href="#dataloader-efficient-data-pipelines" title="Permalink to this heading">#</a></h3>
+<h3>08. DataLoader - Efficient Data Pipelines<a class="headerlink" href="#dataloader-efficient-data-pipelines" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Infrastructure for loading, batching, and shuffling training data efficiently.</p>
 <p><strong>Why it matters</strong>: Real ML systems train on datasets that don’t fit in memory. DataLoaders handle batching, shuffling, and parallel data loading—essential for efficient training.</p>
 <p><strong>What you’ll build</strong>: A DataLoader that supports batching, shuffling, and dataset iteration with proper memory management.</p>
@@ -915,7 +921,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="spatial-convolutional-neural-networks">
-<h3>09. Spatial - Convolutional Neural Networks<a class="headerlink" href="#spatial-convolutional-neural-networks" title="Permalink to this heading">#</a></h3>
+<h3>09. Spatial - Convolutional Neural Networks<a class="headerlink" href="#spatial-convolutional-neural-networks" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Conv2d (convolutional layers) and pooling operations for processing images.</p>
 <p><strong>Why it matters</strong>: CNNs revolutionized computer vision by exploiting spatial structure. Understanding convolutions, kernels, and pooling is essential for image processing and beyond.</p>
 <p><strong>What you’ll build</strong>: Conv2d, MaxPool2d, and related operations with proper gradient computation.</p>
@@ -924,7 +930,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="tokenization-from-text-to-numbers">
-<h3>10. Tokenization - From Text to Numbers<a class="headerlink" href="#tokenization-from-text-to-numbers" title="Permalink to this heading">#</a></h3>
+<h3>10. Tokenization - From Text to Numbers<a class="headerlink" href="#tokenization-from-text-to-numbers" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Converting text into integer sequences that neural networks can process.</p>
 <p><strong>Why it matters</strong>: Neural networks operate on numbers, not text. Tokenization is the bridge between human language and machine learning—understanding vocabulary, encoding, and decoding is fundamental.</p>
 <p><strong>What you’ll build</strong>: Character-level and subword tokenizers with vocabulary management and encoding/decoding.</p>
@@ -932,7 +938,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="embeddings-learning-representations">
-<h3>11. Embeddings - Learning Representations<a class="headerlink" href="#embeddings-learning-representations" title="Permalink to this heading">#</a></h3>
+<h3>11. Embeddings - Learning Representations<a class="headerlink" href="#embeddings-learning-representations" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Learned mappings from discrete tokens (words, characters) to continuous vectors.</p>
 <p><strong>Why it matters</strong>: Embeddings transform sparse, discrete representations into dense, semantic vectors. Understanding embeddings is crucial for NLP, recommendation systems, and any domain with categorical data.</p>
 <p><strong>What you’ll build</strong>: Embedding layers with proper initialization and gradient computation.</p>
@@ -940,7 +946,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="attention-context-aware-representations">
-<h3>12. Attention - Context-Aware Representations<a class="headerlink" href="#attention-context-aware-representations" title="Permalink to this heading">#</a></h3>
+<h3>12. Attention - Context-Aware Representations<a class="headerlink" href="#attention-context-aware-representations" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Self-attention mechanisms that let each token attend to all other tokens in a sequence.</p>
 <p><strong>Why it matters</strong>: Attention is the breakthrough that enabled modern LLMs. It allows models to capture long-range dependencies and contextual relationships that RNNs struggled with.</p>
 <p><strong>What you’ll build</strong>: Scaled dot-product attention, multi-head attention, and causal masking for autoregressive generation.</p>
@@ -948,7 +954,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="transformers-the-modern-architecture">
-<h3>13. Transformers - The Modern Architecture<a class="headerlink" href="#transformers-the-modern-architecture" title="Permalink to this heading">#</a></h3>
+<h3>13. Transformers - The Modern Architecture<a class="headerlink" href="#transformers-the-modern-architecture" title="Link to this heading">#</a></h3>
 <p><strong>What it is</strong>: Complete transformer architecture combining embeddings, attention, and feedforward layers.</p>
 <p><strong>Why it matters</strong>: Transformers power GPT, BERT, and virtually all modern LLMs. Understanding their architecture—positional encodings, layer normalization, residual connections—is essential for AI engineering.</p>
 <p><strong>What you’ll build</strong>: A complete decoder-only transformer (GPT-style) for autoregressive text generation.</p>
@@ -958,7 +964,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="what-you-can-build-after-this-tier">
-<h2>What You Can Build After This Tier<a class="headerlink" href="#what-you-can-build-after-this-tier" title="Permalink to this heading">#</a></h2>
+<h2>What You Can Build After This Tier<a class="headerlink" href="#what-you-can-build-after-this-tier" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         timeline
     title Historical Achievements Unlocked
@@ -974,7 +980,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <p><strong>Required</strong>:</p>
 <ul class="simple">
 <li><p><strong>🏗 Foundation Tier</strong> (Modules 01-07) completed</p></li>
@@ -990,14 +996,14 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="time-commitment">
-<h2>Time Commitment<a class="headerlink" href="#time-commitment" title="Permalink to this heading">#</a></h2>
+<h2>Time Commitment<a class="headerlink" href="#time-commitment" title="Link to this heading">#</a></h2>
 <p><strong>Per module</strong>: 4-6 hours (implementation + exercises + datasets)</p>
 <p><strong>Total tier</strong>: ~30-40 hours for complete mastery</p>
 <p><strong>Recommended pace</strong>: 1 module per week (2 modules/week for intensive study)</p>
 </section>
 <hr class="docutils" />
 <section id="learning-approach">
-<h2>Learning Approach<a class="headerlink" href="#learning-approach" title="Permalink to this heading">#</a></h2>
+<h2>Learning Approach<a class="headerlink" href="#learning-approach" title="Link to this heading">#</a></h2>
 <p>Each module follows the <strong>Build → Use → Reflect</strong> cycle with <strong>real datasets</strong>:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement the architecture component (Conv2d, attention, transformers)</p></li>
@@ -1007,9 +1013,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="key-achievements">
-<h2>Key Achievements<a class="headerlink" href="#key-achievements" title="Permalink to this heading">#</a></h2>
+<h2>Key Achievements<a class="headerlink" href="#key-achievements" title="Link to this heading">#</a></h2>
 <section id="milestone-04-cnn-revolution-1998">
-<h3>🎯 Milestone 04: CNN Revolution (1998)<a class="headerlink" href="#milestone-04-cnn-revolution-1998" title="Permalink to this heading">#</a></h3>
+<h3>🎯 Milestone 04: CNN Revolution (1998)<a class="headerlink" href="#milestone-04-cnn-revolution-1998" title="Link to this heading">#</a></h3>
 <p><strong>After Module 09</strong>, you’ll recreate Yann LeCun’s breakthrough:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>milestones/04_1998_cnn
 python<span class="w"> </span>02_lecun_cifar10.py<span class="w">  </span><span class="c1"># 75%+ accuracy on CIFAR-10</span>
@@ -1018,7 +1024,7 @@ python<span class="w"> </span>02_lecun_cifar10.py<span class="w">  </span><span 
 <p><strong>What makes this special</strong>: You’re not just importing <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>—you built the entire convolutional architecture from scratch.</p>
 </section>
 <section id="milestone-05-transformer-era-2017">
-<h3>🎯 Milestone 05: Transformer Era (2017)<a class="headerlink" href="#milestone-05-transformer-era-2017" title="Permalink to this heading">#</a></h3>
+<h3>🎯 Milestone 05: Transformer Era (2017)<a class="headerlink" href="#milestone-05-transformer-era-2017" title="Link to this heading">#</a></h3>
 <p><strong>After Module 13</strong>, you’ll implement the attention revolution:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>milestones/05_2017_transformer
 python<span class="w"> </span>01_vaswani_generation.py<span class="w">  </span><span class="c1"># Text generation with YOUR transformer</span>
@@ -1029,7 +1035,7 @@ python<span class="w"> </span>01_vaswani_generation.py<span class="w">  </span><
 </section>
 <hr class="docutils" />
 <section id="two-parallel-tracks">
-<h2>Two Parallel Tracks<a class="headerlink" href="#two-parallel-tracks" title="Permalink to this heading">#</a></h2>
+<h2>Two Parallel Tracks<a class="headerlink" href="#two-parallel-tracks" title="Link to this heading">#</a></h2>
 <p>The Architecture tier splits into two parallel paths that can be learned in any order:</p>
 <p><strong>Vision Track (Modules 08-09)</strong>:</p>
 <ul class="simple">
@@ -1047,7 +1053,7 @@ python<span class="w"> </span>01_vaswani_generation.py<span class="w">  </span><
 </section>
 <hr class="docutils" />
 <section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h2>
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
 <p><strong>Ready to build modern architectures?</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start the Architecture tier</span>
 tito<span class="w"> </span>module<span class="w"> </span>start<span class="w"> </span>08_dataloader

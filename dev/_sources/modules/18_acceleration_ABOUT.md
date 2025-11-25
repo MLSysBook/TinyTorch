@@ -337,7 +337,7 @@ Ensure you've completed:
 Check your BLAS configuration:
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Check which BLAS backend NumPy uses
 python -c "import numpy as np; np.show_config()"

@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Module Workflow &#8212; Tiny🔥Torch</title>
   
@@ -29,45 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -434,7 +424,12 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tito/modules';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Milestone System" href="milestones.html" />
@@ -535,7 +530,18 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -641,9 +647,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -801,9 +807,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -841,7 +847,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-export-process">Understanding the Export Process</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-structure">Module Structure</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-you-edit">Where You Edit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-structure">Development Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-code-exports">Where Code Exports</a></li>
 </ul>
 </li>
@@ -864,14 +870,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="module-workflow">
-<h1>Module Workflow<a class="headerlink" href="#module-workflow" title="Permalink to this heading">#</a></h1>
+<h1>Module Workflow<a class="headerlink" href="#module-workflow" title="Link to this heading">#</a></h1>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Build ML Systems from Scratch</h2>
 <p style="margin: 0; font-size: 1.1rem; color: #6c757d;">The core workflow for implementing and exporting TinyTorch modules</p>
 </div>
 <p><strong>Purpose</strong>: Master the module development workflow - the heart of TinyTorch. Learn how to implement modules, export them to your package, and validate with tests.</p>
 <section id="the-core-workflow">
-<h2>The Core Workflow<a class="headerlink" href="#the-core-workflow" title="Permalink to this heading">#</a></h2>
+<h2>The Core Workflow<a class="headerlink" href="#the-core-workflow" title="Link to this heading">#</a></h2>
 <p>TinyTorch follows a simple build-export-validate cycle:</p>
 <pre  class="mermaid">
         graph LR
@@ -886,11 +892,11 @@ document.write(`
     style D fill:#fef3c7
     style E fill:#f3e5f5
     </pre><p><strong>The essential command</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">XX</span></code> - exports your code to the TinyTorch package</p>
-<p>See <a class="reference internal" href="../student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete development cycle and best practices.</p>
+<p>See <a class="reference internal" href="../student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete development cycle and best practices.</p>
 </section>
 <hr class="docutils" />
 <section id="essential-commands">
-<h2>Essential Commands<a class="headerlink" href="#essential-commands" title="Permalink to this heading">#</a></h2>
+<h2>Essential Commands<a class="headerlink" href="#essential-commands" title="Link to this heading">#</a></h2>
 <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0;">
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">Check Environment</h4>
@@ -921,7 +927,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="typical-development-session">
-<h2>Typical Development Session<a class="headerlink" href="#typical-development-session" title="Permalink to this heading">#</a></h2>
+<h2>Typical Development Session<a class="headerlink" href="#typical-development-session" title="Link to this heading">#</a></h2>
 <p>Here’s what a complete session looks like:</p>
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 <p><strong>1. Start Session</strong></p>
@@ -940,7 +946,7 @@ tito<span class="w"> </span>module<span class="w"> </span>resume<span class="w">
 </div>
 <p>This opens Jupyter Lab with the module notebook.</p>
 <p><strong>3. Edit in Jupyter Lab</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In modules/03_layers/layers_dev.py</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In the generated notebook</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">):</span>
         <span class="c1"># YOUR implementation here</span>
@@ -979,9 +985,9 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </section>
 <hr class="docutils" />
 <section id="system-commands">
-<h2>System Commands<a class="headerlink" href="#system-commands" title="Permalink to this heading">#</a></h2>
+<h2>System Commands<a class="headerlink" href="#system-commands" title="Link to this heading">#</a></h2>
 <section id="environment-health">
-<h3>Environment Health<a class="headerlink" href="#environment-health" title="Permalink to this heading">#</a></h3>
+<h3>Environment Health<a class="headerlink" href="#environment-health" title="Link to this heading">#</a></h3>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <p><strong>Check Setup (Run This First)</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
@@ -1022,9 +1028,9 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </section>
 <hr class="docutils" />
 <section id="module-lifecycle-commands">
-<h2>Module Lifecycle Commands<a class="headerlink" href="#module-lifecycle-commands" title="Permalink to this heading">#</a></h2>
+<h2>Module Lifecycle Commands<a class="headerlink" href="#module-lifecycle-commands" title="Link to this heading">#</a></h2>
 <section id="start-a-module-first-time">
-<h3>Start a Module (First Time)<a class="headerlink" href="#start-a-module-first-time" title="Permalink to this heading">#</a></h3>
+<h3>Start a Module (First Time)<a class="headerlink" href="#start-a-module-first-time" title="Link to this heading">#</a></h3>
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span>start<span class="w"> </span><span class="m">01</span>
 </pre></div>
@@ -1040,11 +1046,11 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span>start<span class="w"> </span><span class="m">05</span><span class="w">  </span><span class="c1"># Start Module 05 (Autograd)</span>
 </pre></div>
 </div>
-<p>Jupyter Lab opens with <code class="docutils literal notranslate"><span class="pre">modules/05_autograd/autograd_dev.py</span></code></p>
+<p>Jupyter Lab opens with the generated notebook for Module 05</p>
 </div>
 </section>
 <section id="resume-work-continue-later">
-<h3>Resume Work (Continue Later)<a class="headerlink" href="#resume-work-continue-later" title="Permalink to this heading">#</a></h3>
+<h3>Resume Work (Continue Later)<a class="headerlink" href="#resume-work-continue-later" title="Link to this heading">#</a></h3>
 <div style="background: #f3e5f5; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #9c27b0; margin: 1.5rem 0;">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span>resume<span class="w"> </span><span class="m">01</span>
 </pre></div>
@@ -1060,7 +1066,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </div>
 </section>
 <section id="complete-export-essential">
-<h3>Complete &amp; Export (Essential)<a class="headerlink" href="#complete-export-essential" title="Permalink to this heading">#</a></h3>
+<h3>Complete &amp; Export (Essential)<a class="headerlink" href="#complete-export-essential" title="Link to this heading">#</a></h3>
 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e; margin: 1.5rem 0;">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">01</span>
 </pre></div>
@@ -1093,7 +1099,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </div>
 </section>
 <section id="view-progress">
-<h3>View Progress<a class="headerlink" href="#view-progress" title="Permalink to this heading">#</a></h3>
+<h3>View Progress<a class="headerlink" href="#view-progress" title="Link to this heading">#</a></h3>
 <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span>status
 </pre></div>
@@ -1121,7 +1127,7 @@ Next: Complete Module 04 to continue Foundation Tier
 </div>
 </section>
 <section id="reset-module-advanced">
-<h3>Reset Module (Advanced)<a class="headerlink" href="#reset-module-advanced" title="Permalink to this heading">#</a></h3>
+<h3>Reset Module (Advanced)<a class="headerlink" href="#reset-module-advanced" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #e74c3c; margin: 1.5rem 0;">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span>reset<span class="w"> </span><span class="m">01</span>
 </pre></div>
@@ -1140,7 +1146,7 @@ Next: Complete Module 04 to continue Foundation Tier
 </section>
 <hr class="docutils" />
 <section id="understanding-the-export-process">
-<h2>Understanding the Export Process<a class="headerlink" href="#understanding-the-export-process" title="Permalink to this heading">#</a></h2>
+<h2>Understanding the Export Process<a class="headerlink" href="#understanding-the-export-process" title="Link to this heading">#</a></h2>
 <p>When you run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">XX</span></code>, here’s what happens:</p>
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 <p><strong>Step 1: Validation</strong></p>
@@ -1150,8 +1156,9 @@ Next: Complete Module 04 to continue Foundation Tier
 </pre></div>
 </div>
 <p><strong>Step 2: Export</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✓ Converting modules/XX_name/name_dev.py
-  → tinytorch/path/name.py
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✓ Converting src/XX_name/XX_name.py
+  → modules/XX_name/XX_name.ipynb (notebook)
+  → tinytorch/path/name.py (package)
 ✓ Adding &quot;DO NOT EDIT&quot; warning
 ✓ Making file read-only
 </pre></div>
@@ -1172,21 +1179,29 @@ Next: Complete Module 04 to continue Foundation Tier
 </section>
 <hr class="docutils" />
 <section id="module-structure">
-<h2>Module Structure<a class="headerlink" href="#module-structure" title="Permalink to this heading">#</a></h2>
-<section id="where-you-edit">
-<h3>Where You Edit<a class="headerlink" href="#where-you-edit" title="Permalink to this heading">#</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>modules/
+<h2>Module Structure<a class="headerlink" href="#module-structure" title="Link to this heading">#</a></h2>
+<section id="development-structure">
+<h3>Development Structure<a class="headerlink" href="#development-structure" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>src/                          ← Developer source code
 ├── 01_tensor/
-│   └── tensor_dev.py       ← YOU EDIT THIS
+│   └── 01_tensor.py         ← SOURCE OF TRUTH (devs edit)
 ├── 02_activations/
-│   └── activations_dev.py  ← YOU EDIT THIS
+│   └── 02_activations.py    ← SOURCE OF TRUTH (devs edit)
 └── 03_layers/
-    └── layers_dev.py       ← YOU EDIT THIS
+    └── 03_layers.py         ← SOURCE OF TRUTH (devs edit)
+
+modules/                      ← Generated notebooks (students use)
+├── 01_tensor/
+│   └── 01_tensor.ipynb      ← AUTO-GENERATED for students
+├── 02_activations/
+│   └── 02_activations.ipynb ← AUTO-GENERATED for students
+└── 03_layers/
+    └── 03_layers.ipynb      ← AUTO-GENERATED for students
 </pre></div>
 </div>
 </section>
 <section id="where-code-exports">
-<h3>Where Code Exports<a class="headerlink" href="#where-code-exports" title="Permalink to this heading">#</a></h3>
+<h3>Where Code Exports<a class="headerlink" href="#where-code-exports" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tinytorch/
 ├── core/
 │   └── tensor.py           ← AUTO-GENERATED (DO NOT EDIT)
@@ -1196,20 +1211,20 @@ Next: Complete Module 04 to continue Foundation Tier
 └── ...
 </pre></div>
 </div>
-<p><strong>IMPORTANT</strong>: Never edit files in <code class="docutils literal notranslate"><span class="pre">tinytorch/</span></code> directly!</p>
+<p><strong>IMPORTANT</strong>: Understanding the flow</p>
 <ul class="simple">
-<li><p>They have “DO NOT EDIT” warnings</p></li>
-<li><p>They’re auto-generated from <code class="docutils literal notranslate"><span class="pre">modules/</span></code></p></li>
-<li><p>Changes will be lost on re-export</p></li>
-<li><p>Always edit in <code class="docutils literal notranslate"><span class="pre">modules/</span></code> instead</p></li>
+<li><p><strong>Developers</strong>: Edit <code class="docutils literal notranslate"><span class="pre">src/XX_name/XX_name.py</span></code> → Run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">source</span> <span class="pre">export</span></code> → Generates notebooks &amp; package</p></li>
+<li><p><strong>Students</strong>: Work in generated <code class="docutils literal notranslate"><span class="pre">modules/XX_name/XX_name.ipynb</span></code> notebooks</p></li>
+<li><p><strong>Never edit</strong> <code class="docutils literal notranslate"><span class="pre">tinytorch/</span></code> directly - it’s auto-generated</p></li>
+<li><p>Changes in <code class="docutils literal notranslate"><span class="pre">tinytorch/</span></code> will be lost on re-export</p></li>
 </ul>
 </section>
 </section>
 <hr class="docutils" />
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">#</a></h2>
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
 <section id="environment-not-ready">
-<h3>Environment Not Ready<a class="headerlink" href="#environment-not-ready" title="Permalink to this heading">#</a></h3>
+<h3>Environment Not Ready<a class="headerlink" href="#environment-not-ready" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 <p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code> shows errors</p>
 <p><strong>Solution</strong>:</p>
@@ -1224,7 +1239,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </div>
 </section>
 <section id="export-fails">
-<h3>Export Fails<a class="headerlink" href="#export-fails" title="Permalink to this heading">#</a></h3>
+<h3>Export Fails<a class="headerlink" href="#export-fails" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 <p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">XX</span></code> fails</p>
 <p><strong>Common causes</strong>:</p>
@@ -1243,7 +1258,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </div>
 </section>
 <section id="import-errors">
-<h3>Import Errors<a class="headerlink" href="#import-errors" title="Permalink to this heading">#</a></h3>
+<h3>Import Errors<a class="headerlink" href="#import-errors" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 <p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">tinytorch</span> <span class="pre">import</span> <span class="pre">X</span></code> fails</p>
 <p><strong>Solution</strong>:</p>
@@ -1255,12 +1270,12 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </pre></div>
 </div>
 </div>
-<p>See <a class="reference internal" href="troubleshooting.html"><span class="doc std std-doc">Troubleshooting Guide</span></a> for more issues and solutions.</p>
+<p>See <a class="reference internal" href="troubleshooting.html"><span class="std std-doc">Troubleshooting Guide</span></a> for more issues and solutions.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h2>
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Your First Module?</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">Start with Module 01 (Tensor) and build the foundation of neural networks</p>
@@ -1353,7 +1368,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-export-process">Understanding the Export Process</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-structure">Module Structure</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-you-edit">Where You Edit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-structure">Development Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-code-exports">Where Code Exports</a></li>
 </ul>
 </li>

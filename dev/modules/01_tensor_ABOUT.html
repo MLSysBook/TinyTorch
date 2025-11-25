@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>01. Tensor &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/01_tensor_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="02. Activations" href="02_activations_ABOUT.html" />
@@ -170,7 +165,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -276,9 +282,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -436,9 +442,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -534,14 +540,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="tensor">
-<h1>01. Tensor<a class="headerlink" href="#tensor" title="Permalink to this heading">#</a></h1>
+<h1>01. Tensor<a class="headerlink" href="#tensor" title="Link to this heading">#</a></h1>
 <p><strong>FOUNDATION TIER</strong> | Difficulty: ⭐ (1/4) | Time: 4-6 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>The Tensor class is the foundational data structure of machine learning - every neural network, from simple linear models to GPT and Stable Diffusion, operates on tensors. You’ll build N-dimensional arrays from scratch with arithmetic operations, broadcasting, and shape manipulation. This module gives you deep insight into how PyTorch and TensorFlow work under the hood, understanding the memory and performance implications that matter in production ML systems.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Understand memory and performance implications</strong>: Recognize how tensor operations dominate compute time and memory usage in ML systems - a single matrix multiplication can consume 90% of forward pass time in production frameworks like PyTorch</p></li>
@@ -552,7 +558,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement the Tensor class from scratch using NumPy as the underlying array library - creating <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, operator overloading (<code class="docutils literal notranslate"><span class="pre">__add__</span></code>, <code class="docutils literal notranslate"><span class="pre">__mul__</span></code>, etc.), shape manipulation methods, and reduction operations</p></li>
@@ -561,7 +567,7 @@ document.write(`
 </ol>
 </section>
 <section id="what-youll-build">
-<h2>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Permalink to this heading">#</a></h2>
+<h2>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Link to this heading">#</a></h2>
 <p>By completing this module, you’ll create a production-ready Tensor class with:</p>
 <p><strong>Core Data Structure:</strong></p>
 <ul class="simple">
@@ -597,9 +603,9 @@ document.write(`
 Your Tensor enables the fundamental neural network forward pass: <code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">=</span> <span class="pre">x.matmul(W)</span> <span class="pre">+</span> <span class="pre">b</span></code> - exactly how PyTorch and TensorFlow work internally.</p>
 </section>
 <section id="core-concepts">
-<h2>Core Concepts<a class="headerlink" href="#core-concepts" title="Permalink to this heading">#</a></h2>
+<h2>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading">#</a></h2>
 <section id="tensors-as-multidimensional-arrays">
-<h3>Tensors as Multidimensional Arrays<a class="headerlink" href="#tensors-as-multidimensional-arrays" title="Permalink to this heading">#</a></h3>
+<h3>Tensors as Multidimensional Arrays<a class="headerlink" href="#tensors-as-multidimensional-arrays" title="Link to this heading">#</a></h3>
 <p>A tensor is a generalization of scalars (0D), vectors (1D), and matrices (2D) to N dimensions:</p>
 <ul class="simple">
 <li><p><strong>Scalar</strong>: <code class="docutils literal notranslate"><span class="pre">Tensor(5.0)</span></code> - shape <code class="docutils literal notranslate"><span class="pre">()</span></code></p></li>
@@ -611,7 +617,7 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 <p><strong>Why tensors matter</strong>: They provide a unified interface for all ML data - images, text embeddings, audio spectrograms, and model parameters are all tensors with different shapes.</p>
 </section>
 <section id="broadcasting-efficient-shape-alignment">
-<h3>Broadcasting: Efficient Shape Alignment<a class="headerlink" href="#broadcasting-efficient-shape-alignment" title="Permalink to this heading">#</a></h3>
+<h3>Broadcasting: Efficient Shape Alignment<a class="headerlink" href="#broadcasting-efficient-shape-alignment" title="Link to this heading">#</a></h3>
 <p>Broadcasting automatically expands smaller tensors to match larger ones without copying data:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Matrix (2,2) + Vector (2,) → broadcasts to (2,2)</span>
 <span class="n">matrix</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
@@ -628,7 +634,7 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 <p><strong>Why broadcasting matters</strong>: Eliminates redundant data copying. Adding a bias vector to 1000 feature maps broadcasts once instead of copying the vector 1000 times - saving memory and enabling vectorization.</p>
 </section>
 <section id="views-vs-copies-memory-efficiency">
-<h3>Views vs. Copies: Memory Efficiency<a class="headerlink" href="#views-vs-copies-memory-efficiency" title="Permalink to this heading">#</a></h3>
+<h3>Views vs. Copies: Memory Efficiency<a class="headerlink" href="#views-vs-copies-memory-efficiency" title="Link to this heading">#</a></h3>
 <p>Some operations return <strong>views</strong> (sharing memory) vs. <strong>copies</strong> (duplicating data):</p>
 <ul class="simple">
 <li><p><strong>Views</strong> (O(1)): <code class="docutils literal notranslate"><span class="pre">reshape()</span></code>, <code class="docutils literal notranslate"><span class="pre">transpose()</span></code> when possible - no data movement</p></li>
@@ -637,7 +643,7 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 <p><strong>Why this matters</strong>: A view of a 1GB tensor is free (just metadata). A copy allocates another 1GB. Understanding view semantics prevents memory blowup in production systems.</p>
 </section>
 <section id="computational-complexity">
-<h3>Computational Complexity<a class="headerlink" href="#computational-complexity" title="Permalink to this heading">#</a></h3>
+<h3>Computational Complexity<a class="headerlink" href="#computational-complexity" title="Link to this heading">#</a></h3>
 <p>Different operations have vastly different costs:</p>
 <ul class="simple">
 <li><p><strong>Element-wise</strong> (<code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>): O(n) - linear in tensor size</p></li>
@@ -648,9 +654,9 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 </section>
 </section>
 <section id="architecture-overview">
-<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this heading">#</a></h2>
+<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading">#</a></h2>
 <section id="tensor-class-design">
-<h3>Tensor Class Design<a class="headerlink" href="#tensor-class-design" title="Permalink to this heading">#</a></h3>
+<h3>Tensor Class Design<a class="headerlink" href="#tensor-class-design" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────┐
 │         Tensor Class                    │
 ├─────────────────────────────────────────┤
@@ -677,7 +683,7 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 </div>
 </section>
 <section id="data-flow-architecture">
-<h3>Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Permalink to this heading">#</a></h3>
+<h3>Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Python Interface (your code)
          ↓
     Tensor Class
@@ -694,7 +700,7 @@ Your Tensor enables the fundamental neural network forward pass: <code class="do
 <p>The architecture is identical in concept - you’re learning the same design patterns used in production, just with NumPy instead of custom CUDA kernels.</p>
 </section>
 <section id="module-integration">
-<h3>Module Integration<a class="headerlink" href="#module-integration" title="Permalink to this heading">#</a></h3>
+<h3>Module Integration<a class="headerlink" href="#module-integration" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Module 01: Tensor (THIS MODULE)
     ↓ provides foundation
 Module 02: Activations (ReLU, Sigmoid operate on Tensors)
@@ -710,10 +716,10 @@ Module 06: Optimizers (updates Tensor parameters)
 </section>
 </section>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <p>This is the first module - no prerequisites! Verify your environment is ready:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Check system health</span>
 tito<span class="w"> </span>system<span class="w"> </span>doctor
@@ -722,9 +728,9 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p>All checks should pass (Python 3.8+, NumPy, pytest installed) before starting.</p>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development notebook</strong>: <code class="docutils literal notranslate"><span class="pre">modules/01_tensor/tensor_dev.ipynb</span></code> in Jupyter or your preferred editor</p></li>
 <li><p><strong>Implement Tensor.<strong>init</strong></strong>: Create constructor that converts data to NumPy array, stores shape/size/dtype, initializes gradient attributes</p></li>
@@ -737,9 +743,9 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </section>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="tensor-class-foundation">
-<h3>Tensor Class Foundation<a class="headerlink" href="#tensor-class-foundation" title="Permalink to this heading">#</a></h3>
+<h3>Tensor Class Foundation<a class="headerlink" href="#tensor-class-foundation" title="Link to this heading">#</a></h3>
 <p>Your Tensor class wraps NumPy arrays and provides ML-specific functionality:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
@@ -756,7 +762,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p><strong>Implementation details</strong>: You’ll implement <code class="docutils literal notranslate"><span class="pre">__init__</span></code> to convert input data to NumPy arrays, store shape/size/dtype as properties, and initialize dormant gradient attributes (<code class="docutils literal notranslate"><span class="pre">requires_grad</span></code>, <code class="docutils literal notranslate"><span class="pre">grad</span></code>) that activate in Module 05.</p>
 </section>
 <section id="arithmetic-operations">
-<h3>Arithmetic Operations<a class="headerlink" href="#arithmetic-operations" title="Permalink to this heading">#</a></h3>
+<h3>Arithmetic Operations<a class="headerlink" href="#arithmetic-operations" title="Link to this heading">#</a></h3>
 <p>Implement operator overloading for element-wise operations with broadcasting:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Element-wise operations via operator overloading</span>
 <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>         <span class="c1"># Addition: [[1.5, 3.5], [5.5, 7.5]]</span>
@@ -778,7 +784,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p><strong>Systems insight</strong>: These operations vectorize automatically via NumPy, achieving ~100x speedup over Python loops. This is why all ML frameworks use tensors - the performance difference between <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span> <span class="pre">range(n):</span> <span class="pre">result[i]</span> <span class="pre">=</span> <span class="pre">a[i]</span> <span class="pre">+</span> <span class="pre">b[i]</span></code> and <code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> is dramatic at scale.</p>
 </section>
 <section id="matrix-multiplication">
-<h3>Matrix Multiplication<a class="headerlink" href="#matrix-multiplication" title="Permalink to this heading">#</a></h3>
+<h3>Matrix Multiplication<a class="headerlink" href="#matrix-multiplication" title="Link to this heading">#</a></h3>
 <p>Matrix multiplication is the heart of neural networks - every layer performs it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Matrix multiplication (the @ operator)</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>  <span class="c1"># 2×2</span>
@@ -795,7 +801,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p><strong>Computational complexity</strong>: For matrices <code class="docutils literal notranslate"><span class="pre">(M,K)</span> <span class="pre">&#64;</span> <span class="pre">(K,N)</span></code>, the cost is <code class="docutils literal notranslate"><span class="pre">O(M×K×N)</span></code> floating-point operations. A 1000×1000 matrix multiplication requires 2 billion FLOPs - this dominates training time in production systems.</p>
 </section>
 <section id="shape-manipulation">
-<h3>Shape Manipulation<a class="headerlink" href="#shape-manipulation" title="Permalink to this heading">#</a></h3>
+<h3>Shape Manipulation<a class="headerlink" href="#shape-manipulation" title="Link to this heading">#</a></h3>
 <p>Neural networks constantly reshape tensors to match layer requirements:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reshape: change interpretation of same data (O(1) operation)</span>
 <span class="n">tensor</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
@@ -814,7 +820,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 <p><strong>Memory consideration</strong>: <code class="docutils literal notranslate"><span class="pre">reshape</span></code> often returns <em>views</em> (no data copying) when possible - an O(1) operation. <code class="docutils literal notranslate"><span class="pre">transpose</span></code> may require data rearrangement depending on memory layout. Understanding views vs. copies is crucial: views share memory (efficient), copies duplicate data (expensive for large tensors).</p>
 </section>
 <section id="reduction-operations">
-<h3>Reduction Operations<a class="headerlink" href="#reduction-operations" title="Permalink to this heading">#</a></h3>
+<h3>Reduction Operations<a class="headerlink" href="#reduction-operations" title="Link to this heading">#</a></h3>
 <p>Aggregation operations collapse dimensions for statistics and loss computation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduce along different axes</span>
 <span class="n">total</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>             <span class="c1"># Scalar: sum all elements</span>
@@ -835,9 +841,9 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify tensor functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended - runs all 01_tensor tests)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span>
@@ -852,7 +858,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <p>Expected output: All tests pass with green checkmarks showing your Tensor implementation works correctly.</p>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <p>Your implementation is validated across these dimensions:</p>
 <ul class="simple">
 <li><p><strong>Initialization</strong> (<code class="docutils literal notranslate"><span class="pre">test_tensor_from_list</span></code>, <code class="docutils literal notranslate"><span class="pre">test_tensor_from_numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">test_tensor_shapes</span></code>): Creating tensors from Python lists, NumPy arrays, and nested structures with correct shape/dtype handling</p></li>
@@ -865,33 +871,33 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-validation">
-<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Link to this heading">#</a></h3>
 <p>The development notebook includes comprehensive inline tests with immediate feedback:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🧪 Unit Test: Tensor Creation...
-✅ Tensor created from list
-✅ Shape property correct: (2, 2)
-✅ Size property correct: 4
-✅ dtype is float32
-📈 Progress: Tensor initialization ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example inline test output</span>
+<span class="err">🧪</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Tensor</span> <span class="n">Creation</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Tensor</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">list</span>
+<span class="err">✅</span> <span class="n">Shape</span> <span class="nb">property</span> <span class="n">correct</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="err">✅</span> <span class="n">Size</span> <span class="nb">property</span> <span class="n">correct</span><span class="p">:</span> <span class="mi">4</span>
+<span class="err">✅</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="n">float32</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Tensor</span> <span class="n">initialization</span> <span class="err">✓</span>
 
-🧪 Unit Test: Arithmetic Operations...
-✅ Addition: [[6, 8], [10, 12]]
-✅ Multiplication works element-wise
-✅ Broadcasting: scalar + tensor
-✅ Broadcasting: matrix + vector
-📈 Progress: Arithmetic operations ✓
+<span class="err">🧪</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Arithmetic</span> <span class="n">Operations</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Addition</span><span class="p">:</span> <span class="p">[[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]]</span>
+<span class="err">✅</span> <span class="n">Multiplication</span> <span class="n">works</span> <span class="n">element</span><span class="o">-</span><span class="n">wise</span>
+<span class="err">✅</span> <span class="n">Broadcasting</span><span class="p">:</span> <span class="n">scalar</span> <span class="o">+</span> <span class="n">tensor</span>
+<span class="err">✅</span> <span class="n">Broadcasting</span><span class="p">:</span> <span class="n">matrix</span> <span class="o">+</span> <span class="n">vector</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Arithmetic</span> <span class="n">operations</span> <span class="err">✓</span>
 
-🧪 Unit Test: Matrix Multiplication...
-✅ 2×2 @ 2×2 = [[19, 22], [43, 50]]
-✅ Shape validation catches 2×2 @ 3×1 error
-✅ Error message shows: &quot;2 ≠ 3&quot;
-📈 Progress: Matrix operations ✓
+<span class="err">🧪</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Matrix</span> <span class="n">Multiplication</span><span class="o">...</span>
+<span class="err">✅</span> <span class="mi">2</span><span class="err">×</span><span class="mi">2</span> <span class="o">@</span> <span class="mi">2</span><span class="err">×</span><span class="mi">2</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="p">[</span><span class="mi">43</span><span class="p">,</span> <span class="mi">50</span><span class="p">]]</span>
+<span class="err">✅</span> <span class="n">Shape</span> <span class="n">validation</span> <span class="n">catches</span> <span class="mi">2</span><span class="err">×</span><span class="mi">2</span> <span class="o">@</span> <span class="mi">3</span><span class="err">×</span><span class="mi">1</span> <span class="n">error</span>
+<span class="err">✅</span> <span class="n">Error</span> <span class="n">message</span> <span class="n">shows</span><span class="p">:</span> <span class="s2">&quot;2 ≠ 3&quot;</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Matrix</span> <span class="n">operations</span> <span class="err">✓</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <p>Validate your implementation interactively:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -928,9 +934,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="production-context">
-<h2>Production Context<a class="headerlink" href="#production-context" title="Permalink to this heading">#</a></h2>
+<h2>Production Context<a class="headerlink" href="#production-context" title="Link to this heading">#</a></h2>
 <section id="your-implementation-vs-production-frameworks">
-<h3>Your Implementation vs. Production Frameworks<a class="headerlink" href="#your-implementation-vs-production-frameworks" title="Permalink to this heading">#</a></h3>
+<h3>Your Implementation vs. Production Frameworks<a class="headerlink" href="#your-implementation-vs-production-frameworks" title="Link to this heading">#</a></h3>
 <p>Understanding what you’re building vs. what production frameworks provide:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -993,7 +999,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <p><strong>Line count</strong>: Your implementation is ~1927 lines in the notebook (including tests and documentation). PyTorch’s tensor implementation spans 50,000+ lines across multiple C++ files - your simplified version captures the essential concepts.</p>
 </section>
 <section id="side-by-side-code-comparison">
-<h3>Side-by-Side Code Comparison<a class="headerlink" href="#side-by-side-code-comparison" title="Permalink to this heading">#</a></h3>
+<h3>Side-by-Side Code Comparison<a class="headerlink" href="#side-by-side-code-comparison" title="Link to this heading">#</a></h3>
 <p><strong>Your implementation:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
@@ -1028,20 +1034,20 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ol>
 </section>
 <section id="real-world-production-usage">
-<h3>Real-World Production Usage<a class="headerlink" href="#real-world-production-usage" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Production Usage<a class="headerlink" href="#real-world-production-usage" title="Link to this heading">#</a></h3>
 <p><strong>Meta (Facebook AI)</strong>: PyTorch was developed at Meta and powers their recommendation systems, computer vision models, and LLaMA language models. Their production infrastructure processes billions of tensor operations per second.</p>
 <p><strong>Tesla</strong>: Uses PyTorch tensors for Autopilot neural networks. Each camera frame (6-9 cameras) is converted to tensors, processed through vision models (millions of parameters stored as tensors), and outputs driving decisions in real-time at 36 FPS.</p>
 <p><strong>OpenAI</strong>: GPT-4 training involved tensors with billions of parameters distributed across thousands of GPUs. Each training step performs matrix multiplications on tensors larger than single GPU memory.</p>
 <p><strong>Google</strong>: TensorFlow powers Google Search, Translate, Photos, and Assistant. Google’s TPUs (Tensor Processing Units) are custom hardware designed specifically for accelerating tensor operations.</p>
 </section>
 <section id="performance-characteristics-at-scale">
-<h3>Performance Characteristics at Scale<a class="headerlink" href="#performance-characteristics-at-scale" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics at Scale<a class="headerlink" href="#performance-characteristics-at-scale" title="Link to this heading">#</a></h3>
 <p><strong>Memory usage</strong>: GPT-3 scale models (175B parameters) require ~350GB memory just for weights stored as float16 tensors (175B × 2 bytes). Mixed precision training (float16/float32) reduces memory by 2x while maintaining accuracy.</p>
 <p><strong>Computational bottlenecks</strong>: In production training, tensor operations consume 95%+ of runtime. A single linear layer’s matrix multiplication might take 100ms of a 110ms forward pass - optimizing tensor operations is critical.</p>
 <p><strong>Cache efficiency</strong>: Modern CPUs have ~32KB L1 cache, ~256KB L2, ~8MB L3. Accessing memory in tensor-friendly patterns (contiguous, row-major) can be 10-100x faster than cache-unfriendly patterns (strided, column-major).</p>
 </section>
 <section id="package-integration">
-<h3>Package Integration<a class="headerlink" href="#package-integration" title="Permalink to this heading">#</a></h3>
+<h3>Package Integration<a class="headerlink" href="#package-integration" title="Link to this heading">#</a></h3>
 <p>After export, your Tensor implementation becomes the foundation of TinyTorch:</p>
 <p><strong>Package Export</strong>: Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.core.tensor</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When students install tinytorch, they import YOUR work:</span>
@@ -1069,7 +1075,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <p>Your Tensor class is the universal foundation - every subsequent module depends on what you build here.</p>
 </section>
 <section id="how-your-implementation-maps-to-pytorch">
-<h3>How Your Implementation Maps to PyTorch<a class="headerlink" href="#how-your-implementation-maps-to-pytorch" title="Permalink to this heading">#</a></h3>
+<h3>How Your Implementation Maps to PyTorch<a class="headerlink" href="#how-your-implementation-maps-to-pytorch" title="Link to this heading">#</a></h3>
 <p><strong>What you just built:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your TinyTorch Tensor implementation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
@@ -1132,9 +1138,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="common-pitfalls">
-<h2>Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permalink to this heading">#</a></h2>
+<h2>Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Link to this heading">#</a></h2>
 <section id="shape-mismatch-errors">
-<h3>Shape Mismatch Errors<a class="headerlink" href="#shape-mismatch-errors" title="Permalink to this heading">#</a></h3>
+<h3>Shape Mismatch Errors<a class="headerlink" href="#shape-mismatch-errors" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Matrix multiplication fails with cryptic errors like “shapes (2,3) and (2,2) not aligned”</p>
 <p><strong>Solution</strong>: Always verify inner dimensions match: <code class="docutils literal notranslate"><span class="pre">(M,K)</span> <span class="pre">&#64;</span> <span class="pre">(K,N)</span></code> requires K to be equal. Add shape validation with clear error messages:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -1143,12 +1149,12 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="broadcasting-confusion">
-<h3>Broadcasting Confusion<a class="headerlink" href="#broadcasting-confusion" title="Permalink to this heading">#</a></h3>
+<h3>Broadcasting Confusion<a class="headerlink" href="#broadcasting-confusion" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Expected <code class="docutils literal notranslate"><span class="pre">(2,3)</span> <span class="pre">+</span> <span class="pre">(3,)</span></code> to broadcast but got error</p>
 <p><strong>Solution</strong>: Broadcasting aligns shapes <em>from the right</em>. <code class="docutils literal notranslate"><span class="pre">(2,3)</span> <span class="pre">+</span> <span class="pre">(3,)</span></code> works (broadcasts to <code class="docutils literal notranslate"><span class="pre">(2,3)</span></code>), but <code class="docutils literal notranslate"><span class="pre">(2,3)</span> <span class="pre">+</span> <span class="pre">(2,)</span></code> fails. Add dimension with reshape if needed: <code class="docutils literal notranslate"><span class="pre">tensor.reshape(2,1)</span></code> to make <code class="docutils literal notranslate"><span class="pre">(2,1)</span></code> broadcastable with <code class="docutils literal notranslate"><span class="pre">(2,3)</span></code>.</p>
 </section>
 <section id="view-vs-copy-confusion">
-<h3>View vs Copy Confusion<a class="headerlink" href="#view-vs-copy-confusion" title="Permalink to this heading">#</a></h3>
+<h3>View vs Copy Confusion<a class="headerlink" href="#view-vs-copy-confusion" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Modified a reshaped tensor and original changed unexpectedly</p>
 <p><strong>Solution</strong>: <code class="docutils literal notranslate"><span class="pre">reshape()</span></code> returns a <em>view</em> when possible - they share memory. Changes to the view affect the original. Use <code class="docutils literal notranslate"><span class="pre">.copy()</span></code> if you need independent data:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">view</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1"># Shares memory</span>
@@ -1157,17 +1163,17 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="axis-parameter-mistakes">
-<h3>Axis Parameter Mistakes<a class="headerlink" href="#axis-parameter-mistakes" title="Permalink to this heading">#</a></h3>
+<h3>Axis Parameter Mistakes<a class="headerlink" href="#axis-parameter-mistakes" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">sum(axis=1)</span></code> on <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">features)</span></code> returned wrong shape</p>
 <p><strong>Solution</strong>: Axis semantics: <code class="docutils literal notranslate"><span class="pre">axis=0</span></code> reduces over first dimension (batch), <code class="docutils literal notranslate"><span class="pre">axis=1</span></code> reduces over second (features). For <code class="docutils literal notranslate"><span class="pre">(32,</span> <span class="pre">128)</span></code> tensor, <code class="docutils literal notranslate"><span class="pre">sum(axis=0)</span></code> gives <code class="docutils literal notranslate"><span class="pre">(128,)</span></code>, <code class="docutils literal notranslate"><span class="pre">sum(axis=1)</span></code> gives <code class="docutils literal notranslate"><span class="pre">(32,)</span></code>. Visualize which dimension you’re collapsing.</p>
 </section>
 <section id="dtype-issues">
-<h3>Dtype Issues<a class="headerlink" href="#dtype-issues" title="Permalink to this heading">#</a></h3>
+<h3>Dtype Issues<a class="headerlink" href="#dtype-issues" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Lost precision after operations, or got integer division instead of float</p>
 <p><strong>Solution</strong>: NumPy defaults to preserving dtype. Integer tensors do integer division (<code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">2</span></code>). Always create tensors with float dtype explicitly: <code class="docutils literal notranslate"><span class="pre">Tensor([[1,</span> <span class="pre">2]],</span> <span class="pre">dtype=np.float32)</span></code> or convert: <code class="docutils literal notranslate"><span class="pre">tensor.astype(np.float32)</span></code>.</p>
 </section>
 <section id="memory-leaks-with-large-tensors">
-<h3>Memory Leaks with Large Tensors<a class="headerlink" href="#memory-leaks-with-large-tensors" title="Permalink to this heading">#</a></h3>
+<h3>Memory Leaks with Large Tensors<a class="headerlink" href="#memory-leaks-with-large-tensors" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Memory usage grows unbounded during training loop</p>
 <p><strong>Solution</strong>: Clear intermediate results in loops. Don’t accumulate tensors in lists unnecessarily. Use in-place operations when safe. Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bad: accumulates memory</span>
@@ -1186,9 +1192,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Deep Learning Training</strong>: All neural network layers operate on tensors - Linear layers perform matrix multiplication, Conv2d applies tensor convolutions, Attention mechanisms compute tensor dot products. How would doubling model size affect memory and compute requirements?</p></li>
 <li><p><strong>Computer Vision</strong>: Images are 3D tensors (height × width × channels), and every transformation (resize, crop, normalize) is a tensor operation. What’s the memory footprint of a batch of 32 images at 224×224 resolution with 3 color channels in float32?</p></li>
@@ -1197,7 +1203,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="mathematical-foundations">
-<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Linear Algebra</strong>: Tensors generalize matrices to arbitrary dimensions. How does broadcasting relate to outer products? When is <code class="docutils literal notranslate"><span class="pre">(M,K)</span> <span class="pre">&#64;</span> <span class="pre">(K,N)</span></code> more efficient than <code class="docutils literal notranslate"><span class="pre">(K,M).T</span> <span class="pre">&#64;</span> <span class="pre">(K,N)</span></code>?</p></li>
 <li><p><strong>Numerical Stability</strong>: Operations like softmax require careful implementation to avoid overflow/underflow. Why does <code class="docutils literal notranslate"><span class="pre">exp(x</span> <span class="pre">-</span> <span class="pre">max(x))</span></code> prevent overflow in softmax computation?</p></li>
@@ -1206,7 +1212,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory Contiguity</strong>: Contiguous memory enables SIMD vectorization and cache efficiency. How much can non-contiguous tensors slow down operations (10x? 100x?)?</p></li>
 <li><p><strong>View vs Copy</strong>: Views are O(1) with shared memory, copies are O(n) with duplicated storage. When might a view cause unexpected behavior (e.g., in-place operations)?</p></li>
@@ -1216,7 +1222,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="whats-next">
-<h2>What’s Next<a class="headerlink" href="#whats-next" title="Permalink to this heading">#</a></h2>
+<h2>What’s Next<a class="headerlink" href="#whats-next" title="Link to this heading">#</a></h2>
 <p>After mastering tensors, you’re ready to build the computational layers of neural networks:</p>
 <p><strong>Module 02: Activations</strong> - Implement ReLU, Sigmoid, Tanh, and Softmax activation functions that introduce non-linearity. You’ll operate on your Tensor class and understand why activation functions are essential for learning complex patterns.</p>
 <p><strong>Module 03: Layers</strong> - Build Linear (fully-connected) and convolutional layers using tensor operations. See how weight matrices and bias vectors (stored as Tensors) transform inputs through matrix multiplication and broadcasting.</p>
@@ -1231,7 +1237,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <p>Every module builds on your Tensor foundation - understanding tensors deeply means understanding how neural networks actually compute.</p>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the foundation of all machine learning systems! The Tensor class you’ll build is the universal data structure that powers everything from simple neural networks to GPT, Stable Diffusion, and AlphaFold.</p>
 <p>This is where mathematical abstraction meets practical implementation. You’ll see how N-dimensional arrays enable elegant representations of complex data, how operator overloading makes tensor math feel natural like <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>, and how careful memory management (views vs. copies) enables working with massive models. Every decision you make - from how to handle broadcasting to when to validate shapes - reflects trade-offs that production ML engineers face daily.</p>
 <p>Take your time with this module. Understand each operation deeply. Test your implementations thoroughly. The Tensor foundation you build here will support every subsequent module - if you understand tensors from first principles, you’ll understand how neural networks actually work, not just how to use them.</p>
@@ -1246,7 +1252,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/01_tensor/tensor_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/01_tensor/tensor_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/01_tensor/tensor_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1255,7 +1261,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1264,7 +1270,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Jupyter notebook and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/01_tensor/tensor_dev.ipynb</span></a></div>
 </div>
 </div>
 </div>

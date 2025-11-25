@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>🏅 Torch Olympics (Module 20) &#8212; Tiny🔥Torch</title>
   
@@ -29,45 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -434,7 +424,12 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tiers/olympics';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="20. TinyTorch Olympics - Competition &amp; Submission" href="../modules/20_capstone_ABOUT.html" />
@@ -535,7 +530,18 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -641,9 +647,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -801,9 +807,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -871,11 +877,11 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="torch-olympics-module-20">
-<h1>🏅 Torch Olympics (Module 20)<a class="headerlink" href="#torch-olympics-module-20" title="Permalink to this heading">#</a></h1>
+<h1>🏅 Torch Olympics (Module 20)<a class="headerlink" href="#torch-olympics-module-20" title="Link to this heading">#</a></h1>
 <p><strong>The ultimate test: Build a complete, competition-ready ML system.</strong></p>
 <hr class="docutils" />
 <section id="what-is-the-torch-olympics">
-<h2>What Is the Torch Olympics?<a class="headerlink" href="#what-is-the-torch-olympics" title="Permalink to this heading">#</a></h2>
+<h2>What Is the Torch Olympics?<a class="headerlink" href="#what-is-the-torch-olympics" title="Link to this heading">#</a></h2>
 <p>The Torch Olympics is TinyTorch’s <strong>capstone experience</strong>—a comprehensive challenge where you integrate everything you’ve learned across 19 modules to build, optimize, and compete with a complete ML system.</p>
 <p>This isn’t a traditional homework assignment. It’s a <strong>systems engineering competition</strong> where you’ll:</p>
 <ul class="simple">
@@ -889,7 +895,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="what-youll-build">
-<h2>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Permalink to this heading">#</a></h2>
+<h2>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         graph TB
     FOUNDATION[🏗 Foundation&lt;br/&gt;Tensor, Autograd, Training]
@@ -920,9 +926,9 @@ document.write(`
     </pre></section>
 <hr class="docutils" />
 <section id="competition-tracks">
-<h2>Competition Tracks<a class="headerlink" href="#competition-tracks" title="Permalink to this heading">#</a></h2>
+<h2>Competition Tracks<a class="headerlink" href="#competition-tracks" title="Link to this heading">#</a></h2>
 <section id="track-1-computer-vision-excellence">
-<h3>Track 1: Computer Vision Excellence<a class="headerlink" href="#track-1-computer-vision-excellence" title="Permalink to this heading">#</a></h3>
+<h3>Track 1: Computer Vision Excellence<a class="headerlink" href="#track-1-computer-vision-excellence" title="Link to this heading">#</a></h3>
 <p><strong>Challenge</strong>: Achieve the highest accuracy on CIFAR-10 (color images) using YOUR Conv2d implementation.</p>
 <p><strong>Constraints</strong>:</p>
 <ul class="simple">
@@ -941,7 +947,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="track-2-language-generation-quality">
-<h3>Track 2: Language Generation Quality<a class="headerlink" href="#track-2-language-generation-quality" title="Permalink to this heading">#</a></h3>
+<h3>Track 2: Language Generation Quality<a class="headerlink" href="#track-2-language-generation-quality" title="Link to this heading">#</a></h3>
 <p><strong>Challenge</strong>: Build the best text generation system using YOUR transformer implementation.</p>
 <p><strong>Evaluation</strong>:</p>
 <ul class="simple">
@@ -966,7 +972,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="track-3-inference-speed-championship">
-<h3>Track 3: Inference Speed Championship<a class="headerlink" href="#track-3-inference-speed-championship" title="Permalink to this heading">#</a></h3>
+<h3>Track 3: Inference Speed Championship<a class="headerlink" href="#track-3-inference-speed-championship" title="Link to this heading">#</a></h3>
 <p><strong>Challenge</strong>: Achieve the highest throughput (tokens/second) for transformer inference.</p>
 <p><strong>Optimization techniques</strong>:</p>
 <ul class="simple">
@@ -992,7 +998,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="track-4-model-compression-masters">
-<h3>Track 4: Model Compression Masters<a class="headerlink" href="#track-4-model-compression-masters" title="Permalink to this heading">#</a></h3>
+<h3>Track 4: Model Compression Masters<a class="headerlink" href="#track-4-model-compression-masters" title="Link to this heading">#</a></h3>
 <p><strong>Challenge</strong>: Build the smallest model that maintains competitive accuracy.</p>
 <p><strong>Optimization techniques</strong>:</p>
 <ul class="simple">
@@ -1019,9 +1025,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="how-it-works">
-<h2>How It Works<a class="headerlink" href="#how-it-works" title="Permalink to this heading">#</a></h2>
+<h2>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
 <section id="choose-your-challenge">
-<h3>1. Choose Your Challenge<a class="headerlink" href="#choose-your-challenge" title="Permalink to this heading">#</a></h3>
+<h3>1. Choose Your Challenge<a class="headerlink" href="#choose-your-challenge" title="Link to this heading">#</a></h3>
 <p>Pick one or more competition tracks based on your interests:</p>
 <ul class="simple">
 <li><p>Vision (CNNs)</p></li>
@@ -1031,7 +1037,7 @@ document.write(`
 </ul>
 </section>
 <section id="design-your-system">
-<h3>2. Design Your System<a class="headerlink" href="#design-your-system" title="Permalink to this heading">#</a></h3>
+<h3>2. Design Your System<a class="headerlink" href="#design-your-system" title="Link to this heading">#</a></h3>
 <p>Use all 19 modules you’ve completed:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Conv2d</span><span class="p">,</span> <span class="n">Attention</span>  <span class="c1"># YOUR code</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span>             <span class="c1"># YOUR optimizers</span>
@@ -1051,7 +1057,7 @@ document.write(`
 </div>
 </section>
 <section id="benchmark-rigorously">
-<h3>3. Benchmark Rigorously<a class="headerlink" href="#benchmark-rigorously" title="Permalink to this heading">#</a></h3>
+<h3>3. Benchmark Rigorously<a class="headerlink" href="#benchmark-rigorously" title="Link to this heading">#</a></h3>
 <p>Use Module 19’s benchmarking tools:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Accuracy</span>
 tito<span class="w"> </span>benchmark<span class="w"> </span>accuracy<span class="w"> </span>--model<span class="w"> </span>your_model.pt<span class="w"> </span>--dataset<span class="w"> </span>cifar10
@@ -1068,7 +1074,7 @@ tito<span class="w"> </span>benchmark<span class="w"> </span>memory<span class="
 </div>
 </section>
 <section id="submit-to-leaderboard">
-<h3>4. Submit to Leaderboard<a class="headerlink" href="#submit-to-leaderboard" title="Permalink to this heading">#</a></h3>
+<h3>4. Submit to Leaderboard<a class="headerlink" href="#submit-to-leaderboard" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Package your submission</span>
 tito<span class="w"> </span>olympics<span class="w"> </span>submit<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--track<span class="w"> </span>vision<span class="w"> </span><span class="se">\</span>
@@ -1084,7 +1090,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </section>
 <hr class="docutils" />
 <section id="leaderboard-dimensions">
-<h2>Leaderboard Dimensions<a class="headerlink" href="#leaderboard-dimensions" title="Permalink to this heading">#</a></h2>
+<h2>Leaderboard Dimensions<a class="headerlink" href="#leaderboard-dimensions" title="Link to this heading">#</a></h2>
 <p>Your submission is evaluated across <strong>multiple dimensions</strong>:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1121,10 +1127,10 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </section>
 <hr class="docutils" />
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>The Torch Olympics integrates everything you’ve learned:</p>
 <section id="systems-engineering-skills">
-<h3>Systems Engineering Skills<a class="headerlink" href="#systems-engineering-skills" title="Permalink to this heading">#</a></h3>
+<h3>Systems Engineering Skills<a class="headerlink" href="#systems-engineering-skills" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Architecture design</strong>: Making trade-offs between depth, width, and complexity</p></li>
 <li><p><strong>Hyperparameter tuning</strong>: Systematic search vs intuition</p></li>
@@ -1133,7 +1139,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </ul>
 </section>
 <section id="production-readiness">
-<h3>Production Readiness<a class="headerlink" href="#production-readiness" title="Permalink to this heading">#</a></h3>
+<h3>Production Readiness<a class="headerlink" href="#production-readiness" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Deployment constraints</strong>: Size, speed, memory limits</p></li>
 <li><p><strong>Quality assurance</strong>: Testing, validation, error analysis</p></li>
@@ -1142,7 +1148,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </ul>
 </section>
 <section id="research-skills">
-<h3>Research Skills<a class="headerlink" href="#research-skills" title="Permalink to this heading">#</a></h3>
+<h3>Research Skills<a class="headerlink" href="#research-skills" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Experimentation</strong>: Hypothesis → experiment → analysis</p></li>
 <li><p><strong>Literature review</strong>: Understanding SOTA techniques</p></li>
@@ -1153,7 +1159,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </section>
 <hr class="docutils" />
 <section id="grading-for-classroom-use">
-<h2>Grading (For Classroom Use)<a class="headerlink" href="#grading-for-classroom-use" title="Permalink to this heading">#</a></h2>
+<h2>Grading (For Classroom Use)<a class="headerlink" href="#grading-for-classroom-use" title="Link to this heading">#</a></h2>
 <p>Instructors can use the Torch Olympics as a capstone project:</p>
 <p><strong>Deliverables</strong>:</p>
 <ol class="arabic simple">
@@ -1173,7 +1179,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </section>
 <hr class="docutils" />
 <section id="timeline">
-<h2>Timeline<a class="headerlink" href="#timeline" title="Permalink to this heading">#</a></h2>
+<h2>Timeline<a class="headerlink" href="#timeline" title="Link to this heading">#</a></h2>
 <p><strong>Recommended schedule</strong> (8-week capstone):</p>
 <ul class="simple">
 <li><p><strong>Weeks 1-2</strong>: Challenge selection and initial implementation</p></li>
@@ -1192,9 +1198,9 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard<span cla
 </section>
 <hr class="docutils" />
 <section id="support-and-resources">
-<h2>Support and Resources<a class="headerlink" href="#support-and-resources" title="Permalink to this heading">#</a></h2>
+<h2>Support and Resources<a class="headerlink" href="#support-and-resources" title="Link to this heading">#</a></h2>
 <section id="reference-implementations">
-<h3>Reference Implementations<a class="headerlink" href="#reference-implementations" title="Permalink to this heading">#</a></h3>
+<h3>Reference Implementations<a class="headerlink" href="#reference-implementations" title="Link to this heading">#</a></h3>
 <p>Starter code is provided for each track:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vision track starter</span>
 tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w"> </span>--track<span class="w"> </span>vision<span class="w"> </span>--output<span class="w"> </span>./my_vision_project
@@ -1205,7 +1211,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </div>
 </section>
 <section id="community">
-<h3>Community<a class="headerlink" href="#community" title="Permalink to this heading">#</a></h3>
+<h3>Community<a class="headerlink" href="#community" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Discord</strong>: Get help from other students and instructors</p></li>
 <li><p><strong>Office Hours</strong>: Weekly video calls for Q&amp;A</p></li>
@@ -1214,7 +1220,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </ul>
 </section>
 <section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">#</a></h3>
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference internal" href="../chapters/milestones.html"><span class="doc std std-doc">MLPerf Milestone</span></a></strong>: Historical context</p></li>
 <li><p><strong><a class="reference internal" href="../modules/19_benchmarking_ABOUT.html"><span class="doc std std-doc">Benchmarking Guide</span></a></strong>: Measurement methodology</p></li>
@@ -1224,7 +1230,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </section>
 <hr class="docutils" />
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <p><strong>Required</strong>:</p>
 <ul class="simple">
 <li><p>✅ <strong>All 19 modules completed</strong> (Foundation + Architecture + Optimization)</p></li>
@@ -1241,7 +1247,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </section>
 <hr class="docutils" />
 <section id="time-commitment">
-<h2>Time Commitment<a class="headerlink" href="#time-commitment" title="Permalink to this heading">#</a></h2>
+<h2>Time Commitment<a class="headerlink" href="#time-commitment" title="Link to this heading">#</a></h2>
 <p><strong>Minimum</strong>: 20-30 hours for single track completion</p>
 <p><strong>Recommended</strong>: 40-60 hours for multi-track competition + excellent report</p>
 <p><strong>Intensive</strong>: 80+ hours for top leaderboard performance + research-level analysis</p>
@@ -1249,7 +1255,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </section>
 <hr class="docutils" />
 <section id="what-youll-take-away">
-<h2>What You’ll Take Away<a class="headerlink" href="#what-youll-take-away" title="Permalink to this heading">#</a></h2>
+<h2>What You’ll Take Away<a class="headerlink" href="#what-youll-take-away" title="Link to this heading">#</a></h2>
 <p>By completing the Torch Olympics, you’ll have:</p>
 <ol class="arabic simple">
 <li><p><strong>Portfolio piece</strong>: A complete ML system you built from scratch</p></li>
@@ -1262,7 +1268,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w">
 </section>
 <hr class="docutils" />
 <section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h2>
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
 <p><strong>Ready to compete?</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize your Torch Olympics project</span>
 tito<span class="w"> </span>olympics<span class="w"> </span>init<span class="w"> </span>--track<span class="w"> </span>vision
@@ -1281,7 +1287,7 @@ tito<span class="w"> </span>olympics<span class="w"> </span>leaderboard
 <li><p><strong><a class="reference internal" href="optimization.html"><span class="doc std std-doc">⏱️ Optimization Tier</span></a></strong> (Modules 14-19)</p></li>
 </ul>
 <hr class="docutils" />
-<p><strong><a class="reference internal" href="../intro.html"><span class="doc std std-doc">← Back to Home</span></a></strong> • <strong><span class="xref myst">View Leaderboard</span></strong> • <strong><span class="xref myst">Competition Rules</span></strong></p>
+<p><strong><a class="reference internal" href="../intro.html"><span class="doc std std-doc">← Back to Home</span></a></strong> • <strong><a class="reference internal" href="#../leaderboard"><span class="xref myst">View Leaderboard</span></a></strong> • <strong><a class="reference internal" href="#../olympics-rules"><span class="xref myst">Competition Rules</span></a></strong></p>
 </section>
 </section>
 

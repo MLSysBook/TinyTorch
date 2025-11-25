@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>18. Acceleration - CPU Vectorization &amp; Cache Optimization &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,43 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/18_acceleration_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="19. Benchmarking - Fair Performance Comparison" href="19_benchmarking_ABOUT.html" />
@@ -170,7 +165,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -276,9 +282,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -436,9 +442,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -511,15 +517,15 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="acceleration-cpu-vectorization-cache-optimization">
-<h1>18. Acceleration - CPU Vectorization &amp; Cache Optimization<a class="headerlink" href="#acceleration-cpu-vectorization-cache-optimization" title="Permalink to this heading">#</a></h1>
+<h1>18. Acceleration - CPU Vectorization &amp; Cache Optimization<a class="headerlink" href="#acceleration-cpu-vectorization-cache-optimization" title="Link to this heading">#</a></h1>
 <p><strong>OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 6-8 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>The Acceleration module teaches you to extract maximum performance from modern CPUs through hardware-aware optimization techniques. You’ll learn to leverage optimized BLAS libraries for vectorized matrix operations, implement cache-friendly algorithms that exploit memory hierarchy, and apply kernel fusion to eliminate memory bandwidth bottlenecks. By mastering the roofline model and arithmetic intensity analysis, you’ll develop the systematic thinking needed to accelerate real ML systems from research prototypes to production deployments.</p>
 <p>This is CPU-focused acceleration—the foundation for understanding GPU optimization. You’ll work with NumPy’s BLAS backend (MKL, OpenBLAS) to achieve 10-100x speedups over naive Python, understand why most operations are memory-bound rather than compute-bound, and learn the measurement-driven optimization workflow used by PyTorch, TensorFlow, and production ML systems.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Understand Hardware Bottlenecks</strong>: Apply the roofline model to determine whether operations are compute-bound or memory-bound, and predict performance limits from hardware specifications</p></li>
@@ -530,7 +536,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-optimize">
-<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement vectorized matrix multiplication using BLAS, fused GELU activation, and tiled algorithms for cache efficiency</p></li>
@@ -539,9 +545,9 @@ document.write(`
 </ol>
 </section>
 <section id="why-this-matters-the-hardware-reality">
-<h2>Why This Matters: The Hardware Reality<a class="headerlink" href="#why-this-matters-the-hardware-reality" title="Permalink to this heading">#</a></h2>
+<h2>Why This Matters: The Hardware Reality<a class="headerlink" href="#why-this-matters-the-hardware-reality" title="Link to this heading">#</a></h2>
 <section id="the-performance-gap">
-<h3>The Performance Gap<a class="headerlink" href="#the-performance-gap" title="Permalink to this heading">#</a></h3>
+<h3>The Performance Gap<a class="headerlink" href="#the-performance-gap" title="Link to this heading">#</a></h3>
 <p>Modern ML workloads face a fundamental challenge: <strong>the speed gap between computation and memory access grows every year</strong>. Consider a typical CPU:</p>
 <ul class="simple">
 <li><p><strong>Peak Compute</strong>: 200-500 GFLOP/s (billions of floating-point operations per second)</p></li>
@@ -551,7 +557,7 @@ document.write(`
 <p>This means <strong>most ML operations are memory-bound, not compute-bound</strong>. Naive implementations waste computation cycles waiting for data. Professional optimization is about feeding the compute units efficiently.</p>
 </section>
 <section id="from-naive-python-to-production-performance">
-<h3>From Naive Python to Production Performance<a class="headerlink" href="#from-naive-python-to-production-performance" title="Permalink to this heading">#</a></h3>
+<h3>From Naive Python to Production Performance<a class="headerlink" href="#from-naive-python-to-production-performance" title="Link to this heading">#</a></h3>
 <p>The performance hierarchy for ML operations:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Naive</span> <span class="n">Python</span> <span class="n">loops</span><span class="p">:</span>       <span class="mi">1</span> <span class="n">GFLOP</span><span class="o">/</span><span class="n">s</span>    <span class="p">(</span><span class="n">baseline</span><span class="p">)</span>
 <span class="n">NumPy</span> <span class="p">(</span><span class="n">vectorized</span><span class="p">):</span>       <span class="mi">10</span><span class="o">-</span><span class="mi">50</span> <span class="n">GFLOP</span><span class="o">/</span><span class="n">s</span>  <span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">50</span><span class="n">x</span> <span class="n">faster</span><span class="p">)</span>
@@ -568,7 +574,7 @@ document.write(`
 </ul>
 </section>
 <section id="real-world-impact">
-<h3>Real-World Impact<a class="headerlink" href="#real-world-impact" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Impact<a class="headerlink" href="#real-world-impact" title="Link to this heading">#</a></h3>
 <p>These techniques enable:</p>
 <ul class="simple">
 <li><p><strong>Faster iteration</strong>: Train models in hours instead of days during research</p></li>
@@ -580,9 +586,9 @@ document.write(`
 </section>
 </section>
 <section id="the-roofline-model-your-performance-compass">
-<h2>The Roofline Model: Your Performance Compass<a class="headerlink" href="#the-roofline-model-your-performance-compass" title="Permalink to this heading">#</a></h2>
+<h2>The Roofline Model: Your Performance Compass<a class="headerlink" href="#the-roofline-model-your-performance-compass" title="Link to this heading">#</a></h2>
 <section id="understanding-hardware-limits">
-<h3>Understanding Hardware Limits<a class="headerlink" href="#understanding-hardware-limits" title="Permalink to this heading">#</a></h3>
+<h3>Understanding Hardware Limits<a class="headerlink" href="#understanding-hardware-limits" title="Link to this heading">#</a></h3>
 <p>The <strong>roofline model</strong> is the fundamental tool for understanding performance bottlenecks. It plots two hardware limits:</p>
 <ol class="arabic simple">
 <li><p><strong>Compute Roof</strong>: Maximum FLOPs the processor can execute per second</p></li>
@@ -609,7 +615,7 @@ document.write(`
 <p><strong>Key Insight</strong>: If your operation falls below the roofline (left side), adding more compute won’t help—you need to reduce memory traffic through algorithmic improvements.</p>
 </section>
 <section id="example-calculations">
-<h3>Example Calculations<a class="headerlink" href="#example-calculations" title="Permalink to this heading">#</a></h3>
+<h3>Example Calculations<a class="headerlink" href="#example-calculations" title="Link to this heading">#</a></h3>
 <p><strong>Element-wise addition</strong>: <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code></p>
 <ul class="simple">
 <li><p>FLOPs: N (one addition per element)</p></li>
@@ -626,9 +632,9 @@ document.write(`
 </section>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="vectorized-matrix-multiplication">
-<h3>1. Vectorized Matrix Multiplication<a class="headerlink" href="#vectorized-matrix-multiplication" title="Permalink to this heading">#</a></h3>
+<h3>1. Vectorized Matrix Multiplication<a class="headerlink" href="#vectorized-matrix-multiplication" title="Link to this heading">#</a></h3>
 <p><strong>The Challenge</strong>: Naive triple-nested loops in Python achieve ~1 GFLOP/s. We need 100-500 GFLOP/s.</p>
 <p><strong>The Solution</strong>: Leverage optimized BLAS (Basic Linear Algebra Subprograms) libraries that implement:</p>
 <ul class="simple">
@@ -671,7 +677,7 @@ document.write(`
 </ul>
 </section>
 <section id="kernel-fusion-eliminating-memory-traffic">
-<h3>2. Kernel Fusion: Eliminating Memory Traffic<a class="headerlink" href="#kernel-fusion-eliminating-memory-traffic" title="Permalink to this heading">#</a></h3>
+<h3>2. Kernel Fusion: Eliminating Memory Traffic<a class="headerlink" href="#kernel-fusion-eliminating-memory-traffic" title="Link to this heading">#</a></h3>
 <p><strong>The Problem</strong>: Element-wise operations are memory-bound. Consider GELU activation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GELU(x) = 0.5 * x * (1 + tanh(√(2/π) * (x + 0.044715 * x³)))
 </pre></div>
@@ -723,7 +729,7 @@ document.write(`
 </ul>
 </section>
 <section id="cache-aware-tiling-blocked-algorithms">
-<h3>3. Cache-Aware Tiling (Blocked Algorithms)<a class="headerlink" href="#cache-aware-tiling-blocked-algorithms" title="Permalink to this heading">#</a></h3>
+<h3>3. Cache-Aware Tiling (Blocked Algorithms)<a class="headerlink" href="#cache-aware-tiling-blocked-algorithms" title="Link to this heading">#</a></h3>
 <p><strong>The Memory Hierarchy</strong>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L1</span> <span class="n">Cache</span><span class="p">:</span>   <span class="mi">32</span><span class="o">-</span><span class="mi">64</span> <span class="n">KB</span>    <span class="mi">1</span><span class="o">-</span><span class="mi">4</span> <span class="n">cycles</span>     <span class="o">~</span><span class="mi">1</span> <span class="n">TB</span><span class="o">/</span><span class="n">s</span> <span class="n">bandwidth</span>
 <span class="n">L2</span> <span class="n">Cache</span><span class="p">:</span>   <span class="mi">256</span><span class="n">KB</span><span class="o">-</span><span class="mi">1</span><span class="n">MB</span>   <span class="mi">10</span><span class="o">-</span><span class="mi">20</span> <span class="n">cycles</span>   <span class="o">~</span><span class="mi">500</span> <span class="n">GB</span><span class="o">/</span><span class="n">s</span> <span class="n">bandwidth</span>
@@ -779,7 +785,7 @@ document.write(`
 <p>Note: In this module, we use NumPy’s <code class="docutils literal notranslate"><span class="pre">matmul</span></code> which delegates to BLAS libraries (MKL, OpenBLAS) that already implement sophisticated cache blocking with hardware-specific tuning. Production implementations use tile sizes, loop unrolling, and prefetching tuned for specific CPU architectures.</p>
 </section>
 <section id="roofline-analysis-in-practice">
-<h3>4. Roofline Analysis in Practice<a class="headerlink" href="#roofline-analysis-in-practice" title="Permalink to this heading">#</a></h3>
+<h3>4. Roofline Analysis in Practice<a class="headerlink" href="#roofline-analysis-in-practice" title="Link to this heading">#</a></h3>
 <p><strong>Measuring Your Hardware</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">analyze_arithmetic_intensity</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure actual performance vs. theoretical roofline.&quot;&quot;&quot;</span>
@@ -852,9 +858,9 @@ document.write(`
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you’ve completed:</p>
 <ul class="simple">
 <li><p><strong>Module 14 (Profiling)</strong>: You’ll use profiling tools to measure acceleration gains</p></li>
@@ -863,7 +869,7 @@ document.write(`
 </ul>
 <p>Check your BLAS configuration:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Check which BLAS backend NumPy uses</span>
 python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import numpy as np; np.show_config()&quot;</span>
@@ -880,7 +886,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/18_acceleration/acceleration.py</span></code></p></li>
 <li><p><strong>Implement vectorized matrix multiplication</strong>:</p>
@@ -925,9 +931,9 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify acceleration functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>acceleration
@@ -941,7 +947,7 @@ python<span class="w"> </span>modules/18_acceleration/acceleration.py
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Vectorized Operations Correctness</strong>: Matrix multiplication produces numerically correct results, handles batching and broadcasting, validates incompatible shapes</p></li>
 <li><p><strong>Kernel Fusion Correctness</strong>: Fused GELU matches reference implementation, handles extreme values without NaN/Inf, preserves data types and shapes</p></li>
@@ -951,51 +957,51 @@ python<span class="w"> </span>modules/18_acceleration/acceleration.py
 </ul>
 </section>
 <section id="inline-testing-performance-analysis">
-<h3>Inline Testing &amp; Performance Analysis<a class="headerlink" href="#inline-testing-performance-analysis" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Performance Analysis<a class="headerlink" href="#inline-testing-performance-analysis" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive validation and measurement:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Run all inline tests
-python modules/18_acceleration/acceleration.py
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all inline tests</span>
+<span class="n">python</span> <span class="n">modules</span><span class="o">/</span><span class="mi">18</span><span class="n">_acceleration</span><span class="o">/</span><span class="n">acceleration</span><span class="o">.</span><span class="n">py</span>
 
-# Expected output:
-🔬 Unit Test: Vectorized Matrix Multiplication...
-✅ vectorized_matmul works correctly!
+<span class="c1"># Expected output:</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Vectorized</span> <span class="n">Matrix</span> <span class="n">Multiplication</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">vectorized_matmul</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Unit Test: Fused GELU...
-✅ fused_gelu works correctly!
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Fused</span> <span class="n">GELU</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">fused_gelu</span> <span class="n">works</span> <span class="n">correctly</span><span class="err">!</span>
 
-🔬 Unit Test: Kernel Fusion Performance Impact...
-📊 Kernel Fusion Performance Analysis:
-   Tensor size: 2000×2000 = 4,000,000 elements
-   Unfused time: 45.23 ms
-   Fused time:   18.12 ms
-   Speedup: 2.50× faster
-   Per-element: 11.3 ns → 4.5 ns
-   Memory efficiency: 7→2 memory ops
-   Effective bandwidth: 15.2→38.5 GB/s
-🚀 Excellent! Kernel fusion providing significant speedup
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Kernel</span> <span class="n">Fusion</span> <span class="n">Performance</span> <span class="n">Impact</span><span class="o">...</span>
+<span class="err">📊</span> <span class="n">Kernel</span> <span class="n">Fusion</span> <span class="n">Performance</span> <span class="n">Analysis</span><span class="p">:</span>
+   <span class="n">Tensor</span> <span class="n">size</span><span class="p">:</span> <span class="mi">2000</span><span class="err">×</span><span class="mi">2000</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span><span class="mi">000</span><span class="p">,</span><span class="mi">000</span> <span class="n">elements</span>
+   <span class="n">Unfused</span> <span class="n">time</span><span class="p">:</span> <span class="mf">45.23</span> <span class="n">ms</span>
+   <span class="n">Fused</span> <span class="n">time</span><span class="p">:</span>   <span class="mf">18.12</span> <span class="n">ms</span>
+   <span class="n">Speedup</span><span class="p">:</span> <span class="mf">2.50</span><span class="err">×</span> <span class="n">faster</span>
+   <span class="n">Per</span><span class="o">-</span><span class="n">element</span><span class="p">:</span> <span class="mf">11.3</span> <span class="n">ns</span> <span class="err">→</span> <span class="mf">4.5</span> <span class="n">ns</span>
+   <span class="n">Memory</span> <span class="n">efficiency</span><span class="p">:</span> <span class="mi">7</span><span class="err">→</span><span class="mi">2</span> <span class="n">memory</span> <span class="n">ops</span>
+   <span class="n">Effective</span> <span class="n">bandwidth</span><span class="p">:</span> <span class="mf">15.2</span><span class="err">→</span><span class="mf">38.5</span> <span class="n">GB</span><span class="o">/</span><span class="n">s</span>
+<span class="err">🚀</span> <span class="n">Excellent</span><span class="err">!</span> <span class="n">Kernel</span> <span class="n">fusion</span> <span class="n">providing</span> <span class="n">significant</span> <span class="n">speedup</span>
 
-📊 Analyzing vectorization scaling behavior...
-┌─────────┬─────────────┬─────────────┬─────────────┬─────────────┐
-│  Size   │ Time (ms)   │ GFLOPS      │ Bandwidth   │ Efficiency  │
-├─────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-│     64  │      0.05   │      33.6   │      15.8   │      16.8   │
-│    128  │      0.18   │     114.2   │      26.7   │      57.1   │
-│    256  │      1.12   │     188.5   │      22.1   │      94.3   │
-│    512  │      6.45   │     328.7   │      19.3   │     164.4   │
-│   1024  │     42.18   │     405.1   │      16.1   │     202.6   │
-│   2048  │    281.34   │     485.2   │      15.3   │     242.6   │
-└─────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+<span class="err">📊</span> <span class="n">Analyzing</span> <span class="n">vectorization</span> <span class="n">scaling</span> <span class="n">behavior</span><span class="o">...</span>
+<span class="err">┌─────────┬─────────────┬─────────────┬─────────────┬─────────────┐</span>
+<span class="err">│</span>  <span class="n">Size</span>   <span class="err">│</span> <span class="n">Time</span> <span class="p">(</span><span class="n">ms</span><span class="p">)</span>   <span class="err">│</span> <span class="n">GFLOPS</span>      <span class="err">│</span> <span class="n">Bandwidth</span>   <span class="err">│</span> <span class="n">Efficiency</span>  <span class="err">│</span>
+<span class="err">├─────────┼─────────────┼─────────────┼─────────────┼─────────────┤</span>
+<span class="err">│</span>     <span class="mi">64</span>  <span class="err">│</span>      <span class="mf">0.05</span>   <span class="err">│</span>      <span class="mf">33.6</span>   <span class="err">│</span>      <span class="mf">15.8</span>   <span class="err">│</span>      <span class="mf">16.8</span>   <span class="err">│</span>
+<span class="err">│</span>    <span class="mi">128</span>  <span class="err">│</span>      <span class="mf">0.18</span>   <span class="err">│</span>     <span class="mf">114.2</span>   <span class="err">│</span>      <span class="mf">26.7</span>   <span class="err">│</span>      <span class="mf">57.1</span>   <span class="err">│</span>
+<span class="err">│</span>    <span class="mi">256</span>  <span class="err">│</span>      <span class="mf">1.12</span>   <span class="err">│</span>     <span class="mf">188.5</span>   <span class="err">│</span>      <span class="mf">22.1</span>   <span class="err">│</span>      <span class="mf">94.3</span>   <span class="err">│</span>
+<span class="err">│</span>    <span class="mi">512</span>  <span class="err">│</span>      <span class="mf">6.45</span>   <span class="err">│</span>     <span class="mf">328.7</span>   <span class="err">│</span>      <span class="mf">19.3</span>   <span class="err">│</span>     <span class="mf">164.4</span>   <span class="err">│</span>
+<span class="err">│</span>   <span class="mi">1024</span>  <span class="err">│</span>     <span class="mf">42.18</span>   <span class="err">│</span>     <span class="mf">405.1</span>   <span class="err">│</span>      <span class="mf">16.1</span>   <span class="err">│</span>     <span class="mf">202.6</span>   <span class="err">│</span>
+<span class="err">│</span>   <span class="mi">2048</span>  <span class="err">│</span>    <span class="mf">281.34</span>   <span class="err">│</span>     <span class="mf">485.2</span>   <span class="err">│</span>      <span class="mf">15.3</span>   <span class="err">│</span>     <span class="mf">242.6</span>   <span class="err">│</span>
+<span class="err">└─────────┴─────────────┴─────────────┴─────────────┴─────────────┘</span>
 
-🧪 RUNNING MODULE INTEGRATION TEST
-Running unit tests...
-✅ All tests passed!
+<span class="err">🧪</span> <span class="n">RUNNING</span> <span class="n">MODULE</span> <span class="n">INTEGRATION</span> <span class="n">TEST</span>
+<span class="n">Running</span> <span class="n">unit</span> <span class="n">tests</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">All</span> <span class="n">tests</span> <span class="n">passed</span><span class="err">!</span>
 
-🎉 ALL TESTS PASSED! Module ready for export.
+<span class="err">🎉</span> <span class="n">ALL</span> <span class="n">TESTS</span> <span class="n">PASSED</span><span class="err">!</span> <span class="n">Module</span> <span class="n">ready</span> <span class="k">for</span> <span class="n">export</span><span class="o">.</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">modules.</span><span class="mi">18</span><span class="n">_acceleration</span><span class="o">.</span><span class="n">acceleration</span> <span class="kn">import</span><span class="w"> </span><span class="o">*</span>
 
 <span class="c1"># Test vectorized matrix multiplication</span>
@@ -1055,9 +1061,9 @@ Running unit tests...
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Training Acceleration</strong>: How do vectorized operations reduce training time for transformers? What’s the speedup for attention computation (mostly matrix multiplies) vs. layer normalization (element-wise operations)?</p></li>
 <li><p><strong>Inference Optimization</strong>: Why is kernel fusion more important for inference than training? How does batch size affect the benefit of vectorization vs. fusion?</p></li>
@@ -1066,7 +1072,7 @@ Running unit tests...
 </ul>
 </section>
 <section id="roofline-analysis-foundations">
-<h3>Roofline Analysis Foundations<a class="headerlink" href="#roofline-analysis-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Roofline Analysis Foundations<a class="headerlink" href="#roofline-analysis-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Arithmetic Intensity Calculation</strong>: For convolution with kernel size K×K, input channels C_in, output channels C_out, and spatial dimensions H×W, what’s the arithmetic intensity? Is it compute-bound or memory-bound?</p></li>
 <li><p><strong>Memory Hierarchy Impact</strong>: Why does cache blocking improve performance by 2-5x even though it performs the same FLOPs? What’s the latency difference between L1 cache hits (4 cycles) vs. RAM accesses (300 cycles)?</p></li>
@@ -1075,7 +1081,7 @@ Running unit tests...
 </ul>
 </section>
 <section id="optimization-strategy-characteristics">
-<h3>Optimization Strategy Characteristics<a class="headerlink" href="#optimization-strategy-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Optimization Strategy Characteristics<a class="headerlink" href="#optimization-strategy-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory-Bound Operations</strong>: Why does adding more CPU cores NOT improve element-wise addition performance? What’s the fundamental bottleneck, and how do you fix it?</p></li>
 <li><p><strong>Kernel Fusion Trade-offs</strong>: Fused GELU reduces memory operations from 16 to 2 per element. Why doesn’t this give 8x speedup? What other factors limit acceleration?</p></li>
@@ -1085,7 +1091,7 @@ Running unit tests...
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to learn the hardware-aware optimization techniques that separate research prototypes from production ML systems. Understanding how to extract maximum performance from CPUs—through vectorization, cache optimization, and memory bandwidth reduction—is foundational knowledge for any ML engineer.</p>
 <p>These aren’t just academic exercises. Every time you use PyTorch or TensorFlow, you’re benefiting from these exact techniques implemented in their backend libraries. By building them yourself, you’ll understand:</p>
 <ul class="simple">
@@ -1105,7 +1111,7 @@ Running unit tests...
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/18_acceleration/acceleration_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/18_acceleration/acceleration_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/18_acceleration/acceleration_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1114,7 +1120,7 @@ Running unit tests...
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1123,7 +1129,7 @@ Running unit tests...
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/18_acceleration/acceleration.py</span></a></div>
 </div>
 </div>
 </div>

@@ -219,7 +219,7 @@ Ensure you have completed Module 01 (Tensor) before starting:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify tensor module is complete
 tito test --module tensor

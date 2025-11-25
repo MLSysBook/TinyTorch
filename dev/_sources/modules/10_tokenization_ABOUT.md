@@ -562,7 +562,7 @@ Ensure you understand tensor operations from Module 01:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify tensor module
 tito test --module tensor

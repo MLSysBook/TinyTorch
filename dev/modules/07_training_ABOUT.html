@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>07. Training &#8212; Tiny🔥Torch</title>
   
@@ -29,45 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -434,7 +424,12 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/07_training_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=5357532b"></script>
+    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="🏛️ Architecture Tier (Modules 08-13)" href="../tiers/architecture.html" />
@@ -535,7 +530,18 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -641,9 +647,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -801,9 +807,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -867,14 +873,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="training">
-<h1>07. Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h1>
+<h1>07. Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h1>
 <p><strong>FOUNDATION TIER</strong> | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Build the complete training infrastructure that orchestrates neural network learning end-to-end. This capstone module of the Foundation tier brings together all previous components—tensors, layers, losses, gradients, and optimizers—into production-ready training loops with learning rate scheduling, gradient clipping, and model checkpointing. You’ll create the same training patterns that power PyTorch, TensorFlow, and every production ML system.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Implement complete Trainer class</strong>: Orchestrate forward passes, loss computation, backpropagation, and parameter updates into cohesive training loops with train/eval mode switching</p></li>
@@ -885,7 +891,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement CosineSchedule for learning rate scheduling, clip_grad_norm for gradient stability, and complete Trainer class with checkpointing</p></li>
@@ -894,9 +900,9 @@ document.write(`
 </ol>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="the-training-loop-cycle">
-<h3>The Training Loop Cycle<a class="headerlink" href="#the-training-loop-cycle" title="Permalink to this heading">#</a></h3>
+<h3>The Training Loop Cycle<a class="headerlink" href="#the-training-loop-cycle" title="Link to this heading">#</a></h3>
 <p>Training orchestrates data, forward pass, loss, gradients, and updates in an iterative cycle:</p>
 <pre  class="mermaid">
         graph LR
@@ -916,7 +922,7 @@ document.write(`
     </pre><p><strong>Cycle</strong>: Load batch → Forward through model → Compute loss → Backward gradients → Update parameters → Repeat</p>
 </section>
 <section id="cosineschedule-adaptive-learning-rate-management">
-<h3>CosineSchedule - Adaptive Learning Rate Management<a class="headerlink" href="#cosineschedule-adaptive-learning-rate-management" title="Permalink to this heading">#</a></h3>
+<h3>CosineSchedule - Adaptive Learning Rate Management<a class="headerlink" href="#cosineschedule-adaptive-learning-rate-management" title="Link to this heading">#</a></h3>
 <p>Learning rate scheduling is like adjusting driving speed based on road conditions—start fast on the highway, slow down in neighborhoods for precision. Cosine annealing provides smooth transitions from aggressive learning to fine-tuning:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CosineSchedule</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -948,7 +954,7 @@ document.write(`
 </div>
 </section>
 <section id="gradient-clipping-preventing-training-explosions">
-<h3>Gradient Clipping - Preventing Training Explosions<a class="headerlink" href="#gradient-clipping-preventing-training-explosions" title="Permalink to this heading">#</a></h3>
+<h3>Gradient Clipping - Preventing Training Explosions<a class="headerlink" href="#gradient-clipping-preventing-training-explosions" title="Link to this heading">#</a></h3>
 <p>Gradient clipping is a speed governor that prevents dangerously large gradients from destroying training progress. Global norm clipping scales all gradients uniformly while preserving their relative magnitudes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">clip_grad_norm</span><span class="p">(</span><span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">max_norm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -989,7 +995,7 @@ document.write(`
 </div>
 </section>
 <section id="trainer-class-complete-training-orchestration">
-<h3>Trainer Class - Complete Training Orchestration<a class="headerlink" href="#trainer-class-complete-training-orchestration" title="Permalink to this heading">#</a></h3>
+<h3>Trainer Class - Complete Training Orchestration<a class="headerlink" href="#trainer-class-complete-training-orchestration" title="Link to this heading">#</a></h3>
 <p>The Trainer class conducts the symphony of training—coordinating model, optimizer, loss function, and scheduler into cohesive learning loops with checkpointing and evaluation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Trainer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1132,7 +1138,7 @@ document.write(`
 </div>
 </section>
 <section id="complete-training-example">
-<h3>Complete Training Example<a class="headerlink" href="#complete-training-example" title="Permalink to this heading">#</a></h3>
+<h3>Complete Training Example<a class="headerlink" href="#complete-training-example" title="Link to this heading">#</a></h3>
 <p>Bringing all components together into production-ready training:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">CosineSchedule</span><span class="p">,</span> <span class="n">clip_grad_norm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>
@@ -1189,12 +1195,12 @@ document.write(`
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you have completed all Foundation tier modules:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify all prerequisites (Training is the Foundation capstone!)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor<span class="w">      </span><span class="c1"># Module 01: Tensor operations</span>
@@ -1207,7 +1213,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/07_training/training.py</span></code></p></li>
 <li><p><strong>Implement CosineSchedule</strong>: Build learning rate scheduler with cosine annealing (smooth max_lr → min_lr transition)</p></li>
@@ -1220,9 +1226,9 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify complete training infrastructure:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>training
@@ -1233,7 +1239,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>CosineSchedule Correctness</strong>: Verify cosine annealing produces correct learning rates at start, middle, and end epochs</p></li>
 <li><p><strong>Gradient Clipping Stability</strong>: Test global norm computation and uniform scaling when gradients exceed threshold</p></li>
@@ -1243,30 +1249,30 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-training-analysis">
-<h3>Inline Testing &amp; Training Analysis<a class="headerlink" href="#inline-testing-training-analysis" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Training Analysis<a class="headerlink" href="#inline-testing-training-analysis" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive validation of training dynamics:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># CosineSchedule validation
-schedule = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=100)
-print(schedule.get_lr(0))    # 0.1 - aggressive learning initially
-print(schedule.get_lr(50))   # ~0.055 - gradual slowdown
-print(schedule.get_lr(100))  # 0.01 - fine-tuning at end
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># CosineSchedule validation</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="n">CosineSchedule</span><span class="p">(</span><span class="n">max_lr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">total_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">schedule</span><span class="o">.</span><span class="n">get_lr</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>    <span class="c1"># 0.1 - aggressive learning initially</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">schedule</span><span class="o">.</span><span class="n">get_lr</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>   <span class="c1"># ~0.055 - gradual slowdown</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">schedule</span><span class="o">.</span><span class="n">get_lr</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>  <span class="c1"># 0.01 - fine-tuning at end</span>
 
-# Gradient clipping validation
-param.grad = np.array([100.0, 200.0])  # Large gradients
-original_norm = clip_grad_norm([param], max_norm=1.0)
-# original_norm ≈ 223.6 → clipped to 1.0
-assert np.linalg.norm(param.grad.data) ≈ 1.0
+<span class="c1"># Gradient clipping validation</span>
+<span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">])</span>  <span class="c1"># Large gradients</span>
+<span class="n">original_norm</span> <span class="o">=</span> <span class="n">clip_grad_norm</span><span class="p">([</span><span class="n">param</span><span class="p">],</span> <span class="n">max_norm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="c1"># original_norm ≈ 223.6 → clipped to 1.0</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="err">≈</span> <span class="mf">1.0</span>
 
-# Trainer integration validation
-trainer = Trainer(model, optimizer, loss_fn, scheduler, grad_clip_norm=1.0)
-loss = trainer.train_epoch(train_data)
-eval_loss, accuracy = trainer.evaluate(test_data)
-trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
+<span class="c1"># Trainer integration validation</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">grad_clip_norm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_epoch</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+<span class="n">eval_loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s1">&#39;checkpoint.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">CosineSchedule</span><span class="p">,</span> <span class="n">clip_grad_norm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">losses</span><span class="w"> </span><span class="kn">import</span> <span class="n">MSELoss</span>
@@ -1314,9 +1320,9 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Production Training Pipelines</strong>: PyTorch Lightning, Hugging Face Transformers, TensorFlow Estimators all use similar Trainer architectures with checkpointing and scheduling</p></li>
 <li><p><strong>Large-Scale Model Training</strong>: GPT, BERT, and vision models rely on gradient clipping and learning rate scheduling for stable convergence across billions of parameters</p></li>
@@ -1325,7 +1331,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 </ul>
 </section>
 <section id="training-system-architecture">
-<h3>Training System Architecture<a class="headerlink" href="#training-system-architecture" title="Permalink to this heading">#</a></h3>
+<h3>Training System Architecture<a class="headerlink" href="#training-system-architecture" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory Breakdown</strong>: Training requires parameters (1×) + gradients (1×) + optimizer state (2-3×) = 4-6× model memory footprint</p></li>
 <li><p><strong>Gradient Accumulation</strong>: Enables effective batch size of accumulation_steps × actual_batch_size with fixed memory—trades time for memory efficiency</p></li>
@@ -1334,7 +1340,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 </ul>
 </section>
 <section id="training-dynamics">
-<h3>Training Dynamics<a class="headerlink" href="#training-dynamics" title="Permalink to this heading">#</a></h3>
+<h3>Training Dynamics<a class="headerlink" href="#training-dynamics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Learning Rate Scheduling</strong>: Cosine annealing starts fast (quick convergence when far from optimum) then slows (stable fine-tuning near solution)</p></li>
 <li><p><strong>Exploding Gradients</strong>: Occur in deep networks and RNNs when gradient magnitudes grow exponentially through backpropagation—gradient clipping prevents training collapse</p></li>
@@ -1343,7 +1349,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Training Memory Scaling</strong>: Adam optimizer uses 4× parameter memory (params + grads + m + v) vs SGD with momentum at 3× (params + grads + momentum)</p></li>
 <li><p><strong>Checkpoint Overhead</strong>: Pickle serialization adds 10-30% overhead beyond raw parameter data—use compression for large models</p></li>
@@ -1353,7 +1359,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to complete the Foundation tier by building the training infrastructure that brings neural networks to life! This is where all your work on tensors, activations, layers, losses, gradients, and optimizers comes together into a cohesive system that actually learns from data.</p>
 <p>Training is the heart of machine learning—the process that transforms random initialization into intelligent models. You’re implementing the same patterns used to train GPT, BERT, ResNet, and every production AI system. Understanding how scheduling, gradient clipping, checkpointing, and mode switching work together gives you mastery over the training process.</p>
 <p>This module is the culmination of everything you’ve built. Take your time understanding how each piece fits into the bigger picture, and enjoy creating a complete ML training system from scratch!</p>
@@ -1367,7 +1373,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/07_training/training.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/07_training/training.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/07_training/training.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1376,7 +1382,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/07_training/training.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/07_training/training.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/07_training/training.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1385,7 +1391,7 @@ trainer.save_checkpoint(&#39;checkpoint.pkl&#39;)
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/07_training/training.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/07_training/training.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/07_training/training.py</span></a></div>
 </div>
 </div>
 </div>

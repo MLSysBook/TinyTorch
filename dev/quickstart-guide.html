@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Quick Start Guide &#8212; Tiny🔥Torch</title>
   
@@ -29,45 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=afcf7c3c" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
-    <script src="_static/ml-timeline.js"></script>
-    <script src="_static/wip-banner.js"></script>
-    <script src="_static/marimo-badges.js"></script>
-    <script src="_static/sidebar-link.js"></script>
-    <script src="_static/hero-carousel.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
@@ -434,7 +424,12 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'quickstart-guide';</script>
-    <link rel="shortcut icon" href="_static/favicon.svg"/>
+    <script src="_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="_static/wip-banner.js?v=5357532b"></script>
+    <script src="_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="_static/sidebar-link.js?v=404b701b"></script>
+    <script src="_static/hero-carousel.js?v=10341d2a"></script>
+    <link rel="icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Student Workflow" href="student-workflow.html" />
@@ -535,7 +530,18 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -641,9 +647,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -801,9 +807,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -851,14 +857,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="quick-start-guide">
-<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this heading">#</a></h1>
+<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Link to this heading">#</a></h1>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">From Zero to Building Neural Networks</h2>
 <p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Complete setup + first module in 15 minutes</p>
 </div>
 <p><strong>Purpose</strong>: Get hands-on experience building ML systems in 15 minutes. Complete setup verification and build your first neural network component from scratch.</p>
 <section id="minute-setup">
-<h2>2-Minute Setup<a class="headerlink" href="#minute-setup" title="Permalink to this heading">#</a></h2>
+<h2>2-Minute Setup<a class="headerlink" href="#minute-setup" title="Link to this heading">#</a></h2>
 <p>Let’s get you ready to build ML systems:</p>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 1: One-Command Setup</h4>
@@ -880,7 +886,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsys
 <li><p>Configures TinyTorch in development mode</p></li>
 <li><p>Verifies installation</p></li>
 </ul>
-<p>See <a class="reference internal" href="tito/overview.html"><span class="doc std std-doc">TITO CLI Reference</span></a> for detailed workflow and troubleshooting.</p>
+<p>See <a class="reference internal" href="tito/overview.html"><span class="std std-doc">TITO CLI Reference</span></a> for detailed workflow and troubleshooting.</p>
 </div>
 <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #15803d;">Step 2: Verify Setup</h4>
@@ -889,7 +895,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </pre></div>
 </div>
 <p>You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.</p>
-<p>See <a class="reference internal" href="tito/modules.html"><span class="doc std std-doc">Module Workflow</span></a> for detailed commands and <a class="reference internal" href="tito/troubleshooting.html"><span class="doc std std-doc">Troubleshooting</span></a> if needed.</p>
+<p>See <a class="reference internal" href="tito/modules.html"><span class="std std-doc">Module Workflow</span></a> for detailed commands and <a class="reference internal" href="tito/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a> if needed.</p>
 </div>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #1976d2;">Step 3: Join the Community & Benchmark</h4>
@@ -914,15 +920,15 @@ tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
 <li><p>Your “Hello World” moment!</p></li>
 <li><p>Generates score and saves results locally</p></li>
 </ul>
-<p>See <span class="xref myst">Community Guide</span> for complete features.</p>
+<p>See <a class="reference internal" href="#community.html"><span class="xref myst">Community Guide</span></a> for complete features.</p>
 </div>
 </section>
 <section id="minute-first-module-walkthrough">
-<h2>15-Minute First Module Walkthrough<a class="headerlink" href="#minute-first-module-walkthrough" title="Permalink to this heading">#</a></h2>
+<h2>15-Minute First Module Walkthrough<a class="headerlink" href="#minute-first-module-walkthrough" title="Link to this heading">#</a></h2>
 <p>Let’s build your first neural network component following the <strong>TinyTorch workflow</strong>:</p>
 <pre  class="mermaid">
         graph TD
-    Start[Clone &amp; Setup] --&gt; Edit[Edit Module&lt;br/&gt;tensor_dev.ipynb]
+    Start[Clone &amp; Setup] --&gt; Edit[Edit Module&lt;br/&gt;01_tensor.ipynb]
     Edit --&gt; Export[Export to Package&lt;br/&gt;tito module complete 01]
     Export --&gt; Test[Test Import&lt;br/&gt;from tinytorch import Tensor]
     Test --&gt; Next[Continue to Module 02]
@@ -932,9 +938,9 @@ tito<span class="w"> </span>benchmark<span class="w"> </span>baseline
     style Export fill:#f0fdf4
     style Test fill:#fef3c7
     style Next fill:#f3e5f5
-    </pre><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete development cycle.</p>
+    </pre><p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete development cycle.</p>
 <section id="module-01-tensor-foundations">
-<h3>Module 01: Tensor Foundations<a class="headerlink" href="#module-01-tensor-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Module 01: Tensor Foundations<a class="headerlink" href="#module-01-tensor-foundations" title="Link to this heading">#</a></h3>
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
 <p><strong>Learning Goal:</strong> Build N-dimensional arrays - the foundation of all neural networks</p>
 <p><strong>Time:</strong> 15 minutes</p>
@@ -957,12 +963,12 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </pre></div>
 </div>
 <p>This makes your implementation importable: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">tinytorch</span> <span class="pre">import</span> <span class="pre">Tensor</span></code></p>
-<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
 <p><strong>Achievement Unlocked:</strong> Foundation capability - “Can I create and manipulate the building blocks of ML?”</p>
 </div>
 </section>
 <section id="next-step-module-02-activations">
-<h3>Next Step: Module 02 - Activations<a class="headerlink" href="#next-step-module-02-activations" title="Permalink to this heading">#</a></h3>
+<h3>Next Step: Module 02 - Activations<a class="headerlink" href="#next-step-module-02-activations" title="Link to this heading">#</a></h3>
 <div style="background: #fdf2f8; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ec4899; margin: 1.5rem 0;">
 <p><strong>Learning Goal:</strong> Add nonlinearity - the key to neural network intelligence</p>
 <p><strong>Time:</strong> 10 minutes</p>
@@ -984,13 +990,13 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>activations_dev.ipynb
 tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span><span class="m">02</span>
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle.</p>
 <p><strong>Achievement Unlocked:</strong> Intelligence capability - “Can I add nonlinearity to enable learning?”</p>
 </div>
 </section>
 </section>
 <section id="track-your-progress">
-<h2>Track Your Progress<a class="headerlink" href="#track-your-progress" title="Permalink to this heading">#</a></h2>
+<h2>Track Your Progress<a class="headerlink" href="#track-your-progress" title="Link to this heading">#</a></h2>
 <p>After completing your first modules:</p>
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 <p><strong>Check your new capabilities:</strong> Use the optional checkpoint system to track your progress:</p>
@@ -998,11 +1004,11 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </pre></div>
 </div>
 <p>This is helpful for self-assessment but not required for the core workflow.</p>
-<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the essential edit → export → validate cycle.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the essential edit → export → validate cycle.</p>
 </div>
 </section>
 <section id="validate-with-historical-milestones">
-<h2>Validate with Historical Milestones<a class="headerlink" href="#validate-with-historical-milestones" title="Permalink to this heading">#</a></h2>
+<h2>Validate with Historical Milestones<a class="headerlink" href="#validate-with-historical-milestones" title="Link to this heading">#</a></h2>
 <p>After exporting your modules, <strong>prove what you’ve built</strong> by running milestone scripts:</p>
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 0.5rem; margin: 1.5rem 0; color: white;">
 <p><strong>After Module 07</strong>: Build <strong>Rosenblatt’s 1957 Perceptron</strong> - the first trainable neural network<br />
@@ -1011,13 +1017,13 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <strong>After Module 09</strong>: Hit <strong>75%+ on CIFAR-10</strong> with 1998 CNNs<br />
 <strong>After Module 13</strong>: Generate text with <strong>2017 Transformers</strong><br />
 <strong>After Module 18</strong>: Optimize for production with <strong>2018 Torch Olympics</strong></p>
-<p>See <a class="reference internal" href="chapters/milestones.html"><span class="doc std std-doc">Journey Through ML History</span></a> for complete timeline, requirements, and expected results.</p>
+<p>See <a class="reference internal" href="chapters/milestones.html"><span class="std std-doc">Journey Through ML History</span></a> for complete timeline, requirements, and expected results.</p>
 </div>
 <p><strong>The Workflow</strong>: Edit modules → Export with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">N</span></code> → Run milestone scripts to validate</p>
-<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete cycle.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete cycle.</p>
 </section>
 <section id="what-you-just-accomplished">
-<h2>What You Just Accomplished<a class="headerlink" href="#what-you-just-accomplished" title="Permalink to this heading">#</a></h2>
+<h2>What You Just Accomplished<a class="headerlink" href="#what-you-just-accomplished" title="Link to this heading">#</a></h2>
 <p>In 15 minutes, you’ve:</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 <div style="background: #e6fffa; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #26d0ce;">
@@ -1035,30 +1041,30 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </div>
 </section>
 <section id="your-next-steps">
-<h2>Your Next Steps<a class="headerlink" href="#your-next-steps" title="Permalink to this heading">#</a></h2>
+<h2>Your Next Steps<a class="headerlink" href="#your-next-steps" title="Link to this heading">#</a></h2>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
 <section id="immediate-next-actions-choose-one">
-<h3>Immediate Next Actions (Choose One):<a class="headerlink" href="#immediate-next-actions-choose-one" title="Permalink to this heading">#</a></h3>
+<h3>Immediate Next Actions (Choose One):<a class="headerlink" href="#immediate-next-actions-choose-one" title="Link to this heading">#</a></h3>
 <p><strong>Continue Building (Recommended):</strong> Begin Module 03 to add layers to your network.</p>
 <p><strong>Master the Workflow:</strong></p>
 <ul class="simple">
-<li><p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle</p></li>
-<li><p>See <a class="reference internal" href="tito/overview.html"><span class="doc std std-doc">TITO CLI Reference</span></a> for complete command reference</p></li>
+<li><p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for the complete edit → export → validate cycle</p></li>
+<li><p>See <a class="reference internal" href="tito/overview.html"><span class="std std-doc">TITO CLI Reference</span></a> for complete command reference</p></li>
 </ul>
 <p><strong>For Instructors:</strong></p>
 <ul class="simple">
-<li><p>See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="doc std std-doc">Classroom Setup Guide</span></a> for <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> integration</p></li>
+<li><p>See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="std std-doc">Classroom Setup Guide</span></a> for <a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> integration</p></li>
 </ul>
 <p><strong>Notebook Platforms:</strong></p>
 <ul class="simple">
 <li><p><strong>Online (Viewing)</strong>: Jupyter/MyBinder, Google Colab, Marimo - great for exploring notebooks</p></li>
-<li><p><strong>⚠️ Important</strong>: Online notebooks are for <strong>viewing only</strong>. For full package experiments, milestone validation, and CLI tools, you need <strong>local installation</strong> (see <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a>)</p></li>
+<li><p><strong>⚠️ Important</strong>: Online notebooks are for <strong>viewing only</strong>. For full package experiments, milestone validation, and CLI tools, you need <strong>local installation</strong> (see <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a>)</p></li>
 </ul>
 </div>
 </section>
 </section>
 <section id="pro-tips-for-continued-success">
-<h2>Pro Tips for Continued Success<a class="headerlink" href="#pro-tips-for-continued-success" title="Permalink to this heading">#</a></h2>
+<h2>Pro Tips for Continued Success<a class="headerlink" href="#pro-tips-for-continued-success" title="Link to this heading">#</a></h2>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 <p><strong>The TinyTorch Development Cycle:</strong></p>
 <ol class="arabic simple">
@@ -1066,11 +1072,11 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <li><p>Export with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">N</span></code></p></li>
 <li><p>Validate by running milestone scripts</p></li>
 </ol>
-<p>See <a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> for detailed workflow guide and best practices.</p>
+<p>See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a> for detailed workflow guide and best practices.</p>
 </div>
 </section>
 <section id="youre-now-a-tinytorch-builder">
-<h2>You’re Now a TinyTorch Builder<a class="headerlink" href="#youre-now-a-tinytorch-builder" title="Permalink to this heading">#</a></h2>
+<h2>You’re Now a TinyTorch Builder<a class="headerlink" href="#youre-now-a-tinytorch-builder" title="Link to this heading">#</a></h2>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Build Production ML Systems</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">You've proven you can build ML components from scratch. Time to keep going!</p>
