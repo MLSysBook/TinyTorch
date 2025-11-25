@@ -30,18 +30,18 @@ def print_banner(compact: bool = False):
     else:
         # Create banner text that matches the clean block text theme
         banner_text = Text()
-        banner_text.append("tiny", style="dim cyan")
+        banner_text.append("Tiny", style="dim cyan")
         banner_text.append("🔥", style="red")
         banner_text.append("TORCH", style="bold orange1")
         banner_text.append(": Build ML Systems from Scratch", style="dim")
         console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
 def print_compact_banner():
-    """Print a compact TinyTorch banner with 'tiny' above TORCH."""
+    """Print a compact TinyTorch banner with 'Tiny' above TORCH."""
     console = get_console()
     # Create compact banner text
     banner_text = Text()
-    banner_text.append("tiny", style="dim cyan")
+    banner_text.append("Tiny", style="dim cyan")
     banner_text.append("\n🔥", style="red")
     banner_text.append("TORCH", style="bold orange1")
     banner_text.append(": Build ML Systems from Scratch", style="dim")
