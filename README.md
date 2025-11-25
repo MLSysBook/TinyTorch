@@ -58,9 +58,14 @@ A **complete ML framework** capable of:
 
 ```
 TinyTorch/
-├── modules/           # 🏗️ YOUR workspace - implement ML systems here
+├── src/               # 💻 Python source files (developers/contributors edit here)
 │   ├── 01_tensor/        # Module 01: Tensor operations from scratch
-│   │   ├── ABOUT.md      # Conceptual overview & learning objectives
+│   │   ├── 01_tensor.py  # Python source (version controlled)
+│   │   └── ABOUT.md      # Conceptual overview & learning objectives
+│
+├── modules/           # 📓 Generated notebooks (learners work here)
+│   ├── 01_tensor/        # Auto-generated from src/
+│   │   └── 01_tensor.ipynb  # Jupyter notebook for learning
 │   │   ├── README.md     # Practical implementation guide
 │   │   └── tensor.py     # Your implementation
 │   ├── 02_activations/   # Module 02: ReLU, Softmax activations
@@ -117,13 +122,17 @@ TinyTorch/
     └── core/          # Core utilities
 ```
 
-**🚨 CRITICAL: Work in `modules/`, Import from `tinytorch/`**
-- ✅ **Edit code**: Always in `modules/XX_name/name.py` files
-- ✅ **Import & use**: Your built components from `tinytorch.core.component`
-- ❌ **Never edit**: Files in `tinytorch/` directly (auto-generated from modules)
-- 🔄 **Sync changes**: Use `tito module complete XX_name` to update package
+**🚨 CRITICAL: Understand the Three Layers**
+- 📝 **Source**: Edit `src/XX_name/XX_name.py` (for contributors) OR work in generated `modules/XX_name/XX_name.ipynb` (for learners)
+- 📓 **Notebooks**: Generated from source with `tito export` → creates `modules/*.ipynb` for learning
+- 📦 **Package**: Import from `tinytorch.core.component` → auto-generated from notebooks
+- ❌ **Never edit**: Files in `tinytorch/` directly (regenerated on every export)
+- 🔄 **Workflow**: `src/*.py` → `modules/*.ipynb` → `tinytorch/*.py`
 
-**Why this structure?** Learn by building (modules) → Use what you built (tinytorch) → Validate mastery (tests)
+**Why this structure?** 
+- **Developers**: Edit Python source (`src/`) for version control
+- **Learners**: Work in notebooks (`modules/`) for interactive learning
+- **Both**: Import completed components from `tinytorch/` package
 
 ## Quick Start
 

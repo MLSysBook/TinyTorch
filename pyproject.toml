@@ -31,6 +31,9 @@ dependencies = [
     "PyYAML>=6.0",
 ]
 
+[project.scripts]
+tito = "tito.main:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
@@ -52,5 +55,5 @@ Issues = "https://github.com/mlsysbook/TinyTorch/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tinytorch*"]
-exclude = ["tests*", "modules*", "site*", "docs*", "milestones*", "assignments*", "tito*"]
+include = ["tinytorch*", "tito*"]
+exclude = ["tests*", "modules*", "site*", "docs*", "milestones*", "assignments*"]
