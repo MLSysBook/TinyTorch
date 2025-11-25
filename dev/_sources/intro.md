@@ -106,7 +106,7 @@ Capstone: Vision • Language • Speed • Compression tracks
 
 </div>
 
-**[Complete course structure](chapters/00-introduction)** • **[Daily workflow guide](student-workflow)** • **[Join the community](community)**
+**[Complete course structure](chapters/00-introduction)** • **[Getting started guide](getting-started)** • **[Join the community](community)**
 
 ## Recreate ML History
 

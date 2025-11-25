@@ -107,8 +107,8 @@
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -178,22 +178,9 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -294,70 +281,6 @@
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/faq.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Ffaq.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -761,7 +684,7 @@ document.write(`
 <li><p>Helpful for self-assessment</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">checkpoint</span> <span class="pre">status</span></code> to view progress</p></li>
 </ul>
-<p><strong>📖 See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a></strong> for the core development cycle.</p>
+<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for the core development cycle.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -786,7 +709,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 jupyter<span class="w"> </span>lab<span class="w"> </span>tensor_dev.py
 </pre></div>
 </div>
-<p><strong>📖 See <a class="reference internal" href="quickstart-guide.html"><span class="std std-doc">Quick Start Guide</span></a></strong> for detailed setup.</p>
+<p><strong>📖 See <span class="xref myst">Quick Start Guide</span></strong> for detailed setup.</p>
 </section>
 <section id="whats-the-typical-workflow">
 <h3>What’s the typical workflow?<a class="headerlink" href="#whats-the-typical-workflow" title="Link to this heading">#</a></h3>
@@ -802,7 +725,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 python<span class="w"> </span>rosenblatt_forward.py<span class="w">  </span><span class="c1"># Uses YOUR implementation!</span>
 </pre></div>
 </div>
-<p><strong>📖 See <a class="reference internal" href="student-workflow.html"><span class="std std-doc">Student Workflow</span></a></strong> for complete details.</p>
+<p><strong>📖 See <span class="xref myst">Student Workflow</span></strong> for complete details.</p>
 </section>
 <section id="can-i-use-this-in-my-classroom">
 <h3>Can I use this in my classroom?<a class="headerlink" href="#can-i-use-this-in-my-classroom" title="Link to this heading">#</a></h3>
@@ -813,7 +736,7 @@ python<span class="w"> </span>rosenblatt_forward.py<span class="w">  </span><spa
 <li><p><a class="reference external" href="https://nbgrader.readthedocs.io/">NBGrader</a> integration coming soon for automated grading</p></li>
 <li><p>Instructor tooling under development</p></li>
 </ul>
-<p><strong>📖 See <a class="reference internal" href="usage-paths/classroom-use.html"><span class="std std-doc">Classroom Use Guide</span></a></strong> for details.</p>
+<p><strong>📖 See <span class="xref myst">Classroom Use Guide</span></strong> for details.</p>
 </section>
 <section id="how-do-i-get-help">
 <h3>How do I get help?<a class="headerlink" href="#how-do-i-get-help" title="Link to this heading">#</a></h3>
