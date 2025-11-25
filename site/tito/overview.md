@@ -33,6 +33,96 @@
 
 ---
 
+## 👥 Commands by User Role
+
+TinyTorch serves three types of users. Choose your path:
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
+
+<div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
+<h3 style="margin: 0 0 1rem 0; color: #1976d2;">🎓 Student / Learner</h3>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #37474f;">You're learning ML systems by building from scratch</p>
+
+**Your Workflow:**
+```bash
+# Start learning
+tito module start 01
+
+# Complete modules  
+tito module complete 01
+
+# Validate with history
+tito milestone run 03
+
+# Track progress
+tito status
+```
+
+**Key Commands:**
+- `tito module` - Build components
+- `tito milestone` - Validate
+- `tito status` - Track progress
+
+</div>
+
+<div style="background: #fff3e0; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f57c00;">
+<h3 style="margin: 0 0 1rem 0; color: #e65100;">👨‍🏫 Instructor</h3>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #37474f;">You're teaching ML systems engineering</p>
+
+**Your Workflow:**
+```bash
+# Generate assignments
+tito nbgrader generate 01
+
+# Distribute to students
+tito nbgrader release 01
+
+# Collect & grade
+tito nbgrader collect 01
+tito nbgrader autograde 01
+
+# Provide feedback
+tito nbgrader feedback 01
+```
+
+**Key Commands:**
+- `tito nbgrader` - Assignment management
+- `tito module` - Test implementations
+- `tito milestone` - Validate setups
+
+</div>
+
+<div style="background: #f3e5f5; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #9c27b0;">
+<h3 style="margin: 0 0 1rem 0; color: #7b1fa2;">👩‍💻 Developer / Contributor</h3>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #37474f;">You're contributing to TinyTorch modules</p>
+
+**Your Workflow:**
+```bash
+# Edit source code
+# src/01_tensor/01_tensor.py
+
+# Export to notebooks & package
+tito src export 01_tensor
+tito src export --all
+
+# Test implementations
+tito src test 01_tensor
+
+# Validate changes
+tito milestone run 03
+```
+
+**Key Commands:**
+- `tito src` - Developer workflow
+- `tito module` - Test as student
+- `tito milestone` - Validate
+
+</div>
+
+</div>
+
+---
+
 ## Complete Command Reference
 
 ### System Commands
@@ -111,6 +201,26 @@
 
 **See**: [Community Guide](../community.html) for complete details
 
+### Developer Commands
+
+**Purpose**: Source code development and contribution (for developers only)
+
+| Command | Description | Use Case |
+|---------|-------------|----------|
+| `tito src export <module>` | Export src/ → modules/ → tinytorch/ | After editing source files |
+| `tito src export --all` | Export all modules | After major refactoring |
+| `tito src test <module>` | Run tests on source files | During development |
+
+**Note**: These commands work with `src/XX_name/XX_name.py` files and are for TinyTorch contributors/developers.  
+**Students** use `tito module` commands to work with generated notebooks.
+
+**Directory Structure:**
+```
+src/              ← Developers edit here (Python source)
+modules/          ← Students use these (generated notebooks)
+tinytorch/        ← Package code (auto-generated)
+```
+
 ---
 
 ## Command Groups by Task
@@ -128,7 +238,7 @@ source activate.sh
 tito system doctor
 ```
 
-### Daily Development Workflow
+### Student Workflow (Learning)
 
 ```bash
 # Start or continue a module
@@ -140,6 +250,22 @@ tito module complete 01
 
 # Check progress
 tito module status
+```
+
+### Developer Workflow (Contributing)
+
+```bash
+# Edit source files in src/
+vim src/01_tensor/01_tensor.py
+
+# Export to notebooks + package
+tito src export 01_tensor
+
+# Test implementation
+python -c "from tinytorch import Tensor; print(Tensor([1,2,3]))"
+
+# Validate with milestones
+tito milestone run 03
 ```
 
 ### Achievement & Validation
