@@ -46,8 +46,8 @@ class CLIConfig:
                 current = current.parent
             else:
                 project_root = Path.cwd()
-        
-        modules_path = project_root / 'modules'
+
+        modules_path = project_root / 'src'
         return cls(
             project_root=project_root,
             assignments_dir=project_root / 'assignments',

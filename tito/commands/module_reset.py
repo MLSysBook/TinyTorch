@@ -245,7 +245,7 @@ class ModuleResetCommand(BaseCommand):
         # Get export target from module's #| default_exp directive
         module_dir = self.config.modules_dir / module_name
         short_name = module_name.split("_", 1)[1] if "_" in module_name else module_name
-        dev_file = module_dir / f"{short_name}.py"
+        dev_file = module_dir / f"{module_name}.py"
 
         if not dev_file.exists():
             console.print(f"[yellow]Dev file not found: {dev_file}[/yellow]")
@@ -304,7 +304,7 @@ class ModuleResetCommand(BaseCommand):
         # Get module directory and dev file
         module_dir = self.config.modules_dir / module_name
         short_name = module_name.split("_", 1)[1] if "_" in module_name else module_name
-        dev_file = module_dir / f"{short_name}.py"
+        dev_file = module_dir / f"{module_name}.py"
 
         console.print(f"[cyan]Restoring from git: {dev_file.relative_to(self.config.project_root)}[/cyan]")
 
