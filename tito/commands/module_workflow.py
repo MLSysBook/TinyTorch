@@ -295,7 +295,7 @@ class ModuleWorkflowCommand(BaseCommand):
             ("02", "XOR Crisis (1969)", [1, 2]),
             ("03", "MLP Revival (1986)", [1, 2, 3, 4, 5, 6, 7]),
             ("04", "CNN Revolution (1998)", [1, 2, 3, 4, 5, 6, 7, 8, 9]),
-            ("05", "Transformer Era (2017)", list(range(1, 14))),
+            ("05", "Transformer Era (2017)", [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13]),  # Skip spatial/dataloader for attention
             ("06", "MLPerf (2018)", list(range(1, 20))),
         ]
 
@@ -630,7 +630,7 @@ class ModuleWorkflowCommand(BaseCommand):
             self.console.print(Panel(
                 f"🎉 Module {completed_module} completed!\n\n"
                 "🏆 Congratulations! You've completed all available modules!\n"
-                "🚀 You're now ready to build production ML systems!",
+                "🚀 You're now ready to run MLPerf benchmarks!",
                 title="All Modules Complete!",
                 border_style="gold1"
             ))
@@ -786,7 +786,7 @@ class ModuleWorkflowCommand(BaseCommand):
             ("02", "XOR Crisis (1969)", [1, 2]),
             ("03", "MLP Revival (1986)", [1, 2, 3, 4, 5, 6, 7]),
             ("04", "CNN Revolution (1998)", [1, 2, 3, 4, 5, 6, 7, 8, 9]),
-            ("05", "Transformer Era (2017)", list(range(1, 14))),
+            ("05", "Transformer Era (2017)", [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13]),  # Skip spatial/dataloader for attention
             ("06", "MLPerf (2018)", list(range(1, 20))),
         ]
 

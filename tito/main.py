@@ -77,7 +77,7 @@ class TinyTorchCLI:
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
-            'milestone': MilestoneCommand,
+            'milestones': MilestoneCommand,
             'leaderboard': LeaderboardCommand,
             'olympics': OlympicsCommand,
             'benchmark': BenchmarkCommand,
@@ -106,7 +106,7 @@ Command Groups:
   package      Package management and nbdev integration commands
   nbgrader     Assignment management and auto-grading commands
   checkpoint   Progress tracking - view capabilities unlocked and learning journey
-  milestone    Epic achievements - celebrate major capability unlocks
+  milestones   Epic achievements - celebrate major capability unlocks
   leaderboard  Community showcase - share progress, connect with learners
   olympics     Competition events - friendly challenges and recognition
 
@@ -228,7 +228,7 @@ Tracking Progress:
                     "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
                     "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
                     "  [bold cyan]checkpoint[/bold cyan]   - Progress tracking (capabilities unlocked)\n"
-                    "  [bold magenta]milestone[/bold magenta]    - Epic achievements (major unlocks)\n"
+                    "  [bold magenta]milestones[/bold magenta]   - Epic achievements (major unlocks)\n"
                     "  [bold bright_blue]leaderboard[/bold bright_blue] - Community showcase (share progress)\n"
                     "  [bold bright_yellow]olympics[/bold bright_yellow]     - Competition events (challenges)\n\n"
                     "[bold]Convenience Shortcuts:[/bold]\n"
