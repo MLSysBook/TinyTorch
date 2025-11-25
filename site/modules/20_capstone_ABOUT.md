@@ -1,1 +1,1 @@
-../../modules/20_capstone/ABOUT.md
+../../src/20_capstone/ABOUT.md

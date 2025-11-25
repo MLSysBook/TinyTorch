@@ -13,6 +13,7 @@ from .info import InfoCommand
 from .test import TestCommand
 from .doctor import DoctorCommand
 from .export import ExportCommand
+from .src import SrcCommand
 from .reset import ResetCommand
 from .jupyter import JupyterCommand
 from .nbdev import NbdevCommand
@@ -36,6 +37,7 @@ __all__ = [
     'TestCommand',
     'DoctorCommand',
     'ExportCommand',
+    'SrcCommand',
     'ResetCommand',
     'JupyterCommand',
     'NbdevCommand',

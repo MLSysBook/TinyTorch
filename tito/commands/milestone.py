@@ -950,24 +950,32 @@ class MilestoneCommand(BaseCommand):
         if not args.skip_checks:
             console.print(f"\n[bold cyan]🔍 Checking prerequisites for Milestone {milestone_id}...[/bold cyan]\n")
 
-            # Use unified progress tracker
-            from ..core.progress_tracker import ProgressTracker
-            from ..core.milestone_validator import MilestoneValidator
-            from .export import ExportCommand
+            # Check module completion status using module workflow
+            from .module_workflow import ModuleWorkflowCommand
+            from .source import SourceCommand
             from .test import TestCommand
             
-            tracker = ProgressTracker(self.config.project_root)
-            validator = MilestoneValidator(self.config.project_root, console)
-            export_cmd = ExportCommand(self.config)
+            module_workflow = ModuleWorkflowCommand(self.config)
+            progress_data = module_workflow.get_progress_data()
+            # Use module workflow for checking completion status
+            from .src import SrcCommand
+            from .test import TestCommand
+            
+            source_cmd = SrcCommand(self.config)
             test_cmd = TestCommand(self.config)
             
-            # Check if modules are completed
-            all_complete, missing_modules = validator.check_prerequisites(milestone_id, tracker)
+            # Check if modules are completed using progress data
+            required_modules = milestone.get('required_modules', [])
+            completed_modules = progress_data.get('completed_modules', [])
             
-            if not all_complete:
+            # Convert completed to set of integers
+            completed_set = {int(m) if isinstance(m, str) else m for m in completed_modules}
+            missing_modules = [m for m in required_modules if m not in completed_set]
+            
+            if missing_modules:
                 console.print(Panel(
                     f"[bold yellow]❌ Missing Required Modules[/bold yellow]\n\n"
-                    f"[yellow]Milestone {milestone_id} requires modules: {', '.join(f'{m:02d}' for m in milestone['required_modules'])}[/yellow]\n"
+                    f"[yellow]Milestone {milestone_id} requires modules: {', '.join(f'{m:02d}' for m in required_modules)}[/yellow]\n"
                     f"[red]Missing: {', '.join(f'{m:02d}' for m in missing_modules)}[/red]\n\n"
                     f"[cyan]Complete the missing modules first:[/cyan]\n" +
                     "\n".join(f"[dim]  tito module complete {m:02d}[/dim]" for m in missing_modules[:3]),
@@ -977,24 +985,6 @@ class MilestoneCommand(BaseCommand):
                 return 1
             
             console.print(f"[green]✅ All required modules completed![/green]\n")
-            
-            # Validate that all modules are exported and tested
-            console.print(f"[bold cyan]🔧 Validating exports and tests...[/bold cyan]\n")
-            success, failed = validator.validate_and_export_modules(milestone_id, export_cmd, test_cmd)
-            
-            if not success:
-                console.print(Panel(
-                    f"[bold red]❌ Validation Failed[/bold red]\n\n"
-                    f"[yellow]Some required modules failed export or tests:[/yellow]\n"
-                    f"[red]{', '.join(failed)}[/red]\n\n"
-                    f"[cyan]Fix the issues and try again:[/cyan]\n"
-                    f"[dim]  tito module complete XX[/dim] - Re-export and test modules",
-                    title="Validation Failed",
-                    border_style="red"
-                ))
-                return 1
-            
-            console.print(f"\n[green]✅ All modules exported and tested! Ready to run milestone.[/green]\n")
 
             # Test imports work
             console.print("[bold cyan]🧪 Testing YOUR implementations...[/bold cyan]\n")
@@ -1069,13 +1059,9 @@ class MilestoneCommand(BaseCommand):
                 # Success! Mark milestone as complete
                 self._mark_milestone_complete(milestone_id)
                 
-                # Also update unified progress tracker
-                try:
-                    from ..core.progress_tracker import ProgressTracker
-                    tracker = ProgressTracker(self.config.project_root)
-                    tracker.mark_milestone_completed(milestone_id)
-                except Exception:
-                    pass  # Non-critical
+                # Progress tracking is handled by _mark_milestone_complete
+                # which updates .tito/milestones.json
+                pass
 
                 console.print(Panel(
                     f"[bold green]🏆 MILESTONE ACHIEVED![/bold green]\n\n"

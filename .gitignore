@@ -179,8 +179,9 @@ MODULE_STATUS_SUMMARY.md
 progress.json
 modules/HASATTR_*.md
 
-# Generated development notebooks (built from *_dev.py source files)
-modules/*/*_dev.ipynb
+# Generated notebooks (built from src/*.py source files)
+# The modules/ directory contains generated notebooks for learners
+modules/
 
 # AI development files (keep locally)
 .claude/

@@ -1,1 +1,1 @@
-../../modules/01_tensor/ABOUT.md
+../../src/01_tensor/ABOUT.md

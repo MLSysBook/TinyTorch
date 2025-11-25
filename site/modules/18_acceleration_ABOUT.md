@@ -1,1 +1,1 @@
-../../modules/18_acceleration/ABOUT.md
+../../src/18_acceleration/ABOUT.md

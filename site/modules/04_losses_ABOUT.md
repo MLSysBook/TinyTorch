@@ -1,1 +1,1 @@
-../../modules/04_losses/ABOUT.md
+../../src/04_losses/ABOUT.md

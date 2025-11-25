@@ -34,7 +34,7 @@ tito system doctor
 tito module view 01_tensor
 
 # Or open the notebook directly
-jupyter notebook modules/01_tensor/tensor_dev.py
+jupyter lab modules/01_tensor/
 ```
 
 ## 📚 Learning Path

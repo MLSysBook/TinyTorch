@@ -61,18 +61,22 @@ class ExportCommand(BaseCommand):
 
     def _get_export_target(self, module_path: Path) -> str:
         """
-        Read the actual export target from the dev file's #| default_exp directive.
+        Read the actual export target from the source file's #| default_exp directive.
         This is the source of truth, not the YAML file.
         """
-        # Extract the short name from the full module name
+        # module_path might be pointing to modules/ (notebooks) or src/ (source)
+        # Always look in src/ for the source file
         module_name = module_path.name
-        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-            short_name = module_name[3:]  # Remove "00_" prefix
-        else:
-            short_name = module_name
         
-        # Use regular .py file (has complete exports)
-        dev_file = module_path / f"{short_name}.py"
+        # Check if we're in modules/ or src/
+        if "modules" in str(module_path):
+            # Convert modules/XX_name to src/XX_name
+            source_path = Path("src") / module_name
+        else:
+            source_path = module_path
+        
+        # Use full module name for file (e.g., 01_tensor.py)
+        dev_file = source_path / f"{module_name}.py"
         if not dev_file.exists():
             return "unknown"
 
@@ -90,8 +94,8 @@ class ExportCommand(BaseCommand):
         return "unknown"
 
     def _discover_modules(self) -> list:
-        """Discover available modules from modules directory."""
-        source_dir = Path("modules")
+        """Discover available modules from src directory."""
+        source_dir = Path("src")
         modules = []
         
         if source_dir.exists():
@@ -267,8 +271,8 @@ class ExportCommand(BaseCommand):
 # ║  🛡️ STUDENT PROTECTION: This file contains optimized implementations.        ║
 # ║     Editing it directly may break module functionality and training.         ║
 # ║                                                                               ║
-# ║  🎓 LEARNING TIP: Work in modules/ - that's where real development    ║
-# ║     happens! The tinytorch/ directory is just the compiled output.           ║
+# ║  🎓 LEARNING TIP: Work in src/ (developers) or modules/ (learners)    ║
+# ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 
 """
@@ -304,22 +308,20 @@ class ExportCommand(BaseCommand):
         # Remove .py extension and convert to module path
         module_parts = rel_path.with_suffix('').parts
         
-        # Common mappings
+        # Common mappings (source files are now in src/)
         source_mappings = {
-            ('core', 'tensor'): 'modules/02_tensor/tensor.py',
-            ('core', 'activations'): 'modules/03_activations/activations.py', 
-            ('core', 'layers'): 'modules/04_layers/layers.py',
-            ('core', 'dense'): 'modules/05_dense/dense.py',
-            ('core', 'spatial'): 'modules/06_spatial/spatial.py',
-            ('core', 'attention'): 'modules/07_attention/attention.py',
-            ('core', 'dataloader'): 'modules/08_dataloader/dataloader.py',
-            ('core', 'autograd'): 'modules/09_autograd/autograd.py',
-            ('core', 'optimizers'): 'modules/10_optimizers/optimizers.py',
-            ('core', 'training'): 'modules/11_training/training.py',
-            ('core', 'compression'): 'modules/12_compression/compression.py',
-            ('core', 'kernels'): 'modules/13_kernels/kernels.py',
-            ('core', 'benchmarking'): 'modules/14_benchmarking/benchmarking.py',
-            ('core', 'networks'): 'modules/16_tinygpt/tinygpt_dev.ipynb',
+            ('core', 'tensor'): 'src/01_tensor/01_tensor.py',
+            ('core', 'activations'): 'src/02_activations/02_activations.py', 
+            ('core', 'layers'): 'src/03_layers/03_layers.py',
+            ('core', 'dense'): 'src/04_losses/04_losses.py',
+            ('core', 'spatial'): 'src/09_spatial/09_spatial.py',
+            ('core', 'attention'): 'src/12_attention/12_attention.py',
+            ('core', 'dataloader'): 'src/08_dataloader/08_dataloader.py',
+            ('core', 'autograd'): 'src/05_autograd/05_autograd.py',
+            ('core', 'optimizers'): 'src/06_optimizers/06_optimizers.py',
+            ('core', 'training'): 'src/07_training/07_training.py',
+            ('core', 'compression'): 'src/16_compression/16_compression.py',
+            ('core', 'benchmarking'): 'src/19_benchmarking/19_benchmarking.py',
         }
         
         if module_parts in source_mappings:
@@ -328,9 +330,9 @@ class ExportCommand(BaseCommand):
         # Fallback: try to guess based on the file name
         if len(module_parts) >= 2:
             module_name = module_parts[-1]  # e.g., 'tensor' from ('core', 'tensor')
-            return f"modules/XX_{module_name}/{module_name}.py"
+            return f"src/XX_{module_name}/XX_{module_name}.py"
         
-        return "modules/[unknown]/[unknown].py"
+        return "src/[unknown]/[unknown].py"
 
     def _show_export_details(self, console, module_name: Optional[str] = None):
         """Show detailed export information including where each module exports to."""
@@ -453,17 +455,19 @@ class ExportCommand(BaseCommand):
             }
 
     def _convert_py_to_notebook(self, module_path: Path) -> bool:
-        """Convert .py dev file to .ipynb using Jupytext - always regenerate from Python source."""
+        """Convert .py file from src/ to .ipynb in modules/ using Jupytext."""
         module_name = module_path.name
-        short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
         
-        # Use regular .py file (has complete exports)
-        dev_file = module_path / f"{short_name}.py"
+        # Source file is in src/ with full module name (e.g., src/01_tensor/01_tensor.py)
+        dev_file = module_path / f"{module_name}.py"
         if not dev_file.exists():
-            self.console.print(f"[red]❌ Python file not found: {short_name}.py[/red]")
+            self.console.print(f"[red]❌ Python file not found: {dev_file}[/red]")
             return False
 
-        notebook_file = module_path / f"{short_name}.ipynb"
+        # Output notebook goes to modules/ (e.g., modules/01_tensor/01_tensor.ipynb)
+        modules_dir = Path("modules") / module_name
+        modules_dir.mkdir(parents=True, exist_ok=True)
+        notebook_file = modules_dir / f"{module_name}.ipynb"
         
         # Always regenerate notebook from Python file (Python is source of truth)
         self.console.print(f"[dim]📄 Source: {dev_file.name} → Target: {notebook_file.name}[/dim]")
@@ -536,12 +540,12 @@ class ExportCommand(BaseCommand):
             return False
     
     def _convert_all_modules(self) -> list:
-        """Convert all modules' .py files to .ipynb files."""
+        """Convert all modules' .py files from src/ to .ipynb files in modules/."""
         modules = self._discover_modules()
         converted = []
         
         for module_name in modules:
-            module_path = Path(f"modules/{module_name}")
+            module_path = Path(f"src/{module_name}")
             if self._convert_py_to_notebook(module_path):
                 converted.append(module_name)
         
@@ -565,9 +569,9 @@ class ExportCommand(BaseCommand):
             # Process each module
             for module_name in modules_to_export:
                 logger.debug(f"Processing module: {module_name}")
-                module_path = Path(f"modules/{module_name}")
+                module_path = Path(f"src/{module_name}")
                 if not module_path.exists():
-                    console.print(Panel(f"[red]❌ Module '{module_name}' not found in modules/[/red]", 
+                    console.print(Panel(f"[red]❌ Module '{module_name}' not found in src/[/red]", 
                                       title="Module Not Found", border_style="red"))
                     
                     # Show available modules
@@ -582,8 +586,8 @@ class ExportCommand(BaseCommand):
                     return 1
                 
                 # Always convert Python file to notebook (Python file is source of truth)
-                short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
-                notebook_file = module_path / f"{short_name}.ipynb"
+                # Notebook will be created in modules/ directory
+                notebook_file = Path("modules") / module_name / f"{module_name}.ipynb"
                 
                 console.print(f"📝 Converting {module_name} Python file to notebook...")
                 if not self._convert_py_to_notebook(module_path):
