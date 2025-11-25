@@ -27,6 +27,7 @@ from .commands.info import InfoCommand
 from .commands.test import TestCommand
 from .commands.doctor import DoctorCommand
 from .commands.export import ExportCommand
+from .commands.source import SourceCommand
 from .commands.reset import ResetCommand
 from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
@@ -69,9 +70,10 @@ class TinyTorchCLI:
         self.commands: Dict[str, Type[BaseCommand]] = {
             # Essential commands
             'setup': SetupCommand,
-            # Hierarchical command groups only
+            # Hierarchical command groups
             'system': SystemCommand,
             'module': ModuleWorkflowCommand,
+            'source': SourceCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
@@ -80,7 +82,7 @@ class TinyTorchCLI:
             'olympics': OlympicsCommand,
             'benchmark': BenchmarkCommand,
             'community': CommunityCommand,
-            # Convenience commands
+            # Convenience shortcuts (backward compatibility)
             'notebooks': NotebooksCommand,
             'export': ExportCommand,
             'test': TestCommand,
@@ -99,7 +101,8 @@ class TinyTorchCLI:
             epilog="""
 Command Groups:
   system       System environment and configuration commands
-  module       Module development workflow - start, complete, resume modules
+  module       Module development workflow - start, complete, resume modules (students)
+  source       Source file workflow - export src/ to modules/ and tinytorch/ (developers)
   package      Package management and nbdev integration commands
   nbgrader     Assignment management and auto-grading commands
   checkpoint   Progress tracking - view capabilities unlocked and learning journey
