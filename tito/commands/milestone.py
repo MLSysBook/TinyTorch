@@ -958,10 +958,10 @@ class MilestoneCommand(BaseCommand):
             module_workflow = ModuleWorkflowCommand(self.config)
             progress_data = module_workflow.get_progress_data()
             # Use module workflow for checking completion status
-            from .source import SourceCommand
+            from .src import SrcCommand
             from .test import TestCommand
             
-            source_cmd = SourceCommand(self.config)
+            source_cmd = SrcCommand(self.config)
             test_cmd = TestCommand(self.config)
             
             # Check if modules are completed using progress data
