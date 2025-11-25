@@ -1,1 +1,1 @@
-../../modules/11_embeddings/ABOUT.md
+../../src/11_embeddings/ABOUT.md

@@ -1,1 +1,1 @@
-../../modules/15_quantization/ABOUT.md
+../../src/15_quantization/ABOUT.md
