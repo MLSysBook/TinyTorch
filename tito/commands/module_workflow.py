@@ -306,18 +306,19 @@ class ModuleWorkflowCommand(BaseCommand):
     def run_module_tests(self, module_name: str) -> int:
         """Run tests for a specific module."""
         try:
-            # Run the module's inline tests
-            module_dir = self.config.modules_dir / module_name
-            dev_file = module_dir / f"{module_name.split('_')[1]}.py"
+            # Run the module's inline tests from source file in src/
+            project_root = Path.cwd()
+            src_dir = project_root / "src" / module_name
+            dev_file = src_dir / f"{module_name}.py"
             
             if not dev_file.exists():
-                self.console.print(f"[yellow]⚠️  No dev file found: {dev_file}[/yellow]")
+                self.console.print(f"[yellow]⚠️  No source file found: {dev_file}[/yellow]")
                 return 0
             
             # Execute the Python file to run inline tests
             result = subprocess.run([
-                sys.executable, str(dev_file)
-            ], capture_output=True, text=True, cwd=module_dir)
+                sys.executable, str(dev_file.absolute())
+            ], capture_output=True, text=True, cwd=project_root)
             
             if result.returncode == 0:
                 return 0
@@ -334,13 +335,16 @@ class ModuleWorkflowCommand(BaseCommand):
     def export_module(self, module_name: str) -> int:
         """Export module to the TinyTorch package."""
         try:
-            # Use the existing export command
-            fake_args = Namespace()
-            fake_args.module = module_name
-            fake_args.force = False
+            # Use the new source command for exporting
+            from .source import SourceCommand
             
-            export_command = ExportCommand(self.config)
-            return export_command.run(fake_args)
+            fake_args = Namespace()
+            fake_args.source_command = 'export'  # Subcommand
+            fake_args.modules = [module_name]     # List of modules to export
+            fake_args.test_checkpoint = False
+            
+            source_command = SourceCommand(self.config)
+            return source_command.run(fake_args)
             
         except Exception as e:
             self.console.print(f"[red]Error exporting module: {e}[/red]")
