@@ -81,6 +81,11 @@ sphinx:
     - sphinxcontrib.mermaid
   config:
     mermaid_version: "10.6.1"
+    # Sidebar collapsible sections configuration
+    html_theme_options:
+      show_navbar_depth: 1  # Initial expanded depth (1 = top-level only)
+      collapse_navigation: false  # Allow navigation to be collapsible
+      navigation_depth: 4  # Maximum depth for navigation tree
 
 # Parse configuration for MyST Markdown
 parse:

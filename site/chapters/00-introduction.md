@@ -290,7 +290,7 @@ After each tier, you become the team member who:
 **Next Steps**:
 - **New to TinyTorch**: Start with [Quick Start Guide](../quickstart-guide.md) for immediate hands-on experience
 - **Ready to Commit**: Begin [Module 01: Tensor](../modules/01_tensor_ABOUT.html) to start building
-- **Teaching a Course**: Review [Instructor Guide](../usage-paths/classroom-use.md) for classroom integration
+- **Teaching a Course**: Review [Getting Started Guide - For Instructors](../getting-started.html#instructors) for classroom integration
 
 ```{admonition} Your Three-Tier Journey Awaits
 :class: tip
