@@ -20,9 +20,9 @@ tito module status             # Show progress
 
 ### Developer Commands (Work in src/)
 ```bash
-tito source export 01_tensor   # Export: src/*.py → modules/*.ipynb → tinytorch/*.py
-tito source export --all       # Export all modules
-tito source test 01            # Test module (planned)
+tito src export 01_tensor   # Export: src/*.py → modules/*.ipynb → tinytorch/*.py
+tito src export --all       # Export all modules
+tito src test 01            # Test module (planned)
 ```
 
 ### Instructor Commands
@@ -46,7 +46,7 @@ tito milestone status          # Show achievement progress
 
 | Directory | Command Hierarchy | Purpose |
 |-----------|------------------|---------|
-| `src/` | `tito source` | Python source files (developers) |
+| `src/` | `tito src` | Python source files (developers) |
 | `modules/` | `tito module` | Notebooks (students/learners) |
 | `tinytorch/` | N/A | Generated package (import only) |
 
@@ -58,7 +58,7 @@ tito milestone status          # Show achievement progress
 ```bash
 # Clone and setup
 git clone tinytorch
-tito source export --all        # Generate all notebooks
+tito src export --all        # Generate all notebooks
 
 # Work on modules
 tito module start 01
@@ -76,10 +76,10 @@ tito milestone list
 vim src/01_tensor/01_tensor.py
 
 # Export changes
-tito source export 01_tensor    # Generates notebook + package
+tito src export 01_tensor    # Generates notebook + package
 
 # Test
-tito source test 01_tensor      # (to be implemented)
+tito src test 01_tensor      # (to be implemented)
 
 # Run milestones
 tito milestone run 03
@@ -90,8 +90,8 @@ tito milestone run 03
 ## Command Status
 
 ### ✅ Working
-- `tito source export <num>` - Exports src/ to modules/ to tinytorch/
-- `tito source export --all` - Exports all modules
+- `tito src export <num>` - Exports src/ to modules/ to tinytorch/
+- `tito src export --all` - Exports all modules
 - `tito module status` - Shows progress
 - `tito milestone list` - Lists milestones
 
@@ -104,16 +104,16 @@ tito milestone run 03
 - `tito setup` - Prompts for user input (hangs in automated flow)
 
 ### 🚧 Not Yet Implemented
-- `tito source test` - Defined but not implemented
+- `tito src test` - Defined but not implemented
 - `tito nbgrader` subcommands - Exist but may need updates for new structure
 
 ---
 
 ## Next Steps
 
-1. Fix `tito module complete` to use source command
-2. Fix `tito milestone run` progress_tracker import
-3. Implement `tito source test`
+1. ✅ Fix `tito module complete` to use src command
+2. ✅ Fix `tito milestone run` progress_tracker import
+3. Implement `tito src test`
 4. Add `--non-interactive` flag to setup
 5. Update nbgrader to work with new structure
 
