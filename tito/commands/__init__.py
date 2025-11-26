@@ -11,7 +11,11 @@ from .base import BaseCommand
 from .notebooks import NotebooksCommand
 from .info import InfoCommand
 from .test import TestCommand
-from .doctor import DoctorCommand
+from .health import HealthCommand
+from .check import CheckCommand
+from .version import VersionCommand
+from .clean_workspace import CleanWorkspaceCommand
+from .report import ReportCommand
 from .export import ExportCommand
 from .src import SrcCommand
 from .reset import ResetCommand
@@ -35,7 +39,11 @@ __all__ = [
     'NotebooksCommand',
     'InfoCommand',
     'TestCommand',
-    'DoctorCommand',
+    'HealthCommand',
+    'CheckCommand',
+    'VersionCommand',
+    'CleanWorkspaceCommand',
+    'ReportCommand',
     'ExportCommand',
     'SrcCommand',
     'ResetCommand',
