@@ -9,7 +9,7 @@ def get_venv_path() -> Path:
     """
     Fetch venv in case users have a custom path
     """
-    print(f"running this from {os.getcwd()}")
+    # print(f"running this from {os.getcwd()}")  # Debug output - commented out for clean CLI
     if "VENV_PATH" in os.environ:
         return Path(os.environ["VENV_PATH"]).expanduser().resolve()
 
