@@ -16,6 +16,9 @@ import sys
 from pathlib import Path
 from typing import Dict, Type, Optional, List
 
+# Set TINYTORCH_QUIET before any tinytorch imports to suppress autograd messages
+os.environ['TINYTORCH_QUIET'] = '1'
+
 from .core.config import CLIConfig
 from .core.virtual_env_manager import get_venv_path
 from .core.console import get_console, print_banner, print_error, print_ascii_logo
@@ -25,7 +28,7 @@ from .commands.base import BaseCommand
 from .commands.notebooks import NotebooksCommand
 from .commands.info import InfoCommand
 from .commands.test import TestCommand
-from .commands.doctor import DoctorCommand
+from .commands.health import HealthCommand
 from .commands.export import ExportCommand
 from .commands.src import SrcCommand
 from .commands.reset import ResetCommand
