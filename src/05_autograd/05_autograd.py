@@ -1324,12 +1324,15 @@ class CrossEntropyBackward(Function):
 
 # %% nbgrader={"grade": false, "grade_id": "enable-autograd", "solution": true}
 #| export
-def enable_autograd():
+def enable_autograd(quiet=False):
     """
     Enable gradient tracking for all Tensor operations.
 
     This function enhances the existing Tensor class with autograd capabilities.
     Call this once to activate gradients globally.
+
+    **Args:**
+        quiet (bool): If True, suppress status messages. Default: False.
 
     **What it does:**
     - Replaces Tensor operations with gradient-tracking versions
@@ -1359,7 +1362,8 @@ def enable_autograd():
     # 3. _autograd_enabled is a marker attribute we add at runtime
     # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
-        print("⚠️ Autograd already enabled")
+        if not quiet:
+            print("⚠️ Autograd already enabled")
         return
 
     # Store original operations
@@ -1770,13 +1774,122 @@ def enable_autograd():
     # Mark as enabled
     Tensor._autograd_enabled = True
 
-    print("✅ Autograd enabled! Tensors now track gradients.")
-    print("   - Operations build computation graphs")
-    print("   - backward() computes gradients")
-    print("   - requires_grad=True enables tracking")
+    if not quiet:
+        print("✅ Autograd enabled! Tensors now track gradients.")
+        print("   - Operations build computation graphs")
+        print("   - backward() computes gradients")
+        print("   - requires_grad=True enables tracking")
 
 # Auto-enable when module is imported
-enable_autograd()
+# Check TINYTORCH_QUIET env var to suppress messages (for CLI tools)
+import os
+enable_autograd(quiet=os.environ.get('TINYTORCH_QUIET', '').lower() in ('1', 'true', 'yes'))
+
+# %% [markdown]
+"""
+## 🔥 DANGER: In-Place Operations Break Autograd
+
+**THIS IS THE MOST COMMON SILENT FAILURE IN TINYTORCH!**
+
+### Critical Rule: Never Modify Tensors In-Place When requires_grad=True
+
+**WRONG ❌ - This Corrupts the Gradient Graph:**
+```python
+x = Tensor([1, 2, 3], requires_grad=True)
+y = x * 2
+x.data[0] = 999  # ❌ CORRUPTS GRADIENT GRAPH WITHOUT ERROR!
+y.backward()     # ❌ Wrong gradients or crash
+```
+
+**RIGHT ✅ - Create New Tensors Instead:**
+```python
+x = Tensor([1, 2, 3], requires_grad=True)
+y = x * 2
+x = Tensor([999, 2, 3], requires_grad=True)  # ✅ New tensor, safe
+y.backward()  # ✅ Correct gradients
+```
+
+### Why This Breaks Everything
+
+Autograd records operations on the **original tensor values**. When you modify `.data` directly:
+
+1. **Forward pass** records: "y = x * 2" where x = [1, 2, 3]
+2. **You corrupt**: x.data[0] = 999, so x = [999, 2, 3]
+3. **Backward pass** uses: corrupted x values, causing wrong gradients or crashes
+
+**The computation graph becomes inconsistent** - forward used [1, 2, 3], backward uses [999, 2, 3].
+
+### Common In-Place Operations to AVOID
+
+```python
+# ❌ FORBIDDEN - Direct index assignment
+x.data[0] = value
+x.data[:, 0] = values
+x.data[mask] = values
+
+# ❌ FORBIDDEN - In-place arithmetic
+x.data += other
+x.data *= scalar
+x.data -= value
+
+# ❌ FORBIDDEN - NumPy in-place operations
+np.fill(x.data, value)
+np.add(x.data, other, out=x.data)
+x.data.fill(value)
+
+# ✅ CORRECT - Create new tensors
+x = x + other              # Creates new tensor
+x = Tensor(x.data + other) # Explicit new tensor
+x = Tensor([new_values])   # Complete replacement
+```
+
+### Real-World Example: Parameter Update Gone Wrong
+
+```python
+# ❌ WRONG - This is a common mistake in custom optimizers
+W = Tensor([[0.5, 0.3]], requires_grad=True)
+y = x.matmul(W.T)
+loss = compute_loss(y, target)
+loss.backward()
+
+# Student writes custom optimizer:
+W.data -= 0.01 * W.grad  # ❌ CORRUPTS GRAPH! Next forward pass is broken!
+
+# ✅ CORRECT - Create new parameter tensor
+W = Tensor(W.data - 0.01 * W.grad, requires_grad=True)  # ✅ Safe
+```
+
+### How to Debug In-Place Corruption
+
+If your gradients look wrong or you get mysterious errors:
+
+1. **Search your code** for `.data[` assignments
+2. **Search for** in-place operators: `+=`, `-=`, `*=`, `/=` on `.data`
+3. **Check custom functions** that modify tensors
+4. **Verify** all parameter updates create new tensors
+
+### Why PyTorch Has torch.no_grad()
+
+PyTorch explicitly disables gradient tracking during parameter updates to allow safe in-place operations:
+
+```python
+# PyTorch pattern (we'll implement this in Module 06: Optimizers)
+with torch.no_grad():
+    W -= 0.01 * W.grad  # Safe inside no_grad context
+```
+
+**For now in TinyTorch**: Always create new tensors when requires_grad=True.
+
+### Memory Impact
+
+**Question**: "Doesn't creating new tensors waste memory?"
+
+**Answer**: Gradient tracking already stores intermediate tensors for backprop. Creating new tensors is negligible compared to the computation graph memory overhead. Correctness > premature optimization.
+
+**Bottom Line**: If a tensor has `requires_grad=True`, treat it as **immutable**. Always create new tensors instead of modifying in-place.
+
+---
+"""
 
 # %% [markdown]
 """

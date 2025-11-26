@@ -842,7 +842,7 @@ class CrossEntropyBackward(Function):
         return None,
 
 # %% ../../modules/05_autograd/05_autograd.ipynb 35
-def enable_autograd():
+def enable_autograd(quiet=False):
     """
     Enable gradient tracking for all Tensor operations.
 
@@ -877,7 +877,8 @@ def enable_autograd():
     # 3. _autograd_enabled is a marker attribute we add at runtime
     # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
-        print("⚠️ Autograd already enabled")
+        if not quiet:
+            print("⚠️ Autograd already enabled")
         return
 
     # Store original operations
@@ -1288,10 +1289,13 @@ def enable_autograd():
     # Mark as enabled
     Tensor._autograd_enabled = True
 
-    print("✅ Autograd enabled! Tensors now track gradients.")
-    print("   - Operations build computation graphs")
-    print("   - backward() computes gradients")
-    print("   - requires_grad=True enables tracking")
+    if not quiet:
+        print("✅ Autograd enabled! Tensors now track gradients.")
+        print("   - Operations build computation graphs")
+        print("   - backward() computes gradients")
+        print("   - requires_grad=True enables tracking")
 
 # Auto-enable when module is imported
-enable_autograd()
+# Check TINYTORCH_QUIET env var to suppress messages (for CLI tools)
+import os
+enable_autograd(quiet=os.environ.get('TINYTORCH_QUIET', '').lower() in ('1', 'true', 'yes'))
