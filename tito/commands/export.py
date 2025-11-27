@@ -721,7 +721,7 @@ class ExportCommand(BaseCommand):
                 help_text.append("  • Missing #| default_exp directive in notebook\n", style="white")
                 help_text.append("  • Syntax errors in exported code\n", style="white")
                 help_text.append("  • Missing settings.ini configuration\n", style="white")
-                help_text.append("\n🔧 Run 'tito system doctor' for detailed diagnosis", style="cyan")
+                help_text.append("\n🔧 Run 'tito system health' for detailed diagnosis", style="cyan")
                 
                 console.print(Panel(help_text, title="Troubleshooting", border_style="yellow"))
                 

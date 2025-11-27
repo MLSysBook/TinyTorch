@@ -304,7 +304,7 @@ class HelpCommand(BaseCommand):
             ("tito module complete 02", "Finish a module", "Export & test your code"),
             ("tito demo quick", "See framework in action", "5-minute demonstration"),
             ("tito leaderboard join", "Join community", "Connect with learners"),
-            ("tito system doctor", "Check environment", "Troubleshoot issues")
+            ("tito system health", "Check environment", "Troubleshoot issues")
         ]
         
         for cmd, desc, example in essential_commands:
@@ -318,7 +318,7 @@ class HelpCommand(BaseCommand):
             ("New User", "tito help -i → tito checkpoint status → cd modules/01_setup"),
             ("Continue Learning", "tito checkpoint status → work on next module → tito module complete XX"),
             ("Join Community", "tito leaderboard join → submit progress → see global rankings"),
-            ("Get Help", "tito system doctor → check docs/FAQ → ask community")
+            ("Get Help", "tito system health → check docs/FAQ → ask community")
         ]
         
         for workflow, commands in workflows:
@@ -390,7 +390,7 @@ class HelpCommand(BaseCommand):
             "Here's how to get started:\n\n"
             "[bold cyan]Next Steps:[/bold cyan]\n"
             "1. [code]tito help --interactive[/code] - Personalized onboarding\n"
-            "2. [code]tito system doctor[/code] - Check your environment\n"
+            "2. [code]tito system health[/code] - Check your environment\n"
             "3. [code]tito checkpoint status[/code] - See the learning journey\n\n"
             "[bold yellow]New to ML systems?[/bold yellow] Run the interactive wizard!",
             title="Getting Started",
@@ -421,7 +421,7 @@ class HelpCommand(BaseCommand):
         # First steps
         first_steps_panel = Panel(
             "[bold]2. First Steps[/bold]\n"
-            "• [code]tito system doctor[/code] - Verify installation\n"
+            "• [code]tito system health[/code] - Verify installation\n"
             "• [code]tito help --interactive[/code] - Personalized guidance\n"
             "• [code]tito checkpoint status[/code] - See learning path\n"
             "• [code]cd modules/01_setup[/code] - Start first module",

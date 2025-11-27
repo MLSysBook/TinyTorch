@@ -479,34 +479,277 @@ class ModuleWorkflowCommand(BaseCommand):
 
         return 0 if success else 1
     
-    def run_module_tests(self, module_name: str) -> int:
-        """Run tests for a specific module."""
-        try:
-            # Run the module's inline tests from source file in src/
-            project_root = Path.cwd()
-            src_dir = project_root / "src" / module_name
-            dev_file = src_dir / f"{module_name}.py"
-            
-            if not dev_file.exists():
-                self.console.print(f"[yellow]⚠️  No source file found: {dev_file}[/yellow]")
-                return 0
-            
-            # Execute the Python file to run inline tests
-            result = subprocess.run([
-                sys.executable, str(dev_file.absolute())
-            ], capture_output=True, text=True, cwd=project_root)
-            
-            if result.returncode == 0:
-                return 0
-            else:
-                self.console.print(f"[red]Test output:[/red]\n{result.stdout}")
-                if result.stderr:
-                    self.console.print(f"[red]Errors:[/red]\n{result.stderr}")
-                return 1
-                
-        except Exception as e:
-            self.console.print(f"[red]Error running tests: {e}[/red]")
+    def run_module_tests(self, module_name: str, verbose: bool = True) -> int:
+        """
+        Run comprehensive tests for a module:
+        1. Inline unit tests (from src/XX_modulename/XX_modulename.py)
+        2. Progressive integration tests (from tests/XX_modulename/test_progressive_integration.py)
+        """
+        from rich.table import Table
+        from rich import box
+
+        project_root = Path.cwd()
+        total_passed = 0
+        total_failed = 0
+
+        # Phase 1: Run inline unit tests
+        if verbose:
+            self.console.print("[bold cyan]Phase 1: Unit Tests[/bold cyan] [dim](inline tests from module)[/dim]")
+            self.console.print()
+
+        unit_result = self._run_inline_unit_tests(module_name, verbose)
+        total_passed += unit_result['passed']
+        total_failed += unit_result['failed']
+
+        if unit_result['failed'] > 0:
+            self.console.print(f"\n[red]❌ Unit tests failed ({unit_result['failed']} failures)[/red]")
+            self.console.print()
             return 1
+
+        if verbose and unit_result['passed'] > 0:
+            self.console.print(f"[green]✅ Unit tests: {unit_result['passed']}/{unit_result['passed']} passed[/green]")
+            self.console.print()
+
+        # Phase 2: Run integration tests
+        if verbose:
+            self.console.print("[bold cyan]Phase 2: Integration Tests[/bold cyan] [dim](progressive integration)[/dim]")
+            self.console.print()
+
+        integration_result = self._run_integration_tests(module_name, verbose)
+        total_passed += integration_result['passed']
+        total_failed += integration_result['failed']
+
+        if integration_result['failed'] > 0:
+            self.console.print(f"\n[red]❌ Integration tests failed ({integration_result['failed']} failures)[/red]")
+            self.console.print()
+            return 1
+
+        if verbose and integration_result['passed'] > 0:
+            self.console.print(f"[green]✅ Integration tests: {integration_result['passed']}/{integration_result['passed']} passed[/green]")
+            self.console.print()
+
+        # Summary panel
+        if verbose and total_passed > 0:
+            self.console.print(Panel(
+                f"[bold green]✅ All tests passed ({total_passed}/{total_passed})[/bold green]\n\n"
+                f"Unit tests: {unit_result['passed']}  •  Integration tests: {integration_result['passed']}",
+                title="Test Results",
+                border_style="green",
+                box=box.ROUNDED
+            ))
+            self.console.print()
+
+        return 0
+
+    def _run_inline_unit_tests(self, module_name: str, verbose: bool) -> Dict[str, int]:
+        """Run inline unit tests and parse output for detailed display."""
+        project_root = Path.cwd()
+        src_dir = project_root / "src" / module_name
+        dev_file = src_dir / f"{module_name}.py"
+
+        if not dev_file.exists():
+            if verbose:
+                self.console.print(f"   [dim yellow]No source file found: {dev_file}[/dim yellow]")
+            return {'passed': 0, 'failed': 0, 'tests': [], 'returncode': 0}
+
+        # Run the module file (which triggers if __name__ == "__main__" tests)
+        result = subprocess.run(
+            [sys.executable, str(dev_file.absolute())],
+            capture_output=True,
+            text=True,
+            cwd=project_root
+        )
+
+        # Parse output to extract individual test results
+        tests_run = self._parse_test_output(result.stdout, result.stderr, result.returncode)
+
+        if verbose:
+            for test in tests_run:
+                icon = "✅" if test['passed'] else "❌"
+                color = "green" if test['passed'] else "red"
+                self.console.print(f"   [{color}]{icon} {test['name']}[/{color}]")
+                if not test['passed'] and test.get('error'):
+                    # Show error on next line with indentation
+                    error_lines = test['error'].split('\n')
+                    for error_line in error_lines[:3]:  # Show first 3 lines of error
+                        if error_line.strip():
+                            self.console.print(f"      [dim red]{error_line.strip()}[/dim red]")
+
+        passed = sum(1 for t in tests_run if t['passed'])
+        failed = sum(1 for t in tests_run if not t['passed'])
+
+        return {
+            'passed': passed,
+            'failed': failed,
+            'tests': tests_run,
+            'returncode': result.returncode
+        }
+
+    def _run_integration_tests(self, module_name: str, verbose: bool) -> Dict[str, int]:
+        """Run progressive integration tests using pytest."""
+        project_root = Path.cwd()
+
+        # Find integration test file
+        integration_test_file = project_root / "tests" / module_name / "test_progressive_integration.py"
+
+        if not integration_test_file.exists():
+            # No integration tests for this module yet
+            if verbose:
+                self.console.print(f"   [dim yellow]No integration tests found: {integration_test_file}[/dim yellow]")
+            return {'passed': 0, 'failed': 0, 'tests': [], 'returncode': 0}
+
+        # Run pytest with verbose output
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", str(integration_test_file), "-v", "--tb=short"],
+            capture_output=True,
+            text=True,
+            cwd=project_root
+        )
+
+        # Parse pytest output
+        tests_run = self._parse_pytest_output(result.stdout, result.stderr)
+
+        if verbose:
+            for test in tests_run:
+                icon = "✅" if test['passed'] else "❌"
+                color = "green" if test['passed'] else "red"
+                self.console.print(f"   [{color}]{icon} {test['name']}[/{color}]")
+                if not test['passed'] and test.get('error'):
+                    # Show error on next line with indentation
+                    error_lines = test['error'].split('\n')
+                    for error_line in error_lines[:3]:  # Show first 3 lines of error
+                        if error_line.strip():
+                            self.console.print(f"      [dim red]{error_line.strip()}[/dim red]")
+
+        passed = sum(1 for t in tests_run if t['passed'])
+        failed = sum(1 for t in tests_run if not t['passed'])
+
+        return {
+            'passed': passed,
+            'failed': failed,
+            'tests': tests_run,
+            'returncode': result.returncode
+        }
+
+    def _parse_test_output(self, stdout: str, stderr: str, returncode: int) -> list:
+        """
+        Parse inline test output to extract individual test results.
+        Looks for patterns like:
+        - ✅ test_function_name
+        - ❌ test_function_name: AssertionError
+        """
+        tests = []
+        lines = stdout.split('\n')
+
+        for line in lines:
+            line_stripped = line.strip()
+            # Look for test result markers
+            if line_stripped.startswith('✅') or line_stripped.startswith('❌'):
+                passed = line_stripped.startswith('✅')
+                # Extract test name and error
+                if ':' in line_stripped:
+                    parts = line_stripped.split(':', 1)
+                    name = parts[0][2:].strip()  # Remove emoji
+                    error = parts[1].strip() if len(parts) > 1 else None
+                else:
+                    name = line_stripped[2:].strip()  # Remove emoji
+                    error = None
+
+                tests.append({
+                    'name': name,
+                    'passed': passed,
+                    'error': error
+                })
+
+        # If no explicit test markers found, infer from return code
+        if not tests:
+            if returncode == 0:
+                # Tests passed (or no tests)
+                if stdout.strip() or stderr.strip():
+                    tests.append({
+                        'name': 'module_execution',
+                        'passed': True,
+                        'error': None
+                    })
+            else:
+                # Tests failed
+                # Try to extract error from stderr or stdout
+                error_msg = stderr.strip() if stderr.strip() else stdout.strip()
+                # Get just the first few lines of error
+                error_lines = error_msg.split('\n')
+                concise_error = '\n'.join(error_lines[:5]) if error_lines else "Test execution failed"
+
+                tests.append({
+                    'name': 'module_execution',
+                    'passed': False,
+                    'error': concise_error
+                })
+
+        return tests
+
+    def _parse_pytest_output(self, stdout: str, stderr: str) -> list:
+        """
+        Parse pytest verbose output to extract individual test results.
+        Looks for patterns like:
+        - tests/02_activations/test_progressive_integration.py::TestClass::test_method PASSED
+        """
+        tests = []
+        lines = stdout.split('\n')
+        seen_tests = set()  # Avoid duplicates
+
+        for line in lines:
+            if '::' in line and ('PASSED' in line or 'FAILED' in line):
+                passed = 'PASSED' in line
+
+                # Extract test path and status
+                parts = line.split()
+                if len(parts) >= 2:
+                    test_path = parts[0]
+
+                    # Skip if already seen
+                    if test_path in seen_tests:
+                        continue
+                    seen_tests.add(test_path)
+
+                    # Format: file.py::Class::method -> "Class: method"
+                    path_parts = test_path.split('::')
+                    if len(path_parts) >= 3:
+                        class_name = path_parts[1].replace('Test', '').replace('Module', 'Module ')
+                        method_name = path_parts[2].replace('test_', '').replace('_', ' ').title()
+                        display_name = f"{class_name}: {method_name}"
+                    elif len(path_parts) >= 2:
+                        method_name = path_parts[1].replace('test_', '').replace('_', ' ').title()
+                        display_name = method_name
+                    else:
+                        display_name = test_path
+
+                    tests.append({
+                        'name': display_name,
+                        'passed': passed,
+                        'error': None if passed else self._extract_pytest_error(stdout, stderr, test_path)
+                    })
+
+        return tests
+
+    def _extract_pytest_error(self, stdout: str, stderr: str, test_path: str) -> Optional[str]:
+        """Extract error message for a specific failed test from pytest output."""
+        lines = stdout.split('\n')
+        for i, line in enumerate(lines):
+            if test_path in line and 'FAILED' in line:
+                # Look ahead for error details (typically in next 5-10 lines)
+                for j in range(i+1, min(i+15, len(lines))):
+                    error_line = lines[j].strip()
+                    if 'AssertionError' in error_line or 'Error:' in error_line or 'assert' in error_line:
+                        return error_line
+
+        # Fallback: check stderr
+        if stderr:
+            stderr_lines = stderr.split('\n')
+            for line in stderr_lines:
+                if 'Error' in line or 'assert' in line:
+                    return line.strip()
+
+        return "Test failed (see output for details)"
     
     def export_module(self, module_name: str) -> int:
         """Export module to the TinyTorch package."""
