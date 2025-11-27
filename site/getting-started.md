@@ -50,7 +50,7 @@ cd TinyTorch
 source activate.sh
 
 # Verify setup
-tito system doctor
+tito system health
 ```
 
 **What this does:**
@@ -258,7 +258,7 @@ pip install nbgrader
 <h4 style="color: #495057; margin: 0 0 0.5rem 0;">2️⃣ Initialize Grading (10 min)</h4>
 <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.85rem; margin: 0.5rem 0;">
 tito grade setup<br>
-tito system doctor
+tito system health
 </div>
 <p style="font-size: 0.9rem; margin: 0; color: #6c757d;">NBGrader integration & health check</p>
 </div>
@@ -554,7 +554,7 @@ While NBGrader automates 70-80% of assessment, focus manual review on:
 
 - Module-specific ABOUT.md files with common pitfalls
 - Grading rubrics with sample excellent/good/acceptable solutions
-- System diagnostics tools (`tito system doctor`)
+- System diagnostics tools (`tito system health`)
 - Progress tracking (`tito checkpoint status --student ID`)
 
 ---
