@@ -325,7 +325,7 @@ class SetupCommand(BaseCommand):
         
         success_text.append("💡 Essential commands:\n", style="bold")
         success_text.append("  • ", style="dim")
-        success_text.append("tito system doctor", style="green")
+        success_text.append("tito system health", style="green")
         success_text.append(" - Verify setup\n", style="dim")
         success_text.append("  • ", style="dim")
         success_text.append("tito module test 01_tensor", style="green")
