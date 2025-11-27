@@ -435,7 +435,7 @@ document.write(`
 <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0;">
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">1. Check Your Environment</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system doctor</code>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system health</code>
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready for development</p>
 </div>
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
@@ -536,7 +536,7 @@ tito<span class="w"> </span>milestone<span class="w"> </span>run<span class="w">
 <h2>Complete Command Reference<a class="headerlink" href="#complete-command-reference" title="Link to this heading">#</a></h2>
 <section id="system-commands">
 <h3>System Commands<a class="headerlink" href="#system-commands" title="Link to this heading">#</a></h3>
-<p><strong>Purpose</strong>: Environment health and configuration</p>
+<p><strong>Purpose</strong>: Environment health, validation, and configuration</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Command</p></th>
@@ -545,16 +545,36 @@ tito<span class="w"> </span>milestone<span class="w"> </span>run<span class="w">
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code></p></td>
-<td><p>Diagnose environment issues</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">health</span></code></p></td>
+<td><p>Quick environment health check (status only)</p></td>
 <td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">info</span></code></p></td>
-<td><p>Show system configuration</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">check</span></code></p></td>
+<td><p>Comprehensive validation with 60+ tests</p></td>
+<td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">info</span></code></p></td>
+<td><p>System resources (paths, disk, memory)</p></td>
+<td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">version</span></code></p></td>
+<td><p>Show all package versions</p></td>
+<td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">clean</span></code></p></td>
+<td><p>Clean workspace caches and temp files</p></td>
+<td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">report</span></code></p></td>
+<td><p>Generate JSON diagnostic report</p></td>
 <td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">jupyter</span></code></p></td>
 <td><p>Start Jupyter Lab server</p></td>
+<td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">protect</span></code></p></td>
+<td><p>Student protection system</p></td>
 <td><p><a class="reference internal" href="modules.html"><span class="std std-doc">Module Workflow</span></a></p></td>
 </tr>
 </tbody>
@@ -773,7 +793,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlsys
 <span class="nb">source</span><span class="w"> </span>activate.sh
 
 <span class="c1"># Verify environment</span>
-tito<span class="w"> </span>system<span class="w"> </span>doctor
+tito<span class="w"> </span>system<span class="w"> </span>health
 </pre></div>
 </div>
 </section>
@@ -842,7 +862,7 @@ tito<span class="w"> </span>reset<span class="w"> </span>all<span class="w"> </s
 <p><strong>1. Start Session</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>TinyTorch
 <span class="nb">source</span><span class="w"> </span>activate.sh
-tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">         </span><span class="c1"># Verify environment</span>
+tito<span class="w"> </span>system<span class="w"> </span>health<span class="w">         </span><span class="c1"># Verify environment</span>
 </pre></div>
 </div>
 <p><strong>2. Work on Module</strong></p>
@@ -896,9 +916,9 @@ tito<span class="w"> </span>milestone<span class="w"> </span>run<span class="w">
 <section id="related-resources">
 <h2>Related Resources<a class="headerlink" href="#related-resources" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong><span class="xref myst">Quick Start Guide</span></strong> - 15-minute setup walkthrough</p></li>
-<li><p><strong><span class="xref myst">Student Workflow</span></strong> - Day-to-day development cycle</p></li>
-<li><p><strong><a class="reference internal" href="../datasets.html"><span class="std std-doc">Datasets Guide</span></a></strong> - Understanding TinyTorch datasets</p></li>
+<li><p><strong><a class="reference internal" href="#../getting-started.html"><span class="xref myst">Getting Started Guide</span></a></strong> - Complete setup and first steps</p></li>
+<li><p><strong><a class="reference internal" href="#modules.html"><span class="xref myst">Module Workflow</span></a></strong> - Day-to-day development cycle</p></li>
+<li><p><strong><a class="reference internal" href="#../datasets.html"><span class="xref myst">Datasets Guide</span></a></strong> - Understanding TinyTorch datasets</p></li>
 </ul>
 <hr class="docutils" />
 <p><em>Master these commands and you’ll build ML systems with confidence. Every command is designed to accelerate your learning and keep you focused on what matters: building production-quality ML frameworks from scratch.</em></p>

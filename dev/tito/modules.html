@@ -823,7 +823,7 @@ document.write(`
 <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0;">
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">Check Environment</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system doctor</code>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system health</code>
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready before starting</p>
 </div>
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
@@ -856,7 +856,7 @@ document.write(`
 <p><strong>1. Start Session</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>TinyTorch
 <span class="nb">source</span><span class="w"> </span>activate.sh
-tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">         </span><span class="c1"># Verify environment</span>
+tito<span class="w"> </span>system<span class="w"> </span>health<span class="w">         </span><span class="c1"># Verify environment</span>
 </pre></div>
 </div>
 <p><strong>2. Start or Resume Module</strong></p>
@@ -913,7 +913,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <h3>Environment Health<a class="headerlink" href="#environment-health" title="Link to this heading">#</a></h3>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <p><strong>Check Setup (Run This First)</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>health
 </pre></div>
 </div>
 <p>Verifies:</p>
@@ -1149,14 +1149,14 @@ modules/                      ← Generated notebooks (students use)
 <section id="environment-not-ready">
 <h3>Environment Not Ready<a class="headerlink" href="#environment-not-ready" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
-<p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code> shows errors</p>
+<p><strong>Problem</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">health</span></code> shows errors</p>
 <p><strong>Solution</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Re-run setup</span>
 ./setup-environment.sh
 <span class="nb">source</span><span class="w"> </span>activate.sh
 
 <span class="c1"># Verify</span>
-tito<span class="w"> </span>system<span class="w"> </span>doctor
+tito<span class="w"> </span>system<span class="w"> </span>health
 </pre></div>
 </div>
 </div>

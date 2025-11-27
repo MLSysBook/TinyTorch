@@ -468,7 +468,7 @@ document.write(`
 <p><strong>First step for ANY issue</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>TinyTorch
 <span class="nb">source</span><span class="w"> </span>activate.sh
-tito<span class="w"> </span>system<span class="w"> </span>doctor
+tito<span class="w"> </span>system<span class="w"> </span>health
 </pre></div>
 </div>
 <p>This checks:</p>
@@ -885,7 +885,7 @@ Error:<span class="w"> </span>.tito/progress.json<span class="w"> </span>not<spa
 <p><strong>Cause</strong>: <code class="docutils literal notranslate"><span class="pre">.tito/</span></code> folder deleted or progress file corrupted.</p>
 <p><strong>Solution</strong>:</p>
 <p><strong>Option 1: Let TinyTorch recreate it (fresh start)</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>health
 <span class="c1"># Recreates .tito/ structure with empty progress</span>
 </pre></div>
 </div>
@@ -1142,8 +1142,8 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </pre></div>
 </div>
 </li>
-<li><p><strong>Run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code> regularly</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>doctor
+<li><p><strong>Run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">health</span></code> regularly</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>health
 </pre></div>
 </div>
 </li>
@@ -1196,7 +1196,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <td><p>Re-export required modules</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.tito/progress.json</span> <span class="pre">not</span> <span class="pre">found</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code> to recreate</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">health</span></code> to recreate</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Jupyter</span> <span class="pre">Lab</span> <span class="pre">won't</span> <span class="pre">start</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pkill</span> <span class="pre">-f</span> <span class="pre">jupyter</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">module</span> <span class="pre">start</span> <span class="pre">XX</span></code></p></td>
@@ -1224,7 +1224,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <a href="overview.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Command Reference →</a>
 </div>
 <hr class="docutils" />
-<p><em>Most issues have simple fixes. Start with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code>, read error messages carefully, and remember: your code is always safe in <code class="docutils literal notranslate"><span class="pre">modules/</span></code> - only progress tracking can be reset.</em></p>
+<p><em>Most issues have simple fixes. Start with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">health</span></code>, read error messages carefully, and remember: your code is always safe in <code class="docutils literal notranslate"><span class="pre">modules/</span></code> - only progress tracking can be reset.</em></p>
 </section>
 </section>
 

@@ -317,7 +317,7 @@ cp .tito/backups/03_layers_20251115_180000.py modules/03_layers/layers_dev.py
 
 ```bash
 # If .tito/ is deleted, next command recreates it
-tito system doctor
+tito system health
 ```
 
 **What happens**:
@@ -340,7 +340,7 @@ tito system doctor
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 
 ```bash
-tito system doctor
+tito system health
 ```
 
 **Now includes data health checks**:
@@ -394,7 +394,7 @@ Or restore from backup:
 
 2. **Verify environment before work**:
    ```bash
-   tito system doctor
+   tito system health
    ```
    Catch issues early
 
@@ -510,7 +510,7 @@ tito milestone run 04
 
 ```bash
 # Just run any tito command
-tito system doctor
+tito system health
 
 # OR
 
