@@ -37,7 +37,7 @@ See [Student Workflow](../student-workflow.md) for the complete development cycl
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">Check Environment</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system doctor</code>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system health</code>
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready before starting</p>
 </div>
 
@@ -79,7 +79,7 @@ Here's what a complete session looks like:
 ```bash
 cd TinyTorch
 source activate.sh
-tito system doctor         # Verify environment
+tito system health         # Verify environment
 ```
 
 **2. Start or Resume Module**
@@ -143,7 +143,7 @@ tito module status
 
 **Check Setup (Run This First)**
 ```bash
-tito system doctor
+tito system health
 ```
 
 Verifies:
@@ -402,7 +402,7 @@ tinytorch/
 
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 
-**Problem**: `tito system doctor` shows errors
+**Problem**: `tito system health` shows errors
 
 **Solution**:
 ```bash
@@ -411,7 +411,7 @@ tinytorch/
 source activate.sh
 
 # Verify
-tito system doctor
+tito system health
 ```
 
 </div>

@@ -18,7 +18,7 @@
 ```bash
 cd TinyTorch
 source activate.sh
-tito system doctor
+tito system health
 ```
 
 This checks:
@@ -526,7 +526,7 @@ Error: .tito/progress.json not found
 
 **Option 1: Let TinyTorch recreate it (fresh start)**:
 ```bash
-tito system doctor
+tito system health
 # Recreates .tito/ structure with empty progress
 ```
 
@@ -823,9 +823,9 @@ python -c "from tinytorch import Tensor" 2>&1 | less
    source activate.sh
    ```
 
-2. **Run `tito system doctor` regularly**:
+2. **Run `tito system health` regularly**:
    ```bash
-   tito system doctor
+   tito system health
    ```
 
 3. **Test in Jupyter before exporting**:
@@ -861,7 +861,7 @@ python -c "from tinytorch import Tensor" 2>&1 | less
 | `ModuleNotFoundError: tinytorch` | `pip install -e .` |
 | `SyntaxError` in export | Fix Python syntax, test in Jupyter first |
 | `ImportError` in milestone | Re-export required modules |
-| `.tito/progress.json not found` | `tito system doctor` to recreate |
+| `.tito/progress.json not found` | `tito system health` to recreate |
 | `Jupyter Lab won't start` | `pkill -f jupyter && tito module start XX` |
 | `Permission denied` | `chmod +x setup-environment.sh activate.sh` |
 | `Tests fail` during export | Debug in Jupyter, check test assertions |
@@ -880,4 +880,4 @@ python -c "from tinytorch import Tensor" 2>&1 | less
 
 ---
 
-*Most issues have simple fixes. Start with `tito system doctor`, read error messages carefully, and remember: your code is always safe in `modules/` - only progress tracking can be reset.*
+*Most issues have simple fixes. Start with `tito system health`, read error messages carefully, and remember: your code is always safe in `modules/` - only progress tracking can be reset.*

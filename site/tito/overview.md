@@ -13,7 +13,7 @@
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">1. Check Your Environment</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system doctor</code>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system health</code>
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready for development</p>
 </div>
 
@@ -127,13 +127,18 @@ tito milestone run 03
 
 ### System Commands
 
-**Purpose**: Environment health and configuration
+**Purpose**: Environment health, validation, and configuration
 
 | Command | Description | Guide |
 |---------|-------------|-------|
-| `tito system doctor` | Diagnose environment issues | [Module Workflow](modules.md) |
-| `tito system info` | Show system configuration | [Module Workflow](modules.md) |
+| `tito system health` | Quick environment health check (status only) | [Module Workflow](modules.md) |
+| `tito system check` | Comprehensive validation with 60+ tests | [Module Workflow](modules.md) |
+| `tito system info` | System resources (paths, disk, memory) | [Module Workflow](modules.md) |
+| `tito system version` | Show all package versions | [Module Workflow](modules.md) |
+| `tito system clean` | Clean workspace caches and temp files | [Module Workflow](modules.md) |
+| `tito system report` | Generate JSON diagnostic report | [Module Workflow](modules.md) |
 | `tito system jupyter` | Start Jupyter Lab server | [Module Workflow](modules.md) |
+| `tito system protect` | Student protection system | [Module Workflow](modules.md) |
 
 ### Module Commands
 
@@ -235,7 +240,7 @@ cd TinyTorch
 source activate.sh
 
 # Verify environment
-tito system doctor
+tito system health
 ```
 
 ### Student Workflow (Learning)
@@ -306,7 +311,7 @@ Here's what a typical TinyTorch session looks like:
 ```bash
 cd TinyTorch
 source activate.sh
-tito system doctor         # Verify environment
+tito system health         # Verify environment
 ```
 
 **2. Work on Module**
@@ -365,9 +370,9 @@ tito milestone run --help
 
 ## Related Resources
 
-- **[Quick Start Guide](../quickstart-guide.md)** - 15-minute setup walkthrough
-- **[Student Workflow](../student-workflow.md)** - Day-to-day development cycle
-- **[Datasets Guide](../datasets.md)** - Understanding TinyTorch datasets
+- **[Getting Started Guide](../getting-started.html)** - Complete setup and first steps
+- **[Module Workflow](modules.html)** - Day-to-day development cycle
+- **[Datasets Guide](../datasets.html)** - Understanding TinyTorch datasets
 
 ---
 
