@@ -35,8 +35,8 @@ Enter
 Wait Line "🔥"  # Wait for list output
 Sleep 3s
 
-# Run milestone 03 (MLP Revival 1986) - SKIP CHECKS FOR DEMO
-Type "tito milestone run 03 --skip-checks"
+# Run milestone 03 (MLP Revival 1986)
+Type "tito milestone run 03"
 Sleep 400ms
 Enter
 Sleep 500ms
