@@ -223,7 +223,7 @@ validate() {
     echo ""
 
     test_command "tito module reset 01" \
-        "source activate.sh && tito module reset 01" \
+        "source activate.sh && tito module reset 01 --force --no-backup" \
         "" \
         "false" \
         "true"

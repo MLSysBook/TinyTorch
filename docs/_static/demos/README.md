@@ -295,6 +295,57 @@ Set Width 1024    # Reduce from 1280
 Set Height 576    # Reduce from 720
 ```
 
+## Manual Recording (Alternative Tools)
+
+If you prefer to use Terminalizer, Asciinema, or other recording tools instead of VHS:
+
+### Extract Command List
+
+Use the converter script to extract commands from VHS tape files:
+
+```bash
+# Convert VHS tape to Terminalizer config
+./docs/_static/demos/scripts/vhs-to-terminalizer.sh docs/_static/demos/tapes/01-zero-to-ready.tape
+
+# This creates a .yml file with:
+# - All commands extracted
+# - Timing information converted
+# - Terminal settings (dimensions, theme)
+```
+
+### Manual Recording Workflow
+
+1. **Extract commands** from the tape file (see above)
+2. **Review the .yml config** to see the command sequence
+3. **Record manually** with your preferred tool:
+   ```bash
+   # With Terminalizer
+   terminalizer record demo-01 -c 01-zero-to-ready.yml
+
+   # With Asciinema
+   asciinema rec demo-01.cast
+
+   # Or just read the tape file directly - it's human-readable!
+   cat docs/_static/demos/tapes/01-zero-to-ready.tape
+   ```
+4. **Type commands** from the sequence during recording
+5. **Render to GIF** using your tool's output format
+
+### Why Use VHS?
+
+- **Fully automated** - No manual typing during recording
+- **Reproducible** - Same GIF every time
+- **Version controlled** - Tape files track command changes
+- **Fast iteration** - Edit tape, re-record, done
+
+### Why Use Manual Tools?
+
+- **More polish** - Fine-tune pauses and interactions
+- **Custom workflows** - Your own recording preferences
+- **Tool familiarity** - Stick with what you know
+
+**Tip:** The VHS tape files are human-readable scripts. You can use them as a reference for manual recording even without the converter!
+
 ## Development Tips
 
 1. **Edit tape files directly** - They're in `tapes/*.tape`

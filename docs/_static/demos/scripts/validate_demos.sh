@@ -92,7 +92,7 @@ echo ""
 cd /tmp/TinyTorch_validate
 
 test_command "tito module reset 01" \
-    "source activate.sh && tito module reset 01"
+    "source activate.sh && tito module reset 01 --force --no-backup"
 
 test_command "Check src/01_tensor exists" \
     "test -d src/01_tensor"
