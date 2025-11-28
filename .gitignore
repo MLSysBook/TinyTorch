@@ -189,6 +189,11 @@ modules/HASATTR_*.md
 modules/*
 !modules/README.md
 
+# Generated website module docs (copied from src/*/ABOUT.md during build)
+# Single source of truth: src/*/ABOUT.md
+docs/modules/*
+docs/chapters/modules/*
+
 # AI development files (keep locally)
 .claude/
 
