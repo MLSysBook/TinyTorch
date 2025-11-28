@@ -70,23 +70,26 @@ class TinyTorchCLI:
         """Initialize the CLI application."""
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
+        # SINGLE SOURCE OF TRUTH: All valid commands registered here
         self.commands: Dict[str, Type[BaseCommand]] = {
-            # Essential commands
+            # Essential
             'setup': SetupCommand,
-            # Hierarchical command groups
+            # Workflow (student-facing)
             'system': SystemCommand,
             'module': ModuleWorkflowCommand,
+            # Developer tools
             'src': SrcCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
+            # Progress tracking
             'checkpoint': CheckpointCommand,
             'milestones': MilestoneCommand,
+            # Community
             'leaderboard': LeaderboardCommand,
             'olympics': OlympicsCommand,
             'benchmark': BenchmarkCommand,
             'community': CommunityCommand,
-            # Convenience shortcuts (backward compatibility)
-            'notebooks': NotebooksCommand,
+            # Shortcuts
             'export': ExportCommand,
             'test': TestCommand,
             'book': BookCommand,

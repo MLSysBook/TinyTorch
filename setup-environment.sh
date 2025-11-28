@@ -82,10 +82,30 @@ else
     source .venv/bin/activate
     echo "🔥 TinyTorch environment activated"
 fi
+
+# Check if tito command is available, if not install package
+if ! command -v tito &> /dev/null; then
+    echo "📦 Installing TinyTorch CLI..."
+    if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+        arch -arm64 .venv/bin/pip install -e . -q
+    else
+        pip install -e . -q
+    fi
+    echo "✅ TinyTorch CLI installed"
+fi
+
 echo "💡 Try: tito system health"
 EOF
 
 chmod +x activate.sh
+
+# Install git hooks to prevent accidental pushes to main repo
+if [ -f ".git-hooks/pre-push" ]; then
+    mkdir -p .git/hooks
+    cp .git-hooks/pre-push .git/hooks/pre-push
+    chmod +x .git/hooks/pre-push
+    echo "🔒 Git protection enabled (prevents accidental pushes to main repo)"
+fi
 
 echo ""
 echo "✅ Setup complete!"

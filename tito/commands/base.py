@@ -35,12 +35,16 @@ def suppress_output():
 
 class BaseCommand(ABC):
     """Base class for all CLI commands."""
-    
+
+    # Command metadata - override in subclasses
+    category: str = "other"  # "essential", "workflow", "tracking", "community", "shortcut", "developer"
+    hidden: bool = False  # Set to True to hide from main help
+
     def __init__(self, config: CLIConfig):
         """Initialize the command with configuration."""
         self.config = config
         self.console = get_console()
-    
+
     @property
     @abstractmethod
     def name(self) -> str:
@@ -51,7 +55,7 @@ class BaseCommand(ABC):
     def venv_path(self) -> Path:
         """Return the command name."""
         return get_venv_path()
-    
+
     @property
     @abstractmethod
     def description(self) -> str:
