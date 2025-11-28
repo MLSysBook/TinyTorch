@@ -216,37 +216,60 @@ Tracking Progress:
             if not parsed_args.command:
                 # Show ASCII logo first
                 print_ascii_logo()
-                
-                # Show enhanced help with command groups
+
+                # Dynamically build help based on registered commands
+                # Categorize commands by role
+                essential = ['setup']
+                student_workflow = ['module', 'checkpoint', 'milestones']
+                community = ['leaderboard', 'olympics', 'community']
+                developer = ['system', 'package', 'nbgrader', 'src']
+                shortcuts = ['export', 'test', 'book', 'demo']
+                other = ['benchmark', 'grade', 'logo']
+
+                help_text = "[bold]Essential Commands:[/bold]\n"
+                for cmd in essential:
+                    if cmd in self.commands:
+                        desc = self.commands[cmd](self.config).description
+                        help_text += f"  [bold cyan]{cmd}[/bold cyan]        - {desc}\n"
+
+                help_text += "\n[bold]Student Workflow:[/bold]\n"
+                for cmd in student_workflow:
+                    if cmd in self.commands:
+                        desc = self.commands[cmd](self.config).description
+                        help_text += f"  [bold green]{cmd}[/bold green]       - {desc}\n"
+
+                help_text += "\n[bold]Community:[/bold]\n"
+                for cmd in community:
+                    if cmd in self.commands:
+                        desc = self.commands[cmd](self.config).description
+                        help_text += f"  [bold bright_blue]{cmd}[/bold bright_blue]  - {desc}\n"
+
+                help_text += "\n[bold]Developer Tools:[/bold]\n"
+                for cmd in developer:
+                    if cmd in self.commands:
+                        desc = self.commands[cmd](self.config).description
+                        help_text += f"  [dim]{cmd}[/dim]       - {desc}\n"
+
+                help_text += "\n[bold]Shortcuts:[/bold]\n"
+                for cmd in shortcuts:
+                    if cmd in self.commands:
+                        desc = self.commands[cmd](self.config).description
+                        help_text += f"  [bold yellow]{cmd}[/bold yellow]      - {desc}\n"
+
+                help_text += "\n[bold]Quick Start:[/bold]\n"
+                help_text += "  [dim]tito setup[/dim]                    - First-time setup (run once)\n"
+                help_text += "  [dim]tito module start 01[/dim]          - Start Module 01 (tensors)\n"
+                help_text += "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
+                help_text += "  [dim]tito module status[/dim]            - View all progress\n"
+                help_text += "\n[bold]Track Progress:[/bold]\n"
+                help_text += "  [dim]tito checkpoint status[/dim]        - Capabilities unlocked\n"
+                help_text += "  [dim]tito leaderboard profile[/dim]      - Your achievement journey\n"
+                help_text += "\n[bold]Get Help:[/bold]\n"
+                help_text += "  [dim]tito <command>[/dim]                - Show command subcommands\n"
+                help_text += "  [dim]tito --help[/dim]                   - Show full help"
+
                 self.console.print(Panel(
-                    "[bold]Essential Commands:[/bold]\n"
-                    "  [bold cyan]setup[/bold cyan]        - First-time environment setup\n\n"
-                    "[bold]Command Groups:[/bold]\n"
-                    "  [bold green]system[/bold green]       - System environment and configuration\n"
-                    "  [bold green]module[/bold green]       - Module workflow (start, complete, resume)\n"
-                    "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
-                    "  [bold cyan]checkpoint[/bold cyan]   - Progress tracking (capabilities unlocked)\n"
-                    "  [bold magenta]milestones[/bold magenta]   - Epic achievements (major unlocks)\n"
-                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Community showcase (share progress)\n"
-                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Competition events (challenges)\n\n"
-                    "[bold]Convenience Shortcuts:[/bold]\n"
-                    "  [bold yellow]export[/bold yellow]      - Quick export (→ module export)\n"
-                    "  [bold yellow]test[/bold yellow]        - Quick test (→ module test)\n"
-                    "  [bold green]book[/bold green]        - Build Jupyter Book documentation\n"
-                    "  [bold green]logo[/bold green]        - Learn about Tiny🔥Torch philosophy\n"
-                    "[bold]Quick Start:[/bold]\n"
-                    "  [dim]tito setup[/dim]                    - First-time setup (run once)\n"
-                    "  [dim]tito module start 01[/dim]          - Start Module 01 (tensors)\n"
-                    "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
-                    "  [dim]tito module start 02[/dim]          - Continue to Module 02\n"
-                    "  [dim]tito module status[/dim]            - View all progress\n\n"
-                    "[bold]Track Progress:[/bold]\n"
-                    "  [dim]tito checkpoint status[/dim]        - Capabilities unlocked\n"
-                    "  [dim]tito leaderboard profile[/dim]      - Your achievement journey\n\n"
-                    "[bold]Get Help:[/bold]\n"
-                    "  [dim]tito <command>[/dim]                - Show command subcommands\n"
-                    "  [dim]tito --help[/dim]                   - Show full help",
+                    help_text,
                     title="Welcome to Tiny🔥Torch!",
                     border_style="bright_green"
                 ))
