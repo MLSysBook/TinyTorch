@@ -64,14 +64,18 @@ generate_gif() {
     local name=$2
     local tape_file="$TAPE_DIR/${num}-${name}.tape"
     local output_file="$DEMO_DIR/${num}-${name}.gif"
-    
+
     echo -e "${BLUE}🎬 Generating GIF ${num}: ${name}...${NC}"
-    
+
     if [ ! -f "$tape_file" ]; then
         echo -e "${RED}❌ Tape file not found: ${tape_file}${NC}"
         return 1
     fi
-    
+
+    # Clean /tmp/TinyTorch before each GIF (VHS executes real commands)
+    echo "  🧹 Cleaning /tmp/TinyTorch for this GIF..."
+    rm -rf /tmp/TinyTorch 2>/dev/null || true
+
     # Generate GIF with VHS
     if vhs "$tape_file"; then
         echo -e "${GREEN}✅ GIF ${num} complete${NC}"
