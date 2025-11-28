@@ -376,6 +376,19 @@ class ModuleWorkflowCommand(BaseCommand):
 
         module_name = module_mapping[normalized]
 
+        # Validate sequential completion: all previous modules must be completed
+        module_num = int(normalized)
+        if module_num > 1:
+            progress = self.get_progress_data()
+            completed = progress.get('completed_modules', [])
+            prev_num = f"{module_num - 1:02d}"
+
+            if prev_num not in completed:
+                self.console.print(f"[red]❌ Cannot complete module {normalized}[/red]")
+                self.console.print(f"[yellow]⚠️  You must complete module {prev_num} first[/yellow]")
+                self.console.print(f"💡 Run: [bold cyan]tito module complete {prev_num}[/bold cyan]")
+                return 1
+
         # Header
         self.console.print(Panel(
             f"Running tests, exporting code, tracking progress...",
@@ -840,17 +853,21 @@ class ModuleWorkflowCommand(BaseCommand):
     def update_progress(self, module_number: str, module_name: str) -> None:
         """Update user progress tracking."""
         progress = self.get_progress_data()
-        
+
         # Update completed modules
         if 'completed_modules' not in progress:
             progress['completed_modules'] = []
-        
+
         if module_number not in progress['completed_modules']:
             progress['completed_modules'].append(module_number)
-        
+
+        # Remove from started modules when completing (prevent double-tracking)
+        if 'started_modules' in progress and module_number in progress['started_modules']:
+            progress['started_modules'].remove(module_number)
+
         progress['last_completed'] = module_number
         self.save_progress_data(progress)
-        
+
         self.console.print(f"📈 Progress updated: {len(progress['completed_modules'])} modules completed")
     
     def show_next_steps(self, completed_module: str) -> None:
@@ -947,19 +964,9 @@ class ModuleWorkflowCommand(BaseCommand):
         status_table.add_column("Status", width=12, justify="center")
         status_table.add_column("Next Action", style="dim", width=30)
 
-        # Add rows for each module (with smart collapsing for long lists)
-        collapse_inserted = False
+        # Add rows for each module (show all modules - no collapsing)
         for num, name in sorted(module_mapping.items()):
             module_num = int(num)
-
-            # Smart collapsing: show completed + next 5 + last 2
-            if total_modules > 10:
-                # Always show completed modules
-                if module_num > completed_count + 5 and module_num < total_modules - 1:
-                    if not collapse_inserted:
-                        status_table.add_row("...", "...", "[dim]...[/dim]", "...")
-                        collapse_inserted = True
-                    continue
 
             # Determine status
             if num in completed:

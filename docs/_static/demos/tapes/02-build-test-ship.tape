@@ -15,11 +15,17 @@ Set Framerate 30
 
 # Set shell with custom prompt for reliable waiting
 Set Shell bash
-Env PS1 "🔥 "
+Env PS1 "@profvjreddi 🔥 › "
 
 # Window bar for realistic terminal look
 Set WindowBar Colorful
 Set TypingSpeed 100ms
+
+# Activate TinyTorch environment
+Type "source activate.sh"
+Sleep 400ms
+Enter
+Sleep 2s
 
 # Start module 02
 Type "tito module start 02"
