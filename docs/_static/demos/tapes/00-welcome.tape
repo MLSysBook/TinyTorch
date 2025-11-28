@@ -21,11 +21,12 @@ Set TypingSpeed 100ms
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 
-# Activate TinyTorch environment
+# Activate TinyTorch environment (hidden from recording)
+Hide
 Type "source activate.sh"
-Sleep 400ms
 Enter
 Sleep 2s
+Show
 
 # Show the beautiful welcome screen
 Type "tito"
