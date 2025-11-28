@@ -249,9 +249,9 @@ Ensure you understand the optimization foundations:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module profiling
-tito test --module quantization
-tito test --module compression
+tito test profiling
+tito test quantization
+tito test compression
 ```
 
 ### Development Workflow
@@ -261,7 +261,7 @@ tito test --module compression
 3. **Build Benchmark class**: Runner with warmup, multiple runs, metrics collection
 4. **Create BenchmarkSuite**: Full evaluation with latency/accuracy/memory/energy
 5. **Add reporting**: Automated report generation with visualizations
-6. **Export and verify**: `tito module complete 19 && tito test --module benchmarking`
+6. **Export and verify**: `tito module complete 19 && tito test benchmarking`
 
 ## Testing
 
@@ -271,7 +271,7 @@ Run the full test suite to verify benchmarking functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module benchmarking
+tito test benchmarking
 
 # Direct pytest execution
 python -m pytest tests/ -k benchmarking -v

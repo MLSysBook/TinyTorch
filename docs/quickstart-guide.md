@@ -41,7 +41,7 @@ See [TITO CLI Reference](tito/overview.md) for detailed workflow and troubleshoo
 
 ```bash
 # Run system diagnostics
-tito system doctor
+tito system health
 ```
 
 You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.

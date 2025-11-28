@@ -208,9 +208,9 @@ Ensure you understand the foundations:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor
-tito test --module layers
-tito test --module training
+tito test tensor
+tito test layers
+tito test training
 ```
 
 **Required Knowledge:**
@@ -226,7 +226,7 @@ tito test --module training
 3. **Build TensorDataset**: Create concrete implementation for tensor-based data
 4. **Create DataLoader**: Implement batching, shuffling, and iterator protocol
 5. **Test integration**: Verify with training workflow simulation
-6. **Export and verify**: `tito module complete 08 && tito test --module dataloader`
+6. **Export and verify**: `tito module complete 08 && tito test dataloader`
 
 ## Testing
 
@@ -236,7 +236,7 @@ Run the full test suite to verify DataLoader functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module dataloader
+tito test dataloader
 
 # Direct pytest execution
 python -m pytest tests/ -k dataloader -v

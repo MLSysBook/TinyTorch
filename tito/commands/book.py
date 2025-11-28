@@ -155,9 +155,9 @@ class BookCommand(BaseCommand):
         console.print("📝 Verifying book chapters...")
         
         # Check that the chapters directory exists
-        chapters_dir = Path("site/chapters")
+        chapters_dir = Path("docs/chapters")
         if not chapters_dir.exists():
-            console.print("[red]❌ site/chapters directory not found[/red]")
+            console.print("[red]❌ docs/chapters directory not found[/red]")
             return 1
         
         # Count markdown files in chapters directory
@@ -165,7 +165,7 @@ class BookCommand(BaseCommand):
         if chapter_files:
             console.print(f"✅ Found {len(chapter_files)} chapter files")
         else:
-            console.print("[yellow]⚠️  No chapter files found in site/chapters/[/yellow]")
+            console.print("[yellow]⚠️  No chapter files found in docs/chapters/[/yellow]")
         
         return 0
 
@@ -199,7 +199,7 @@ class BookCommand(BaseCommand):
                             console.print(f"🌐 View at: {line.strip()}")
                             break
                 
-                console.print("📁 HTML files available in: site/_build/html/")
+                console.print("📁 HTML files available in: docs/_build/html/")
                 return 0
             else:
                 console.print(f"[red]❌ Failed to build book[/red]")
@@ -233,7 +233,7 @@ class BookCommand(BaseCommand):
         console.print("🛑 Press [bold]Ctrl+C[/bold] to stop the server")
         console.print()
         
-        book_dir = Path("site/_build/html")
+        book_dir = Path("docs/_build/html")
         if not book_dir.exists():
             console.print("[red]❌ Built book not found. Run with --no-build=False to build first.[/red]")
             return 1

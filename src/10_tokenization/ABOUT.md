@@ -565,7 +565,7 @@ Ensure you understand tensor operations from Module 01:
 source scripts/activate-tinytorch
 
 # Verify tensor module
-tito test --module tensor
+tito test tensor
 ```
 
 **Why This Prerequisite Matters:**
@@ -591,7 +591,7 @@ tito test --module tensor
    - Test unknown word handling via subword decomposition
    - Analyze vocabulary utilization
 7. **Optimize for performance**: Measure tokenization throughput (tokens/second), profile merge application, test on large corpora
-8. **Export and verify**: `tito module complete 10 && tito test --module tokenization`
+8. **Export and verify**: `tito module complete 10 && tito test tokenization`
 
 **Development Tips:**
 
@@ -609,7 +609,7 @@ Run the full test suite to verify tokenization functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module tokenization
+tito test tokenization
 
 # Direct pytest execution
 python -m pytest tests/ -k tokenization -v

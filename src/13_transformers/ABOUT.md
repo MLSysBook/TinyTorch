@@ -367,8 +367,8 @@ Ensure you understand the foundations from previous modules:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module embeddings
-tito test --module attention
+tito test embeddings
+tito test attention
 ```
 
 **Required Background:**
@@ -384,7 +384,7 @@ tito test --module attention
 3. **Build MLP**: Two linear layers with 4x expansion ratio and GELU activation (position-wise transformation)
 4. **Create TransformerBlock**: Combine attention and MLP with pre-norm residual connections (LayerNorm before sub-layers)
 5. **Add GPT model**: Stack transformer blocks with token+positional embeddings, causal masking, and generation
-6. **Export and verify**: `tito module complete 13 && tito test --module transformers`
+6. **Export and verify**: `tito module complete 13 && tito test transformers`
 
 ## Testing
 
@@ -394,7 +394,7 @@ Run the full test suite to verify transformer functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module transformers
+tito test transformers
 
 # Direct pytest execution
 python -m pytest tests/ -k transformers -v

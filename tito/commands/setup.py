@@ -320,7 +320,7 @@ class SetupCommand(BaseCommand):
         success_text.append("  # On Windows: .venv\\Scripts\\activate\n\n", style="dim")
         
         success_text.append("🚀 Start building ML systems:\n\n", style="bold green")
-        success_text.append("  tito module view 01_tensor", style="bold green")
+        success_text.append("  tito module start 01_tensor", style="bold green")
         success_text.append("  # Begin with tensor foundations\n\n", style="dim")
         
         success_text.append("💡 Essential commands:\n", style="bold")

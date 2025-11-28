@@ -74,8 +74,8 @@ echo ""
 if [ $BUILD_EXIT_CODE -eq 0 ]; then
     echo "✅ Build complete!"
     echo ""
-    echo "📂 To view locally, open: site/_build/html/index.html"
-    echo "🌐 Or run: open site/_build/html/index.html"
+    echo "📂 To view locally, open: docs/_build/html/index.html"
+    echo "🌐 Or run: open docs/_build/html/index.html"
 else
     echo "❌ Build failed with exit code $BUILD_EXIT_CODE"
     exit $BUILD_EXIT_CODE

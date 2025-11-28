@@ -6,15 +6,15 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'site/**'
-      - 'modules/**'
+      - 'docs/**'
+      - 'src/**'
       - '.github/workflows/publish-live.yml'
       - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
     paths:
-      - 'site/**'
-      - 'modules/**'
+      - 'docs/**'
+      - 'src/**'
       - 'tito/**'
   workflow_dispatch:
 
@@ -45,31 +45,21 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install "jupyter-book<1.0"
-        pip install -r site/requirements.txt || pip install jupyter-book
+        pip install -r docs/requirements.txt
 
     - name: Build Jupyter Book
       run: |
-        cd site
+        cd docs
         jupyter-book clean . || true
         jupyter-book build .
         # Ensure .nojekyll exists in build output for GitHub Pages
         # This prevents Jekyll from processing and ignoring _static/ files
-        if [ -f .nojekyll ]; then
-          cp .nojekyll _build/html/.nojekyll
-          echo "✅ Copied .nojekyll to build output"
-        else
-          touch _build/html/.nojekyll
-          echo "✅ Created .nojekyll in build output"
-        fi
-        echo "=== Contents of site after build ==="
+        touch _build/html/.nojekyll
+        echo "✅ Created .nojekyll in build output"
+        echo "=== Contents of docs after build ==="
         ls -la
-        echo "=== Contents of _build (if exists) ==="
-        ls -la _build/ || echo "_build doesn't exist"
-        echo "=== Contents of _build/html (if exists) ==="
+        echo "=== Contents of _build/html ==="
         ls -la _build/html/ || echo "_build/html doesn't exist"
-        echo "=== Verifying .nojekyll exists ==="
-        ls -la _build/html/.nojekyll || echo "⚠️  .nojekyll missing!"
 
     - name: Deploy main site to gh-pages branch (root)
       # Only deploy on main branch pushes (not PRs)
@@ -77,7 +67,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./site/_build/html
+        publish_dir: ./docs/_build/html
         destination_dir: .  # Deploy to root of gh-pages branch
         publish_branch: gh-pages
         user_name: 'github-actions[bot]'

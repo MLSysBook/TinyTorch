@@ -1,6 +1,6 @@
 # TinyTorch Binder Environment
 # This file is used by Binder to set up the execution environment
-# Keep synchronized with main requirements.txt and site/requirements.txt
+# Keep synchronized with main requirements.txt and docs/requirements.txt
 
 # Core numerical computing (TinyTorch dependency)
 numpy>=1.24.0,<3.0.0

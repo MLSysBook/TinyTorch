@@ -118,7 +118,7 @@ Show students where they are in their journey, what they've accomplished, and wh
 💡 Run a milestone: tito milestone run 01
 ```
 
-### `tito system doctor`
+### `tito system health`
 
 **Current Issues:**
 - Bland table format
@@ -280,7 +280,7 @@ Run these commands to see the new designs:
 ```bash
 tito module status
 tito milestone status
-tito system doctor
+tito system health
 tito module complete 01  # (after working on module 01)
 ```
 

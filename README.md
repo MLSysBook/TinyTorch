@@ -148,10 +148,10 @@ cd TinyTorch
 source activate.sh
 
 # Verify setup
-tito system doctor
+tito system health
 
 # Start building
-tito module view 01_tensor
+tito module start 01_tensor
 ```
 
 **That's it!** The setup script handles:

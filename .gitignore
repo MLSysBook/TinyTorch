@@ -86,6 +86,7 @@ site/.venv/
 # Jupyter Book
 book/_build/
 site/_build/
+docs/_build/
 
 # NBGrader - assignments are dynamically generated via 'tito nbgrader generate'
 # Only ignore student submissions and grading outputs, not source/release (for now)
@@ -136,6 +137,10 @@ Thumbs.db
 tito-cli.log
 COMMIT_LOG.txt
 
+# Tito CLI backups and cache
+.tito/backups/
+.tito/cache/
+
 # Downloaded datasets (not source-controlled, too large)
 data/
 datasets/
@@ -181,10 +186,12 @@ modules/HASATTR_*.md
 
 # Generated notebooks (built from src/*.py source files)
 # The modules/ directory contains generated notebooks for learners
-modules/
+modules/*
+!modules/README.md
 
 # AI development files (keep locally)
 .claude/
 
 # Site build artifacts
 site/_build/
+.envrc

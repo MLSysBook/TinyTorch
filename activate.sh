@@ -11,4 +11,4 @@ else
     source .venv/bin/activate
     echo "🔥 TinyTorch environment activated"
 fi
-echo "💡 Try: tito system doctor"
+echo "💡 Try: tito system health"

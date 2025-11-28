@@ -13,7 +13,7 @@ cd TinyTorch
 source activate.sh
 
 # Verify installation
-tito system doctor
+tito system health
 
 # System information
 tito system info
@@ -105,7 +105,7 @@ tito module complete 05
 ### Debugging Module Errors
 ```bash
 # Check system health
-tito system doctor
+tito system health
 
 # View detailed error logs
 tito module complete N --verbose

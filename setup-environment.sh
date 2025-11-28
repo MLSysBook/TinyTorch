@@ -82,7 +82,7 @@ else
     source .venv/bin/activate
     echo "🔥 TinyTorch environment activated"
 fi
-echo "💡 Try: tito system doctor"
+echo "💡 Try: tito system health"
 EOF
 
 chmod +x activate.sh
@@ -91,8 +91,8 @@ echo ""
 echo "✅ Setup complete!"
 echo ""
 echo "🚀 Next steps:"
-echo "   1. source activate.sh          # Activate environment"
-echo "   2. tito system doctor           # Verify setup"
-echo "   3. tito module view 01_tensor   # Start learning"
+echo "   1. source activate.sh       # Activate environment"
+echo "   2. tito system health       # Verify setup"
+echo "   3. tito module start 01     # Start learning"
 echo ""
 

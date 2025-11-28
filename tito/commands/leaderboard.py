@@ -863,7 +863,7 @@ class LeaderboardCommand(BaseCommand):
         # Quick action suggestions
         self.console.print(Panel(
             f"[bold cyan]🎯 Quick Actions[/bold cyan]\n\n" +
-            (f"[green]Continue Learning:[/green]\n[dim]  tito module view {next_module}[/dim]\n\n" if next_module else "") +
+            (f"[green]Continue Learning:[/green]\n[dim]  tito module start {next_module}[/dim]\n\n" if next_module else "") +
             f"[yellow]Submit Results:[/yellow]\n[dim]  tito leaderboard submit --task mnist --accuracy XX.X[/dim]\n\n"
             f"[blue]View Community:[/blue]\n[dim]  tito leaderboard view[/dim]\n\n"
             f"[magenta]Track Progress:[/magenta]\n[dim]  tito checkpoint status[/dim]",
@@ -1364,7 +1364,7 @@ class LeaderboardCommand(BaseCommand):
         # Module-based suggestions
         if next_module:
             suggestions.append(f"[green]Continue learning:[/green] {next_module}")
-            suggestions.append(f"[dim]  tito module view {next_module}[/dim]")
+            suggestions.append(f"[dim]  tito module start {next_module}[/dim]")
         else:
             suggestions.append("[green]🏆 All modules complete![/green] You're an ML Systems Engineer!")
         

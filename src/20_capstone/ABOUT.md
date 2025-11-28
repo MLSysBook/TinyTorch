@@ -194,14 +194,14 @@ This capstone requires understanding of benchmarking (Module 19) and optimizatio
 source scripts/activate-tinytorch
 
 # Required: Benchmarking methodology (Module 19)
-tito test --module benchmarking     # Module 19: Statistical measurement, fair comparison
+tito test benchmarking     # Module 19: Statistical measurement, fair comparison
 
 # Helpful: Optimization techniques (Modules 14-18)
-tito test --module profiling        # Module 14: Find bottlenecks
-tito test --module quantization     # Module 15: Reduce precision
-tito test --module compression      # Module 16: Prune parameters
-tito test --module memoization      # Module 17: Cache computations
-tito test --module acceleration     # Module 18: Operator fusion
+tito test profiling        # Module 14: Find bottlenecks
+tito test quantization     # Module 15: Reduce precision
+tito test compression      # Module 16: Prune parameters
+tito test memoization      # Module 17: Cache computations
+tito test acceleration     # Module 18: Operator fusion
 ```
 
 **Why You Need Module 19:**
@@ -241,7 +241,7 @@ tito test --module acceleration     # Module 18: Operator fusion
 6. **Export and verify**:
    ```bash
    tito module complete 20
-   tito test --module capstone
+   tito test capstone
    ```
 
 ## Testing
@@ -252,7 +252,7 @@ Run the full test suite to verify your competition submission:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module capstone
+tito test capstone
 
 # Direct pytest execution
 python -m pytest tests/ -k capstone -v

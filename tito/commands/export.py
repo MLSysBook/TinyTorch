@@ -208,7 +208,7 @@ class ExportCommand(BaseCommand):
                     console.print(f"[bold]Next Module:[/bold] {next_module}")
                     console.print(f"[dim]{next_desc}[/dim]")
                     console.print(f"\n[green]Ready to continue? Run:[/green]")
-                    console.print(f"[dim]  tito module view {next_module}[/dim]")
+                    console.print(f"[dim]  tito module start {next_module}[/dim]")
                 elif next_num > 16:
                     console.print(f"\n[bold green]🏆 Congratulations![/bold green]")
                     console.print(f"[green]You've completed all TinyTorch modules![/green]")
