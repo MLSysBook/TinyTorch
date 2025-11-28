@@ -16,6 +16,12 @@ Set Framerate 30
 Set WindowBar Colorful
 Set TypingSpeed 100ms
 
+# Activate environment first
+Type "source activate.sh"
+Sleep 300ms
+Enter
+Sleep 1s
+
 # Complete module that unlocks milestone
 Type "tito module complete 07"
 Sleep 400ms
