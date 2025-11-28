@@ -43,6 +43,11 @@ class ModuleResetCommand(BaseCommand):
             "module_number", nargs="?", help="Module number to reset (01, 02, etc.)"
         )
         parser.add_argument(
+            "--all",
+            action="store_true",
+            help="Reset all modules to pristine state",
+        )
+        parser.add_argument(
             "--soft",
             action="store_true",
             help="Soft reset: backup + restore source (keep package export)",
@@ -491,9 +496,206 @@ class ModuleResetCommand(BaseCommand):
             # If git check fails, continue anyway
             return True
 
+    def _reset_all_modules(self, args: Namespace) -> int:
+        """Reset all modules to pristine state."""
+        console = self.console
+        
+        module_mapping = self.get_module_mapping()
+        
+        # BIG WARNING
+        console.print()
+        console.print()
+        console.print(
+            Panel(
+                f"[bold red]⚠️  WARNING: RESET ALL MODULES ⚠️[/bold red]\n\n"
+                f"[bold yellow]This will:[/bold yellow]\n"
+                f"  🗑️  Reset ALL {len(module_mapping)} modules to pristine state\n"
+                f"  🗑️  Clear ALL progress tracking\n"
+                f"  🗑️  Remove ALL package exports\n"
+                f"  ♻️  Restore ALL source files from git\n"
+                f"  📦 Re-export ALL modules fresh\n\n"
+                f"[bold]Current state:[/bold]\n"
+                f"  {'✅ Backups will be created' if not args.no_backup else '❌ NO BACKUPS - Your work will be LOST!'}\n\n"
+                f"[dim]This is like a fresh install - use with caution![/dim]",
+                title="⚠️  RESET ALL MODULES",
+                border_style="red",
+                padding=(1, 2),
+            )
+        )
+        console.print()
+        
+        # Check git status
+        self.check_git_status()
+        
+        # Confirmation (unless --force)
+        if not args.force:
+            console.print()
+            console.print("[bold red]═══════════════════════════════════════════[/bold red]")
+            console.print("[bold red]        CONFIRMATION REQUIRED              [/bold red]")
+            console.print("[bold red]═══════════════════════════════════════════[/bold red]")
+            console.print()
+            
+            if not args.no_backup:
+                console.print("[green]✓ Your work will be backed up before reset[/green]")
+            else:
+                console.print("[bold red]✗ NO BACKUP - YOUR WORK WILL BE LOST![/bold red]")
+            
+            console.print()
+            
+            try:
+                response = input("Type 'yes' to continue with reset (anything else cancels): ").strip().lower()
+                if response != "yes":
+                    console.print()
+                    console.print(
+                        Panel(
+                            "[cyan]Reset cancelled. Your work is safe.[/cyan]",
+                            title="✓ Cancelled",
+                            border_style="cyan",
+                        )
+                    )
+                    return 0
+            except KeyboardInterrupt:
+                console.print()
+                console.print(
+                    Panel(
+                        "[cyan]Reset cancelled. Your work is safe.[/cyan]",
+                        title="✓ Cancelled",
+                        border_style="cyan",
+                    )
+                )
+                return 0
+        
+        console.print()
+        
+        # Reset each module
+        reset_count = 0
+        failed_modules = []
+        
+        for module_num, module_name in sorted(module_mapping.items()):
+            console.print(f"[cyan]Resetting {module_name}...[/cyan]")
+            
+            # Create backup if requested
+            if not args.no_backup:
+                backup_dir = self.create_backup(module_name)
+                if not backup_dir:
+                    console.print(f"[yellow]⚠ Backup failed for {module_name}[/yellow]")
+            
+            # Unexport
+            self.unexport_module(module_name)
+            
+            # Restore from git
+            if self.restore_from_git(module_name):
+                console.print(f"[green]✓ {module_name} reset[/green]")
+                reset_count += 1
+            else:
+                console.print(f"[red]✗ {module_name} failed[/red]")
+                failed_modules.append(module_name)
+            
+            console.print()
+        
+        # Reset EVERYTHING for complete fresh install state
+        console.print()
+        console.print("[bold cyan]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/bold cyan]")
+        console.print("[bold cyan]Resetting ALL data to fresh install state...[/bold cyan]")
+        console.print("[bold cyan]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[/bold cyan]")
+        console.print()
+        
+        # Reset progress tracking
+        console.print("[cyan]→ Module progress tracking...[/cyan]")
+        for module_num in module_mapping.keys():
+            self.update_progress_tracking(module_mapping[module_num], module_num)
+        console.print("  [green]✓ Cleared[/green]")
+        
+        # Reset .tito/progress.json (comprehensive)
+        tito_dir = self.config.project_root / ".tito"
+        tito_dir.mkdir(parents=True, exist_ok=True)
+        
+        console.print("[cyan]→ Progress files...[/cyan]")
+        progress_file = tito_dir / "progress.json"
+        progress_file.write_text(json.dumps({
+            "version": "1.0",
+            "completed_modules": [],
+            "completion_dates": {}
+        }, indent=2))
+        console.print("  [green]✓ Cleared[/green]")
+        
+        # Reset milestones.json
+        console.print("[cyan]→ Milestone achievements...[/cyan]")
+        milestones_file = tito_dir / "milestones.json"
+        milestones_file.write_text(json.dumps({
+            "version": "1.0",
+            "completed_milestones": [],
+            "completion_dates": {}
+        }, indent=2))
+        console.print("  [green]✓ Cleared[/green]")
+        
+        # Reset config.json
+        console.print("[cyan]→ Configuration settings...[/cyan]")
+        config_file = tito_dir / "config.json"
+        config_file.write_text(json.dumps({
+            "logo_theme": "standard"
+        }, indent=2))
+        console.print("  [green]✓ Reset to defaults[/green]")
+        console.print()
+        
+        # Re-export all modules to get fresh package files
+        console.print("[cyan]Re-exporting modules to package...[/cyan]")
+        try:
+            result = subprocess.run(
+                ["python", "-m", "nbdev.export"],
+                capture_output=True,
+                text=True,
+                cwd=self.config.project_root,
+            )
+            if result.returncode == 0:
+                console.print("[green]✓ Modules exported[/green]")
+            else:
+                console.print("[yellow]⚠ Export had issues (continuing)[/yellow]")
+        except Exception as e:
+            console.print(f"[yellow]⚠ Could not re-export: {e}[/yellow]")
+        console.print()
+        
+        # Summary
+        if failed_modules:
+            console.print(
+                Panel(
+                    f"[yellow]⚠ Partial reset complete[/yellow]\n\n"
+                    f"[green]Reset: {reset_count} modules[/green]\n"
+                    f"[red]Failed: {len(failed_modules)} modules[/red]\n\n"
+                    f"[dim]Failed modules: {', '.join(failed_modules)}[/dim]",
+                    title="Reset Complete (with errors)",
+                    border_style="yellow",
+                )
+            )
+            return 1
+        else:
+            console.print(
+                Panel(
+                    f"[bold green]✅ COMPLETE RESET SUCCESSFUL![/bold green]\n\n"
+                    f"[bold]What was reset:[/bold]\n"
+                    f"  ✓ {reset_count} modules → pristine source files\n"
+                    f"  ✓ All progress tracking → cleared\n"
+                    f"  ✓ All milestones → cleared\n"
+                    f"  ✓ Configuration → defaults\n"
+                    f"  ✓ Package exports → re-exported fresh\n\n"
+                    f"[bold cyan]🔥 You now have a completely fresh TinyTorch install![/bold cyan]\n\n"
+                    f"[bold]Next steps:[/bold]\n"
+                    f"  • [dim]tito module start 01[/dim] - Begin your journey\n"
+                    f"  • [dim]tito module status[/dim] - Check status\n"
+                    f"  • [dim]tito logo[/dim] - See what you're building",
+                    title="🔥 Fresh Install State",
+                    border_style="green",
+                )
+            )
+            return 0
+
     def run(self, args: Namespace) -> int:
         """Execute the reset command."""
         console = self.console
+
+        # Handle --all (reset all modules)
+        if args.all:
+            return self._reset_all_modules(args)
 
         # Handle --list-backups
         if args.list_backups:
