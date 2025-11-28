@@ -23,7 +23,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .base import BaseCommand
+from ..base import BaseCommand
 
 
 class ModuleResetCommand(BaseCommand):
@@ -694,11 +694,11 @@ class ModuleResetCommand(BaseCommand):
         console = self.console
 
         # Handle --all (reset all modules)
-        if args.all:
+        if getattr(args, 'all', False):
             return self._reset_all_modules(args)
 
         # Handle --list-backups
-        if args.list_backups:
+        if getattr(args, 'list_backups', False):
             if not args.module_number:
                 console.print(
                     "[red]Error: --list-backups requires a module number[/red]"
