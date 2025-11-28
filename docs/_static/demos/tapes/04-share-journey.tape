@@ -17,7 +17,7 @@ Set WindowBar Colorful
 Set TypingSpeed 100ms
 
 # Check progress
-Type "tito status"
+Type "tito module status"
 Sleep 400ms
 Enter
 Sleep 3s

@@ -16,8 +16,8 @@ Set Framerate 30
 Set WindowBar Colorful
 Set TypingSpeed 100ms
 
-# Start clean
-Type "cd /tmp"
+# Start clean - remove any existing TinyTorch
+Type "cd /tmp && rm -rf TinyTorch"
 Sleep 300ms
 Enter
 Sleep 800ms
@@ -45,8 +45,8 @@ Sleep 300ms
 Enter
 Sleep 1s
 
-# Check status shows clean slate
-Type "tito status"
+# Check module status shows clean slate
+Type "tito module status"
 Sleep 400ms
 Enter
 Sleep 3s
