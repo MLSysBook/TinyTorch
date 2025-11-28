@@ -17,12 +17,12 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from .base import BaseCommand
-from .view import ViewCommand
-from .test import TestCommand
-from .export import ExportCommand
-from .module_reset import ModuleResetCommand
-from ..core.exceptions import ModuleNotFoundError
+from ..base import BaseCommand
+from ..view import ViewCommand
+from ..test import TestCommand
+from ..export import ExportCommand
+from .reset import ModuleResetCommand
+from ...core.exceptions import ModuleNotFoundError
 
 class ModuleWorkflowCommand(BaseCommand):
     """Enhanced module command with natural workflow."""

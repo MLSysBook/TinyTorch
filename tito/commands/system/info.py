@@ -11,7 +11,7 @@ from pathlib import Path
 from rich.panel import Panel
 from rich.table import Table
 
-from .base import BaseCommand
+from ..base import BaseCommand
 
 class InfoCommand(BaseCommand):
     @property

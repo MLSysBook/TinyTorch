@@ -5,15 +5,15 @@ System command group for TinyTorch CLI: environment, configuration, and system t
 from argparse import ArgumentParser, Namespace
 from rich.panel import Panel
 
-from .base import BaseCommand
+from ..base import BaseCommand
 from .info import InfoCommand
 from .health import HealthCommand
-from .check import CheckCommand
-from .version import VersionCommand
-from .clean_workspace import CleanWorkspaceCommand
-from .report import ReportCommand
+from ..check import CheckCommand
+from ..version import VersionCommand
+from ..clean_workspace import CleanWorkspaceCommand
+from ..report import ReportCommand
 from .jupyter import JupyterCommand
-from .protect import ProtectCommand
+from ..protect import ProtectCommand
 
 class SystemCommand(BaseCommand):
     @property

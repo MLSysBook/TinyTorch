@@ -6,7 +6,7 @@ import subprocess
 from argparse import ArgumentParser, Namespace
 from rich.panel import Panel
 
-from .base import BaseCommand
+from ..base import BaseCommand
 
 class NbdevCommand(BaseCommand):
     @property
@@ -33,7 +33,7 @@ class NbdevCommand(BaseCommand):
         
         if args.export:
             # Use the export command logic
-            from .export import ExportCommand
+            from ..export import ExportCommand
             export_cmd = ExportCommand(self.config)
             export_args = ArgumentParser()
             export_cmd.add_arguments(export_args)
