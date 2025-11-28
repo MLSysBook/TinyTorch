@@ -25,40 +25,37 @@ Set TypingSpeed 100ms
 Type "tito module status"
 Sleep 400ms
 Enter
-Wait Line "🔥"  # Wait for status output
+Sleep 3s
 Sleep 3s
 
 # Join community
 Type "tito community join"
 Sleep 400ms
 Enter
-Wait Line ""  # Wait for first prompt
-Sleep 1s
+Sleep 2s  # Wait for first prompt
 
 # Simulate interactive prompts
 Type "United States"
 Sleep 400ms
 Enter
-Wait Line ""  # Wait for next prompt
-Sleep 1s
+Sleep 2s  # Wait for next prompt
 
 Type "Harvard University"
 Sleep 400ms
 Enter
-Wait Line ""  # Wait for next prompt
-Sleep 1s
+Sleep 2s  # Wait for next prompt
 
 Type "intermediate"
 Sleep 400ms
 Enter
-Wait Line "🔥"  # Wait for welcome message
+Sleep 3s
 Sleep 3s
 
 # Share achievement after more progress
 Type "tito community update"
 Sleep 400ms
 Enter
-Wait Line "🔥"  # Wait for update confirmation
+Sleep 3s
 Sleep 3s
 
 # Final message

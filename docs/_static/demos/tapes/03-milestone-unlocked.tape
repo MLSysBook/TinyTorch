@@ -25,24 +25,24 @@ Set TypingSpeed 100ms
 Type "tito module complete 07"
 Sleep 400ms
 Enter
-Wait Line "🔥"  # Wait for module completion
+Sleep 10s
 Sleep 3s
 
 # Check available milestones
 Type "tito milestone list"
 Sleep 400ms
 Enter
-Wait Line "🔥"  # Wait for list output
+Sleep 3s
 Sleep 3s
 
 # Run milestone 03 (MLP Revival 1986)
 Type "tito milestone run 03"
 Sleep 400ms
 Enter
-Sleep 500ms
+Sleep 2s
 Type ""  # Press Enter to proceed past "Press Enter to begin"
 Enter
-Wait 60s Line "▶"  # Wait for milestone to complete (max 60s)
+Sleep 60s  # Wait for milestone to complete
 Sleep 3s
 
 # Celebrate the achievement
