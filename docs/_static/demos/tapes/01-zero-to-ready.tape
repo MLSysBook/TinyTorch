@@ -26,32 +26,32 @@ Sleep 500ms
 Type "git clone https://github.com/mlsysbook/TinyTorch.git"
 Sleep 400ms
 Enter
-Sleep 2s
+Sleep 3s
 
 Type "cd TinyTorch"
 Sleep 300ms
 Enter
 Sleep 500ms
 
-# Setup environment (auto-detection)
+# Setup environment (measured: ~9s)
 Type "./setup-environment.sh"
 Sleep 400ms
 Enter
-Sleep 3s
+Sleep 9s
 
-# Activate
+# Activate (instant)
 Type "source activate.sh"
 Sleep 300ms
 Enter
 Sleep 1s
 
-# Check module status shows clean slate
+# Check module status (measured: ~0.2s, show for 3s)
 Type "tito module status"
 Sleep 400ms
 Enter
 Sleep 3s
 
-# Show the TinyTorch brand and philosophy
+# Show the TinyTorch brand and philosophy (measured: ~0.1s, show for 6s)
 Type "tito logo"
 Sleep 400ms
 Enter
