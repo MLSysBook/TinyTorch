@@ -16,11 +16,11 @@ Set Framerate 30
 Set WindowBar Colorful
 Set TypingSpeed 100ms
 
-# Start clean - remove any existing TinyTorch
-Type "cd /tmp && rm -rf TinyTorch"
+# Start in /tmp for demo purposes
+Type "cd /tmp"
 Sleep 300ms
 Enter
-Sleep 800ms
+Sleep 500ms
 
 # Clone repository
 Type "git clone https://github.com/mlsysbook/TinyTorch.git"

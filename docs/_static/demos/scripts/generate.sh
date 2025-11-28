@@ -52,6 +52,12 @@ fi
 mkdir -p "$DEMO_DIR"
 mkdir -p "$TAPE_DIR"
 
+# Clean /tmp/TinyTorch to ensure fresh demo environment
+echo "🧹 Cleaning /tmp/TinyTorch for fresh demo..."
+rm -rf /tmp/TinyTorch 2>/dev/null || true
+echo "✅ Demo environment ready"
+echo ""
+
 # Function to generate a single GIF
 generate_gif() {
     local num=$1

@@ -162,20 +162,25 @@ The test script ensures:
 
 ### Cleanup strategy
 
-The test script uses explicit cleanup:
+**Test script:** Cleans before testing to validate fresh setup
 ```bash
 if [ -d "/tmp/TinyTorch" ]; then
     rm -rf "$DEMO_DIR"
 fi
 ```
 
-VHS tapes include cleanup in the demo flow:
-```
-Type "cd /tmp && rm -rf TinyTorch"
-Enter
+**Generate script:** Cleans before VHS to ensure clean demo environment
+```bash
+rm -rf /tmp/TinyTorch 2>/dev/null || true
 ```
 
-This makes demos self-contained and reproducible.
+**VHS tapes:** Show clean student workflow (no cleanup commands visible)
+```
+Type "cd /tmp"
+Type "git clone https://github.com/mlsysbook/TinyTorch.git"
+```
+
+This separation ensures demos show the ideal first-time experience while maintaining reproducibility behind the scenes.
 
 ### Command validation
 
