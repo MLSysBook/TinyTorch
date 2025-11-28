@@ -21,8 +21,11 @@ Set TypingSpeed 100ms
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 
-# Activate TinyTorch environment (hidden from recording)
+# Change to TinyTorch directory and activate (hidden from recording)
 Hide
+Type "cd /Users/VJ/GitHub/TinyTorch"
+Enter
+Sleep 500ms
 Type "source activate.sh"
 Enter
 Sleep 2s

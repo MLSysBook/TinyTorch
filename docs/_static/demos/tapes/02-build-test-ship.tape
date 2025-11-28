@@ -22,6 +22,11 @@ Set WindowBar Colorful
 Set TypingSpeed 100ms
 
 # Activate TinyTorch environment
+Hide
+Type "cd /Users/VJ/GitHub/TinyTorch"
+Enter
+Sleep 500ms
+Show
 Type "source activate.sh"
 Sleep 400ms
 Enter
