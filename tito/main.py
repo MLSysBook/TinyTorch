@@ -50,6 +50,8 @@ from .commands.olympics import OlympicsCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
+from .commands.login import LoginCommand, LogoutCommand
+
 
 # Configure logging
 logging.basicConfig(
@@ -65,7 +67,7 @@ logger = logging.getLogger(__name__)
 
 class TinyTorchCLI:
     """Main CLI application class."""
-    
+
     def __init__(self):
         """Initialize the CLI application."""
         self.config = CLIConfig.from_project_root()
@@ -93,8 +95,11 @@ class TinyTorchCLI:
             'grade': GradeCommand,
             'demo': DemoCommand,
             'logo': LogoCommand,
+            # Authentication commands
+            'login': LoginCommand,
+            'logout': LogoutCommand,
         }
-    
+
     def create_parser(self) -> argparse.ArgumentParser:
         """Create the main argument parser."""
         parser = argparse.ArgumentParser(
@@ -134,7 +139,7 @@ Tracking Progress:
   tito leaderboard profile      View your achievement journey
             """
         )
-        
+
         # Global options
         parser.add_argument(
             '--version',
@@ -151,14 +156,14 @@ Tracking Progress:
             action='store_true',
             help='Disable colored output'
         )
-        
+
         # Subcommands
         subparsers = parser.add_subparsers(
             dest='command',
             help='Available commands',
             metavar='COMMAND'
         )
-        
+
         # Add command parsers
         for command_name, command_class in self.commands.items():
             # Create temporary instance to get metadata
@@ -168,13 +173,13 @@ Tracking Progress:
                 help=temp_command.description
             )
             temp_command.add_arguments(cmd_parser)
-        
+
         return parser
-    
+
     def validate_environment(self) -> bool:
         """Validate the environment and show issues if any."""
         issues = self.config.validate(get_venv_path())
-        
+
         if issues:
             print_error(
                 "Environment validation failed:\n" + "\n".join(f"  • {issue}" for issue in issues),
@@ -184,43 +189,43 @@ Tracking Progress:
             # Return True to allow command execution despite validation issues
             # This is temporary for development
             return True
-        
+
         return True
-    
+
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
-            
+
             # Update config with global options
             if hasattr(parsed_args, 'verbose') and parsed_args.verbose:
                 self.config.verbose = True
                 logging.getLogger().setLevel(logging.DEBUG)
-            
+
             if hasattr(parsed_args, 'no_color') and parsed_args.no_color:
                 self.config.no_color = True
-            
+
             # Show banner for interactive commands (except logo which has its own display)
             if parsed_args.command and not self.config.no_color and parsed_args.command != 'logo':
                 print_banner()
-            
+
             # Validate environment for most commands (skip for doctor)
             skip_validation = (
                 parsed_args.command in [None, 'version', 'help'] or
-                (parsed_args.command == 'system' and 
-                 hasattr(parsed_args, 'system_command') and 
+                (parsed_args.command == 'system' and
+                 hasattr(parsed_args, 'system_command') and
                  parsed_args.system_command == 'doctor')
             )
             if not skip_validation:
                 if not self.validate_environment():
                     return 1
-            
+
             # Handle no command
             if not parsed_args.command:
                 # Show ASCII logo first
                 print_ascii_logo()
-                
+
                 # Show enhanced help with command groups
                 self.console.print(Panel(
                     "[bold]Essential Commands:[/bold]\n"
@@ -255,7 +260,7 @@ Tracking Progress:
                     border_style="bright_green"
                 ))
                 return 0
-            
+
             # Execute command
             if parsed_args.command in self.commands:
                 command_class = self.commands[parsed_args.command]
@@ -264,7 +269,7 @@ Tracking Progress:
             else:
                 print_error(f"Unknown command: {parsed_args.command}")
                 return 1
-                
+
         except KeyboardInterrupt:
             self.console.print("\n[yellow]Operation cancelled by user[/yellow]")
             return 130
@@ -283,4 +288,4 @@ def main() -> int:
     return cli.run(sys.argv[1:])
 
 if __name__ == "__main__":
-    sys.exit(main()) 
+    sys.exit(main())
