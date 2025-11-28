@@ -2,7 +2,7 @@
 # Purpose: Show complete module workflow with detailed test output
 # Duration: 30-35 seconds
 
-Output "02-build-test-ship.gif"
+Output "gifs/02-build-test-ship.gif"
 
 # Carousel-optimized dimensions (16:9 aspect ratio)
 Set Width 1280

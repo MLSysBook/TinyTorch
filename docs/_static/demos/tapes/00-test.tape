@@ -2,7 +2,7 @@
 # Purpose: Test that VHS setup works with torch prompt
 # Duration: 5 seconds
 
-Output "00-test.gif"
+Output "gifs/00-test.gif"
 
 # Window bar for realistic terminal look (must be at top)
 Set WindowBar Colorful

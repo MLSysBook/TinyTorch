@@ -2,7 +2,7 @@
 # Purpose: Show community engagement and progress tracking
 # Duration: 20-25 seconds
 
-Output "04-share-journey.gif"
+Output "gifs/04-share-journey.gif"
 
 # Carousel-optimized dimensions (16:9 aspect ratio)
 Set Width 1280

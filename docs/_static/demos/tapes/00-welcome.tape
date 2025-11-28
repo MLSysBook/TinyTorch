@@ -2,7 +2,7 @@
 # Purpose: Show the beautiful branded welcome screen with full command reference
 # Duration: 10-12 seconds
 
-Output "00-welcome.gif"
+Output "gifs/00-welcome.gif"
 
 # Window bar for realistic terminal look (must be at top)
 Set WindowBar Colorful

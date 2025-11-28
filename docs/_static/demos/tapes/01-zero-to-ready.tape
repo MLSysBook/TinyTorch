@@ -2,7 +2,7 @@
 # Purpose: Show how easy TinyTorch setup is
 # Duration: 15-20 seconds
 
-Output "01-zero-to-ready.gif"
+Output "gifs/01-zero-to-ready.gif"
 
 # Window bar for realistic terminal look (must be at top)
 Set WindowBar Colorful

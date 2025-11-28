@@ -2,7 +2,7 @@
 # Purpose: Show milestone unlock and training with historical context
 # Duration: 30-35 seconds
 
-Output "03-milestone-unlocked.gif"
+Output "gifs/03-milestone-unlocked.gif"
 
 # Carousel-optimized dimensions (16:9 aspect ratio)
 Set Width 1280
