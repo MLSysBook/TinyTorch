@@ -7,9 +7,9 @@ Output "gifs/00-welcome.gif"
 # Window bar for realistic terminal look (must be at top)
 Set WindowBar Colorful
 
-# Carousel-optimized dimensions (16:9 aspect ratio)
+# Taller dimensions to show full tito output
 Set Width 1280
-Set Height 720
+Set Height 1000
 Set FontSize 18
 Set FontFamily "JetBrains Mono, Monaco, Menlo, monospace"
 Set Theme "Catppuccin Mocha"
