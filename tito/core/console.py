@@ -102,8 +102,7 @@ def print_ascii_logo(compact: bool = False):
             logo_text.append(line, style=TORCH_COLOR)
         logo_text.append("\n")
     
-    # Add tagline (aligned under TORCH, matches flame glow
-    )
+    # Add tagline (aligned under TORCH, matches flame glow)
     logo_text.append("\n                🔥 Don't import it. Build it.", style=TAGLINE_COLOR)
     logo_text.append("\n")
         
