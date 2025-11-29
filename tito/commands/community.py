@@ -111,13 +111,25 @@ class CommunityCommand(BaseCommand):
             'profile',
             help='View your community profile'
         )
+
+        # Leaderboard command (opens browser)
+        leaderboard_parser = subparsers.add_parser(
+            'leaderboard',
+            help='View global leaderboard (opens in browser)'
+        )
+
+        # Compete command (opens browser)
+        compete_parser = subparsers.add_parser(
+            'compete',
+            help='Join competitions and challenges (opens in browser)'
+        )
     
     def run(self, args: Namespace) -> int:
         """Execute community command."""
         if not args.community_command:
-            self.console.print("[yellow]Please specify a community command: join, update, leave, stats, or profile[/yellow]")
+            self.console.print("[yellow]Please specify a community command: join, leaderboard, compete, profile[/yellow]")
             return 1
-        
+
         if args.community_command == 'join':
             return self._join_community(args)
         elif args.community_command == 'update':
@@ -128,6 +140,10 @@ class CommunityCommand(BaseCommand):
             return self._show_stats(args)
         elif args.community_command == 'profile':
             return self._show_profile(args)
+        elif args.community_command == 'leaderboard':
+            return self._open_leaderboard(args)
+        elif args.community_command == 'compete':
+            return self._open_compete(args)
         else:
             self.console.print(f"[red]Unknown community command: {args.community_command}[/red]")
             return 1
@@ -658,3 +674,35 @@ class CommunityCommand(BaseCommand):
             #     self.console.print(f"[dim]Note: Could not sync with website: {e}[/dim]")
             #     self.console.print("[dim]Profile removed locally.[/dim]")
             pass
+
+    def _open_leaderboard(self, args: Namespace) -> int:
+        """Open community leaderboard in browser."""
+        import webbrowser
+
+        leaderboard_url = "https://tinytorch.ai/community/leaderboard"
+
+        self.console.print(f"[blue]🏆 Opening leaderboard...[/blue]")
+        try:
+            webbrowser.open(leaderboard_url)
+            self.console.print(f"[green]✓[/green] Browser opened: [cyan]{leaderboard_url}[/cyan]")
+        except Exception as e:
+            self.console.print(f"[yellow]⚠️  Could not open browser automatically[/yellow]")
+            self.console.print(f"[dim]Please visit: {leaderboard_url}[/dim]")
+
+        return 0
+
+    def _open_compete(self, args: Namespace) -> int:
+        """Open competitions page in browser."""
+        import webbrowser
+
+        compete_url = "https://tinytorch.ai/community/compete"
+
+        self.console.print(f"[blue]🎯 Opening competitions...[/blue]")
+        try:
+            webbrowser.open(compete_url)
+            self.console.print(f"[green]✓[/green] Browser opened: [cyan]{compete_url}[/cyan]")
+        except Exception as e:
+            self.console.print(f"[yellow]⚠️  Could not open browser automatically[/yellow]")
+            self.console.print(f"[dim]Please visit: {compete_url}[/dim]")
+
+        return 0
