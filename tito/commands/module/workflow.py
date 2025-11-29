@@ -768,7 +768,7 @@ class ModuleWorkflowCommand(BaseCommand):
         """Export module to the TinyTorch package."""
         try:
             # Use the new source command for exporting
-            from .src import SrcCommand
+            from ..src import SrcCommand
             
             fake_args = Namespace()
             fake_args.src_command = 'export'  # Subcommand
