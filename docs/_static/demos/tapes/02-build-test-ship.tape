@@ -4,6 +4,9 @@
 
 Output "gifs/02-build-test-ship.gif"
 
+# Window bar for realistic terminal look
+Set WindowBar Colorful
+
 # Carousel-optimized dimensions (16:9 aspect ratio)
 Set Width 1280
 Set Height 720
@@ -20,9 +23,6 @@ Set LoopOffset 10%
 # Set shell with custom prompt for reliable waiting
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
-
-# Window bar for realistic terminal look
-Set WindowBar Colorful
 Set TypingSpeed 100ms
 
 # Activate TinyTorch environment

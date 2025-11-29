@@ -4,6 +4,9 @@
 
 Output "gifs/03-milestone-unlocked.gif"
 
+# Window bar for realistic terminal look
+Set WindowBar Colorful
+
 # Carousel-optimized dimensions (16:9 aspect ratio)
 Set Width 1280
 Set Height 720
@@ -20,12 +23,9 @@ Set LoopOffset 10%
 # Set shell with custom prompt for reliable waiting
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
-
-# Window bar for realistic terminal look
-Set WindowBar Colorful
 Set TypingSpeed 100ms
 
-# Setup: cd, activate, and prepare modules 01-07 (all hidden)
+# Setup: cd, activate, and complete modules 01-06 (all hidden)
 Hide
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Enter
@@ -33,17 +33,32 @@ Sleep 500ms
 Type "source activate.sh"
 Enter
 Sleep 2s
-# Reset and complete modules 01-06 to set up for module 07
-Type "tito src export 01_tensor 02_activations 03_layers 04_losses 05_autograd 06_optimizers"
+# Complete modules 01-06 to unlock module 07 and milestone 03
+Type "tito module complete 01"
 Enter
-Sleep 10s
+Sleep 5s
+Type "tito module complete 02"
+Enter
+Sleep 5s
+Type "tito module complete 03"
+Enter
+Sleep 5s
+Type "tito module complete 04"
+Enter
+Sleep 5s
+Type "tito module complete 05"
+Enter
+Sleep 5s
+Type "tito module complete 06"
+Enter
+Sleep 5s
 Show
 
-# Show where we are in the journey
+# Show where we are in the journey (modules 01-06 completed)
 Type "tito module status"
 Sleep 400ms
 Enter
-Sleep 3s
+Sleep 4s
 
 # Complete module 07 which unlocks milestone 03
 Type "tito module complete 07"
