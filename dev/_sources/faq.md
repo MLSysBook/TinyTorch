@@ -228,7 +228,7 @@ Each milestone proves your framework works by running actual ML experiments.
 - Helpful for self-assessment
 - Use `tito checkpoint status` to view progress
 
-**📖 See [Module Workflow](tito/modules.html)** for the core development cycle.
+**📖 See [Module Workflow](tito/modules.md)** for the core development cycle.
 
 ---
 
@@ -255,7 +255,7 @@ cd modules/01_tensor
 jupyter lab tensor_dev.py
 ```
 
-**📖 See [Getting Started Guide](getting-started.html)** for detailed setup.
+**📖 See [Getting Started Guide](getting-started.md)** for detailed setup.
 
 ### What's the typical workflow?
 
@@ -272,7 +272,7 @@ cd ../../milestones/01_1957_perceptron
 python rosenblatt_forward.py  # Uses YOUR implementation!
 ```
 
-**📖 See [Module Workflow](tito/modules.html)** for complete details.
+**📖 See [Module Workflow](tito/modules.md)** for complete details.
 
 ### Can I use this in my classroom?
 

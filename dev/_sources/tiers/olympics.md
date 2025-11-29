@@ -382,4 +382,4 @@ tito olympics leaderboard
 
 ---
 
-**[← Back to Home](../intro)** • **[View Leaderboard](../leaderboard)** • **[Competition Rules](../olympics-rules)**
+**[← Back to Home](../intro)**

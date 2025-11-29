@@ -187,13 +187,13 @@ tito milestone run 03
 
 | Command | Description | Guide |
 |---------|-------------|-------|
-| `tito community join` | Join the community (optional info) | [Community Guide](../community.html) |
-| `tito community update` | Update your community profile | [Community Guide](../community.html) |
-| `tito community profile` | View your community profile | [Community Guide](../community.html) |
-| `tito community stats` | View community statistics | [Community Guide](../community.html) |
-| `tito community leave` | Remove your community profile | [Community Guide](../community.html) |
+| `tito community join` | Join the community (optional info) | [Community Guide](../community.md) |
+| `tito community update` | Update your community profile | [Community Guide](../community.md) |
+| `tito community profile` | View your community profile | [Community Guide](../community.md) |
+| `tito community stats` | View community statistics | [Community Guide](../community.md) |
+| `tito community leave` | Remove your community profile | [Community Guide](../community.md) |
 
-**See**: [Community Guide](../community.html) for complete details
+**See**: [Community Guide](../community.md) for complete details
 
 ### Benchmark Commands
 
@@ -201,10 +201,10 @@ tito milestone run 03
 
 | Command | Description | Guide |
 |---------|-------------|-------|
-| `tito benchmark baseline` | Quick setup validation ("Hello World") | [Community Guide](../community.html) |
-| `tito benchmark capstone` | Full Module 20 performance evaluation | [Community Guide](../community.html) |
+| `tito benchmark baseline` | Quick setup validation ("Hello World") | [Community Guide](../community.md) |
+| `tito benchmark capstone` | Full Module 20 performance evaluation | [Community Guide](../community.md) |
 
-**See**: [Community Guide](../community.html) for complete details
+**See**: [Community Guide](../community.md) for complete details
 
 ### Developer Commands
 
@@ -370,9 +370,9 @@ tito milestone run --help
 
 ## Related Resources
 
-- **[Getting Started Guide](../getting-started.html)** - Complete setup and first steps
-- **[Module Workflow](modules.html)** - Day-to-day development cycle
-- **[Datasets Guide](../datasets.html)** - Understanding TinyTorch datasets
+- **[Getting Started Guide](../getting-started.md)** - Complete setup and first steps
+- **[Module Workflow](modules.md)** - Day-to-day development cycle
+- **[Datasets Guide](../datasets.md)** - Understanding TinyTorch datasets
 
 ---
 

@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Marimo can open .ipynb files directly from GitHub
     // Format: https://marimo.app/molab?repo=owner/repo&path=path/to/file.ipynb
     // Works for all modules: 01_tensor, 02_activations, etc.
-    const marimoUrl = `https://marimo.app/molab?repo=${repoPath}&path=site/chapters/modules/${notebookName}.ipynb`;
+    const marimoUrl = `https://marimo.app/molab?repo=${repoPath}&path=docs/chapters/modules/${notebookName}.ipynb`;
     
     // Create marimo badge
     const marimoBadge = document.createElement('div');
