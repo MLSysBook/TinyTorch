@@ -61,21 +61,32 @@ class HealthCommand(BaseCommand):
             venv_status = "[red]❌ Missing[/red]"
         env_table.add_row("Virtual Environment", venv_status)
 
-        # Dependencies - STATUS ONLY (no versions)
-        dependencies = [
+        # Required dependencies (from requirements.txt)
+        required_deps = [
             ('NumPy', 'numpy'),
-            ('Pytest', 'pytest'),
-            ('PyYAML', 'yaml'),
             ('Rich', 'rich'),
-            ('JupyterLab', 'jupyterlab'),
-            ('Jupytext', 'jupytext')
+            ('PyYAML', 'yaml'),
+            ('Pytest', 'pytest'),
+            ('Jupytext', 'jupytext'),
         ]
-        for display_name, import_name in dependencies:
+        for display_name, import_name in required_deps:
             try:
                 __import__(import_name)
                 env_table.add_row(display_name, "[green]✅ OK[/green]")
             except ImportError:
                 env_table.add_row(display_name, "[red]❌ Missing[/red]")
+
+        # Optional dependencies (nice to have, not required for core workflow)
+        optional_deps = [
+            ('JupyterLab', 'jupyterlab'),
+            ('Matplotlib', 'matplotlib'),
+        ]
+        for display_name, import_name in optional_deps:
+            try:
+                __import__(import_name)
+                env_table.add_row(f"{display_name} (optional)", "[green]✅ Installed[/green]")
+            except ImportError:
+                env_table.add_row(f"{display_name} (optional)", "[dim]○ Not installed[/dim]")
         
         console.print(env_table)
         console.print()
