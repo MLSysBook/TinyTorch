@@ -2175,26 +2175,13 @@ Running all module components including systems analysis and final validation.
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("MODULE 09: SPATIAL OPERATIONS - COMPLETE EXECUTION")
+    print("MODULE 09: SPATIAL OPERATIONS - TEST EXECUTION")
     print("=" * 70)
-
-    # Part 1: Run systems analysis
-    print("\n" + "="*70)
-    print("PART 1: SYSTEMS ANALYSIS")
-    print("="*70)
-
-    analyze_convolution_complexity()
-    analyze_pooling_effects()
-
-    # Part 2: Run comprehensive module test
-    print("\n" + "="*70)
-    print("PART 2: MODULE INTEGRATION TEST")
-    print("="*70)
 
     test_module()
 
     print("\n" + "="*70)
-    print("MODULE 09 EXECUTION COMPLETE!")
+    print("MODULE 09 TESTS COMPLETE!")
     print("="*70)
 
 
