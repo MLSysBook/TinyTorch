@@ -849,6 +849,9 @@ def enable_autograd(quiet=False):
     This function enhances the existing Tensor class with autograd capabilities.
     Call this once to activate gradients globally.
 
+    **Args:**
+        quiet (bool): If True, suppress status messages. Default: False.
+
     **What it does:**
     - Replaces Tensor operations with gradient-tracking versions
     - Adds backward() method for reverse-mode differentiation
@@ -877,8 +880,7 @@ def enable_autograd(quiet=False):
     # 3. _autograd_enabled is a marker attribute we add at runtime
     # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
-        if not quiet:
-            print("⚠️ Autograd already enabled")
+        # Silently return if already enabled - no need to warn
         return
 
     # Store original operations
