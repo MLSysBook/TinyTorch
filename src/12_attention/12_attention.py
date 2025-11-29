@@ -418,10 +418,6 @@ def test_unit_scaled_dot_product_attention():
 
     print("✅ scaled_dot_product_attention works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_scaled_dot_product_attention()
-
 # %% [markdown]
 """
 ### 🧪 Unit Test: Scaled Dot-Product Attention
@@ -736,10 +732,6 @@ def test_unit_multihead_attention():
 
     print("✅ MultiHeadAttention works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_multihead_attention()
-
 # %% [markdown]
 """
 ### 🧪 Unit Test: Multi-Head Attention
@@ -882,11 +874,6 @@ def analyze_attention_memory_overhead():
 
     print(f"\n💡 Training requires 4× memory of inference (forward + grad + 2× optimizer state)")
     print(f"🚀 For GPT-3 (96 layers, 2048 context): ~6GB just for attention gradients!")
-
-# Call the analysis functions
-analyze_attention_complexity()
-analyze_attention_timing()
-analyze_attention_memory_overhead()
 
 # %% [markdown]
 """
@@ -1046,10 +1033,6 @@ def test_attention_scenarios():
 
     print("\n✅ All attention scenarios work correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_attention_scenarios()
-
 # %% [markdown]
 """
 ### 🧪 Integration Test: Attention Scenarios
@@ -1117,15 +1100,10 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 12")
 
+# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": false}
 # Run comprehensive module test when executed directly
 if __name__ == "__main__":
     test_module()
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Attention module...")
-    test_module()
-    print("✅ Module validation complete!")
 
 # %% [markdown]
 """

@@ -951,10 +951,6 @@ def demonstrate_complete_training_pipeline():
     print("   • Checkpointing for training persistence")
     print("   • Evaluation mode for model assessment")
 
-# Run the demonstration
-if __name__ == "__main__":
-    demonstrate_complete_training_pipeline()
-
 # %% [markdown]
 """
 ## 📊 Part 5: Systems Analysis - Training Performance and Memory
@@ -1059,10 +1055,6 @@ def analyze_training_memory():
     print("- Adam: 4× parameter memory (params + grads + 2 moment buffers)")
     print("- Gradient accumulation reduces memory but increases training time")
 
-# Run analysis
-if __name__ == "__main__":
-    analyze_training_memory()
-
 # %% nbgrader={"grade": false, "grade_id": "analyze_checkpoint_overhead", "solution": true}
 def analyze_checkpoint_overhead():
     """📊 Analyze checkpoint size and overhead."""
@@ -1124,10 +1116,6 @@ def analyze_checkpoint_overhead():
     print("- Pickle serialization adds 10-30% overhead")
     print("- Adam optimizer doubles checkpoint size vs SGD")
     print("- Use checkpoint frequency wisely in production (memory vs fault tolerance)")
-
-# Run analysis
-if __name__ == "__main__":
-    analyze_checkpoint_overhead()
 
 # %% [markdown]
 """

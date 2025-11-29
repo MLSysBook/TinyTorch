@@ -2290,12 +2290,6 @@ def test_module():
 if __name__ == "__main__":
     test_module()
 
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Benchmarking module...")
-    test_module()
-    print("✅ Module validation complete!")
-
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Benchmarking and Performance Engineering

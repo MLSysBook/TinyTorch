@@ -41,7 +41,7 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/17_compression/compression_dev.py`  
+**Learning Side:** You work in `modules/16_compression/compression_dev.py`
 **Building Side:** Code exports to `tinytorch.optimization.compression`
 
 ```python
@@ -147,57 +147,62 @@ distribution. We'll discover that many weights are tiny and might not matter muc
 # Module 14 (Profiling) must be completed before Module 16
 from tinytorch.profiling.profiler import Profiler, analyze_weight_distribution
 
-profiler = Profiler()
+def show_weight_distribution_motivation():
+    """Display weight distribution analysis - motivates compression techniques."""
+    profiler = Profiler()
 
-# Create a model and analyze its weights
-model = Linear(512, 512)
-input_data = Tensor(np.random.randn(1, 512))
+    # Create a model and analyze its weights
+    model = Linear(512, 512)
+    input_data = Tensor(np.random.randn(1, 512))
 
-# Profile basic characteristics
-profile = profiler.profile_forward_pass(model, input_data)
+    # Profile basic characteristics
+    profile = profiler.profile_forward_pass(model, input_data)
 
-print("🔬 Profiling Parameter Distribution:\n")
-print(f"   Total parameters: {profile['parameters']:,}")
-print(f"   Model memory: {profile['parameters'] * BYTES_PER_FLOAT32 / MB_TO_BYTES:.1f} MB (FP32)")
+    print("🔬 Profiling Parameter Distribution:\n")
+    print(f"   Total parameters: {profile['parameters']:,}")
+    print(f"   Model memory: {profile['parameters'] * BYTES_PER_FLOAT32 / MB_TO_BYTES:.1f} MB (FP32)")
 
-# Analyze weight distribution
-weights = model.weight.data.flatten()
-abs_weights = np.abs(weights)
+    # Analyze weight distribution
+    weights = model.weight.data.flatten()
+    abs_weights = np.abs(weights)
 
-print("\n   Weight Statistics:")
-print(f"   Mean: {np.mean(abs_weights):.4f}")
-print(f"   Std:  {np.std(abs_weights):.4f}")
-print(f"   Min:  {np.min(abs_weights):.4f}")
-print(f"   Max:  {np.max(abs_weights):.4f}")
+    print("\n   Weight Statistics:")
+    print(f"   Mean: {np.mean(abs_weights):.4f}")
+    print(f"   Std:  {np.std(abs_weights):.4f}")
+    print(f"   Min:  {np.min(abs_weights):.4f}")
+    print(f"   Max:  {np.max(abs_weights):.4f}")
 
-# Check how many weights are small
-thresholds = [0.001, 0.01, 0.1, 0.5]
-print("\n   Weights Below Threshold:")
-print("   Threshold  |  Percentage")
-print("   -----------|--------------")
-for threshold in thresholds:
-    percentage = np.sum(abs_weights < threshold) / len(weights) * 100
-    print(f"   < {threshold:<6}  |  {percentage:5.1f}%")
+    # Check how many weights are small
+    thresholds = [0.001, 0.01, 0.1, 0.5]
+    print("\n   Weights Below Threshold:")
+    print("   Threshold  |  Percentage")
+    print("   -----------|--------------")
+    for threshold in thresholds:
+        percentage = np.sum(abs_weights < threshold) / len(weights) * 100
+        print(f"   < {threshold:<6}  |  {percentage:5.1f}%")
 
-print("\n💡 Key Observations:")
-print("   • Many weights are very small (close to zero)")
-print("   • Weight distribution typically: mean ≈ 0, concentrated near zero")
-print("   • Small weights contribute little to final predictions")
-print("   • Typical finding: 50-90% of weights can be removed!")
+    print("\n💡 Key Observations:")
+    print("   • Many weights are very small (close to zero)")
+    print("   • Weight distribution typically: mean ≈ 0, concentrated near zero")
+    print("   • Small weights contribute little to final predictions")
+    print("   • Typical finding: 50-90% of weights can be removed!")
 
-print("\n🎯 The Problem:")
-print("   Why store and compute with weights that barely matter?")
-print("   • They take memory")
-print("   • They require computation")  
-print("   • They slow down inference")
-print("   • But removing them has minimal accuracy impact!")
+    print("\n🎯 The Problem:")
+    print("   Why store and compute with weights that barely matter?")
+    print("   • They take memory")
+    print("   • They require computation")
+    print("   • They slow down inference")
+    print("   • But removing them has minimal accuracy impact!")
 
-print("\n✨ The Solution:")
-print("   Prune (remove) small weights:")
-print("   • Magnitude pruning: Set small weights to zero")
-print("   • Structured pruning: Remove entire neurons/channels")
-print("   • Typical: 80-90% sparsity with <1% accuracy loss")
-print("   • Benefit: Smaller models, faster inference, less memory\n")
+    print("\n✨ The Solution:")
+    print("   Prune (remove) small weights:")
+    print("   • Magnitude pruning: Set small weights to zero")
+    print("   • Structured pruning: Remove entire neurons/channels")
+    print("   • Typical: 80-90% sparsity with <1% accuracy loss")
+    print("   • Benefit: Smaller models, faster inference, less memory\n")
+
+if __name__ == "__main__":
+    show_weight_distribution_motivation()
 
 # %% [markdown]
 """
@@ -1416,7 +1421,8 @@ def demo_compression_with_profiler():
     print(f"   Critical for: edge devices, mobile apps, energy efficiency")
     print("\n✅ This is the power of compression: remove what doesn't matter!")
 
-demo_compression_with_profiler()
+if __name__ == "__main__":
+    demo_compression_with_profiler()
 
 # %% [markdown]
 """
@@ -1481,7 +1487,8 @@ def analyze_compression_techniques():
     print("   • Larger models compress more effectively")
     print("   • Compression ratio = 1 / (1 - sparsity)")
 
-analyze_compression_techniques()
+if __name__ == "__main__":
+    analyze_compression_techniques()
 
 # %% [markdown]
 """
@@ -1521,7 +1528,8 @@ def analyze_distillation_effectiveness():
     print("   Deploy small student models on edge devices")
     print("   Train expensive teacher once, distill many students")
 
-analyze_distillation_effectiveness()
+if __name__ == "__main__":
+    analyze_distillation_effectiveness()
 
 # %% [markdown]
 """
@@ -1631,10 +1639,7 @@ def test_module():
 
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
-    print("Run: tito module complete 18")
-
-# Call the integration test
-test_module()
+    print("Run: tito module complete 16")
 
 # %%
 if __name__ == "__main__":
@@ -1832,7 +1837,7 @@ Congratulations! You've built a comprehensive model compression system that can 
 
 ### Ready for Next Steps
 Your compression implementation enables efficient model deployment across diverse hardware constraints!
-Export with: `tito module complete 18`
+Export with: `tito module complete 16`
 
-**Next**: Module 19 will add comprehensive benchmarking to evaluate all optimization techniques together, measuring the cumulative effects of quantization, acceleration, and compression!
+**Next**: Module 17 will add memoization and caching strategies to optimize repeated computations, building on compression for maximum efficiency!
 """

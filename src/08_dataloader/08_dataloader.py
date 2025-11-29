@@ -1285,8 +1285,6 @@ def analyze_dataloader_performance():
     print("• Memory usage scales linearly with batch size")
     print("🚀 Production tip: Balance batch size with GPU memory limits")
 
-# analyze_dataloader_performance()  # Optional: Run manually for performance insights
-
 
 def analyze_memory_usage():
     """📊 Analyze memory usage patterns in data loading."""
@@ -1342,8 +1340,6 @@ def analyze_memory_usage():
     print("• Use float32 instead of float64 to halve memory usage")
     print("• Consider gradient accumulation for effective larger batches")
 
-# analyze_memory_usage()  # Optional: Run manually for memory insights
-
 
 def analyze_collation_overhead():
     """📊 Analyze the cost of collating samples into batches."""
@@ -1375,8 +1371,6 @@ def analyze_collation_overhead():
     print("• Larger batches take longer to collate (more np.stack operations)")
     print("• But fewer large batches are more efficient than many small ones")
     print("• Optimal: Balance between batch size and iteration overhead")
-
-# analyze_collation_overhead()  # Optional: Run manually for collation insights
 
 
 # %% [markdown]

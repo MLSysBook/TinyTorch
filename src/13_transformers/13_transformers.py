@@ -492,7 +492,7 @@ def test_unit_layer_norm():
 
 # Run test immediately when developing this module
 if __name__ == "__main__":
-    test_unit_layer_norm()
+    test_unit_layer_norm()  # Moved after implementation
 
 # %% [markdown]
 """
@@ -696,7 +696,7 @@ def test_unit_mlp():
 
 # Run test immediately when developing this module
 if __name__ == "__main__":
-    test_unit_mlp()
+    test_unit_mlp()  # Moved after implementation
 
 # %% [markdown]
 """
@@ -942,7 +942,7 @@ def test_unit_transformer_block():
 
 # Run test immediately when developing this module
 if __name__ == "__main__":
-    test_unit_transformer_block()
+    test_unit_transformer_block()  # Moved after implementation
 
 # %% [markdown]
 """
@@ -1332,7 +1332,7 @@ def test_unit_gpt():
 
 # Run test immediately when developing this module
 if __name__ == "__main__":
-    test_unit_gpt()
+    test_unit_gpt()  # Moved after implementation
 
 # %% [markdown]
 """
