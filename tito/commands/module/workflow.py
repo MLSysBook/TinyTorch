@@ -22,6 +22,7 @@ from ..view import ViewCommand
 from ..test import TestCommand
 from ..export import ExportCommand
 from .reset import ModuleResetCommand
+from .test import ModuleTestCommand
 from ...core.exceptions import ModuleNotFoundError
 
 class ModuleWorkflowCommand(BaseCommand):
@@ -84,7 +85,38 @@ class ModuleWorkflowCommand(BaseCommand):
             action='store_true',
             help='Skip automatic export'
         )
-        
+        complete_parser.add_argument(
+            '--all',
+            action='store_true',
+            help='Complete all modules (test + export all)'
+        )
+
+        # TEST command - run module tests
+        test_parser = subparsers.add_parser(
+            'test',
+            help='Run module tests to verify implementation'
+        )
+        test_parser.add_argument(
+            'module_number',
+            nargs='?',
+            help='Module number to test (01, 02, 03, etc.)'
+        )
+        test_parser.add_argument(
+            '--all',
+            action='store_true',
+            help='Test all modules sequentially'
+        )
+        test_parser.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='Show detailed test output'
+        )
+        test_parser.add_argument(
+            '--stop-on-fail',
+            action='store_true',
+            help='Stop testing if a module fails (only with --all)'
+        )
+
         # RESET command - reset module to clean state
         reset_parser = subparsers.add_parser(
             'reset',
@@ -1064,6 +1096,10 @@ class ModuleWorkflowCommand(BaseCommand):
                     getattr(args, 'skip_tests', False),
                     getattr(args, 'skip_export', False)
                 )
+            elif args.module_command == 'test':
+                # Delegate to ModuleTestCommand
+                test_command = ModuleTestCommand(self.config)
+                return test_command.run(args)
             elif args.module_command == 'reset':
                 # Delegate to ModuleResetCommand
                 reset_command = ModuleResetCommand(self.config)
