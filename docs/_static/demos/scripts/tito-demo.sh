@@ -377,10 +377,18 @@ generate() {
     fi
     echo ""
 
+    # Delete old GIF if it exists (prevent appending)
+    if [ -f "docs/_static/demos/gifs/${demo_name}.gif" ]; then
+        echo -e "${YELLOW}🧹 Step 2.3: Removing old GIF to prevent appending...${NC}"
+        rm -f "docs/_static/demos/gifs/${demo_name}.gif"
+        echo -e "  ${GREEN}✓ Removed old GIF${NC}"
+        echo ""
+    fi
+
     # Record
-    echo -e "${YELLOW}⏳ Step 2.3: Recording with VHS (1-2 minutes)...${NC}"
+    echo -e "${YELLOW}⏳ Step 2.4: Recording with VHS (1-2 minutes)...${NC}"
     echo ""
-    
+
     local start=$(date +%s)
     
     if vhs "$tape_file" 2>&1 | while read line; do
@@ -394,12 +402,12 @@ generate() {
             echo ""
             echo -e "${GREEN}✅ Recording complete!${NC} (took ${duration}s)"
             echo ""
-            echo -e "${YELLOW}⏳ Step 2.4: Moving to docs/_static/demos/${NC}"
-            mv "$output_gif" "docs/_static/demos/$output_gif"
-            echo -e "  ${GREEN}✓ Saved: docs/_static/demos/$output_gif ($size)${NC}"
+            echo -e "${YELLOW}⏳ Step 2.5: Moving to docs/_static/demos/gifs/${NC}"
+            mv "$output_gif" "docs/_static/demos/gifs/$output_gif"
+            echo -e "  ${GREEN}✓ Saved: docs/_static/demos/gifs/$output_gif ($size)${NC}"
             echo ""
             echo -e "${BLUE}💡 Preview with:${NC}"
-            echo "  open docs/_static/demos/$output_gif"
+            echo "  open docs/_static/demos/gifs/$output_gif"
             echo ""
             return 0
         else

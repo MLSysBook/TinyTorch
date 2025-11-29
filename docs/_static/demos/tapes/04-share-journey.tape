@@ -25,16 +25,16 @@ Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
-# Activate TinyTorch environment (cd hidden, activation shown)
-Hide
+# Show everything - users see the full setup
 Type "cd /Users/VJ/GitHub/TinyTorch"
+Sleep 400ms
 Enter
-Sleep 500ms
+Sleep 1s
+
 Type "source activate.sh"
 Sleep 400ms
 Enter
-Show
-Sleep 2s
+Sleep 3s
 
 # Check progress
 Type "tito module status"

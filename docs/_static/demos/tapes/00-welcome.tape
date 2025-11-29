@@ -25,15 +25,16 @@ Set TypingSpeed 100ms
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 
-# Change to TinyTorch directory and activate (cd hidden, activation shown)
-Hide
+# Show everything - users see the full setup
 Type "cd /Users/VJ/GitHub/TinyTorch"
+Sleep 400ms
 Enter
-Sleep 500ms
+Sleep 1s
+
 Type "source activate.sh"
+Sleep 400ms
 Enter
-Show
-Sleep 2s
+Sleep 3s
 
 # Show the beautiful welcome screen
 Type "tito"

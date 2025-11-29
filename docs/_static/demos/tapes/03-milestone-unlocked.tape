@@ -25,16 +25,18 @@ Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
-# Setup: cd and activate (shown), then complete modules 01-06 (hidden)
-Hide
+# Show cd and activate, then fast-forward module completions (hidden)
 Type "cd /Users/VJ/GitHub/TinyTorch"
+Sleep 400ms
 Enter
-Sleep 500ms
+Sleep 1s
+
 Type "source activate.sh"
+Sleep 400ms
 Enter
-Show
-Sleep 2s
-# Complete modules 01-06 to unlock module 07 and milestone 03 (hidden)
+Sleep 3s
+
+# Fast-forward: Complete modules 01-06 to unlock module 07 (hidden for speed)
 Hide
 Type "tito module complete 01"
 Enter
