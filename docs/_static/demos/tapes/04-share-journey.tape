@@ -12,6 +12,10 @@ Set FontFamily "JetBrains Mono, Monaco, Menlo, monospace"
 Set Theme "Catppuccin Mocha"
 Set Padding 30
 Set Framerate 30
+Set Margin 20
+Set MarginFill "#1E1E2E"
+Set BorderRadius 10
+Set LoopOffset 10%
 
 # Set shell with custom prompt for reliable waiting
 Set Shell bash
@@ -43,24 +47,25 @@ Sleep 3s
 Type "tito community join"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for first prompt
+Sleep 2s  # Wait for Question 1/3 (GitHub username)
 
-# Simulate interactive prompts
+# Question 1: GitHub username (required)
+Type "profvjreddi"
+Sleep 400ms
+Enter
+Sleep 2s  # Wait for Question 2/3 (Country)
+
+# Question 2: Country (optional)
 Type "United States"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for next prompt
+Sleep 2s  # Wait for Question 3/3 (Institution)
 
+# Question 3: Institution (optional)
 Type "Harvard University"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for next prompt
-
-Type "intermediate"
-Sleep 400ms
-Enter
-Sleep 3s
-Sleep 3s
+Sleep 3s  # Wait for confirmation
 
 # Share achievement after more progress
 Type "tito community update"
