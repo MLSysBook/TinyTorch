@@ -19,6 +19,7 @@ from typing import Dict, List, Tuple
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 
 from ..base import BaseCommand
 
@@ -170,28 +171,39 @@ class ModuleTestCommand(BaseCommand):
         failed = []
         errors = {}
 
-        for module_num, module_name in sorted(module_mapping.items()):
-            success, output = self.test_module(module_name, module_num, verbose)
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            console=console
+        ) as progress:
+            task = progress.add_task("[cyan]Testing modules...", total=len(module_mapping))
 
-            if success:
-                passed.append((module_num, module_name))
-            else:
-                failed.append((module_num, module_name))
-                errors[module_num] = output
+            for module_num, module_name in sorted(module_mapping.items()):
+                progress.update(task, description=f"[cyan]Testing Module {module_num}: {module_name}...")
+                success, output = self.test_module(module_name, module_num, verbose)
+                progress.advance(task)
 
-                if stop_on_fail:
-                    console.print()
-                    console.print(
-                        Panel(
-                            f"[red]Testing stopped due to failure in Module {module_num}[/red]\n\n"
-                            f"[dim]Use --verbose to see full error details[/dim]",
-                            title="Stopped on Failure",
-                            border_style="red",
+                if success:
+                    passed.append((module_num, module_name))
+                else:
+                    failed.append((module_num, module_name))
+                    errors[module_num] = output
+
+                    if stop_on_fail:
+                        console.print()
+                        console.print(
+                            Panel(
+                                f"[red]Testing stopped due to failure in Module {module_num}[/red]\n\n"
+                                f"[dim]Use --verbose to see full error details[/dim]",
+                                title="Stopped on Failure",
+                                border_style="red",
+                            )
                         )
-                    )
-                    break
+                        break
 
-            console.print()
+                console.print()
 
         # Display summary
         console.print()
