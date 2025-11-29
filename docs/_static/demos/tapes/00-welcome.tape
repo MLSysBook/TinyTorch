@@ -25,6 +25,12 @@ Set TypingSpeed 100ms
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 
+# Opening: Show what this demo is about
+Type "# Welcome to Tiny🔥Torch!"
+Sleep 2s
+Enter
+Sleep 500ms
+
 # Show everything - users see the full setup
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Sleep 400ms
@@ -43,5 +49,5 @@ Enter
 Sleep 8s
 
 # Final message
-Type "# Welcome to TinyTorch! 🔥"
+Type "# Let's build ML from scratch! 🔥"
 Sleep 3s

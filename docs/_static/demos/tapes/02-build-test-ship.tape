@@ -25,6 +25,12 @@ Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
+# Opening: Show what this demo is about
+Type "# Build → Test → Ship 🔨"
+Sleep 2s
+Enter
+Sleep 500ms
+
 # Show everything - users see the full setup
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Sleep 400ms

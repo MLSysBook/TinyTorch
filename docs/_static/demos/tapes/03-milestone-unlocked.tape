@@ -25,6 +25,12 @@ Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
+# Opening: Show what this demo is about
+Type "# Milestone: Recreate ML History 🏆"
+Sleep 2s
+Enter
+Sleep 500ms
+
 # Show cd and activate, then fast-forward module completions (hidden)
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Sleep 400ms
