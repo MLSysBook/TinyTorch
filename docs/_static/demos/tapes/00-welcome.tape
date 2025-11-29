@@ -15,6 +15,10 @@ Set FontFamily "JetBrains Mono, Monaco, Menlo, monospace"
 Set Theme "Catppuccin Mocha"
 Set Padding 30
 Set Framerate 30
+Set Margin 20
+Set MarginFill "#1E1E2E"
+Set BorderRadius 10
+Set LoopOffset 10%
 Set TypingSpeed 100ms
 
 # Set shell with custom prompt for reliable waiting
