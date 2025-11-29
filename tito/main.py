@@ -32,9 +32,7 @@ from .commands.system import SystemCommand
 from .commands.module import ModuleWorkflowCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
-from .commands.book import BookCommand
 from .commands.grade import GradeCommand
-from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
 from .commands.leaderboard import LeaderboardCommand
@@ -83,9 +81,7 @@ class TinyTorchCLI:
             # Shortcuts
             'export': ExportCommand,
             'test': TestCommand,
-            'book': BookCommand,
             'grade': GradeCommand,
-            'demo': DemoCommand,
             'logo': LogoCommand,
         }
     
@@ -109,9 +105,7 @@ Command Groups:
 Convenience Shortcuts:
   export       Quick export (alias for: tito module export)
   test         Quick test (alias for: tito module test)
-  book         Build Jupyter Book documentation
   grade        Simplified grading interface (wraps NBGrader)
-  demo         Run capability demos (show what you've built!)
 
 Getting Started:
   tito setup                    First-time environment setup
@@ -220,8 +214,8 @@ Tracking Progress:
                 student_workflow = ['module', 'milestones']
                 community = ['leaderboard', 'olympics', 'community']
                 developer = ['system', 'package', 'nbgrader', 'src']
-                shortcuts = ['export', 'test', 'book', 'demo']
-                other = ['benchmark', 'grade', 'logo']
+                shortcuts = ['export', 'test', 'grade']
+                other = ['benchmark', 'logo']
 
                 help_text = "[bold]Essential Commands:[/bold]\n"
                 for cmd in essential:

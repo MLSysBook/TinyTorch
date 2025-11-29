@@ -12,7 +12,6 @@ from .test import TestCommand
 from .export import ExportCommand
 from .src import SrcCommand
 from .nbgrader import NBGraderCommand
-from .book import BookCommand
 from .benchmark import BenchmarkCommand
 from .community import CommunityCommand
 
@@ -28,7 +27,6 @@ __all__ = [
     'ExportCommand',
     'SrcCommand',
     'NBGraderCommand',
-    'BookCommand',
     'BenchmarkCommand',
     'CommunityCommand',
     # Command groups

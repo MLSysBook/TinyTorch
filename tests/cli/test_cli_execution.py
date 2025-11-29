@@ -70,8 +70,8 @@ class TestCommandExecution:
     @pytest.mark.parametrize("command", [
         'setup', 'system', 'module', 'src', 'package', 'nbgrader',
         'milestones', 'leaderboard', 'olympics',
-        'benchmark', 'community', 'export', 'test', 'book',
-        'grade', 'demo', 'logo'
+        'benchmark', 'community', 'export', 'test',
+        'grade', 'logo'
     ])
     def test_command_help_works(self, command):
         """Test that each command's help can be displayed."""

@@ -9,6 +9,8 @@ These command files are no longer top-level commands but are kept for reference.
 - `notebooks.py` - Deprecated notebooks command
 - `status.py` - Old status command (functionality moved to module workflow)
 - `checkpoint.py` - Old checkpoint tracking (superseded by milestones command)
+- `demo.py` - Demo runner (students can run demos directly with Python)
+- `book.py` - Jupyter Book builder (developers can run jupyter-book directly)
 
 ## Note
 
