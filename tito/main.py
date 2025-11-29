@@ -203,7 +203,9 @@ Quick Start:
                 help_text += "  [yellow]tito milestones status[/yellow]    View unlocked capabilities\n"
                 help_text += "\n[bold cyan]Community:[/bold cyan]\n"
                 help_text += "  [blue]tito community join[/blue]          Connect with builders worldwide\n"
-                help_text += "\n[dim]More commands: tito --help[/dim]"
+                help_text += "\n[bold cyan]Help & Docs:[/bold cyan]\n"
+                help_text += "  [magenta]tito system doctor[/magenta]       Check environment health\n"
+                help_text += "  [magenta]tito --help[/magenta]              See all commands"
 
                 self.console.print(Panel(
                     help_text,
