@@ -11,6 +11,8 @@ These command files are no longer top-level commands but are kept for reference.
 - `checkpoint.py` - Old checkpoint tracking (superseded by milestones command)
 - `demo.py` - Demo runner (students can run demos directly with Python)
 - `book.py` - Jupyter Book builder (developers can run jupyter-book directly)
+- `leaderboard.py` - Community leaderboard (functionality merged into community command)
+- `olympics.py` - Competition events (functionality merged into community command)
 
 ## Note
 

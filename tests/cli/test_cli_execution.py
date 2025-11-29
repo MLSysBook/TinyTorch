@@ -69,8 +69,7 @@ class TestCommandExecution:
 
     @pytest.mark.parametrize("command", [
         'setup', 'system', 'module', 'src', 'package', 'nbgrader',
-        'milestones', 'leaderboard', 'olympics',
-        'benchmark', 'community', 'export', 'test',
+        'milestones', 'benchmark', 'community', 'export', 'test',
         'grade', 'logo'
     ])
     def test_command_help_works(self, command):
@@ -98,7 +97,7 @@ class TestCommandExecution:
         ('system', 'doctor'),
         ('module', 'status'),
         ('module', 'list'),
-        ('leaderboard', 'profile'),
+        ('community', 'join'),
         ('milestones', 'status'),
     ])
     def test_subcommand_help_works(self, command, subcommand):

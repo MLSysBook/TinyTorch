@@ -35,8 +35,6 @@ from .commands.nbgrader import NBGraderCommand
 from .commands.grade import GradeCommand
 from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
-from .commands.leaderboard import LeaderboardCommand
-from .commands.olympics import OlympicsCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
@@ -74,10 +72,8 @@ class TinyTorchCLI:
             # Progress tracking
             'milestones': MilestoneCommand,
             # Community
-            'leaderboard': LeaderboardCommand,
-            'olympics': OlympicsCommand,
-            'benchmark': BenchmarkCommand,
             'community': CommunityCommand,
+            'benchmark': BenchmarkCommand,
             # Shortcuts
             'export': ExportCommand,
             'test': TestCommand,
@@ -92,33 +88,22 @@ class TinyTorchCLI:
             description="Tiny🔥Torch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
-Command Groups:
-  system       System environment and configuration commands
-  module       Module development workflow - start, complete, resume modules (students)
-  source       Source file workflow - export src/ to modules/ and tinytorch/ (developers)
-  package      Package management and nbdev integration commands
-  nbgrader     Assignment management and auto-grading commands
-  milestones   Track progress through ML history - epic achievements and capability unlocks
-  leaderboard  Community showcase - share progress, connect with learners
-  olympics     Competition events - friendly challenges and recognition
+Student Commands:
+  module       Module workflow - start, work, complete modules
+  milestones   Track progress - unlock capabilities as you build
+  community    Join global community - connect with builders
 
-Convenience Shortcuts:
-  export       Quick export (alias for: tito module export)
-  test         Quick test (alias for: tito module test)
-  grade        Simplified grading interface (wraps NBGrader)
+Developer Commands:
+  system       Environment and configuration
+  src          Export src/ to modules/ and tinytorch/
+  package      Package management (nbdev)
+  nbgrader     Auto-grading tools
 
-Getting Started:
-  tito setup                    First-time environment setup
-  tito module start 01          Start Module 01 (tensors, first time)
-  tito module complete 01       Complete Module 01 (test + export + track)
-  tito module resume 02         Resume working on Module 02
-  tito module status            View your progress across all modules
-
-Tracking Progress:
-  tito milestones list          See all available milestones
-  tito milestones status        View progress and achievements
-  tito leaderboard join         Join the community
-  tito leaderboard profile      View your achievement journey
+Quick Start:
+  tito setup                    First-time setup
+  tito module start 01          Start Module 01 (tensors)
+  tito module complete 01       Test, export, and track progress
+  tito module status            View your progress
             """
         )
         
@@ -208,57 +193,17 @@ Tracking Progress:
                 # Show ASCII logo first
                 print_ascii_logo()
 
-                # Dynamically build help based on registered commands
-                # Categorize commands by role
-                essential = ['setup']
-                student_workflow = ['module', 'milestones']
-                community = ['leaderboard', 'olympics', 'community']
-                developer = ['system', 'package', 'nbgrader', 'src']
-                shortcuts = ['export', 'test', 'grade']
-                other = ['benchmark', 'logo']
-
-                help_text = "[bold]Essential Commands:[/bold]\n"
-                for cmd in essential:
-                    if cmd in self.commands:
-                        desc = self.commands[cmd](self.config).description
-                        help_text += f"  [bold cyan]{cmd}[/bold cyan]        - {desc}\n"
-
-                help_text += "\n[bold]Student Workflow:[/bold]\n"
-                for cmd in student_workflow:
-                    if cmd in self.commands:
-                        desc = self.commands[cmd](self.config).description
-                        help_text += f"  [bold green]{cmd}[/bold green]       - {desc}\n"
-
-                help_text += "\n[bold]Community:[/bold]\n"
-                for cmd in community:
-                    if cmd in self.commands:
-                        desc = self.commands[cmd](self.config).description
-                        help_text += f"  [bold bright_blue]{cmd}[/bold bright_blue]  - {desc}\n"
-
-                help_text += "\n[bold]Developer Tools:[/bold]\n"
-                for cmd in developer:
-                    if cmd in self.commands:
-                        desc = self.commands[cmd](self.config).description
-                        help_text += f"  [dim]{cmd}[/dim]       - {desc}\n"
-
-                help_text += "\n[bold]Shortcuts:[/bold]\n"
-                for cmd in shortcuts:
-                    if cmd in self.commands:
-                        desc = self.commands[cmd](self.config).description
-                        help_text += f"  [bold yellow]{cmd}[/bold yellow]      - {desc}\n"
-
-                help_text += "\n[bold]Quick Start:[/bold]\n"
-                help_text += "  [dim]tito setup[/dim]                    - First-time setup (run once)\n"
-                help_text += "  [dim]tito module start 01[/dim]          - Start Module 01 (tensors)\n"
-                help_text += "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
-                help_text += "  [dim]tito module status[/dim]            - View all progress\n"
-                help_text += "\n[bold]Track Progress:[/bold]\n"
-                help_text += "  [dim]tito milestones list[/dim]          - Available milestones\n"
-                help_text += "  [dim]tito milestones status[/dim]        - Your progress\n"
-                help_text += "  [dim]tito leaderboard profile[/dim]      - Community profile\n"
-                help_text += "\n[bold]Get Help:[/bold]\n"
-                help_text += "  [dim]tito <command>[/dim]                - Show command subcommands\n"
-                help_text += "  [dim]tito --help[/dim]                   - Show full help"
+                # Simple, focused welcome message
+                help_text = "[bold cyan]Quick Start:[/bold cyan]\n"
+                help_text += "  [green]tito setup[/green]                  First-time setup\n"
+                help_text += "  [green]tito module start 01[/green]        Start Module 01 (tensors)\n"
+                help_text += "  [green]tito module complete 01[/green]     Test, export, and track progress\n"
+                help_text += "\n[bold cyan]Track Progress:[/bold cyan]\n"
+                help_text += "  [yellow]tito module status[/yellow]        View module progress\n"
+                help_text += "  [yellow]tito milestones status[/yellow]    View unlocked capabilities\n"
+                help_text += "\n[bold cyan]Community:[/bold cyan]\n"
+                help_text += "  [blue]tito community join[/blue]          Connect with builders worldwide\n"
+                help_text += "\n[dim]More commands: tito --help[/dim]"
 
                 self.console.print(Panel(
                     help_text,

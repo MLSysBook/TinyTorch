@@ -150,8 +150,8 @@ class TestWelcomeScreen:
         )
 
         output = result.stdout
-        assert 'Command Groups' in output or 'Commands:' in output, \
-            "Welcome screen should show command groups"
+        assert 'Quick Start:' in output or 'Commands:' in output, \
+            "Welcome screen should show quick start or commands"
 
     def test_welcome_screen_has_examples(self):
         """Verify welcome screen shows example commands."""
