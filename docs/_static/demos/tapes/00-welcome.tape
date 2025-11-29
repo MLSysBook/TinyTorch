@@ -49,5 +49,5 @@ Enter
 Sleep 8s
 
 # Final message
-Type "# Let's build ML from scratch! 🔥"
+Type "# Let's recreate PyTorch together! 🔥"
 Sleep 3s
