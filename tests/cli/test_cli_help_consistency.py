@@ -68,7 +68,7 @@ class TestHelpConsistency:
         help_output = help_result.stdout
 
         # Should both mention key commands
-        for cmd in ['module', 'checkpoint', 'setup']:
+        for cmd in ['module', 'milestones', 'setup']:
             assert cmd in bare_output, f"'{cmd}' missing from bare tito"
             assert cmd in help_output, f"'{cmd}' missing from tito -h"
 
@@ -207,9 +207,9 @@ class TestCommandDocumentation:
             f"Add them to welcome screen or help text"
         )
 
-    def test_checkpoint_properly_documented(self):
-        """Specifically test that checkpoint command is documented."""
-        # This addresses the user's concern about checkpoint
+    def test_milestones_properly_documented(self):
+        """Specifically test that milestones command is documented."""
+        # This addresses the user's concern about progress tracking
         welcome_result = subprocess.run(
             [sys.executable, '-m', 'tito.main'],
             cwd=self.project_root,
@@ -226,20 +226,21 @@ class TestCommandDocumentation:
 
         combined = welcome_result.stdout + help_result.stdout
 
-        assert 'checkpoint' in combined.lower(), \
-            "checkpoint command should be documented"
+        assert 'milestones' in combined.lower(), \
+            "milestones command should be documented"
 
         # Check it has a description
-        checkpoint_help = subprocess.run(
-            [sys.executable, '-m', 'tito.main', 'checkpoint', '-h'],
+        milestones_help = subprocess.run(
+            [sys.executable, '-m', 'tito.main', 'milestones', '-h'],
             cwd=self.project_root,
             capture_output=True,
             text=True
         )
 
-        assert 'progress' in checkpoint_help.stdout.lower() or \
-               'track' in checkpoint_help.stdout.lower(), \
-            "checkpoint help should explain its purpose"
+        assert 'progress' in milestones_help.stdout.lower() or \
+               'track' in milestones_help.stdout.lower() or \
+               'milestone' in milestones_help.stdout.lower(), \
+            "milestones help should explain its purpose"
 
 
 if __name__ == '__main__':

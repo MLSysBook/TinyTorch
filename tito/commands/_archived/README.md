@@ -8,6 +8,7 @@ These command files are no longer top-level commands but are kept for reference.
 - `help.py` - Old help command (now handled by argparse)
 - `notebooks.py` - Deprecated notebooks command
 - `status.py` - Old status command (functionality moved to module workflow)
+- `checkpoint.py` - Old checkpoint tracking (superseded by milestones command)
 
 ## Note
 

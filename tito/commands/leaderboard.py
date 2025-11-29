@@ -23,7 +23,6 @@ from rich.align import Align
 
 from .base import BaseCommand
 from ..core.exceptions import TinyTorchCLIError
-from .checkpoint import CheckpointSystem
 
 
 class LeaderboardCommand(BaseCommand):
@@ -830,34 +829,21 @@ class LeaderboardCommand(BaseCommand):
         
         # Detailed module breakdown if requested
         if args.all and modules_completed:
-            # Load checkpoint system for detailed info
-            checkpoint_system = CheckpointSystem(self.config)
-            
             module_table = Table(title="📚 Detailed Module Completion History")
             module_table.add_column("Date", style="dim")
             module_table.add_column("Module", style="bold cyan")
-            module_table.add_column("Checkpoint", style="yellow", justify="center")
-            module_table.add_column("Capability Unlocked", style="green")
-            
+            module_table.add_column("Status", style="green")
+
             for completion in sorted(modules_completed, key=lambda x: x["completed"]):
                 date = completion["completed"]
                 module = completion["module"]
-                checkpoint = completion.get("checkpoint")
-                
-                # Get capability description
-                capability = "Module Completed"
-                if checkpoint is not None:
-                    checkpoint_data = checkpoint_system.CHECKPOINTS.get(f"{checkpoint:02d}")
-                    if checkpoint_data:
-                        capability = checkpoint_data["name"]
-                
+
                 module_table.add_row(
                     date,
                     module,
-                    f"#{checkpoint}" if checkpoint is not None else "—",
-                    capability
+                    "Completed"
                 )
-            
+
             self.console.print(module_table)
         
         # Quick action suggestions
@@ -866,7 +852,7 @@ class LeaderboardCommand(BaseCommand):
             (f"[green]Continue Learning:[/green]\n[dim]  tito module start {next_module}[/dim]\n\n" if next_module else "") +
             f"[yellow]Submit Results:[/yellow]\n[dim]  tito leaderboard submit --task mnist --accuracy XX.X[/dim]\n\n"
             f"[blue]View Community:[/blue]\n[dim]  tito leaderboard view[/dim]\n\n"
-            f"[magenta]Track Progress:[/magenta]\n[dim]  tito checkpoint status[/dim]",
+            f"[magenta]Track Progress:[/magenta]\n[dim]  tito milestones status[/dim]",
             title="🚀 Next Steps",
             border_style="bright_blue"
         ))
@@ -1291,29 +1277,16 @@ class LeaderboardCommand(BaseCommand):
             module_table = Table(title="📚 Module Completion Journey")
             module_table.add_column("Date", style="dim")
             module_table.add_column("Module", style="bold cyan")
-            module_table.add_column("Checkpoint", style="yellow", justify="center")
-            module_table.add_column("Capability", style="green")
-            
-            # Load checkpoint system for capability descriptions
-            checkpoint_system = CheckpointSystem(self.config)
-            
+            module_table.add_column("Status", style="green")
+
             for module_completion in sorted(modules_completed, key=lambda x: x["completed"], reverse=True):
                 date = module_completion["completed"]
                 module = module_completion["module"]
-                checkpoint = module_completion.get("checkpoint")
-                
-                # Get capability description if checkpoint is known
-                capability = "Module Completed"
-                if checkpoint is not None:
-                    checkpoint_data = checkpoint_system.CHECKPOINTS.get(f"{checkpoint:02d}")
-                    if checkpoint_data:
-                        capability = checkpoint_data["name"]
-                
+
                 module_table.add_row(
                     date,
                     module,
-                    f"#{checkpoint}" if checkpoint is not None else "—",
-                    capability
+                    "Completed"
                 )
             
             self.console.print(module_table)

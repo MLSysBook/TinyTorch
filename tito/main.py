@@ -33,7 +33,6 @@ from .commands.module import ModuleWorkflowCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
-from .commands.checkpoint import CheckpointCommand
 from .commands.grade import GradeCommand
 from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
@@ -75,7 +74,6 @@ class TinyTorchCLI:
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             # Progress tracking
-            'checkpoint': CheckpointCommand,
             'milestones': MilestoneCommand,
             # Community
             'leaderboard': LeaderboardCommand,
@@ -104,8 +102,7 @@ Command Groups:
   source       Source file workflow - export src/ to modules/ and tinytorch/ (developers)
   package      Package management and nbdev integration commands
   nbgrader     Assignment management and auto-grading commands
-  checkpoint   Progress tracking - view capabilities unlocked and learning journey
-  milestones   Epic achievements - celebrate major capability unlocks
+  milestones   Track progress through ML history - epic achievements and capability unlocks
   leaderboard  Community showcase - share progress, connect with learners
   olympics     Competition events - friendly challenges and recognition
 
@@ -124,8 +121,8 @@ Getting Started:
   tito module status            View your progress across all modules
 
 Tracking Progress:
-  tito checkpoint status        See all capabilities unlocked
-  tito checkpoint timeline      Visual progress timeline
+  tito milestones list          See all available milestones
+  tito milestones status        View progress and achievements
   tito leaderboard join         Join the community
   tito leaderboard profile      View your achievement journey
             """
@@ -220,7 +217,7 @@ Tracking Progress:
                 # Dynamically build help based on registered commands
                 # Categorize commands by role
                 essential = ['setup']
-                student_workflow = ['module', 'checkpoint', 'milestones']
+                student_workflow = ['module', 'milestones']
                 community = ['leaderboard', 'olympics', 'community']
                 developer = ['system', 'package', 'nbgrader', 'src']
                 shortcuts = ['export', 'test', 'book', 'demo']
@@ -262,8 +259,9 @@ Tracking Progress:
                 help_text += "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
                 help_text += "  [dim]tito module status[/dim]            - View all progress\n"
                 help_text += "\n[bold]Track Progress:[/bold]\n"
-                help_text += "  [dim]tito checkpoint status[/dim]        - Capabilities unlocked\n"
-                help_text += "  [dim]tito leaderboard profile[/dim]      - Your achievement journey\n"
+                help_text += "  [dim]tito milestones list[/dim]          - Available milestones\n"
+                help_text += "  [dim]tito milestones status[/dim]        - Your progress\n"
+                help_text += "  [dim]tito leaderboard profile[/dim]      - Community profile\n"
                 help_text += "\n[bold]Get Help:[/bold]\n"
                 help_text += "  [dim]tito <command>[/dim]                - Show command subcommands\n"
                 help_text += "  [dim]tito --help[/dim]                   - Show full help"

@@ -69,7 +69,7 @@ class TestCommandExecution:
 
     @pytest.mark.parametrize("command", [
         'setup', 'system', 'module', 'src', 'package', 'nbgrader',
-        'checkpoint', 'milestones', 'leaderboard', 'olympics',
+        'milestones', 'leaderboard', 'olympics',
         'benchmark', 'community', 'export', 'test', 'book',
         'grade', 'demo', 'logo'
     ])
@@ -98,8 +98,6 @@ class TestCommandExecution:
         ('system', 'doctor'),
         ('module', 'status'),
         ('module', 'list'),
-        ('checkpoint', 'status'),
-        ('checkpoint', 'timeline'),
         ('leaderboard', 'profile'),
         ('milestones', 'status'),
     ])
@@ -137,7 +135,7 @@ class TestCommandGrouping:
         )
 
         # Key student commands should be visible
-        student_commands = ['setup', 'module', 'checkpoint', 'milestones']
+        student_commands = ['setup', 'module', 'milestones']
 
         for cmd in student_commands:
             assert cmd in result.stdout, (
