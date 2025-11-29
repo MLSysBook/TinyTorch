@@ -102,8 +102,8 @@ def print_ascii_logo(compact: bool = False):
             logo_text.append(line, style=TORCH_COLOR)
         logo_text.append("\n")
     
-    # Add tagline
-    logo_text.append("\n🔥 Don't just import it. Build it.", style="orange1")
+    # Add tagline (aligned under TORCH)
+    logo_text.append("\n        🔥 Don't just import it. Build it.", style="orange1")
     logo_text.append("\n")
         
     # Combine logo and tagline
