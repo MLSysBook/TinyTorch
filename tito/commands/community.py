@@ -6,11 +6,12 @@ Join, update, and manage your community profile for the global builder map.
 
 import json
 import os
+import webbrowser
+import urllib.parse
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-import uuid
 
 from rich.panel import Panel
 from rich.table import Table
@@ -30,7 +31,7 @@ class CommunityCommand(BaseCommand):
     
     @property
     def description(self) -> str:
-        return "Community management - join, update, and manage your profile"
+        return "Join the global community - connect with builders worldwide"
     
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add community subcommands."""
@@ -132,144 +133,126 @@ class CommunityCommand(BaseCommand):
             return 1
     
     def _join_community(self, args: Namespace) -> int:
-        """Join the TinyTorch community."""
+        """Join the TinyTorch community - GitHub-first flow."""
         console = self.console
-        
+
         # Check if already joined
         profile = self._get_profile()
         if profile:
+            github_username = profile.get("github_username")
+            profile_url = profile.get("profile_url", "https://tinytorch.ai/community")
             console.print(Panel(
-                "[yellow]⚠️  You're already in the community![/yellow]\n\n"
-                "Use [cyan]tito community update[/cyan] to update your profile\n"
-                "Use [cyan]tito community profile[/cyan] to view your profile",
+                f"[yellow]⚠️  You're already in the community![/yellow]\n\n"
+                f"GitHub: [cyan]@{github_username}[/cyan]\n"
+                f"Profile: [cyan]{profile_url}[/cyan]\n\n"
+                f"Update online: [cyan]{profile_url}[/cyan]\n"
+                f"View profile: [cyan]tito community profile[/cyan]",
                 title="Already Joined",
                 border_style="yellow"
             ))
             return 0
-        
+
         console.print(Panel(
             "[bold cyan]🌍 Join the TinyTorch Community[/bold cyan]\n\n"
-            "Be part of the global community of ML systems builders!\n"
-            "Your information helps us build a community map.",
+            "Connect with ML systems builders worldwide!\n"
+            "We'll ask 3 quick questions, then open your browser to complete your profile.",
             title="Welcome",
             border_style="cyan"
         ))
-        
-        # Explicit consent
-        console.print("\n[yellow]📋 Privacy & Consent[/yellow]")
-        console.print("We collect optional information to build a community map:\n")
-        console.print("  • Country (for global visualization)")
-        console.print("  • Institution (for cohort identification)")
-        console.print("  • Course type (for community insights)")
-        console.print("  • Experience level (for learning support)\n")
-        console.print("[dim]All fields are optional. We use anonymous IDs (no personal names).[/dim]")
-        console.print("[dim]Data is stored locally in .tinytorch/ (project directory).[/dim]\n")
-        
-        consent = Confirm.ask(
-            "[cyan]Do you consent to sharing this optional information?[/cyan]",
-            default=True
-        )
-        
-        if not consent:
-            console.print(Panel(
-                "[yellow]No problem! You can join later with: [cyan]tito community join[/cyan][/yellow]",
-                title="Cancelled",
-                border_style="yellow"
-            ))
-            return 0
-        
-        # Collect information
-        console.print("\n[cyan]Let's collect some information (all optional):[/cyan]\n")
-        
-        # Country
-        country = args.country
-        if not country:
-            country = self._detect_country()
-            if country:
-                console.print(f"[dim]Detected country: {country}[/dim]")
+
+        console.print("\n[dim]Your data:[/dim]")
+        console.print("  • Stored locally in [cyan].tinytorch/community.json[/cyan]")
+        console.print("  • GitHub username for authentication")
+        console.print("  • Basic info shared with community (country, institution)")
+        console.print("  • Full profile completed on tinytorch.ai\n")
+
+        # Question 1: GitHub username (REQUIRED)
+        console.print("[bold]Question 1/3[/bold]")
+        github_username = Prompt.ask(
+            "[cyan]GitHub username[/cyan] (required for authentication)",
+            default=""
+        ).strip()
+
+        if not github_username:
+            console.print("[red]❌ GitHub username is required to join the community[/red]")
+            console.print("[dim]Your GitHub username is used to:\n"
+                        "  • Authenticate your profile\n  "
+                        "  • Link to your projects\n"
+                        "  • Connect with other builders[/dim]")
+            return 1
+
+        # Question 2: Country (optional, auto-detect)
+        console.print("\n[bold]Question 2/3[/bold]")
+        country = self._detect_country()
+        if country:
+            console.print(f"[dim]Auto-detected: {country}[/dim]")
         country = Prompt.ask(
-            "[cyan]Country[/cyan] (optional, for community map)",
+            "[cyan]Country[/cyan] (for community map, optional)",
             default=country or "",
             show_default=False
-        )
-        
-        # Institution
-        institution = args.institution
-        if not institution:
-            institution = Prompt.ask(
-                "[cyan]Institution/School[/cyan] (optional)",
-                default="",
-                show_default=False
-            )
-        
-        # Course type
-        course_type = args.course_type
-        if not course_type:
-            course_type = Prompt.ask(
-                "[cyan]Course Type[/cyan]",
-                choices=['university', 'bootcamp', 'self-paced', 'other', ''],
-                default='',
-                show_default=False
-            )
-        
-        # Experience level
-        experience = args.experience
-        if not experience:
-            experience = Prompt.ask(
-                "[cyan]Experience Level[/cyan]",
-                choices=['beginner', 'intermediate', 'advanced', 'expert', ''],
-                default='',
-                show_default=False
-            )
-        
-        # Create profile
+        ).strip()
+
+        # Question 3: Institution (optional)
+        console.print("\n[bold]Question 3/3[/bold]")
+        institution = Prompt.ask(
+            "[cyan]Institution/University[/cyan] (optional)",
+            default="",
+            show_default=False
+        ).strip()
+
+        # Create local profile
         profile = {
-            "anonymous_id": str(uuid.uuid4()),
+            "github_username": github_username,
             "joined_at": datetime.now().isoformat(),
-            "location": {
-                "country": country or None
-            },
-            "institution": {
-                "name": institution or None,
-                "type": None  # Could be auto-detected later
-            },
-            "context": {
-                "course_type": course_type or None,
-                "experience_level": experience or None,
-                "cohort": self._determine_cohort()  # e.g., "Fall 2024"
-            },
-            "progress": {
-                "setup_verified": False,
-                "milestones_passed": 0,
-                "modules_completed": 0,
-                "capstone_score": None
-            }
+            "country": country or None,
+            "institution": institution or None,
+            "profile_url": f"https://tinytorch.ai/community/{github_username}",
+            "last_synced": None
         }
-        
-        # Save profile
+
+        # Save profile locally
         self._save_profile(profile)
-        
-        # Get config for website URL
-        config = self._get_config()
-        map_url = config.get("website", {}).get("community_map_url", "https://tinytorch.ai/community")
-        
-        # Show welcome message
+
+        # Build URL with pre-filled params
+        base_url = "https://tinytorch.ai/community/join"
+        params = {
+            "github": github_username,
+        }
+        if country:
+            params["country"] = country
+        if institution:
+            params["institution"] = institution
+
+        signup_url = f"{base_url}?{urllib.parse.urlencode(params)}"
+
+        # Show success and open browser
         console.print("\n")
         console.print(Panel(
-            f"[bold green]✅ You've joined the TinyTorch Community![/bold green]\n\n"
-            f"📍 Location: {country or 'Not specified'}\n"
-            f"🏫 Institution: {institution or 'Not specified'}\n"
-            f"📚 Course Type: {course_type or 'Not specified'}\n"
-            f"🎯 Experience: {experience or 'Not specified'}\n\n"
-            f"🌍 View community map: [cyan]{map_url}[/cyan]\n\n"
-            f"💡 Update your profile: [cyan]tito community update[/cyan]",
-            title="Welcome to the Community!",
+            f"[bold green]✅ Local profile created![/bold green]\n\n"
+            f"👤 GitHub: [cyan]@{github_username}[/cyan]\n"
+            f"📍 Country: {country or '[dim]Not specified[/dim]'}\n"
+            f"🏫 Institution: {institution or '[dim]Not specified[/dim]'}\n\n"
+            f"[bold cyan]🌐 Opening browser to complete your profile...[/bold cyan]\n"
+            f"[dim]URL: {signup_url}[/dim]\n\n"
+            f"Complete your profile online to:\n"
+            f"  • Authenticate with GitHub OAuth\n"
+            f"  • Add bio, interests, and social links\n"
+            f"  • Join the global community map\n"
+            f"  • Connect with other builders",
+            title="Almost There!",
             border_style="green"
         ))
-        
-        # Stub: Notify website of join
-        self._notify_website_join(profile)
-        
+
+        # Open browser
+        try:
+            webbrowser.open(signup_url)
+            console.print("\n[green]✓[/green] Browser opened! Complete your profile there.")
+        except Exception as e:
+            console.print(f"\n[yellow]⚠️  Could not open browser automatically[/yellow]")
+            console.print(f"[dim]Please visit: {signup_url}[/dim]")
+
+        console.print(f"\n[dim]💡 View profile later: [cyan]tito community profile[/cyan][/dim]")
+
         return 0
     
     def _update_profile(self, args: Namespace) -> int:
