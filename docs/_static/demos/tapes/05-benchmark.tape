@@ -1,8 +1,8 @@
-# VHS Tape: 🏆 Milestone Unlocked - Recreate ML History
-# Purpose: Show milestone unlock and training with historical context
-# Duration: 30-35 seconds
+# VHS Tape: ⚡ Benchmark Your Build - Performance Validation
+# Purpose: Show how to benchmark TinyTorch implementations
+# Duration: 25-30 seconds
 
-Output "gifs/03-milestone-unlocked.gif"
+Output "gifs/05-benchmark.gif"
 
 # Window bar for realistic terminal look
 Set WindowBar Colorful
@@ -48,7 +48,7 @@ Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
 Enter
 Sleep 1s
 
-# Complete modules 01-06 as prerequisites to unlock module 07 (hidden for speed)
+# Complete modules 01-03 to have some implementations to benchmark
 Type "tito module complete 01"
 Enter
 Sleep 5s
@@ -58,56 +58,24 @@ Sleep 5s
 Type "tito module complete 03"
 Enter
 Sleep 5s
-Type "tito module complete 04"
-Enter
-Sleep 5s
-Type "tito module complete 05"
-Enter
-Sleep 5s
-Type "tito module complete 06"
-Enter
-Sleep 5s
 
 Show
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the actual milestone workflow
+# DEMO BEGINS (VISIBLE): Now show the benchmarking workflow
 # ==============================================================================
 
 # Opening comment explaining what we'll demonstrate
-Type "# Milestone: Recreate ML History 🏆"
+Type "# Benchmark Your Build ⚡"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Show where we are in the journey (modules 01-06 completed)
-Type "tito module status"
+# Run the baseline benchmark
+Type "tito benchmark baseline"
 Sleep 400ms
 Enter
-Sleep 4s
+Sleep 15s  # Wait for benchmark to complete
 
-# Complete module 07 which unlocks milestone 03
-Type "tito module complete 07"
-Sleep 400ms
-Enter
-Sleep 10s
-
-# Check available milestones
-Type "tito milestones list"
-Sleep 400ms
-Enter
+# Final message
+Type "# Fast code. Built by you. 🚀"
 Sleep 3s
-
-# Run milestone 03 (MLP Revival 1986)
-Type "tito milestones run 03"
-Sleep 400ms
-Enter
-Sleep 2s
-Type ""  # Press Enter to proceed past "Press Enter to begin"
-Enter
-Sleep 60s  # Wait for milestone to complete
-Sleep 3s
-
-# Celebrate the achievement
-Type "# You recreated Rumelhart's 1986 breakthrough! 🏆"
-Sleep 3s
-

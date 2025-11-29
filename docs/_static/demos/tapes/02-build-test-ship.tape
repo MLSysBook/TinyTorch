@@ -25,22 +25,44 @@ Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
-# Opening: Show what this demo is about
+# ==============================================================================
+# SETUP PHASE (HIDDEN): Like a unit test, set up the environment cleanly first
+# ==============================================================================
+Hide
+
+# Navigate to project and activate environment
+Type "cd /Users/VJ/GitHub/TinyTorch"
+Enter
+Sleep 1s
+Type "source activate.sh"
+Enter
+Sleep 3s
+
+# Reset all modules to pristine state using git
+Type "git checkout -- modules/"
+Enter
+Sleep 2s
+
+# Clean any cached/built files
+Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
+Enter
+Sleep 1s
+
+# Complete module 01 as prerequisite (hidden from user)
+Type "tito module complete 01"
+Enter
+Sleep 5s
+
+Show
+# ==============================================================================
+# DEMO BEGINS (VISIBLE): Now show the actual workflow
+# ==============================================================================
+
+# Opening comment explaining what we'll demonstrate
 Type "# Build → Test → Ship 🔨"
 Sleep 2s
 Enter
 Sleep 500ms
-
-# Show everything - users see the full setup
-Type "cd /Users/VJ/GitHub/TinyTorch"
-Sleep 400ms
-Enter
-Sleep 1s
-
-Type "source activate.sh"
-Sleep 400ms
-Enter
-Sleep 3s
 
 # Start module 02
 Type "tito module start 02"

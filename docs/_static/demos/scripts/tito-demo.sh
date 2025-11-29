@@ -330,11 +330,11 @@ validate() {
 
 get_demo_name() {
     case $1 in
-        00) echo "00-test" ;;
-        01) echo "01-zero-to-ready" ;;
+        00) echo "00-welcome" ;;
         02) echo "02-build-test-ship" ;;
         03) echo "03-milestone-unlocked" ;;
         04) echo "04-share-journey" ;;
+        05) echo "05-logo" ;;
         *) echo "" ;;
     esac
 }
@@ -457,13 +457,13 @@ interactive() {
         2)
             echo -e "${BOLD}Which demo to generate?${NC}"
             echo ""
-            echo "  00) Quick test (5 seconds)"
-            echo "  01) Zero to Ready"
+            echo "  00) Welcome (Quick test)"
             echo "  02) Build, Test, Ship"
             echo "  03) Milestone Unlocked"
             echo "  04) Share Journey"
+            echo "  05) TinyTorch Logo & Story"
             echo ""
-            read -p "Choose demo [00-04]: " demo_num
+            read -p "Choose demo [00,02-05]: " demo_num
             echo ""
             
             cd "$(dirname "$0")/../../.."
@@ -480,13 +480,13 @@ interactive() {
                 # Step 2: Generate
                 echo -e "${BOLD}Which demo to generate?${NC}"
                 echo ""
-                echo "  00) Quick test (5 seconds)"
-                echo "  01) Zero to Ready"
+                echo "  00) Welcome (Quick test)"
                 echo "  02) Build, Test, Ship"
                 echo "  03) Milestone Unlocked"
                 echo "  04) Share Journey"
+                echo "  05) TinyTorch Logo & Story"
                 echo ""
-                read -p "Choose demo [00-04]: " demo_num
+                read -p "Choose demo [00,02-05]: " demo_num
                 echo ""
                 
                 cd "$(dirname "$0")/../../.."

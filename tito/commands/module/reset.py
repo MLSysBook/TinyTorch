@@ -40,7 +40,7 @@ class ModuleResetCommand(BaseCommand):
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add reset command arguments."""
         parser.add_argument(
-            "module_number", nargs="?", help="Module number to reset (01, 02, etc.)"
+            "module_number", nargs="?", default=None, help="Module number to reset (01, 02, etc.)"
         )
         parser.add_argument(
             "--all",

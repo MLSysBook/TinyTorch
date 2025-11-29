@@ -1,8 +1,8 @@
-# VHS Tape: 🏆 Milestone Unlocked - Recreate ML History
-# Purpose: Show milestone unlock and training with historical context
-# Duration: 30-35 seconds
+# VHS Tape: 🔥 The TinyTorch Story - Philosophy & Vision
+# Purpose: Show the beautiful story behind TinyTorch with tito logo
+# Duration: 45-50 seconds
 
-Output "gifs/03-milestone-unlocked.gif"
+Output "gifs/05-logo.gif"
 
 # Window bar for realistic terminal look
 Set WindowBar Colorful
@@ -38,76 +38,63 @@ Type "source activate.sh"
 Enter
 Sleep 3s
 
-# Reset all modules to pristine state using git
-Type "git checkout -- modules/"
-Enter
-Sleep 2s
-
-# Clean any cached/built files
-Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
-Enter
-Sleep 1s
-
-# Complete modules 01-06 as prerequisites to unlock module 07 (hidden for speed)
-Type "tito module complete 01"
-Enter
-Sleep 5s
-Type "tito module complete 02"
-Enter
-Sleep 5s
-Type "tito module complete 03"
-Enter
-Sleep 5s
-Type "tito module complete 04"
-Enter
-Sleep 5s
-Type "tito module complete 05"
-Enter
-Sleep 5s
-Type "tito module complete 06"
-Enter
-Sleep 5s
-
 Show
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the actual milestone workflow
+# DEMO BEGINS (VISIBLE): Now show the philosophy and story
 # ==============================================================================
 
 # Opening comment explaining what we'll demonstrate
-Type "# Milestone: Recreate ML History 🏆"
+Type "# The Story Behind TinyTorch 🔥"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Show where we are in the journey (modules 01-06 completed)
-Type "tito module status"
+# Show the beautiful logo and story
+Type "tito logo"
 Sleep 400ms
+Enter
+Sleep 5s  # Let the logo appear
+
+# Scroll down to show the flame symbolism
+Type ""
+Enter
+Sleep 3s
+
+# Continue scrolling through the philosophy
+Type ""
+Enter
+Sleep 3s
+
+# Scroll to show "Why Tiny?"
+Type ""
+Enter
+Sleep 3s
+
+# Scroll to show "Why Torch?"
+Type ""
+Enter
+Sleep 3s
+
+# Scroll to show the hidden network
+Type ""
+Enter
+Sleep 3s
+
+# Scroll to show the philosophy section
+Type ""
+Enter
+Sleep 3s
+
+# Scroll to show Professor Reddi's message
+Type ""
 Enter
 Sleep 4s
 
-# Complete module 07 which unlocks milestone 03
-Type "tito module complete 07"
-Sleep 400ms
-Enter
-Sleep 10s
-
-# Check available milestones
-Type "tito milestones list"
-Sleep 400ms
+# Scroll to the final message
+Type ""
 Enter
 Sleep 3s
 
-# Run milestone 03 (MLP Revival 1986)
-Type "tito milestones run 03"
-Sleep 400ms
-Enter
-Sleep 2s
-Type ""  # Press Enter to proceed past "Press Enter to begin"
-Enter
-Sleep 60s  # Wait for milestone to complete
+# Final comment
+Type "# Don't just import it. Build it. 🔥"
 Sleep 3s
-
-# Celebrate the achievement
-Type "# You recreated Rumelhart's 1986 breakthrough! 🏆"
-Sleep 3s
-
