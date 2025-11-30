@@ -191,35 +191,35 @@ Residual connections are the secret to training deep networks. They create "grad
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  RESIDUAL CONNECTIONS: The Gradient Highway System             │
+│  RESIDUAL CONNECTIONS: The Gradient Highway System              │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  PRE-NORM ARCHITECTURE (Modern Standard):                      │
+│  PRE-NORM ARCHITECTURE (Modern Standard):                       │
 │                                                                 │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │                ATTENTION SUB-LAYER                       │  │
+│  │                ATTENTION SUB-LAYER                        │  │
 │  │                                                           │  │
-│  │  Input (x) ────┬─→ LayerNorm ─→ MultiHeadAttention ─┐    │  │
-│  │                │                                     │    │  │
-│  │                │         ┌─────────────────────────────┘    │  │
-│  │                │         ▼                               │  │
-│  │                └────→ ADD ─→ Output to next sub-layer    │  │
-│  │                      (x + attention_output)             │  │
+│  │  Input (x) ────┬─→ LayerNorm ─→ MultiHeadAttention ─┐     │  │
+│  │                │                                    │     │  │
+│  │                │         ┌──────────────────────────┘     │  │
+│  │                │         ▼                                │  │
+│  │                └────→ ADD ─→ Output to next sub-layer     │  │
+│  │                      (x + attention_output)               │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │                   MLP SUB-LAYER                          │  │
+│  │                   MLP SUB-LAYER                           │  │
 │  │                                                           │  │
-│  │  Input (x) ────┬─→ LayerNorm ─→ MLP (Feed Forward) ─┐    │  │
+│  │  Input (x) ────┬─→ LayerNorm ─→ MLP (Feed Forward)  ─┐    │  │
 │  │                │                                     │    │  │
-│  │                │         ┌─────────────────────────────┘    │  │
-│  │                │         ▼                               │  │
-│  │                └────→ ADD ─→ Final Output                │  │
-│  │                      (x + mlp_output)                   │  │
+│  │                │         ┌───────────────────────────┘    │  │
+│  │                │         ▼                                │  │
+│  │                └────→ ADD ─→ Final Output                 │  │
+│  │                      (x + mlp_output)                     │  │
 │  └───────────────────────────────────────────────────────────┘  │
 │                                                                 │
-│  KEY INSIGHT: Each sub-layer ADDS to the residual stream       │
-│  rather than replacing it, preserving information flow!        │
+│  KEY INSIGHT: Each sub-layer ADDS to the residual stream        │
+│  rather than replacing it, preserving information flow!         │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -710,7 +710,7 @@ Modern transformers use "pre-norm" architecture where LayerNorm comes BEFORE the
 
 ```
 Pre-Norm Architecture (What We Implement):
-┌─────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────┐
 │                     INPUT (x)                          │
 │                       │                                │
 │       ┌───────────────┴───────────────┐                │
@@ -722,7 +722,7 @@ Pre-Norm Architecture (What We Implement):
 │ MultiHeadAttention                    │                │
 │       │                               │                │
 │       └───────────────┬───────────────┘                │
-│                       │           (residual connection) │
+│                       │          (residual connection) │
 │                       ▼                                │
 │                  x + attention                         │
 │                       │                                │
@@ -735,13 +735,13 @@ Pre-Norm Architecture (What We Implement):
 │      MLP                              │                │
 │       │                               │                │
 │       └───────────────┬───────────────┘                │
-│                       │           (residual connection) │
+│                       │          (residual connection) │
 │                       ▼                                │
 │                   x + mlp                              │
 │                       │                                │
 │                       ▼                                │
 │                    OUTPUT                              │
-└─────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────┘
 ```
 
 #### Why Pre-Norm Works Better
@@ -787,7 +787,7 @@ Attention adds information ──────┘                      │
                                                         ├─→ + MLP info ─┐
 MLP adds information ───────────────────────────────────┘               │
                                                                         │
-Layer 2: carries accumulated information ──────────────────────────────┘
+Layer 2: carries accumulated information ───────────────────────────────┘
 ```
 
 Each layer adds information to this stream rather than replacing it, creating a rich representation.
@@ -969,40 +969,40 @@ Result: "The cat sat on the mat"
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     GPT ARCHITECTURE                       │
-│                                                             │
-│ Input: Token IDs [15496, 1917, ...]                        │
-│                    │                                        │
-│ ┌──────────────────┴──────────────────┐                    │
-│ │          EMBEDDING LAYER            │                    │
-│ │  ┌─────────────┐  ┌─────────────────┐│                    │
-│ │  │Token Embed  │+│Position Embed   ││                    │
-│ │  │vocab→vector ││ │sequence→vector  ││                    │
-│ │  └─────────────┘  └─────────────────┘│                    │
-│ └──────────────────┬──────────────────┘                    │
-│                    │                                        │
-│ ┌──────────────────┴──────────────────┐                    │
-│ │        TRANSFORMER BLOCK 1          │                    │
-│ │ ┌─────────┐  ┌─────────┐  ┌───────┐ │                    │
-│ │ │LayerNorm│→│Attention│→│  +x   │ │                    │
-│ │ └─────────┘  └─────────┘  └───┬───┘ │                    │
-│ │                               │     │                    │
-│ │ ┌─────────┐  ┌─────────┐  ┌───▼───┐ │                    │
-│ │ │LayerNorm│→│   MLP   │→│  +x   │ │                    │
-│ │ └─────────┘  └─────────┘  └───────┘ │                    │
-│ └──────────────────┬──────────────────┘                    │
-│                    │                                        │
-│         ... (more transformer blocks) ...                  │
-│                    │                                        │
-│ ┌──────────────────┴──────────────────┐                    │
-│ │         OUTPUT HEAD                 │                    │
-│ │ ┌─────────┐  ┌─────────────────────┐ │                    │
-│ │ │LayerNorm│→│Linear(embed→vocab)  │ │                    │
-│ │ └─────────┘  └─────────────────────┘ │                    │
-│ └──────────────────┬──────────────────┘                    │
-│                    │                                        │
-│ Output: Vocabulary Logits [0.1, 0.05, 0.8, ...]           │
-└─────────────────────────────────────────────────────────────┘
+│                     GPT ARCHITECTURE            |
+│                                                 |
+│ Input: Token IDs [15496, 1917, ...]             |
+│                    │                            |
+│ ┌──────────────────┴──────────────────┐         |
+│ │          EMBEDDING LAYER            │         |
+│ │  ┌─────────────┐  ┌─────────────────┐│        |
+│ │  │Token Embed  │+│Position Embed   ││         |
+│ │  │vocab→vector ││ │sequence→vector  ││        |
+│ │  └─────────────┘  └─────────────────┘│        |
+│ └──────────────────┬──────────────────┘         |
+│                    │                            |
+│ ┌──────────────────┴──────────────────┐         │
+│ │        TRANSFORMER BLOCK 1          │         │
+│ │ ┌─────────┐  ┌─────────┐  ┌───────┐ │         │
+│ │ │LayerNorm│→│Attention│→│  +x   │ │           │
+│ │ └─────────┘  └─────────┘  └───┬───┘ │         │
+│ │                               │     │         │
+│ │ ┌─────────┐  ┌─────────┐  ┌───▼───┐ │         │
+│ │ │LayerNorm│→│   MLP   │→│  +x   │ │           │
+│ │ └─────────┘  └─────────┘  └───────┘ │         |
+│ └──────────────────┬──────────────────┘         │
+│                    │                            │
+│         ... (more transformer blocks) ...       │
+│                    │                            │
+│ ┌──────────────────┴──────────────────┐         │
+│ │         OUTPUT HEAD                 │         │
+│ │ ┌─────────┐  ┌─────────────────────┐ │        │
+│ │ │LayerNorm│→│Linear(embed→vocab)  │ │         │
+│ │ └─────────┘  └─────────────────────┘ │        │
+│ └──────────────────┬──────────────────┘         │
+│                    │                            │
+│ Output: Vocabulary Logits [0.1, 0.05, 0.8, ...] │
+└─────────────────────────────────────────────────┘
 ```
 
 #### Causal Masking for Autoregressive Training
@@ -1011,33 +1011,33 @@ During training, GPT sees the entire sequence but must not "cheat" by looking at
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  CAUSAL MASKING: Preventing Future Information Leakage         │
+│  CAUSAL MASKING: Preventing Future Information Leakage          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  SEQUENCE: ["The", "cat", "sat", "on"]                         │
-│  POSITIONS:   0      1      2     3                            │
+│  SEQUENCE: ["The", "cat", "sat", "on"]                          │
+│  POSITIONS:   0      1      2     3                             │
 │                                                                 │
-│  ATTENTION MATRIX (what each position can see):                │
+│  ATTENTION MATRIX (what each position can see):                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │      Pos:  0   1   2   3                               │   │
-│  │  Pos 0:  [ ✓   ✗   ✗   ✗ ]  ← "The" only sees itself   │   │
-│  │  Pos 1:  [ ✓   ✓   ✗   ✗ ]  ← "cat" sees "The" + self  │   │
-│  │  Pos 2:  [ ✓   ✓   ✓   ✗ ]  ← "sat" sees all previous  │   │
-│  │  Pos 3:  [ ✓   ✓   ✓   ✓ ]  ← "on" sees everything     │   │
+│  │      Pos:  0   1   2   3                                 │   │
+│  │  Pos 0:  [ ✓   ✗   ✗   ✗ ]  ← "The" only sees itself     │   │
+│  │  Pos 1:  [ ✓   ✓   ✗   ✗ ]  ← "cat" sees "The" + self    │   │
+│  │  Pos 2:  [ ✓   ✓   ✓   ✗ ]  ← "sat" sees all previous    │   │
+│  │  Pos 3:  [ ✓   ✓   ✓   ✓ ]  ← "on" sees everything       │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  IMPLEMENTATION: Upper triangular matrix with -∞               │
+│  IMPLEMENTATION: Upper triangular matrix with -∞                │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │ [[  0, -∞, -∞, -∞],                                     │   │
+│  │ [[  0, -∞, -∞, -∞],                                      │   │
 │  │  [  0,   0, -∞, -∞],                                     │   │
-│  │  [  0,   0,   0, -∞],                                     │   │
-│  │  [  0,   0,   0,   0]]                                    │   │
+│  │  [  0,   0,   0, -∞],                                    │   │
+│  │  [  0,   0,   0,   0]]                                   │   │
 │  │                                                          │   │
-│  │ After softmax: -∞ becomes 0 probability                 │   │
+│  │ After softmax: -∞ becomes 0 probability                  │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  WHY THIS WORKS: During training, model sees entire sequence   │
-│  but mask ensures position i only attends to positions ≤ i     │
+│  WHY THIS WORKS: During training, model sees entire sequence    │
+│  but mask ensures position i only attends to positions ≤ i      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -1487,25 +1487,26 @@ Memory Scaling by Component:
 │                                                                 │
 │  MEMORY USAGE BY SEQUENCE LENGTH (Quadratic Growth):           │
 │                                                                 │
-│  1K tokens:   [▓] 16 MB        ← Manageable                    │
-│  2K tokens:   [▓▓▓▓] 64 MB     ← 4× memory (quadratic!)        │
-│  4K tokens:   [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 256 MB   ← 16× memory         │
+│  1K tokens:   [▓] 16 MB                ← Manageable            │
+│  2K tokens:   [▓▓▓▓] 64 MB             ← 4× memory (quadratic) │
+│  4K tokens:   [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 256 MB   ← 16× memory        │
 │  8K tokens:   [████████████████████████████████] 1 GB          │
-│  16K tokens:  ████████████████████████████████████████████████████████████████ 4 GB │
-│  32K tokens:  ████████████████████████████████████████████████████████████████████████████████████████████████████████████████ 16 GB │
+│  16K tokens:  [████████████████████████████████████████] 4 GB  │
+│  32K tokens:  [████████████████████████████████████████████] → │
+│               ← extends to 16 GB (off the chart!)              │
 │                                                                 │
 │  REAL-WORLD CONTEXT LIMITS:                                    │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │ GPT-3:     2K tokens  (limited by memory)                │  │
-│  │ GPT-4:     8K tokens  (32K with optimizations)           │  │
-│  │ Claude-3:  200K tokens (special techniques required!)    │  │
-│  │ GPT-4o:    128K tokens (efficient attention)             │  │
-│  └───────────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ GPT-3:     2K tokens  (limited by memory)                 │ │
+│  │ GPT-4:     8K tokens  (32K with optimizations)            │ │
+│  │ Claude-3:  200K tokens (special techniques required!)     │ │
+│  │ GPT-4o:    128K tokens (efficient attention)              │ │
+│  └───────────────────────────────────────────────────────────┘ │
 │                                                                 │
 │  MATHEMATICAL SCALING:                                         │
 │  Memory = batch_size × num_heads × seq_len² × 4 bytes          │
-│                                   ↑                           │
-│                          This is the killer!                  │
+│                                   ↑                            │
+│                          This is the killer!                   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
