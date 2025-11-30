@@ -400,20 +400,20 @@ Let's break down where the parameters come from:
 SimpleMLP Parameter Breakdown:
 ┌─────────────────────────────────────────────────────────────┐
 │ Layer 1: Linear(10, 20)                                     │
-│   Weight matrix: (10, 20) = 200 parameters                 │
-│   Bias vector:   (20,)    = 20 parameters                  │
+│   Weight matrix: (10, 20) = 200 parameters                  │
+│   Bias vector:   (20,)    = 20 parameters                   │
 │   Subtotal: 220 parameters                                  │
 │                                                             │
 │ Layer 2: ReLU                                               │
-│   No parameters (just max(0, x))                           │
+│   No parameters (just max(0, x))                            │
 │   Subtotal: 0 parameters                                    │
 │                                                             │
 │ Layer 3: Linear(20, 3)                                      │
-│   Weight matrix: (20, 3)  = 60 parameters                  │
-│   Bias vector:   (3,)     = 3 parameters                   │
+│   Weight matrix: (20, 3)  = 60 parameters                   │
+│   Bias vector:   (3,)     = 3 parameters                    │
 │   Subtotal: 63 parameters                                   │
 │                                                             │
-│ TOTAL: 220 + 0 + 63 = 283 parameters                       │
+│ TOTAL: 220 + 0 + 63 = 283 parameters                        │
 └─────────────────────────────────────────────────────────────┘
 
 Memory Calculation (FP32):
