@@ -532,14 +532,14 @@ Loss: -log(0.003) = 5.8  ← Very high loss ❌
 ```
 What Cross-Entropy Teaches the Model:
 
-┌─────────────────┬─────────────────┬─────────────────┐
-│ Prediction      │ True Label      │ Learning Signal │
-├─────────────────┼─────────────────┼─────────────────┤
-│ Confident ✅    │ Correct ✅      │ "Keep doing this"│
-│ Uncertain ⚠️    │ Correct ✅      │ "Be more confident"│
-│ Confident ❌    │ Wrong ❌        │ "STOP! Change everything"│
-│ Uncertain ⚠️    │ Wrong ❌        │ "Learn the right answer"│
-└─────────────────┴─────────────────┴─────────────────┘
+┌─────────────────┬─────────────────┬───────────────────────────┐
+│ Prediction      │ True Label      │ Learning Signal           │
+├─────────────────┼─────────────────┼───────────────────────────┤
+│ Confident ✅     │ Correct ✅       │ "Keep doing this"         │
+│ Uncertain ⚠️    │ Correct ✅       │ "Be more confident"       │
+│ Confident ❌     │ Wrong ❌         │ "STOP! Change everything" │
+│ Uncertain ⚠️    │ Wrong ❌         │ "Learn the right answer"  │
+└─────────────────┴─────────────────┴───────────────────────────┘
 
 Loss Landscape by Confidence:
      Loss
@@ -1043,26 +1043,26 @@ Different loss functions have different computational costs, especially at scale
 Computational Cost Comparison (Batch Size B, Classes C):
 
 MSELoss:
-┌───────────────┬───────────────┐
+┌────────────────┬────────────────┐
 │ Operation      │ Complexity     │
-├───────────────┼───────────────┤
+├────────────────┼────────────────┤
 │ Subtraction    │ O(B)           │
 │ Squaring       │ O(B)           │
 │ Mean           │ O(B)           │
 │ Total          │ O(B)           │
-└───────────────┴───────────────┘
+└────────────────┴────────────────┘
 
 CrossEntropyLoss:
-┌───────────────┬───────────────┐
+┌────────────────┬────────────────┐
 │ Operation      │ Complexity     │
-├───────────────┼───────────────┤
+├────────────────┼────────────────┤
 │ Max (stability)│ O(B*C)         │
 │ Exponential    │ O(B*C)         │
 │ Sum            │ O(B*C)         │
 │ Log            │ O(B)           │
 │ Indexing       │ O(B)           │
 │ Total          │ O(B*C)         │
-└───────────────┴───────────────┘
+└────────────────┴────────────────┘
 
 Cross-entropy is C times more expensive than MSE!
 For ImageNet (C=1000), CE is 1000x more expensive than MSE.

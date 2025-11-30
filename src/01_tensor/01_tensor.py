@@ -834,7 +834,7 @@ Neural Network Usage:
 ┌─────────────────────┬─────────────────────┬─────────────────────┐
 │ Weight Matrices     │ Attention Mechanism │ Gradient Computation│
 ├─────────────────────┼─────────────────────┼─────────────────────┤
-│ Forward: X @ W      │ Q @ K^T attention   │ ∂L/∂W = X^T @ ∂L/∂Y│
+│ Forward: X @ W      │ Q @ K^T attention   │ ∂L/∂W = X^T @ ∂L/∂Y │
 │ Backward: X @ W^T   │ scores              │                     │
 └─────────────────────┴─────────────────────┴─────────────────────┘
 ```
