@@ -231,24 +231,24 @@ Model compression reduces the size and computational requirements of neural netw
 ```
 Neural Network Compression Techniques:
 
-┌─────────────────────────────────────────────────────────────┐
-│                    COMPRESSION METHODS                      │
-├─────────────────────────────────────────────────────────────┤
-│  WEIGHT-BASED                    │  ARCHITECTURE-BASED      │
-│  ┌─────────────────────────────┐ │  ┌─────────────────────┐ │
-│  │ Magnitude Pruning           │ │  │ Knowledge Distillation│ │
-│  │ • Remove small weights      │ │  │ • Teacher → Student  │ │
-│  │ • 90% sparsity achievable   │ │  │ • 10x size reduction │ │
-│  │                             │ │  │                     │ │
-│  │ Structured Pruning          │ │  │ Neural Architecture │ │
-│  │ • Remove entire channels    │ │  │ Search (NAS)        │ │
-│  │ • Hardware-friendly         │ │  │ • Automated design  │ │
-│  │                             │ │  │                     │ │
-│  │ Low-Rank Approximation      │ │  │ Early Exit          │ │
-│  │ • Matrix factorization      │ │  │ • Adaptive compute  │ │
-│  │ • SVD decomposition         │ │  │                     │ │
-│  └─────────────────────────────┘ │  └─────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│                         COMPRESSION METHODS                           │
+├───────────────────────────────────────────────────────────────────────┤
+│  WEIGHT-BASED                       │  ARCHITECTURE-BASED             │
+│  ┌────────────────────────────────┐ │  ┌────────────────────────────┐ │
+│  │ Magnitude Pruning              │ │  │ Knowledge Distillation     │ │
+│  │ • Remove small weights         │ │  │ • Teacher → Student        │ │
+│  │ • 90% sparsity achievable      │ │  │ • 10x size reduction       │ │
+│  │                                │ │  │                            │ │
+│  │ Structured Pruning             │ │  │ Neural Architecture        │ │
+│  │ • Remove entire channels       │ │  │ Search (NAS)               │ │
+│  │ • Hardware-friendly            │ │  │ • Automated design         │ │
+│  │                                │ │  │                            │ │
+│  │ Low-Rank Approximation         │ │  │ Early Exit                 │ │
+│  │ • Matrix factorization         │ │  │ • Adaptive compute         │ │
+│  │ • SVD decomposition            │ │  │                            │ │
+│  └────────────────────────────────┘ │  └────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
 Think of compression like optimizing a recipe - you want to keep the essential ingredients that create the flavor while removing anything that doesn't contribute to the final dish.
