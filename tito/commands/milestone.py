@@ -941,15 +941,12 @@ class MilestoneCommand(BaseCommand):
             console.print(f"\n[bold cyan]🔍 Checking prerequisites for Milestone {milestone_id}...[/bold cyan]\n")
 
             # Check module completion status using module workflow
-            from .module_workflow import ModuleWorkflowCommand
-            from .source import SourceCommand
+            from .module.workflow import ModuleWorkflowCommand
+            from .src import SrcCommand
             from .test import TestCommand
             
             module_workflow = ModuleWorkflowCommand(self.config)
             progress_data = module_workflow.get_progress_data()
-            # Use module workflow for checking completion status
-            from .src import SrcCommand
-            from .test import TestCommand
             
             source_cmd = SrcCommand(self.config)
             test_cmd = TestCommand(self.config)
