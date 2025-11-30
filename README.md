@@ -518,15 +518,31 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## Related Projects
+## Related Projects & Name Disambiguation
 
-We acknowledge several excellent educational ML framework projects with similar names:
+**Note**: "TinyTorch" is a popular name for educational ML frameworks. This project (MLSysBook/TinyTorch) is the Harvard University course focused on ML systems engineering, part of the [ML Systems Book](https://mlsysbook.ai/tinytorch) ecosystem. We acknowledge and respect other excellent projects with similar names:
+
+### Educational ML Frameworks:
 - [tinygrad](https://github.com/tinygrad/tinygrad) - George Hotz's minimalist deep learning framework
 - [micrograd](https://github.com/karpathy/micrograd) - Andrej Karpathy's tiny autograd engine
 - [MiniTorch](https://minitorch.github.io/) - Cornell's educational framework
-- Other TinyTorch implementations - Various educational implementations on GitHub
 
-**Our TinyTorch** focuses specifically on ML systems engineering with a complete curriculum, NBGrader integration, and production deployment—designed as a comprehensive university course rather than a standalone library.
+### Other TinyTorch Implementations:
+- [msarmi9/tinytorch](https://github.com/msarmi9/tinytorch) - Numpy-based deep learning library
+- [keith2018/TinyTorch](https://github.com/keith2018/TinyTorch) - C++ implementation following PyTorch API
+- [darglein/TinyTorch](https://github.com/darglein/TinyTorch) - Auto-diff optimization framework
+- [joey00072/Tinytorch](https://github.com/joey00072/Tinytorch) - Tiny autograd engine
+- [aspfohl/tinytorch](https://github.com/aspfohl/tinytorch) - Pure-python PyTorch implementation
+- Several other educational implementations on GitHub
+
+**Our TinyTorch** distinguishes itself through:
+- Complete 20-module curriculum (Tensor → Transformers → Optimization → Capstone)
+- NBGrader integration for classroom deployment
+- ML systems engineering focus (memory, performance, production deployment)
+- Part of the [ML Systems Book](https://mlsysbook.ai/tinytorch) educational ecosystem
+- Designed as a comprehensive university course, not a standalone library
+
+All these projects share the noble goal of making ML internals accessible through education. We're grateful to be part of this community.
 
 ## Acknowledgments
 
