@@ -26,94 +26,118 @@ Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
 # ==============================================================================
-# SETUP PHASE (HIDDEN): Like a unit test, set up the environment cleanly first
+# SETUP PHASE (HIDDEN): Unit test pattern - prepare clean environment
 # ==============================================================================
 Hide
 
-# Navigate to project and activate environment
+# 1. Navigate to project root
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Enter
 Sleep 1s
+
+# 2. Activate the TinyTorch environment
 Type "source activate.sh"
 Enter
 Sleep 3s
 
-# Reset all modules to pristine state using git
+# 3. Reset all modules to pristine state (git checkout)
 Type "git checkout -- modules/"
 Enter
 Sleep 2s
 
-# Clean any cached/built files
+# 4. Clean cached/built files
 Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
 Enter
 Sleep 1s
 
-# Complete module 01 as prerequisite (hidden from user)
+# 5. Complete prerequisite modules (module 01 needed for 02)
 Type "tito module complete 01"
 Enter
 Sleep 5s
 
 Show
+
+Ctrl+L  # Clear screen to hide setup command history
+
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the actual workflow
+# OPENING: Introduce the workflow we'll demonstrate
 # ==============================================================================
 
-# Opening comment explaining what we'll demonstrate
 Type "# Build → Test → Ship 🔨"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Start module 02
+# ==============================================================================
+# STEP 1: START - Begin working on a module
+# ==============================================================================
+
 Type "tito module start 02"
 Sleep 400ms
 Enter
 Sleep 3s
 
-# Show working indicator
+# ==============================================================================
+# STEP 2: BUILD - Simulate working in Jupyter Lab
+# ==============================================================================
+
 Type "# ... working in Jupyter Lab ..."
 Sleep 1500ms
 Enter
 Sleep 800ms
 
-# Complete module - THE MONEY SHOT
+# ==============================================================================
+# STEP 3: COMPLETE - Test, export, and validate (THE MONEY SHOT)
+# ==============================================================================
+
 Type "tito module complete 02"
 Sleep 400ms
 Enter
-Sleep 8s  # Long pause to read all test output
+Sleep 8s  # Let viewers read test output & validation results
 
-# Verify it works in Python
+# ==============================================================================
+# STEP 4: VERIFY - Prove it works by importing in Python
+# ==============================================================================
+
 Type "python3"
 Sleep 400ms
 Enter
 Sleep 1s
 
+# Import the newly built activation function
 Type "from tinytorch import Sigmoid"
 Sleep 400ms
 Enter
 Sleep 500ms
 
+# Import Tensor to test with
 Type "from tinytorch import Tensor"
 Sleep 400ms
 Enter
 Sleep 500ms
 
+# Create an instance
 Type "sig = Sigmoid()"
 Sleep 400ms
 Enter
 Sleep 500ms
 
+# Use it on real data
 Type "sig(Tensor([-2.0, -1.0, 0.0, 1.0, 2.0]))"
 Sleep 400ms
 Enter
 Sleep 2s
 
+# Exit Python REPL
 Type "exit()"
 Sleep 300ms
 Enter
 Sleep 1s
 
-# Final message
+# ==============================================================================
+# CLOSING: Celebrate the achievement
+# ==============================================================================
+
 Type "# You didn't just import it. You BUILT it! 🎉"
 Sleep 3s
 

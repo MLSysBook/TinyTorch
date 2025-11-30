@@ -26,29 +26,31 @@ Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
 # ==============================================================================
-# SETUP PHASE (HIDDEN): Like a unit test, set up the environment cleanly first
+# SETUP PHASE (HIDDEN): Unit test pattern - prepare clean environment
 # ==============================================================================
 Hide
 
-# Navigate to project and activate environment
+# 1. Navigate to project root
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Enter
 Sleep 1s
+
+# 2. Activate the TinyTorch environment
 Type "source activate.sh"
 Enter
 Sleep 3s
 
-# Reset all modules to pristine state using git
+# 3. Reset all modules to pristine state (git checkout)
 Type "git checkout -- modules/"
 Enter
 Sleep 2s
 
-# Clean any cached/built files
+# 4. Clean cached/built files
 Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
 Enter
 Sleep 1s
 
-# Complete a few modules so we have progress to show
+# 5. Complete a few modules to have progress to demonstrate
 Type "tito module complete 01"
 Enter
 Sleep 5s
@@ -60,55 +62,58 @@ Enter
 Sleep 5s
 
 Show
+
+Ctrl+L  # Clear screen to hide setup command history
+
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the community/progress features
+# OPENING: Introduce community sharing
 # ==============================================================================
 
-# Opening comment explaining what we'll demonstrate
 Type "# Share Your Journey 🌍"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Check progress
+# ==============================================================================
+# STEP 1: CHECK PROGRESS - See what we've built so far
+# ==============================================================================
+
 Type "tito module status"
 Sleep 400ms
 Enter
-Sleep 3s
-Sleep 3s
+Sleep 6s  # Let viewers see modules 01-03 completed
 
-# Join community
+# ==============================================================================
+# STEP 2: JOIN COMMUNITY - Connect with builders worldwide
+# ==============================================================================
+
 Type "tito community join"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for Question 1/3 (GitHub username)
+Sleep 2s  # Wait for Question 1/3 prompt
 
-# Question 1: GitHub username (required)
+# Answer Question 1: GitHub username (required)
 Type "profvjreddi"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for Question 2/3 (Country)
+Sleep 2s  # Wait for Question 2/3 prompt
 
-# Question 2: Country (optional)
+# Answer Question 2: Country (optional)
 Type "United States"
 Sleep 400ms
 Enter
-Sleep 2s  # Wait for Question 3/3 (Institution)
+Sleep 2s  # Wait for Question 3/3 prompt
 
-# Question 3: Institution (optional)
+# Answer Question 3: Institution (optional)
 Type "Harvard University"
 Sleep 400ms
 Enter
-Sleep 3s  # Wait for confirmation
+Sleep 3s  # Wait for welcome message
 
-# Share achievement after more progress
-Type "tito community update"
-Sleep 400ms
-Enter
-Sleep 3s
-Sleep 3s
+# ==============================================================================
+# CLOSING: Inspire others to join the community
+# ==============================================================================
 
-# Final message
 Type "# Join 2,847 builders worldwide! 🌍"
 Sleep 3s
 

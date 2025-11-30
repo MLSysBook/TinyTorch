@@ -24,14 +24,21 @@ Set TypingSpeed 100ms
 # Set shell with custom prompt for reliable waiting
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
+Env COLUMNS "128"
 
-# Opening: Show what this demo is about
+# ==============================================================================
+# OPENING: Welcome message to set the tone
+# ==============================================================================
+
 Type "# Welcome to Tiny🔥Torch!"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Show everything - users see the full setup
+# ==============================================================================
+# SETUP: Show the activation process (visible for this demo)
+# ==============================================================================
+
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Sleep 400ms
 Enter
@@ -42,12 +49,18 @@ Sleep 400ms
 Enter
 Sleep 3s
 
-# Show the beautiful welcome screen
+# ==============================================================================
+# MAIN FEATURE: Display the complete tito command reference
+# ==============================================================================
+
 Type "tito"
 Sleep 400ms
 Enter
-Sleep 8s
+Sleep 8s  # Let viewers read the full feature list
 
-# Final message
+# ==============================================================================
+# CLOSING: Inspire them to start the journey
+# ==============================================================================
+
 Type "# Let's recreate PyTorch together! 🔥"
 Sleep 3s

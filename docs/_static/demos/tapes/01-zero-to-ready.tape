@@ -22,55 +22,79 @@ Set LoopOffset 0%
 Set Shell bash
 Env PS1 "@profvjreddi 🔥 › "
 
-# Start in /tmp for clean setup
+# ==============================================================================
+# STEP 1: START IN CLEAN DIRECTORY
+# ==============================================================================
+
 Type "cd /tmp"
 Sleep 300ms
 Enter
 Wait+Line@10ms /profvjreddi/
 Sleep 500ms
 
-# Clone the TinyTorch repository
+# ==============================================================================
+# STEP 2: CLONE REPOSITORY - Get TinyTorch from GitHub
+# ==============================================================================
+
 Type "git clone https://github.com/mlsysbook/TinyTorch.git"
 Sleep 400ms
 Enter
 Wait+Line@120s /profvjreddi/  # Wait for clone to complete (up to 120s)
 Sleep 500ms
 
-# Navigate into the project
+# ==============================================================================
+# STEP 3: ENTER PROJECT - Navigate into TinyTorch
+# ==============================================================================
+
 Type "cd TinyTorch"
 Sleep 300ms
 Enter
 Wait+Line@10ms /profvjreddi/
 Sleep 500ms
 
-# Setup automatically detects your environment (conda/venv)
+# ==============================================================================
+# STEP 4: SETUP ENVIRONMENT - Automatic detection (conda/venv)
+# ==============================================================================
+
 Type "./setup-environment.sh"
 Sleep 400ms
 Enter
 Wait+Line@120s /profvjreddi/  # Setup creates virtual environment (up to 120s)
 Sleep 1s
 
-# Activate the environment to get tito command
+# ==============================================================================
+# STEP 5: ACTIVATE - Get access to tito commands
+# ==============================================================================
+
 Type "source activate.sh"
 Sleep 300ms
 Enter
 Wait+Line@10ms /profvjreddi/
 Sleep 1s
 
-# Check module status - shows all 20 modules ready to complete
+# ==============================================================================
+# STEP 6: CHECK STATUS - See all 20 modules ready to build
+# ==============================================================================
+
 Type "tito module status"
 Sleep 400ms
 Enter
 Wait+Line@10ms /profvjreddi/
 Sleep 2s
 
-# Learn the story and motivation
+# ==============================================================================
+# STEP 7: READ THE STORY - Understand the TinyTorch philosophy
+# ==============================================================================
+
 Type "tito logo"
 Sleep 400ms
 Enter
 Wait+Line@10ms /profvjreddi/
 Sleep 3s
 
-# Ready to build!
+# ==============================================================================
+# CLOSING: You're ready to start building!
+# ==============================================================================
+
 Type "# Ready to build your ML framework from scratch 🔥"
 Sleep 2s

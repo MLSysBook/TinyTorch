@@ -7,7 +7,7 @@ Output "gifs/05-logo.gif"
 # Window bar for realistic terminal look
 Set WindowBar Colorful
 
-# Carousel-optimized dimensions (16:9 aspect ratio)
+# Standard carousel dimensions (16:9 aspect ratio)
 Set Width 1280
 Set Height 720
 Set FontSize 18
@@ -26,75 +26,68 @@ Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
 # ==============================================================================
-# SETUP PHASE (HIDDEN): Like a unit test, set up the environment cleanly first
+# SETUP: Activate environment to access tito command (hidden)
 # ==============================================================================
-Hide
 
-# Navigate to project and activate environment
+Hide
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Enter
-Sleep 1s
+Sleep 500ms
 Type "source activate.sh"
 Enter
 Sleep 3s
-
 Show
+
+Ctrl+L  # Clear screen to hide setup command history
+
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the philosophy and story
+# OPENING: Set the stage with a comment about the story
 # ==============================================================================
 
-# Opening comment explaining what we'll demonstrate
 Type "# The Story Behind TinyTorch 🔥"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Show the beautiful logo and story
+# ==============================================================================
+# SHOW THE LOGO: Display the complete philosophy
+# ==============================================================================
+
 Type "tito logo"
 Sleep 400ms
 Enter
-Sleep 5s  # Let the logo appear
+Sleep 3s  # Let the output complete
 
-# Scroll down to show the flame symbolism
-Type ""
-Enter
+# ==============================================================================
+# SCROLL THROUGH THE LOGO: Use Up/Down arrows to navigate like a real user
+# ==============================================================================
+
+# Scroll way up to see the top (the ASCII art logo)
+Up 50
 Sleep 3s
 
-# Continue scrolling through the philosophy
-Type ""
-Enter
+# Now scroll down slowly through each section
+Down 8
 Sleep 3s
 
-# Scroll to show "Why Tiny?"
-Type ""
-Enter
+Down 8
 Sleep 3s
 
-# Scroll to show "Why Torch?"
-Type ""
-Enter
+Down 8
 Sleep 3s
 
-# Scroll to show the hidden network
-Type ""
-Enter
+Down 8
 Sleep 3s
 
-# Scroll to show the philosophy section
-Type ""
-Enter
+Down 8
 Sleep 3s
 
-# Scroll to show Professor Reddi's message
-Type ""
-Enter
-Sleep 4s
+Down 8
+Sleep 4s  # Longer pause for the final message
 
-# Scroll to the final message
-Type ""
-Enter
-Sleep 3s
+# ==============================================================================
+# CLOSING: Reinforce the core message
+# ==============================================================================
 
-# Final comment
-Type "# Don't just import it. Build it. 🔥"
+Type "# Don't just import it. Build it. ✨🔥"
 Sleep 3s

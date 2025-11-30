@@ -26,29 +26,31 @@ Env PS1 "@profvjreddi 🔥 › "
 Set TypingSpeed 100ms
 
 # ==============================================================================
-# SETUP PHASE (HIDDEN): Like a unit test, set up the environment cleanly first
+# SETUP PHASE (HIDDEN): Unit test pattern - prepare clean environment
 # ==============================================================================
 Hide
 
-# Navigate to project and activate environment
+# 1. Navigate to project root
 Type "cd /Users/VJ/GitHub/TinyTorch"
 Enter
 Sleep 1s
+
+# 2. Activate the TinyTorch environment
 Type "source activate.sh"
 Enter
 Sleep 3s
 
-# Reset all modules to pristine state using git
+# 3. Reset all modules to pristine state (git checkout)
 Type "git checkout -- modules/"
 Enter
 Sleep 2s
 
-# Clean any cached/built files
+# 4. Clean cached/built files
 Type "rm -rf tinytorch/__pycache__ tinytorch/*.pyc"
 Enter
 Sleep 1s
 
-# Complete modules 01-06 as prerequisites to unlock module 07 (hidden for speed)
+# 5. Complete prerequisite modules 01-06 (needed to unlock module 07)
 Type "tito module complete 01"
 Enter
 Sleep 5s
@@ -69,45 +71,58 @@ Enter
 Sleep 5s
 
 Show
+
+Ctrl+L  # Clear screen to hide setup command history
+
 # ==============================================================================
-# DEMO BEGINS (VISIBLE): Now show the actual milestone workflow
+# OPENING: Introduce the milestone concept
 # ==============================================================================
 
-# Opening comment explaining what we'll demonstrate
 Type "# Milestone: Recreate ML History 🏆"
 Sleep 2s
 Enter
 Sleep 500ms
 
-# Show where we are in the journey (modules 01-06 completed)
+# ==============================================================================
+# STEP 1: CHECK PROGRESS - Show where we are in the journey
+# ==============================================================================
+
 Type "tito module status"
 Sleep 400ms
 Enter
-Sleep 4s
+Sleep 4s  # Let viewers see modules 01-06 are completed
 
-# Complete module 07 which unlocks milestone 03
+# ==============================================================================
+# STEP 2: UNLOCK MILESTONE - Complete module 07 (Training)
+# ==============================================================================
+
 Type "tito module complete 07"
 Sleep 400ms
 Enter
-Sleep 10s
+Sleep 10s  # Watch tests pass and module export to TinyTorch
 
-# Check available milestones
+# ==============================================================================
+# STEP 3: LIST MILESTONES - See what historical achievements are available
+# ==============================================================================
+
 Type "tito milestones list"
 Sleep 400ms
 Enter
-Sleep 3s
+Sleep 3s  # Read the milestone descriptions
 
-# Run milestone 03 (MLP Revival 1986)
-Type "tito milestones run 03"
+# ==============================================================================
+# STEP 4: RUN MILESTONE - Recreate Rumelhart's 1986 breakthrough
+# ==============================================================================
+
+Type "echo '' | tito milestones run 03"
 Sleep 400ms
 Enter
-Sleep 2s
-Type ""  # Press Enter to proceed past "Press Enter to begin"
-Enter
-Sleep 60s  # Wait for milestone to complete
-Sleep 3s
+Sleep 60s  # Watch the training recreate history (training takes ~30s)
 
-# Celebrate the achievement
-Type "# You recreated Rumelhart's 1986 breakthrough! 🏆"
+# ==============================================================================
+# CLOSING: Celebrate recreating ML history
+# ==============================================================================
+
+Type "# You recreated Rumelhart's 1986 breakthrough! 🎉"
 Sleep 3s
 
