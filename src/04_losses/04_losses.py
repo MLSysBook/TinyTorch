@@ -532,14 +532,14 @@ Loss: -log(0.003) = 5.8  ← Very high loss ❌
 ```
 What Cross-Entropy Teaches the Model:
 
-┌─────────────────┬─────────────────┬─────────────────┐
-│ Prediction      │ True Label      │ Learning Signal │
-├─────────────────┼─────────────────┼─────────────────┤
-│ Confident ✅    │ Correct ✅      │ "Keep doing this"│
-│ Uncertain ⚠️    │ Correct ✅      │ "Be more confident"│
-│ Confident ❌    │ Wrong ❌        │ "STOP! Change everything"│
-│ Uncertain ⚠️    │ Wrong ❌        │ "Learn the right answer"│
-└─────────────────┴─────────────────┴─────────────────┘
+┌─────────────────┬─────────────────┬───────────────────────────┐
+│ Prediction      │ True Label      │ Learning Signal           │
+├─────────────────┼─────────────────┼───────────────────────────┤
+│ Confident ✅    │ Correct ✅      │ "Keep doing this"         │
+│ Uncertain ⚠️    │ Correct ✅      │ "Be more confident"       │
+│ Confident ❌    │ Wrong ❌        │ "STOP! Change everything" │
+│ Uncertain ⚠️    │ Wrong ❌        │ "Learn the right answer"  │
+└─────────────────┴─────────────────┴───────────────────────────┘
 
 Loss Landscape by Confidence:
      Loss
@@ -1043,26 +1043,26 @@ Different loss functions have different computational costs, especially at scale
 Computational Cost Comparison (Batch Size B, Classes C):
 
 MSELoss:
-┌───────────────┬───────────────┐
+┌────────────────┬────────────────┐
 │ Operation      │ Complexity     │
-├───────────────┼───────────────┤
+├────────────────┼────────────────┤
 │ Subtraction    │ O(B)           │
 │ Squaring       │ O(B)           │
 │ Mean           │ O(B)           │
 │ Total          │ O(B)           │
-└───────────────┴───────────────┘
+└────────────────┴────────────────┘
 
 CrossEntropyLoss:
-┌───────────────┬───────────────┐
+┌────────────────┬────────────────┐
 │ Operation      │ Complexity     │
-├───────────────┼───────────────┤
+├────────────────┼────────────────┤
 │ Max (stability)│ O(B*C)         │
 │ Exponential    │ O(B*C)         │
 │ Sum            │ O(B*C)         │
 │ Log            │ O(B)           │
 │ Indexing       │ O(B)           │
 │ Total          │ O(B*C)         │
-└───────────────┴───────────────┘
+└────────────────┴────────────────┘
 
 Cross-entropy is C times more expensive than MSE!
 For ImageNet (C=1000), CE is 1000x more expensive than MSE.
@@ -1198,14 +1198,14 @@ As models grow larger, loss function bottlenecks become critical:
 ```
 Scaling Challenge Matrix:
 
-                    │ Small Model     │ Large Model      │ Production Scale
-                    │ (MNIST)         │ (ImageNet)       │ (GPT/BERT)
-────────────────────┼─────────────────┼──────────────────┼──────────────────
-Classes (C)         │ 10              │ 1,000            │ 50,000+
-Batch Size (B)      │ 64              │ 256              │ 2,048
-Memory (CE)         │ 2.5 KB          │ 1 MB             │ 400 MB
-Memory (MSE)        │ 0.25 KB         │ 1 KB             │ 8 KB
-Bottleneck          │ None            │ Softmax compute  │ Vocabulary memory
+                    │ Small Model     │ Large Model      │ Production Scale  │
+                    │ (MNIST)         │ (ImageNet)       │ (GPT/BERT)        │
+────────────────────┼─────────────────┼──────────────────┼───────────────────┤
+Classes (C)         │ 10              │ 1,000            │ 50,000+           │
+Batch Size (B)      │ 64              │ 256              │ 2,048             │
+Memory (CE)         │ 2.5 KB          │ 1 MB             │ 400 MB            │
+Memory (MSE)        │ 0.25 KB         │ 1 KB             │ 8 KB              │
+Bottleneck          │ None            │ Softmax compute  │ Vocabulary memory │
 
 Memory grows as B*C for cross-entropy!
 At scale, vocabulary (C) dominates everything.
@@ -1217,14 +1217,12 @@ At scale, vocabulary (C) dominates everything.
 Common Production Optimizations:
 
 1. Hierarchical Softmax:
-   ┌─────────────────┐
-   │ Full Softmax:      │
-   │ O(V) per sample    │  ┌─────────────────┐
-   │ 50k classes = 50k  │  │ Hierarchical:       │
-   │ operations         │  │ O(log V) per sample │
-   └─────────────────┘  │ 50k classes = 16   │
-                          │ operations         │
-                          └─────────────────┘
+   ┌─────────────────────┐     ┌─────────────────────┐
+   │ Full Softmax:       │     │ Hierarchical:       │
+   │ O(V) per sample     │ →   │ O(log V) per sample │
+   │ 50k classes = 50k   │     │ 50k classes = 16    │
+   │ operations          │     │ operations          │
+   └─────────────────────┘     └─────────────────────┘
 
 2. Sampled Softmax:
    Instead of computing over all 50k classes,

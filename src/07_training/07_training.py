@@ -308,6 +308,8 @@ This preserves the relative magnitudes while preventing explosion.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "gradient_clipping", "locked": false, "solution": true}
+#| export
+
 def clip_grad_norm(parameters: List, max_norm: float = 1.0) -> float:
     """
     Clip gradients by global norm to prevent exploding gradients.
@@ -446,29 +448,29 @@ Training Loop Structure:
 for epoch in range(num_epochs):
     ┌─────────────────── TRAINING PHASE ───────────────────┐
     │                                                       │
-    │  for batch in dataloader:                            │
-    │      ┌─── Forward Pass ───┐                          │
-    │      │ 1. input → model   │                          │
-    │      │ 2. predictions     │                          │
-    │      └───────────────────┘                          │
-    │               ↓                                      │
-    │      ┌─── Loss Computation ───┐                     │
-    │      │ 3. loss = loss_fn()    │                     │
-    │      └───────────────────────┘                     │
-    │               ↓                                      │
-    │      ┌─── Backward Pass ───┐                       │
-    │      │ 4. loss.backward()  │                       │
-    │      │ 5. gradients        │                       │
-    │      └────────────────────┘                       │
-    │               ↓                                      │
-    │      ┌─── Parameter Update ───┐                    │
-    │      │ 6. optimizer.step()    │                    │
-    │      │ 7. zero gradients      │                    │
-    │      └───────────────────────┘                    │
-    └───────────────────────────────────────────────────┘
+    │  for batch in dataloader:                             │
+    │      ┌─── Forward Pass ───────┐                       │
+    │      │ 1. input → model       │                       │
+    │      │ 2. predictions         │                       │
+    │      └────────────────────────┘                       │
+    │               ↓                                       │
+    │      ┌─── Loss Computation ───┐                       │
+    │      │ 3. loss = loss_fn()    │                       │
+    │      └────────────────────────┘                       │
+    │               ↓                                       │
+    │      ┌─── Backward Pass ──────┐                       │
+    │      │ 4. loss.backward()     │                       │
+    │      │ 5. gradients           │                       │
+    │      └────────────────────────┘                       │
+    │               ↓                                       │
+    │      ┌─── Parameter Update ───┐                       │
+    │      │ 6. optimizer.step()    │                       │
+    │      │ 7. zero gradients      │                       │
+    │      └────────────────────────┘                       │
+    └───────────────────────────────────────────────────────┘
              ↓
     ┌─── Learning Rate Update ───┐
-    │ 8. scheduler.step()         │
+    │ 8. scheduler.step()        │
     └────────────────────────────┘
 ```
 
@@ -951,10 +953,6 @@ def demonstrate_complete_training_pipeline():
     print("   • Checkpointing for training persistence")
     print("   • Evaluation mode for model assessment")
 
-# Run the demonstration
-if __name__ == "__main__":
-    demonstrate_complete_training_pipeline()
-
 # %% [markdown]
 """
 ## 📊 Part 5: Systems Analysis - Training Performance and Memory
@@ -1059,10 +1057,6 @@ def analyze_training_memory():
     print("- Adam: 4× parameter memory (params + grads + 2 moment buffers)")
     print("- Gradient accumulation reduces memory but increases training time")
 
-# Run analysis
-if __name__ == "__main__":
-    analyze_training_memory()
-
 # %% nbgrader={"grade": false, "grade_id": "analyze_checkpoint_overhead", "solution": true}
 def analyze_checkpoint_overhead():
     """📊 Analyze checkpoint size and overhead."""
@@ -1124,10 +1118,6 @@ def analyze_checkpoint_overhead():
     print("- Pickle serialization adds 10-30% overhead")
     print("- Adam optimizer doubles checkpoint size vs SGD")
     print("- Use checkpoint frequency wisely in production (memory vs fault tolerance)")
-
-# Run analysis
-if __name__ == "__main__":
-    analyze_checkpoint_overhead()
 
 # %% [markdown]
 """

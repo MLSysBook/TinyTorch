@@ -28,7 +28,7 @@ Welcome to Module 18! You're about to master the art of neural network accelerat
 
 **Connection Map**:
 ```
-Layers (03) → Training (07) → CNNs (09) → Acceleration (16) → Advanced Optimization
+Layers (03) → Training (07) → CNNs (09) → Acceleration (18) → Advanced Optimization
 (building blocks) (learning)   (spatial)  (speed up)         (future modules)
 ```
 
@@ -212,6 +212,8 @@ For c₁₁: Row₁ · Column₁ = a₁₁×b₁₁ + a₁₂×b₂₁ + a₁₃
 """
 
 # %% nbgrader={"grade": false, "grade_id": "vectorized-matmul", "solution": true}
+#| export
+
 def vectorized_matmul(a: Tensor, b: Tensor) -> Tensor:
     """
     High-performance matrix multiplication using vectorized operations.
@@ -322,9 +324,9 @@ def test_unit_vectorized_matmul():
 
     print("✅ vectorized_matmul works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_vectorized_matmul()
+# Test is callable but runs via test_module() in main block below
+# if __name__ == "__main__":
+#     test_unit_vectorized_matmul()
 
 # %% [markdown]
 """
@@ -391,6 +393,8 @@ Unfused Operations:                    Fused Operation:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "fused-gelu", "solution": true}
+#| export
+
 def fused_gelu(x: Tensor) -> Tensor:
     """
     Fused GELU activation that combines all operations in a single kernel.
@@ -490,9 +494,9 @@ def test_unit_fused_gelu():
 
     print("✅ fused_gelu works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_fused_gelu()
+# Test is callable but runs via test_module() in main block below
+# if __name__ == "__main__":
+#     test_unit_fused_gelu()
 
 # %% [markdown]
 """
@@ -620,9 +624,9 @@ def test_unit_fusion_speedup():
 
     print("✅ Fusion performance analysis completed!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_fusion_speedup()
+# Test is callable but runs via test_module() in main block below
+# if __name__ == "__main__":
+#     test_unit_fusion_speedup()
 
 # %% [markdown]
 """
@@ -646,6 +650,8 @@ Tiling keeps working set in cache for maximum reuse.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tiled-matmul", "solution": true}
+#| export
+
 def tiled_matmul(a: Tensor, b: Tensor, tile_size: int = 64) -> Tensor:
     """
     Cache-aware matrix multiplication using tiling/blocking.
@@ -748,9 +754,9 @@ def test_unit_tiled_matmul():
 
     print("✅ tiled_matmul works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_tiled_matmul()
+# Test is callable but runs via test_module() in main block below
+# if __name__ == "__main__":
+#     test_unit_tiled_matmul()
 
 # %% [markdown]
 """
@@ -811,9 +817,9 @@ def analyze_vectorization_scaling():
     print(f"   • BLAS libraries automatically optimize for each size regime")
     print("🚀 Vectorization effectiveness depends on problem size and hardware")
 
-# Run analysis when developing this module
-if __name__ == "__main__":
-    analyze_vectorization_scaling()
+# Analysis is callable but runs via main block below
+# if __name__ == "__main__":
+#     analyze_vectorization_scaling()
 
 # %% nbgrader={"grade": false, "grade_id": "analyze-arithmetic-intensity", "solution": true}
 def analyze_arithmetic_intensity():
@@ -901,9 +907,9 @@ def analyze_arithmetic_intensity():
     print(f"   ⚡ Element-wise ops ({add_ai:.3f} AI) need memory optimization")
     print("🚀 Design algorithms with high arithmetic intensity for performance")
 
-# Run analysis when developing this module
-if __name__ == "__main__":
-    analyze_arithmetic_intensity()
+# Analysis is callable but runs via main block below
+# if __name__ == "__main__":
+#     analyze_arithmetic_intensity()
 
 # %% [markdown]
 """
@@ -961,9 +967,9 @@ def analyze_memory_efficiency():
     print("   • Fusion reduces memory allocations by 4-5×")
     print("🚀 Memory efficiency critical for large batch sizes and limited GPU memory")
 
-# Run analysis when developing this module
-if __name__ == "__main__":
-    analyze_memory_efficiency()
+# Analysis is callable but runs via main block below
+# if __name__ == "__main__":
+#     analyze_memory_efficiency()
 
 # %% [markdown]
 """
@@ -1128,9 +1134,9 @@ def analyze_acceleration_decision_framework():
     print(f"   🔄 Iterate: Optimization is an ongoing process, not one-time")
     print("🚀 Systematic acceleration beats random optimization")
 
-# Run analysis when developing this module
-if __name__ == "__main__":
-    analyze_acceleration_decision_framework()
+# Analysis is callable but runs via main block below
+# if __name__ == "__main__":
+#     analyze_acceleration_decision_framework()
 
 # %% [markdown]
 """
@@ -1228,9 +1234,9 @@ def demo_acceleration_with_profiler():
     print(f"   This is why {speedup:.0f}x speedups are possible with the same FLOPs!")
     print("\n✅ This is the power of acceleration: same math, different execution!")
 
-# Run demo when developing this module
-if __name__ == "__main__":
-    demo_acceleration_with_profiler()
+# Demo is callable but runs via main block below
+# if __name__ == "__main__":
+#     demo_acceleration_with_profiler()
 
 # %% [markdown]
 """
@@ -1373,16 +1379,17 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 18")
 
-# Run comprehensive module test when executed directly
+# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": false}
+# Main execution block - single clean entry point
 if __name__ == "__main__":
+    print("🚀 Running Acceleration Module...")
+    print("=" * 50)
+
+    # Run comprehensive module test
     test_module()
 
-# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": false}
-# Main execution block
-if __name__ == "__main__":
-    print("🚀 Running Acceleration module...")
-    test_module()
-    print("✅ Module validation complete!")
+    print("\n" + "=" * 50)
+    print("✅ Acceleration module validation complete!")
 
 # %% [markdown]
 """
@@ -1444,7 +1451,7 @@ Your acceleration techniques enable:
 Your acceleration implementations provide the foundation for advanced optimization modules.
 The performance analysis skills transfer directly to production optimization workflows.
 
-Export with: `tito module complete 16`
+Export with: `tito module complete 18`
 
 **Next**: Advanced modules will build on these acceleration techniques for specialized optimizations!
 """

@@ -569,78 +569,78 @@ Character tokenization provides a simple, robust foundation for text processing.
 BPE is the secret sauce behind modern language models (GPT, BERT, etc.). It learns to merge frequent character pairs, creating subword units that balance vocabulary size with sequence length.
 
 ```
-┌───────────────────────────────────────────────────────────────────────────┐
-│ BPE TRAINING ALGORITHM: Learning Subword Units                            │
-├───────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│ STEP 1: Initialize with Character Vocabulary                              │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Training Data: ["hello", "hello", "help"]                    │          │
-│ │                                                              │          │
-│ │ Initial Tokens (with end-of-word markers):                   │          │
-│ │   ['h','e','l','l','o</w>']    (hello)                       │          │
-│ │   ['h','e','l','l','o</w>']    (hello)                       │          │
-│ │   ['h','e','l','p</w>']        (help)                        │          │
-│ │                                                              │          │
-│ │ Starting Vocab: ['h', 'e', 'l', 'o', 'p', '</w>']            │          │
-│ │                   ↑ All unique characters                    │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ STEP 2: Count All Adjacent Pairs                                          │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Pair Frequency Analysis:                                     │          │
-│ │                                                              │          │
-│ │   ('h', 'e'): ██████  3 occurrences  ← MOST FREQUENT!        │          │
-│ │   ('e', 'l'): ██████  3 occurrences                          │          │
-│ │   ('l', 'l'): ████    2 occurrences                          │          │
-│ │   ('l', 'o'): ████    2 occurrences                          │          │
-│ │   ('o', '<'): ████    2 occurrences                          │          │
-│ │   ('l', 'p'): ██      1 occurrence                           │          │
-│ │   ('p', '<'): ██      1 occurrence                           │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ STEP 3: Merge Most Frequent Pair                                          │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Merge Operation: ('h', 'e') → 'he'                           │          │
-│ │                                                              │          │
-│ │ BEFORE:                          AFTER:                      │          │
-│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']       │          │
-│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']       │          │
-│ │   ['h','e','l','p</w>']      →  ['he','l','p</w>']           │          │
-│ │                                                              │          │
-│ │ Updated Vocab: ['h','e','l','o','p','</w>', 'he']            │          │
-│ │                                              ↑ NEW TOKEN!    │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ STEP 4: Repeat Until Target Vocab Size Reached                            │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Iteration 2: Next most frequent is ('l', 'l')                │          │
-│ │ Merge ('l','l') → 'll'                                       │          │
-│ │                                                              │          │
-│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']          │          │
-│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']          │          │
-│ │   ['he','l','p</w>']         →  ['he','l','p</w>']           │          │
-│ │                                                              │          │
-│ │ Updated Vocab: ['h','e','l','o','p','</w>','he','ll']        │          │
-│ │                                                  ↑ NEW!      │          │
-│ │                                                              │          │
-│ │ Continue merging until vocab_size target...                  │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ FINAL RESULTS:                                                            │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Trained BPE can now encode efficiently:                      │          │
-│ │                                                              │          │
-│ │ "hello" → ['he', 'll', 'o</w>']  = 3 tokens (vs 5 chars)     │          │
-│ │ "help"  → ['he', 'l', 'p</w>']   = 3 tokens (vs 4 chars)     │          │
-│ │                                                              │          │
-│ │  Key Insights: BPE automatically discovers:                  │          │
-│ │    - Common prefixes ('he')                                  │          │
-│ │    - Morphological patterns ('ll')                           │          │
-│ │    - Natural word boundaries (</w>)                          │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-└───────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│ BPE TRAINING ALGORITHM: Learning Subword Units                        │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│ STEP 1: Initialize with Character Vocabulary                          │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Training Data: ["hello", "hello", "help"]                         │ │
+│ │                                                                   │ │
+│ │ Initial Tokens (with end-of-word markers):                        │ │
+│ │   ['h','e','l','l','o</w>']    (hello)                            │ │
+│ │   ['h','e','l','l','o</w>']    (hello)                            │ │
+│ │   ['h','e','l','p</w>']        (help)                             │ │
+│ │                                                                   │ │
+│ │ Starting Vocab: ['h', 'e', 'l', 'o', 'p', '</w>']                 │ │
+│ │                   ↑ All unique characters                         │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ STEP 2: Count All Adjacent Pairs                                      │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Pair Frequency Analysis:                                          │ │
+│ │                                                                   │ │
+│ │   ('h', 'e'): ██████  3 occurrences  ← MOST FREQUENT!             │ │
+│ │   ('e', 'l'): ██████  3 occurrences                               │ │
+│ │   ('l', 'l'): ████    2 occurrences                               │ │
+│ │   ('l', 'o'): ████    2 occurrences                               │ │
+│ │   ('o', '<'): ████    2 occurrences                               │ │
+│ │   ('l', 'p'): ██      1 occurrence                                │ │
+│ │   ('p', '<'): ██      1 occurrence                                │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ STEP 3: Merge Most Frequent Pair                                      │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Merge Operation: ('h', 'e') → 'he'                                │ │
+│ │                                                                   │ │
+│ │ BEFORE:                          AFTER:                           │ │
+│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']            │ │
+│ │   ['h','e','l','l','o</w>']  →  ['he','l','l','o</w>']            │ │
+│ │   ['h','e','l','p</w>']      →  ['he','l','p</w>']                │ │
+│ │                                                                   │ │
+│ │ Updated Vocab: ['h','e','l','o','p','</w>', 'he']                 │ │
+│ │                                              ↑ NEW TOKEN!         │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ STEP 4: Repeat Until Target Vocab Size Reached                        │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Iteration 2: Next most frequent is ('l', 'l')                     │ │
+│ │ Merge ('l','l') → 'll'                                            │ │
+│ │                                                                   │ │
+│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']               │ │
+│ │   ['he','l','l','o</w>']     →  ['he','ll','o</w>']               │ │
+│ │   ['he','l','p</w>']         →  ['he','l','p</w>']                │ │
+│ │                                                                   │ │
+│ │ Updated Vocab: ['h','e','l','o','p','</w>','he','ll']             │ │
+│ │                                                  ↑ NEW!           │ │
+│ │                                                                   │ │
+│ │ Continue merging until vocab_size target...                       │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ FINAL RESULTS:                                                        │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Trained BPE can now encode efficiently:                           │ │
+│ │                                                                   │ │
+│ │ "hello" → ['he', 'll', 'o</w>']  = 3 tokens (vs 5 chars)          │ │
+│ │ "help"  → ['he', 'l', 'p</w>']   = 3 tokens (vs 4 chars)          │ │
+│ │                                                                   │ │
+│ │  Key Insights: BPE automatically discovers:                       │ │
+│ │    - Common prefixes ('he')                                       │ │
+│ │    - Morphological patterns ('ll')                                │ │
+│ │    - Natural word boundaries (</w>)                               │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
 **Why BPE Works**: By starting with characters and iteratively merging frequent pairs, BPE discovers the natural statistical patterns in language. Common words become single tokens, rare words split into recognizable subword pieces!

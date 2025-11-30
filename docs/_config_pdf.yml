@@ -4,7 +4,7 @@
 title: "TinyTorch: Build ML Systems from Scratch"
 author: "Prof. Vijay Janapa Reddi (Harvard University)"
 copyright: "2025"
-logo: ../site/_static/logos/logo-tinytorch-white.png
+logo: _static/logos/logo-tinytorch-white.png
 
 # Book description
 description: >-
@@ -42,7 +42,7 @@ latex:
 
 # Bibliography support
 bibtex_bibfiles:
-  - ../site/references.bib
+  - references.bib
 
 # Sphinx extensions
 sphinx:

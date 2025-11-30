@@ -26,15 +26,18 @@ features from real-world photographs!
   Module 10 (DataLoader)    : YOUR CIFAR10Dataset and batching
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🏗️ ARCHITECTURE (Hierarchical Feature Extraction):
-    ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-    │ Input Image │  │   Conv2D    │  │   MaxPool   │  │   Conv2D    │  │   MaxPool   │  │   Flatten   │  │   Linear    │  │   Linear    │
-    │ 32×32×3 RGB │─▶│    3→32     │─▶│     2×2     │─▶│    32→64    │─▶│     2×2     │─▶│   →2304     │─▶│  2304→256   │─▶│   256→10    │
-    │   Pixels    │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M4   │  │   YOUR M4   │
-    └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
-                      Edge Detection     Downsample      Shape Detection    Downsample       Vectorize     Hidden Layer    Classification
-                           ↓                                  ↓                                                                   ↓
-                    Low-level features              High-level features                                                  10 Class Probs
+🏗️ ARCHITECTURE (Modern Pattern with BatchNorm):
+    ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+    │ Input Image │  │   Conv2D    │  │ BatchNorm2D │  │   MaxPool   │  │   Conv2D    │  │ BatchNorm2D │  │   MaxPool   │  │   Linear    │  │   Linear    │
+    │ 32×32×3 RGB │─▶│    3→32     │─▶│  Normalize  │─▶│     2×2     │─▶│    32→64    │─▶│  Normalize  │─▶│     2×2     │─▶│  2304→256   │─▶│   256→10    │
+    │   Pixels    │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M4   │  │   YOUR M4   │
+    └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
+                      Edge Detection   Stabilize Train     Downsample      Shape Detect.   Stabilize Train    Downsample      Hidden Layer    Classification
+                           ↓                                                                                                                       ↓
+                    Low-level features                                   High-level features                                                 10 Class Probs
+    
+    🆕 DATA AUGMENTATION (Training only):
+    RandomHorizontalFlip (50%) + RandomCrop with padding - prevents overfitting!
 
 🔍 CIFAR-10 DATASET - REAL NATURAL IMAGES:
 
@@ -50,7 +53,7 @@ CIFAR-10 contains 60,000 32×32 color images in 10 classes:
     └──────────┘                     Layer 2 (Conv 32→64):
                                       • Object parts
     ┌──────────┐                     • Complex patterns
-    │ 🚗 Car   │                     • Spatial relationships
+    │ 🚗 Car    │                     • Spatial relationships
     │[Red body]│                     
     │[Wheels]  │                     Output Layer:
     │[Windows] │                     • Complete objects
@@ -67,8 +70,10 @@ CIFAR-10 contains 60,000 32×32 color images in 10 classes:
 📊 EXPECTED PERFORMANCE:
 - Dataset: 50,000 training images, 10,000 test images
 - Training time: 3-5 minutes (demonstration mode)
-- Expected accuracy: 65%+ (with YOUR simple CNN!)
+- Expected accuracy: 70%+ (with YOUR CNN + BatchNorm + Augmentation!)
 - Parameters: ~600K (mostly in conv layers)
+- 🆕 BatchNorm: Stabilizes training, faster convergence
+- 🆕 Augmentation: Reduces overfitting, better generalization
 """
 
 import sys
@@ -85,24 +90,38 @@ sys.path.append(project_root)
 from tinytorch.core.tensor import Tensor              # Module 02: YOU built this!
 from tinytorch.core.layers import Linear             # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax  # Module 03: YOU built this!
-from tinytorch.core.spatial import Conv2d, MaxPool2D  # Module 09: YOU built this!
+from tinytorch.core.spatial import Conv2d, MaxPool2D, BatchNorm2d  # Module 09: YOU built this!
 from tinytorch.core.optimizers import Adam            # Module 07: YOU built this!
 from tinytorch.core.dataloader import DataLoader, Dataset  # Module 10: YOU built this!
+from tinytorch.data.loader import RandomHorizontalFlip, RandomCrop, Compose  # Module 08: Data Augmentation!
 
 # Import dataset manager
 from data_manager import DatasetManager
 
 class CIFARDataset(Dataset):
-    """Custom CIFAR-10 Dataset using YOUR Dataset interface from Module 10!"""
+    """Custom CIFAR-10 Dataset using YOUR Dataset interface from Module 10!
     
-    def __init__(self, data, labels):
-        """Initialize with data and labels arrays."""
+    Now with data augmentation support using YOUR transforms from Module 08!
+    """
+    
+    def __init__(self, data, labels, transform=None):
+        """Initialize with data, labels, and optional transforms."""
         self.data = data
         self.labels = labels
+        self.transform = transform  # Module 08: YOUR augmentation transforms!
     
     def __getitem__(self, idx):
         """Get a single sample - YOUR Dataset interface!"""
-        return Tensor(self.data[idx]), Tensor([self.labels[idx]])
+        img = self.data[idx]
+        
+        # Apply augmentation if provided (training only!)
+        if self.transform is not None:
+            img = self.transform(img)
+            # Convert back to numpy if it became a Tensor
+            if isinstance(img, Tensor):
+                img = img.data
+        
+        return Tensor(img), Tensor([self.labels[idx]])
     
     def __len__(self):
         """Return dataset size - YOUR Dataset interface!"""
@@ -111,6 +130,13 @@ class CIFARDataset(Dataset):
     def get_num_classes(self):
         """Return number of classes."""
         return 10
+
+
+# Training augmentation using YOUR transforms from Module 08!
+train_transforms = Compose([
+    RandomHorizontalFlip(p=0.5),   # 50% chance to flip - cars/animals look similar flipped!
+    RandomCrop(32, padding=4),      # Random crop with 4px padding - simulates translation
+])
 
 def flatten(x):
     """Flatten spatial features for dense layers - YOUR implementation!"""
@@ -123,6 +149,9 @@ class CIFARCNN:
     
     This architecture demonstrates how spatial feature extraction enables
     recognition of complex patterns in natural images.
+    
+    Architecture: Conv → BatchNorm → ReLU → Pool (modern pattern)
+    This is more stable and trains faster than without BatchNorm!
     """
     
     def __init__(self):
@@ -130,7 +159,9 @@ class CIFARCNN:
         
         # Convolutional feature extractors - YOUR spatial modules!
         self.conv1 = Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3))   # Module 09!
+        self.bn1 = BatchNorm2d(32)  # Module 09: YOUR BatchNorm! Stabilizes training
         self.conv2 = Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3))  # Module 09!
+        self.bn2 = BatchNorm2d(64)  # Module 09: YOUR BatchNorm!
         self.pool = MaxPool2D(pool_size=(2, 2))  # Module 09: YOUR pooling!
         
         # Activation functions
@@ -141,27 +172,48 @@ class CIFARCNN:
         self.fc1 = Linear(64 * 6 * 6, 256)  # Module 04: YOUR Linear!
         self.fc2 = Linear(256, 10)          # Module 04: YOUR Linear!
         
-        # Calculate total parameters
+        # Training mode flag
+        self._training = True
+        
+        # Calculate total parameters (including BatchNorm gamma/beta)
         conv1_params = 3 * 3 * 3 * 32 + 32     # 3×3 kernels, 3→32 channels
+        bn1_params = 32 * 2                    # gamma + beta
         conv2_params = 3 * 3 * 32 * 64 + 64    # 3×3 kernels, 32→64 channels
+        bn2_params = 64 * 2                    # gamma + beta
         fc1_params = 64 * 6 * 6 * 256 + 256    # Flattened→256
         fc2_params = 256 * 10 + 10             # 256→10 classes
-        self.total_params = conv1_params + conv2_params + fc1_params + fc2_params
+        self.total_params = conv1_params + bn1_params + conv2_params + bn2_params + fc1_params + fc2_params
         
-        print(f"   Conv1: 3→32 channels (YOUR Conv2D extracts edges)")
-        print(f"   Conv2: 32→64 channels (YOUR Conv2D builds shapes)")
+        print(f"   Conv1: 3→32 channels + BatchNorm (YOUR modules!)")
+        print(f"   Conv2: 32→64 channels + BatchNorm (YOUR modules!)")
         print(f"   Dense: 2304→256→10 (YOUR Linear classification)")
         print(f"   Total parameters: {self.total_params:,}")
+    
+    def train(self):
+        """Set model to training mode."""
+        self._training = True
+        self.bn1.train()
+        self.bn2.train()
+        return self
+    
+    def eval(self):
+        """Set model to evaluation mode."""
+        self._training = False
+        self.bn1.eval()
+        self.bn2.eval()
+        return self
         
     def forward(self, x):
         """Forward pass through YOUR CNN architecture."""
-        # First conv block: Extract low-level features (edges, colors)
+        # First conv block: Conv → BatchNorm → ReLU → Pool (modern pattern)
         x = self.conv1(x)           # Module 09: YOUR Conv2D!
+        x = self.bn1(x)             # Module 09: YOUR BatchNorm! Normalizes activations
         x = self.relu(x)            # Module 03: YOUR ReLU!
         x = self.pool(x)            # Module 09: YOUR MaxPool2D!
         
-        # Second conv block: Build higher-level features (shapes, patterns)
+        # Second conv block: Same modern pattern
         x = self.conv2(x)           # Module 09: YOUR Conv2D!
+        x = self.bn2(x)             # Module 09: YOUR BatchNorm!
         x = self.relu(x)            # Module 03: YOUR ReLU!
         x = self.pool(x)            # Module 09: YOUR MaxPool2D!
         
@@ -173,11 +225,17 @@ class CIFARCNN:
         
         return x
     
+    def __call__(self, x):
+        """Enable model(x) syntax."""
+        return self.forward(x)
+    
     def parameters(self):
         """Get all trainable parameters from YOUR layers."""
         return [
             self.conv1.weight, self.conv1.bias,
+            self.bn1.gamma, self.bn1.beta,
             self.conv2.weight, self.conv2.bias,
+            self.bn2.gamma, self.bn2.beta,
             self.fc1.weights, self.fc1.bias,
             self.fc2.weights, self.fc2.bias
         ]
@@ -223,7 +281,11 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
     print(f"   Dataset: {len(train_loader.dataset)} color images")
     print(f"   Batch size: {train_loader.batch_size}")
     print(f"   YOUR DataLoader (Module 10) handles batching!")
+    print(f"   YOUR BatchNorm (Module 09) uses batch statistics!")
     print(f"   YOUR Adam optimizer (Module 07)")
+    
+    # Set model to training mode - BatchNorm uses batch statistics
+    model.train()
     
     # YOUR optimizer
     optimizer = Adam(model.parameters(), learning_rate=learning_rate)
@@ -290,6 +352,10 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
 def test_cifar_cnn(model, test_loader, class_names):
     """Test YOUR CNN on CIFAR-10 test set using DataLoader."""
     print("\n🧪 Testing YOUR CNN on Natural Images with YOUR DataLoader...")
+    
+    # Set model to evaluation mode - BatchNorm uses running statistics
+    model.eval()
+    print("   ℹ️  Model in eval mode: BatchNorm uses running statistics")
     
     correct = 0
     total = 0
@@ -422,14 +488,18 @@ def main():
     
     # Step 2: Create Datasets and DataLoaders using YOUR Module 10!
     print("\n📦 Creating YOUR Dataset and DataLoader (Module 10)...")
-    train_dataset = CIFARDataset(train_data, train_labels)
-    test_dataset = CIFARDataset(test_data, test_labels)
+    
+    # Training with augmentation - YOUR transforms from Module 08!
+    train_dataset = CIFARDataset(train_data, train_labels, transform=train_transforms)
+    # Testing without augmentation - we want consistent evaluation
+    test_dataset = CIFARDataset(test_data, test_labels, transform=None)
     
     # YOUR DataLoader handles batching and shuffling!
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=100, shuffle=False)
     print(f"   Train DataLoader: {len(train_dataset)} samples, batch_size={args.batch_size}")
     print(f"   Test DataLoader: {len(test_dataset)} samples, batch_size=100")
+    print(f"   ✅ Data Augmentation: RandomFlip + RandomCrop (training only)")
     
     # Step 3: Build CNN
     model = CIFARCNN()

@@ -6,11 +6,12 @@ Join, update, and manage your community profile for the global builder map.
 
 import json
 import os
+import webbrowser
+import urllib.parse
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-import uuid
 
 from rich.panel import Panel
 from rich.table import Table
@@ -30,7 +31,7 @@ class CommunityCommand(BaseCommand):
     
     @property
     def description(self) -> str:
-        return "Community management - join, update, and manage your profile"
+        return "Join the global community - connect with builders worldwide"
     
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add community subcommands."""
@@ -110,13 +111,35 @@ class CommunityCommand(BaseCommand):
             'profile',
             help='View your community profile'
         )
+
+        # Leaderboard command (opens browser)
+        leaderboard_parser = subparsers.add_parser(
+            'leaderboard',
+            help='View global leaderboard (opens in browser)'
+        )
+
+        # Compete command (opens browser)
+        compete_parser = subparsers.add_parser(
+            'compete',
+            help='Join competitions and challenges (opens in browser)'
+        )
+
+        # Submit command
+        submit_parser = subparsers.add_parser(
+            'submit',
+            help='Submit your benchmark results to the leaderboard'
+        )
+        submit_parser.add_argument(
+            'submission_file',
+            help='Path to submission JSON file (e.g., submission.json)'
+        )
     
     def run(self, args: Namespace) -> int:
         """Execute community command."""
         if not args.community_command:
-            self.console.print("[yellow]Please specify a community command: join, update, leave, stats, or profile[/yellow]")
+            self.console.print("[yellow]Please specify a community command: join, leaderboard, compete, profile[/yellow]")
             return 1
-        
+
         if args.community_command == 'join':
             return self._join_community(args)
         elif args.community_command == 'update':
@@ -127,149 +150,137 @@ class CommunityCommand(BaseCommand):
             return self._show_stats(args)
         elif args.community_command == 'profile':
             return self._show_profile(args)
+        elif args.community_command == 'leaderboard':
+            return self._open_leaderboard(args)
+        elif args.community_command == 'compete':
+            return self._open_compete(args)
+        elif args.community_command == 'submit':
+            return self._submit_benchmark(args)
         else:
             self.console.print(f"[red]Unknown community command: {args.community_command}[/red]")
             return 1
     
     def _join_community(self, args: Namespace) -> int:
-        """Join the TinyTorch community."""
+        """Join the TinyTorch community - GitHub-first flow."""
         console = self.console
-        
+
         # Check if already joined
         profile = self._get_profile()
         if profile:
+            github_username = profile.get("github_username")
+            profile_url = profile.get("profile_url", "https://tinytorch.ai/community")
             console.print(Panel(
-                "[yellow]⚠️  You're already in the community![/yellow]\n\n"
-                "Use [cyan]tito community update[/cyan] to update your profile\n"
-                "Use [cyan]tito community profile[/cyan] to view your profile",
+                f"[yellow]⚠️  You're already in the community![/yellow]\n\n"
+                f"GitHub: [cyan]@{github_username}[/cyan]\n"
+                f"Profile: [cyan]{profile_url}[/cyan]\n\n"
+                f"Update online: [cyan]{profile_url}[/cyan]\n"
+                f"View profile: [cyan]tito community profile[/cyan]",
                 title="Already Joined",
                 border_style="yellow"
             ))
             return 0
-        
+
         console.print(Panel(
             "[bold cyan]🌍 Join the TinyTorch Community[/bold cyan]\n\n"
-            "Be part of the global community of ML systems builders!\n"
-            "Your information helps us build a community map.",
+            "Connect with ML systems builders worldwide!\n"
+            "We'll ask 3 quick questions, then open your browser to complete your profile.",
             title="Welcome",
             border_style="cyan"
         ))
-        
-        # Explicit consent
-        console.print("\n[yellow]📋 Privacy & Consent[/yellow]")
-        console.print("We collect optional information to build a community map:\n")
-        console.print("  • Country (for global visualization)")
-        console.print("  • Institution (for cohort identification)")
-        console.print("  • Course type (for community insights)")
-        console.print("  • Experience level (for learning support)\n")
-        console.print("[dim]All fields are optional. We use anonymous IDs (no personal names).[/dim]")
-        console.print("[dim]Data is stored locally in .tinytorch/ (project directory).[/dim]\n")
-        
-        consent = Confirm.ask(
-            "[cyan]Do you consent to sharing this optional information?[/cyan]",
-            default=True
-        )
-        
-        if not consent:
-            console.print(Panel(
-                "[yellow]No problem! You can join later with: [cyan]tito community join[/cyan][/yellow]",
-                title="Cancelled",
-                border_style="yellow"
-            ))
-            return 0
-        
-        # Collect information
-        console.print("\n[cyan]Let's collect some information (all optional):[/cyan]\n")
-        
-        # Country
-        country = args.country
-        if not country:
-            country = self._detect_country()
-            if country:
-                console.print(f"[dim]Detected country: {country}[/dim]")
+
+        console.print("\n[dim]Your data:[/dim]")
+        console.print("  • Stored locally in [cyan].tinytorch/community.json[/cyan]")
+        console.print("  • GitHub username for authentication")
+        console.print("  • Basic info shared with community (country, institution)")
+        console.print("  • Full profile completed on tinytorch.ai\n")
+
+        # Question 1: GitHub username (REQUIRED)
+        console.print("[bold]Question 1/3[/bold]")
+        github_username = Prompt.ask(
+            "[cyan]GitHub username[/cyan] (required for authentication)",
+            default=""
+        ).strip()
+
+        if not github_username:
+            console.print("[red]❌ GitHub username is required to join the community[/red]")
+            console.print("[dim]Your GitHub username is used to:\n"
+                        "  • Authenticate your profile\n  "
+                        "  • Link to your projects\n"
+                        "  • Connect with other builders[/dim]")
+            return 1
+
+        # Question 2: Country (optional, auto-detect)
+        console.print("\n[bold]Question 2/3[/bold]")
+        country = self._detect_country()
+        if country:
+            console.print(f"[dim]Auto-detected: {country}[/dim]")
         country = Prompt.ask(
-            "[cyan]Country[/cyan] (optional, for community map)",
+            "[cyan]Country[/cyan] (for community map, optional)",
             default=country or "",
             show_default=False
-        )
-        
-        # Institution
-        institution = args.institution
-        if not institution:
-            institution = Prompt.ask(
-                "[cyan]Institution/School[/cyan] (optional)",
-                default="",
-                show_default=False
-            )
-        
-        # Course type
-        course_type = args.course_type
-        if not course_type:
-            course_type = Prompt.ask(
-                "[cyan]Course Type[/cyan]",
-                choices=['university', 'bootcamp', 'self-paced', 'other', ''],
-                default='',
-                show_default=False
-            )
-        
-        # Experience level
-        experience = args.experience
-        if not experience:
-            experience = Prompt.ask(
-                "[cyan]Experience Level[/cyan]",
-                choices=['beginner', 'intermediate', 'advanced', 'expert', ''],
-                default='',
-                show_default=False
-            )
-        
-        # Create profile
+        ).strip()
+
+        # Question 3: Institution (optional)
+        console.print("\n[bold]Question 3/3[/bold]")
+        institution = Prompt.ask(
+            "[cyan]Institution/University[/cyan] (optional)",
+            default="",
+            show_default=False
+        ).strip()
+
+        # Create local profile
         profile = {
-            "anonymous_id": str(uuid.uuid4()),
+            "github_username": github_username,
             "joined_at": datetime.now().isoformat(),
-            "location": {
-                "country": country or None
-            },
-            "institution": {
-                "name": institution or None,
-                "type": None  # Could be auto-detected later
-            },
-            "context": {
-                "course_type": course_type or None,
-                "experience_level": experience or None,
-                "cohort": self._determine_cohort()  # e.g., "Fall 2024"
-            },
-            "progress": {
-                "setup_verified": False,
-                "milestones_passed": 0,
-                "modules_completed": 0,
-                "capstone_score": None
-            }
+            "country": country or None,
+            "institution": institution or None,
+            "profile_url": f"https://tinytorch.ai/community/{github_username}",
+            "last_synced": None
         }
-        
-        # Save profile
+
+        # Save profile locally
         self._save_profile(profile)
-        
-        # Get config for website URL
-        config = self._get_config()
-        map_url = config.get("website", {}).get("community_map_url", "https://tinytorch.ai/community")
-        
-        # Show welcome message
+
+        # Build URL with pre-filled params
+        base_url = "https://tinytorch.ai/community/join"
+        params = {
+            "github": github_username,
+        }
+        if country:
+            params["country"] = country
+        if institution:
+            params["institution"] = institution
+
+        signup_url = f"{base_url}?{urllib.parse.urlencode(params)}"
+
+        # Show success and open browser
         console.print("\n")
         console.print(Panel(
-            f"[bold green]✅ You've joined the TinyTorch Community![/bold green]\n\n"
-            f"📍 Location: {country or 'Not specified'}\n"
-            f"🏫 Institution: {institution or 'Not specified'}\n"
-            f"📚 Course Type: {course_type or 'Not specified'}\n"
-            f"🎯 Experience: {experience or 'Not specified'}\n\n"
-            f"🌍 View community map: [cyan]{map_url}[/cyan]\n\n"
-            f"💡 Update your profile: [cyan]tito community update[/cyan]",
-            title="Welcome to the Community!",
+            f"[bold green]✅ Local profile created![/bold green]\n\n"
+            f"👤 GitHub: [cyan]@{github_username}[/cyan]\n"
+            f"📍 Country: {country or '[dim]Not specified[/dim]'}\n"
+            f"🏫 Institution: {institution or '[dim]Not specified[/dim]'}\n\n"
+            f"[bold cyan]🌐 Opening browser to complete your profile...[/bold cyan]\n"
+            f"[dim]URL: {signup_url}[/dim]\n\n"
+            f"Complete your profile online to:\n"
+            f"  • Authenticate with GitHub OAuth\n"
+            f"  • Add bio, interests, and social links\n"
+            f"  • Join the global community map\n"
+            f"  • Connect with other builders",
+            title="Almost There!",
             border_style="green"
         ))
-        
-        # Stub: Notify website of join
-        self._notify_website_join(profile)
-        
+
+        # Open browser
+        try:
+            webbrowser.open(signup_url)
+            console.print("\n[green]✓[/green] Browser opened! Complete your profile there.")
+        except Exception as e:
+            console.print(f"\n[yellow]⚠️  Could not open browser automatically[/yellow]")
+            console.print(f"[dim]Please visit: {signup_url}[/dim]")
+
+        console.print(f"\n[dim]💡 View profile later: [cyan]tito community profile[/cyan][/dim]")
+
         return 0
     
     def _update_profile(self, args: Namespace) -> int:
@@ -675,3 +686,174 @@ class CommunityCommand(BaseCommand):
             #     self.console.print(f"[dim]Note: Could not sync with website: {e}[/dim]")
             #     self.console.print("[dim]Profile removed locally.[/dim]")
             pass
+
+    def _open_leaderboard(self, args: Namespace) -> int:
+        """Open community leaderboard in browser."""
+        import webbrowser
+
+        leaderboard_url = "https://tinytorch.ai/community/leaderboard"
+
+        self.console.print(f"[blue]🏆 Opening leaderboard...[/blue]")
+        try:
+            webbrowser.open(leaderboard_url)
+            self.console.print(f"[green]✓[/green] Browser opened: [cyan]{leaderboard_url}[/cyan]")
+        except Exception as e:
+            self.console.print(f"[yellow]⚠️  Could not open browser automatically[/yellow]")
+            self.console.print(f"[dim]Please visit: {leaderboard_url}[/dim]")
+
+        return 0
+
+    def _open_compete(self, args: Namespace) -> int:
+        """Open competitions page in browser."""
+        import webbrowser
+
+        compete_url = "https://tinytorch.ai/community/compete"
+
+        self.console.print(f"[blue]🎯 Opening competitions...[/blue]")
+        try:
+            webbrowser.open(compete_url)
+            self.console.print(f"[green]✓[/green] Browser opened: [cyan]{compete_url}[/cyan]")
+        except Exception as e:
+            self.console.print(f"[yellow]⚠️  Could not open browser automatically[/yellow]")
+            self.console.print(f"[dim]Please visit: {compete_url}[/dim]")
+
+        return 0
+
+    def _submit_benchmark(self, args: Namespace) -> int:
+        """Submit benchmark results to the leaderboard."""
+        console = self.console
+        submission_file = Path(args.submission_file)
+
+        # Check if file exists
+        if not submission_file.exists():
+            console.print(Panel(
+                f"[red]❌ Submission file not found[/red]\n\n"
+                f"[dim]Path: {submission_file}[/dim]\n\n"
+                f"Make sure you've generated a submission file first:\n"
+                f"  • Run Module 20 (Capstone)\n"
+                f"  • Generate submission: [cyan]save_submission(submission, 'submission.json')[/cyan]",
+                title="File Not Found",
+                border_style="red"
+            ))
+            return 1
+
+        # Load and validate submission
+        try:
+            with open(submission_file, 'r') as f:
+                submission = json.load(f)
+        except json.JSONDecodeError as e:
+            console.print(Panel(
+                f"[red]❌ Invalid JSON file[/red]\n\n"
+                f"[dim]Error: {e}[/dim]\n\n"
+                f"Make sure your file contains valid JSON.",
+                title="Invalid JSON",
+                border_style="red"
+            ))
+            return 1
+
+        # Validate submission schema
+        console.print(Panel(
+            "[cyan]🔍 Validating submission...[/cyan]",
+            title="Validation",
+            border_style="cyan"
+        ))
+
+        try:
+            # Import validation function from Module 20
+            import sys
+            sys.path.insert(0, str(self.config.project_root / "src" / "20_capstone"))
+            from importlib import import_module
+            capstone = import_module("20_capstone")
+
+            # Validate
+            capstone.validate_submission_schema(submission)
+
+            # Show validation success
+            console.print()
+            console.print("[green]✅ Submission validated successfully![/green]")
+            console.print()
+
+            # Display submission summary
+            table = Table(title="Submission Summary", show_header=True, box=None)
+            table.add_column("Field", style="cyan", width=25)
+            table.add_column("Value", style="green")
+
+            table.add_row("TinyTorch Version", submission.get('tinytorch_version', 'N/A'))
+            table.add_row("Submission Type", submission.get('submission_type', 'N/A'))
+            table.add_row("Timestamp", submission.get('timestamp', 'N/A'))
+
+            baseline = submission.get('baseline', {})
+            metrics = baseline.get('metrics', {})
+            table.add_row("", "")
+            table.add_row("[bold]Baseline Model[/bold]", "")
+            table.add_row("  Model Name", baseline.get('model_name', 'N/A'))
+            table.add_row("  Parameters", f"{metrics.get('parameter_count', 0):,}")
+            table.add_row("  Size", f"{metrics.get('model_size_mb', 0):.2f} MB")
+            table.add_row("  Accuracy", f"{metrics.get('accuracy', 0)*100:.1f}%")
+            table.add_row("  Latency", f"{metrics.get('latency_ms_mean', 0):.2f} ms")
+
+            if 'optimized' in submission:
+                optimized = submission['optimized']
+                opt_metrics = optimized.get('metrics', {})
+                improvements = submission.get('improvements', {})
+
+                table.add_row("", "")
+                table.add_row("[bold]Optimized Model[/bold]", "")
+                table.add_row("  Model Name", optimized.get('model_name', 'N/A'))
+                table.add_row("  Parameters", f"{opt_metrics.get('parameter_count', 0):,}")
+                table.add_row("  Size", f"{opt_metrics.get('model_size_mb', 0):.2f} MB")
+                table.add_row("  Accuracy", f"{opt_metrics.get('accuracy', 0)*100:.1f}%")
+                table.add_row("  Latency", f"{opt_metrics.get('latency_ms_mean', 0):.2f} ms")
+
+                table.add_row("", "")
+                table.add_row("[bold]Improvements[/bold]", "")
+                table.add_row("  Speedup", f"{improvements.get('speedup', 0):.2f}x")
+                table.add_row("  Compression", f"{improvements.get('compression_ratio', 0):.2f}x")
+                table.add_row("  Accuracy Delta", f"{improvements.get('accuracy_delta', 0)*100:+.1f}%")
+
+            console.print()
+            console.print(table)
+            console.print()
+
+        except AssertionError as e:
+            console.print(Panel(
+                f"[red]❌ Validation failed[/red]\n\n"
+                f"[dim]Error: {e}[/dim]\n\n"
+                f"Check your submission matches the required schema:\n"
+                f"  • Required fields: tinytorch_version, submission_type, timestamp, system_info, baseline\n"
+                f"  • Baseline metrics: parameter_count, model_size_mb, accuracy, latency_ms_mean\n"
+                f"  • Accuracy must be in [0, 1]\n"
+                f"  • All counts/sizes/latencies must be positive",
+                title="Validation Failed",
+                border_style="red"
+            ))
+            return 1
+        except Exception as e:
+            console.print(Panel(
+                f"[red]❌ Validation error[/red]\n\n"
+                f"[dim]Error: {e}[/dim]",
+                title="Error",
+                border_style="red"
+            ))
+            return 1
+
+        # Show "coming soon" message for actual submission
+        console.print(Panel(
+            "[bold yellow]🚧 Submission to Leaderboard - Coming Soon![/bold yellow]\n\n"
+            "[dim]Your submission has been validated successfully![/dim]\n\n"
+            "The TinyTorch community leaderboard is currently under development.\n"
+            "Soon you'll be able to:\n"
+            "  • Submit your optimized models to the global leaderboard\n"
+            "  • Compare your results with other learners worldwide\n"
+            "  • Participate in TinyML optimization challenges\n"
+            "  • Earn badges and achievements\n\n"
+            f"[green]✓[/green] Your submission file is ready: [cyan]{submission_file}[/cyan]\n"
+            "[dim]Keep this file - you'll be able to submit it once the leaderboard launches![/dim]\n\n"
+            "In the meantime:\n"
+            "  • View community: [cyan]tito community leaderboard[/cyan]\n"
+            "  • Join challenges: [cyan]tito community compete[/cyan]",
+            title="🎯 Leaderboard Coming Soon",
+            border_style="yellow"
+        ))
+
+        return 0

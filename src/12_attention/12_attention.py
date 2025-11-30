@@ -137,7 +137,7 @@ Think of attention like a sophisticated address book lookup:
 ```
 Query: "What information do I need?"
 ┌─────────────────────────────────────┐
-│ Q: [0.1, 0.8, 0.3, 0.2]            │ ← Query vector (what we're looking for)
+│ Q: [0.1, 0.8, 0.3, 0.2]             │ ← Query vector (what we're looking for)
 └─────────────────────────────────────┘
 
 Keys: "What information is available at each position?"
@@ -418,10 +418,6 @@ def test_unit_scaled_dot_product_attention():
 
     print("✅ scaled_dot_product_attention works correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_scaled_dot_product_attention()
-
 # %% [markdown]
 """
 ### 🧪 Unit Test: Scaled Dot-Product Attention
@@ -649,11 +645,10 @@ class MultiHeadAttention:
         mask_reshaped = mask
         if mask is not None and len(mask.shape) == 3:
              # Add head dimension: (batch, seq, seq) -> (batch, 1, seq, seq)
-             # Note: Tensor.reshape doesn't support adding dims easily without full shape
-             # But we can use numpy reshape on data and wrap in Tensor?
-             # Or just rely on broadcasting if mask is 2D?
-             # In the proof script, mask is None, so this is fine.
-             pass
+             # This allows the mask to broadcast across all attention heads
+             batch_size_mask, seq_len_mask, _ = mask.shape
+             mask_data = mask.data.reshape(batch_size_mask, 1, seq_len_mask, seq_len_mask)
+             mask_reshaped = Tensor(mask_data, requires_grad=False)
 
         attended, _ = scaled_dot_product_attention(Q, K, V, mask=mask_reshaped)
 
@@ -735,10 +730,6 @@ def test_unit_multihead_attention():
     assert output_small.shape == (1, 5, 32)
 
     print("✅ MultiHeadAttention works correctly!")
-
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_unit_multihead_attention()
 
 # %% [markdown]
 """
@@ -882,11 +873,6 @@ def analyze_attention_memory_overhead():
 
     print(f"\n💡 Training requires 4× memory of inference (forward + grad + 2× optimizer state)")
     print(f"🚀 For GPT-3 (96 layers, 2048 context): ~6GB just for attention gradients!")
-
-# Call the analysis functions
-analyze_attention_complexity()
-analyze_attention_timing()
-analyze_attention_memory_overhead()
 
 # %% [markdown]
 """
@@ -1046,10 +1032,6 @@ def test_attention_scenarios():
 
     print("\n✅ All attention scenarios work correctly!")
 
-# Run test immediately when developing this module
-if __name__ == "__main__":
-    test_attention_scenarios()
-
 # %% [markdown]
 """
 ### 🧪 Integration Test: Attention Scenarios
@@ -1117,15 +1099,10 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 12")
 
+# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": false}
 # Run comprehensive module test when executed directly
 if __name__ == "__main__":
     test_module()
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Attention module...")
-    test_module()
-    print("✅ Module validation complete!")
 
 # %% [markdown]
 """

@@ -31,7 +31,7 @@ pip install -r requirements.txt
 pip install nbgrader
 
 # Verify installation
-tito system doctor
+tito system health
 ```
 
 **Step 2: Initialize Grading (10 minutes)**
@@ -376,7 +376,7 @@ While auto-grading handles 70%, focus manual review on:
 ### Environment Problems
 ```bash
 # Student fix:
-tito system doctor
+tito system health
 tito system reset
 ```
 

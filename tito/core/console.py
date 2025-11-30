@@ -33,7 +33,7 @@ def print_banner(compact: bool = False):
         banner_text.append("Tiny", style="dim cyan")
         banner_text.append("🔥", style="red")
         banner_text.append("TORCH", style="bold orange1")
-        banner_text.append(": Build ML Systems from Scratch", style="dim")
+        banner_text.append(": Don't just import it. Build it.", style="dim")
         console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
 def print_compact_banner():
@@ -44,7 +44,7 @@ def print_compact_banner():
     banner_text.append("Tiny", style="dim cyan")
     banner_text.append("\n🔥", style="red")
     banner_text.append("TORCH", style="bold orange1")
-    banner_text.append(": Build ML Systems from Scratch", style="dim")
+    banner_text.append(": Don't just import it. Build it.", style="dim")
     console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
 def print_ascii_logo(compact: bool = False):
@@ -65,14 +65,14 @@ def print_ascii_logo(compact: bool = False):
     # Add/remove spaces at the beginning of each line to adjust positioning
     
     logo_lines = [
-        # Flames above TORCH letters
-        "         🔥                                  🔥",             # Flames above T-O-R-C-H
-        "      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",           # TORCH line 1
-        "      ╚T═██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",           # TORCH line 2
-        "       I ██║   ██║   ██║██████╔╝██║     ███████║",           # TORCH line 3
-        "       N ██║   ██║   ██║██╔══██╗██║     ██╔══██║",           # TORCH line 4
-        "       Y ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",           # TORCH line 5
-        "         ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝"            # TORCH line 6
+        # Flames positioned closer to T and H for visual cohesion
+        "      🔥                                         🔥",              # Flames above T and H
+        "      ████████╗  ██████╗  ██████╗   ██████╗ ██╗  ██╗",           # TORCH line 1
+        "      ╚T═██╔══╝ ██╔═══██╗ ██╔══██╗ ██╔════╝ ██║  ██║",           # TORCH line 2
+        "       I ██║    ██║   ██║ ██████╔╝ ██║      ███████║",           # TORCH line 3
+        "       N ██║    ██║   ██║ ██╔══██╗ ██║      ██╔══██║",           # TORCH line 4
+        "       Y ██║    ╚██████╔╝ ██║  ██║ ╚██████╗ ██║  ██║",           # TORCH line 5
+        "         ╚═╝     ╚═════╝  ╚═╝  ╚═╝  ╚═════╝ ╚═╝  ╚═╝"            # TORCH line 6
     ]
     
     # ============================================
@@ -85,7 +85,7 @@ def print_ascii_logo(compact: bool = False):
     FLAME_COLOR = "yellow"              # Color for 🔥 emoji
     TINY_COLOR = "bold orange1"         # Color for "tiny" text (flame effect!)
     TORCH_COLOR = "bold white"          # Color for "TORCH" text (better contrast)
-    TAGLINE_COLOR = "orange1"          # Color for tagline
+    TAGLINE_COLOR = "bold orange1"      # Color for tagline (matches flame glow)
     
     # Process and apply colors to each line
     for i, line in enumerate(logo_lines):
@@ -102,8 +102,8 @@ def print_ascii_logo(compact: bool = False):
             logo_text.append(line, style=TORCH_COLOR)
         logo_text.append("\n")
     
-    # Add tagline
-    logo_text.append("\n🔥 Don't import the future. Build it from tensors up.", style="orange1")
+    # Add tagline (aligned under TORCH, matches flame glow)
+    logo_text.append("\n                🔥 Don't import it. Build it.", style=TAGLINE_COLOR)
     logo_text.append("\n")
         
     # Combine logo and tagline

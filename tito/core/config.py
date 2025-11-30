@@ -31,7 +31,8 @@ class CLIConfig:
     def __post_init__(self):
         """Initialize default values."""
         if self.required_packages is None:
-            self.required_packages = ['numpy', 'pytest', 'rich']
+            # Core dependencies from requirements.txt (required section)
+            self.required_packages = ['numpy', 'rich', 'yaml', 'pytest', 'jupytext']
     
     @classmethod
     def from_project_root(cls, project_root: Optional[Path] = None) -> 'CLIConfig':

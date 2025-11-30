@@ -186,10 +186,10 @@ But here's the surprising truth: **we don't need all that precision for most AI 
 ```
 Model Memory Requirements (FP32):
 ┌─────────────────────────────────────────────────────────────┐
-│ BERT-Base:   110M params ×  4 bytes = 440MB                │
-│ GPT-2:       1.5B params ×  4 bytes = 6GB                  │
-│ GPT-3:       175B params × 4 bytes = 700GB                 │
-│ Your Phone:  Available RAM = 4-8GB                         │
+│ BERT-Base:   110M params ×  4 bytes = 440MB                 │
+│ GPT-2:       1.5B params ×  4 bytes = 6GB                   │
+│ GPT-3:       175B params × 4 bytes = 700GB                  │
+│ Your Phone:  Available RAM = 4-8GB                          │
 └─────────────────────────────────────────────────────────────┘
                         ↑
                     Problem!
@@ -201,9 +201,9 @@ What if we could represent each weight with just 8 bits instead of 32?
 
 ```
 Before Quantization (FP32):
-┌──────────────────────────────────┐
-│  3.14159265  │  2.71828183  │   │  32 bits each
-└──────────────────────────────────┘
+┌───────────────────────────────┐
+│  3.14159265   │  2.71828183   │  32 bits each
+└───────────────────────────────┘
 
 After Quantization (INT8):
 ┌────────┬────────┬────────┬────────┐
@@ -272,7 +272,7 @@ Quantization (FP32 → INT8):
 
 Dequantization (INT8 → FP32):
 ┌─────────────────────────────────────────────────────────┐
-│  float_value = (quantized - zero_point) × scale        │
+│  float_value = (quantized - zero_point) × scale         │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -364,18 +364,18 @@ We'll build quantization in logical layers, each building on the previous:
 Quantization System Architecture:
 
 ┌─────────────────────────────────────────────────────────────┐
-│                    Layer 4: Model Quantization             │
-│  quantize_model() - Convert entire neural networks         │
+│                    Layer 4: Model Quantization              │
+│  quantize_model() - Convert entire neural networks          │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 3: Layer Quantization             │
-│  QuantizedLinear - Quantized linear transformations        │
+│                    Layer 3: Layer Quantization              │
+│  QuantizedLinear - Quantized linear transformations         │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 2: Tensor Operations              │
-│  quantize_int8() - Core quantization algorithm             │
-│  dequantize_int8() - Restore to floating point             │
+│                    Layer 2: Tensor Operations               │
+│  quantize_int8() - Core quantization algorithm              │
+│  dequantize_int8() - Restore to floating point              │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 1: Foundation                     │
-│  Scale & Zero Point Calculation - Parameter optimization   │
+│                    Layer 1: Foundation                      │
+│  Scale & Zero Point Calculation - Parameter optimization    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -407,10 +407,10 @@ Quantization Process Visualization:
 
 Step 1: Analyze Range              Step 2: Calculate Parameters       Step 3: Apply Formula
 ┌─────────────────────────┐    ┌─────────────────────────┐  ┌─────────────────────────┐
-│ Input: [-1.5, 0.2, 2.8]    │    │ Min: -1.5               │  │ quantized = round(     │
-│                         │    │ Max: 2.8                │  │   (value - zp*scale)   │
-│ Find min/max values     │ →  │ Range: 4.3              │ →│   / scale)             │
-│                         │    │ Scale: 4.3/255 = 0.017  │  │                       │
+│ Input: [-1.5, 0.2, 2.8] │    │ Min: -1.5               │  │ quantized = round(      │
+│                         │    │ Max: 2.8                │  │   (value - zp*scale)    │
+│ Find min/max values     │ →  │ Range: 4.3              │ →│   / scale)              │
+│                         │    │ Scale: 4.3/255 = 0.017  │  │                         │
 │                         │    │ Zero Point: 88          │  │ Result: [-128, 12, 127] │
 └─────────────────────────┘    └─────────────────────────┘  └─────────────────────────┘
 ```
@@ -537,24 +537,24 @@ Dequantization Process:
 
 INT8 Values + Parameters → FP32 Reconstruction
 
-┌─────────────────────────┐
-│ Quantized: [-128, 12, 127]   │
-│ Scale: 0.017               │
-│ Zero Point: 88             │
-└─────────────────────────┘
-           │
-           ▼ Apply Formula
-┌─────────────────────────┐
-│ FP32 = (quantized - zero_point) │
-│        × scale                  │
-└─────────────────────────┘
-           │
-           ▼
-┌─────────────────────────┐
-│ Result: [-1.496, 0.204, 2.799]│
-│ Original: [-1.5, 0.2, 2.8]  │
-│ Error: [0.004, 0.004, 0.001] │
-└─────────────────────────┘
+┌───────────────────────────────────┐
+│ Quantized: [-128, 12, 127]        │
+│ Scale: 0.017                      │
+│ Zero Point: 88                    │
+└───────────────────────────────────┘
+                 │
+                 ▼ Apply Formula
+┌───────────────────────────────────┐
+│ FP32 = (quantized - zero_point)   │
+│        × scale                    │
+└───────────────────────────────────┘
+                 │
+                 ▼
+┌───────────────────────────────────┐
+│ Result: [-1.496, 0.204, 2.799]    │
+│ Original: [-1.5, 0.2, 2.8]        │
+│ Error: [0.004, 0.004, 0.001]      │
+└───────────────────────────────────┘
        ↑
   Excellent approximation!
 ```
@@ -688,9 +688,9 @@ Calibration Process:
 
  Step 1: Collect Sample Inputs    Step 2: Analyze Distribution    Step 3: Optimize Parameters
  ┌─────────────────────────┐      ┌─────────────────────────┐    ┌─────────────────────────┐
- │ input_1: [-0.5, 0.2, ..] │      │   Min: -0.8            │    │ Scale: 0.00627          │
- │ input_2: [-0.3, 0.8, ..] │  →   │   Max: +0.8            │ →  │ Zero Point: 0           │
- │ input_3: [-0.1, 0.5, ..] │      │   Range: 1.6           │    │ Optimal for this data   │
+ │ input_1: [-0.5, 0.2, ..]│      │   Min: -0.8             │    │ Scale: 0.00627          │
+ │ input_2: [-0.3, 0.8, ..]│  →   │   Max: +0.8             │ →  │ Zero Point: 0           │
+ │ input_3: [-0.1, 0.5, ..]│      │   Range: 1.6            │    │ Optimal for this data   │
  │ ...                     │      │   Distribution: Normal  │    │ range and distribution  │
  └─────────────────────────┘      └─────────────────────────┘    └─────────────────────────┘
 ```
@@ -710,18 +710,18 @@ This class replaces regular Linear layers with quantized versions that use 4× l
 ```
 QuantizedLinear Architecture:
 
-Creation Time:                   Runtime:
-┌─────────────────────────┐         ┌─────────────────────────┐
-│ Regular Linear Layer      │         │ Input (FP32)            │
-│ ↓                       │         │ ↓                     │
-│ Quantize weights → INT8  │         │ Optional: quantize input│
-│ Quantize bias → INT8     │    →    │ ↓                     │
-│ Store quantization params │         │ Dequantize weights      │
-│ Ready for deployment!     │         │ ↓                     │
-└─────────────────────────┘         │ Matrix multiply (FP32)  │
-      One-time cost                  │ ↓                     │
-                                     │ Output (FP32)           │
-                                     └─────────────────────────┘
+Creation Time:                       Runtime:
+┌───────────────────────────────┐    ┌───────────────────────────────┐
+│ Regular Linear Layer          │    │ Input (FP32)                  │
+│ ↓                             │    │ ↓                             │
+│ Quantize weights → INT8       │    │ Optional: quantize input      │
+│ Quantize bias → INT8          │ →  │ ↓                             │
+│ Store quantization params     │    │ Dequantize weights            │
+│ Ready for deployment!         │    │ ↓                             │
+└───────────────────────────────┘    │ Matrix multiply (FP32)        │
+      One-time cost                  │ ↓                             │
+                                     │ Output (FP32)                 │
+                                     └───────────────────────────────┘
                                         Per-inference cost
 ```
 
@@ -996,15 +996,15 @@ Calibration Data Flow:
      Input Data              Layer-by-Layer Processing
          │                            │
          ▼                            ▼
-  ┌─────────────────┐    ┌───────────────────────────────────────────────────────────┐
-  │ Sample Batch 1   │    │ Layer 0: Forward → Collect activation statistics        │
-  │ Sample Batch 2   │ →  │    ↓                                                 │
-  │ ...             │    │ Layer 2: Forward → Collect activation statistics        │
-  │ Sample Batch N   │    │    ↓                                                 │
-  └─────────────────┘    │ Layer 4: Forward → Collect activation statistics        │
-                         │    ↓                                                 │
-                         │ For each layer: calibrate optimal quantization      │
-                         └───────────────────────────────────────────────────────────┘
+  ┌───────────────────┐    ┌─────────────────────────────────────────────────────────┐
+  │ Sample Batch 1    │    │ Layer 0: Forward → Collect activation statistics       │
+  │ Sample Batch 2    │ →  │    ↓                                                   │
+  │ ...               │    │ Layer 2: Forward → Collect activation statistics       │
+  │ Sample Batch N    │    │    ↓                                                   │
+  └───────────────────┘    │ Layer 4: Forward → Collect activation statistics       │
+                           │    ↓                                                   │
+                           │ For each layer: calibrate optimal quantization         │
+                           └─────────────────────────────────────────────────────────┘
 ```
 
 **Why In-Place Modification:**
@@ -1015,14 +1015,14 @@ Calibration Data Flow:
 
 **Deployment Benefits:**
 ```
-Before Quantization:            After Quantization:
-┌─────────────────────────┐     ┌─────────────────────────┐
-│ ❌ Can't fit on phone      │     │ ✅ Fits on mobile device │
-│ ❌ Slow cloud deployment   │     │ ✅ Fast edge inference   │
-│ ❌ High memory usage       │ →   │ ✅ 4× memory efficiency   │
-│ ❌ Expensive to serve      │     │ ✅ Lower serving costs    │
-│ ❌ Battery drain           │     │ ✅ Extended battery life  │
-└─────────────────────────┘     └─────────────────────────┘
+Before Quantization:              After Quantization:
+┌───────────────────────────┐     ┌───────────────────────────┐
+│ ❌ Can't fit on phone     │     │ ✅ Fits on mobile device  │
+│ ❌ Slow cloud deployment  │     │ ✅ Fast edge inference    │
+│ ❌ High memory usage      │ →   │ ✅ 4× memory efficiency   │
+│ ❌ Expensive to serve     │     │ ✅ Lower serving costs    │
+│ ❌ Battery drain          │     │ ✅ Extended battery life  │
+└───────────────────────────┘     └───────────────────────────┘
 ```
 """
 
@@ -1155,19 +1155,19 @@ This function provides detailed analysis of memory savings achieved through quan
 ```
 Memory Analysis Framework:
 
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                          Memory Breakdown Analysis                          │
-├─────────────────┬─────────────────┬─────────────────┬─────────────────┤
-│  Component      │  Original (FP32) │ Quantized (INT8) │  Savings        │
-├─────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ Layer 1 weights │    12.8 MB      │     3.2 MB      │    9.6 MB (75%)│
-│ Layer 1 bias    │     0.5 MB      │     0.1 MB      │    0.4 MB (75%)│
-│ Layer 2 weights │     2.0 MB      │     0.5 MB      │    1.5 MB (75%)│
-│ Layer 2 bias    │     0.3 MB      │     0.1 MB      │    0.2 MB (67%)│
-│ Overhead        │     0.0 MB      │     0.02 MB     │   -0.02 MB    │
-├─────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ TOTAL           │    15.6 MB      │     3.92 MB     │   11.7 MB (74%)│
-└─────────────────┴─────────────────┴─────────────────┴─────────────────┘
+┌───────────────────┬──────────────────┬──────────────────┬─────────────────┐
+│                   │  Memory Breakdown Analysis                          │
+├───────────────────┼──────────────────┼──────────────────┼─────────────────┤
+│  Component        │  Original (FP32) │ Quantized (INT8) │  Savings        │
+├───────────────────┼──────────────────┼──────────────────┼─────────────────┤
+│ Layer 1 weights   │    12.8 MB       │     3.2 MB       │  9.6 MB (75%)   │
+│ Layer 1 bias      │     0.5 MB       │     0.1 MB       │  0.4 MB (75%)   │
+│ Layer 2 weights   │     2.0 MB       │     0.5 MB       │  1.5 MB (75%)   │
+│ Layer 2 bias      │     0.3 MB       │     0.1 MB       │  0.2 MB (67%)   │
+│ Overhead          │     0.0 MB       │     0.02 MB      │ -0.02 MB        │
+├───────────────────┼──────────────────┼──────────────────┼─────────────────┤
+│ TOTAL             │    15.6 MB       │     3.92 MB      │ 11.7 MB (74%)   │
+└───────────────────┴──────────────────┴──────────────────┴─────────────────┘
                             ↑
                     4× compression ratio!
 ```
@@ -1210,6 +1210,8 @@ Output Dictionary:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "compare_model_sizes", "solution": true}
+#| export
+
 def compare_model_sizes(original_model, quantized_model) -> Dict[str, float]:
     """
     Compare memory usage between original and quantized models.
@@ -1397,25 +1399,25 @@ This analysis compares different quantization approaches used in production syst
 ```
 Strategy Comparison Framework:
 
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                           Three Advanced Strategies                           │
-├────────────────────────────┬────────────────────────────┬────────────────────────────┤
-│      Strategy 1       │      Strategy 2       │      Strategy 3       │
-│   Per-Tensor (Ours)   │   Per-Channel Scale   │   Mixed Precision     │
-├────────────────────────────┼────────────────────────────┼────────────────────────────┤
-│                        │                        │                        │
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                          Three Advanced Strategies                             │
+├──────────────────────────┬──────────────────────────┬──────────────────────────┤
+│       Strategy 1         │       Strategy 2         │       Strategy 3         │
+│    Per-Tensor (Ours)     │    Per-Channel Scale     │    Mixed Precision       │
+├──────────────────────────┼──────────────────────────┼──────────────────────────┤
+│                          │                          │                          │
 │ ┌──────────────────────┐ │ ┌──────────────────────┐ │ ┌──────────────────────┐ │
-│ │ Weights:           │ │ │ Channel 1: scale₁  │ │ │ Sensitive: FP32    │ │
-│ │ [W₁₁ W₁₂ W₁₃]       │ │ │ Channel 2: scale₂  │ │ │ Regular: INT8      │ │
-│ │ [W₂₁ W₂₂ W₂₃] scale │ │ │ Channel 3: scale₃  │ │ │                    │ │
-│ │ [W₃₁ W₃₂ W₃₃]       │ │ │                    │ │ │ Input: FP32        │ │
-│ └──────────────────────┘ │ │ Better precision   │ │ │ Output: FP32       │ │
-│                        │ │ per channel        │ │ │ Hidden: INT8       │ │
-│ Simple, fast          │ └──────────────────────┘ │ └──────────────────────┘ │
-│ Good baseline         │                        │                        │
-│                        │ More complex           │ Optimal accuracy       │
-│                        │ Better accuracy        │ Selective compression  │
-└────────────────────────────┴────────────────────────────┴────────────────────────────┘
+│ │ Weights:             │ │ │ Channel 1: scale₁   │ │ │ Sensitive: FP32      │ │
+│ │ [W₁₁ W₁₂ W₁₃]        │ │ │ Channel 2: scale₂   │ │ │ Regular: INT8        │ │
+│ │ [W₂₁ W₂₂ W₂₃] scale  │ │ │ Channel 3: scale₃   │ │ │                      │ │
+│ │ [W₃₁ W₃₂ W₃₃]        │ │ │                      │ │ │ Input: FP32          │ │
+│ └──────────────────────┘ │ │ Better precision     │ │ │ Output: FP32         │ │
+│                          │ │ per channel          │ │ │ Hidden: INT8         │ │
+│ Simple, fast             │ └──────────────────────┘ │ └──────────────────────┘ │
+│ Good baseline            │                          │                          │
+│                          │ More complex             │ Optimal accuracy         │
+│                          │ Better accuracy          │ Selective compression    │
+└──────────────────────────┴──────────────────────────┴──────────────────────────┘
 ```
 
 **Strategy 1: Per-Tensor Quantization (Our Implementation)**

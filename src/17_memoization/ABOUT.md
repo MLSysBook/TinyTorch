@@ -274,8 +274,8 @@ Ensure you understand transformers and profiling:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module transformers
-tito test --module profiling
+tito test transformers
+tito test profiling
 ```
 
 **Required Understanding**:
@@ -293,7 +293,7 @@ tito test --module profiling
 5. **Implement enable_kv_cache()**: Non-invasively patch model attention layers
 6. **Build cached attention forward**: Three-path logic (training, first token, cached generation)
 7. **Measure speedup**: Profile cached vs non-cached generation, validate O(n) complexity
-8. **Export and verify**: `tito module complete 17 && tito test --module memoization`
+8. **Export and verify**: `tito module complete 17 && tito test memoization`
 
 ## Testing
 
@@ -303,7 +303,7 @@ Run the full test suite to verify memoization functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module memoization
+tito test memoization
 
 # Direct pytest execution
 python -m pytest tests/ -k memoization -v

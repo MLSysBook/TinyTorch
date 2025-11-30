@@ -428,9 +428,9 @@ Ensure you understand the foundations from previous modules:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules (all modules 1-13)
-tito test --module tensor
-tito test --module activations
-tito test --module transformer
+tito test tensor
+tito test activations
+tito test transformer
 ```
 
 **Why these prerequisites**: You'll profile models built in Modules 1-13. Understanding the implementations helps you interpret profiling results (e.g., why attention is memory-bound).
@@ -443,7 +443,7 @@ tito test --module transformer
 4. **Create memory profiler**: Use tracemalloc to track allocations during forward/backward
 5. **Add timing profiler**: Implement warmup runs, multiple measurements, statistical analysis
 6. **Implement advanced profiling**: Build `profile_forward_pass()` and `profile_backward_pass()` combining all metrics
-7. **Export and verify**: `tito module complete 14 && tito test --module profiling`
+7. **Export and verify**: `tito module complete 14 && tito test profiling`
 
 **Development tips**:
 ```python
@@ -478,7 +478,7 @@ Run the full test suite to verify profiling functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module profiling
+tito test profiling
 
 # Direct pytest execution
 python -m pytest tests/ -k profiling -v

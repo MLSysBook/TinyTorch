@@ -161,11 +161,11 @@ Broadcasting automatically aligns tensors of different shapes for operations:
 Broadcasting Examples:
 ┌─────────────────────────────────────────────────────────┐
 │ Scalar + Vector:                                        │
-│    5    + [1, 2, 3] → [5, 5, 5] + [1, 2, 3] = [6, 7, 8]│
+│    5    + [1, 2, 3] → [5, 5, 5] + [1, 2, 3] = [6, 7, 8] │
 │                                                         │
 │ Matrix + Vector (row-wise):                             │
-│ [[1, 2]]   [10]   [[1, 2]]   [[10, 10]]   [[11, 12]]  │
-│ [[3, 4]] + [10] = [[3, 4]] + [[10, 10]] = [[13, 14]]  │
+│ [[1, 2]]   [10]   [[1, 2]]   [[10, 10]]   [[11, 12]]    │
+│ [[3, 4]] + [10] = [[3, 4]] + [[10, 10]] = [[13, 14]]    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -207,7 +207,7 @@ Tensor Class Structure:
 │ • dtype: type (float32, int64)  │
 ├─────────────────────────────────┤
 │ Gradient Attributes (dormant):  │
-│ • requires_grad: bool          │
+│ • requires_grad: bool           │
 │ • grad: None (until Module 05)  │
 ├─────────────────────────────────┤
 │ Operations:                     │
@@ -374,8 +374,9 @@ class Tensor:
             new_shape[unknown_idx] = unknown_dim
             new_shape = tuple(new_shape)
         if np.prod(new_shape) != self.size:
+            target_size = int(np.prod(new_shape))
             raise ValueError(
-                f"Cannot reshape tensor of size {self.size} to shape {new_shape}"
+                f"Total elements must match: {self.size} ≠ {target_size}"
             )
         reshaped_data = np.reshape(self.data, new_shape)
         result = Tensor(reshaped_data, requires_grad=self.requires_grad)
@@ -833,7 +834,7 @@ Neural Network Usage:
 ┌─────────────────────┬─────────────────────┬─────────────────────┐
 │ Weight Matrices     │ Attention Mechanism │ Gradient Computation│
 ├─────────────────────┼─────────────────────┼─────────────────────┤
-│ Forward: X @ W      │ Q @ K^T attention   │ ∂L/∂W = X^T @ ∂L/∂Y│
+│ Forward: X @ W      │ Q @ K^T attention   │ ∂L/∂W = X^T @ ∂L/∂Y │
 │ Backward: X @ W^T   │ scores              │                     │
 └─────────────────────┴─────────────────────┴─────────────────────┘
 ```
@@ -1101,19 +1102,19 @@ Gradient System Evolution:
 Module 01: Tensor with dormant gradients
   ┌─────────────────────────────────┐
   │ Tensor                          │
-  │ • data: actual values          │
-  │ • requires_grad: False         │ ← Present but unused
-  │ • grad: None                   │ ← Present but stays None
-  │ • backward(): pass             │ ← Present but does nothing
+  │ • data: actual values           │
+  │ • requires_grad: False          │ ← Present but unused
+  │ • grad: None                    │ ← Present but stays None
+  │ • backward(): pass              │ ← Present but does nothing
   └─────────────────────────────────┘
          ↓ Module 05 activates these
 Module 05: Tensor with active gradients
   ┌─────────────────────────────────┐
   │ Tensor                          │
-  │ • data: actual values          │
-  │ • requires_grad: True          │ ← Now controls gradient tracking
-  │ • grad: computed gradients     │ ← Now accumulates gradients
-  │ • backward(): computes grads   │ ← Now implements chain rule
+  │ • data: actual values           │
+  │ • requires_grad: True           │ ← Now controls gradient tracking
+  │ • grad: computed gradients      │ ← Now accumulates gradients
+  │ • backward(): computes grads    │ ← Now implements chain rule
   └─────────────────────────────────┘
 ```
 

@@ -17,34 +17,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 from .base import BaseCommand
-from .checkpoint import CheckpointSystem
 
 class SrcCommand(BaseCommand):
-    # Module to checkpoint mapping - defines which checkpoint is triggered after each module
-    MODULE_TO_CHECKPOINT = {
-        # Direct mapping: Module NN → Checkpoint NN for intuitive workflow
-        # Note: Checkpoint 00 (Environment) is standalone, not tied to any module
-        "01_tensor": "01",         # Tensor → Foundation checkpoint
-        "02_activations": "02",    # Activations → Intelligence checkpoint
-        "03_layers": "03",         # Layers → Components checkpoint
-        "04_losses": "04",         # Losses → Networks checkpoint
-        "05_autograd": "05",       # Autograd → Learning checkpoint
-        "06_optimizers": "06",     # Optimizers → Optimization checkpoint
-        "07_training": "07",       # Training → Training checkpoint
-        "08_spatial": "08",        # Spatial → Vision checkpoint
-        "09_dataloader": "09",     # Dataloader → Data checkpoint
-        "10_tokenization": "10",   # Tokenization → Language checkpoint
-        "11_embeddings": "11",     # Embeddings → Representation checkpoint
-        "12_attention": "12",      # Attention → Attention checkpoint
-        "13_transformers": "13",   # Transformers → Architecture checkpoint
-        "14_profiling": "14",      # Profiling → Systems checkpoint
-        "15_acceleration": "15",   # Acceleration → Acceleration checkpoint
-        "16_quantization": "16",   # Quantization → Quantization checkpoint
-        "17_compression": "17",    # Compression → Compression checkpoint
-        "18_caching": "18",        # Caching → Caching checkpoint
-        "19_benchmarking": "19",   # Benchmarking → Competition checkpoint
-        "20_capstone": "20",       # Capstone → TinyGPT Capstone checkpoint
-    }
 
     @property
     def name(self) -> str:
@@ -146,73 +120,6 @@ class SrcCommand(BaseCommand):
         
         return sorted(modules)
 
-    def _run_checkpoint_test(self, module_name: str) -> Dict:
-        """Run checkpoint test for a module if mapping exists."""
-        if module_name not in self.MODULE_TO_CHECKPOINT:
-            return {"skipped": True, "reason": f"No checkpoint mapping for module {module_name}"}
-        
-        checkpoint_id = self.MODULE_TO_CHECKPOINT[module_name]
-        checkpoint_system = CheckpointSystem(self.config)
-        
-        console = self.console
-        console.print(f"\n[bold cyan]🧪 Running Checkpoint Test[/bold cyan]")
-        
-        checkpoint = checkpoint_system.CHECKPOINTS[checkpoint_id]
-        console.print(f"[bold]Checkpoint {checkpoint_id}: {checkpoint['name']}[/bold]")
-        console.print(f"[dim]Testing: {checkpoint['capability']}[/dim]")
-        
-        with console.status(f"[bold green]Running checkpoint {checkpoint_id} test...", spinner="dots"):
-            result = checkpoint_system.run_checkpoint_test(checkpoint_id)
-        
-        return result
-
-    def _show_checkpoint_results(self, result: Dict, module_name: str) -> None:
-        """Display checkpoint test results with celebration or guidance."""
-        console = self.console
-        
-        if result.get("skipped"):
-            console.print(f"[dim]No checkpoint test for {module_name}[/dim]")
-            return
-        
-        if result["success"]:
-            # Celebration and progress feedback
-            checkpoint_name = result.get("checkpoint_name", "Unknown")
-            capability = result.get("capability", "")
-            
-            console.print(Panel(
-                f"[bold green]🎉 Checkpoint Achieved![/bold green]\n\n"
-                f"[green]✅ {checkpoint_name} checkpoint unlocked![/green]\n"
-                f"[green]Capability: {capability}[/green]\n\n"
-                f"[bold cyan]🚀 Progress Update[/bold cyan]\n"
-                f"You've successfully built the {module_name} module and\n"
-                f"proven your {checkpoint_name.lower()} capabilities!",
-                title=f"Module {module_name} Complete",
-                border_style="green"
-            ))
-            
-            # Show next steps
-            self._show_next_steps(module_name)
-        else:
-            console.print(Panel(
-                f"[bold yellow]⚠️  Export Successful, Test Incomplete[/bold yellow]\n\n"
-                f"[yellow]Module {module_name} exported successfully,[/yellow]\n"
-                f"[yellow]but the checkpoint test failed.[/yellow]\n\n"
-                f"[bold]This usually means:[/bold]\n"
-                f"• Some functionality is still missing\n"
-                f"• Implementation needs refinement\n"
-                f"• Module requirements not fully met\n\n"
-                f"[dim]Check the implementation and try again[/dim]",
-                title="Integration Test Failed",
-                border_style="yellow"
-            ))
-            
-            # Show error details if available
-            if "error" in result:
-                console.print(f"\n[red]Error: {result['error']}[/red]")
-            elif result.get("stderr"):
-                console.print(f"\n[red]Test error output:[/red]")
-                console.print(f"[dim]{result['stderr']}[/dim]")
-
     def _show_next_steps(self, completed_module: str) -> None:
         """Show next steps after successful module completion."""
         console = self.console
@@ -248,7 +155,7 @@ class SrcCommand(BaseCommand):
                     console.print(f"[bold]Next Module:[/bold] {next_module}")
                     console.print(f"[dim]{next_desc}[/dim]")
                     console.print(f"\n[green]Ready to continue? Run:[/green]")
-                    console.print(f"[dim]  tito module view {next_module}[/dim]")
+                    console.print(f"[dim]  tito module start {next_module}[/dim]")
                 elif next_num > 16:
                     console.print(f"\n[bold green]🏆 Congratulations![/bold green]")
                     console.print(f"[green]You've completed all TinyTorch modules![/green]")
@@ -766,11 +673,6 @@ class SrcCommand(BaseCommand):
                 module_names = args.modules if hasattr(args, 'modules') and args.modules else None
                 if module_names and len(module_names) == 1:
                     self._show_export_details(console, module_names[0])
-                    
-                    # Run checkpoint test if requested and for single module exports
-                    if hasattr(args, 'test_checkpoint') and args.test_checkpoint:
-                        checkpoint_result = self._run_checkpoint_test(module_names[0])
-                        self._show_checkpoint_results(checkpoint_result, module_names[0])
                 else:
                     self._show_export_details(console, None)
                 

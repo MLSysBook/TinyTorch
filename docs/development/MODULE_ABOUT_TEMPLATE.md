@@ -61,8 +61,8 @@ Ensure you understand the [foundations]:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module [prerequisite1]
-tito test --module [prerequisite2]
+tito test [prerequisite1]
+tito test [prerequisite2]
 ```
 
 ### Development Workflow
@@ -71,7 +71,7 @@ tito test --module [prerequisite2]
 3. **Build [component 2]**: [Description]
 4. **Create [component 3]**: [Description]
 5. **Add [component 4]**: [Description]
-6. **Export and verify**: `tito module complete [NN] && tito test --module [modulename]`
+6. **Export and verify**: `tito module complete [NN] && tito test [modulename]`
 
 ## Testing
 
@@ -80,7 +80,7 @@ Run the full test suite to verify [module] functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module [modulename]
+tito test [modulename]
 
 # Direct pytest execution
 python -m pytest tests/ -k [modulename] -v

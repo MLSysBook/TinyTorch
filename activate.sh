@@ -11,4 +11,16 @@ else
     source .venv/bin/activate
     echo "🔥 TinyTorch environment activated"
 fi
-echo "💡 Try: tito system doctor"
+
+# Check if tito command is available, if not install package
+if ! command -v tito &> /dev/null; then
+    echo "📦 Installing TinyTorch CLI..."
+    if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+        arch -arm64 .venv/bin/pip install -e . -q
+    else
+        pip install -e . -q
+    fi
+    echo "✅ TinyTorch CLI installed"
+fi
+
+echo "💡 Try: tito system health"

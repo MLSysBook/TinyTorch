@@ -9,10 +9,10 @@ chapters:
 - file: preface
   title: "Preface"
 
-- file: ../site/intro
+- file: intro
   title: "Introduction"
 
-- file: ../site/chapters/00-introduction
+- file: chapters/00-introduction
   title: "Course Overview"
 
 # Foundation Tier (Modules 01-07)
@@ -80,14 +80,14 @@ chapters:
   title: "20. MLPerf® Edu Competition"
 
 # Appendices
-- file: ../site/chapters/milestones
+- file: chapters/milestones
   title: "Appendix A: Historical Milestones"
 
-- file: ../site/quickstart-guide
+- file: quickstart-guide
   title: "Appendix B: Quick Start Guide"
 
-- file: ../site/tito-essentials
+- file: tito-essentials
   title: "Appendix C: TITO CLI Reference"
 
-- file: ../site/resources
+- file: resources
   title: "Appendix D: Additional Resources"

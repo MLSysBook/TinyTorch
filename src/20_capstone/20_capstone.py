@@ -14,179 +14,109 @@
 
 # %% [markdown]
 """
-# Module 20: Capstone - Building TinyGPT End-to-End
+# Module 20: Capstone - Benchmarking & Submission
 
-Welcome to the capstone project of TinyTorch! You've built an entire ML framework from scratch across 19 modules. Now it's time to put it all together and build something amazing: **TinyGPT** - a complete transformer-based language model.
+Welcome to the TinyTorch capstone! You've built an entire ML framework from scratch across 19 modules. Now it's time to demonstrate your work by benchmarking a model and generating a submission that showcases your framework's capabilities.
 
 ## 🔗 Prerequisites & Progress
-**You've Built**: The complete TinyTorch framework with 19 specialized modules
-**You'll Build**: A complete end-to-end ML system demonstrating production capabilities
-**You'll Enable**: Understanding of how modern AI systems work from tensor to text generation
+**You've Built**: Complete ML framework with profiling (M14), quantization (M15), compression (M16), memoization (M17), acceleration (M18), and benchmarking (M19)
+**You'll Build**: Professional benchmark submission workflow with standardized reporting
+**You'll Enable**: Shareable, reproducible results demonstrating framework performance
 
 **Connection Map**:
 ```
-Modules 01-19 → Capstone Integration → Complete TinyGPT System
-(Foundation)    (Systems Thinking)    (Real AI Application)
+Modules 01-13 → Optimization Suite (14-18) → Benchmarking (19) → Submission (20)
+(Framework)     (Performance Tools)            (Measurement)       (Results)
 ```
 
 ## Learning Objectives
 By the end of this capstone, you will:
-1. **Integrate** all TinyTorch modules into a cohesive system
-2. **Build** a complete TinyGPT model with training and inference
-3. **Optimize** the system with quantization, pruning, and acceleration
-4. **Benchmark** performance against accuracy trade-offs
-5. **Demonstrate** end-to-end ML systems engineering
+1. **Use** Module 19's benchmarking tools to measure model performance comprehensively
+2. **Apply** optimization techniques from Modules 14-18 to improve baseline models
+3. **Generate** standardized JSON submissions following industry best practices
+4. **Validate** submissions against a schema for reproducibility
+5. **Compare** baseline vs. optimized models with quantitative metrics
+6. **Share** your results with the TinyTorch community in a professional format
 
-This capstone represents the culmination of your journey from basic tensors to a complete AI system!
-"""
+**Key Insight**: This module teaches you the complete workflow from model to measurable results - the foundation of ML systems engineering. In production, reproducible benchmarking is what separates research experiments from deployable systems.
 
-# %% [markdown]
-"""
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/20_capstone/capstone_dev.py`  
-**Building Side:** Code exports to `tinytorch.applications.tinygpt`
+**Learning Side:** You work in `src/20_capstone/20_capstone.py`
+**Building Side:** Code exports to `tinytorch.capstone`
 
 ```python
 # How to use this module:
-from tinytorch.applications.tinygpt import TinyGPT, FullPipeline
+from tinytorch.capstone import generate_submission, BenchmarkReport
+
+# Benchmark your model
+report = BenchmarkReport()
+report.benchmark_model(my_model, X_test, y_test)
+
+# Generate submission
+submission = generate_submission(report)
+submission.save("my_submission.json")
 ```
 
 **Why this matters:**
-- **Learning:** Complete ML system integrating all previous learning into real application
-- **Production:** Demonstrates how framework components compose into deployable systems
-- **Consistency:** Shows the power of modular design and clean abstractions
-- **Integration:** Validates that our 19-module journey builds something meaningful
+- **Learning:** Complete workflow from model to shareable results
+- **Production:** Professional submission format mirroring MLPerf and Papers with Code standards
+- **Community:** Share and compare results with other builders using standardized metrics
+- **Reproducibility:** Schema-validated submissions ensure results can be verified and trusted
 """
 
 # %% nbgrader={"grade": false, "grade_id": "exports", "solution": true}
-#| default_exp applications.tinygpt
+#| default_exp capstone
 #| export
 
 # %% [markdown]
 """
-## 🔮 Introduction: From Building Blocks to Intelligence
+## Introduction: From Framework to Reproducible Results
 
-Over the past 19 modules, you've built the complete infrastructure for modern ML:
+Over the past 19 modules, you built a complete ML framework from the ground up. You implemented tensors, layers, optimizers, loss functions, and advanced optimization techniques. But building a framework is only half the story.
 
-**Foundation (Modules 01-04):** Tensors, activations, layers, and losses
-**Training (Modules 05-07):** Automatic differentiation, optimizers, and training loops
-**Architecture (Modules 08-09):** Spatial processing and data loading
-**Language (Modules 10-14):** Text processing, embeddings, attention, transformers, and KV caching
-**Optimization (Modules 15-19):** Profiling, acceleration, quantization, compression, and benchmarking
+**The Missing Piece: Proving It Works**
 
-Now we integrate everything into **TinyGPT** - a complete language model that demonstrates the power of your framework.
+In production ML systems, claims without measurements are worthless. When researchers publish papers or engineers deploy models, they need to answer fundamental questions:
+- How fast is inference on this hardware?
+- How much memory does the model consume?
+- What's the accuracy-latency trade-off?
+- How do optimizations affect these metrics?
 
-```
-Your Journey:
-    Tensor Ops → Neural Networks → Training → Transformers → Optimization → TinyGPT
-    (Module 01)   (Modules 02-07)  (Mod 08-09) (Mod 10-14)    (Mod 15-19)   (Module 20)
-```
+### The Reproducibility Crisis in ML
 
-This isn't just a demo - it's a production-ready system that showcases everything you've learned about ML systems engineering.
-"""
+Modern ML faces a reproducibility crisis. Many published results can't be replicated because:
+- **Missing system details** - What hardware? What software versions?
+- **Inconsistent metrics** - Different ways to measure "accuracy" or "latency"
+- **Cherry-picked results** - Showing best runs without variance
+- **Incomplete reporting** - Omitting negative results or failed optimizations
 
-# %% [markdown]
-"""
-## 📊 Systems Architecture: The Complete ML Pipeline
+### Industry Standard: Benchmarking Frameworks
 
-This capstone demonstrates how all 19 modules integrate into a complete ML system. Let's visualize the full architecture and understand how each component contributes to the final TinyGPT system.
-
-### Complete TinyGPT System Architecture
+Professional ML systems use standardized benchmarking frameworks:
 
 ```
-                        🏗️ TINYGPT COMPLETE SYSTEM ARCHITECTURE 🏗️
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                   DATA PIPELINE                                     │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│  Raw Text     →    Tokenizer    →    DataLoader    →    Training Loop              │
-│ "Hello AI"         [72,101,..]       Batches(32)        Loss/Gradients             │
-│ (Module 10)        (Module 10)       (Module 08)       (Modules 05-07)             │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                 MODEL ARCHITECTURE                                  │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Token IDs → [Embeddings] → [Positional] → [Dropout] → [Transformer Blocks] → Output │
-│              (Module 11)    (Module 11)   (Module 03)     (Module 13)              │
-│                                                                                     │
-│  Transformer Block Details:                                                         │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Input → [LayerNorm] → [MultiHeadAttention] → [Residual] → [LayerNorm]      │   │
-│  │           (Module 03)      (Module 12)        (Module 01)   (Module 03)    │   │
-│  │                                    ↓                                       │   │
-│  │         [MLP] ← [Residual] ← [GELU] ← [Linear] ← [Linear]                  │   │
-│  │      (Module 03)  (Module 01)  (Module 02)   (Module 03)                  │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                              GENERATION PIPELINE                                    │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│  Model Output → [Sampling] → [Token Selection] → [Decoding] → Generated Text       │
-│                (Temperature)    (Greedy/Random)   (Module 10)                      │
-│                                                                                     │
-│  With KV Caching (Module 14):                                                      │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Cache Keys/Values → Only Process New Token → O(n) vs O(n²) Complexity      │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                            OPTIMIZATION PIPELINE                                    │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│  Base Model → [Profiling] → [Quantization] → [Pruning] → [Benchmarking] → Optimized │
-│              (Module 15)   (Module 17)    (Module 18)   (Module 19)                │
-│                                                                                     │
-│  Memory Reduction Pipeline:                                                         │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ FP32 (4 bytes) → INT8 (1 byte) → 90% Pruning → 40× Memory Reduction         │   │
-│  │    200MB      →      50MB      →     5MB     →     Final Size               │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+Industry Benchmarking Standards:
+┌──────────────────────────────────────────────────────────────┐
+│ MLPerf (AI Hardware)     │ Papers with Code (Research)       │
+├──────────────────────────┼───────────────────────────────────┤
+│ • Standardized tasks     │ • Leaderboards for all datasets   │
+│ • Hardware specifications│ • Reproducible results required   │
+│ • Measurement protocols  │ • Code submission mandatory       │
+│ • Fair comparisons       │ • Automated verification          │
+└──────────────────────────┴───────────────────────────────────┘
 ```
 
-### Memory Footprint Analysis for Different Model Sizes
+### What This Capstone Teaches You
 
-```
-TinyGPT Model Sizes and Memory Requirements:
+This module shows you how to:
+1. **Measure comprehensively** - Not just accuracy, but latency, memory, throughput
+2. **Report systematically** - Following a schema that ensures completeness
+3. **Enable comparison** - Using standardized metrics others can verify
+4. **Document optimizations** - Tracking what techniques were applied and their impact
+5. **Share professionally** - Generating submission files that work like research papers
 
-┌──────────────┬────────────────┬─────────────────┬─────────────────┬─────────────────┐
-│ Model Size   │   Parameters   │ Inference (MB)  │ Training (MB)   │ Quantized (MB)  │
-├──────────────┼────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ TinyGPT-1M   │    1,000,000   │      4.0        │     12.0        │      1.0        │
-│ TinyGPT-13M  │   13,000,000   │     52.0        │    156.0        │     13.0        │
-│ TinyGPT-50M  │   50,000,000   │    200.0        │    600.0        │     50.0        │
-│ TinyGPT-100M │  100,000,000   │    400.0        │   1200.0        │    100.0        │
-└──────────────┴────────────────┴─────────────────┴─────────────────┴─────────────────┘
-
-Memory Breakdown:
-• Inference = Parameters × 4 bytes (FP32)
-• Training = Parameters × 12 bytes (params + gradients + optimizer states)
-• Quantized = Parameters × 1 byte (INT8)
-```
-
-### Critical Systems Properties
-
-**Computational Complexity:**
-- **Attention Mechanism**: O(n² × d) where n=sequence_length, d=embed_dim
-- **MLP Layers**: O(n × d²) per layer
-- **Generation**: O(n²) without KV cache, O(n) with KV cache
-
-**Memory Scaling:**
-- **Linear with batch size**: memory = base_memory × batch_size
-- **Quadratic with sequence length**: attention memory ∝ seq_len²
-- **Linear with model depth**: memory ∝ num_layers
-
-**Performance Characteristics:**
-- **Training throughput**: ~100-1000 tokens/second (depending on model size)
-- **Inference latency**: ~1-10ms per token (depending on hardware)
-- **Memory efficiency**: 4× improvement with quantization, 10× with pruning
+Let's build a benchmarking and submission system worthy of production ML!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
@@ -195,2036 +125,1494 @@ import time
 import json
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
-import matplotlib.pyplot as plt
+import platform
+import sys
 
-# Import all TinyTorch modules (representing 19 modules of work!)
-### BEGIN SOLUTION
-# Module 01: Tensor foundation
+# Import TinyTorch modules
 from tinytorch.core.tensor import Tensor
-
-# Module 02: Activations
-from tinytorch.core.activations import ReLU, GELU, Sigmoid
-
-# Module 03: Layers
-from tinytorch.core.layers import Linear, Dropout
-
-# Module 04: Losses
+from tinytorch.core.layers import Linear
+from tinytorch.core.activations import ReLU
 from tinytorch.core.losses import CrossEntropyLoss
 
-# Module 05: Autograd (enhances Tensor)
-from tinytorch.core.autograd import Function
-
-# Module 06: Optimizers
-from tinytorch.core.optimizers import AdamW, SGD
-
-# Module 07: Training
-from tinytorch.core.training import Trainer, CosineSchedule
-
-# Module 08: DataLoader
-from tinytorch.data.loader import DataLoader, TensorDataset
-
-# Module 09: Spatial (for potential CNN comparisons)
-from tinytorch.core.spatial import Conv2d, MaxPool2d
-
-# Module 10: Tokenization
-from tinytorch.text.tokenization import CharTokenizer
-
-# Module 11: Embeddings
-from tinytorch.text.embeddings import Embedding, PositionalEncoding
-
-# Module 12: Attention
-from tinytorch.core.attention import MultiHeadAttention, scaled_dot_product_attention
-
-# Module 13: Transformers
-from tinytorch.models.transformer import GPT, TransformerBlock
-
-# Module 14: KV Caching
-from tinytorch.generation.kv_cache import KVCache
-
-# Module 15: Profiling
-from tinytorch.profiling.profiler import Profiler
-
-# Module 16: Acceleration
-# Note: MixedPrecisionTrainer not available in acceleration module
-# from tinytorch.optimization.acceleration import MixedPrecisionTrainer
-
-# Module 17: Quantization
-from tinytorch.optimization.quantization import quantize_model
-# QuantizedLinear is an optional advanced feature (may not be exported)
-# This is acceptable - quantize_model is the main API, QuantizedLinear is internal
-try:
-    from tinytorch.optimization.quantization import QuantizedLinear
-except ImportError:
-    # QuantizedLinear is optional - quantize_model() is the main API
-    QuantizedLinear = None
-
-# Module 18: Compression
-# These are optional advanced features (may not be exported)
-# NOTE: These are OPTIONAL - students can use quantize_model() without them
-try:
-    from tinytorch.optimization.compression import magnitude_prune, structured_prune
-except ImportError:
-    # Compression functions are optional - quantize_model() is sufficient for competition
-    magnitude_prune = None
-    structured_prune = None
-
-# Module 19: Benchmarking
-from tinytorch.benchmarking.benchmark import Benchmark
-### END SOLUTION
-
-# Constants for memory calculations
-BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
-BYTES_PER_INT8 = 1  # INT8 size in bytes
-KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
-MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
-
-print("🎉 Successfully imported all 19 TinyTorch modules!")
-print("📦 Framework Status: COMPLETE")
+print("✅ Capstone modules imported!")
+print("📊 Ready to benchmark and submit results")
 
 # %% [markdown]
 """
-## 🏗️ Stage 1: Core TinyGPT Architecture
+## 2. Foundations: The Science of Benchmarking
 
-We'll build TinyGPT in three systematic stages, each demonstrating different aspects of ML systems engineering:
+Before we build our submission system, let's understand what makes a good benchmark and why standardized reporting matters.
 
-### What We're Building: Complete Transformer Architecture
-
-The TinyGPT architecture integrates every component you've built across 19 modules into a cohesive system. Here's how all the pieces fit together:
+### The Three Pillars of Good Benchmarking
 
 ```
-                          🧠 TINYGPT ARCHITECTURE BREAKDOWN 🧠
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                INPUT PROCESSING                                     │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│  Token IDs (integers)                                                               │
-│        │                                                                            │
-│        ▼                                                                            │
-│  [Token Embedding] ──────────────── Maps vocab_size → embed_dim                    │
-│   (Module 11)          ╲                                                            │
-│        │                ╲                                                           │
-│        ▼                 ╲─→ [Element-wise Addition] ──────► Dense Vectors         │
-│  [Positional Encoding] ──╱    (Module 01)                                          │
-│   (Module 11)          ╱                                                            │
-│                       ╱                                                             │
-│        │             ╱                                                              │
-│        ▼            ╱                                                               │
-│  [Dropout] ────────╱ ←──────────────── Regularization (Module 03)                │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                              TRANSFORMER PROCESSING                                 │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  For each of num_layers (typically 4-12):                                         │
-│                                                                                     │
-│  ┌───────────────────────────────────────────────────────────────────────────┐     │
-│  │                          TRANSFORMER BLOCK                                │     │
-│  │                                                                           │     │
-│  │  Input Vectors (batch, seq_len, embed_dim)                               │     │
-│  │        │                                                                 │     │
-│  │        ▼                                                                 │     │
-│  │  ┌─────────────┐   ┌──────────────────────────────────────────────┐     │     │
-│  │  │ Layer Norm  │──▶│ Multi-Head Self-Attention (Module 12)        │     │     │
-│  │  │ (Module 03) │   │                                              │     │     │
-│  │  └─────────────┘   │ • Query, Key, Value projections              │     │     │
-│  │                    │ • Scaled dot-product attention               │     │     │
-│  │                    │ • Multi-head parallel processing             │     │     │
-│  │                    │ • Output projection                          │     │     │
-│  │                    └──────────────────────────────────────────────┘     │     │
-│  │                                     │                                   │     │
-│  │                                     ▼                                   │     │
-│  │                    ┌─────────────────────────────────────────┐         │     │
-│  │  ┌─────────────┐   │ Residual Connection (Module 01)         │         │     │
-│  │  │             │◄──┤ output = input + attention(input)       │         │     │
-│  │  │             │   └─────────────────────────────────────────┘         │     │
-│  │  │             │                                                       │     │
-│  │  │             ▼                                                       │     │
-│  │  │       ┌─────────────┐   ┌──────────────────────────────────────┐   │     │
-│  │  │       │ Layer Norm  │──▶│ Feed-Forward Network (MLP)          │   │     │
-│  │  │       │ (Module 03) │   │                                     │   │     │
-│  │  │       └─────────────┘   │ • Linear: embed_dim → 4×embed_dim   │   │     │
-│  │  │                         │ • GELU Activation (Module 02)       │   │     │
-│  │  │                         │ • Linear: 4×embed_dim → embed_dim   │   │     │
-│  │  │                         │ • Dropout                           │   │     │
-│  │  │                         └──────────────────────────────────────┘   │     │
-│  │  │                                          │                         │     │
-│  │  │                                          ▼                         │     │
-│  │  │                         ┌─────────────────────────────────────────┐   │     │
-│  │  └─────────────────────────│ Residual Connection (Module 01)         │   │     │
-│  │                            │ output = input + mlp(input)             │   │     │
-│  │                            └─────────────────────────────────────────┘   │     │
-│  └───────────────────────────────────────────────────────────────────────────┘     │
-│                                           │                                        │
-│                                           ▼                                        │
-│                               Next Transformer Block                               │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                OUTPUT PROCESSING                                    │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│  Final Hidden States (batch, seq_len, embed_dim)                                  │
-│                          │                                                         │
-│                          ▼                                                         │
-│                 [Output Linear Layer] ──────► Logits (batch, seq_len, vocab_size) │
-│                    (Module 03)                                                     │
-│                          │                                                         │
-│                          ▼                                                         │
-│                    [Softmax + Sampling] ──────► Next Token Predictions            │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+Good Benchmarks Rest on Three Pillars:
+┌─────────────────┬─────────────────┬─────────────────┐
+│ Repeatability   │ Comparability   │ Completeness    │
+├─────────────────┼─────────────────┼─────────────────┤
+│ Same result     │ Apples-to-apples│ All relevant    │
+│ every time      │ comparisons     │ metrics captured│
+│                 │                 │                 │
+│ • Fixed seeds   │ • Same hardware │ • Accuracy      │
+│ • Same data     │ • Same metrics  │ • Latency       │
+│ • Same config   │ • Same protocol │ • Memory        │
+│ • Variance      │ • Documented    │ • Throughput    │
+└─────────────────┴─────────────────┴─────────────────┘
 ```
 
-### Systems Focus: Parameter Distribution and Memory Impact
+### What Metrics Actually Matter?
 
-Understanding where parameters live in TinyGPT is crucial for optimization:
+Different stakeholders care about different metrics:
 
 ```
-Parameter Distribution in TinyGPT (embed_dim=128, vocab_size=1000, 4 layers):
-
-┌─────────────────────┬─────────────────┬─────────────────┬─────────────────┐
-│ Component           │ Parameter Count │ Memory (MB)     │ % of Total      │
-├─────────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ Token Embeddings    │    128,000      │      0.5        │     15%         │
-│ Positional Encoding │     32,768      │      0.1        │      4%         │
-│ Attention Layers    │    262,144      │      1.0        │     31%         │
-│ MLP Layers          │    393,216      │      1.5        │     46%         │
-│ Layer Norms         │      2,048      │      0.01       │      0.2%       │
-│ Output Projection   │    128,000      │      0.5        │     15%         │
-├─────────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ TOTAL              │    946,176      │      3.6        │    100%         │
-└─────────────────────┴─────────────────┴─────────────────┴─────────────────┘
-
-Key Insights:
-• MLP layers dominate parameter count (46% of total)
-• Attention layers are second largest (31% of total)
-• Embedding tables scale with vocabulary size
-• Memory scales linearly with embed_dim²
+Stakeholder View:
+┌──────────────────────────────────────────────────────────────┐
+│ ML Researcher:                                               │
+│   Primary   → Accuracy, F1, BLEU (task-specific)             │
+│   Secondary → Training time, convergence                     │
+│                                                              │
+│ Systems Engineer:                                            │
+│   Primary   → Latency (p50, p99), throughput                 │
+│   Secondary → Memory usage, CPU/GPU utilization              │
+│                                                              │
+│ Product Manager:                                             │
+│   Primary   → User experience (latency < 100ms?)             │
+│   Secondary → Cost per request, scalability                  │
+│                                                              │
+│ DevOps/MLOps:                                                │
+│   Primary   → Model size (deployment), inference cost        │
+│   Secondary → Batch throughput, hardware utilization         │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### Why This Architecture Matters
+**Key Insight**: A complete benchmark captures ALL perspectives, not just one.
 
-**1. Modular Design**: Each component can be optimized independently
-**2. Scalable**: Architecture works from 1M to 100B+ parameters
-**3. Interpretable**: Clear information flow through attention and MLP
-**4. Optimizable**: Each layer type has different optimization strategies
+### Benchmark Report Components
 
-Let's implement this step by step, starting with the core TinyGPT class that orchestrates all components.
+Our BenchmarkReport class will track everything needed for reproducibility:
+
+```
+BenchmarkReport Structure:
+┌─────────────────────────────────────────────────────────────┐
+│ Model Characteristics:                                      │
+│   • Parameter count     → Model capacity                    │
+│   • Model size (MB)     → Deployment cost                   │
+│                                                             │
+│ Performance Metrics:                                        │
+│   • Accuracy           → Task performance                   │
+│   • Latency (mean/std) → Inference speed + variance         │
+│   • Throughput         → Samples/second capacity            │
+│                                                             │
+│ System Context:                                             │
+│   • Platform           → Hardware/OS environment            │
+│   • Python version     → Language runtime                   │
+│   • NumPy version      → Numerical library version          │
+│   • Timestamp          → When benchmark was run             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Latency vs. Throughput: A Critical Distinction
+
+Many beginners confuse latency and throughput. They measure different things:
+
+```
+Latency vs. Throughput:
+
+Latency (Per-Sample Speed):
+┌──────────────────────────────────────────────────┐
+│  Input → Model → Output                          │
+│   ↑              ↓                               │
+│   └──── 10ms ────┘                               │
+│                                                  │
+│  "How fast can I get ONE result?"                │
+│  Critical for: Real-time apps, user experience   │
+└──────────────────────────────────────────────────┘
+
+Throughput (Batch Capacity):
+┌──────────────────────────────────────────────────┐
+│  [Input1, Input2, ... Input100]                  │
+│           ↓                                      │
+│        Model                                     │
+│           ↓                                      │
+│  [Out1, Out2, ... Out100] in 200ms               │
+│                                                  │
+│  "How many samples per second?"                  │
+│  Critical for: Batch jobs, data processing       │
+└──────────────────────────────────────────────────┘
+
+Example:
+  Latency:     10ms per sample   → "Fast" for users
+  Throughput:  500 samples/sec   → "Fast" for batches
+
+Trade-off: Batching increases throughput but adds latency!
+```
+
+### Why Variance Matters
+
+Single measurements lie. Variance tells the truth:
+
+```
+Why We Report Mean ± Std:
+
+Measurement 1: 9.2ms    ┐
+Measurement 2: 10.1ms   │ Mean = 10.0ms
+Measurement 3: 9.8ms    │ Std  = 0.5ms
+Measurement 4: 10.5ms   │
+Measurement 5: 9.4ms    ┘
+
+vs.
+
+Measurement 1: 5.2ms    ┐
+Measurement 2: 14.8ms   │ Mean = 10.0ms ← Same mean!
+Measurement 3: 8.1ms    │ Std  = 4.2ms  ← Different variance!
+Measurement 4: 15.3ms   │
+Measurement 5: 6.6ms    ┘
+           ↑
+    Unpredictable performance!
+```
+
+**Which model would you deploy?** The first one, because consistent performance matters in production.
+
+### The Submission Schema: Enforcing Standards
+
+Our submission format follows a JSON schema that ensures:
+- **Required fields** can't be omitted (no incomplete results)
+- **Type safety** prevents errors (accuracy is float, not string)
+- **Version tracking** allows format evolution
+- **Nested structure** organizes related data logically
+
+```
+Submission JSON Schema:
+{
+  "tinytorch_version": "0.1.0",           ← Version tracking
+  "submission_type": "capstone_benchmark", ← Classification
+  "timestamp": "2025-01-15 14:30:00",     ← When run
+  "system_info": {                         ← Environment
+    "platform": "macOS-14.0-arm64",
+    "python_version": "3.11.0",
+    "numpy_version": "1.24.0"
+  },
+  "baseline": {                            ← Required baseline
+    "model_name": "simple_mlp",
+    "metrics": {
+      "parameter_count": 1000,
+      "model_size_mb": 0.004,
+      "accuracy": 0.92,
+      "latency_ms_mean": 0.15,
+      "latency_ms_std": 0.02,
+      "throughput_samples_per_sec": 6666.67
+    }
+  },
+  "optimized": {                           ← Optional optimization
+    "model_name": "quantized_mlp",
+    "metrics": { ... },
+    "techniques_applied": ["int8_quantization", "pruning"]
+  },
+  "improvements": {                        ← Auto-calculated
+    "speedup": 2.3,
+    "compression_ratio": 4.1,
+    "accuracy_delta": -0.01
+  }
+}
+```
+
+This structure makes it trivial to:
+- **Validate** submissions programmatically
+- **Compare** different models objectively
+- **Aggregate** results across the community
+- **Visualize** trends and trade-offs
+
+Now let's build it!
 """
 
-# %% nbgrader={"grade": false, "grade_id": "tinygpt_architecture", "solution": true}
-#| export
-class TinyGPT:
-    """
-    Complete GPT implementation integrating all TinyTorch modules.
+# %% [markdown]
+"""
+## Part 1: Building a Simple Benchmark Model
 
-    This class demonstrates how framework components compose into real applications.
-    Built using modules 01,02,03,11,12,13 as core architecture.
+For this capstone, we'll use a simple MLP model. This keeps the focus on the benchmarking workflow rather than model complexity.
+
+**Why a Simple Model?**
+- **Focus on workflow** - The submission process is the learning goal, not model architecture
+- **Fast iteration** - Quick benchmarks let you experiment with the pipeline
+- **Extensible pattern** - Same workflow applies to complex models from milestones
+
+Students can later apply this exact workflow to more sophisticated models (CNNs, Transformers, etc.) from milestone projects!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "toy-model", "solution": true}
+#| export
+class SimpleMLP:
+    """
+    Simple 2-layer MLP for benchmarking demonstration.
+
+    This is a toy model to demonstrate the benchmarking workflow.
+    Students can later apply the same workflow to milestone models.
 
     Architecture:
-    - Token Embeddings (Module 11)
-    - Positional Encoding (Module 11)
-    - Transformer Blocks (Module 13)
-    - Output Linear Layer (Module 03)
-    - Language Modeling Head (Module 04)
+        Input → Linear(in, hidden) → ReLU → Linear(hidden, out) → Output
+
+    Why this design:
+    - Two layers: Enough to show optimization impact (quantization, pruning)
+    - ReLU activation: Common pattern students recognize
+    - Small by default: Fast benchmarking during development
+    - Configurable sizes: Can scale up for experiments
     """
-
-    def __init__(self, vocab_size: int, embed_dim: int = 128, num_layers: int = 4,
-                 num_heads: int = 4, max_seq_len: int = 256, dropout: float = 0.1):
-        """
-        Initialize TinyGPT with production-inspired architecture.
-
-        TODO: Build a complete GPT model using TinyTorch components
-
-        APPROACH:
-        1. Create token embeddings (vocab_size × embed_dim)
-        2. Create positional encoding (max_seq_len × embed_dim)
-        3. Build transformer layers using TransformerBlock
-        4. Add output projection layer
-        5. Calculate and report parameter count
-
-        ARCHITECTURE DECISIONS:
-        - embed_dim=128: Small enough for fast training, large enough for learning
-        - num_layers=4: Sufficient depth without excessive memory
-        - num_heads=4: Multi-head attention without head_dim being too small
-        - max_seq_len=256: Reasonable context length for character-level modeling
-
-        EXAMPLE:
-        >>> model = TinyGPT(vocab_size=50, embed_dim=128, num_layers=4)
-        >>> print(f"Parameters: {model.count_parameters():,}")
-        Parameters: 1,234,567
-
-        HINTS:
-        - Use Embedding class for token embeddings
-        - Use PositionalEncoding for position information
-        - Stack TransformerBlock instances in a list
-        - Final Linear layer maps embed_dim → vocab_size
-        """
-        ### BEGIN SOLUTION
-        self.vocab_size = vocab_size
-        self.embed_dim = embed_dim
-        self.num_layers = num_layers
-        self.num_heads = num_heads
-        self.max_seq_len = max_seq_len
-        self.dropout = dropout
-
-        # Token embeddings: convert token IDs to dense vectors
-        self.token_embedding = Embedding(vocab_size, embed_dim)
-
-        # Positional encoding: add position information
-        self.positional_encoding = PositionalEncoding(max_seq_len, embed_dim)
-
-        # Transformer layers: core processing
-        self.transformer_blocks = []
-        for _ in range(num_layers):
-            block = TransformerBlock(embed_dim, num_heads, mlp_ratio=4.0)
-            self.transformer_blocks.append(block)
-
-        # Output projection: map back to vocabulary
-        self.output_projection = Linear(embed_dim, vocab_size)
-
-        # Dropout for regularization
-        self.dropout_layer = Dropout(dropout)
-
-        # Calculate parameter count for systems analysis
-        self._param_count = self.count_parameters()
-        print(f"🏗️ TinyGPT initialized: {self._param_count:,} parameters")
-        print(f"📐 Architecture: {num_layers}L/{num_heads}H/{embed_dim}D")
-        print(f"💾 Estimated memory: {self._param_count * BYTES_PER_FLOAT32 / MB_TO_BYTES:.1f}MB")
-        ### END SOLUTION
-
-def test_unit_tinygpt_init():
-    """🔬 Test TinyGPT initialization and parameter counting."""
-    print("🔬 Unit Test: TinyGPT Initialization...")
-
-    # Create a small model for testing
-    model = TinyGPT(vocab_size=50, embed_dim=64, num_layers=2, num_heads=2, max_seq_len=128)
-
-    # Verify architecture components exist
-    assert hasattr(model, 'token_embedding')
-    assert hasattr(model, 'positional_encoding')
-    assert hasattr(model, 'transformer_blocks')
-    assert hasattr(model, 'output_projection')
-    assert len(model.transformer_blocks) == 2
-
-    # Verify parameter count is reasonable
-    param_count = model.count_parameters()
-    assert param_count > 0
-    assert param_count < 1000000  # Sanity check for small model
-
-    print(f"✅ Model created with {param_count:,} parameters")
-    print("✅ TinyGPT initialization works correctly!")
-
-# Run immediate test when developing this module
-if __name__ == "__main__":
-    test_unit_tinygpt_init()
-
-# %% nbgrader={"grade": false, "grade_id": "tinygpt_methods", "solution": true}
-def count_parameters(self) -> int:
-    """
-    Count total trainable parameters in the model.
-
-    TODO: Implement parameter counting across all components
-
-    APPROACH:
-    1. Get parameters from token embeddings
-    2. Get parameters from all transformer blocks
-    3. Get parameters from output projection
-    4. Sum all parameter counts
-    5. Return total count
-
-    SYSTEMS INSIGHT:
-    Parameter count directly determines:
-    - Model memory footprint (params × 4 bytes for float32)
-    - Training memory (3× params for gradients + optimizer states)
-    - Inference latency (more params = more compute)
-
-    EXAMPLE:
-    >>> model = TinyGPT(vocab_size=1000, embed_dim=128, num_layers=6)
-    >>> params = model.count_parameters()
-    >>> print(f"Memory: {params * 4 / 1024 / 1024:.1f}MB")
-    Memory: 52.3MB
-
-    HINT: Each component has a parameters() method that returns a list
-    """
-    ### BEGIN SOLUTION
-    total_params = 0
-
-    # Count embedding parameters
-    for param in self.token_embedding.parameters():
-        total_params += np.prod(param.shape)
-
-    # Count transformer block parameters
-    for block in self.transformer_blocks:
-        for param in block.parameters():
-            total_params += np.prod(param.shape)
-
-    # Count output projection parameters
-    for param in self.output_projection.parameters():
-        total_params += np.prod(param.shape)
-
-    return total_params
-    ### END SOLUTION
-
-def forward(self, input_ids: Tensor, return_logits: bool = True) -> Tensor:
-    """
-    Forward pass through the complete TinyGPT model.
-
-    TODO: Implement full forward pass integrating all components
-
-    APPROACH:
-    1. Apply token embeddings to convert IDs to vectors
-    2. Add positional encoding for sequence position information
-    3. Apply dropout for regularization
-    4. Pass through each transformer block sequentially
-    5. Apply final output projection to get logits
-
-    ARCHITECTURE FLOW:
-    input_ids → embeddings → +positional → dropout → transformer_layers → output_proj → logits
-
-    EXAMPLE:
-    >>> model = TinyGPT(vocab_size=100, embed_dim=64)
-    >>> input_ids = Tensor([[1, 15, 42, 7]])  # Shape: (batch=1, seq_len=4)
-    >>> logits = model.forward(input_ids)
-    >>> print(logits.shape)
-    (1, 4, 100)  # (batch, seq_len, vocab_size)
-
-    HINTS:
-    - embeddings + positional should be element-wise addition
-    - Each transformer block takes and returns same shape
-    - Final logits shape: (batch_size, seq_len, vocab_size)
-    """
-    ### BEGIN SOLUTION
-    batch_size, seq_len = input_ids.shape
-
-    # Step 1: Token embeddings
-    embeddings = self.token_embedding.forward(input_ids)  # (batch, seq_len, embed_dim)
-
-    # Step 2: Add positional encoding
-    positions = self.positional_encoding.forward(embeddings)  # Same shape
-    hidden_states = embeddings + positions
-
-    # Step 3: Apply dropout
-    hidden_states = self.dropout_layer.forward(hidden_states, training=True)
-
-    # Step 4: Pass through transformer blocks
-    for block in self.transformer_blocks:
-        hidden_states = block.forward(hidden_states)
-
-    # Step 5: Output projection to vocabulary
-    if return_logits:
-        logits = self.output_projection.forward(hidden_states)
-        return logits  # (batch, seq_len, vocab_size)
-    else:
-        return hidden_states  # Return final hidden states
-    ### END SOLUTION
-
-def generate(self, prompt_ids: Tensor, max_new_tokens: int = 50,
-             temperature: float = 1.0, use_cache: bool = True) -> Tensor:
-    """
-    Generate text using autoregressive sampling.
-
-    TODO: Implement text generation with KV caching optimization
-
-    APPROACH:
-    1. Initialize KV cache if enabled
-    2. For each new token position:
-       a. Get logits for next token
-       b. Apply temperature scaling
-       c. Sample from probability distribution
-       d. Append to sequence
-    3. Return complete generated sequence
-
-    SYSTEMS OPTIMIZATION:
-    - Without cache: O(n²) complexity (recompute all positions)
-    - With cache: O(n) complexity (only compute new position)
-    - Cache memory: O(layers × heads × seq_len × head_dim)
-
-    EXAMPLE:
-    >>> model = TinyGPT(vocab_size=100)
-    >>> prompt = Tensor([[1, 5, 10]])  # "Hello"
-    >>> output = model.generate(prompt, max_new_tokens=10)
-    >>> print(output.shape)
-    (1, 13)  # Original 3 + 10 new tokens
-
-    HINTS:
-    - Use KVCache from Module 14 for efficiency
-    - Apply softmax with temperature for sampling
-    - Build sequence iteratively, one token at a time
-    """
-    ### BEGIN SOLUTION
-    batch_size, current_seq_len = prompt_ids.shape
-
-    if use_cache and current_seq_len + max_new_tokens <= self.max_seq_len:
-        # Initialize KV cache for efficient generation
-        cache = KVCache(
-            batch_size=batch_size,
-            max_seq_len=self.max_seq_len,
-            num_layers=self.num_layers,
-            num_heads=self.num_heads,
-            head_dim=self.embed_dim // self.num_heads
-        )
-    else:
-        cache = None
-
-    # Start with the prompt
-    generated_ids = prompt_ids
-
-    for step in range(max_new_tokens):
-        # Get logits for next token prediction
-        if cache is not None:
-            # Efficient: only process the last token
-            current_input = generated_ids[:, -1:] if step > 0 else generated_ids
-            logits = self.forward_with_cache(current_input, cache, step)
-        else:
-            # Standard: process entire sequence each time
-            logits = self.forward(generated_ids)
-
-        # Get logits for the last position (next token prediction)
-        next_token_logits = logits[:, -1, :]  # (batch_size, vocab_size)
-
-        # Apply temperature scaling
-        if temperature != 1.0:
-            next_token_logits = next_token_logits / temperature
-
-        # Sample next token (simple greedy for now)
-        next_token_id = Tensor(np.argmax(next_token_logits.data, axis=-1, keepdims=True))
-
-        # Append to sequence
-        generated_ids = Tensor(np.concatenate([generated_ids.data, next_token_id.data], axis=1))
-
-        # Stop if we hit max sequence length
-        if generated_ids.shape[1] >= self.max_seq_len:
-            break
-
-    return generated_ids
-    ### END SOLUTION
-
-def forward_with_cache(self, input_ids: Tensor, cache: KVCache, step: int) -> Tensor:
-    """
-    Forward pass with KV caching for efficient generation.
-
-    TODO: Implement forward pass that uses cached key/value pairs
-
-    APPROACH:
-    1. Get embeddings and positional encoding
-    2. For each transformer block, use cache to avoid recomputation
-    3. Apply output projection
-    4. Return logits
-
-    SYSTEMS OPTIMIZATION:
-    - Without cache: O(n²) for each new token (recompute all attention)
-    - With cache: O(n) for each new token (only new position)
-    - Memory trade-off: Extra O(layers × heads × seq_len × head_dim) for cache
-
-    EXAMPLE:
-    >>> model = TinyGPT(vocab_size=100)
-    >>> cache = KVCache(batch_size=1, max_seq_len=256, num_layers=4, num_heads=4, head_dim=32)
-    >>> input_ids = Tensor([[42]])  # Single new token
-    >>> logits = model.forward_with_cache(input_ids, cache, step=5)
-    >>> print(logits.shape)
-    (1, 1, 100)  # Only compute for new token
-
-    HINTS:
-    - Process embeddings normally for the new token(s)
-    - Each transformer block should use its cached K/V from previous steps
-    - Cache stores keys/values so we don't recompute attention for old positions
-    """
-    ### BEGIN SOLUTION
-    batch_size, seq_len = input_ids.shape
-
-    # Step 1: Embed tokens (same as regular forward)
-    embeddings = self.token_embedding.forward(input_ids)
-    positions = self.positional_encoding.forward(embeddings)
-    hidden_states = embeddings + positions
-    hidden_states = self.dropout_layer.forward(hidden_states, training=False)
-
-    # Step 2: Pass through transformer blocks with caching
-    # Note: In a full implementation, each transformer block would have
-    # a forward_with_cache method that uses the cache for K/V pairs
-    # For this educational implementation, we'll use regular forward
-    # but in production, each block would retrieve cached K/V and only
-    # compute attention for the new position
-    for i, block in enumerate(self.transformer_blocks):
-        # In production: block.forward_with_cache(hidden_states, cache, i, step)
-        # For now: use regular forward (cache provides speedup via implementation)
-        hidden_states = block.forward(hidden_states)
-
-    # Step 3: Output projection to vocabulary
-    logits = self.output_projection.forward(hidden_states)
-    return logits
-    ### END SOLUTION
-
-# Add methods to TinyGPT class
-TinyGPT.count_parameters = count_parameters
-TinyGPT.forward = forward
-TinyGPT.generate = generate
-TinyGPT.forward_with_cache = forward_with_cache
-
-def test_unit_tinygpt_forward():
-    """🔬 Test TinyGPT forward pass and generation."""
-    print("🔬 Unit Test: TinyGPT Forward Pass...")
-
-    # Create model and test data
-    model = TinyGPT(vocab_size=100, embed_dim=64, num_layers=2, num_heads=2)
-    input_ids = Tensor([[1, 15, 42, 7, 23]])  # Batch size 1, sequence length 5
-
-    # Test forward pass
-    logits = model.forward(input_ids)
-
-    # Verify output shape
-    expected_shape = (1, 5, 100)  # (batch, seq_len, vocab_size)
-    assert logits.shape == expected_shape, f"Expected {expected_shape}, got {logits.shape}"
-
-    # Test generation
-    prompt = Tensor([[1, 15]])
-    generated = model.generate(prompt, max_new_tokens=5)
-
-    # Verify generation extends sequence
-    assert generated.shape[1] == 7, f"Expected 7 tokens, got {generated.shape[1]}"
-    assert np.array_equal(generated.data[:, :2], prompt.data), "Prompt should be preserved"
-
-    print(f"✅ Forward pass shape: {logits.shape}")
-    print(f"✅ Generation shape: {generated.shape}")
-    print("✅ TinyGPT forward and generation work correctly!")
-
-# Run immediate test when developing this module
-if __name__ == "__main__":
-    test_unit_tinygpt_forward()
+    def __init__(self, input_size=10, hidden_size=20, output_size=3):
+        """Initialize simple MLP with random weights."""
+        self.fc1 = Linear(input_size, hidden_size)
+        self.relu = ReLU()
+        self.fc2 = Linear(hidden_size, output_size)
+
+        # Initialize with small random weights
+        # Linear layer expects weight shape: (in_features, out_features)
+        self.fc1.weight.data = np.random.randn(input_size, hidden_size) * 0.01
+        self.fc1.bias.data = np.zeros(hidden_size)
+        self.fc2.weight.data = np.random.randn(hidden_size, output_size) * 0.01
+        self.fc2.bias.data = np.zeros(output_size)
+
+    def forward(self, x):
+        """Forward pass through the network."""
+        x = self.fc1.forward(x)
+        x = self.relu.forward(x)
+        x = self.fc2.forward(x)
+        return x
+
+    def parameters(self):
+        """Return model parameters for optimization."""
+        return [self.fc1.weight, self.fc1.bias, self.fc2.weight, self.fc2.bias]
+
+    def count_parameters(self):
+        """Count total number of parameters."""
+        total = 0
+        for param in self.parameters():
+            total += param.data.size
+        return total
+
+print("✅ SimpleMLP model defined")
 
 # %% [markdown]
 """
-## 🚀 Stage 2: Training Pipeline Integration
+### Understanding SimpleMLP Parameter Counting
 
-Now we'll integrate the training components (Modules 05-07) to create a complete training pipeline. This demonstrates how autograd, optimizers, and training loops work together in a production-quality system.
-
-### What We're Building: Complete Training Infrastructure
-
-The training pipeline connects data processing, model forward/backward passes, and optimization into a cohesive learning system:
+Let's break down where the parameters come from:
 
 ```
-                        🎯 TRAINING PIPELINE ARCHITECTURE 🎯
+SimpleMLP Parameter Breakdown:
+┌─────────────────────────────────────────────────────────────┐
+│ Layer 1: Linear(10, 20)                                     │
+│   Weight matrix: (10, 20) = 200 parameters                  │
+│   Bias vector:   (20,)    = 20 parameters                   │
+│   Subtotal: 220 parameters                                  │
+│                                                             │
+│ Layer 2: ReLU                                               │
+│   No parameters (just max(0, x))                            │
+│   Subtotal: 0 parameters                                    │
+│                                                             │
+│ Layer 3: Linear(20, 3)                                      │
+│   Weight matrix: (20, 3)  = 60 parameters                   │
+│   Bias vector:   (3,)     = 3 parameters                    │
+│   Subtotal: 63 parameters                                   │
+│                                                             │
+│ TOTAL: 220 + 0 + 63 = 283 parameters                        │
+└─────────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                              DATA PREPARATION FLOW                                  │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Raw Text Corpus                                                                   │
-│       │                                                                             │
-│       ▼                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Text Processing (Module 10 - Tokenization)                                 │   │
-│  │                                                                             │   │
-│  │ "Hello world" → [72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100]    │   │
-│  │ "AI is fun"  → [65, 73, 32, 105, 115, 32, 102, 117, 110]                 │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Language Modeling Setup                                                     │   │
-│  │                                                                             │   │
-│  │ Input:   [72, 101, 108, 108, 111]  ←─ Current tokens                       │   │
-│  │ Target:  [101, 108, 108, 111, 32]  ←─ Next tokens (shifted by 1)          │   │
-│  │                                                                             │   │
-│  │ Model learns: P(next_token | previous_tokens)                              │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Batch Formation (Module 08 - DataLoader)                                   │   │
-│  │                                                                             │   │
-│  │ Sequence 1: [input_ids_1, target_ids_1]                                   │   │
-│  │ Sequence 2: [input_ids_2, target_ids_2]                                   │   │
-│  │    ...           ...                                                       │   │
-│  │ Sequence N: [input_ids_N, target_ids_N]                                   │   │
-│  │                                     │                                       │   │
-│  │                                     ▼                                       │   │
-│  │ Batched Tensor: (batch_size, seq_len) shape                               │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                             TRAINING STEP EXECUTION                                 │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Training Step Loop (for each batch):                                              │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 1: Zero Gradients (Module 06 - Optimizers)                            │   │
-│  │                                                                             │   │
-│  │ optimizer.zero_grad()  ←─ Clear gradients from previous step               │   │
-│  │                                                                             │   │
-│  │ Before: param.grad = [0.1, 0.3, -0.2, ...]  ←─ Old gradients              │   │
-│  │ After:  param.grad = [0.0, 0.0,  0.0, ...]  ←─ Cleared                    │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 2: Forward Pass (Modules 01-04, 11-13)                                │   │
-│  │                                                                             │   │
-│  │ input_ids ──► TinyGPT ──► logits (batch, seq_len, vocab_size)             │   │
-│  │                │                                                           │   │
-│  │                ▼                                                           │   │
-│  │ Memory Usage: ~2× model size (activations + parameters)                   │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 3: Loss Computation (Module 04 - Losses)                              │   │
-│  │                                                                             │   │
-│  │ logits (batch×seq_len, vocab_size) ──┐                                     │   │
-│  │                                       │                                     │   │
-│  │ targets (batch×seq_len,)          ────┼──► CrossEntropyLoss ──► scalar     │   │
-│  │                                       │                                     │   │
-│  │ Measures: How well model predicts next tokens                              │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 4: Backward Pass (Module 05 - Autograd)                               │   │
-│  │                                                                             │   │
-│  │ loss.backward()  ←─ Automatic differentiation through computation graph    │   │
-│  │                                                                             │   │
-│  │ Memory Usage: ~3× model size (params + activations + gradients)           │   │
-│  │                                                                             │   │
-│  │ Result: param.grad = [∂L/∂w₁, ∂L/∂w₂, ∂L/∂w₃, ...]                      │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 5: Parameter Update (Module 06 - Optimizers)                          │   │
-│  │                                                                             │   │
-│  │ AdamW Optimizer:                                                            │   │
-│  │                                                                             │   │
-│  │ momentum₁ = β₁ × momentum₁ + (1-β₁) × gradient                             │   │
-│  │ momentum₂ = β₂ × momentum₂ + (1-β₂) × gradient²                            │   │
-│  │                                                                             │   │
-│  │ param = param - learning_rate × (momentum₁ / √momentum₂ + weight_decay)    │   │
-│  │                                                                             │   │
-│  │ Memory Usage: ~4× model size (params + grads + 2×momentum)                │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                               TRAINING MONITORING                                   │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Training Metrics Tracking:                                                        │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Loss Tracking: Monitor convergence                                        │   │
-│  │   - Training loss should decrease over time                                 │   │
-│  │   - Perplexity = exp(loss) should approach 1.0                            │   │
-│  │                                                                             │   │
-│  │ • Learning Rate Scheduling (Module 07):                                    │   │
-│  │   - Cosine schedule: lr = max_lr × cos(π × epoch / max_epochs)            │   │
-│  │   - Warm-up: gradually increase lr for first few epochs                    │   │
-│  │                                                                             │   │
-│  │ • Memory Monitoring:                                                        │   │
-│  │   - Track GPU memory usage                                                  │   │
-│  │   - Detect memory leaks                                                     │   │
-│  │   - Optimize batch sizes                                                    │   │
-│  │                                                                             │   │
-│  │ • Gradient Health:                                                          │   │
-│  │   - Monitor gradient norms                                                  │   │
-│  │   - Detect exploding/vanishing gradients                                   │   │
-│  │   - Apply gradient clipping if needed                                      │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+Memory Calculation (FP32):
+  283 parameters × 4 bytes/param = 1,132 bytes ≈ 0.001 MB
+
+If we quantize to INT8:
+  283 parameters × 1 byte/param = 283 bytes ≈ 0.0003 MB
+  → 4× memory reduction!
 ```
 
-### Memory Management During Training
-
-Training requires careful memory management due to the multiple copies of model state:
-
-```
-Training Memory Breakdown (TinyGPT-13M example):
-
-┌─────────────────────┬─────────────────┬─────────────────┬─────────────────┐
-│ Component           │ Memory Usage    │ When Allocated  │ Purpose         │
-├─────────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ Model Parameters    │    52 MB        │ Model Init      │ Forward Pass    │
-│ Gradients          │    52 MB        │ First Backward  │ Store ∂L/∂w     │
-│ Adam Momentum1     │    52 MB        │ First Step      │ Optimizer State │
-│ Adam Momentum2     │    52 MB        │ First Step      │ Optimizer State │
-│ Activations        │    ~100 MB      │ Forward Pass    │ Backward Pass   │
-├─────────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ TOTAL TRAINING     │    ~308 MB      │ Peak Usage      │ All Operations  │
-├─────────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ Inference Only     │    52 MB        │ Model Init      │ Just Forward    │
-└─────────────────────┴─────────────────┴─────────────────┴─────────────────┘
-
-Key Insights:
-• Training uses ~6× inference memory
-• Adam optimizer doubles memory (2 momentum terms)
-• Activation memory scales with batch size and sequence length
-• Gradient checkpointing can reduce activation memory
-```
-
-### Systems Focus: Training Performance Optimization
-
-**1. Memory Management**: Keep training within GPU memory limits
-**2. Convergence Monitoring**: Track loss, perplexity, and gradient health
-**3. Learning Rate Scheduling**: Optimize training dynamics
-**4. Checkpointing**: Save model state for recovery and deployment
-
-Let's implement the complete training infrastructure that makes all of this work seamlessly.
+This small model is perfect for demonstrating optimization impact without long benchmark times.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "training_pipeline", "solution": true}
+# %% [markdown]
+"""
+## Part 2: Benchmark Report Class
+
+The BenchmarkReport class encapsulates all benchmark results and provides methods for comprehensive measurement and professional reporting.
+
+**Design Philosophy:**
+1. **Separation of concerns** - Measurement logic separate from model logic
+2. **Comprehensive metrics** - Capture model characteristics AND performance
+3. **System context** - Record environment for reproducibility
+4. **Statistical rigor** - Multiple runs for latency, report mean + std
+5. **JSON-serializable** - All data types compatible with JSON export
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "benchmark-report", "solution": true}
 #| export
-class TinyGPTTrainer:
+class BenchmarkReport:
     """
-    Complete training pipeline integrating optimizers, schedulers, and monitoring.
+    Benchmark report for model performance.
 
-    Uses modules 05 (autograd), 06 (optimizers), 07 (training) for end-to-end training.
+    Measures and stores:
+    - Model characteristics (parameters, size)
+    - Performance metrics (accuracy, latency, throughput)
+    - System context (platform, versions)
+    - Optimization info (techniques applied)
+
+    Usage:
+        report = BenchmarkReport(model_name="my_model")
+        report.benchmark_model(model, X_test, y_test, num_runs=100)
+        print(report.metrics)
     """
+    def __init__(self, model_name="model"):
+        self.model_name = model_name
+        self.metrics = {}
+        self.system_info = self._get_system_info()
+        self.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
-    def __init__(self, model: TinyGPT, tokenizer: CharTokenizer,
-                 learning_rate: float = 3e-4, weight_decay: float = 0.01):
-        """
-        Initialize trainer with model and optimization components.
-
-        TODO: Set up complete training infrastructure
-
-        APPROACH:
-        1. Store model and tokenizer references
-        2. Initialize AdamW optimizer (standard for transformers)
-        3. Initialize loss function (CrossEntropyLoss for language modeling)
-        4. Set up learning rate scheduler (cosine schedule)
-        5. Initialize training metrics tracking
-
-        PRODUCTION CHOICES:
-        - AdamW: Better generalization than Adam (weight decay)
-        - learning_rate=3e-4: Standard for small transformers
-        - Cosine schedule: Smooth learning rate decay
-        - CrossEntropy: Standard for classification/language modeling
-
-        EXAMPLE:
-        >>> model = TinyGPT(vocab_size=100)
-        >>> tokenizer = CharTokenizer(['a', 'b', 'c'])
-        >>> trainer = TinyGPTTrainer(model, tokenizer)
-        >>> print("Trainer ready for training")
-        Trainer ready for training
-
-        HINTS:
-        - Get all model parameters with model.parameters()
-        - Use AdamW with weight_decay for better generalization
-        - CrossEntropyLoss handles the language modeling objective
-        """
-        ### BEGIN SOLUTION
-        self.model = model
-        self.tokenizer = tokenizer
-
-        # Collect all trainable parameters
-        all_params = []
-        all_params.extend(model.token_embedding.parameters())
-        for block in model.transformer_blocks:
-            all_params.extend(block.parameters())
-        all_params.extend(model.output_projection.parameters())
-
-        # Initialize optimizer (AdamW for transformers)
-        self.optimizer = AdamW(
-            params=all_params,
-            lr=learning_rate,
-            weight_decay=weight_decay,
-            betas=(0.9, 0.95)  # Standard for language models
-        )
-
-        # Loss function for next token prediction
-        self.loss_fn = CrossEntropyLoss()
-
-        # Learning rate scheduler
-        self.scheduler = CosineSchedule(
-            optimizer=self.optimizer,
-            max_epochs=100,  # Will adjust based on actual training
-            min_lr=learning_rate * 0.1
-        )
-
-        # Training metrics
-        self.training_history = {
-            'losses': [],
-            'perplexities': [],
-            'learning_rates': [],
-            'epoch': 0
+    def _get_system_info(self):
+        """Collect system information for reproducibility."""
+        return {
+            'platform': platform.platform(),
+            'python_version': sys.version.split()[0],
+            'numpy_version': np.__version__
         }
 
-        print(f"🚀 Trainer initialized:")
-        print(f"   Optimizer: AdamW (lr={learning_rate}, wd={weight_decay})")
-        print(f"   Parameters: {len(all_params):,} tensors")
-        print(f"   Loss: CrossEntropyLoss")
-        ### END SOLUTION
-
-    def prepare_batch(self, text_batch: List[str], max_length: int = 128) -> Tuple[Tensor, Tensor]:
+    def benchmark_model(self, model, X_test, y_test, num_runs=100):
         """
-        Convert text batch to input/target tensors for language modeling.
+        Benchmark model performance comprehensively.
 
-        TODO: Implement text-to-tensor conversion with proper targets
+        Args:
+            model: Model to benchmark (must have .forward() and .count_parameters())
+            X_test: Test inputs (Tensor)
+            y_test: Test labels (numpy array of class indices)
+            num_runs: Number of inference runs for latency measurement (default: 100)
 
-        APPROACH:
-        1. Tokenize each text in the batch
-        2. Pad/truncate to consistent length
-        3. Create input_ids (text) and target_ids (text shifted by 1)
-        4. Convert to Tensor format
+        Returns:
+            Dictionary of metrics
 
-        LANGUAGE MODELING OBJECTIVE:
-        - Input: [token1, token2, token3, token4]
-        - Target: [token2, token3, token4, token5]
-        - Model predicts next token at each position
-
-        EXAMPLE:
-        >>> trainer = TinyGPTTrainer(model, tokenizer)
-        >>> texts = ["hello world", "ai is fun"]
-        >>> inputs, targets = trainer.prepare_batch(texts)
-        >>> print(inputs.shape, targets.shape)
-        (2, 128) (2, 128)
-
-        HINTS:
-        - Use tokenizer.encode() for text → token conversion
-        - Pad shorter sequences with tokenizer pad token
-        - Target sequence is input sequence shifted right by 1
+        Measurements:
+        1. Parameter count - Model capacity indicator
+        2. Model size (MB) - Deployment cost (assumes FP32)
+        3. Accuracy - Task performance (classification accuracy)
+        4. Latency (mean ± std) - Inference speed and consistency
+        5. Throughput - Maximum samples/second capacity
         """
-        ### BEGIN SOLUTION
-        batch_size = len(text_batch)
+        # Count parameters
+        param_count = model.count_parameters()
+        model_size_mb = (param_count * 4) / (1024 * 1024)  # Assuming FP32
 
-        # Tokenize all texts
-        tokenized_batch = []
-        for text in text_batch:
-            tokens = self.tokenizer.encode(text)
+        # Measure accuracy
+        predictions = model.forward(X_test)
+        pred_labels = np.argmax(predictions.data, axis=1)
+        accuracy = np.mean(pred_labels == y_test)
 
-            # Truncate or pad to max_length
-            if len(tokens) > max_length:
-                tokens = tokens[:max_length]
-            else:
-                # Pad with special token (use 0 as pad)
-                tokens.extend([0] * (max_length - len(tokens)))
+        # Measure latency (average over multiple runs)
+        # Why multiple runs? See "Variance" section in Foundations
+        latencies = []
+        for _ in range(num_runs):
+            start = time.time()
+            _ = model.forward(X_test[:1])  # Single sample inference
+            latencies.append((time.time() - start) * 1000)  # Convert to ms
 
-            tokenized_batch.append(tokens)
+        avg_latency = np.mean(latencies)
+        std_latency = np.std(latencies)
 
-        # Convert to numpy then Tensor
-        input_ids = Tensor(np.array(tokenized_batch))  # (batch_size, seq_len)
+        # Store metrics (all as Python native types for JSON serialization)
+        self.metrics = {
+            'parameter_count': int(param_count),
+            'model_size_mb': float(model_size_mb),
+            'accuracy': float(accuracy),
+            'latency_ms_mean': float(avg_latency),
+            'latency_ms_std': float(std_latency),
+            'throughput_samples_per_sec': float(1000 / avg_latency)
+        }
 
-        # Create targets (shifted input for next token prediction)
-        target_ids = Tensor(np.roll(input_ids.data, -1, axis=1))  # Shift left by 1
+        print(f"\n📊 Benchmark Results for {self.model_name}:")
+        print(f"  Parameters: {param_count:,}")
+        print(f"  Size: {model_size_mb:.2f} MB")
+        print(f"  Accuracy: {accuracy*100:.1f}%")
+        print(f"  Latency: {avg_latency:.2f}ms ± {std_latency:.2f}ms")
 
-        return input_ids, target_ids
-        ### END SOLUTION
+        return self.metrics
 
-    def train_step(self, input_ids: Tensor, target_ids: Tensor) -> float:
-        """
-        Single training step with forward, backward, and optimization.
-
-        TODO: Implement complete training step
-
-        APPROACH:
-        1. Zero gradients from previous step
-        2. Forward pass to get logits
-        3. Compute loss between logits and targets
-        4. Backward pass to compute gradients
-        5. Optimizer step to update parameters
-        6. Return loss value for monitoring
-
-        MEMORY MANAGEMENT:
-        During training, memory usage = 3× model size:
-        - 1× for parameters
-        - 1× for gradients
-        - 1× for optimizer states (Adam moments)
-
-        EXAMPLE:
-        >>> loss = trainer.train_step(input_ids, target_ids)
-        >>> print(f"Training loss: {loss:.4f}")
-        Training loss: 2.3456
-
-        HINTS:
-        - Always zero_grad() before forward pass
-        - Loss should be computed on flattened logits and targets
-        - Call backward() on the loss tensor
-        """
-        ### BEGIN SOLUTION
-        # Zero gradients from previous step
-        self.optimizer.zero_grad()
-
-        # Forward pass
-        logits = self.model.forward(input_ids)  # (batch, seq_len, vocab_size)
-
-        # Reshape for loss computation
-        batch_size, seq_len, vocab_size = logits.shape
-        logits_flat = logits.reshape(batch_size * seq_len, vocab_size)
-        targets_flat = target_ids.reshape(batch_size * seq_len)
-
-        # Compute loss
-        loss = self.loss_fn.forward(logits_flat, targets_flat)
-
-        # Backward pass
-        loss.backward()
-
-        # Optimizer step
-        self.optimizer.step()
-
-        # Return scalar loss for monitoring
-        # loss.data is numpy array - float() handles conversion automatically
-        return float(loss.data)
-        ### END SOLUTION
-
-def test_unit_training_pipeline():
-    """🔬 Test training pipeline components."""
-    print("🔬 Unit Test: Training Pipeline...")
-
-    # Create small model and trainer
-    model = TinyGPT(vocab_size=50, embed_dim=32, num_layers=2, num_heads=2)
-    tokenizer = CharTokenizer(['a', 'b', 'c', 'd', 'e', ' '])
-    trainer = TinyGPTTrainer(model, tokenizer, learning_rate=1e-3)
-
-    # Test batch preparation
-    texts = ["hello", "world"]
-    input_ids, target_ids = trainer.prepare_batch(texts, max_length=8)
-
-    assert input_ids.shape == (2, 8), f"Expected (2, 8), got {input_ids.shape}"
-    assert target_ids.shape == (2, 8), f"Expected (2, 8), got {target_ids.shape}"
-
-    # Test training step
-    initial_loss = trainer.train_step(input_ids, target_ids)
-    assert initial_loss > 0, "Loss should be positive"
-
-    # Second step should work (gradients computed and applied)
-    second_loss = trainer.train_step(input_ids, target_ids)
-    assert second_loss > 0, "Second loss should also be positive"
-
-    print(f"✅ Batch preparation shape: {input_ids.shape}")
-    print(f"✅ Initial loss: {initial_loss:.4f}")
-    print(f"✅ Second loss: {second_loss:.4f}")
-    print("✅ Training pipeline works correctly!")
-
-# Run immediate test when developing this module
-if __name__ == "__main__":
-    test_unit_training_pipeline()
+print("✅ BenchmarkReport class defined")
 
 # %% [markdown]
 """
-## ⚡ Stage 3: Systems Analysis and Optimization
+### Why These Metrics?
 
-Now we'll apply the systems analysis tools from Modules 15-19 to understand TinyGPT's performance characteristics. This demonstrates the complete systems thinking approach to ML engineering.
-
-### What We're Analyzing: Complete Performance Profile
-
-Real ML systems require deep understanding of performance characteristics, bottlenecks, and optimization opportunities. Let's systematically analyze TinyGPT across all dimensions:
+Each metric answers a specific production question:
 
 ```
-                         📊 SYSTEMS ANALYSIS FRAMEWORK 📊
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                             1. BASELINE PROFILING                                   │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Parameter Analysis (Module 15):                                                   │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Count & Distribution  →  Memory Footprint  →  FLOP Analysis                │   │
-│  │                                                                             │   │
-│  │ Where are params?     What's the memory?   How many operations?            │   │
-│  │ • Embeddings: 15%     • Inference: 1×     • Attention: O(n²×d)            │   │
-│  │ • Attention: 31%      • Training: 3×      • MLP: O(n×d²)                  │   │
-│  │ • MLP: 46%           • Optim: 4×          • Total: O(L×n×d²)              │   │
-│  │ • Other: 8%                                                                │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                          2. SCALING BEHAVIOR ANALYSIS                               │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  How does performance scale with key parameters?                                   │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Model Size Scaling:                                                         │   │
-│  │                                                                             │   │
-│  │ embed_dim:  64  →  128  →  256  →  512                                     │   │
-│  │ Memory:     5MB →  20MB →  80MB →  320MB                                   │   │
-│  │ Inference:  10ms→  25ms →  60ms →  150ms                                   │   │
-│  │ Training:   30ms→  75ms → 180ms →  450ms                                   │   │
-│  │                                                                             │   │
-│  │ Memory scales as O(d²), Compute scales as O(d³)                           │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Sequence Length Scaling:                                                    │   │
-│  │                                                                             │   │
-│  │ seq_len:     64   →   128  →   256  →   512                                │   │
-│  │ Attn Memory: 16KB →   64KB →  256KB → 1024KB                               │   │
-│  │ Attn Time:   2ms  →    8ms →   32ms →  128ms                               │   │
-│  │                                                                             │   │
-│  │ Attention is the quadratic bottleneck: O(n²)                              │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Batch Size Scaling:                                                         │   │
-│  │                                                                             │   │
-│  │ batch_size:  1   →    4   →   16   →   32                                  │   │
-│  │ Memory:     50MB →  200MB →  800MB → 1600MB                                │   │
-│  │ Throughput: 100  →  350   → 1200   → 2000  tokens/sec                     │   │
-│  │                                                                             │   │
-│  │ Linear memory growth, sub-linear throughput improvement                    │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                           3. OPTIMIZATION IMPACT ANALYSIS                           │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Quantization Analysis (Module 17):                                                │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │                    QUANTIZATION PIPELINE                                   │   │
-│  │                                                                             │   │
-│  │ FP32 Model     →    INT8 Conversion    →    Performance Impact             │   │
-│  │ (32-bit)            (8-bit)                                                │   │
-│  │                                                                             │   │
-│  │ 200MB          →         50MB          →    4× memory reduction           │   │
-│  │ 100ms inference →       60ms inference  →    1.7× speedup                │   │
-│  │ 95.2% accuracy  →      94.8% accuracy   →    0.4% accuracy loss           │   │
-│  │                                                                             │   │
-│  │ Trade-off: 4× smaller, 1.7× faster, minimal accuracy loss                │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  Pruning Analysis (Module 18):                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │                      PRUNING PIPELINE                                      │   │
-│  │                                                                             │   │
-│  │ Dense Model → Magnitude Pruning → Structured Pruning → Performance        │   │
-│  │                                                                             │   │
-│  │ Sparsity:  0%     →      50%     →       90%        →   Impact           │   │
-│  │ Memory:   200MB   →     100MB     →      20MB        →   10× reduction   │   │
-│  │ Speed:    100ms   →      80ms     →      40ms        →   2.5× speedup    │   │
-│  │ Accuracy: 95.2%   →     94.8%     →     92.1%        →   3.1% loss       │   │
-│  │                                                                             │   │
-│  │ Sweet spot: 70-80% sparsity (good speed/accuracy trade-off)               │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  Combined Optimization:                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Original Model: 200MB, 100ms, 95.2% accuracy                              │   │
-│  │      ↓                                                                      │   │
-│  │ + INT8 Quantization: 50MB, 60ms, 94.8% accuracy                           │   │
-│  │      ↓                                                                      │   │
-│  │ + 80% Pruning: 10MB, 30ms, 92.5% accuracy                                 │   │
-│  │                                                                             │   │
-│  │ Final: 20× smaller, 3.3× faster, 2.7% accuracy loss                      │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                         4. COMPARATIVE BENCHMARKING                                 │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Benchmark Against Reference Implementations (Module 19):                          │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │                        BENCHMARK RESULTS                                   │   │
-│  │                                                                             │   │
-│  │ ┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐   │   │
-│  │ │   Model     │  Parameters │    Memory   │  Latency    │  Perplexity │   │   │
-│  │ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   │   │
-│  │ │ TinyGPT-1M  │     1M      │    4MB      │    5ms      │    12.5     │   │   │
-│  │ │ TinyGPT-13M │    13M      │   52MB      │   25ms      │     8.2     │   │   │
-│  │ │ TinyGPT-50M │    50M      │  200MB      │   80ms      │     6.1     │   │   │
-│  │ │ GPT-2 Small │   124M      │  500MB      │  150ms      │     5.8     │   │   │
-│  │ └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘   │   │
-│  │                                                                             │   │
-│  │ Key Findings:                                                               │   │
-│  │ • TinyGPT achieves competitive perplexity at smaller sizes                 │   │
-│  │ • Linear scaling relationship between params and performance               │   │
-│  │ • Memory efficiency matches theoretical predictions                        │   │
-│  │ • Inference latency scales predictably with model size                    │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+Metric Decision Tree:
+┌─────────────────────────────────────────────────────────────┐
+│ Question                 │ Metric              │ Why        │
+├──────────────────────────┼─────────────────────┼────────────┤
+│ "Will it fit on device?" │ model_size_mb       │ Memory     │
+│ "Is it accurate enough?" │ accuracy            │ Quality    │
+│ "Is it fast enough?"     │ latency_ms_mean     │ UX         │
+│ "Is it consistent?"      │ latency_ms_std      │ Reliability│
+│ "Can it scale?"          │ throughput          │ Capacity   │
+│ "How complex is it?"     │ parameter_count     │ Capacity   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Critical Performance Insights
+### Design Choice: Why num_runs=100?
 
-**Scaling Laws:**
-- **Parameters**: Memory ∝ params, Compute ∝ params^1.3
-- **Sequence Length**: Attention memory/compute ∝ seq_len²
-- **Model Depth**: Memory ∝ layers, Compute ∝ layers
+We run inference 100 times by default to:
+- **Warm up** the system (first runs are often slower)
+- **Capture variance** (some runs hit cache, others miss)
+- **Average out noise** (OS interrupts, GC pauses)
+- **Get confidence intervals** (via std dev)
 
-**Optimization Sweet Spots:**
-- **Quantization**: 4× memory reduction, <5% accuracy loss
-- **Pruning**: 70-80% sparsity optimal for accuracy/speed trade-off
-- **Combined**: 20× total compression possible with careful tuning
+```
+Single Run (Unreliable):        Multiple Runs (Reliable):
+┌─────────────────────────┐     ┌─────────────────────────┐
+│ Run 1: 12.3ms           │     │ Run 1: 12.3ms           │
+│                         │     │ Run 2: 9.8ms            │
+│ Result: 12.3ms          │     │ Run 3: 10.1ms           │
+│ Confidence: Low         │     │ ...                     │
+│ (Could be outlier!)     │     │ Run 100: 10.2ms         │
+│                         │     │                         │
+│                         │     │ Result: 10.0ms ± 0.5ms  │
+│                         │     │ Confidence: High        │
+│                         │     │ (Statistically sound)   │
+└─────────────────────────┘     └─────────────────────────┘
+```
 
-**Bottleneck Analysis:**
-- **Training**: Memory bandwidth (moving gradients)
-- **Inference**: Compute bound (matrix multiplications)
-- **Generation**: Sequential dependency (limited parallelism)
+### Design Choice: Python Native Types
 
-Let's implement comprehensive analysis functions that measure and understand all these characteristics.
+Notice we convert all metrics to Python native types (int, float):
+
+```python
+'parameter_count': int(param_count),  # NumPy int64 → Python int
+'accuracy': float(accuracy),          # NumPy float64 → Python float
+```
+
+**Why?** JSON can't serialize NumPy types directly:
+```python
+# ❌ This fails:
+json.dumps({"value": np.int64(42)})  # TypeError!
+
+# ✅ This works:
+json.dumps({"value": int(42)})  # Success!
+```
+
+This design decision makes our submissions JSON-compatible without custom encoders.
 """
-
-# %% nbgrader={"grade": false, "grade_id": "systems_analysis", "solution": true}
-def analyze_tinygpt_memory_scaling():
-    """📊 Analyze how TinyGPT memory usage scales with model size."""
-    print("📊 Analyzing TinyGPT Memory Scaling...")
-
-    configs = [
-        {"embed_dim": 64, "num_layers": 2, "name": "Tiny"},
-        {"embed_dim": 128, "num_layers": 4, "name": "Small"},
-        {"embed_dim": 256, "num_layers": 6, "name": "Base"},
-        {"embed_dim": 512, "num_layers": 8, "name": "Large"}
-    ]
-
-    results = []
-    for config in configs:
-        model = TinyGPT(
-            vocab_size=1000,
-            embed_dim=config["embed_dim"],
-            num_layers=config["num_layers"],
-            num_heads=config["embed_dim"] // 32,  # Maintain reasonable head_dim
-            max_seq_len=256
-        )
-
-        # Use Module 15 profiler
-        profiler = Profiler()
-        param_count = profiler.count_parameters(model)
-
-        # Calculate memory footprint
-        inference_memory = param_count * BYTES_PER_FLOAT32 / MB_TO_BYTES
-        training_memory = inference_memory * 3  # Parameters + gradients + optimizer
-
-        results.append({
-            "name": config["name"],
-            "params": param_count,
-            "inference_mb": inference_memory,
-            "training_mb": training_memory,
-            "embed_dim": config["embed_dim"],
-            "layers": config["num_layers"]
-        })
-
-        print(f"{config['name']}: {param_count:,} params, "
-              f"Inference: {inference_memory:.1f}MB, Training: {training_memory:.1f}MB")
-
-    # Analyze scaling trends
-    print("\n💡 Memory Scaling Insights:")
-    tiny_params = results[0]["params"]
-    large_params = results[-1]["params"]
-    scaling_factor = large_params / tiny_params
-    print(f"   Parameter growth: {scaling_factor:.1f}× from Tiny to Large")
-    print(f"   Training memory range: {results[0]['training_mb']:.1f}MB → {results[-1]['training_mb']:.1f}MB")
-
-    return results
-
-def analyze_optimization_impact():
-    """📊 Analyze the impact of quantization and pruning on model performance."""
-    print("📊 Analyzing Optimization Techniques Impact...")
-
-    # Create base model
-    model = TinyGPT(vocab_size=100, embed_dim=128, num_layers=4, num_heads=4)
-    profiler = Profiler()
-
-    # Baseline measurements
-    base_params = profiler.count_parameters(model)
-    base_memory = base_params * BYTES_PER_FLOAT32 / MB_TO_BYTES
-
-    print(f"📐 Baseline Model:")
-    print(f"   Parameters: {base_params:,}")
-    print(f"   Memory: {base_memory:.1f}MB")
-
-    # Simulate quantization impact (Module 17)
-    print(f"\n🔧 After INT8 Quantization:")
-    quantized_memory = base_memory * BYTES_PER_INT8 / BYTES_PER_FLOAT32
-    print(f"   Memory: {quantized_memory:.1f}MB ({quantized_memory/base_memory:.1%} of original)")
-    print(f"   Memory saved: {base_memory - quantized_memory:.1f}MB")
-
-    # Simulate pruning impact (Module 18)
-    sparsity_levels = [0.5, 0.7, 0.9]
-    print(f"\n✂️ Pruning Analysis:")
-    for sparsity in sparsity_levels:
-        effective_params = base_params * (1 - sparsity)
-        memory_reduction = base_memory * sparsity
-        print(f"   {sparsity:.0%} sparsity: {effective_params:,} active params, "
-              f"{memory_reduction:.1f}MB saved")
-
-    # Combined optimization
-    print(f"\n🚀 Combined Optimization (90% pruning + INT8):")
-    combined_memory = base_memory * 0.1 / 4  # 10% params × 1/4 size
-    print(f"   Memory: {combined_memory:.1f}MB ({combined_memory/base_memory:.1%} of original)")
-    print(f"   Total reduction: {base_memory/combined_memory:.1f}× smaller")
-
-def analyze_training_performance():
-    """📊 Analyze training vs inference performance characteristics."""
-    print("📊 Analyzing Training vs Inference Performance...")
-
-    # Create model for analysis
-    model = TinyGPT(vocab_size=1000, embed_dim=256, num_layers=6, num_heads=8)
-    profiler = Profiler()
-
-    # Simulate batch processing at different sizes
-    batch_sizes = [1, 4, 16, 32]
-    seq_len = 128
-
-    print(f"📈 Batch Size Impact (seq_len={seq_len}):")
-    for batch_size in batch_sizes:
-        # Calculate memory for batch
-        input_memory = batch_size * seq_len * BYTES_PER_FLOAT32 / MB_TO_BYTES
-        activation_memory = input_memory * model.num_layers * 2  # Rough estimate
-        total_memory = model._param_count * BYTES_PER_FLOAT32 / MB_TO_BYTES + activation_memory
-
-        # Estimate throughput (tokens/second)
-        # Rough approximation based on batch efficiency
-        base_throughput = 100  # tokens/second for batch_size=1
-        efficiency = min(batch_size, 16) / 16  # Efficiency plateaus at batch_size=16
-        throughput = base_throughput * batch_size * efficiency
-
-        print(f"   Batch {batch_size:2d}: {total_memory:6.1f}MB memory, "
-              f"{throughput:5.0f} tokens/sec")
-
-    print("\n💡 Performance Insights:")
-    print("   Memory scales linearly with batch size")
-    print("   Throughput improves with batching (better GPU utilization)")
-    print("   Sweet spot: batch_size=16-32 for most GPUs")
-
-# Run all analyses when developing this module
-if __name__ == "__main__":
-    memory_results = analyze_tinygpt_memory_scaling()
-    analyze_optimization_impact()
-    analyze_training_performance()
 
 # %% [markdown]
 """
-## 🎭 Stage 4: Complete ML Pipeline Demonstration
+## Part 3: Submission Generation
 
-Now we'll create a complete demonstration that brings together all components into a working ML system. This shows the full journey from raw text to trained model to generated output, demonstrating how all 19 modules work together.
+The core function that generates a standardized JSON submission from benchmark results.
 
-### What We're Demonstrating: End-to-End ML System
-
-This final stage shows how everything integrates into a production-quality ML pipeline:
-
-```
-                      🎭 COMPLETE ML PIPELINE DEMONSTRATION 🎭
-
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                           STAGE 1: DATA PREPARATION                                 │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Raw Text Corpus ──────────────────────────────────────────────────────────────►   │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ "The quick brown fox jumps over the lazy dog."                             │   │
-│  │ "Artificial intelligence is transforming the world."                       │   │
-│  │ "Machine learning models require large amounts of data."                   │   │
-│  │ "Neural networks learn patterns from training examples."                   │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Tokenization (Module 10)                                                    │   │
-│  │                                                                             │   │
-│  │ "The quick" → [84, 104, 101, 32, 113, 117, 105, 99, 107]                  │   │
-│  │ "brown fox" → [98, 114, 111, 119, 110, 32, 102, 111, 120]                 │   │
-│  │ ...                                                                         │   │
-│  │                                                                             │   │
-│  │ Result: 10,000 training sequences                                           │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ DataLoader Creation (Module 08)                                             │   │
-│  │                                                                             │   │
-│  │ • Batch size: 32                                                            │   │
-│  │ • Sequence length: 64                                                       │   │
-│  │ • Shuffle: True                                                             │   │
-│  │ • Total batches: 312                                                        │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                            STAGE 2: MODEL TRAINING                                  │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Training Configuration:                                                            │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Model: TinyGPT (13M parameters)                                             │   │
-│  │ • embed_dim: 256                                                            │   │
-│  │ • num_layers: 6                                                             │   │
-│  │ • num_heads: 8                                                              │   │
-│  │ • vocab_size: 1000                                                          │   │
-│  │                                                                             │   │
-│  │ Optimizer: AdamW                                                            │   │
-│  │ • learning_rate: 3e-4                                                       │   │
-│  │ • weight_decay: 0.01                                                        │   │
-│  │ • betas: (0.9, 0.95)                                                        │   │
-│  │                                                                             │   │
-│  │ Schedule: Cosine with warmup                                                │   │
-│  │ • warmup_steps: 100                                                         │   │
-│  │ • max_epochs: 20                                                            │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Training Progress:                                                          │   │
-│  │                                                                             │   │
-│  │ Epoch 1:  Loss=4.234, PPL=68.9   ←─ Random initialization                 │   │
-│  │ Epoch 5:  Loss=2.891, PPL=18.0   ←─ Learning patterns                     │   │
-│  │ Epoch 10: Loss=2.245, PPL=9.4    ←─ Convergence                           │   │
-│  │ Epoch 15: Loss=1.967, PPL=7.1    ←─ Fine-tuning                           │   │
-│  │ Epoch 20: Loss=1.823, PPL=6.2    ←─ Final performance                     │   │
-│  │                                                                             │   │
-│  │ Training Time: 45 minutes on CPU                                           │   │
-│  │ Memory Usage: ~500MB peak                                                   │   │
-│  │ Final Perplexity: 6.2 (good for character-level)                          │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                           STAGE 3: MODEL OPTIMIZATION                               │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Optimization Pipeline:                                                             │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 1: Baseline Profiling (Module 15)                                     │   │
-│  │                                                                             │   │
-│  │ • Parameter count: 13,042,176                                               │   │
-│  │ • Memory footprint: 52.2MB                                                  │   │
-│  │ • Inference latency: 25ms per sequence                                      │   │
-│  │ • FLOP count: 847M per forward pass                                         │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 2: INT8 Quantization (Module 17)                                      │   │
-│  │                                                                             │   │
-│  │ Before: FP32 weights, 52.2MB                                               │   │
-│  │ After:  INT8 weights, 13.1MB                                               │   │
-│  │                                                                             │   │
-│  │ • Memory reduction: 4.0× smaller                                           │   │
-│  │ • Speed improvement: 1.8× faster                                           │   │
-│  │ • Accuracy impact: 6.2 → 6.4 PPL (minimal degradation)                   │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 3: Magnitude Pruning (Module 18)                                      │   │
-│  │                                                                             │   │
-│  │ Sparsity levels tested: 50%, 70%, 90%                                      │   │
-│  │                                                                             │   │
-│  │ 50% sparse: 6.5MB, 1.6× faster, 6.3 PPL                                  │   │
-│  │ 70% sparse: 3.9MB, 2.1× faster, 6.8 PPL                                  │   │
-│  │ 90% sparse: 1.3MB, 2.8× faster, 8.9 PPL ←─ Too aggressive                │   │
-│  │                                                                             │   │
-│  │ Optimal: 70% sparsity (good speed/accuracy trade-off)                     │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                       │                                             │
-│                                       ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Step 4: Final Optimized Model                                               │   │
-│  │                                                                             │   │
-│  │ Original:  52.2MB, 25ms, 6.2 PPL                                          │   │
-│  │ Optimized: 3.9MB, 12ms, 6.8 PPL                                           │   │
-│  │                                                                             │   │
-│  │ Total improvement: 13.4× smaller, 2.1× faster, +0.6 PPL                  │   │
-│  │                                                                             │   │
-│  │ Ready for deployment on mobile/edge devices!                               │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                            STAGE 4: TEXT GENERATION                                 │
-├─────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                     │
-│  Generation Examples:                                                               │
-│                                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ Prompt: "The future of AI"                                                 │   │
-│  │ Generated: "The future of AI is bright and full of possibilities for       │   │
-│  │            helping humanity solve complex problems."                       │   │
-│  │                                                                             │   │
-│  │ Prompt: "Machine learning"                                                 │   │
-│  │ Generated: "Machine learning enables computers to learn patterns from      │   │
-│  │            data without being explicitly programmed."                      │   │
-│  │                                                                             │   │
-│  │ Prompt: "Neural networks"                                                  │   │
-│  │ Generated: "Neural networks are computational models inspired by the       │   │
-│  │            human brain that can learn complex representations."            │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                     │
-│  Generation Performance:                                                            │
-│  ┌─────────────────────────────────────────────────────────────────────────────┐   │
-│  │ • Speed: ~50 tokens/second                                                  │   │
-│  │ • Quality: Coherent short text                                              │   │
-│  │ • Memory: 3.9MB (optimized model)                                          │   │
-│  │ • Latency: 20ms per token                                                   │   │
-│  │                                                                             │   │
-│  │ With KV Caching (Module 14):                                               │   │
-│  │ • Speed: ~80 tokens/second (1.6× improvement)                              │   │
-│  │ • Memory: +2MB for cache                                                    │   │
-│  │ • Latency: 12ms per token                                                   │   │
-│  └─────────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Complete System Validation
-
-Our end-to-end pipeline demonstrates:
-
-**1. Data Flow Integrity**: Text → Tokens → Batches → Training → Model
-**2. Training Effectiveness**: Loss convergence, perplexity improvement
-**3. Optimization Success**: Memory reduction, speed improvement
-**4. Generation Quality**: Coherent text output
-**5. Systems Integration**: All 19 modules working together
-
-Let's implement the complete pipeline class that orchestrates this entire process.
+**Design Goals:**
+1. **Baseline-first** - Always require baseline results (comparison reference)
+2. **Optimization optional** - Support baseline-only OR baseline+optimized submissions
+3. **Auto-calculate improvements** - Automatically compute speedup, compression, accuracy delta
+4. **Schema compliance** - Generate structure that passes validation
+5. **Extensible** - Easy to add new fields without breaking existing code
 """
 
-# %% nbgrader={"grade": false, "grade_id": "complete_pipeline", "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "generate-submission", "solution": true}
 #| export
-class CompleteTinyGPTPipeline:
+def generate_submission(
+    baseline_report: BenchmarkReport,
+    optimized_report: Optional[BenchmarkReport] = None,
+    student_name: Optional[str] = None,
+    techniques_applied: Optional[List[str]] = None
+) -> Dict[str, Any]:
     """
-    End-to-end ML pipeline demonstrating integration of all 19 modules.
+    Generate a standardized benchmark submission.
 
-    Pipeline stages:
-    1. Data preparation (Module 10: Tokenization)
-    2. Model creation (Modules 01-04, 11-13: Architecture)
-    3. Training setup (Modules 05-07: Optimization)
-    4. Training loop (Module 08: DataLoader)
-    5. Optimization (Modules 17-18: Quantization, Pruning)
-    6. Evaluation (Module 19: Benchmarking)
-    7. Generation (Module 14: KV Caching)
+    Args:
+        baseline_report: Benchmark results for baseline model (REQUIRED)
+        optimized_report: Optional benchmark results for optimized model
+        student_name: Optional student/submitter name
+        techniques_applied: List of optimization techniques used (e.g., ["quantization", "pruning"])
+
+    Returns:
+        Dictionary containing submission data (ready for JSON export)
+
+    Submission Structure:
+        {
+          "tinytorch_version": "0.1.0",
+          "submission_type": "capstone_benchmark",
+          "timestamp": "...",
+          "system_info": {...},
+          "baseline": {
+            "model_name": "...",
+            "metrics": {...}
+          },
+          "optimized": {...},        # Optional
+          "improvements": {...}      # Auto-calculated if optimized present
+        }
     """
+    submission = {
+        'tinytorch_version': '0.1.0',
+        'submission_type': 'capstone_benchmark',
+        'timestamp': baseline_report.timestamp,
+        'system_info': baseline_report.system_info,
+        'baseline': {
+            'model_name': baseline_report.model_name,
+            'metrics': baseline_report.metrics
+        }
+    }
 
-    def __init__(self, vocab_size: int = 100, embed_dim: int = 128,
-                 num_layers: int = 4, num_heads: int = 4):
-        """
-        Initialize complete end-to-end TinyGPT pipeline integrating all 19 modules.
+    # Add student name if provided
+    if student_name:
+        submission['student_name'] = student_name
 
-        TODO: Set up a complete ML pipeline with tokenization, model, training,
-        profiling, and benchmarking components
+    # Add optimization results if provided
+    if optimized_report:
+        submission['optimized'] = {
+            'model_name': optimized_report.model_name,
+            'metrics': optimized_report.metrics,
+            'techniques_applied': techniques_applied or []
+        }
 
-        APPROACH:
-        1. Store model architecture parameters (vocab_size, embed_dim, num_layers, num_heads)
-        2. Initialize tokenizer using CharTokenizer from Module 10 with printable ASCII (32-127)
-        3. Create TinyGPT model instance with stored parameters and max_seq_len=256
-        4. Setup TinyGPTTrainer for training orchestration with learning_rate=3e-4
-        5. Initialize Profiler (Module 15) and Benchmark (Module 19) for performance analysis
-        6. Initialize pipeline state tracking (is_trained flag, training_history list)
-        7. Print pipeline initialization summary with parameter count and memory usage
+        # Calculate improvement metrics
+        baseline_latency = baseline_report.metrics['latency_ms_mean']
+        optimized_latency = optimized_report.metrics['latency_ms_mean']
+        baseline_size = baseline_report.metrics['model_size_mb']
+        optimized_size = optimized_report.metrics['model_size_mb']
 
-        EXAMPLE:
-        >>> pipeline = CompleteTinyGPTPipeline(vocab_size=100, embed_dim=128,
-        ...                                     num_layers=4, num_heads=4)
-        🏗️ Complete TinyGPT Pipeline Initialized
-           Model: 419,300 parameters
-           Memory: 1.6MB
-        >>> pipeline.model.count_parameters()
-        419300
-        >>> pipeline.is_trained
-        False
-        >>> len(pipeline.training_history)
-        0
+        submission['improvements'] = {
+            'speedup': float(baseline_latency / optimized_latency),
+            'compression_ratio': float(baseline_size / optimized_size),
+            'accuracy_delta': float(
+                optimized_report.metrics['accuracy'] - baseline_report.metrics['accuracy']
+            )
+        }
 
-        HINTS:
-        - CharTokenizer needs list of characters: [chr(i) for i in range(32, 127)]
-        - TinyGPT requires vocab_size, embed_dim, num_layers, num_heads, max_seq_len
-        - TinyGPTTrainer takes model, tokenizer, and learning_rate as arguments
-        - Benchmark expects (models_list, datasets_list, metrics_list) format
-        - Memory calculation: parameters * 4 bytes / 1024 / 1024 for MB
-        """
+    return submission
 
-        ### BEGIN SOLUTION
-        self.vocab_size = vocab_size
-        self.embed_dim = embed_dim
-        self.num_layers = num_layers
-        self.num_heads = num_heads
+def save_submission(submission: Dict[str, Any], filepath: str = "submission.json"):
+    """
+    Save submission to JSON file.
 
-        # Stage 1: Initialize tokenizer (Module 10)
-        self.tokenizer = CharTokenizer([chr(i) for i in range(32, 127)])  # Printable ASCII
+    Args:
+        submission: Submission dictionary from generate_submission()
+        filepath: Output path (default: "submission.json")
 
-        # Stage 2: Create model (Modules 01-04, 11-13)
-        self.model = TinyGPT(
-            vocab_size=vocab_size,
-            embed_dim=embed_dim,
-            num_layers=num_layers,
-            num_heads=num_heads,
-            max_seq_len=256
-        )
+    Returns:
+        Path to saved file
+    """
+    Path(filepath).write_text(json.dumps(submission, indent=2))
+    print(f"\n✅ Submission saved to: {filepath}")
+    return filepath
 
-        # Stage 3: Setup training (Modules 05-07)
-        self.trainer = TinyGPTTrainer(self.model, self.tokenizer, learning_rate=3e-4)
-
-        # Stage 4: Initialize profiler and benchmark (Modules 15, 19)
-        self.profiler = Profiler()
-        self.benchmark = Benchmark([self.model], [], ["perplexity", "latency"])
-
-        # Pipeline state
-        self.is_trained = False
-        self.training_history = []
-
-        print("🏗️ Complete TinyGPT Pipeline Initialized")
-        print(f"   Model: {self.model.count_parameters():,} parameters")
-        print(f"   Memory: {self.model.count_parameters() * 4 / 1024 / 1024:.1f}MB")
-        ### END SOLUTION
-
-    def prepare_training_data(self, text_corpus: List[str], batch_size: int = 8) -> DataLoader:
-        """
-        Prepare training data using DataLoader (Module 08).
-
-        TODO: Create DataLoader for training text data
-
-        APPROACH:
-        1. Tokenize all texts in corpus
-        2. Create input/target pairs for language modeling
-        3. Package into TensorDataset
-        4. Create DataLoader with batching and shuffling
-
-        EXAMPLE:
-        >>> pipeline = CompleteTinyGPTPipeline()
-        >>> corpus = ["hello world", "ai is amazing"]
-        >>> dataloader = pipeline.prepare_training_data(corpus, batch_size=2)
-        >>> print(f"Batches: {len(dataloader)}")
-        Batches: 1
-        """
-        ### BEGIN SOLUTION
-        # Tokenize and prepare training pairs
-        input_sequences = []
-        target_sequences = []
-
-        for text in text_corpus:
-            tokens = self.tokenizer.encode(text)
-            if len(tokens) < 2:
-                continue  # Skip very short texts
-
-            # Create sliding window of input/target pairs
-            for i in range(len(tokens) - 1):
-                input_seq = tokens[:i+1]
-                target_seq = tokens[i+1]
-
-                # Pad input to consistent length
-                max_len = 32  # Reasonable context window
-                if len(input_seq) > max_len:
-                    input_seq = input_seq[-max_len:]
-                else:
-                    input_seq = [0] * (max_len - len(input_seq)) + input_seq
-
-                input_sequences.append(input_seq)
-                target_sequences.append(target_seq)
-
-        # Convert to tensors
-        inputs = Tensor(np.array(input_sequences))
-        targets = Tensor(np.array(target_sequences))
-
-        # Create dataset and dataloader
-        dataset = TensorDataset(inputs, targets)
-        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-        print(f"📚 Training data prepared: {len(dataset)} examples, {len(dataloader)} batches")
-        return dataloader
-        ### END SOLUTION
-
-    def train(self, dataloader: DataLoader, epochs: int = 10) -> Dict[str, List[float]]:
-        """
-        Complete training loop with monitoring.
-
-        TODO: Implement full training with progress tracking
-
-        APPROACH:
-        1. Loop through epochs
-        2. For each batch: forward, backward, optimize
-        3. Track loss and perplexity
-        4. Update learning rate schedule
-        5. Return training history
-
-        EXAMPLE:
-        >>> history = pipeline.train(dataloader, epochs=5)
-        >>> print(f"Final loss: {history['losses'][-1]:.4f}")
-        Final loss: 1.2345
-        """
-        ### BEGIN SOLUTION
-        history = {'losses': [], 'perplexities': [], 'epochs': []}
-
-        print(f"🚀 Starting training for {epochs} epochs...")
-
-        for epoch in range(epochs):
-            epoch_losses = []
-
-            for batch_idx, (inputs, targets) in enumerate(dataloader):
-                # Training step
-                loss = self.trainer.train_step(inputs, targets)
-                epoch_losses.append(loss)
-
-                # Log progress
-                if batch_idx % 10 == 0:
-                    perplexity = np.exp(loss)
-                    print(f"   Epoch {epoch+1}/{epochs}, Batch {batch_idx}: "
-                          f"Loss={loss:.4f}, PPL={perplexity:.2f}")
-
-            # Epoch summary
-            avg_loss = np.mean(epoch_losses)
-            avg_perplexity = np.exp(avg_loss)
-
-            history['losses'].append(avg_loss)
-            history['perplexities'].append(avg_perplexity)
-            history['epochs'].append(epoch + 1)
-
-            # Update learning rate
-            self.trainer.scheduler.step()
-
-            print(f"✅ Epoch {epoch+1} complete: Loss={avg_loss:.4f}, PPL={avg_perplexity:.2f}")
-
-        self.is_trained = True
-        self.training_history = history
-        print(f"🎉 Training complete! Final perplexity: {history['perplexities'][-1]:.2f}")
-
-        return history
-        ### END SOLUTION
-
-    def optimize_model(self, quantize: bool = True, prune_sparsity: float = 0.0):
-        """
-        Apply optimization techniques (Modules 17-18).
-
-        TODO: Apply quantization and pruning optimizations
-
-        APPROACH:
-        1. Optionally apply quantization to reduce precision
-        2. Optionally apply pruning to remove weights
-        3. Measure size reduction
-        4. Validate model still works
-
-        EXAMPLE:
-        >>> pipeline.optimize_model(quantize=True, prune_sparsity=0.5)
-        Model optimized: 75% size reduction
-        """
-        ### BEGIN SOLUTION
-        original_params = self.model.count_parameters()
-        original_memory = original_params * 4 / (1024 * 1024)
-
-        optimizations_applied = []
-
-        if quantize:
-            # Apply quantization (simulated)
-            # In real implementation, would use quantize_model()
-            quantized_memory = original_memory / 4  # INT8 vs FP32
-            optimizations_applied.append(f"INT8 quantization (4× memory reduction)")
-            print("   Applied INT8 quantization")
-
-        if prune_sparsity > 0:
-            # Apply pruning (simulated)
-            # In real implementation, would use magnitude_prune()
-            remaining_weights = 1 - prune_sparsity
-            optimizations_applied.append(f"{prune_sparsity:.0%} pruning ({remaining_weights:.0%} weights remain)")
-            print(f"   Applied {prune_sparsity:.0%} magnitude pruning")
-
-        # Calculate final size
-        size_reduction = 1.0
-        if quantize:
-            size_reduction *= 0.25  # 4× smaller
-        if prune_sparsity > 0:
-            size_reduction *= (1 - prune_sparsity)
-
-        final_memory = original_memory * size_reduction
-        reduction_factor = original_memory / final_memory
-
-        print(f"🔧 Model optimization complete:")
-        print(f"   Original: {original_memory:.1f}MB")
-        print(f"   Optimized: {final_memory:.1f}MB")
-        print(f"   Reduction: {reduction_factor:.1f}× smaller")
-        print(f"   Applied: {', '.join(optimizations_applied)}")
-        ### END SOLUTION
-
-    def generate_text(self, prompt: str, max_tokens: int = 50) -> str:
-        """
-        Generate text using the trained model.
-
-        TODO: Implement text generation with proper encoding/decoding
-
-        APPROACH:
-        1. Encode prompt to token IDs
-        2. Use model.generate() for autoregressive generation
-        3. Decode generated tokens back to text
-        4. Return generated text
-
-        EXAMPLE:
-        >>> text = pipeline.generate_text("Hello", max_tokens=10)
-        >>> print(f"Generated: {text}")
-        Generated: Hello world this is AI
-        """
-        ### BEGIN SOLUTION
-        if not self.is_trained:
-            print("⚠️ Model not trained yet. Generating with random weights.")
-
-        # Encode prompt
-        prompt_tokens = self.tokenizer.encode(prompt)
-        prompt_tensor = Tensor([prompt_tokens])
-
-        # Generate tokens
-        generated_tokens = self.model.generate(
-            prompt_tensor,
-            max_new_tokens=max_tokens,
-            temperature=0.8,
-            use_cache=True
-        )
-
-        # Decode to text
-        all_tokens = generated_tokens.data[0].tolist()
-        generated_text = self.tokenizer.decode(all_tokens)
-
-        return generated_text
-        ### END SOLUTION
-
-def test_unit_complete_pipeline():
-    """🔬 Test complete pipeline integration."""
-    print("🔬 Unit Test: Complete Pipeline Integration...")
-
-    # Create pipeline
-    pipeline = CompleteTinyGPTPipeline(vocab_size=50, embed_dim=32, num_layers=2)
-
-    # Test data preparation
-    corpus = ["hello world", "ai is fun", "machine learning"]
-    dataloader = pipeline.prepare_training_data(corpus, batch_size=2)
-    assert len(dataloader) > 0, "DataLoader should have batches"
-
-    # Test training (minimal)
-    history = pipeline.train(dataloader, epochs=1)
-    assert 'losses' in history, "History should contain losses"
-    assert len(history['losses']) == 1, "Should have one epoch of losses"
-
-    # Test optimization
-    pipeline.optimize_model(quantize=True, prune_sparsity=0.5)
-
-    # Test generation
-    generated = pipeline.generate_text("hello", max_tokens=5)
-    assert isinstance(generated, str), "Generated output should be string"
-    assert len(generated) > 0, "Generated text should not be empty"
-
-    print(f"✅ Pipeline stages completed successfully")
-    print(f"✅ Training history: {len(history['losses'])} epochs")
-    print(f"✅ Generated text: '{generated[:20]}...'")
-    print("✅ Complete pipeline integration works!")
-
-# Run immediate test when developing this module
-if __name__ == "__main__":
-    test_unit_complete_pipeline()
+print("✅ Submission generation functions defined")
 
 # %% [markdown]
 """
-## 🎯 Module Integration Test
+### Understanding the Improvements Calculation
 
-Final comprehensive test validating all components work together correctly.
+When you provide both baseline and optimized results, the submission auto-calculates three key improvement metrics:
+
+```
+Improvement Metrics Explained:
+
+1. Speedup (Latency Ratio):
+   ┌────────────────────────────────────────────────┐
+   │ Speedup = baseline_latency / optimized_latency │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  10.0ms                            │
+   │   Optimized: 5.0ms                             │
+   │   Speedup:   10.0 / 5.0 = 2.0x                 │
+   │                                                │
+   │ Interpretation:                                │
+   │   2.0x = Optimized model is 2× faster          │
+   │   1.0x = No change                             │
+   │   0.5x = Optimized model is slower (bad!)      │
+   └────────────────────────────────────────────────┘
+
+2. Compression Ratio (Size Reduction):
+   ┌────────────────────────────────────────────────┐
+   │ Compression = baseline_size / optimized_size   │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  4.0 MB                            │
+   │   Optimized: 1.0 MB                            │
+   │   Compression: 4.0 / 1.0 = 4.0x                │
+   │                                                │
+   │ Interpretation:                                │
+   │   4.0x = Model is 4× smaller                   │
+   │   1.0x = Same size                             │
+   │   0.8x = Larger after "optimization" (bad!)    │
+   └────────────────────────────────────────────────┘
+
+3. Accuracy Delta (Quality Impact):
+   ┌────────────────────────────────────────────────┐
+   │ Delta = optimized_accuracy - baseline_accuracy │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  92.0%                             │
+   │   Optimized: 91.5%                             │
+   │   Delta:     91.5 - 92.0 = -0.5%               │
+   │                                                │
+   │ Interpretation:                                │
+   │   +0.5% = Improved accuracy (rare but good!)   │
+   │    0.0% = Maintained accuracy (ideal!)         │
+   │   -0.5% = Slight loss (acceptable)             │
+   │   -5.0% = Major loss (unacceptable)            │
+   └────────────────────────────────────────────────┘
+```
+
+### The Optimization Trade-off Triangle
+
+Every optimization involves trade-offs:
+
+```
+The Impossible Triangle:
+         Fast (Speedup)
+              ▲
+             /│\
+            / │ \
+           /  │  \
+          /   │   \
+         /  Good  \
+        /  Balance \
+       ▼─────────────▼
+    Small         Accurate
+  (Compression)   (Delta)
+
+You can pick TWO:
+• Fast + Small   → Aggressive optimization, some accuracy loss
+• Fast + Accurate → Careful optimization, less compression
+• Small + Accurate → Conservative quantization, slower
+
+The goal: Find the sweet spot for YOUR use case!
+```
+
+### Why JSON Schema Validation Matters
+
+Our submission format is designed to be validated:
+
+```python
+# Valid submission (passes validation):
+{
+  "tinytorch_version": "0.1.0",      # ✓ Required, string
+  "timestamp": "2025-01-15 14:30",   # ✓ Required, string
+  "baseline": {                       # ✓ Required, object
+    "metrics": {                      # ✓ Required, object
+      "accuracy": 0.92                # ✓ Required, float in [0, 1]
+    }
+  }
+}
+
+# Invalid submission (fails validation):
+{
+  "tinytorch_version": 0.1,          # ✗ Wrong type (number not string)
+  # ✗ Missing timestamp
+  "baseline": {
+    "metrics": {
+      "accuracy": "92%"                # ✗ Wrong type (string not float)
+    }
+  }
+}
+```
+
+This prevents common mistakes:
+- Forgetting required fields
+- Using wrong data types
+- Invalid value ranges (accuracy > 1.0)
+- Inconsistent structure
+
+In production ML, schema validation is what makes benchmarks trustworthy and comparable!
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test_module", "locked": true, "points": 20}
-def test_module():
-    """🧪 Module Test: Complete Integration
+# %% [markdown]
+"""
+## Part 4: Complete Example Workflow
 
-    Comprehensive test of entire capstone module functionality.
+This section demonstrates the complete workflow from model to submission.
+Students can modify this to benchmark their own models!
 
-    This final test runs before module summary to ensure:
-    - TinyGPT architecture works correctly
-    - Training pipeline integrates properly
-    - Optimization techniques can be applied
-    - Text generation produces output
-    - All systems analysis functions execute
-    - Complete pipeline demonstrates end-to-end functionality
+**Workflow Steps:**
+1. Create test dataset (or load from milestone)
+2. Create baseline model
+3. Benchmark baseline performance
+4. (Optional) Apply optimizations
+5. (Optional) Benchmark optimized version
+6. Generate submission with comparisons
+7. Save to JSON file
+
+This is the EXACT workflow used in production ML systems!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "example-workflow", "solution": true}
+def run_example_benchmark():
     """
-    print("🧪 RUNNING MODULE INTEGRATION TEST")
-    print("=" * 60)
+    Complete example showing the full benchmarking workflow.
 
-    # Test 1: TinyGPT Architecture
-    print("🔬 Testing TinyGPT architecture...")
-    test_unit_tinygpt_init()
-    test_unit_tinygpt_forward()
+    Students can modify this to benchmark their own models!
+    """
+    print("="*70)
+    print("TINYTORCH CAPSTONE: BENCHMARKING WORKFLOW EXAMPLE")
+    print("="*70)
 
-    # Test 2: Training Pipeline
-    print("\n🔬 Testing training pipeline...")
-    test_unit_training_pipeline()
+    # Step 1: Create toy dataset
+    print("\n🔧 Step 1: Creating toy dataset...")
+    np.random.seed(42)
+    X_test = Tensor(np.random.randn(100, 10))
+    y_test = np.random.randint(0, 3, 100)
+    print(f"  Dataset: {X_test.shape[0]} samples, {X_test.shape[1]} features, 3 classes")
 
-    # Test 3: Complete Pipeline
-    print("\n🔬 Testing complete pipeline...")
-    test_unit_complete_pipeline()
+    # Step 2: Create baseline model
+    print("\n🔧 Step 2: Creating baseline model...")
+    baseline_model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    print(f"  Model: {baseline_model.count_parameters():,} parameters")
 
-    # Test 4: Systems Analysis
-    print("\n🔬 Testing systems analysis...")
+    # Step 3: Benchmark baseline
+    print("\n📊 Step 3: Benchmarking baseline model...")
+    baseline_report = BenchmarkReport(model_name="baseline_mlp")
+    baseline_report.benchmark_model(baseline_model, X_test, y_test, num_runs=50)
 
-    # Create model for final validation
-    print("🔬 Final integration test...")
-    model = TinyGPT(vocab_size=100, embed_dim=64, num_layers=2, num_heads=2)
-
-    # Verify core functionality
-    assert hasattr(model, 'count_parameters'), "Model should have parameter counting"
-    assert hasattr(model, 'forward'), "Model should have forward method"
-    assert hasattr(model, 'generate'), "Model should have generation method"
-
-    # Test parameter counting
-    param_count = model.count_parameters()
-    assert param_count > 0, "Model should have parameters"
-
-    # Test forward pass
-    test_input = Tensor([[1, 2, 3, 4, 5]])
-    output = model.forward(test_input)
-    assert output.shape == (1, 5, 100), f"Expected (1, 5, 100), got {output.shape}"
-
-    # Test generation
-    generated = model.generate(test_input, max_new_tokens=3)
-    assert generated.shape[1] == 8, f"Expected 8 tokens, got {generated.shape[1]}"
-
-    print("\n" + "=" * 60)
-    print("🎉 ALL CAPSTONE TESTS PASSED!")
-    print("🚀 TinyGPT system fully functional!")
-    print("✅ All 19 modules successfully integrated!")
-    print("🎯 Ready for real-world deployment!")
-    print("\nRun: tito module complete 20")
-
-# Run comprehensive test when developing this module
-if __name__ == "__main__":
-    test_module()
-
-# %% nbgrader={"grade": false, "grade_id": "main_execution", "solution": false}
-if __name__ == "__main__":
-    print("🚀 Running TinyGPT Capstone module...")
-
-    # Run the comprehensive test
-    test_module()
-
-    # Demo the complete system
-    print("\n" + "=" * 60)
-    print("🎭 CAPSTONE DEMONSTRATION")
-    print("=" * 60)
-
-    # Create a demo pipeline
-    print("🏗️ Creating demonstration pipeline...")
-    demo_pipeline = CompleteTinyGPTPipeline(
-        vocab_size=100,
-        embed_dim=128,
-        num_layers=4,
-        num_heads=4
+    # Step 4: Generate submission
+    print("\n📝 Step 4: Generating submission...")
+    submission = generate_submission(
+        baseline_report=baseline_report,
+        student_name="TinyTorch Student"
     )
 
-    # Show parameter breakdown
-    print(f"\n📊 Model Architecture Summary:")
-    print(f"   Parameters: {demo_pipeline.model.count_parameters():,}")
-    print(f"   Layers: {demo_pipeline.num_layers}")
-    print(f"   Heads: {demo_pipeline.num_heads}")
-    print(f"   Embedding dimension: {demo_pipeline.embed_dim}")
+    # Step 5: Save submission
+    print("\n💾 Step 5: Saving submission...")
+    save_submission(submission, "capstone_submission.json")
 
-    # Demonstrate text generation (with untrained model)
-    print(f"\n🎭 Demonstration Generation (untrained model):")
-    sample_text = demo_pipeline.generate_text("Hello", max_tokens=10)
-    print(f"   Input: 'Hello'")
-    print(f"   Output: '{sample_text}'")
-    print(f"   Note: Random output expected (model not trained)")
+    print("\n" + "="*70)
+    print("🎉 WORKFLOW COMPLETE!")
+    print("="*70)
+    print("\nNext steps:")
+    print("  1. Try optimizing the model (quantization, pruning, etc.)")
+    print("  2. Benchmark the optimized version")
+    print("  3. Generate a new submission with both baseline and optimized results")
+    print("  4. Share your submission.json with the TinyTorch community!")
 
-    print("\n✅ Capstone demonstration complete!")
-    print("🎯 TinyGPT represents the culmination of 19 modules of ML systems learning!")
+    return submission
+
+print("✅ Example workflow defined")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Capstone Reflection
+### Understanding the Workflow Pattern
 
-This capstone integrates everything you've learned across 19 modules. Let's reflect on the complete systems picture.
+This workflow follows industry best practices:
 
-### Question 1: Architecture Scaling
-You built TinyGPT with configurable architecture (embed_dim, num_layers, num_heads).
-If you double the embed_dim from 128 to 256, approximately how much does memory usage increase?
+```
+Production ML Workflow:
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Define Task                                              │
+│    ↓ What are we solving? What's the test set?              │
+│                                                             │
+│ 2. Baseline Model                                           │
+│    ↓ Simplest reasonable model                              │
+│                                                             │
+│ 3. Baseline Benchmark                                       │
+│    ↓ Measure: accuracy, latency, memory                     │
+│                                                             │
+│ 4. Optimization (ITERATIVE)                                 │
+│    ↓ Try technique → Benchmark → Compare → Keep or revert   │
+│    ↓ Quantization? Pruning? Distillation?                   │
+│                                                             │
+│ 5. Final Submission                                         │
+│    ↓ Document: baseline, optimized, improvements            │
+│    ↓ Share: JSON file, metrics, techniques                  │
+│                                                             │
+│ 6. Community Comparison                                     │
+│    ↓ How do your results compare to others?                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
-**Answer:** _______ (2×, 4×, 8×, or 16×)
-
-**Reasoning:** Consider that embed_dim affects embedding tables, all linear layers in attention, and MLP layers.
-
-### Question 2: Training vs Inference Memory
-Your TinyGPT uses different memory patterns for training vs inference.
-For a model with 50M parameters, what's the approximate memory usage difference?
-
-**Training Memory:** _______ MB
-**Inference Memory:** _______ MB
-**Ratio:** _______ × larger for training
-
-**Hint:** Training requires parameters + gradients + optimizer states (Adam has 2 momentum terms).
-
-### Question 3: Optimization Trade-offs
-You implemented quantization (INT8) and pruning (90% sparsity) optimizations.
-For the original 200MB model, what's the memory footprint after both optimizations?
-
-**Original:** 200MB
-**After INT8 + 90% pruning:** _______ MB
-**Total reduction factor:** _______ ×
-
-### Question 4: Generation Complexity
-Your generate() method can use KV caching for efficiency.
-For generating 100 tokens with sequence length 500, how many forward passes are needed?
-
-**Without KV cache:** _______ forward passes
-**With KV cache:** _______ forward passes
-**Speedup factor:** _______ ×
-
-### Question 5: Systems Integration
-You integrated 19 different modules into a cohesive system.
-Which integration challenge was most critical for making TinyGPT work?
-
-a) Making all imports work correctly
-b) Ensuring tensor shapes flow correctly through all components
-c) Managing memory during training
-d) Coordinating the generation loop with KV caching
-
-**Answer:** _______
-
-**Explanation:** ________________________________
+**Key Insight**: Professional ML engineers iterate on step 4, trying different optimizations and measuring their impact. The submission captures the BEST result after this exploration.
 """
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Capstone - Complete TinyGPT System
+## Part 4b: Advanced Workflow - Using TinyTorch Optimization APIs
 
-Congratulations! You've completed the ultimate integration project - building TinyGPT from your own ML framework!
+This section demonstrates using the complete optimization pipeline from Modules 14-19:
+- Module 14 (Profiling): Measure baseline performance and identify bottlenecks
+- Module 15 (Quantization): Reduce precision from FP32 to INT8
+- Module 16 (Compression): Prune low-magnitude weights
+- Module 17 (Memoization): Cache repeated computations
+- Module 18 (Acceleration): Use optimized kernels
+- Module 19 (Benchmarking): Professional measurement infrastructure
+
+This is the COMPLETE story: Profile → Optimize → Benchmark → Submit
+
+**What Students Learn:**
+- How to import and use APIs from previous modules
+- How to combine multiple optimizations (quantization + pruning)
+- How to measure cumulative impact (2× from quant + 1.5× from pruning = 3× total)
+- How to document techniques for reproducibility
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "optimization-workflow", "solution": true}
+def run_optimization_workflow_example():
+    """
+    Advanced example showing the complete optimization workflow.
+
+    This demonstrates:
+    1. Profiling baseline model (Module 14)
+    2. Applying optimizations (Modules 15, 16)
+    3. Benchmarking with best practices (Module 19)
+    4. Generating submission with before/after comparison
+
+    Students learn how to use TinyTorch as a complete framework!
+    """
+    print("="*70)
+    print("TINYTORCH CAPSTONE: OPTIMIZATION WORKFLOW")
+    print("="*70)
+    print("\nThis workflow demonstrates using Modules 14-19 together:")
+    print("  📊 Module 14: Profiling")
+    print("  🔢 Module 15: Quantization (optional - API imported for demonstration)")
+    print("  ✂️  Module 16: Compression (optional - API imported for demonstration)")
+    print("  💾 Module 17: Memoization (optional - API imported for demonstration)")
+    print("  ⚡ Module 18: Acceleration (optional - API imported for demonstration)")
+    print("  📈 Module 19: Benchmarking")
+    print("  📝 Module 20: Submission Generation")
+
+    # Demonstrate API imports (students can use these for their own optimizations)
+    print("\n🔧 Importing optimization APIs...")
+    try:
+        from tinytorch.profiling.profiler import Profiler, quick_profile
+        print("  ✅ Module 14 (Profiling) imported")
+    except ImportError:
+        print("  ⚠️  Module 14 (Profiling) not available - using basic profiling")
+        Profiler = None
+
+    try:
+        from tinytorch.optimization.compression import magnitude_prune, structured_prune
+        print("  ✅ Module 16 (Compression) imported")
+    except ImportError:
+        print("  ⚠️  Module 16 (Compression) not available - skipping pruning demo")
+        magnitude_prune = None
+
+    try:
+        from tinytorch.benchmarking import Benchmark, BenchmarkResult
+        print("  ✅ Module 19 (Benchmarking) imported")
+    except ImportError:
+        print("  ⚠️  Module 19 (Benchmarking) not available - using basic benchmarking")
+        Benchmark = None
+
+    # Step 1: Create dataset
+    print("\n" + "="*70)
+    print("STEP 1: Create Test Dataset")
+    print("="*70)
+    np.random.seed(42)
+    X_test = Tensor(np.random.randn(100, 10))
+    y_test = np.random.randint(0, 3, 100)
+    print(f"  Dataset: {X_test.shape[0]} samples, {X_test.shape[1]} features, 3 classes")
+
+    # Step 2: Create and profile baseline model
+    print("\n" + "="*70)
+    print("STEP 2: Baseline Model - Profile & Benchmark")
+    print("="*70)
+    baseline_model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    print(f"  Model: {baseline_model.count_parameters():,} parameters")
+
+    # Benchmark baseline using BenchmarkReport
+    baseline_report = BenchmarkReport(model_name="baseline_mlp")
+    baseline_metrics = baseline_report.benchmark_model(baseline_model, X_test, y_test, num_runs=50)
+
+    # Optional: Demonstrate using Module 14's Profiler if available
+    if Profiler:
+        print("\n  📊 Optional: Using Module 14's Profiler for detailed analysis...")
+        profiler = Profiler()
+        # Note: Profiler integration would go here
+        # This demonstrates the API is available for students to use
+
+    # Step 3: (DEMO ONLY) Show optimization APIs available
+    print("\n" + "="*70)
+    print("STEP 3: Optimization APIs Available (Demo)")
+    print("="*70)
+    print("\n  📚 Students can apply these optimizations:")
+    print("     - Module 15: quantize_model(model, bits=8)")
+    print("     - Module 16: magnitude_prune(model, sparsity=0.5)")
+    print("     - Module 17: enable_kv_cache(model)  # For transformers")
+    print("     - Module 18: Use accelerated ops (vectorized_matmul, etc.)")
+    print("\n  💡 For this demo, we'll simulate an optimized model")
+    print("     (Students can replace this with real optimizations!)")
+
+    # Create "optimized" model (students would apply real optimizations here)
+    optimized_model = SimpleMLP(input_size=10, hidden_size=15, output_size=3)  # Smaller for demo
+    optimized_report = BenchmarkReport(model_name="optimized_mlp")
+    optimized_metrics = optimized_report.benchmark_model(optimized_model, X_test, y_test, num_runs=50)
+
+    # Step 4: Generate submission with before/after comparison
+    print("\n" + "="*70)
+    print("STEP 4: Generate Submission with Improvements")
+    print("="*70)
+
+    submission = generate_submission(
+        baseline_report=baseline_report,
+        optimized_report=optimized_report,
+        student_name="TinyTorch Optimizer",
+        techniques_applied=["model_sizing", "architecture_search"]  # Students list real techniques
+    )
+
+    # Display improvement summary
+    if 'improvements' in submission:
+        improvements = submission['improvements']
+        print("\n  📈 Optimization Results:")
+        print(f"     Speedup: {improvements['speedup']:.2f}x")
+        print(f"     Compression: {improvements['compression_ratio']:.2f}x")
+        print(f"     Accuracy change: {improvements['accuracy_delta']*100:+.1f}%")
+
+    # Step 5: Save submission
+    print("\n" + "="*70)
+    print("STEP 5: Save Submission")
+    print("="*70)
+    filepath = save_submission(submission, "optimization_submission.json")
+
+    print("\n" + "="*70)
+    print("🎉 OPTIMIZATION WORKFLOW COMPLETE!")
+    print("="*70)
+    print("\n📚 What students learned:")
+    print("  ✅ How to import and use optimization APIs from Modules 14-19")
+    print("  ✅ How to benchmark before and after optimization")
+    print("  ✅ How to generate professional submissions with improvement metrics")
+    print("  ✅ How TinyTorch modules work together as a complete framework")
+    print("\n💡 Next steps:")
+    print("  - Apply real optimizations (quantization, pruning, etc.)")
+    print("  - Benchmark milestone models (XOR, MNIST, CNN, etc.)")
+    print("  - Share your optimized results with the community!")
+
+    return submission
+
+print("✅ Optimization workflow example defined")
+
+# %% [markdown]
+"""
+### Combining Multiple Optimizations
+
+In production ML, you often stack optimizations for cumulative benefits:
+
+```
+Stacking Optimizations:
+┌─────────────────────────────────────────────────────────────┐
+│ Baseline Model                                              │
+│   Size: 4.0 MB, Latency: 10.0ms, Accuracy: 92.0%            │
+│                                                             │
+│ ↓ Apply Quantization (INT8)                                 │
+│   Size: 1.0 MB (4.0×), Latency: 5.0ms (2.0×), Acc: 91.8%    │
+│                                                             │
+│ ↓ Apply Pruning (50% sparsity)                              │
+│   Size: 0.5 MB (2.0×), Latency: 3.5ms (1.4×), Acc: 91.5%    │
+│                                                             │
+│ Final Optimized Model                                       │
+│   Total compression: 8.0× (4.0 MB → 0.5 MB)                 │
+│   Total speedup: 2.9× (10.0ms → 3.5ms)                      │
+│   Accuracy loss: -0.5% (92.0% → 91.5%)                      │
+└─────────────────────────────────────────────────────────────┘
+
+Key Insight: Effects multiply!
+  Quant (4.0×) × Pruning (2.0×) = 8.0× total compression
+```
+
+The submission's `techniques_applied` list documents this for reproducibility:
+```json
+"techniques_applied": ["int8_quantization", "magnitude_pruning_0.5"]
+```
+
+This tells other engineers EXACTLY what you did, so they can reproduce or build on your work!
+"""
+
+# %% [markdown]
+"""
+## Part 5: Module Testing
+
+Individual unit tests for each component, following TinyTorch testing patterns.
+
+**Testing Strategy:**
+1. **Unit tests** - Test each class/function in isolation
+2. **Integration test** - Test complete workflow end-to-end (in test_module)
+3. **Schema validation** - Ensure submissions conform to standard
+4. **Edge cases** - Test with missing optional fields, extreme values
+
+Each test validates one specific aspect and provides clear feedback.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "test-simple-mlp", "solution": true}
+def test_unit_simple_mlp():
+    """🔬 Test SimpleMLP model creation and forward pass."""
+    print("🔬 Unit Test: SimpleMLP...")
+
+    # Test model creation with default parameters
+    model = SimpleMLP()
+    assert model is not None, "Model should be created"
+
+    # Test with custom parameters
+    model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+
+    # Test parameter count
+    param_count = model.count_parameters()
+    expected_params = (10 * 20 + 20) + (20 * 3 + 3)  # fc1 + fc2
+    assert param_count == expected_params, f"Expected {expected_params} parameters, got {param_count}"
+
+    # Test forward pass
+    np.random.seed(42)
+    X = Tensor(np.random.randn(5, 10))  # 5 samples, 10 features
+    output = model.forward(X)
+
+    assert output.shape == (5, 3), f"Expected output shape (5, 3), got {output.shape}"
+    assert not np.isnan(output.data).any(), "Output should not contain NaN values"
+
+    print("✅ SimpleMLP works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_simple_mlp()
+
+# %% nbgrader={"grade": false, "grade_id": "test-benchmark-report", "solution": true}
+def test_unit_benchmark_report():
+    """🔬 Test BenchmarkReport class functionality."""
+    print("🔬 Unit Test: BenchmarkReport...")
+
+    # Create report
+    report = BenchmarkReport(model_name="test_model")
+
+    # Check initialization
+    assert report.model_name == "test_model", "Model name should be set correctly"
+    assert report.timestamp is not None, "Timestamp should be set"
+    assert report.system_info is not None, "System info should be collected"
+    assert 'platform' in report.system_info, "Should have platform info"
+    assert 'python_version' in report.system_info, "Should have Python version"
+
+    # Create test data
+    np.random.seed(42)
+    model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    X_test = Tensor(np.random.randn(50, 10))
+    y_test = np.random.randint(0, 3, 50)
+
+    # Benchmark model
+    metrics = report.benchmark_model(model, X_test, y_test, num_runs=10)
+
+    # Check metrics exist
+    required_metrics = [
+        'parameter_count', 'model_size_mb', 'accuracy',
+        'latency_ms_mean', 'latency_ms_std', 'throughput_samples_per_sec'
+    ]
+    for metric in required_metrics:
+        assert metric in metrics, f"Missing metric: {metric}"
+
+    # Check metric types and ranges
+    assert isinstance(metrics['parameter_count'], int), "Parameter count should be int"
+    assert metrics['parameter_count'] > 0, "Should have positive parameter count"
+    assert metrics['model_size_mb'] > 0, "Model size should be positive"
+    assert 0 <= metrics['accuracy'] <= 1, "Accuracy should be in [0, 1]"
+    assert metrics['latency_ms_mean'] > 0, "Latency should be positive"
+    assert metrics['latency_ms_std'] >= 0, "Standard deviation should be non-negative"
+    assert metrics['throughput_samples_per_sec'] > 0, "Throughput should be positive"
+
+    print("✅ BenchmarkReport works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_benchmark_report()
+
+# %% nbgrader={"grade": false, "grade_id": "test-submission-generation", "solution": true}
+def test_unit_submission_generation():
+    """🔬 Test generate_submission() function."""
+    print("🔬 Unit Test: Submission Generation...")
+
+    # Create baseline report
+    np.random.seed(42)
+    model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    X_test = Tensor(np.random.randn(50, 10))
+    y_test = np.random.randint(0, 3, 50)
+
+    baseline_report = BenchmarkReport(model_name="baseline_model")
+    baseline_report.benchmark_model(model, X_test, y_test, num_runs=10)
+
+    # Generate submission with baseline only
+    submission = generate_submission(baseline_report)
+
+    # Check submission structure
+    assert isinstance(submission, dict), "Submission should be a dictionary"
+    assert 'tinytorch_version' in submission, "Should have version field"
+    assert 'submission_type' in submission, "Should have submission type"
+    assert 'timestamp' in submission, "Should have timestamp"
+    assert 'system_info' in submission, "Should have system info"
+    assert 'baseline' in submission, "Should have baseline results"
+
+    # Check baseline structure
+    baseline = submission['baseline']
+    assert 'model_name' in baseline, "Baseline should have model name"
+    assert 'metrics' in baseline, "Baseline should have metrics"
+    assert baseline['model_name'] == "baseline_model", "Model name should match"
+
+    # Test with student name
+    submission_with_name = generate_submission(baseline_report, student_name="Test Student")
+    assert 'student_name' in submission_with_name, "Should include student name when provided"
+    assert submission_with_name['student_name'] == "Test Student", "Student name should match"
+
+    print("✅ Submission generation works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_submission_generation()
+
+# %% nbgrader={"grade": false, "grade_id": "test-submission-schema", "solution": true}
+def validate_submission_schema(submission: Dict[str, Any]) -> bool:
+    """
+    Validate submission JSON conforms to required schema.
+
+    This function ensures submissions are:
+    - Complete (no missing required fields)
+    - Type-safe (correct data types)
+    - Valid (values in acceptable ranges)
+
+    Used for automated validation before accepting community submissions.
+    """
+    # Check required top-level fields
+    required_fields = ['tinytorch_version', 'submission_type', 'timestamp', 'system_info', 'baseline']
+    for field in required_fields:
+        if field not in submission:
+            raise AssertionError(f"Missing required field: {field}")
+
+    # Check field types
+    assert isinstance(submission['tinytorch_version'], str), "Version should be string"
+    assert isinstance(submission['submission_type'], str), "Submission type should be string"
+    assert isinstance(submission['timestamp'], str), "Timestamp should be string"
+    assert isinstance(submission['system_info'], dict), "System info should be dict"
+    assert isinstance(submission['baseline'], dict), "Baseline should be dict"
+
+    # Check baseline structure
+    baseline = submission['baseline']
+    assert 'model_name' in baseline, "Baseline missing model_name"
+    assert 'metrics' in baseline, "Baseline missing metrics"
+
+    # Check metrics structure and types
+    metrics = baseline['metrics']
+    required_metrics = ['parameter_count', 'model_size_mb', 'accuracy', 'latency_ms_mean']
+    for metric in required_metrics:
+        if metric not in metrics:
+            raise AssertionError(f"Missing metric in baseline: {metric}")
+
+    # Check metric value ranges
+    assert 0 <= metrics['accuracy'] <= 1, "Accuracy must be in [0, 1]"
+    assert metrics['parameter_count'] > 0, "Parameter count must be positive"
+    assert metrics['model_size_mb'] > 0, "Model size must be positive"
+    assert metrics['latency_ms_mean'] > 0, "Latency must be positive"
+
+    # Check system info
+    system_info = submission['system_info']
+    assert 'platform' in system_info, "System info missing platform"
+    assert 'python_version' in system_info, "System info missing python_version"
+
+    return True
+
+def test_unit_submission_schema():
+    """🔬 Test submission schema validation."""
+    print("🔬 Unit Test: Submission Schema...")
+
+    # Create valid submission
+    np.random.seed(42)
+    model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    X_test = Tensor(np.random.randn(50, 10))
+    y_test = np.random.randint(0, 3, 50)
+
+    report = BenchmarkReport(model_name="test_model")
+    report.benchmark_model(model, X_test, y_test, num_runs=10)
+
+    submission = generate_submission(report)
+
+    # Validate schema
+    assert validate_submission_schema(submission), "Submission should pass schema validation"
+
+    # Test with optimized results
+    optimized_model = SimpleMLP(input_size=10, hidden_size=15, output_size=3)
+    optimized_report = BenchmarkReport(model_name="optimized_model")
+    optimized_report.benchmark_model(optimized_model, X_test, y_test, num_runs=10)
+
+    submission_with_opt = generate_submission(
+        report,
+        optimized_report,
+        techniques_applied=["pruning"]
+    )
+
+    # Validate optimized submission
+    assert validate_submission_schema(submission_with_opt), "Optimized submission should pass validation"
+    assert 'optimized' in submission_with_opt, "Should have optimized section"
+    assert 'improvements' in submission_with_opt, "Should have improvements section"
+
+    print("✅ Submission schema validation works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_submission_schema()
+
+# %% nbgrader={"grade": false, "grade_id": "test-submission-with-optimization", "solution": true}
+def test_unit_submission_with_optimization():
+    """🔬 Test submission with baseline + optimized comparison."""
+    print("🔬 Unit Test: Submission with Optimization...")
+
+    # Create baseline
+    np.random.seed(42)
+    baseline_model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    X_test = Tensor(np.random.randn(50, 10))
+    y_test = np.random.randint(0, 3, 50)
+
+    baseline_report = BenchmarkReport(model_name="baseline")
+    baseline_report.benchmark_model(baseline_model, X_test, y_test, num_runs=10)
+
+    # Create optimized version (smaller model for demo)
+    optimized_model = SimpleMLP(input_size=10, hidden_size=15, output_size=3)
+    optimized_report = BenchmarkReport(model_name="optimized")
+    optimized_report.benchmark_model(optimized_model, X_test, y_test, num_runs=10)
+
+    # Generate submission with both
+    techniques = ["model_sizing", "pruning"]
+    submission = generate_submission(
+        baseline_report,
+        optimized_report,
+        student_name="Test Student",
+        techniques_applied=techniques
+    )
+
+    # Check optimized section exists
+    assert 'optimized' in submission, "Should have optimized section"
+    optimized = submission['optimized']
+    assert 'model_name' in optimized, "Optimized section should have model name"
+    assert 'metrics' in optimized, "Optimized section should have metrics"
+    assert 'techniques_applied' in optimized, "Should have techniques list"
+    assert optimized['techniques_applied'] == techniques, "Techniques should match"
+
+    # Check improvements section
+    assert 'improvements' in submission, "Should have improvements section"
+    improvements = submission['improvements']
+    assert 'speedup' in improvements, "Should have speedup metric"
+    assert 'compression_ratio' in improvements, "Should have compression ratio"
+    assert 'accuracy_delta' in improvements, "Should have accuracy delta"
+
+    # Check improvement values are reasonable
+    assert improvements['speedup'] > 0, "Speedup should be positive"
+    assert improvements['compression_ratio'] > 0, "Compression ratio should be positive"
+    assert -1 <= improvements['accuracy_delta'] <= 1, "Accuracy delta should be in [-1, 1]"
+
+    print("✅ Submission with optimization works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_submission_with_optimization()
+
+# %% nbgrader={"grade": false, "grade_id": "test-improvements-calculation", "solution": true}
+def test_unit_improvements_calculation():
+    """🔬 Test speedup/compression/accuracy calculations are correct."""
+    print("🔬 Unit Test: Improvements Calculation...")
+
+    # Create baseline with known metrics
+    baseline_report = BenchmarkReport(model_name="baseline")
+    baseline_report.metrics = {
+        'parameter_count': 1000,
+        'model_size_mb': 4.0,
+        'accuracy': 0.80,
+        'latency_ms_mean': 10.0,
+        'latency_ms_std': 1.0,
+        'throughput_samples_per_sec': 100.0
+    }
+    baseline_report.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+    baseline_report.system_info = {'platform': 'test', 'python_version': '3.9', 'numpy_version': '1.20'}
+
+    # Create optimized with 2x speedup, 2x compression, 5% accuracy loss
+    optimized_report = BenchmarkReport(model_name="optimized")
+    optimized_report.metrics = {
+        'parameter_count': 500,
+        'model_size_mb': 2.0,
+        'accuracy': 0.75,
+        'latency_ms_mean': 5.0,
+        'latency_ms_std': 0.5,
+        'throughput_samples_per_sec': 200.0
+    }
+    optimized_report.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+    optimized_report.system_info = baseline_report.system_info
+
+    # Generate submission
+    submission = generate_submission(baseline_report, optimized_report)
+
+    improvements = submission['improvements']
+
+    # Verify calculations
+    # Speedup = baseline_latency / optimized_latency = 10.0 / 5.0 = 2.0
+    assert abs(improvements['speedup'] - 2.0) < 0.01, f"Expected speedup 2.0, got {improvements['speedup']}"
+
+    # Compression = baseline_size / optimized_size = 4.0 / 2.0 = 2.0
+    assert abs(improvements['compression_ratio'] - 2.0) < 0.01, f"Expected compression 2.0, got {improvements['compression_ratio']}"
+
+    # Accuracy delta = 0.75 - 0.80 = -0.05
+    assert abs(improvements['accuracy_delta'] - (-0.05)) < 0.001, f"Expected accuracy delta -0.05, got {improvements['accuracy_delta']}"
+
+    print("✅ Improvements calculation is correct!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_improvements_calculation()
+
+# %% nbgrader={"grade": false, "grade_id": "test-json-serialization", "solution": true}
+def test_unit_json_serialization():
+    """🔬 Test save_submission() creates valid JSON files."""
+    print("🔬 Unit Test: JSON Serialization...")
+
+    # Create submission
+    np.random.seed(42)
+    model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
+    X_test = Tensor(np.random.randn(50, 10))
+    y_test = np.random.randint(0, 3, 50)
+
+    report = BenchmarkReport(model_name="test_model")
+    report.benchmark_model(model, X_test, y_test, num_runs=10)
+
+    submission = generate_submission(report, student_name="Test Student")
+
+    # Save to file
+    test_file = "/tmp/test_submission_unit.json"
+    filepath = save_submission(submission, test_file)
+
+    # Check file exists
+    assert Path(filepath).exists(), "Submission file should exist"
+
+    # Load and verify JSON is valid
+    loaded_json = json.loads(Path(test_file).read_text())
+
+    # Verify structure is preserved
+    assert loaded_json['tinytorch_version'] == submission['tinytorch_version'], "Version should match"
+    assert loaded_json['student_name'] == submission['student_name'], "Student name should match"
+    assert loaded_json['baseline']['model_name'] == submission['baseline']['model_name'], "Model name should match"
+
+    # Verify metrics are preserved
+    baseline_metrics = loaded_json['baseline']['metrics']
+    original_metrics = submission['baseline']['metrics']
+    assert baseline_metrics['accuracy'] == original_metrics['accuracy'], "Accuracy should match"
+    assert baseline_metrics['parameter_count'] == original_metrics['parameter_count'], "Parameter count should match"
+
+    # Verify JSON can be dumped again (round-trip test)
+    round_trip = json.dumps(loaded_json, indent=2)
+    assert len(round_trip) > 0, "JSON should serialize again"
+
+    # Clean up
+    Path(test_file).unlink()
+
+    print("✅ JSON serialization works correctly!")
+
+# Run test immediately when developing
+if __name__ == "__main__":
+    test_unit_json_serialization()
+
+# %% nbgrader={"grade": false, "grade_id": "test-module", "solution": true}
+def test_module():
+    """
+    🧪 Test Module 20: Capstone submission infrastructure.
+
+    Runs all unit tests to validate complete functionality.
+    """
+    print("\n" + "="*70)
+    print("MODULE 20: CAPSTONE - UNIT TESTS")
+    print("="*70)
+
+    test_unit_simple_mlp()
+    test_unit_benchmark_report()
+    test_unit_submission_generation()
+    test_unit_submission_schema()
+    test_unit_submission_with_optimization()
+    test_unit_improvements_calculation()
+    test_unit_json_serialization()
+
+    print("\n" + "="*70)
+    print("🎉 ALL TESTS PASSED!")
+    print("="*70)
+    print("\nModule 20 validation complete!")
+    print("Run: tito module complete 20")
+
+print("✅ Test module defined")
+
+# %% [markdown]
+"""
+## Main Execution
+
+When run as a script, this demonstrates the complete workflow.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "main", "solution": true}
+if __name__ == "__main__":
+    # Run the test module to validate everything works
+    test_module()
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Capstone - Benchmarking & Submission
+
+Congratulations! You've completed the TinyTorch capstone by building a professional benchmarking and submission system!
 
 ### Key Accomplishments
-- **Integrated 19 modules** into a cohesive, production-ready system
-- **Built complete TinyGPT** with training, optimization, and generation capabilities
-- **Demonstrated systems thinking** with memory analysis, performance profiling, and optimization
-- **Created end-to-end pipeline** from raw text to trained model to generated output
-- **Applied advanced optimizations** including quantization and pruning
-- **Validated the complete framework** through comprehensive testing
-- All tests pass ✅ (validated by `test_module()`)
 
-### Systems Insights Gained
-- **Architecture scaling**: How model size affects memory and compute requirements
-- **Training dynamics**: Memory patterns, convergence monitoring, and optimization
-- **Production optimization**: Quantization and pruning for deployment efficiency
-- **Integration complexity**: How modular design enables complex system composition
+**What You Built:**
+- ✅ **BenchmarkReport class** - Comprehensive performance measurement (accuracy, latency, throughput, memory)
+- ✅ **Submission generation** - Standardized JSON format with schema validation
+- ✅ **Comparison infrastructure** - Automatic calculation of speedup, compression, accuracy delta
+- ✅ **Complete workflows** - From baseline to optimized models with reproducible results
 
-### The Complete Journey
+**What You Learned:**
+- 📊 **Benchmarking science** - Repeatability, comparability, completeness principles
+- 📈 **Metrics that matter** - Latency vs throughput, mean vs variance, accuracy vs efficiency
+- 🔍 **Reproducibility** - System context, schema validation, standardized reporting
+- 🚀 **Production patterns** - How real ML systems measure and compare model performance
+
+**Technical Skills Gained:**
+- Measuring inference latency with statistical rigor (mean ± std over multiple runs)
+- Calculating model memory footprint (parameters × bytes per parameter)
+- Generating schema-compliant JSON for automated validation
+- Comparing baseline vs optimized models quantitatively
+
+### The Complete TinyTorch Journey
+
 ```
-Module 01: Tensor Operations
-    ↓
-Modules 02-04: Neural Network Basics
-    ↓
-Modules 05-07: Training Infrastructure
-    ↓
-Modules 08-09: Data and Spatial Processing
-    ↓
-Modules 10-14: Language Models and Transformers
-    ↓
-Modules 15-19: Systems Optimization
-    ↓
-Module 20: COMPLETE TINYGPT SYSTEM! 🎉
+Module 01: Tensor          → Built foundation
+Modules 02-13: Framework   → Implemented ML components
+Modules 14-18: Optimization → Learned performance techniques
+Module 19: Benchmarking    → Measured performance
+Module 20: Submission      → Proved it works! ✨
 ```
 
-### Ready for the Real World
-Your TinyGPT implementation demonstrates:
-- **Production-quality code** with proper error handling and optimization
-- **Systems engineering mindset** with performance analysis and memory management
-- **ML framework design** understanding how PyTorch-like systems work internally
-- **End-to-end ML pipeline** from data to deployment
+### Real-World Impact
 
-**Export with:** `tito module complete 20`
+The skills you practiced in this capstone are used daily in production ML:
 
-**Achievement Unlocked:** 🏆 **ML Systems Engineer** - You've built a complete AI system from scratch!
+**Research Labs:**
+- Publishing papers with reproducible benchmarks
+- Comparing architectures on standardized leaderboards
+- Validating claims with measurable improvements
 
-You now understand how modern AI systems work from the ground up. From tensors to text generation, from training loops to production optimization - you've mastered the full stack of ML systems engineering.
+**ML Engineering Teams:**
+- A/B testing model versions before deployment
+- Tracking latency/accuracy trade-offs across experiments
+- Documenting optimization wins for stakeholders
 
-**What's Next:** Take your TinyTorch framework and build even more ambitious projects! The foundations you've built can support any ML architecture you can imagine.
+**MLOps Platforms:**
+- Automated model evaluation pipelines
+- Performance regression detection
+- Multi-metric decision making (speed vs accuracy vs cost)
+
+### Next Steps
+
+1. **Benchmark milestone models** - Apply this workflow to your MNIST CNN, XOR network, etc.
+2. **Apply optimizations** - Use Modules 14-18 techniques and measure their impact
+3. **Share your results** - Submit your JSON to the TinyTorch community
+4. **Compare with others** - See how your optimizations stack up
+5. **Build production systems** - Use these patterns in real ML projects
+
+### Final Reflection
+
+You started Module 01 with a simple Tensor class. Now you have:
+- ✅ A complete ML framework
+- ✅ Advanced optimization techniques
+- ✅ Professional benchmarking infrastructure
+- ✅ Reproducible, shareable results
+
+**You didn't just learn ML systems - you BUILT one from scratch.** 🎉
+
+Export your capstone module:
+```bash
+tito module complete 20
+```
+
+Then share your submission with the community and celebrate your achievement! 🚀
 """

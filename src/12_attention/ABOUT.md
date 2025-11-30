@@ -306,10 +306,10 @@ Ensure you understand these foundations:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor      # Matrix operations (matmul, transpose)
-tito test --module activations  # Softmax for attention normalization
-tito test --module layers      # Linear layers for Q/K/V projections
-tito test --module embeddings  # Token/position embeddings attention operates on
+tito test tensor      # Matrix operations (matmul, transpose)
+tito test activations  # Softmax for attention normalization
+tito test layers      # Linear layers for Q/K/V projections
+tito test embeddings  # Token/position embeddings attention operates on
 ```
 
 **Core Concepts You'll Need:**
@@ -325,7 +325,7 @@ tito test --module embeddings  # Token/position embeddings attention operates on
 3. **Create MultiHeadAttention class**: Add Q/K/V projections, head splitting, parallel attention, and output projection
 4. **Build masking utilities**: Create causal mask for GPT-style attention and padding mask for batching
 5. **Test and analyze**: Run comprehensive tests, visualize attention patterns, and profile computational scaling
-6. **Export and verify**: `tito module complete 12 && tito test --module attention`
+6. **Export and verify**: `tito module complete 12 && tito test attention`
 
 ## Testing
 
@@ -335,7 +335,7 @@ Run the full test suite to verify attention functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module attention
+tito test attention
 
 # Direct pytest execution
 python -m pytest tests/ -k attention -v

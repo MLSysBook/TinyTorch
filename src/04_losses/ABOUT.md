@@ -157,9 +157,9 @@ Ensure you understand the foundations from previous modules:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor
-tito test --module activations
-tito test --module layers
+tito test tensor
+tito test activations
+tito test layers
 ```
 
 ### Development Workflow
@@ -168,7 +168,7 @@ tito test --module layers
 3. **Build MSELoss**: Create regression loss with proper reduction
 4. **Create CrossEntropyLoss**: Implement classification loss using stable log-softmax
 5. **Add BinaryCrossEntropyLoss**: Build binary classification loss with clamping
-6. **Export and verify**: `tito module complete 04 && tito test --module losses`
+6. **Export and verify**: `tito module complete 04 && tito test losses`
 
 ## Testing
 
@@ -177,7 +177,7 @@ Run the full test suite to verify loss functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module losses
+tito test losses
 
 # Direct pytest execution
 python -m pytest tests/ -k losses -v
@@ -292,7 +292,7 @@ tito jupyter 04
 
 # When complete
 tito module complete 04
-tito test --module losses
+tito test losses
 ```
 
 ---

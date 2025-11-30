@@ -88,9 +88,9 @@ class TestProgressiveStack:
         # 1. Environment should support numpy (from setup)
         import numpy as np
         assert np.__version__ is not None, "Numpy not properly set up"
-        
+
         # 2. Project structure should support tensor module
-        tensor_module_path = Path(__file__).parent.parent.parent / "modules" / "source" / "02_tensor"
+        tensor_module_path = Path(__file__).parent.parent.parent / "src" / "01_tensor"
         assert tensor_module_path.exists(), "Setup didn't create proper module structure"
     
     def test_end_to_end_capability(self):

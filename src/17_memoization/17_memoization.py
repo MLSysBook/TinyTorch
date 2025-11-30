@@ -155,8 +155,10 @@ def profile_naive_generation():
     print("   • Speedup: 10-15× for typical generation\n")
 
 # Run profiling when module is executed directly
-if __name__ == "__main__":
-    profile_naive_generation()
+# NOTE: Commented out to run tests. Profiling requires proper Profiler API usage.
+# Uncomment to run profiling (requires matplotlib installed)
+# if __name__ == "__main__":
+#     profile_naive_generation()
 
 # %% [markdown]
 """
@@ -750,11 +752,11 @@ for each new token:
 
 # %%
 #| export
-def enable_kv_cache(batch_size: int, max_seq_len: int, num_layers: int,
+def create_kv_cache(batch_size: int, max_seq_len: int, num_layers: int,
                     num_heads: int, head_dim: int) -> KVCache:
     """
     Create and return a KVCache instance for model generation.
-    
+
     This function creates a properly sized cache for the model architecture.
     Call this before starting generation, then pass the cache to your
     generation loop.
@@ -1499,9 +1501,10 @@ def analyze_kvcache_speedup():
     print("   • This optimization makes conversational AI possible!")
 
 # Run analysis functions when module is executed directly
-if __name__ == "__main__":
-    analyze_kvcache_memory()
-    analyze_kvcache_speedup()
+# NOTE: Commented out to run tests. These functions should be called separately.
+# if __name__ == "__main__":
+#     analyze_kvcache_memory()
+#     analyze_kvcache_speedup()
 
 
 # %% [markdown]

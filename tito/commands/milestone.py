@@ -25,7 +25,6 @@ from datetime import datetime
 from pathlib import Path
 
 from .base import BaseCommand
-from .checkpoint import CheckpointSystem
 from ..core.console import print_ascii_logo
 from ..core.console import get_console
 
@@ -151,63 +150,51 @@ class MilestoneSystem:
                 except Exception as e:
                     self.console.print(f"[yellow]Warning: Could not load era config {era_path}: {e}[/yellow]")
         
-        # If no milestones loaded, return fallback
+        # If no milestones loaded, use MILESTONE_SCRIPTS as fallback
+        # (MILESTONE_SCRIPTS is the simple dict-based config that doesn't need YAML)
         if not milestones:
-            return {
-                "1": {
-                    "id": "1",
-                    "name": "Machines Can See",
-                    "title": "I taught a computer to recognize digits!",
-                    "trigger_module": "05_dense",
-                    "required_checkpoints": ["00", "01", "02", "03", "04"],
-                    "victory_condition": "85%+ MNIST accuracy with MLP",
-                    "capability": "I can create neural networks that recognize images!",
-                    "real_world_impact": "Foundation for any computer vision system",
-                    "emoji": "👁️",
-                    "test_file": "milestone_01_machines_can_see.py"
-                }
-            }
-        
+            return {}  # Let calling code handle using MILESTONE_SCRIPTS
+
         return milestones
     
     def get_milestone_status(self) -> dict:
         """Get current milestone progress status."""
-        checkpoint_system = CheckpointSystem(self.config)
         milestone_data = self._get_milestone_progress_data()
-        
+
         status = {
             "milestones": {},
             "overall_progress": 0,
             "total_unlocked": 0,
             "next_milestone": None
         }
-        
+
         total_milestones = len(self.MILESTONES)
         unlocked_count = 0
-        
+
         for milestone_id, milestone in self.MILESTONES.items():
-            # Check if all required checkpoints are complete
+            # Check if all required modules are complete (no more checkpoint dependencies)
+            required_modules = milestone.get("required_modules", [])
             required_complete = all(
-                checkpoint_system.get_checkpoint_status(cp_id).get("is_complete", False)
-                for cp_id in milestone["required_checkpoints"]
+                self._is_module_completed(f"{mod:02d}")
+                for mod in required_modules
             )
-            
+
             # Check if milestone is unlocked
             is_unlocked = milestone_id in milestone_data.get("unlocked_milestones", [])
-            
+
             # Check if trigger module is completed
-            trigger_complete = self._is_module_completed(milestone["trigger_module"])
+            trigger_complete = self._is_module_completed(milestone.get("trigger_module", ""))
             
             milestone_status = {
                 "id": milestone_id,
-                "name": milestone["name"], 
+                "name": milestone["name"],
                 "title": milestone["title"],
-                "emoji": milestone["emoji"],
-                "trigger_module": milestone["trigger_module"],
-                "required_checkpoints": milestone["required_checkpoints"],
-                "victory_condition": milestone["victory_condition"],
-                "capability": milestone["capability"],
-                "real_world_impact": milestone["real_world_impact"],
+                "emoji": milestone.get("emoji", "🎯"),
+                "trigger_module": milestone.get("trigger_module", ""),
+                "required_modules": milestone.get("required_modules", []),
+                "victory_condition": milestone.get("victory_condition", ""),
+                "capability": milestone.get("capability", ""),
+                "real_world_impact": milestone.get("real_world_impact", ""),
                 "required_complete": required_complete,
                 "trigger_complete": trigger_complete,
                 "is_unlocked": is_unlocked,
@@ -259,40 +246,41 @@ class MilestoneSystem:
         """Run tests to validate milestone achievement."""
         if milestone_id not in self.MILESTONES:
             return {"success": False, "error": f"Milestone {milestone_id} not found"}
-        
+
         milestone = self.MILESTONES[milestone_id]
-        
-        # Check all required checkpoints
-        checkpoint_system = CheckpointSystem(self.config)
-        failed_checkpoints = []
-        
-        for cp_id in milestone["required_checkpoints"]:
-            if not checkpoint_system.get_checkpoint_status(cp_id).get("is_complete", False):
-                failed_checkpoints.append(cp_id)
-        
-        if failed_checkpoints:
+
+        # Check all required modules are complete
+        required_modules = milestone.get("required_modules", [])
+        failed_modules = []
+
+        for mod in required_modules:
+            if not self._is_module_completed(f"{mod:02d}"):
+                failed_modules.append(f"{mod:02d}")
+
+        if failed_modules:
             return {
                 "success": False,
-                "error": f"Required checkpoints not completed: {', '.join(failed_checkpoints)}",
+                "error": f"Required modules not completed: {', '.join(failed_modules)}",
                 "milestone_name": milestone["name"]
             }
-        
+
         # Check trigger module completion
-        if not self._is_module_completed(milestone["trigger_module"]):
+        trigger_module = milestone.get("trigger_module", "")
+        if trigger_module and not self._is_module_completed(trigger_module):
             return {
                 "success": False,
-                "error": f"Trigger module {milestone['trigger_module']} not completed",
+                "error": f"Trigger module {trigger_module} not completed",
                 "milestone_name": milestone["name"]
             }
-        
+
         # All tests passed
         return {
             "success": True,
             "milestone_id": milestone_id,
             "milestone_name": milestone["name"],
-            "title": milestone["title"],
-            "capability": milestone["capability"],
-            "victory_condition": milestone["victory_condition"]
+            "title": milestone.get("title", ""),
+            "capability": milestone.get("capability", ""),
+            "victory_condition": milestone.get("victory_condition", "")
         }
     
     def _unlock_milestone(self, milestone_id: str) -> None:
@@ -575,11 +563,13 @@ class MilestoneCommand(BaseCommand):
         if detailed:
             req_status = "✅" if milestone["required_complete"] else "❌"
             trigger_status = "✅" if milestone["trigger_complete"] else "❌"
-            
+
+            required_modules_str = ', '.join(f"{m:02d}" for m in milestone.get('required_modules', []))
+
             milestone_content += (
                 f"\n\n[bold]Requirements:[/bold]\n"
-                f"  {req_status} Checkpoints: {', '.join(milestone['required_checkpoints'])}\n"
-                f"  {trigger_status} Module: {milestone['trigger_module']}\n"
+                f"  {req_status} Modules: {required_modules_str}\n"
+                f"  {trigger_status} Trigger: {milestone.get('trigger_module', 'N/A')}\n"
                 f"[bold]Capability:[/bold] {milestone['capability']}\n"
                 f"[bold]Impact:[/bold] {milestone['real_world_impact']}"
             )
@@ -951,15 +941,12 @@ class MilestoneCommand(BaseCommand):
             console.print(f"\n[bold cyan]🔍 Checking prerequisites for Milestone {milestone_id}...[/bold cyan]\n")
 
             # Check module completion status using module workflow
-            from .module_workflow import ModuleWorkflowCommand
-            from .source import SourceCommand
+            from .module.workflow import ModuleWorkflowCommand
+            from .src import SrcCommand
             from .test import TestCommand
             
             module_workflow = ModuleWorkflowCommand(self.config)
             progress_data = module_workflow.get_progress_data()
-            # Use module workflow for checking completion status
-            from .src import SrcCommand
-            from .test import TestCommand
             
             source_cmd = SrcCommand(self.config)
             test_cmd = TestCommand(self.config)

@@ -222,7 +222,7 @@ Ensure you have completed Module 01 (Tensor) before starting:
 source scripts/activate-tinytorch
 
 # Verify tensor module is complete
-tito test --module tensor
+tito test tensor
 
 # Expected: ✓ Module 01 complete!
 ```
@@ -235,7 +235,7 @@ tito test --module tensor
 4. **Create Tanh**: Use `np.tanh` for hyperbolic tangent transformation
 5. **Add GELU**: Implement smooth approximation using `x * sigmoid(1.702 * x)`
 6. **Build Softmax**: Implement with max subtraction for numerical stability, handle dimension parameter for multi-dimensional tensors
-7. **Export and verify**: Run `tito module complete 02 && tito test --module activations`
+7. **Export and verify**: Run `tito module complete 02 && tito test activations`
 
 **Development Tips**:
 - Test with extreme values (±1000) to verify numerical stability
@@ -251,7 +251,7 @@ Run the full test suite to verify all activation implementations:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module activations
+tito test activations
 
 # Direct pytest execution
 python -m pytest tests/ -k activations -v

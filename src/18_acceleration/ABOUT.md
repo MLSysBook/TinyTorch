@@ -349,8 +349,8 @@ python -c "import numpy as np; np.show_config()"
 
 Verify prerequisite modules work:
 ```bash
-tito test --module tensor
-tito test --module profiling
+tito test tensor
+tito test profiling
 ```
 
 ### Development Workflow
@@ -384,7 +384,7 @@ tito test --module profiling
 6. **Export and verify**:
    ```bash
    tito module complete 18
-   tito test --module acceleration
+   tito test acceleration
    ```
 
 ## Testing
@@ -395,7 +395,7 @@ Run the full test suite to verify acceleration functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module acceleration
+tito test acceleration
 
 # Direct pytest execution
 python -m pytest tests/ -k acceleration -v

@@ -562,57 +562,57 @@ if __name__ == "__main__":
 Mathematical position encoding that creates unique signatures for each position using trigonometric functions. This approach requires no additional parameters and can extrapolate to sequences longer than seen during training.
 
 ```
-┌───────────────────────────────────────────────────────────────────────────┐
-│ SINUSOIDAL POSITION ENCODING: Mathematical Position Signatures            │
-├───────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│ MATHEMATICAL FORMULA:                                                     │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ PE(pos, 2i)   = sin(pos / 10000^(2i/embed_dim))  # Even dims │          │
-│ │ PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))  # Odd dims  │          │
-│ │                                                              │          │
-│ │ Where:                                                       │          │
-│ │   pos = position in sequence (0, 1, 2, ...)                  │          │
-│ │   i = dimension pair index (0, 1, 2, ...)                    │          │
-│ │   10000 = base frequency (creates different wavelengths)     │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ FREQUENCY PATTERN ACROSS DIMENSIONS:                                      │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Dimension:  0     1     2     3     4     5     6     7      │          │
-│ │ Frequency:  High  High  Med   Med   Low   Low   VLow  VLow   │          │
-│ │ Function:   sin   cos   sin   cos   sin   cos   sin   cos    │          │
-│ │                                                              │          │
-│ │ pos=0:    [0.00, 1.00, 0.00, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
-│ │ pos=1:    [0.84, 0.54, 0.01, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
-│ │ pos=2:    [0.91,-0.42, 0.02, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
-│ │ pos=3:    [0.14,-0.99, 0.03, 1.00, 0.00, 1.00, 0.00, 1.00]   │          │
-│ │                                                              │          │
-│ │ Each position gets a unique mathematical "fingerprint"!      │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ WHY THIS WORKS:                                                           │
-│ ┌──────────────────────────────────────────────────────────────┐          │
-│ │ Wave Pattern Visualization:                                  │          │
-│ │                                                              │          │
-│ │ Dim 0: ∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿  (rapid oscillation)              │          │
-│ │ Dim 2: ∿---∿---∿---∿---∿---∿  (medium frequency)             │          │
-│ │ Dim 4: ∿-----∿-----∿-----∿--  (low frequency)                │          │
-│ │ Dim 6: ∿----------∿----------  (very slow changes)           │          │
-│ │                                                              │          │
-│ │ • High frequency dims change rapidly between positions       │          │
-│ │ • Low frequency dims change slowly                           │          │
-│ │ • Combination creates unique signature for each position     │          │
-│ │ • Similar positions have similar (but distinct) encodings    │          │
-│ └──────────────────────────────────────────────────────────────┘          │
-│                                                                           │
-│ KEY ADVANTAGES:                                                           │
-│ • Zero parameters (no memory overhead)                                    │
-│ • Infinite sequence length (can extrapolate)                              │
-│ • Smooth transitions (nearby positions are similar)                       │
-│ • Mathematical elegance (interpretable patterns)                          │
-│                                                                           │
-└───────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│ SINUSOIDAL POSITION ENCODING: Mathematical Position Signatures        │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│ MATHEMATICAL FORMULA:                                                 │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ PE(pos, 2i)   = sin(pos / 10000^(2i/embed_dim))  # Even dims      │ │
+│ │ PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))  # Odd dims       │ │
+│ │                                                                   │ │
+│ │ Where:                                                            │ │
+│ │   pos = position in sequence (0, 1, 2, ...)                       │ │
+│ │   i = dimension pair index (0, 1, 2, ...)                         │ │
+│ │   10000 = base frequency (creates different wavelengths)          │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ FREQUENCY PATTERN ACROSS DIMENSIONS:                                  │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Dimension:  0     1     2     3     4     5     6     7           │ │
+│ │ Frequency:  High  High  Med   Med   Low   Low   VLow  VLow        │ │
+│ │ Function:   sin   cos   sin   cos   sin   cos   sin   cos         │ │
+│ │                                                                   │ │
+│ │ pos=0:    [0.00, 1.00, 0.00, 1.00, 0.00, 1.00, 0.00, 1.00]        │ │
+│ │ pos=1:    [0.84, 0.54, 0.01, 1.00, 0.00, 1.00, 0.00, 1.00]        │ │
+│ │ pos=2:    [0.91,-0.42, 0.02, 1.00, 0.00, 1.00, 0.00, 1.00]        │ │
+│ │ pos=3:    [0.14,-0.99, 0.03, 1.00, 0.00, 1.00, 0.00, 1.00]        │ │
+│ │                                                                   │ │
+│ │ Each position gets a unique mathematical "fingerprint"!           │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ WHY THIS WORKS:                                                       │
+│ ┌───────────────────────────────────────────────────────────────────┐ │
+│ │ Wave Pattern Visualization:                                       │ │
+│ │                                                                   │ │
+│ │ Dim 0: ∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿  (rapid oscillation)                  │ │
+│ │ Dim 2: ∿---∿---∿---∿---∿---∿  (medium frequency)                  │ │
+│ │ Dim 4: ∿-----∿-----∿-----∿--  (low frequency)                     │ │
+│ │ Dim 6: ∿----------∿----------  (very slow changes)                │ │
+│ │                                                                   │ │
+│ │ • High frequency dims change rapidly between positions            │ │
+│ │ • Low frequency dims change slowly                                │ │
+│ │ • Combination creates unique signature for each position          │ │
+│ │ • Similar positions have similar (but distinct) encodings         │ │
+│ └───────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│ KEY ADVANTAGES:                                                       │
+│ • Zero parameters (no memory overhead)                                │
+│ • Infinite sequence length (can extrapolate)                          │
+│ • Smooth transitions (nearby positions are similar)                   │
+│ • Mathematical elegance (interpretable patterns)                      │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
 **Why transformers use this**: The mathematical structure allows the model to learn relative positions (how far apart tokens are) through simple vector operations, which is crucial for attention mechanisms!
@@ -626,6 +626,8 @@ Let's implement the mathematical position encoding that creates unique signature
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sinusoidal-function", "solution": true}
+#| export
+
 def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
     """
     Create sinusoidal positional encodings as used in "Attention Is All You Need".

@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ./bin/tito nbgrader init
 
 # 3. Verify setup
-./bin/tito system doctor
+./bin/tito system health
 ```
 
 ---
@@ -84,7 +84,7 @@ assignments/
 ```bash
 # Environment issues
 source .venv/bin/activate
-./bin/tito system doctor
+./bin/tito system health
 
 # Module not found
 ls modules/                          # Check available modules

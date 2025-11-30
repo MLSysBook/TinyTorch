@@ -95,24 +95,24 @@ Backward Pass: ∇x ← ∇Linear₁ ← ∇ReLU ← ∇Linear₂ ← ∇Loss
 
 **Complete Autograd Process Visualization:**
 ```
-┌─ FORWARD PASS ──────────────────────────────────────────────┐
-│                                                             │
-│ x ──┬── W₁ ──┐                                              │
-│     │        ├──[Linear₁]──→ z₁ ──[ReLU]──→ a₁ ──┬── W₂ ──┐ │
-│     └── b₁ ──┘                               │        ├─→ Loss
-│                                              └── b₂ ──┘ │
-│                                                             │
-└─ COMPUTATION GRAPH BUILT ──────────────────────────────────┘
+┌─ FORWARD PASS ─────────────────────────────────────────────────┐
+│                                                                │
+│ x ──┬── W₁ ──┐                                                 │
+│     │        ├──[Linear₁]──→ z₁ ──[ReLU]──→ a₁ ──┬── W₂ ──┐    │
+│     └── b₁ ──┘                               │        ├─→ Loss │
+│                                              └── b₂ ──┘        │
+│                                                                │
+└─ COMPUTATION GRAPH BUILT ──────────────────────────────────────┘
                              │
                              ▼
 ┌─ BACKWARD PASS ─────────────────────────────────────────────┐
 │                                                             │
-│∇x ←┬← ∇W₁ ←┐                                               │
-│    │       ├←[Linear₁]←─ ∇z₁ ←[ReLU]← ∇a₁ ←┬← ∇W₂ ←┐      │
-│    └← ∇b₁ ←┘                             │       ├← ∇Loss  │
-│                                          └← ∇b₂ ←┘      │
+│∇x ←┬← ∇W₁ ←┐                                                │
+│    │       ├←[Linear₁]←─ ∇z₁ ←[ReLU]← ∇a₁ ←┬← ∇W₂ ←┐        │
+│    └← ∇b₁ ←┘                             │       ├← ∇Loss   │
+│                                          └← ∇b₂ ←┘          │
 │                                                             │
-└─ GRADIENTS COMPUTED ───────────────────────────────────────┘
+└─ GRADIENTS COMPUTED ────────────────────────────────────────┘
 
 Key Insight: Each [operation] stores how to compute its backward pass.
 The chain rule automatically flows gradients through the entire graph.
@@ -795,6 +795,7 @@ class EmbeddingBackward(Function):
 
         return (grad_weight,)
 
+#| export
 
 class SliceBackward(Function):
     """
@@ -1362,8 +1363,7 @@ def enable_autograd(quiet=False):
     # 3. _autograd_enabled is a marker attribute we add at runtime
     # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
-        if not quiet:
-            print("⚠️ Autograd already enabled")
+        # Silently return if already enabled - no need to warn
         return
 
     # Store original operations
@@ -1781,9 +1781,9 @@ def enable_autograd(quiet=False):
         print("   - requires_grad=True enables tracking")
 
 # Auto-enable when module is imported
-# Check TINYTORCH_QUIET env var to suppress messages (for CLI tools)
+# Always quiet to avoid cluttering user imports
 import os
-enable_autograd(quiet=os.environ.get('TINYTORCH_QUIET', '').lower() in ('1', 'true', 'yes'))
+enable_autograd(quiet=True)
 
 # %% [markdown]
 """

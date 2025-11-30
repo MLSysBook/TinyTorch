@@ -33,8 +33,7 @@ jobs:
     - name: Install base dependencies
       run: |
         pip install --upgrade pip
-        pip install "jupyter-book<1.0"
-        pip install -r site/requirements.txt || pip install jupyter-book
+        pip install -r docs/requirements.txt
 
     - name: Install LaTeX (if latex method)
       if: github.event.inputs.method == 'latex' || github.event_name == 'release'

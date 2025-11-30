@@ -89,7 +89,7 @@ class LogoCommand(BaseCommand):
         )
         
         # The philosophy
-        explanation.append("The Philosophy 💡\n", style="bold green")
+        explanation.append("The Philosophy 💡\n", style="bold yellow")
         explanation.append(
             "TinyTorch embodies the belief that anyone can understand ML systems by building them. "
             "Start small, understand deeply, build everything. What begins as a tiny flame of "
@@ -102,24 +102,23 @@ class LogoCommand(BaseCommand):
         explanation.append("Professor Vijay Janapa Reddi\n", style="bold cyan")
         explanation.append("   Harvard University • CS 249R: Tiny Machine Learning\n\n", style="dim")
 
-        # Make the entire message italic for a more personal, conversational feel
+        # Personal message - flows naturally, only the tagline pops
         explanation.append(
             "TinyTorch grew from the TinyML movement that started at Harvard in CS 249R. As I taught "
             "thousands of students, both online and in person, I realized something was missing: there "
-            "was no way to truly ",
+            "was no way to truly engineer ML systems from the ground up. So that's why I built "
+            "TinyTorch—a hands-on companion to ",
             style="italic dim"
         )
-        explanation.append("engineer", style="italic yellow")
+        explanation.append("www.mlsysbook.ai", style="italic magenta")
         explanation.append(
-            " ML systems from the ground up. So that's why I built TinyTorch—a framework where you "
-            "don't just import libraries, you engineer every component yourself. Think of it as "
-            "building the Lego blocks for your favorite Star Wars set.\n\n",
+            ", where you don't just import libraries, you engineer every component yourself. "
+            "Think of it as building the Lego blocks for your favorite Star Wars set.\n\n",
             style="italic dim"
         )
-
-        # Single powerful statement combining both catchphrases
-        explanation.append("The future of ML is tiny and bright—", style="bold yellow")
-        explanation.append("don't just \"import torch\", build it.", style="bold cyan")
+        explanation.append("So don't just ", style="bold cyan")
+        explanation.append("\"import torch\"", style="white")
+        explanation.append(", build it.", style="bold cyan")
         explanation.append("\n\n", style="dim")
 
         # Display in a nice panel

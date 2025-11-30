@@ -102,7 +102,7 @@ When updating dependencies:
 
 1. Update `requirements.txt` (root) - for local development
 2. Update `binder/requirements.txt` - for Binder/Colab
-3. Update `site/requirements.txt` - for documentation builds
+3. Update `docs/requirements.txt` - for documentation builds
 4. Keep versions synchronized where possible
 
 ## References

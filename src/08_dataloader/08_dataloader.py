@@ -566,6 +566,370 @@ class DataLoader:
         ### END SOLUTION
 
 
+# %% [markdown]
+"""
+## Part 4: Data Augmentation - Preventing Overfitting Through Variety
+
+Data augmentation is one of the most effective techniques for improving model generalization. By applying random transformations during training, we artificially expand the dataset and force the model to learn robust, invariant features.
+
+### Why Augmentation Matters
+
+```
+Without Augmentation:                With Augmentation:
+Model sees exact same images         Model sees varied versions
+every epoch                          every epoch
+
+Cat photo #247                       Cat #247 (original)
+Cat photo #247                       Cat #247 (flipped)
+Cat photo #247                       Cat #247 (cropped left)
+Cat photo #247                       Cat #247 (cropped right)
+     ↓                                    ↓
+Model memorizes position             Model learns "cat-ness"
+Overfits to training set             Generalizes to new cats
+```
+
+### Common Augmentation Strategies
+
+For CIFAR-10 and similar image datasets:
+
+```
+RandomHorizontalFlip (50% probability):
+┌──────────┐     ┌──────────┐
+│  🐱 →    │  →  │    ← 🐱  │
+│          │     │          │
+└──────────┘     └──────────┘
+Cars, cats, dogs look similar when flipped!
+
+RandomCrop with Padding:
+┌──────────┐     ┌────────────┐     ┌──────────┐
+│   🐱     │  →  │░░░░░░░░░░░░│  →  │  🐱      │
+│          │     │░░  🐱     ░│     │          │
+└──────────┘     │░░░░░░░░░░░░│     └──────────┘
+  Original        Pad edges        Random crop
+                  (with zeros)     (back to 32×32)
+```
+
+### Training vs Evaluation
+
+**Critical**: Augmentation applies ONLY during training!
+
+```
+Training:                              Evaluation:
+┌─────────────────┐                   ┌─────────────────┐
+│ Original Image  │                   │ Original Image  │
+│      ↓          │                   │      ↓          │
+│ Random Flip     │                   │ (no transforms) │
+│      ↓          │                   │      ↓          │
+│ Random Crop     │                   │ Direct to Model │
+│      ↓          │                   └─────────────────┘
+│ To Model        │
+└─────────────────┘
+```
+
+Why? During evaluation, we want consistent, reproducible predictions. Augmentation during test would add randomness to predictions, making them unreliable.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "augmentation-transforms", "solution": true}
+
+#| export
+
+class RandomHorizontalFlip:
+    """
+    Randomly flip images horizontally with given probability.
+    
+    A simple but effective augmentation for most image datasets.
+    Flipping is appropriate when horizontal orientation doesn't change class
+    (cats, dogs, cars - not digits or text!).
+    
+    Args:
+        p: Probability of flipping (default: 0.5)
+    """
+    
+    def __init__(self, p=0.5):
+        """
+        Initialize RandomHorizontalFlip.
+        
+        TODO: Store flip probability
+        
+        EXAMPLE:
+        >>> flip = RandomHorizontalFlip(p=0.5)  # 50% chance to flip
+        """
+        ### BEGIN SOLUTION
+        if not 0.0 <= p <= 1.0:
+            raise ValueError(f"Probability must be between 0 and 1, got {p}")
+        self.p = p
+        ### END SOLUTION
+    
+    def __call__(self, x):
+        """
+        Apply random horizontal flip to input.
+        
+        TODO: Implement random horizontal flip
+        
+        APPROACH:
+        1. Generate random number in [0, 1)
+        2. If random < p, flip horizontally
+        3. Otherwise, return unchanged
+        
+        Args:
+            x: Input array with shape (..., H, W) or (..., H, W, C)
+               Flips along the last-1 axis (width dimension)
+        
+        Returns:
+            Flipped or unchanged array (same shape as input)
+        
+        EXAMPLE:
+        >>> flip = RandomHorizontalFlip(0.5)
+        >>> img = np.array([[1, 2, 3], [4, 5, 6]])  # 2x3 image
+        >>> # 50% chance output is [[3, 2, 1], [6, 5, 4]]
+        
+        HINT: Use np.flip(x, axis=-1) to flip along width axis
+        """
+        ### BEGIN SOLUTION
+        if np.random.random() < self.p:
+            # Flip along the width axis (last axis for HW format, second-to-last for HWC)
+            # Using axis=-1 works for both (..., H, W) and (..., H, W, C)
+            if isinstance(x, Tensor):
+                return Tensor(np.flip(x.data, axis=-1).copy())
+            else:
+                return np.flip(x, axis=-1).copy()
+        return x
+        ### END SOLUTION
+
+#| export
+
+class RandomCrop:
+    """
+    Randomly crop image after padding.
+    
+    This is the standard augmentation for CIFAR-10:
+    1. Pad image by `padding` pixels on each side
+    2. Randomly crop back to original size
+    
+    This simulates small translations in the image, forcing the model
+    to recognize objects regardless of their exact position.
+    
+    Args:
+        size: Output crop size (int for square, or tuple (H, W))
+        padding: Pixels to pad on each side before cropping (default: 4)
+    """
+    
+    def __init__(self, size, padding=4):
+        """
+        Initialize RandomCrop.
+        
+        TODO: Store crop parameters
+        
+        EXAMPLE:
+        >>> crop = RandomCrop(32, padding=4)  # CIFAR-10 standard
+        >>> # Pads to 40x40, then crops back to 32x32
+        """
+        ### BEGIN SOLUTION
+        if isinstance(size, int):
+            self.size = (size, size)
+        else:
+            self.size = size
+        self.padding = padding
+        ### END SOLUTION
+    
+    def __call__(self, x):
+        """
+        Apply random crop after padding.
+        
+        TODO: Implement random crop with padding
+        
+        APPROACH:
+        1. Add zero-padding to all sides
+        2. Choose random top-left corner for crop
+        3. Extract crop of target size
+        
+        Args:
+            x: Input image with shape (C, H, W) or (H, W) or (H, W, C)
+               Assumes spatial dimensions are H, W
+        
+        Returns:
+            Cropped image with target size
+        
+        EXAMPLE:
+        >>> crop = RandomCrop(32, padding=4)
+        >>> img = np.random.randn(3, 32, 32)  # CIFAR-10 format (C, H, W)
+        >>> out = crop(img)
+        >>> print(out.shape)  # (3, 32, 32)
+        
+        HINTS:
+        - Use np.pad for adding zeros
+        - Handle both (C, H, W) and (H, W) formats
+        - Random offsets should be in [0, 2*padding]
+        """
+        ### BEGIN SOLUTION
+        is_tensor = isinstance(x, Tensor)
+        data = x.data if is_tensor else x
+        
+        target_h, target_w = self.size
+        
+        # Determine image format and dimensions
+        if len(data.shape) == 2:
+            # (H, W) format
+            h, w = data.shape
+            padded = np.pad(data, self.padding, mode='constant', constant_values=0)
+            
+            # Random crop position
+            top = np.random.randint(0, 2 * self.padding + h - target_h + 1)
+            left = np.random.randint(0, 2 * self.padding + w - target_w + 1)
+            
+            cropped = padded[top:top + target_h, left:left + target_w]
+            
+        elif len(data.shape) == 3:
+            if data.shape[0] <= 4:  # Likely (C, H, W) format
+                c, h, w = data.shape
+                # Pad only spatial dimensions
+                padded = np.pad(data, 
+                              ((0, 0), (self.padding, self.padding), (self.padding, self.padding)),
+                              mode='constant', constant_values=0)
+                
+                # Random crop position
+                top = np.random.randint(0, 2 * self.padding + 1)
+                left = np.random.randint(0, 2 * self.padding + 1)
+                
+                cropped = padded[:, top:top + target_h, left:left + target_w]
+            else:  # Likely (H, W, C) format
+                h, w, c = data.shape
+                padded = np.pad(data,
+                              ((self.padding, self.padding), (self.padding, self.padding), (0, 0)),
+                              mode='constant', constant_values=0)
+                
+                top = np.random.randint(0, 2 * self.padding + 1)
+                left = np.random.randint(0, 2 * self.padding + 1)
+                
+                cropped = padded[top:top + target_h, left:left + target_w, :]
+        else:
+            raise ValueError(f"Expected 2D or 3D input, got shape {data.shape}")
+        
+        return Tensor(cropped) if is_tensor else cropped
+        ### END SOLUTION
+
+#| export
+
+class Compose:
+    """
+    Compose multiple transforms into a pipeline.
+    
+    Applies transforms in sequence, passing output of each
+    as input to the next.
+    
+    Args:
+        transforms: List of transform callables
+    """
+    
+    def __init__(self, transforms):
+        """
+        Initialize Compose with list of transforms.
+        
+        EXAMPLE:
+        >>> transforms = Compose([
+        ...     RandomHorizontalFlip(0.5),
+        ...     RandomCrop(32, padding=4)
+        ... ])
+        """
+        self.transforms = transforms
+    
+    def __call__(self, x):
+        """Apply all transforms in sequence."""
+        for transform in self.transforms:
+            x = transform(x)
+        return x
+
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Data Augmentation Transforms
+This test validates our augmentation implementations.
+**What we're testing**: RandomHorizontalFlip, RandomCrop, Compose pipeline
+**Why it matters**: Augmentation is critical for training models that generalize
+**Expected**: Correct shapes and appropriate randomness
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-augmentation", "locked": true, "points": 10}
+
+
+def test_unit_augmentation():
+    """🔬 Test data augmentation transforms."""
+    print("🔬 Unit Test: Data Augmentation...")
+    
+    # Test 1: RandomHorizontalFlip
+    print("  Testing RandomHorizontalFlip...")
+    flip = RandomHorizontalFlip(p=1.0)  # Always flip for deterministic test
+    
+    img = np.array([[1, 2, 3], [4, 5, 6]])  # 2x3 image
+    flipped = flip(img)
+    expected = np.array([[3, 2, 1], [6, 5, 4]])
+    assert np.array_equal(flipped, expected), f"Flip failed: {flipped} vs {expected}"
+    
+    # Test never flip
+    no_flip = RandomHorizontalFlip(p=0.0)
+    unchanged = no_flip(img)
+    assert np.array_equal(unchanged, img), "p=0 should never flip"
+    
+    # Test 2: RandomCrop shape preservation
+    print("  Testing RandomCrop...")
+    crop = RandomCrop(32, padding=4)
+    
+    # Test with (C, H, W) format (CIFAR-10 style)
+    img_chw = np.random.randn(3, 32, 32)
+    cropped = crop(img_chw)
+    assert cropped.shape == (3, 32, 32), f"CHW crop shape wrong: {cropped.shape}"
+    
+    # Test with (H, W) format
+    img_hw = np.random.randn(28, 28)
+    crop_hw = RandomCrop(28, padding=4)
+    cropped_hw = crop_hw(img_hw)
+    assert cropped_hw.shape == (28, 28), f"HW crop shape wrong: {cropped_hw.shape}"
+    
+    # Test 3: Compose pipeline
+    print("  Testing Compose...")
+    transforms = Compose([
+        RandomHorizontalFlip(p=0.5),
+        RandomCrop(32, padding=4)
+    ])
+    
+    img = np.random.randn(3, 32, 32)
+    augmented = transforms(img)
+    assert augmented.shape == (3, 32, 32), f"Compose output shape wrong: {augmented.shape}"
+    
+    # Test 4: Transforms work with Tensor
+    print("  Testing Tensor compatibility...")
+    tensor_img = Tensor(np.random.randn(3, 32, 32))
+    
+    flip_result = RandomHorizontalFlip(p=1.0)(tensor_img)
+    assert isinstance(flip_result, Tensor), "Flip should return Tensor when given Tensor"
+    
+    crop_result = RandomCrop(32, padding=4)(tensor_img)
+    assert isinstance(crop_result, Tensor), "Crop should return Tensor when given Tensor"
+    
+    # Test 5: Randomness verification
+    print("  Testing randomness...")
+    flip_random = RandomHorizontalFlip(p=0.5)
+    
+    # Run many times and check we get both outcomes
+    flips = 0
+    no_flips = 0
+    test_img = np.array([[1, 2]])
+    
+    for _ in range(100):
+        result = flip_random(test_img)
+        if np.array_equal(result, np.array([[2, 1]])):
+            flips += 1
+        else:
+            no_flips += 1
+    
+    # With p=0.5, we should get roughly 50/50 (allow for randomness)
+    assert flips > 20 and no_flips > 20, f"Flip randomness seems broken: {flips} flips, {no_flips} no-flips"
+    
+    print("✅ Data Augmentation works correctly!")
+
+if __name__ == "__main__":
+    test_unit_augmentation()
+
 # %% nbgrader={"grade": true, "grade_id": "test-dataloader", "locked": true, "points": 20}
 def test_unit_dataloader():
     """🔬 Test DataLoader implementation."""
@@ -763,11 +1127,13 @@ You've built the **data loading infrastructure** that powers all modern ML:
 - ✅ Dataset abstraction (universal interface)
 - ✅ TensorDataset (in-memory efficiency)
 - ✅ DataLoader (batching, shuffling, iteration)
+- ✅ Data Augmentation (RandomHorizontalFlip, RandomCrop, Compose)
 
-**Next steps:** Apply your DataLoader to real datasets in the milestones!
+**Next steps:** Apply your DataLoader and augmentation to real datasets in the milestones!
 
 **Real-world connection:** You've implemented the same patterns as:
 - PyTorch's `torch.utils.data.DataLoader`
+- PyTorch's `torchvision.transforms`
 - TensorFlow's `tf.data.Dataset`
 - Production ML pipelines everywhere
 """
@@ -809,16 +1175,16 @@ Batch Size Impact:
 
 Small Batches (batch_size=8):
 ┌─────────────────────────────────────────┐
-│ Memory: 8 × 28 × 28 × 4 bytes = 25KB   │ ← Low memory
-│ Overhead: High (many small batches)    │ ← High overhead
-│ GPU Util: Poor (underutilized)         │ ← Poor efficiency
+│ Memory: 8 × 28 × 28 × 4 bytes = 25KB    │ ← Low memory
+│ Overhead: High (many small batches)     │ ← High overhead
+│ GPU Util: Poor (underutilized)          │ ← Poor efficiency
 └─────────────────────────────────────────┘
 
 Large Batches (batch_size=512):
 ┌─────────────────────────────────────────┐
-│ Memory: 512 × 28 × 28 × 4 bytes = 1.6MB│ ← Higher memory
-│ Overhead: Low (fewer large batches)    │ ← Lower overhead
-│ GPU Util: Good (well utilized)         │ ← Better efficiency
+│ Memory: 512 × 28 × 28 × 4 bytes = 1.6MB │ ← Higher memory
+│ Overhead: Low (fewer large batches)     │ ← Lower overhead
+│ GPU Util: Good (well utilized)          │ ← Better efficiency
 └─────────────────────────────────────────┘
 ```
 
@@ -921,8 +1287,6 @@ def analyze_dataloader_performance():
     print("• Memory usage scales linearly with batch size")
     print("🚀 Production tip: Balance batch size with GPU memory limits")
 
-# analyze_dataloader_performance()  # Optional: Run manually for performance insights
-
 
 def analyze_memory_usage():
     """📊 Analyze memory usage patterns in data loading."""
@@ -978,8 +1342,6 @@ def analyze_memory_usage():
     print("• Use float32 instead of float64 to halve memory usage")
     print("• Consider gradient accumulation for effective larger batches")
 
-# analyze_memory_usage()  # Optional: Run manually for memory insights
-
 
 def analyze_collation_overhead():
     """📊 Analyze the cost of collating samples into batches."""
@@ -1011,8 +1373,6 @@ def analyze_collation_overhead():
     print("• Larger batches take longer to collate (more np.stack operations)")
     print("• But fewer large batches are more efficient than many small ones")
     print("• Optimal: Balance between batch size and iteration overhead")
-
-# analyze_collation_overhead()  # Optional: Run manually for collation insights
 
 
 # %% [markdown]
@@ -1220,11 +1580,39 @@ def test_module():
     test_unit_tensordataset()
     test_unit_dataloader()
     test_unit_dataloader_deterministic()
+    test_unit_augmentation()
 
     print("\nRunning integration scenarios...")
 
     # Test complete workflow
     test_training_integration()
+    
+    # Test augmentation with DataLoader
+    print("🔬 Integration Test: Augmentation with DataLoader...")
+    
+    # Create dataset with augmentation
+    train_transforms = Compose([
+        RandomHorizontalFlip(0.5),
+        RandomCrop(8, padding=2)  # Small images for test
+    ])
+    
+    # Simulate CIFAR-style images (C, H, W)
+    images = np.random.randn(100, 3, 8, 8)
+    labels = np.random.randint(0, 10, 100)
+    
+    # Apply augmentation manually (how you'd use in practice)
+    augmented_images = np.array([train_transforms(img) for img in images])
+    
+    dataset = TensorDataset(Tensor(augmented_images), Tensor(labels))
+    loader = DataLoader(dataset, batch_size=16, shuffle=True)
+    
+    batch_count = 0
+    for batch_x, batch_y in loader:
+        assert batch_x.shape[1:] == (3, 8, 8), f"Augmented batch shape wrong: {batch_x.shape}"
+        batch_count += 1
+    
+    assert batch_count > 0, "DataLoader should produce batches"
+    print("✅ Augmentation + DataLoader integration works!")
 
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")

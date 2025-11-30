@@ -26,7 +26,7 @@ TinyTorch is an **educational framework** where every contribution should:
 
 2. **Verify installation**:
    ```bash
-   tito system doctor
+   tito system health
    tito checkpoint status
    ```
 
@@ -189,7 +189,7 @@ When reporting bugs, include:
 # Always include this information
 python --version
 echo $VIRTUAL_ENV
-tito system doctor
+tito system health
 ```
 
 ## 🌟 Feature Requests

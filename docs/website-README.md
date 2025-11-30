@@ -113,7 +113,7 @@ Visit: http://localhost:8000
 
 ```bash
 pip install sphinx-autobuild
-sphinx-autobuild site site/_build/html
+sphinx-autobuild docs docs/_build/html
 ```
 
 ## 🤝 Contributing

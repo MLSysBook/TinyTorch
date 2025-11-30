@@ -25,33 +25,20 @@ from .core.console import get_console, print_banner, print_error, print_ascii_lo
 from .core.exceptions import TinyTorchCLIError
 from rich.panel import Panel
 from .commands.base import BaseCommand
-from .commands.notebooks import NotebooksCommand
-from .commands.info import InfoCommand
 from .commands.test import TestCommand
-from .commands.health import HealthCommand
 from .commands.export import ExportCommand
 from .commands.src import SrcCommand
-from .commands.reset import ResetCommand
-from .commands.jupyter import JupyterCommand
-from .commands.nbdev import NbdevCommand
-from .commands.status import StatusCommand
 from .commands.system import SystemCommand
-from .commands.module_workflow import ModuleWorkflowCommand
+from .commands.module import ModuleWorkflowCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
-from .commands.book import BookCommand
-from .commands.checkpoint import CheckpointCommand
 from .commands.grade import GradeCommand
-from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
-from .commands.leaderboard import LeaderboardCommand
-from .commands.olympics import OlympicsCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
 from .commands.login import LoginCommand, LogoutCommand
-
 
 # Configure logging
 logging.basicConfig(
@@ -72,28 +59,26 @@ class TinyTorchCLI:
         """Initialize the CLI application."""
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
+        # SINGLE SOURCE OF TRUTH: All valid commands registered here
         self.commands: Dict[str, Type[BaseCommand]] = {
-            # Essential commands
+            # Essential
             'setup': SetupCommand,
-            # Hierarchical command groups
+            # Workflow (student-facing)
             'system': SystemCommand,
             'module': ModuleWorkflowCommand,
+            # Developer tools
             'src': SrcCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
-            'checkpoint': CheckpointCommand,
+            # Progress tracking
             'milestones': MilestoneCommand,
-            'leaderboard': LeaderboardCommand,
-            'olympics': OlympicsCommand,
-            'benchmark': BenchmarkCommand,
+            # Community
             'community': CommunityCommand,
-            # Convenience shortcuts (backward compatibility)
-            'notebooks': NotebooksCommand,
+            'benchmark': BenchmarkCommand,
+            # Shortcuts
             'export': ExportCommand,
             'test': TestCommand,
-            'book': BookCommand,
             'grade': GradeCommand,
-            'demo': DemoCommand,
             'logo': LogoCommand,
             # Authentication commands
             'login': LoginCommand,
@@ -107,36 +92,22 @@ class TinyTorchCLI:
             description="Tiny🔥Torch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
-Command Groups:
-  system       System environment and configuration commands
-  module       Module development workflow - start, complete, resume modules (students)
-  source       Source file workflow - export src/ to modules/ and tinytorch/ (developers)
-  package      Package management and nbdev integration commands
-  nbgrader     Assignment management and auto-grading commands
-  checkpoint   Progress tracking - view capabilities unlocked and learning journey
-  milestones   Epic achievements - celebrate major capability unlocks
-  leaderboard  Community showcase - share progress, connect with learners
-  olympics     Competition events - friendly challenges and recognition
+Student Commands:
+  module       Module workflow - start, work, complete modules
+  milestones   Track progress - unlock capabilities as you build
+  community    Join global community - connect with builders
 
-Convenience Shortcuts:
-  export       Quick export (alias for: tito module export)
-  test         Quick test (alias for: tito module test)
-  book         Build Jupyter Book documentation
-  grade        Simplified grading interface (wraps NBGrader)
-  demo         Run capability demos (show what you've built!)
+Developer Commands:
+  system       Environment and configuration
+  src          Export src/ to modules/ and tinytorch/
+  package      Package management (nbdev)
+  nbgrader     Auto-grading tools
 
-Getting Started:
-  tito setup                    First-time environment setup
-  tito module start 01          Start Module 01 (tensors, first time)
-  tito module complete 01       Complete Module 01 (test + export + track)
-  tito module resume 02         Resume working on Module 02
-  tito module status            View your progress across all modules
-
-Tracking Progress:
-  tito checkpoint status        See all capabilities unlocked
-  tito checkpoint timeline      Visual progress timeline
-  tito leaderboard join         Join the community
-  tito leaderboard profile      View your achievement journey
+Quick Start:
+  tito setup                    First-time setup
+  tito module start 01          Start Module 01 (tensors)
+  tito module complete 01       Test, export, and track progress
+  tito module status            View your progress
             """
         )
 
@@ -226,36 +197,22 @@ Tracking Progress:
                 # Show ASCII logo first
                 print_ascii_logo()
 
-                # Show enhanced help with command groups
+                # Simple, focused welcome message
+                help_text = "[bold cyan]Quick Start:[/bold cyan]\n"
+                help_text += "  [green]tito setup[/green]                  First-time setup\n"
+                help_text += "  [green]tito module start 01[/green]        Start Module 01 (tensors)\n"
+                help_text += "  [green]tito module complete 01[/green]     Test, export, and track progress\n"
+                help_text += "\n[bold cyan]Track Progress:[/bold cyan]\n"
+                help_text += "  [yellow]tito module status[/yellow]        View module progress\n"
+                help_text += "  [yellow]tito milestones status[/yellow]    View unlocked capabilities\n"
+                help_text += "\n[bold cyan]Community:[/bold cyan]\n"
+                help_text += "  [blue]tito community join[/blue]          Connect with builders worldwide\n"
+                help_text += "\n[bold cyan]Help & Docs:[/bold cyan]\n"
+                help_text += "  [magenta]tito system doctor[/magenta]       Check environment health\n"
+                help_text += "  [magenta]tito --help[/magenta]              See all commands"
+
                 self.console.print(Panel(
-                    "[bold]Essential Commands:[/bold]\n"
-                    "  [bold cyan]setup[/bold cyan]        - First-time environment setup\n\n"
-                    "[bold]Command Groups:[/bold]\n"
-                    "  [bold green]system[/bold green]       - System environment and configuration\n"
-                    "  [bold green]module[/bold green]       - Module workflow (start, complete, resume)\n"
-                    "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
-                    "  [bold cyan]checkpoint[/bold cyan]   - Progress tracking (capabilities unlocked)\n"
-                    "  [bold magenta]milestones[/bold magenta]   - Epic achievements (major unlocks)\n"
-                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Community showcase (share progress)\n"
-                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Competition events (challenges)\n\n"
-                    "[bold]Convenience Shortcuts:[/bold]\n"
-                    "  [bold yellow]export[/bold yellow]      - Quick export (→ module export)\n"
-                    "  [bold yellow]test[/bold yellow]        - Quick test (→ module test)\n"
-                    "  [bold green]book[/bold green]        - Build Jupyter Book documentation\n"
-                    "  [bold green]logo[/bold green]        - Learn about Tiny🔥Torch philosophy\n"
-                    "[bold]Quick Start:[/bold]\n"
-                    "  [dim]tito setup[/dim]                    - First-time setup (run once)\n"
-                    "  [dim]tito module start 01[/dim]          - Start Module 01 (tensors)\n"
-                    "  [dim]tito module complete 01[/dim]       - Complete it (test + export + track)\n"
-                    "  [dim]tito module start 02[/dim]          - Continue to Module 02\n"
-                    "  [dim]tito module status[/dim]            - View all progress\n\n"
-                    "[bold]Track Progress:[/bold]\n"
-                    "  [dim]tito checkpoint status[/dim]        - Capabilities unlocked\n"
-                    "  [dim]tito leaderboard profile[/dim]      - Your achievement journey\n\n"
-                    "[bold]Get Help:[/bold]\n"
-                    "  [dim]tito <command>[/dim]                - Show command subcommands\n"
-                    "  [dim]tito --help[/dim]                   - Show full help",
+                    help_text,
                     title="Welcome to Tiny🔥Torch!",
                     border_style="bright_green"
                 ))

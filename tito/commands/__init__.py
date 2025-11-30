@@ -7,52 +7,26 @@ Commands are organized into logical groups: system, module, and package.
 
 from .base import BaseCommand
 
-# Individual commands (for backward compatibility)
-from .notebooks import NotebooksCommand
-from .info import InfoCommand
+# Individual commands
 from .test import TestCommand
-from .health import HealthCommand
-from .check import CheckCommand
-from .version import VersionCommand
-from .clean_workspace import CleanWorkspaceCommand
-from .report import ReportCommand
 from .export import ExportCommand
 from .src import SrcCommand
-from .reset import ResetCommand
-from .jupyter import JupyterCommand
-from .nbdev import NbdevCommand
-from .status import StatusCommand
-from .clean import CleanCommand
 from .nbgrader import NBGraderCommand
-from .book import BookCommand
 from .benchmark import BenchmarkCommand
 from .community import CommunityCommand
 
-# Command groups
+# Command groups (with subcommands organized in subfolders)
 from .system import SystemCommand
-from .module_workflow import ModuleWorkflowCommand
+from .module import ModuleWorkflowCommand
 from .package import PackageCommand
 
 __all__ = [
     'BaseCommand',
     # Individual commands
-    'NotebooksCommand',
-    'InfoCommand',
     'TestCommand',
-    'HealthCommand',
-    'CheckCommand',
-    'VersionCommand',
-    'CleanWorkspaceCommand',
-    'ReportCommand',
     'ExportCommand',
     'SrcCommand',
-    'ResetCommand',
-    'JupyterCommand',
-    'NbdevCommand',
-    'StatusCommand',
-    'CleanCommand',
     'NBGraderCommand',
-    'BookCommand',
     'BenchmarkCommand',
     'CommunityCommand',
     # Command groups
