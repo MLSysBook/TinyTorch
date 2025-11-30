@@ -216,6 +216,10 @@ class Sigmoid:
     Perfect for probabilities and binary classification.
     """
 
+    def parameters(self):
+        """Return empty list (activations have no learnable parameters)."""
+        return []
+
     def forward(self, x: Tensor) -> Tensor:
         """
         Apply sigmoid activation element-wise.
@@ -349,6 +353,10 @@ class ReLU:
     Most popular activation for hidden layers.
     """
 
+    def parameters(self):
+        """Return empty list (activations have no learnable parameters)."""
+        return []
+
     def forward(self, x: Tensor) -> Tensor:
         """
         Apply ReLU activation element-wise.
@@ -466,6 +474,10 @@ class Tanh:
     Maps any real number to (-1, 1) range.
     Zero-centered alternative to sigmoid.
     """
+
+    def parameters(self):
+        """Return empty list (activations have no learnable parameters)."""
+        return []
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -590,6 +602,10 @@ class GELU:
     Where Φ(x) is the cumulative distribution function of standard normal.
     """
 
+    def parameters(self):
+        """Return empty list (activations have no learnable parameters)."""
+        return []
+
     def forward(self, x: Tensor) -> Tensor:
         """
         Apply GELU activation element-wise.
@@ -712,6 +728,10 @@ class Softmax:
     Converts any vector to a probability distribution.
     Sum of all outputs equals 1.0.
     """
+
+    def parameters(self):
+        """Return empty list (activations have no learnable parameters)."""
+        return []
 
     def forward(self, x: Tensor, dim: int = -1) -> Tensor:
         """

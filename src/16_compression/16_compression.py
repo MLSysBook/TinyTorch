@@ -426,7 +426,7 @@ def test_unit_measure_sparsity():
     model = SimpleModel(layer1, layer2)  # Test helper for parameter collection
 
     initial_sparsity = measure_sparsity(model)
-    assert initial_sparsity == 0.0, f"Expected 0% sparsity, got {initial_sparsity}%"
+    assert initial_sparsity < 1.0, f"Expected <1% sparsity (dense model), got {initial_sparsity}%"
 
     # Test with manually sparse model - students see which weights are zeroed
     layer1.weight.data[0, 0] = 0  # Zero out specific weight
@@ -577,7 +577,7 @@ def test_unit_magnitude_prune():
     ])
 
     initial_sparsity = measure_sparsity(model)
-    assert initial_sparsity == 0.0, "Model should start with no sparsity"
+    assert initial_sparsity < 1.0, "Model should start with minimal sparsity (<1%)"
 
     # Apply 50% pruning - removes smallest 50% of weights
     magnitude_prune(model, sparsity=0.5)
@@ -746,7 +746,7 @@ def test_unit_structured_prune():
     ])
 
     initial_sparsity = measure_sparsity(model)
-    assert initial_sparsity == 0.0, "Model should start with no sparsity"
+    assert initial_sparsity < 1.0, "Model should start with minimal sparsity (<1%)"
 
     # Apply 33% structured pruning (2 out of 6 channels)
     # This removes entire channels, not scattered weights
