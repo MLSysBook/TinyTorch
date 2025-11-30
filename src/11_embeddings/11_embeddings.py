@@ -626,6 +626,8 @@ Let's implement the mathematical position encoding that creates unique signature
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sinusoidal-function", "solution": true}
+#| export
+
 def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
     """
     Create sinusoidal positional encodings as used in "Attention Is All You Need".

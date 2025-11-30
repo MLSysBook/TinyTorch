@@ -550,9 +550,14 @@ class SGD(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient data (grad is a Tensor from Module 01)
+            # Get gradient data - grad can be Tensor or numpy array
             grad = param.grad
-            grad_data = grad.data
+            # Handle both Tensor (with .data) and numpy array (from autograd) cases
+            if isinstance(grad, Tensor):
+                grad_data = grad.data
+            else:
+                # grad is already a numpy array from autograd
+                grad_data = grad
 
             # Apply weight decay
             if self.weight_decay != 0:
@@ -783,9 +788,14 @@ class Adam(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient data (grad is a Tensor from Module 01)
+            # Get gradient data - grad can be Tensor or numpy array
             grad = param.grad
-            grad_data = grad.data
+            # Handle both Tensor (with .data) and numpy array (from autograd) cases
+            if isinstance(grad, Tensor):
+                grad_data = grad.data
+            else:
+                # grad is already a numpy array from autograd
+                grad_data = grad
 
             # Apply weight decay
             if self.weight_decay != 0:
@@ -1027,9 +1037,14 @@ class AdamW(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient data (NOT modified by weight decay)
+            # Get gradient data - grad can be Tensor or numpy array
             grad = param.grad
-            grad_data = grad.data
+            # Handle both Tensor (with .data) and numpy array (from autograd) cases
+            if isinstance(grad, Tensor):
+                grad_data = grad.data
+            else:
+                # grad is already a numpy array from autograd
+                grad_data = grad
 
             # Initialize buffers if needed
             if self.m_buffers[i] is None:

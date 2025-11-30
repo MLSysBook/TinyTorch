@@ -696,6 +696,7 @@ class RandomHorizontalFlip:
         return x
         ### END SOLUTION
 
+#| export
 
 class RandomCrop:
     """
@@ -807,6 +808,7 @@ class RandomCrop:
         return Tensor(cropped) if is_tensor else cropped
         ### END SOLUTION
 
+#| export
 
 class Compose:
     """

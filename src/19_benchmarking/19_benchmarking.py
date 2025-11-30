@@ -300,6 +300,8 @@ The confidence interval tells us: "We're 95% confident the true mean latency is 
 """
 
 # %% nbgrader={"grade": false, "grade_id": "benchmark-dataclass", "solution": true}
+#| export
+
 @dataclass
 class BenchmarkResult:
     """

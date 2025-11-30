@@ -841,6 +841,8 @@ It works poorly when:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "low-rank-approx", "solution": true, "schema_version": 3}
+#| export
+
 def low_rank_approximate(weight_matrix, rank_ratio=0.5):
     """
     Approximate weight matrix using low-rank decomposition (SVD).

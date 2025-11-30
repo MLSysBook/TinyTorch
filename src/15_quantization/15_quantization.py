@@ -1210,6 +1210,8 @@ Output Dictionary:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "compare_model_sizes", "solution": true}
+#| export
+
 def compare_model_sizes(original_model, quantized_model) -> Dict[str, float]:
     """
     Compare memory usage between original and quantized models.

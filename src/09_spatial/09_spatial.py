@@ -400,6 +400,7 @@ class Conv2dBackward(Function):
         # Following TinyTorch protocol: return (grad_input, grad_weight, grad_bias)
         return grad_input, grad_weight, grad_bias
 
+#| export
 
 class Conv2d:
     """
@@ -874,6 +875,7 @@ class MaxPool2dBackward(Function):
         # Return as tuple (following Function protocol)
         return (grad_input,)
 
+#| export
 
 class MaxPool2d:
     """

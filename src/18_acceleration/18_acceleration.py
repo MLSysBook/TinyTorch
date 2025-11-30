@@ -212,6 +212,8 @@ For c₁₁: Row₁ · Column₁ = a₁₁×b₁₁ + a₁₂×b₂₁ + a₁₃
 """
 
 # %% nbgrader={"grade": false, "grade_id": "vectorized-matmul", "solution": true}
+#| export
+
 def vectorized_matmul(a: Tensor, b: Tensor) -> Tensor:
     """
     High-performance matrix multiplication using vectorized operations.
@@ -391,6 +393,8 @@ Unfused Operations:                    Fused Operation:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "fused-gelu", "solution": true}
+#| export
+
 def fused_gelu(x: Tensor) -> Tensor:
     """
     Fused GELU activation that combines all operations in a single kernel.
@@ -646,6 +650,8 @@ Tiling keeps working set in cache for maximum reuse.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tiled-matmul", "solution": true}
+#| export
+
 def tiled_matmul(a: Tensor, b: Tensor, tile_size: int = 64) -> Tensor:
     """
     Cache-aware matrix multiplication using tiling/blocking.
