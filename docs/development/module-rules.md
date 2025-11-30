@@ -152,7 +152,124 @@ Show concrete applications and industry relevance.
 """
 ```
 
-### E. **Implementation Sections**
+### E. **ASCII Diagrams and Tables**
+
+ASCII diagrams are powerful educational tools that visualize concepts, architectures, and data flows. Follow these guidelines to ensure they render correctly across all environments.
+
+#### Box Alignment Rules
+
+**1. Border Width Consistency**: The top border (`┌───┐`) defines the box width. All content lines must match this width exactly.
+
+```
+✅ CORRECT:
+┌───────────────────────────────┐
+│ Content fits within borders  │
+│ All lines same width         │
+└───────────────────────────────┘
+
+❌ WRONG:
+┌─────────────────┐
+│ Content extends beyond│
+│ Border mismatch      │
+└─────────────────┘
+```
+
+**2. Nested Boxes**: Inner boxes must align with the outer box's right border. Use consistent spacing.
+
+```
+✅ CORRECT:
+┌───────────────────────────────────────────────────────┐
+│ OUTER BOX TITLE                                       │
+├───────────────────────────────────────────────────────┤
+│                                                       │
+│ Section Header                                        │
+│ ┌───────────────────────────────────────────────────┐ │
+│ │ Inner content properly aligned                    │ │
+│ │ All borders match outer box width                 │ │
+│ └───────────────────────────────────────────────────┘ │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+
+❌ WRONG (misaligned nested boxes):
+┌──────────────────────────────────┐
+│ OUTER BOX                        │
+│ ┌──────────────────────────────┐          │
+│ │ Inner box extends beyond     │          │
+│ └──────────────────────────────┘          │
+└──────────────────────────────────────────────────┘
+```
+
+**3. Side-by-Side Boxes**: Both boxes should have equal or proportional widths with consistent spacing.
+
+```
+✅ CORRECT:
+┌───────────────────────────────┐    ┌───────────────────────────────┐
+│ Left Box                      │    │ Right Box                     │
+│ Content here                  │ →  │ Content here                  │
+│ Same width as right           │    │ Same width as left            │
+└───────────────────────────────┘    └───────────────────────────────┘
+
+❌ WRONG (unequal widths, misaligned):
+┌─────────────────┐         ┌─────────────────────────┐
+│ Left Box          │         │ Right Box            │
+│ Width mismatch   │    →    │ Different size      │
+└─────────────────┘         └─────────────────────────┘
+```
+
+#### Table Formatting Rules
+
+**1. Column Alignment**: All column separators (`│`) must align vertically. Use consistent column widths.
+
+```
+✅ CORRECT:
+┌─────────────────┬─────────────────┬─────────────────┐
+│ Column 1        │ Column 2        │ Column 3        │
+├─────────────────┼─────────────────┼─────────────────┤
+│ Data aligned    │ Same width      │ Consistent      │
+│ Short           │ Medium content  │ Longer content  │
+└─────────────────┴─────────────────┴─────────────────┘
+
+❌ WRONG (separators don't align):
+┌─────────────────┬─────────────────┬─────────────────┐
+│ Column 1        │ Column 2        │ Column 3        │
+├─────────────────┼─────────────────┼─────────────────┤
+│ Misaligned│ Content      │ Wrong widths     │
+└─────────────────┴─────────────────┴─────────────────┘
+```
+
+**2. Multi-Column Tables**: Header separators (`┬`, `┼`, `┴`) must align with content separators.
+
+#### Special Characters
+
+**Emoji Width**: Emojis display as ~2 characters wide but count as 1 in string length. Add extra padding after emojis.
+
+```
+✅ CORRECT (emoji padding):
+│ ✅ Success message here      │
+│ ❌ Error message here        │
+
+❌ WRONG (no padding compensation):
+│ ✅ Success message here│
+│ ❌ Error message here │
+```
+
+**Box-Drawing Characters Reference**:
+- Corners: `┌` `┐` `└` `┘`
+- Lines: `─` (horizontal), `│` (vertical)
+- Intersections: `┬` `┴` `├` `┤` `┼`
+- Arrows: `→` `←` `↑` `↓` `▼` `▲`
+
+#### Quality Checklist for Diagrams
+
+Before committing, verify each diagram:
+- [ ] Top border width matches bottom border width
+- [ ] All content lines have consistent right-edge `│` alignment
+- [ ] Nested boxes align with outer box boundaries
+- [ ] Table columns have uniform widths
+- [ ] Side-by-side boxes are visually balanced
+- [ ] Emojis have appropriate padding
+
+### F. **Implementation Sections**
 ```python
 # %% [markdown]
 """
@@ -189,7 +306,7 @@ class ComponentName:
         raise NotImplementedError("Student implementation required")
 ```
 
-### F. **Test Functions**
+### G. **Test Functions**
 ```python
 # %% [markdown]
 """
@@ -221,7 +338,7 @@ if __name__ == "__main__":
     test_component_function()
 ```
 
-### G. **Module Summary** (CRITICAL)
+### H. **Module Summary** (CRITICAL)
 ```python
 # %% [markdown]
 """
