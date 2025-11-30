@@ -170,19 +170,19 @@ This formula captures the "multiply and sum" operation for each kernel position.
 
 ```
 Max Pooling Example (2×2 window):
-Input:           Output:
-┌───────────┐    ┌─────┐
-│ 1 3 2 4 │    │ 6 8 │  ← max([1,3,5,6])=6, max([2,4,7,8])=8
-│ 5 6 7 8 │ →  │ 9 9 │  ← max([5,2,9,1])=9, max([7,4,9,3])=9
-│ 2 9 1 3 │    └─────┘
-│ 0 1 9 3 │
-└───────────┘
+Input:             Output:
+┌───────────────┐  ┌───────┐
+│ 1  3  2  4    │  │ 6   8 │  ← max([1,3,5,6])=6, max([2,4,7,8])=8
+│ 5  6  7  8    │  │ 9   9 │  ← max([5,2,9,1])=9, max([7,4,9,3])=9
+│ 2  9  1  3    │  └───────┘
+│ 0  1  9  3    │
+└───────────────┘
 
 Average Pooling (same window):
-┌─────┐  ← avg([1,3,5,6])=3.75, avg([2,4,7,8])=5.25
-│3.75 5.25│
-│2.75 5.75│  ← avg([5,2,9,1])=4.25, avg([7,4,9,3])=5.75
-└─────┘
+┌─────────────┐
+│ 3.75   5.25 │  ← avg([1,3,5,6])=3.75, avg([2,4,7,8])=5.25
+│ 2.75   5.75 │  ← avg([5,2,9,1])=4.25, avg([7,4,9,3])=5.75
+└─────────────┘
 ```
 
 ### Why This Complexity Matters
@@ -672,10 +672,10 @@ Max pooling finds the strongest activation in each window, preserving sharp feat
 ```
 MaxPool2d Example (2×2 kernel, stride=2):
 Input (4×4):              Windows:               Output (2×2):
-┌─────────────┐          ┌─────┬─────┐          ┌─────┐
-│ 1  3 │ 2  8 │          │ 1 3 │ 2 8 │          │ 6 8 │
-│ 5  6 │ 7  4 │     →   │ 5 6 │ 7 4 │    →    │ 9 7 │
-├─────┼─────┤          ├─────┼─────┤          └─────┘
+┌─────────────┐          ┌─────┬─────┐          ┌───────┐
+│ 1  3 │ 2  8 │          │ 1 3 │ 2 8 │          │ 6   8 │
+│ 5  6 │ 7  4 │    →     │ 5 6 │ 7 4 │    →     │ 9   7 │
+├──────┼──────┤          ├─────┼─────┤          └───────┘
 │ 2  9 │ 1  7 │          │ 2 9 │ 1 7 │
 │ 0  1 │ 3  6 │          │ 0 1 │ 3 6 │
 └─────────────┘          └─────┴─────┘
@@ -692,10 +692,10 @@ Average pooling computes the mean of each window, creating smoother, more genera
 ```
 AvgPool2d Example (same 2×2 kernel, stride=2):
 Input (4×4):              Output (2×2):
-┌─────────────┐          ┌──────────┐
-│ 1  3 │ 2  8 │          │ 3.75  5.25│
-│ 5  6 │ 7  4 │     →   │ 3.0   4.25│
-├─────┼─────┤          └──────────┘
+┌─────────────┐          ┌─────────────┐
+│ 1  3 │ 2  8 │          │ 3.75   5.25 │
+│ 5  6 │ 7  4 │    →     │ 3.0    4.25 │
+├──────┼──────┤          └─────────────┘
 │ 2  9 │ 1  7 │
 │ 0  1 │ 3  6 │
 └─────────────┘
@@ -1257,8 +1257,8 @@ Training Mode:                      Eval Mode:
 │ mean/variance      │             │  training)         │
 └────────────────────┘             └────────────────────┘
    ↓                                  ↓
-Computes μ, σ² from               Uses frozen μ, σ² for
-current batch                     consistent inference
+Computes μ, σ² from                Uses frozen μ, σ² for
+current batch                      consistent inference
 ```
 
 **Why this matters**: During inference, you might process just 1 image. Batch statistics from 1 sample would be meaningless. Running statistics provide stable normalization.
@@ -1846,12 +1846,12 @@ CNN vs Dense Comparison for 32×32×3 → 10 classes:
 CNN Approach:                    Dense Approach:
 ┌────────────────────┐          ┌────────────────────┐
 │ Conv1: 3→16, 3×3   │          │ Input: 3072 values │
-│ Params: 448        │          │        ↓          │
-├────────────────────┤          │ Dense: 3072→512   │
-│ Conv2: 16→32, 3×3  │          │ Params: 1.57M     │
+│ Params: 448        │          │        ↓           │
+├────────────────────┤          │ Dense: 3072→512    │
+│ Conv2: 16→32, 3×3  │          │ Params: 1.57M      │
 │ Params: 4,640      │          ├────────────────────┤
-├────────────────────┤          │ Dense: 512→10     │
-│ Dense: 2048→10     │          │ Params: 5,120     │
+├────────────────────┤          │ Dense: 512→10      │
+│ Dense: 2048→10     │          │ Params: 5,120      │
 │ Params: 20,490     │          └────────────────────┘
 └────────────────────┘          Total: 1.58M params
 Total: 25,578 params
