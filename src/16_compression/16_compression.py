@@ -454,30 +454,30 @@ Magnitude Pruning Process:
 
 Step 1: Collect All Weights
 ┌──────────────────────────────────────────────────┐
-│ Layer 1: [2.1, 0.1, -1.8, 0.05, 3.2, -0.02]    │
-│ Layer 2: [1.5, -0.03, 2.8, 0.08, -2.1, 0.01]   │
-│ Layer 3: [0.7, 2.4, -0.06, 1.9, 0.04, -1.3]    │
+│ Layer 1: [2.1, 0.1, -1.8, 0.05, 3.2, -0.02]      │
+│ Layer 2: [1.5, -0.03, 2.8, 0.08, -2.1, 0.01]     │
+│ Layer 3: [0.7, 2.4, -0.06, 1.9, 0.04, -1.3]      │
 └──────────────────────────────────────────────────┘
                     ↓
 Step 2: Calculate Magnitudes
 ┌──────────────────────────────────────────────────┐
-│ Magnitudes: [2.1, 0.1, 1.8, 0.05, 3.2, 0.02,   │
-│              1.5, 0.03, 2.8, 0.08, 2.1, 0.01,   │
-│              0.7, 2.4, 0.06, 1.9, 0.04, 1.3]    │
+│ Magnitudes: [2.1, 0.1, 1.8, 0.05, 3.2, 0.02,     │
+│              1.5, 0.03, 2.8, 0.08, 2.1, 0.01,    │
+│              0.7, 2.4, 0.06, 1.9, 0.04, 1.3]     │
 └──────────────────────────────────────────────────┘
                     ↓
 Step 3: Find Threshold (e.g., 70th percentile)
 ┌──────────────────────────────────────────────────┐
-│ Sorted: [0.01, 0.02, 0.03, 0.04, 0.05, 0.06,    │
-│          0.08, 0.1, 0.7, 1.3, 1.5, 1.8,         │ Threshold: 0.1
-│          1.9, 2.1, 2.1, 2.4, 2.8, 3.2]          │ (70% of weights removed)
+│ Sorted: [0.01, 0.02, 0.03, 0.04, 0.05, 0.06,     │
+│          0.08, 0.1, 0.7, 1.3, 1.5, 1.8,          │ Threshold: 0.1
+│          1.9, 2.1, 2.1, 2.4, 2.8, 3.2]           │ (70% of weights removed)
 └──────────────────────────────────────────────────┘
                     ↓
 Step 4: Apply Pruning Mask
 ┌──────────────────────────────────────────────────┐
-│ Layer 1: [2.1, 0.0, -1.8, 0.0, 3.2, 0.0]       │
-│ Layer 2: [1.5, 0.0, 2.8, 0.0, -2.1, 0.0]       │ 70% weights → 0
-│ Layer 3: [0.7, 2.4, 0.0, 1.9, 0.0, -1.3]       │ 30% preserved
+│ Layer 1: [2.1, 0.0, -1.8, 0.0, 3.2, 0.0]         │
+│ Layer 2: [1.5, 0.0, 2.8, 0.0, -2.1, 0.0]         │ 70% weights → 0
+│ Layer 3: [0.7, 2.4, 0.0, 1.9, 0.0, -1.3]         │ 30% preserved
 └──────────────────────────────────────────────────┘
 
 Memory Impact:
@@ -611,19 +611,19 @@ Unstructured vs Structured Sparsity:
 
 UNSTRUCTURED (Magnitude Pruning):
 ┌─────────────────────────────────────────────┐
-│ Channel 0: [2.1, 0.0, 1.8, 0.0, 3.2]       │ ← Sparse weights
-│ Channel 1: [0.0, 2.8, 0.0, 2.1, 0.0]       │ ← Sparse weights
-│ Channel 2: [1.5, 0.0, 2.4, 0.0, 1.9]       │ ← Sparse weights
-│ Channel 3: [0.0, 1.7, 0.0, 2.0, 0.0]       │ ← Sparse weights
+│ Channel 0: [2.1, 0.0, 1.8, 0.0, 3.2]        │ ← Sparse weights
+│ Channel 1: [0.0, 2.8, 0.0, 2.1, 0.0]        │ ← Sparse weights
+│ Channel 2: [1.5, 0.0, 2.4, 0.0, 1.9]        │ ← Sparse weights
+│ Channel 3: [0.0, 1.7, 0.0, 2.0, 0.0]        │ ← Sparse weights
 └─────────────────────────────────────────────┘
 Issues: Irregular memory access, no hardware speedup
 
 STRUCTURED (Channel Pruning):
 ┌─────────────────────────────────────────────┐
-│ Channel 0: [2.1, 1.3, 1.8, 0.9, 3.2]       │ ← Fully preserved
-│ Channel 1: [0.0, 0.0, 0.0, 0.0, 0.0]       │ ← Fully removed
-│ Channel 2: [1.5, 2.2, 2.4, 1.1, 1.9]       │ ← Fully preserved
-│ Channel 3: [0.0, 0.0, 0.0, 0.0, 0.0]       │ ← Fully removed
+│ Channel 0: [2.1, 1.3, 1.8, 0.9, 3.2]        │ ← Fully preserved
+│ Channel 1: [0.0, 0.0, 0.0, 0.0, 0.0]        │ ← Fully removed
+│ Channel 2: [1.5, 2.2, 2.4, 1.1, 1.9]        │ ← Fully preserved
+│ Channel 3: [0.0, 0.0, 0.0, 0.0, 0.0]        │ ← Fully removed
 └─────────────────────────────────────────────┘
 Benefits: Regular patterns, hardware acceleration possible
 ```
@@ -1232,7 +1232,7 @@ CLOUD SERVICE (Minimal compression):
 │ • Magnitude pruning: 50% sparsity       │
 │ • Structured pruning: 10% channels      │
 │ • Dynamic batching optimization         │
-│ • Mixed precision inference            │
+│ • Mixed precision inference             │
 └─────────────────────────────────────────┘
 ```
 """

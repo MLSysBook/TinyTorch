@@ -1798,7 +1798,7 @@ SimpleCNN Architecture Visualization:
 Input: (batch, 3, 32, 32)     ← RGB images (CIFAR-10 size)
          ↓
 ┌─────────────────────────┐
-│ Conv2d(3→16, 3×3, p=1) │    ← Detect edges, textures
+│ Conv2d(3→16, 3×3, p=1)  │    ← Detect edges, textures
 │ ReLU()                  │    ← Remove negative values
 │ MaxPool(2×2)            │    ← Reduce to (batch, 16, 16, 16)
 └─────────────────────────┘

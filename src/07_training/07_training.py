@@ -470,7 +470,7 @@ for epoch in range(num_epochs):
     └───────────────────────────────────────────────────┘
              ↓
     ┌─── Learning Rate Update ───┐
-    │ 8. scheduler.step()         │
+    │ 8. scheduler.step()        │
     └────────────────────────────┘
 ```
 

@@ -535,10 +535,10 @@ Benchmark Execution Flow:
                                                ↓
                            ┌─────────────────────────────────┐
                            │        Benchmark Loop           │
-                           │ 1. Warmup runs (JIT, cache)    │
+                           │ 1. Warmup runs (JIT, cache)     │
                            │ 2. Measurement runs (statistics)│
-                           │ 3. System info capture         │
-                           │ 4. Result aggregation          │
+                           │ 3. System info capture          │
+                           │ 4. Result aggregation           │
                            └─────────────────────────────────┘
                                         ↓
                     ┌────────────────────────────────────┐
@@ -1258,26 +1258,26 @@ This makes it impossible to compare results across papers, products, or research
 TinyMLPerf Benchmark Structure:
 ┌─────────────────────────────────────────────────────────┐
 │                  Benchmark Definition                   │
-│ • Standard datasets (CIFAR-10, Speech Commands, etc.)  │
+│ • Standard datasets (CIFAR-10, Speech Commands, etc.)   │
 │ • Fixed input shapes and data types                     │
-│ • Target accuracy and latency thresholds               │
-│ • Measurement protocol (warmup, runs, etc.)            │
+│ • Target accuracy and latency thresholds                │
+│ • Measurement protocol (warmup, runs, etc.)             │
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐
 │                 Execution Protocol                      │
-│ 1. Model registration and validation                   │
-│ 2. Warmup phase (deterministic random inputs)          │
-│ 3. Measurement phase (statistical sampling)            │
-│ 4. Accuracy evaluation (ground truth comparison)       │
-│ 5. Compliance checking (thresholds, statistical tests) │
+│ 1. Model registration and validation                    │
+│ 2. Warmup phase (deterministic random inputs)           │
+│ 3. Measurement phase (statistical sampling)             │
+│ 4. Accuracy evaluation (ground truth comparison)        │
+│ 5. Compliance checking (thresholds, statistical tests)  │
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐
 │              Compliance Determination                   │
-│ PASS: accuracy ≥ target AND latency ≤ target           │
+│ PASS: accuracy ≥ target AND latency ≤ target            │
 │ FAIL: Either constraint violated                        │
-│ Report: Detailed metrics + system information          │
+│ Report: Detailed metrics + system information           │
 └─────────────────────────────────────────────────────────┘
 ```
 

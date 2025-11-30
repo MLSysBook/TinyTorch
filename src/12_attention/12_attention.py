@@ -137,7 +137,7 @@ Think of attention like a sophisticated address book lookup:
 ```
 Query: "What information do I need?"
 ┌─────────────────────────────────────┐
-│ Q: [0.1, 0.8, 0.3, 0.2]            │ ← Query vector (what we're looking for)
+│ Q: [0.1, 0.8, 0.3, 0.2]             │ ← Query vector (what we're looking for)
 └─────────────────────────────────────┘
 
 Keys: "What information is available at each position?"

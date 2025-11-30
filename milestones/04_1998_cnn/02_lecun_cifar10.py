@@ -53,7 +53,7 @@ CIFAR-10 contains 60,000 32×32 color images in 10 classes:
     └──────────┘                     Layer 2 (Conv 32→64):
                                       • Object parts
     ┌──────────┐                     • Complex patterns
-    │ 🚗 Car   │                     • Spatial relationships
+    │ 🚗 Car    │                     • Spatial relationships
     │[Red body]│                     
     │[Wheels]  │                     Output Layer:
     │[Windows] │                     • Complete objects

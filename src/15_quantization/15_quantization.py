@@ -186,10 +186,10 @@ But here's the surprising truth: **we don't need all that precision for most AI 
 ```
 Model Memory Requirements (FP32):
 ┌─────────────────────────────────────────────────────────────┐
-│ BERT-Base:   110M params ×  4 bytes = 440MB                │
-│ GPT-2:       1.5B params ×  4 bytes = 6GB                  │
-│ GPT-3:       175B params × 4 bytes = 700GB                 │
-│ Your Phone:  Available RAM = 4-8GB                         │
+│ BERT-Base:   110M params ×  4 bytes = 440MB                 │
+│ GPT-2:       1.5B params ×  4 bytes = 6GB                   │
+│ GPT-3:       175B params × 4 bytes = 700GB                  │
+│ Your Phone:  Available RAM = 4-8GB                          │
 └─────────────────────────────────────────────────────────────┘
                         ↑
                     Problem!
@@ -272,7 +272,7 @@ Quantization (FP32 → INT8):
 
 Dequantization (INT8 → FP32):
 ┌─────────────────────────────────────────────────────────┐
-│  float_value = (quantized - zero_point) × scale        │
+│  float_value = (quantized - zero_point) × scale         │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -364,18 +364,18 @@ We'll build quantization in logical layers, each building on the previous:
 Quantization System Architecture:
 
 ┌─────────────────────────────────────────────────────────────┐
-│                    Layer 4: Model Quantization             │
-│  quantize_model() - Convert entire neural networks         │
+│                    Layer 4: Model Quantization              │
+│  quantize_model() - Convert entire neural networks          │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 3: Layer Quantization             │
-│  QuantizedLinear - Quantized linear transformations        │
+│                    Layer 3: Layer Quantization              │
+│  QuantizedLinear - Quantized linear transformations         │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 2: Tensor Operations              │
-│  quantize_int8() - Core quantization algorithm             │
-│  dequantize_int8() - Restore to floating point             │
+│                    Layer 2: Tensor Operations               │
+│  quantize_int8() - Core quantization algorithm              │
+│  dequantize_int8() - Restore to floating point              │
 ├─────────────────────────────────────────────────────────────┤
-│                    Layer 1: Foundation                     │
-│  Scale & Zero Point Calculation - Parameter optimization   │
+│                    Layer 1: Foundation                      │
+│  Scale & Zero Point Calculation - Parameter optimization    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -538,22 +538,22 @@ Dequantization Process:
 INT8 Values + Parameters → FP32 Reconstruction
 
 ┌─────────────────────────┐
-│ Quantized: [-128, 12, 127]   │
-│ Scale: 0.017               │
-│ Zero Point: 88             │
+│ Quantized: [-128, 12, 127]│
+│ Scale: 0.017            │
+│ Zero Point: 88          │
 └─────────────────────────┘
            │
            ▼ Apply Formula
 ┌─────────────────────────┐
-│ FP32 = (quantized - zero_point) │
-│        × scale                  │
+│ FP32 = (quantized - zero_point)│
+│        × scale          │
 └─────────────────────────┘
            │
            ▼
 ┌─────────────────────────┐
 │ Result: [-1.496, 0.204, 2.799]│
-│ Original: [-1.5, 0.2, 2.8]  │
-│ Error: [0.004, 0.004, 0.001] │
+│ Original: [-1.5, 0.2, 2.8]│
+│ Error: [0.004, 0.004, 0.001]│
 └─────────────────────────┘
        ↑
   Excellent approximation!

@@ -168,20 +168,20 @@ Different stakeholders care about different metrics:
 Stakeholder View:
 ┌──────────────────────────────────────────────────────────────┐
 │ ML Researcher:                                               │
-│   Primary   → Accuracy, F1, BLEU (task-specific)            │
+│   Primary   → Accuracy, F1, BLEU (task-specific)             │
 │   Secondary → Training time, convergence                     │
 │                                                              │
 │ Systems Engineer:                                            │
-│   Primary   → Latency (p50, p99), throughput                │
-│   Secondary → Memory usage, CPU/GPU utilization             │
+│   Primary   → Latency (p50, p99), throughput                 │
+│   Secondary → Memory usage, CPU/GPU utilization              │
 │                                                              │
 │ Product Manager:                                             │
-│   Primary   → User experience (latency < 100ms?)            │
-│   Secondary → Cost per request, scalability                 │
+│   Primary   → User experience (latency < 100ms?)             │
+│   Secondary → Cost per request, scalability                  │
 │                                                              │
 │ DevOps/MLOps:                                                │
-│   Primary   → Model size (deployment), inference cost       │
-│   Secondary → Batch throughput, hardware utilization        │
+│   Primary   → Model size (deployment), inference cost        │
+│   Secondary → Batch throughput, hardware utilization         │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -200,14 +200,14 @@ BenchmarkReport Structure:
 │                                                             │
 │ Performance Metrics:                                        │
 │   • Accuracy           → Task performance                   │
-│   • Latency (mean/std) → Inference speed + variance        │
-│   • Throughput         → Samples/second capacity           │
+│   • Latency (mean/std) → Inference speed + variance         │
+│   • Throughput         → Samples/second capacity            │
 │                                                             │
 │ System Context:                                             │
 │   • Platform           → Hardware/OS environment            │
 │   • Python version     → Language runtime                   │
-│   • NumPy version      → Numerical library version         │
-│   • Timestamp          → When benchmark was run            │
+│   • NumPy version      → Numerical library version          │
+│   • Timestamp          → When benchmark was run             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -220,24 +220,24 @@ Latency vs. Throughput:
 
 Latency (Per-Sample Speed):
 ┌──────────────────────────────────────────────────┐
-│  Input → Model → Output                         │
+│  Input → Model → Output                          │
 │   ↑              ↓                               │
-│   └──── 10ms ────┘                              │
+│   └──── 10ms ────┘                               │
 │                                                  │
-│  "How fast can I get ONE result?"               │
-│  Critical for: Real-time apps, user experience  │
+│  "How fast can I get ONE result?"                │
+│  Critical for: Real-time apps, user experience   │
 └──────────────────────────────────────────────────┘
 
 Throughput (Batch Capacity):
 ┌──────────────────────────────────────────────────┐
-│  [Input1, Input2, ... Input100]                 │
+│  [Input1, Input2, ... Input100]                  │
 │           ↓                                      │
 │        Model                                     │
 │           ↓                                      │
-│  [Out1, Out2, ... Out100] in 200ms             │
+│  [Out1, Out2, ... Out100] in 200ms               │
 │                                                  │
-│  "How many samples per second?"                 │
-│  Critical for: Batch jobs, data processing      │
+│  "How many samples per second?"                  │
+│  Critical for: Batch jobs, data processing       │
 └──────────────────────────────────────────────────┘
 
 Example:
@@ -714,14 +714,14 @@ Improvement Metrics Explained:
    │ Speedup = baseline_latency / optimized_latency │
    │                                                │
    │ Example:                                       │
-   │   Baseline:  10.0ms                           │
-   │   Optimized: 5.0ms                            │
-   │   Speedup:   10.0 / 5.0 = 2.0x                │
+   │   Baseline:  10.0ms                            │
+   │   Optimized: 5.0ms                             │
+   │   Speedup:   10.0 / 5.0 = 2.0x                 │
    │                                                │
    │ Interpretation:                                │
-   │   2.0x = Optimized model is 2× faster         │
-   │   1.0x = No change                            │
-   │   0.5x = Optimized model is slower (bad!)     │
+   │   2.0x = Optimized model is 2× faster          │
+   │   1.0x = No change                             │
+   │   0.5x = Optimized model is slower (bad!)      │
    └────────────────────────────────────────────────┘
 
 2. Compression Ratio (Size Reduction):
@@ -729,14 +729,14 @@ Improvement Metrics Explained:
    │ Compression = baseline_size / optimized_size   │
    │                                                │
    │ Example:                                       │
-   │   Baseline:  4.0 MB                           │
-   │   Optimized: 1.0 MB                           │
-   │   Compression: 4.0 / 1.0 = 4.0x               │
+   │   Baseline:  4.0 MB                            │
+   │   Optimized: 1.0 MB                            │
+   │   Compression: 4.0 / 1.0 = 4.0x                │
    │                                                │
    │ Interpretation:                                │
-   │   4.0x = Model is 4× smaller                  │
-   │   1.0x = Same size                            │
-   │   0.8x = Larger after "optimization" (bad!)   │
+   │   4.0x = Model is 4× smaller                   │
+   │   1.0x = Same size                             │
+   │   0.8x = Larger after "optimization" (bad!)    │
    └────────────────────────────────────────────────┘
 
 3. Accuracy Delta (Quality Impact):
@@ -744,15 +744,15 @@ Improvement Metrics Explained:
    │ Delta = optimized_accuracy - baseline_accuracy │
    │                                                │
    │ Example:                                       │
-   │   Baseline:  92.0%                            │
-   │   Optimized: 91.5%                            │
-   │   Delta:     91.5 - 92.0 = -0.5%              │
+   │   Baseline:  92.0%                             │
+   │   Optimized: 91.5%                             │
+   │   Delta:     91.5 - 92.0 = -0.5%               │
    │                                                │
    │ Interpretation:                                │
-   │   +0.5% = Improved accuracy (rare but good!)  │
-   │    0.0% = Maintained accuracy (ideal!)        │
-   │   -0.5% = Slight loss (acceptable)            │
-   │   -5.0% = Major loss (unacceptable)           │
+   │   +0.5% = Improved accuracy (rare but good!)   │
+   │    0.0% = Maintained accuracy (ideal!)         │
+   │   -0.5% = Slight loss (acceptable)             │
+   │   -5.0% = Major loss (unacceptable)            │
    └────────────────────────────────────────────────┘
 ```
 
@@ -900,24 +900,24 @@ This workflow follows industry best practices:
 Production ML Workflow:
 ┌─────────────────────────────────────────────────────────────┐
 │ 1. Define Task                                              │
-│    ↓ What are we solving? What's the test set?             │
+│    ↓ What are we solving? What's the test set?              │
 │                                                             │
 │ 2. Baseline Model                                           │
-│    ↓ Simplest reasonable model                             │
+│    ↓ Simplest reasonable model                              │
 │                                                             │
 │ 3. Baseline Benchmark                                       │
-│    ↓ Measure: accuracy, latency, memory                    │
+│    ↓ Measure: accuracy, latency, memory                     │
 │                                                             │
 │ 4. Optimization (ITERATIVE)                                 │
-│    ↓ Try technique → Benchmark → Compare → Keep or revert  │
-│    ↓ Quantization? Pruning? Distillation?                  │
+│    ↓ Try technique → Benchmark → Compare → Keep or revert   │
+│    ↓ Quantization? Pruning? Distillation?                   │
 │                                                             │
 │ 5. Final Submission                                         │
-│    ↓ Document: baseline, optimized, improvements           │
-│    ↓ Share: JSON file, metrics, techniques                 │
+│    ↓ Document: baseline, optimized, improvements            │
+│    ↓ Share: JSON file, metrics, techniques                  │
 │                                                             │
 │ 6. Community Comparison                                     │
-│    ↓ How do your results compare to others?                │
+│    ↓ How do your results compare to others?                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -1090,18 +1090,18 @@ In production ML, you often stack optimizations for cumulative benefits:
 Stacking Optimizations:
 ┌─────────────────────────────────────────────────────────────┐
 │ Baseline Model                                              │
-│   Size: 4.0 MB, Latency: 10.0ms, Accuracy: 92.0%          │
+│   Size: 4.0 MB, Latency: 10.0ms, Accuracy: 92.0%            │
 │                                                             │
-│ ↓ Apply Quantization (INT8)                                │
-│   Size: 1.0 MB (4.0×), Latency: 5.0ms (2.0×), Acc: 91.8% │
+│ ↓ Apply Quantization (INT8)                                 │
+│   Size: 1.0 MB (4.0×), Latency: 5.0ms (2.0×), Acc: 91.8%    │
 │                                                             │
-│ ↓ Apply Pruning (50% sparsity)                             │
-│   Size: 0.5 MB (2.0×), Latency: 3.5ms (1.4×), Acc: 91.5% │
+│ ↓ Apply Pruning (50% sparsity)                              │
+│   Size: 0.5 MB (2.0×), Latency: 3.5ms (1.4×), Acc: 91.5%    │
 │                                                             │
 │ Final Optimized Model                                       │
-│   Total compression: 8.0× (4.0 MB → 0.5 MB)                │
-│   Total speedup: 2.9× (10.0ms → 3.5ms)                    │
-│   Accuracy loss: -0.5% (92.0% → 91.5%)                    │
+│   Total compression: 8.0× (4.0 MB → 0.5 MB)                 │
+│   Total speedup: 2.9× (10.0ms → 3.5ms)                      │
+│   Accuracy loss: -0.5% (92.0% → 91.5%)                      │
 └─────────────────────────────────────────────────────────────┘
 
 Key Insight: Effects multiply!

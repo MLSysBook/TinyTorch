@@ -95,24 +95,24 @@ Backward Pass: ∇x ← ∇Linear₁ ← ∇ReLU ← ∇Linear₂ ← ∇Loss
 
 **Complete Autograd Process Visualization:**
 ```
-┌─ FORWARD PASS ──────────────────────────────────────────────┐
-│                                                             │
-│ x ──┬── W₁ ──┐                                              │
-│     │        ├──[Linear₁]──→ z₁ ──[ReLU]──→ a₁ ──┬── W₂ ──┐ │
-│     └── b₁ ──┘                               │        ├─→ Loss
-│                                              └── b₂ ──┘ │
-│                                                             │
-└─ COMPUTATION GRAPH BUILT ──────────────────────────────────┘
+┌─ FORWARD PASS ─────────────────────────────────────────────────┐
+│                                                                │
+│ x ──┬── W₁ ──┐                                                 │
+│     │        ├──[Linear₁]──→ z₁ ──[ReLU]──→ a₁ ──┬── W₂ ──┐    │
+│     └── b₁ ──┘                               │        ├─→ Loss │
+│                                              └── b₂ ──┘        │
+│                                                                │
+└─ COMPUTATION GRAPH BUILT ──────────────────────────────────────┘
                              │
                              ▼
 ┌─ BACKWARD PASS ─────────────────────────────────────────────┐
 │                                                             │
-│∇x ←┬← ∇W₁ ←┐                                               │
-│    │       ├←[Linear₁]←─ ∇z₁ ←[ReLU]← ∇a₁ ←┬← ∇W₂ ←┐      │
-│    └← ∇b₁ ←┘                             │       ├← ∇Loss  │
-│                                          └← ∇b₂ ←┘      │
+│∇x ←┬← ∇W₁ ←┐                                                │
+│    │       ├←[Linear₁]←─ ∇z₁ ←[ReLU]← ∇a₁ ←┬← ∇W₂ ←┐        │
+│    └← ∇b₁ ←┘                             │       ├← ∇Loss   │
+│                                          └← ∇b₂ ←┘          │
 │                                                             │
-└─ GRADIENTS COMPUTED ───────────────────────────────────────┘
+└─ GRADIENTS COMPUTED ────────────────────────────────────────┘
 
 Key Insight: Each [operation] stores how to compute its backward pass.
 The chain rule automatically flows gradients through the entire graph.

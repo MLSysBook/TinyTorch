@@ -94,51 +94,51 @@ Before transformers, language models used RNNs or CNNs that processed text seque
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  COMPLETE GPT ARCHITECTURE: From Text to Generation            │
+│  COMPLETE GPT ARCHITECTURE: From Text to Generation             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  INPUT: "Hello world"  →  Token IDs: [15496, 1917]             │
-│                                ↓                               │
+│  INPUT: "Hello world"  →  Token IDs: [15496, 1917]              │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │                EMBEDDING LAYER                            │  │
 │  │                                                           │  │
-│  │  ┌─────────────┐       ┌─────────────────────────────┐   │  │
-│  │  │Token Embed  │   +   │ Positional Embedding        │   │  │
-│  │  │15496→[0.1,  │       │ pos_0→[0.05, -0.02, ...]   │   │  │
-│  │  │     0.3,..]│       │ pos_1→[0.12,  0.08, ...]   │   │  │
-│  │  │1917→[0.2,   │       │                             │   │  │
-│  │  │    -0.1,..]│       │                             │   │  │
-│  │  └─────────────┘       └─────────────────────────────┘   │  │
+│  │  ┌─────────────┐       ┌─────────────────────────────┐    │  │
+│  │  │Token Embed  │   +   │ Positional Embedding        │    │  │
+│  │  │15496→[0.1,  │       │ pos_0→[0.05, -0.02, ...]    │    │  │
+│  │  │     0.3,..]│       │ pos_1→[0.12,  0.08, ...]     │    │  │
+│  │  │1917→[0.2,   │       │                             │    │  │
+│  │  │    -0.1,..]│       │                              │    │  │
+│  │  └─────────────┘       └─────────────────────────────┘    │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │              TRANSFORMER BLOCK 1                         │  │
+│  │              TRANSFORMER BLOCK 1                          │  │
 │  │                                                           │  │
-│  │  x → LayerNorm → MultiHeadAttention → + x → result       │  │
-│  │  │                                      ↑               │  │
-│  │  │              residual connection     │               │  │
-│  │  └──────────────────────────────────────┘               │  │
-│  │  │                                                       │  │
-│  │  result → LayerNorm → MLP (Feed Forward) → + result      │  │
-│  │  │                                           ↑           │  │
-│  │  │                residual connection       │           │  │
-│  │  └───────────────────────────────────────────┘           │  │
+│  │  x → LayerNorm → MultiHeadAttention → + x → result        │  │
+│  │  │                                      ↑                 │  │
+│  │  │              residual connection     │                 │  │
+│  │  └──────────────────────────────────────┘                 │  │
+│  │  │                                                        │  │
+│  │  result → LayerNorm → MLP (Feed Forward) → + result       │  │
+│  │  │                                           ↑            │  │
+│  │  │                residual connection        │            │  │
+│  │  └───────────────────────────────────────────┘            │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
-│              TRANSFORMER BLOCK 2 (same pattern)                │
-│                                ↓                               │
-│                      ... (more blocks) ...                     │
-│                                ↓                               │
+│                                ↓                                │
+│              TRANSFORMER BLOCK 2 (same pattern)                 │
+│                                ↓                                │
+│                      ... (more blocks) ...                      │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │                   OUTPUT HEAD                             │  │
 │  │                                                           │  │
 │  │  final_hidden → LayerNorm → Linear(embed_dim, vocab_size) │  │
-│  │                              ↓                           │  │
-│  │               Vocabulary Logits: [0.1, 0.05, 0.8, ...]   │  │
+│  │                              ↓                            │  │
+│  │               Vocabulary Logits: [0.1, 0.05, 0.8, ...]    │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
-│  OUTPUT: Next Token Probabilities                              │
-│  "Hello" → 10%,  "world" → 5%,  "!" → 80%,  ...               │
+│                                ↓                                │
+│  OUTPUT: Next Token Probabilities                               │
+│  "Hello" → 10%,  "world" → 5%,  "!" → 80%,  ...                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -318,43 +318,43 @@ Without normalization, deep networks suffer from "internal covariate shift" - th
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  LAYER NORMALIZATION: Stabilizing Deep Networks               │
+│  LAYER NORMALIZATION: Stabilizing Deep Networks                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  INPUT TENSOR: (batch=2, seq=3, features=4)                    │
+│  INPUT TENSOR: (batch=2, seq=3, features=4)                     │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │ Sample 1: [[1.0,  2.0,  3.0,  4.0],     ← Position 0     │  │
-│  │            [5.0,  6.0,  7.0,  8.0],     ← Position 1     │  │
-│  │            [9.0, 10.0, 11.0, 12.0]]     ← Position 2     │  │
+│  │ Sample 1: [[1.0,  2.0,  3.0,  4.0],     ← Position 0      │  │
+│  │            [5.0,  6.0,  7.0,  8.0],     ← Position 1      │  │
+│  │            [9.0, 10.0, 11.0, 12.0]]     ← Position 2      │  │
 │  │                                                           │  │
 │  │ Sample 2: [[13., 14., 15., 16.],         ← Position 0     │  │
 │  │            [17., 18., 19., 20.],         ← Position 1     │  │
 │  │            [21., 22., 23., 24.]]         ← Position 2     │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
-│           NORMALIZE ACROSS FEATURES (per position)             │
-│                                ↓                               │
+│                                ↓                                │
+│           NORMALIZE ACROSS FEATURES (per position)              │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │ AFTER NORMALIZATION: Each position → mean=0, std=1        │  │
 │  │                                                           │  │
-│  │ Sample 1: [[-1.34, -0.45,  0.45,  1.34],                 │  │
-│  │            [-1.34, -0.45,  0.45,  1.34],                 │  │
-│  │            [-1.34, -0.45,  0.45,  1.34]]                 │  │
+│  │ Sample 1: [[-1.34, -0.45,  0.45,  1.34],                  │  │
+│  │            [-1.34, -0.45,  0.45,  1.34],                  │  │
+│  │            [-1.34, -0.45,  0.45,  1.34]]                  │  │
 │  │                                                           │  │
-│  │ Sample 2: [[-1.34, -0.45,  0.45,  1.34],                 │  │
-│  │            [-1.34, -0.45,  0.45,  1.34],                 │  │
-│  │            [-1.34, -0.45,  0.45,  1.34]]                 │  │
+│  │ Sample 2: [[-1.34, -0.45,  0.45,  1.34],                  │  │
+│  │            [-1.34, -0.45,  0.45,  1.34],                  │  │
+│  │            [-1.34, -0.45,  0.45,  1.34]]                  │  │
 │  └───────────────────────────────────────────────────────────┘  │
-│                                ↓                               │
-│            APPLY LEARNABLE PARAMETERS: γ * norm + β            │
-│                                ↓                               │
+│                                ↓                                │
+│            APPLY LEARNABLE PARAMETERS: γ * norm + β             │
+│                                ↓                                │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │ FINAL OUTPUT: Model can learn any desired distribution    │  │
 │  │ γ (scale) and β (shift) are learned during training       │  │
 │  └───────────────────────────────────────────────────────────┘  │
 │                                                                 │
-│  KEY INSIGHT: Unlike batch norm, each sample normalized        │
-│  independently - perfect for variable-length sequences!        │
+│  KEY INSIGHT: Unlike batch norm, each sample normalized         │
+│  independently - perfect for variable-length sequences!         │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -513,19 +513,19 @@ Input: (batch, seq_len, embed_dim=512)
          ↓
 ┌─────────────────────────────────────────────┐
 │ Linear Layer 1: Expansion                   │
-│ Weight: (512, 2048)  Bias: (2048,)         │
+│ Weight: (512, 2048)  Bias: (2048,)          │
 │ Output: (batch, seq_len, 2048)              │
 └─────────────────────────────────────────────┘
          ↓
 ┌─────────────────────────────────────────────┐
 │ GELU Activation                             │
 │ Smooth, differentiable activation           │
-│ Better than ReLU for language modeling     │
+│ Better than ReLU for language modeling      │
 └─────────────────────────────────────────────┘
          ↓
 ┌─────────────────────────────────────────────┐
 │ Linear Layer 2: Contraction                 │
-│ Weight: (2048, 512)  Bias: (512,)          │
+│ Weight: (2048, 512)  Bias: (512,)           │
 │ Output: (batch, seq_len, 512)               │
 └─────────────────────────────────────────────┘
          ↓

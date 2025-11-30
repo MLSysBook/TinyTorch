@@ -1175,16 +1175,16 @@ Batch Size Impact:
 
 Small Batches (batch_size=8):
 ┌─────────────────────────────────────────┐
-│ Memory: 8 × 28 × 28 × 4 bytes = 25KB   │ ← Low memory
-│ Overhead: High (many small batches)    │ ← High overhead
-│ GPU Util: Poor (underutilized)         │ ← Poor efficiency
+│ Memory: 8 × 28 × 28 × 4 bytes = 25KB    │ ← Low memory
+│ Overhead: High (many small batches)     │ ← High overhead
+│ GPU Util: Poor (underutilized)          │ ← Poor efficiency
 └─────────────────────────────────────────┘
 
 Large Batches (batch_size=512):
 ┌─────────────────────────────────────────┐
-│ Memory: 512 × 28 × 28 × 4 bytes = 1.6MB│ ← Higher memory
-│ Overhead: Low (fewer large batches)    │ ← Lower overhead
-│ GPU Util: Good (well utilized)         │ ← Better efficiency
+│ Memory: 512 × 28 × 28 × 4 bytes = 1.6MB │ ← Higher memory
+│ Overhead: Low (fewer large batches)     │ ← Lower overhead
+│ GPU Util: Good (well utilized)          │ ← Better efficiency
 └─────────────────────────────────────────┘
 ```
 

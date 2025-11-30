@@ -753,24 +753,24 @@ Data Flow:
 ```
 Parameter Breakdown (Manual Layer Composition):
 ┌─────────────────────────────────────────────────────────────┐
-│ layer1 = Linear(784 → 256)                               │
-│   Weights: 784 × 256 = 200,704 params                      │
+│ layer1 = Linear(784 → 256)                                  │
+│   Weights: 784 × 256 = 200,704 params                       │
 │   Bias:    256 params                                       │
 │   Subtotal: 200,960 params                                  │
 ├─────────────────────────────────────────────────────────────┤
-│ activation1 = ReLU(), dropout1 = Dropout(0.5)              │
+│ activation1 = ReLU(), dropout1 = Dropout(0.5)               │
 │   Parameters: 0 (no learnable weights)                      │
 ├─────────────────────────────────────────────────────────────┤
-│ layer2 = Linear(256 → 128)                               │
-│   Weights: 256 × 128 = 32,768 params                       │
+│ layer2 = Linear(256 → 128)                                  │
+│   Weights: 256 × 128 = 32,768 params                        │
 │   Bias:    128 params                                       │
 │   Subtotal: 32,896 params                                   │
 ├─────────────────────────────────────────────────────────────┤
-│ activation2 = ReLU(), dropout2 = Dropout(0.3)              │
+│ activation2 = ReLU(), dropout2 = Dropout(0.3)               │
 │   Parameters: 0 (no learnable weights)                      │
 ├─────────────────────────────────────────────────────────────┤
-│ layer3 = Linear(128 → 10)                                │
-│   Weights: 128 × 10 = 1,280 params                         │
+│ layer3 = Linear(128 → 10)                                   │
+│   Weights: 128 × 10 = 1,280 params                          │
 │   Bias:    10 params                                        │
 │   Subtotal: 1,290 params                                    │
 └─────────────────────────────────────────────────────────────┘
@@ -792,22 +792,22 @@ Layer Memory Components:
 ┌─────────────────────────────────────────────────────────────┐
 │                    PARAMETER MEMORY                         │
 ├─────────────────────────────────────────────────────────────┤
-│ • Weights: Persistent, shared across batches               │
-│ • Biases: Small but necessary for output shifting          │
-│ • Total: Grows with network width and depth                │
+│ • Weights: Persistent, shared across batches                │
+│ • Biases: Small but necessary for output shifting           │
+│ • Total: Grows with network width and depth                 │
 ├─────────────────────────────────────────────────────────────┤
 │                   ACTIVATION MEMORY                         │
 ├─────────────────────────────────────────────────────────────┤
-│ • Input tensors: batch_size × features × 4 bytes           │
-│ • Output tensors: batch_size × features × 4 bytes          │
+│ • Input tensors: batch_size × features × 4 bytes            │
+│ • Output tensors: batch_size × features × 4 bytes           │
 │ • Intermediate results during forward pass                  │
-│ • Total: Grows with batch size and layer width             │
+│ • Total: Grows with batch size and layer width              │
 ├─────────────────────────────────────────────────────────────┤
 │                   TEMPORARY MEMORY                          │
 ├─────────────────────────────────────────────────────────────┤
-│ • Dropout masks: batch_size × features × 1 byte            │
+│ • Dropout masks: batch_size × features × 1 byte             │
 │ • Computation buffers for matrix operations                 │
-│ • Total: Peak during forward/backward passes               │
+│ • Total: Peak during forward/backward passes                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -824,7 +824,7 @@ Layer Operation Complexity:
 │   Sum of all layer complexities                             │
 │   Memory: Peak of all intermediate activations              │
 ├─────────────────────────────────────────────────────────────┤
-│ Dropout Forward Pass:                                        │
+│ Dropout Forward Pass:                                       │
 │   Mask Generation: O(elements)                              │
 │   Element-wise Multiply: O(elements)                        │
 │   Overhead: Minimal compared to linear layers               │
