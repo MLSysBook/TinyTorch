@@ -83,20 +83,20 @@ class TestAuthReceiver:
         mock_server = Mock()
         mock_server.server_address = ('127.0.0.1', 54321)
         mock_server_class.return_value = mock_server
-        
+
         # Mock socket for port checking
         mock_socket = Mock()
         mock_socket.connect_ex.return_value = 0  # Success
         mock_socket_class.return_value = mock_socket
-        
+
         # Mock thread
         mock_thread = Mock()
         mock_thread.is_alive.return_value = True
         mock_thread_class.return_value = mock_thread
-        
+
         receiver = AuthReceiver()
         port = receiver.start()
-        
+
         assert port == 54321
         mock_server_class.assert_called_once()
         receiver.stop()
@@ -137,7 +137,7 @@ class TestCallbackHandler:
         """Test successful callback handling."""
         # Create handler directly without server initialization
         handler = CallbackHandler.__new__(CallbackHandler)
-        
+
         # Mock the required attributes
         handler.path = "/callback?access_token=test&refresh_token=refresh&email=user@example.com"
         handler.send_response = Mock()
@@ -145,7 +145,7 @@ class TestCallbackHandler:
         handler.end_headers = Mock()
         handler.wfile = Mock()
         handler.server = Mock()
-        
+
         with patch('tito.core.auth.save_credentials') as mock_save:
             handler.do_GET()
             assert handler.server.auth_data == {
@@ -158,11 +158,11 @@ class TestCallbackHandler:
     def test_do_get_invalid_path(self):
         """Test handling of invalid callback path."""
         handler = CallbackHandler.__new__(CallbackHandler)
-        
+
         handler.path = "/invalid"
         handler.send_error = Mock()
         handler.server = Mock()
-        
+
         handler.do_GET()
         handler.send_error.assert_called_with(404, "Not Found")
 
@@ -183,23 +183,23 @@ class TestLoginCommand:
     def test_already_logged_in(self, mock_get_console, mock_is_logged_in):
         """Test that login command exits early if already logged in."""
         from tito.commands.login import LoginCommand
-        
+
         mock_is_logged_in.return_value = True
-        
+
         # Mock console
         mock_console = Mock()
         mock_get_console.return_value = mock_console
-        
+
         # Mock config
         mock_config = Mock()
         command = LoginCommand(mock_config)
-        
+
         # Create mock args
         args = Mock()
         args.force = False
-        
+
         result = command.run(args)
-        
+
         assert result == 0
         mock_console.print.assert_called_with("[green]Already logged in to TinyTorch![/green]")
 
@@ -215,25 +215,25 @@ class TestLogoutCommand:
     def test_logout_with_browser(self, mock_get_console, mock_delete, mock_sleep, mock_open, mock_receiver_class):
         """Test that logout command opens browser and deletes credentials."""
         from tito.commands.login import LogoutCommand
-        
+
         # Mock console
         mock_console = Mock()
         mock_get_console.return_value = mock_console
-        
+
         # Mock receiver
         mock_receiver = Mock()
         mock_receiver.start.return_value = 54321
         mock_receiver_class.return_value = mock_receiver
-        
+
         # Mock config
         mock_config = Mock()
         command = LogoutCommand(mock_config)
-        
+
         # Create mock args
         args = Mock()
-        
+
         result = command.run(args)
-        
+
         assert result == 0
         mock_receiver.start.assert_called_once()
         mock_open.assert_called_once_with("http://127.0.0.1:54321/logout")

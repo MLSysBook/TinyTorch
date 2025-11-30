@@ -2,6 +2,7 @@
 import webbrowser
 import time
 from argparse import ArgumentParser, Namespace
+from rich.prompt import Confirm
 from tito.commands.base import BaseCommand
 from tito.core.auth import AuthReceiver, save_credentials, delete_credentials, ENDPOINTS, is_logged_in
 
@@ -25,8 +26,13 @@ class LoginCommand(BaseCommand):
 
         # Check if already logged in (unless force was used)
         if is_logged_in():
-            self.console.print("[green]Already logged in to TinyTorch![/green]")
-            return 0
+            self.console.print("[green]You are already logged in.[/green]")
+            if Confirm.ask("[bold yellow]Do you want to force re-login?[/bold yellow]", default=False):
+                delete_credentials()
+                self.console.print("Cleared existing credentials. Proceeding with new login...")
+            else:
+                self.console.print("Login cancelled.")
+                return 0
 
         receiver = AuthReceiver()
         try:
@@ -65,18 +71,18 @@ class LogoutCommand(BaseCommand):
             # Start local server for logout redirect
             receiver = AuthReceiver()
             port = receiver.start()
-            
+
             # Open browser to local logout endpoint
             logout_url = f"http://127.0.0.1:{port}/logout"
             self.console.print(f"Opening browser to complete logout...")
             webbrowser.open(logout_url)
-            
+
             # Give browser time to redirect and close
             time.sleep(2.0)
-            
+
             # Clean up server
             receiver.stop()
-            
+
             # Delete local credentials
             delete_credentials()
             self.console.print("[green]Successfully logged out of TinyTorch![/green]")

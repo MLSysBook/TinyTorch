@@ -95,20 +95,104 @@ def is_logged_in() -> bool:
     """Check if the user has valid credentials stored."""
     return get_token() is not None
 
+def get_user_email() -> Optional[str]:
+    """Retrieve the user's email if it exists."""
+    creds = load_credentials()
+    if creds:
+        return creds.get("user_email")
+    return None
 
+
+def get_refresh_token() -> Optional[str]:
+    """Retrieve the refresh token if it exists."""
+    creds = load_credentials()
+    if creds:
+        return creds.get("refresh_token")
+    return None
+
+def refresh_token(console: "Console") -> Optional[str]:
+    """Refresh the access token. If refresh fails, clear credentials to force re-login."""
+    refresh_token_val = get_refresh_token()
+    if not refresh_token_val:
+        return None
+
+    import urllib.request
+    import urllib.error
+    import json
+
+    url = f"{API_BASE_URL}/api/auth/refresh"
+    data = {"refreshToken": refresh_token_val}
+    headers = {"Content-Type": "application/json"}
+
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(data).encode('utf-8'),
+        headers=headers,
+        method="POST"
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            if response.status == 200:
+                new_session = json.loads(response.read().decode('utf-8'))
+
+                # Handle nested session structures (adjust based on your actual API response)
+                # Some APIs return { session: { ... } }, others return { access_token: ... } direct
+                session_data = new_session.get('session', new_session)
+
+                if 'access_token' in session_data:
+                    new_access_token = session_data['access_token']
+                    # IMPORTANT: Always grab the new refresh token if the server rotates it
+                    new_refresh_token = session_data.get('refresh_token', refresh_token_val)
+
+                    creds = load_credentials() or {}
+                    creds.update({
+                        "access_token": new_access_token,
+                        "refresh_token": new_refresh_token,
+                    })
+                    save_credentials(creds)
+                    return new_access_token
+                else:
+                    console.print("[red]Token refresh response is missing session data.[/red]")
+                    return None
+            else:
+                console.print(f"[red]Token refresh failed with status: {response.status}[/red]")
+                return None
+
+    except urllib.error.HTTPError as e:
+        # --- CRITICAL FIX HERE ---
+        # If we get a 400 (Bad Request) or 401 (Unauthorized), the refresh token is dead.
+        # We must delete the credentials so the user is forced to log in again.
+        if e.code in [400, 401, 403]:
+            console.print("[yellow]Session expired. Please log in again.[/yellow]")
+            delete_credentials() # This deletes the JSON file
+            return None
+
+        console.print(f"[red]Token refresh failed (HTTP {e.code}): {e.reason}[/red]")
+        try:
+            error_body = e.read().decode('utf-8')
+            error_json = json.loads(error_body)
+            console.print(f"   [dim red]Error details: {error_json.get('error', 'No description provided.')}[/dim red]")
+        except (json.JSONDecodeError, Exception):
+            pass
+        return None
+
+    except urllib.error.URLError as e:
+        console.print(f"[red]Token refresh failed (Network error): {e.reason}[/red]")
+        return None
 
 # --- Auth Server Logic ---
 
 class CallbackHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urlparse(self.path)
-        
+
         if parsed_path.path == "/logout":
             self.send_response(302)
             self.send_header('Location', f"{API_BASE_URL}/logout")
             self.end_headers()
             return
-        
+
         if parsed_path.path != AUTH_CALLBACK_PATH:
             self.send_error(404, "Not Found")
             return
@@ -121,16 +205,16 @@ class CallbackHandler(http.server.BaseHTTPRequestHandler):
                 'refresh_token': query_params['refresh_token'][0],
                 'user_email': query_params.get('email', [''])[0]
             }
-            
+
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            
+
             html_content = "<html><body><h1>🔥 Tinytorch <h1> <h2>Login Successful</h2><p>You can close this window and return to the CLI.</p><p><a href='https://tinytorch.netlify.app/dashboard'>Go to TinyTorch Dashboard</a></p><script>window.close()</script></body></html>"
-            
+
             self.wfile.write(html_content.encode('utf-8'))
             self.wfile.flush()
-            
+
             # Persist immediately
             try:
                 save_credentials(self.server.auth_data)
@@ -157,7 +241,7 @@ class AuthReceiver:
     def start(self) -> int:
         port = self.start_port
         max_port = self.start_port + AUTH_PORT_HUNT_RANGE
-        
+
         while True:
             try:
                 self.server = LocalAuthServer((LOCAL_SERVER_HOST, port), CallbackHandler)
@@ -173,21 +257,21 @@ class AuthReceiver:
                 self.server.serve_forever()
             except Exception:
                 pass
-        
+
         self.thread = threading.Thread(target=serve_with_error_handling, daemon=True)
         self.thread.start()
         time.sleep(0.2)
-        
+
         # Check if server is ready
         max_wait = 2.0
         waited = 0.0
         server_ready = False
-        
+
         while waited < max_wait:
             try:
                 if not self.thread.is_alive():
                     break
-                
+
                 test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 test_socket.settimeout(0.2)
                 result = test_socket.connect_ex((LOCAL_SERVER_HOST, self.port))
@@ -199,7 +283,7 @@ class AuthReceiver:
                 pass
             time.sleep(0.1)
             waited += 0.1
-        
+
         if not server_ready:
             self.stop()
             raise Exception(f"Server failed to start on port {self.port}")
@@ -213,18 +297,18 @@ class AuthReceiver:
                 if time.time() - start_time > timeout:
                     return None
                 time.sleep(0.25)
-            
+
             try:
                 save_credentials(self.server.auth_data)
             except Exception:
                 pass
-            
-            time.sleep(1.0) 
-            
+
+            time.sleep(1.0)
+
             return self.server.auth_data
         finally:
             self.stop()
-        
+
     def stop(self):
         if self.server:
             try:
