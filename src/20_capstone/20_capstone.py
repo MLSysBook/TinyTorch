@@ -19,31 +19,30 @@
 Welcome to the TinyTorch capstone! You've built an entire ML framework from scratch across 19 modules. Now it's time to demonstrate your work by benchmarking a model and generating a submission that showcases your framework's capabilities.
 
 ## 🔗 Prerequisites & Progress
-**You've Built**: Complete ML framework with benchmarking tools (Module 19)
-**You'll Build**: Benchmark submission workflow
-**You'll Enable**: Shareable results demonstrating framework performance
+**You've Built**: Complete ML framework with profiling (M14), quantization (M15), compression (M16), memoization (M17), acceleration (M18), and benchmarking (M19)
+**You'll Build**: Professional benchmark submission workflow with standardized reporting
+**You'll Enable**: Shareable, reproducible results demonstrating framework performance
 
 **Connection Map**:
 ```
-Modules 01-19 → Benchmarking (M19) → Submission (M20)
-(Framework)     (Measurement)        (Results)
+Modules 01-13 → Optimization Suite (14-18) → Benchmarking (19) → Submission (20)
+(Framework)     (Performance Tools)            (Measurement)       (Results)
 ```
 
 ## Learning Objectives
 By the end of this capstone, you will:
-1. **Use** Module 19's benchmarking tools to measure model performance
-2. **Apply** optimization techniques from Modules 14-18
-3. **Generate** standardized JSON submissions
-4. **Share** your results with the TinyTorch community
+1. **Use** Module 19's benchmarking tools to measure model performance comprehensively
+2. **Apply** optimization techniques from Modules 14-18 to improve baseline models
+3. **Generate** standardized JSON submissions following industry best practices
+4. **Validate** submissions against a schema for reproducibility
+5. **Compare** baseline vs. optimized models with quantitative metrics
+6. **Share** your results with the TinyTorch community in a professional format
 
-**Key Insight**: This module teaches you the complete workflow from model to measurable results - the foundation of ML systems engineering.
-"""
+**Key Insight**: This module teaches you the complete workflow from model to measurable results - the foundation of ML systems engineering. In production, reproducible benchmarking is what separates research experiments from deployable systems.
 
-# %% [markdown]
-"""
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `src/20_capstone/20_capstone.py`  
+**Learning Side:** You work in `src/20_capstone/20_capstone.py`
 **Building Side:** Code exports to `tinytorch.capstone`
 
 ```python
@@ -61,8 +60,9 @@ submission.save("my_submission.json")
 
 **Why this matters:**
 - **Learning:** Complete workflow from model to shareable results
-- **Production:** Professional submission format for benchmarking
-- **Community:** Share and compare results with other builders
+- **Production:** Professional submission format mirroring MLPerf and Papers with Code standards
+- **Community:** Share and compare results with other builders using standardized metrics
+- **Reproducibility:** Schema-validated submissions ensure results can be verified and trusted
 """
 
 # %% nbgrader={"grade": false, "grade_id": "exports", "solution": true}
@@ -71,17 +71,52 @@ submission.save("my_submission.json")
 
 # %% [markdown]
 """
-## Introduction: From Framework to Results
+## Introduction: From Framework to Reproducible Results
 
-Over the past 19 modules, you built a complete ML framework. Now we bring it all together by demonstrating that your framework works end-to-end and can produce measurable, shareable results.
+Over the past 19 modules, you built a complete ML framework from the ground up. You implemented tensors, layers, optimizers, loss functions, and advanced optimization techniques. But building a framework is only half the story.
 
-This capstone shows you how to:
-1. Benchmark a model using your framework
-2. Apply optimizations and measure improvements
-3. Generate a standardized submission JSON
-4. Share your results
+**The Missing Piece: Proving It Works**
 
-Let's get started!
+In production ML systems, claims without measurements are worthless. When researchers publish papers or engineers deploy models, they need to answer fundamental questions:
+- How fast is inference on this hardware?
+- How much memory does the model consume?
+- What's the accuracy-latency trade-off?
+- How do optimizations affect these metrics?
+
+### The Reproducibility Crisis in ML
+
+Modern ML faces a reproducibility crisis. Many published results can't be replicated because:
+- **Missing system details** - What hardware? What software versions?
+- **Inconsistent metrics** - Different ways to measure "accuracy" or "latency"
+- **Cherry-picked results** - Showing best runs without variance
+- **Incomplete reporting** - Omitting negative results or failed optimizations
+
+### Industry Standard: Benchmarking Frameworks
+
+Professional ML systems use standardized benchmarking frameworks:
+
+```
+Industry Benchmarking Standards:
+┌──────────────────────────────────────────────────────────────┐
+│ MLPerf (AI Hardware)     │ Papers with Code (Research)       │
+├──────────────────────────┼───────────────────────────────────┤
+│ • Standardized tasks     │ • Leaderboards for all datasets   │
+│ • Hardware specifications│ • Reproducible results required   │
+│ • Measurement protocols  │ • Code submission mandatory       │
+│ • Fair comparisons       │ • Automated verification          │
+└──────────────────────────┴───────────────────────────────────┘
+```
+
+### What This Capstone Teaches You
+
+This module shows you how to:
+1. **Measure comprehensively** - Not just accuracy, but latency, memory, throughput
+2. **Report systematically** - Following a schema that ensures completeness
+3. **Enable comparison** - Using standardized metrics others can verify
+4. **Document optimizations** - Tracking what techniques were applied and their impact
+5. **Share professionally** - Generating submission files that work like research papers
+
+Let's build a benchmarking and submission system worthy of production ML!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
@@ -104,11 +139,204 @@ print("📊 Ready to benchmark and submit results")
 
 # %% [markdown]
 """
+## 2. Foundations: The Science of Benchmarking
+
+Before we build our submission system, let's understand what makes a good benchmark and why standardized reporting matters.
+
+### The Three Pillars of Good Benchmarking
+
+```
+Good Benchmarks Rest on Three Pillars:
+┌─────────────────┬─────────────────┬─────────────────┐
+│ Repeatability   │ Comparability   │ Completeness    │
+├─────────────────┼─────────────────┼─────────────────┤
+│ Same result     │ Apples-to-apples│ All relevant    │
+│ every time      │ comparisons     │ metrics captured│
+│                 │                 │                 │
+│ • Fixed seeds   │ • Same hardware │ • Accuracy      │
+│ • Same data     │ • Same metrics  │ • Latency       │
+│ • Same config   │ • Same protocol │ • Memory        │
+│ • Variance      │ • Documented    │ • Throughput    │
+└─────────────────┴─────────────────┴─────────────────┘
+```
+
+### What Metrics Actually Matter?
+
+Different stakeholders care about different metrics:
+
+```
+Stakeholder View:
+┌──────────────────────────────────────────────────────────────┐
+│ ML Researcher:                                               │
+│   Primary   → Accuracy, F1, BLEU (task-specific)            │
+│   Secondary → Training time, convergence                     │
+│                                                              │
+│ Systems Engineer:                                            │
+│   Primary   → Latency (p50, p99), throughput                │
+│   Secondary → Memory usage, CPU/GPU utilization             │
+│                                                              │
+│ Product Manager:                                             │
+│   Primary   → User experience (latency < 100ms?)            │
+│   Secondary → Cost per request, scalability                 │
+│                                                              │
+│ DevOps/MLOps:                                                │
+│   Primary   → Model size (deployment), inference cost       │
+│   Secondary → Batch throughput, hardware utilization        │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Key Insight**: A complete benchmark captures ALL perspectives, not just one.
+
+### Benchmark Report Components
+
+Our BenchmarkReport class will track everything needed for reproducibility:
+
+```
+BenchmarkReport Structure:
+┌─────────────────────────────────────────────────────────────┐
+│ Model Characteristics:                                      │
+│   • Parameter count     → Model capacity                    │
+│   • Model size (MB)     → Deployment cost                   │
+│                                                             │
+│ Performance Metrics:                                        │
+│   • Accuracy           → Task performance                   │
+│   • Latency (mean/std) → Inference speed + variance        │
+│   • Throughput         → Samples/second capacity           │
+│                                                             │
+│ System Context:                                             │
+│   • Platform           → Hardware/OS environment            │
+│   • Python version     → Language runtime                   │
+│   • NumPy version      → Numerical library version         │
+│   • Timestamp          → When benchmark was run            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Latency vs. Throughput: A Critical Distinction
+
+Many beginners confuse latency and throughput. They measure different things:
+
+```
+Latency vs. Throughput:
+
+Latency (Per-Sample Speed):
+┌──────────────────────────────────────────────────┐
+│  Input → Model → Output                         │
+│   ↑              ↓                               │
+│   └──── 10ms ────┘                              │
+│                                                  │
+│  "How fast can I get ONE result?"               │
+│  Critical for: Real-time apps, user experience  │
+└──────────────────────────────────────────────────┘
+
+Throughput (Batch Capacity):
+┌──────────────────────────────────────────────────┐
+│  [Input1, Input2, ... Input100]                 │
+│           ↓                                      │
+│        Model                                     │
+│           ↓                                      │
+│  [Out1, Out2, ... Out100] in 200ms             │
+│                                                  │
+│  "How many samples per second?"                 │
+│  Critical for: Batch jobs, data processing      │
+└──────────────────────────────────────────────────┘
+
+Example:
+  Latency:     10ms per sample   → "Fast" for users
+  Throughput:  500 samples/sec   → "Fast" for batches
+
+Trade-off: Batching increases throughput but adds latency!
+```
+
+### Why Variance Matters
+
+Single measurements lie. Variance tells the truth:
+
+```
+Why We Report Mean ± Std:
+
+Measurement 1: 9.2ms    ┐
+Measurement 2: 10.1ms   │ Mean = 10.0ms
+Measurement 3: 9.8ms    │ Std  = 0.5ms
+Measurement 4: 10.5ms   │
+Measurement 5: 9.4ms    ┘
+
+vs.
+
+Measurement 1: 5.2ms    ┐
+Measurement 2: 14.8ms   │ Mean = 10.0ms ← Same mean!
+Measurement 3: 8.1ms    │ Std  = 4.2ms  ← Different variance!
+Measurement 4: 15.3ms   │
+Measurement 5: 6.6ms    ┘
+           ↑
+    Unpredictable performance!
+```
+
+**Which model would you deploy?** The first one, because consistent performance matters in production.
+
+### The Submission Schema: Enforcing Standards
+
+Our submission format follows a JSON schema that ensures:
+- **Required fields** can't be omitted (no incomplete results)
+- **Type safety** prevents errors (accuracy is float, not string)
+- **Version tracking** allows format evolution
+- **Nested structure** organizes related data logically
+
+```
+Submission JSON Schema:
+{
+  "tinytorch_version": "0.1.0",           ← Version tracking
+  "submission_type": "capstone_benchmark", ← Classification
+  "timestamp": "2025-01-15 14:30:00",     ← When run
+  "system_info": {                         ← Environment
+    "platform": "macOS-14.0-arm64",
+    "python_version": "3.11.0",
+    "numpy_version": "1.24.0"
+  },
+  "baseline": {                            ← Required baseline
+    "model_name": "simple_mlp",
+    "metrics": {
+      "parameter_count": 1000,
+      "model_size_mb": 0.004,
+      "accuracy": 0.92,
+      "latency_ms_mean": 0.15,
+      "latency_ms_std": 0.02,
+      "throughput_samples_per_sec": 6666.67
+    }
+  },
+  "optimized": {                           ← Optional optimization
+    "model_name": "quantized_mlp",
+    "metrics": { ... },
+    "techniques_applied": ["int8_quantization", "pruning"]
+  },
+  "improvements": {                        ← Auto-calculated
+    "speedup": 2.3,
+    "compression_ratio": 4.1,
+    "accuracy_delta": -0.01
+  }
+}
+```
+
+This structure makes it trivial to:
+- **Validate** submissions programmatically
+- **Compare** different models objectively
+- **Aggregate** results across the community
+- **Visualize** trends and trade-offs
+
+Now let's build it!
+"""
+
+# %% [markdown]
+"""
 ## Part 1: Building a Simple Benchmark Model
 
 For this capstone, we'll use a simple MLP model. This keeps the focus on the benchmarking workflow rather than model complexity.
 
-Students can later apply this same workflow to more complex models from milestones!
+**Why a Simple Model?**
+- **Focus on workflow** - The submission process is the learning goal, not model architecture
+- **Fast iteration** - Quick benchmarks let you experiment with the pipeline
+- **Extensible pattern** - Same workflow applies to complex models from milestones
+
+Students can later apply this exact workflow to more sophisticated models (CNNs, Transformers, etc.) from milestone projects!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "toy-model", "solution": true}
@@ -116,9 +344,18 @@ Students can later apply this same workflow to more complex models from mileston
 class SimpleMLP:
     """
     Simple 2-layer MLP for benchmarking demonstration.
-    
+
     This is a toy model to demonstrate the benchmarking workflow.
     Students can later apply the same workflow to milestone models.
+
+    Architecture:
+        Input → Linear(in, hidden) → ReLU → Linear(hidden, out) → Output
+
+    Why this design:
+    - Two layers: Enough to show optimization impact (quantization, pruning)
+    - ReLU activation: Common pattern students recognize
+    - Small by default: Fast benchmarking during development
+    - Configurable sizes: Can scale up for experiments
     """
     def __init__(self, input_size=10, hidden_size=20, output_size=3):
         """Initialize simple MLP with random weights."""
@@ -132,18 +369,18 @@ class SimpleMLP:
         self.fc1.bias.data = np.zeros(hidden_size)
         self.fc2.weight.data = np.random.randn(hidden_size, output_size) * 0.01
         self.fc2.bias.data = np.zeros(output_size)
-    
+
     def forward(self, x):
         """Forward pass through the network."""
         x = self.fc1.forward(x)
         x = self.relu.forward(x)
         x = self.fc2.forward(x)
         return x
-    
+
     def parameters(self):
         """Return model parameters for optimization."""
         return [self.fc1.weight, self.fc1.bias, self.fc2.weight, self.fc2.bias]
-    
+
     def count_parameters(self):
         """Count total number of parameters."""
         total = 0
@@ -155,9 +392,53 @@ print("✅ SimpleMLP model defined")
 
 # %% [markdown]
 """
+### Understanding SimpleMLP Parameter Counting
+
+Let's break down where the parameters come from:
+
+```
+SimpleMLP Parameter Breakdown:
+┌─────────────────────────────────────────────────────────────┐
+│ Layer 1: Linear(10, 20)                                     │
+│   Weight matrix: (10, 20) = 200 parameters                 │
+│   Bias vector:   (20,)    = 20 parameters                  │
+│   Subtotal: 220 parameters                                  │
+│                                                             │
+│ Layer 2: ReLU                                               │
+│   No parameters (just max(0, x))                           │
+│   Subtotal: 0 parameters                                    │
+│                                                             │
+│ Layer 3: Linear(20, 3)                                      │
+│   Weight matrix: (20, 3)  = 60 parameters                  │
+│   Bias vector:   (3,)     = 3 parameters                   │
+│   Subtotal: 63 parameters                                   │
+│                                                             │
+│ TOTAL: 220 + 0 + 63 = 283 parameters                       │
+└─────────────────────────────────────────────────────────────┘
+
+Memory Calculation (FP32):
+  283 parameters × 4 bytes/param = 1,132 bytes ≈ 0.001 MB
+
+If we quantize to INT8:
+  283 parameters × 1 byte/param = 283 bytes ≈ 0.0003 MB
+  → 4× memory reduction!
+```
+
+This small model is perfect for demonstrating optimization impact without long benchmark times.
+"""
+
+# %% [markdown]
+"""
 ## Part 2: Benchmark Report Class
 
-The BenchmarkReport class encapsulates all benchmark results and provides methods for measurement and reporting.
+The BenchmarkReport class encapsulates all benchmark results and provides methods for comprehensive measurement and professional reporting.
+
+**Design Philosophy:**
+1. **Separation of concerns** - Measurement logic separate from model logic
+2. **Comprehensive metrics** - Capture model characteristics AND performance
+3. **System context** - Record environment for reproducibility
+4. **Statistical rigor** - Multiple runs for latency, report mean + std
+5. **JSON-serializable** - All data types compatible with JSON export
 """
 
 # %% nbgrader={"grade": false, "grade_id": "benchmark-report", "solution": true}
@@ -165,56 +446,73 @@ The BenchmarkReport class encapsulates all benchmark results and provides method
 class BenchmarkReport:
     """
     Benchmark report for model performance.
-    
+
     Measures and stores:
     - Model characteristics (parameters, size)
-    - Performance metrics (accuracy, latency)
+    - Performance metrics (accuracy, latency, throughput)
+    - System context (platform, versions)
     - Optimization info (techniques applied)
+
+    Usage:
+        report = BenchmarkReport(model_name="my_model")
+        report.benchmark_model(model, X_test, y_test, num_runs=100)
+        print(report.metrics)
     """
     def __init__(self, model_name="model"):
         self.model_name = model_name
         self.metrics = {}
         self.system_info = self._get_system_info()
         self.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-    
+
     def _get_system_info(self):
-        """Collect system information."""
+        """Collect system information for reproducibility."""
         return {
             'platform': platform.platform(),
             'python_version': sys.version.split()[0],
             'numpy_version': np.__version__
         }
-    
+
     def benchmark_model(self, model, X_test, y_test, num_runs=100):
         """
-        Benchmark model performance.
-        
+        Benchmark model performance comprehensively.
+
         Args:
-            model: Model to benchmark
-            X_test: Test inputs
-            y_test: Test labels  
-            num_runs: Number of inference runs for latency measurement
+            model: Model to benchmark (must have .forward() and .count_parameters())
+            X_test: Test inputs (Tensor)
+            y_test: Test labels (numpy array of class indices)
+            num_runs: Number of inference runs for latency measurement (default: 100)
+
+        Returns:
+            Dictionary of metrics
+
+        Measurements:
+        1. Parameter count - Model capacity indicator
+        2. Model size (MB) - Deployment cost (assumes FP32)
+        3. Accuracy - Task performance (classification accuracy)
+        4. Latency (mean ± std) - Inference speed and consistency
+        5. Throughput - Maximum samples/second capacity
         """
         # Count parameters
         param_count = model.count_parameters()
         model_size_mb = (param_count * 4) / (1024 * 1024)  # Assuming FP32
-        
+
         # Measure accuracy
         predictions = model.forward(X_test)
         pred_labels = np.argmax(predictions.data, axis=1)
         accuracy = np.mean(pred_labels == y_test)
-        
+
         # Measure latency (average over multiple runs)
+        # Why multiple runs? See "Variance" section in Foundations
         latencies = []
         for _ in range(num_runs):
             start = time.time()
             _ = model.forward(X_test[:1])  # Single sample inference
             latencies.append((time.time() - start) * 1000)  # Convert to ms
-        
+
         avg_latency = np.mean(latencies)
         std_latency = np.std(latencies)
-        
-        # Store metrics
+
+        # Store metrics (all as Python native types for JSON serialization)
         self.metrics = {
             'parameter_count': int(param_count),
             'model_size_mb': float(model_size_mb),
@@ -223,22 +521,93 @@ class BenchmarkReport:
             'latency_ms_std': float(std_latency),
             'throughput_samples_per_sec': float(1000 / avg_latency)
         }
-        
+
         print(f"\n📊 Benchmark Results for {self.model_name}:")
         print(f"  Parameters: {param_count:,}")
         print(f"  Size: {model_size_mb:.2f} MB")
         print(f"  Accuracy: {accuracy*100:.1f}%")
         print(f"  Latency: {avg_latency:.2f}ms ± {std_latency:.2f}ms")
-        
+
         return self.metrics
 
 print("✅ BenchmarkReport class defined")
 
 # %% [markdown]
 """
+### Why These Metrics?
+
+Each metric answers a specific production question:
+
+```
+Metric Decision Tree:
+┌─────────────────────────────────────────────────────────────┐
+│ Question                 │ Metric              │ Why        │
+├──────────────────────────┼─────────────────────┼────────────┤
+│ "Will it fit on device?" │ model_size_mb       │ Memory     │
+│ "Is it accurate enough?" │ accuracy            │ Quality    │
+│ "Is it fast enough?"     │ latency_ms_mean     │ UX         │
+│ "Is it consistent?"      │ latency_ms_std      │ Reliability│
+│ "Can it scale?"          │ throughput          │ Capacity   │
+│ "How complex is it?"     │ parameter_count     │ Capacity   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Design Choice: Why num_runs=100?
+
+We run inference 100 times by default to:
+- **Warm up** the system (first runs are often slower)
+- **Capture variance** (some runs hit cache, others miss)
+- **Average out noise** (OS interrupts, GC pauses)
+- **Get confidence intervals** (via std dev)
+
+```
+Single Run (Unreliable):        Multiple Runs (Reliable):
+┌─────────────────────────┐     ┌─────────────────────────┐
+│ Run 1: 12.3ms           │     │ Run 1: 12.3ms           │
+│                         │     │ Run 2: 9.8ms            │
+│ Result: 12.3ms          │     │ Run 3: 10.1ms           │
+│ Confidence: Low         │     │ ...                     │
+│ (Could be outlier!)     │     │ Run 100: 10.2ms         │
+│                         │     │                         │
+│                         │     │ Result: 10.0ms ± 0.5ms  │
+│                         │     │ Confidence: High        │
+│                         │     │ (Statistically sound)   │
+└─────────────────────────┘     └─────────────────────────┘
+```
+
+### Design Choice: Python Native Types
+
+Notice we convert all metrics to Python native types (int, float):
+
+```python
+'parameter_count': int(param_count),  # NumPy int64 → Python int
+'accuracy': float(accuracy),          # NumPy float64 → Python float
+```
+
+**Why?** JSON can't serialize NumPy types directly:
+```python
+# ❌ This fails:
+json.dumps({"value": np.int64(42)})  # TypeError!
+
+# ✅ This works:
+json.dumps({"value": int(42)})  # Success!
+```
+
+This design decision makes our submissions JSON-compatible without custom encoders.
+"""
+
+# %% [markdown]
+"""
 ## Part 3: Submission Generation
 
 The core function that generates a standardized JSON submission from benchmark results.
+
+**Design Goals:**
+1. **Baseline-first** - Always require baseline results (comparison reference)
+2. **Optimization optional** - Support baseline-only OR baseline+optimized submissions
+3. **Auto-calculate improvements** - Automatically compute speedup, compression, accuracy delta
+4. **Schema compliance** - Generate structure that passes validation
+5. **Extensible** - Easy to add new fields without breaking existing code
 """
 
 # %% nbgrader={"grade": false, "grade_id": "generate-submission", "solution": true}
@@ -251,15 +620,29 @@ def generate_submission(
 ) -> Dict[str, Any]:
     """
     Generate a standardized benchmark submission.
-    
+
     Args:
-        baseline_report: Benchmark results for baseline model
+        baseline_report: Benchmark results for baseline model (REQUIRED)
         optimized_report: Optional benchmark results for optimized model
         student_name: Optional student/submitter name
-        techniques_applied: List of optimization techniques used
-    
+        techniques_applied: List of optimization techniques used (e.g., ["quantization", "pruning"])
+
     Returns:
         Dictionary containing submission data (ready for JSON export)
+
+    Submission Structure:
+        {
+          "tinytorch_version": "0.1.0",
+          "submission_type": "capstone_benchmark",
+          "timestamp": "...",
+          "system_info": {...},
+          "baseline": {
+            "model_name": "...",
+            "metrics": {...}
+          },
+          "optimized": {...},        # Optional
+          "improvements": {...}      # Auto-calculated if optimized present
+        }
     """
     submission = {
         'tinytorch_version': '0.1.0',
@@ -271,11 +654,11 @@ def generate_submission(
             'metrics': baseline_report.metrics
         }
     }
-    
+
     # Add student name if provided
     if student_name:
         submission['student_name'] = student_name
-    
+
     # Add optimization results if provided
     if optimized_report:
         submission['optimized'] = {
@@ -283,13 +666,13 @@ def generate_submission(
             'metrics': optimized_report.metrics,
             'techniques_applied': techniques_applied or []
         }
-        
+
         # Calculate improvement metrics
         baseline_latency = baseline_report.metrics['latency_ms_mean']
         optimized_latency = optimized_report.metrics['latency_ms_mean']
         baseline_size = baseline_report.metrics['model_size_mb']
         optimized_size = optimized_report.metrics['model_size_mb']
-        
+
         submission['improvements'] = {
             'speedup': float(baseline_latency / optimized_latency),
             'compression_ratio': float(baseline_size / optimized_size),
@@ -297,11 +680,20 @@ def generate_submission(
                 optimized_report.metrics['accuracy'] - baseline_report.metrics['accuracy']
             )
         }
-    
+
     return submission
 
 def save_submission(submission: Dict[str, Any], filepath: str = "submission.json"):
-    """Save submission to JSON file."""
+    """
+    Save submission to JSON file.
+
+    Args:
+        submission: Submission dictionary from generate_submission()
+        filepath: Output path (default: "submission.json")
+
+    Returns:
+        Path to saved file
+    """
     Path(filepath).write_text(json.dumps(submission, indent=2))
     print(f"\n✅ Submission saved to: {filepath}")
     return filepath
@@ -310,51 +702,181 @@ print("✅ Submission generation functions defined")
 
 # %% [markdown]
 """
+### Understanding the Improvements Calculation
+
+When you provide both baseline and optimized results, the submission auto-calculates three key improvement metrics:
+
+```
+Improvement Metrics Explained:
+
+1. Speedup (Latency Ratio):
+   ┌────────────────────────────────────────────────┐
+   │ Speedup = baseline_latency / optimized_latency │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  10.0ms                           │
+   │   Optimized: 5.0ms                            │
+   │   Speedup:   10.0 / 5.0 = 2.0x                │
+   │                                                │
+   │ Interpretation:                                │
+   │   2.0x = Optimized model is 2× faster         │
+   │   1.0x = No change                            │
+   │   0.5x = Optimized model is slower (bad!)     │
+   └────────────────────────────────────────────────┘
+
+2. Compression Ratio (Size Reduction):
+   ┌────────────────────────────────────────────────┐
+   │ Compression = baseline_size / optimized_size   │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  4.0 MB                           │
+   │   Optimized: 1.0 MB                           │
+   │   Compression: 4.0 / 1.0 = 4.0x               │
+   │                                                │
+   │ Interpretation:                                │
+   │   4.0x = Model is 4× smaller                  │
+   │   1.0x = Same size                            │
+   │   0.8x = Larger after "optimization" (bad!)   │
+   └────────────────────────────────────────────────┘
+
+3. Accuracy Delta (Quality Impact):
+   ┌────────────────────────────────────────────────┐
+   │ Delta = optimized_accuracy - baseline_accuracy │
+   │                                                │
+   │ Example:                                       │
+   │   Baseline:  92.0%                            │
+   │   Optimized: 91.5%                            │
+   │   Delta:     91.5 - 92.0 = -0.5%              │
+   │                                                │
+   │ Interpretation:                                │
+   │   +0.5% = Improved accuracy (rare but good!)  │
+   │    0.0% = Maintained accuracy (ideal!)        │
+   │   -0.5% = Slight loss (acceptable)            │
+   │   -5.0% = Major loss (unacceptable)           │
+   └────────────────────────────────────────────────┘
+```
+
+### The Optimization Trade-off Triangle
+
+Every optimization involves trade-offs:
+
+```
+The Impossible Triangle:
+         Fast (Speedup)
+              ▲
+             /│\
+            / │ \
+           /  │  \
+          /   │   \
+         /  Good  \
+        /  Balance \
+       ▼─────────────▼
+    Small         Accurate
+  (Compression)   (Delta)
+
+You can pick TWO:
+• Fast + Small   → Aggressive optimization, some accuracy loss
+• Fast + Accurate → Careful optimization, less compression
+• Small + Accurate → Conservative quantization, slower
+
+The goal: Find the sweet spot for YOUR use case!
+```
+
+### Why JSON Schema Validation Matters
+
+Our submission format is designed to be validated:
+
+```python
+# Valid submission (passes validation):
+{
+  "tinytorch_version": "0.1.0",      # ✓ Required, string
+  "timestamp": "2025-01-15 14:30",   # ✓ Required, string
+  "baseline": {                       # ✓ Required, object
+    "metrics": {                      # ✓ Required, object
+      "accuracy": 0.92                # ✓ Required, float in [0, 1]
+    }
+  }
+}
+
+# Invalid submission (fails validation):
+{
+  "tinytorch_version": 0.1,          # ✗ Wrong type (number not string)
+  # ✗ Missing timestamp
+  "baseline": {
+    "metrics": {
+      "accuracy": "92%"                # ✗ Wrong type (string not float)
+    }
+  }
+}
+```
+
+This prevents common mistakes:
+- Forgetting required fields
+- Using wrong data types
+- Invalid value ranges (accuracy > 1.0)
+- Inconsistent structure
+
+In production ML, schema validation is what makes benchmarks trustworthy and comparable!
+"""
+
+# %% [markdown]
+"""
 ## Part 4: Complete Example Workflow
 
 This section demonstrates the complete workflow from model to submission.
 Students can modify this to benchmark their own models!
+
+**Workflow Steps:**
+1. Create test dataset (or load from milestone)
+2. Create baseline model
+3. Benchmark baseline performance
+4. (Optional) Apply optimizations
+5. (Optional) Benchmark optimized version
+6. Generate submission with comparisons
+7. Save to JSON file
+
+This is the EXACT workflow used in production ML systems!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "example-workflow", "solution": true}
 def run_example_benchmark():
     """
     Complete example showing the full benchmarking workflow.
-    
+
     Students can modify this to benchmark their own models!
     """
     print("="*70)
     print("TINYTORCH CAPSTONE: BENCHMARKING WORKFLOW EXAMPLE")
     print("="*70)
-    
+
     # Step 1: Create toy dataset
     print("\n🔧 Step 1: Creating toy dataset...")
     np.random.seed(42)
     X_test = Tensor(np.random.randn(100, 10))
     y_test = np.random.randint(0, 3, 100)
     print(f"  Dataset: {X_test.shape[0]} samples, {X_test.shape[1]} features, 3 classes")
-    
+
     # Step 2: Create baseline model
     print("\n🔧 Step 2: Creating baseline model...")
     baseline_model = SimpleMLP(input_size=10, hidden_size=20, output_size=3)
     print(f"  Model: {baseline_model.count_parameters():,} parameters")
-    
+
     # Step 3: Benchmark baseline
     print("\n📊 Step 3: Benchmarking baseline model...")
     baseline_report = BenchmarkReport(model_name="baseline_mlp")
     baseline_report.benchmark_model(baseline_model, X_test, y_test, num_runs=50)
-    
+
     # Step 4: Generate submission
     print("\n📝 Step 4: Generating submission...")
     submission = generate_submission(
         baseline_report=baseline_report,
         student_name="TinyTorch Student"
     )
-    
+
     # Step 5: Save submission
     print("\n💾 Step 5: Saving submission...")
     save_submission(submission, "capstone_submission.json")
-    
+
     print("\n" + "="*70)
     print("🎉 WORKFLOW COMPLETE!")
     print("="*70)
@@ -363,22 +885,64 @@ def run_example_benchmark():
     print("  2. Benchmark the optimized version")
     print("  3. Generate a new submission with both baseline and optimized results")
     print("  4. Share your submission.json with the TinyTorch community!")
-    
+
     return submission
 
 print("✅ Example workflow defined")
 
 # %% [markdown]
 """
+### Understanding the Workflow Pattern
+
+This workflow follows industry best practices:
+
+```
+Production ML Workflow:
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Define Task                                              │
+│    ↓ What are we solving? What's the test set?             │
+│                                                             │
+│ 2. Baseline Model                                           │
+│    ↓ Simplest reasonable model                             │
+│                                                             │
+│ 3. Baseline Benchmark                                       │
+│    ↓ Measure: accuracy, latency, memory                    │
+│                                                             │
+│ 4. Optimization (ITERATIVE)                                 │
+│    ↓ Try technique → Benchmark → Compare → Keep or revert  │
+│    ↓ Quantization? Pruning? Distillation?                  │
+│                                                             │
+│ 5. Final Submission                                         │
+│    ↓ Document: baseline, optimized, improvements           │
+│    ↓ Share: JSON file, metrics, techniques                 │
+│                                                             │
+│ 6. Community Comparison                                     │
+│    ↓ How do your results compare to others?                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Key Insight**: Professional ML engineers iterate on step 4, trying different optimizations and measuring their impact. The submission captures the BEST result after this exploration.
+"""
+
+# %% [markdown]
+"""
 ## Part 4b: Advanced Workflow - Using TinyTorch Optimization APIs
 
 This section demonstrates using the complete optimization pipeline from Modules 14-19:
-- Module 14 (Profiling): Measure baseline performance
-- Module 15 (Quantization): Reduce precision
-- Module 16 (Compression): Prune weights
-- Module 19 (Benchmarking): Professional measurement
+- Module 14 (Profiling): Measure baseline performance and identify bottlenecks
+- Module 15 (Quantization): Reduce precision from FP32 to INT8
+- Module 16 (Compression): Prune low-magnitude weights
+- Module 17 (Memoization): Cache repeated computations
+- Module 18 (Acceleration): Use optimized kernels
+- Module 19 (Benchmarking): Professional measurement infrastructure
 
 This is the COMPLETE story: Profile → Optimize → Benchmark → Submit
+
+**What Students Learn:**
+- How to import and use APIs from previous modules
+- How to combine multiple optimizations (quantization + pruning)
+- How to measure cumulative impact (2× from quant + 1.5× from pruning = 3× total)
+- How to document techniques for reproducibility
 """
 
 # %% nbgrader={"grade": false, "grade_id": "optimization-workflow", "solution": true}
@@ -401,6 +965,7 @@ def run_optimization_workflow_example():
     print("  📊 Module 14: Profiling")
     print("  🔢 Module 15: Quantization (optional - API imported for demonstration)")
     print("  ✂️  Module 16: Compression (optional - API imported for demonstration)")
+    print("  💾 Module 17: Memoization (optional - API imported for demonstration)")
     print("  ⚡ Module 18: Acceleration (optional - API imported for demonstration)")
     print("  📈 Module 19: Benchmarking")
     print("  📝 Module 20: Submission Generation")
@@ -517,14 +1082,58 @@ print("✅ Optimization workflow example defined")
 
 # %% [markdown]
 """
+### Combining Multiple Optimizations
+
+In production ML, you often stack optimizations for cumulative benefits:
+
+```
+Stacking Optimizations:
+┌─────────────────────────────────────────────────────────────┐
+│ Baseline Model                                              │
+│   Size: 4.0 MB, Latency: 10.0ms, Accuracy: 92.0%          │
+│                                                             │
+│ ↓ Apply Quantization (INT8)                                │
+│   Size: 1.0 MB (4.0×), Latency: 5.0ms (2.0×), Acc: 91.8% │
+│                                                             │
+│ ↓ Apply Pruning (50% sparsity)                             │
+│   Size: 0.5 MB (2.0×), Latency: 3.5ms (1.4×), Acc: 91.5% │
+│                                                             │
+│ Final Optimized Model                                       │
+│   Total compression: 8.0× (4.0 MB → 0.5 MB)                │
+│   Total speedup: 2.9× (10.0ms → 3.5ms)                    │
+│   Accuracy loss: -0.5% (92.0% → 91.5%)                    │
+└─────────────────────────────────────────────────────────────┘
+
+Key Insight: Effects multiply!
+  Quant (4.0×) × Pruning (2.0×) = 8.0× total compression
+```
+
+The submission's `techniques_applied` list documents this for reproducibility:
+```json
+"techniques_applied": ["int8_quantization", "magnitude_pruning_0.5"]
+```
+
+This tells other engineers EXACTLY what you did, so they can reproduce or build on your work!
+"""
+
+# %% [markdown]
+"""
 ## Part 5: Module Testing
 
 Individual unit tests for each component, following TinyTorch testing patterns.
+
+**Testing Strategy:**
+1. **Unit tests** - Test each class/function in isolation
+2. **Integration test** - Test complete workflow end-to-end (in test_module)
+3. **Schema validation** - Ensure submissions conform to standard
+4. **Edge cases** - Test with missing optional fields, extreme values
+
+Each test validates one specific aspect and provides clear feedback.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-simple-mlp", "solution": true}
 def test_unit_simple_mlp():
-    """Test SimpleMLP model creation and forward pass."""
+    """🔬 Test SimpleMLP model creation and forward pass."""
     print("🔬 Unit Test: SimpleMLP...")
 
     # Test model creation with default parameters
@@ -555,7 +1164,7 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-benchmark-report", "solution": true}
 def test_unit_benchmark_report():
-    """Test BenchmarkReport class functionality."""
+    """🔬 Test BenchmarkReport class functionality."""
     print("🔬 Unit Test: BenchmarkReport...")
 
     # Create report
@@ -602,7 +1211,7 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-submission-generation", "solution": true}
 def test_unit_submission_generation():
-    """Test generate_submission() function."""
+    """🔬 Test generate_submission() function."""
     print("🔬 Unit Test: Submission Generation...")
 
     # Create baseline report
@@ -644,7 +1253,16 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-submission-schema", "solution": true}
 def validate_submission_schema(submission: Dict[str, Any]) -> bool:
-    """Validate submission JSON conforms to required schema."""
+    """
+    Validate submission JSON conforms to required schema.
+
+    This function ensures submissions are:
+    - Complete (no missing required fields)
+    - Type-safe (correct data types)
+    - Valid (values in acceptable ranges)
+
+    Used for automated validation before accepting community submissions.
+    """
     # Check required top-level fields
     required_fields = ['tinytorch_version', 'submission_type', 'timestamp', 'system_info', 'baseline']
     for field in required_fields:
@@ -684,7 +1302,7 @@ def validate_submission_schema(submission: Dict[str, Any]) -> bool:
     return True
 
 def test_unit_submission_schema():
-    """Test submission schema validation."""
+    """🔬 Test submission schema validation."""
     print("🔬 Unit Test: Submission Schema...")
 
     # Create valid submission
@@ -725,7 +1343,7 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-submission-with-optimization", "solution": true}
 def test_unit_submission_with_optimization():
-    """Test submission with baseline + optimized comparison."""
+    """🔬 Test submission with baseline + optimized comparison."""
     print("🔬 Unit Test: Submission with Optimization...")
 
     # Create baseline
@@ -779,7 +1397,7 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-improvements-calculation", "solution": true}
 def test_unit_improvements_calculation():
-    """Test speedup/compression/accuracy calculations are correct."""
+    """🔬 Test speedup/compression/accuracy calculations are correct."""
     print("🔬 Unit Test: Improvements Calculation...")
 
     # Create baseline with known metrics
@@ -831,7 +1449,7 @@ if __name__ == "__main__":
 
 # %% nbgrader={"grade": false, "grade_id": "test-json-serialization", "solution": true}
 def test_unit_json_serialization():
-    """Test save_submission() creates valid JSON files."""
+    """🔬 Test save_submission() creates valid JSON files."""
     print("🔬 Unit Test: JSON Serialization...")
 
     # Create submission
@@ -882,7 +1500,7 @@ if __name__ == "__main__":
 # %% nbgrader={"grade": false, "grade_id": "test-module", "solution": true}
 def test_module():
     """
-    Test Module 20: Capstone submission infrastructure.
+    🧪 Test Module 20: Capstone submission infrastructure.
 
     Runs all unit tests to validate complete functionality.
     """
@@ -917,3 +1535,84 @@ When run as a script, this demonstrates the complete workflow.
 if __name__ == "__main__":
     # Run the test module to validate everything works
     test_module()
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Capstone - Benchmarking & Submission
+
+Congratulations! You've completed the TinyTorch capstone by building a professional benchmarking and submission system!
+
+### Key Accomplishments
+
+**What You Built:**
+- ✅ **BenchmarkReport class** - Comprehensive performance measurement (accuracy, latency, throughput, memory)
+- ✅ **Submission generation** - Standardized JSON format with schema validation
+- ✅ **Comparison infrastructure** - Automatic calculation of speedup, compression, accuracy delta
+- ✅ **Complete workflows** - From baseline to optimized models with reproducible results
+
+**What You Learned:**
+- 📊 **Benchmarking science** - Repeatability, comparability, completeness principles
+- 📈 **Metrics that matter** - Latency vs throughput, mean vs variance, accuracy vs efficiency
+- 🔍 **Reproducibility** - System context, schema validation, standardized reporting
+- 🚀 **Production patterns** - How real ML systems measure and compare model performance
+
+**Technical Skills Gained:**
+- Measuring inference latency with statistical rigor (mean ± std over multiple runs)
+- Calculating model memory footprint (parameters × bytes per parameter)
+- Generating schema-compliant JSON for automated validation
+- Comparing baseline vs optimized models quantitatively
+
+### The Complete TinyTorch Journey
+
+```
+Module 01: Tensor          → Built foundation
+Modules 02-13: Framework   → Implemented ML components
+Modules 14-18: Optimization → Learned performance techniques
+Module 19: Benchmarking    → Measured performance
+Module 20: Submission      → Proved it works! ✨
+```
+
+### Real-World Impact
+
+The skills you practiced in this capstone are used daily in production ML:
+
+**Research Labs:**
+- Publishing papers with reproducible benchmarks
+- Comparing architectures on standardized leaderboards
+- Validating claims with measurable improvements
+
+**ML Engineering Teams:**
+- A/B testing model versions before deployment
+- Tracking latency/accuracy trade-offs across experiments
+- Documenting optimization wins for stakeholders
+
+**MLOps Platforms:**
+- Automated model evaluation pipelines
+- Performance regression detection
+- Multi-metric decision making (speed vs accuracy vs cost)
+
+### Next Steps
+
+1. **Benchmark milestone models** - Apply this workflow to your MNIST CNN, XOR network, etc.
+2. **Apply optimizations** - Use Modules 14-18 techniques and measure their impact
+3. **Share your results** - Submit your JSON to the TinyTorch community
+4. **Compare with others** - See how your optimizations stack up
+5. **Build production systems** - Use these patterns in real ML projects
+
+### Final Reflection
+
+You started Module 01 with a simple Tensor class. Now you have:
+- ✅ A complete ML framework
+- ✅ Advanced optimization techniques
+- ✅ Professional benchmarking infrastructure
+- ✅ Reproducible, shareable results
+
+**You didn't just learn ML systems - you BUILT one from scratch.** 🎉
+
+Export your capstone module:
+```bash
+tito module complete 20
+```
+
+Then share your submission with the community and celebrate your achievement! 🚀
+"""
