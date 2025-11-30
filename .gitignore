@@ -200,3 +200,11 @@ docs/chapters/modules/*
 # Site build artifacts
 site/_build/
 .envrc
+
+# Generated tinytorch package (auto-generated from src/ via nbdev_export)
+# Single source of truth: src/*/*.py files
+tinytorch/*
+!tinytorch/README.md
+
+# Generated benchmark outputs
+.tito/benchmarks/
