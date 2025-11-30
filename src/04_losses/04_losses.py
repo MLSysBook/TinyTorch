@@ -701,7 +701,7 @@ PREDICTED  P    TP       FP     ← Model says "Yes"
            N    FN       TN     ← Model says "No"
 
 BCE Loss for each quadrant:
-- True Positive (TP): -log(prediction)     ← Reward confident correct "Yes"
+- True Positive (TP): -log(prediction)    ← Reward confident correct "Yes"
 - False Positive (FP): -log(1-prediction) ← Punish confident wrong "Yes"
 - False Negative (FN): -log(prediction)   ← Punish confident wrong "No"
 - True Negative (TN): -log(1-prediction)  ← Reward confident correct "No"

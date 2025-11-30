@@ -530,7 +530,7 @@ The Benchmark class implements the core measurement logic for different metrics.
 Benchmark Execution Flow:
 ┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
 │   Models    │    │   Datasets   │    │ Measurement     │
-│ [M1, M2...] │ → │ [D1, D2...]  │ → │ Protocol        │
+│ [M1, M2...] │ →  │ [D1, D2...]  │ →  │ Protocol        │
 └─────────────┘    └──────────────┘    └─────────────────┘
                                                ↓
                            ┌─────────────────────────────────┐
@@ -541,12 +541,12 @@ Benchmark Execution Flow:
                            │ 4. Result aggregation           │
                            └─────────────────────────────────┘
                                         ↓
-                    ┌────────────────────────────────────┐
-                    │          BenchmarkResult           │
-                    │ • Statistical analysis             │
-                    │ • Confidence intervals             │
-                    │ • Metadata (system, conditions)    │
-                    └────────────────────────────────────┘
+                        ┌────────────────────────────────────┐
+                        │          BenchmarkResult           │
+                        │ • Statistical analysis             │
+                        │ • Confidence intervals             │
+                        │ • Metadata (system, conditions)    │
+                        └────────────────────────────────────┘
 ```
 
 ### Why Warmup Runs Matter

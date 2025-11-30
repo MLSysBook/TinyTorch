@@ -1153,11 +1153,11 @@ In a typical training step, time is split between data loading and computation:
 
 ```
 Training Step Breakdown:
-┌───────────────────────────────────────────────────────────────┐
-│ Data Loading        │ Forward Pass     │ Backward Pass     │
-│ ████████████         │ ███████         │ ████████         │
-│ 40ms               │ 25ms            │ 35ms              │
-└───────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ Data Loading        │ Forward Pass     │ Backward Pass      │
+│ ████████████        │ ███████          │ ████████           │
+│ 40ms                │ 25ms             │ 35ms               │
+└─────────────────────────────────────────────────────────────┘
               100ms total per step
 
 Bottleneck Analysis:

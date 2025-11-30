@@ -659,7 +659,7 @@ Parameter Sensitivity Landscape:
   output_weight                 embedding_weight
        ↑                              ↑
        |                              |
-    😱 |  steep cliff                  |  🐌 gentle slope
+    😱 |  steep cliff                 |  🐌 gentle slope
        |  (needs tiny steps)          |  (needs big steps)
        |                              |
     ━━━●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●━━━→

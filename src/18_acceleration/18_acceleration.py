@@ -120,7 +120,7 @@ Solution: Kernel fusion, memory layout optimization
 Every processor has fundamental limits:
 
 ```
-Performance    │   Compute Bound Region
+Performance   │   Compute Bound Region
 (GFLOPS)      │  ┌─────────────────────
               │  │ Peak Performance
               │  │
@@ -361,8 +361,8 @@ Activation Functions Compared:
 ReLU:           GELU:           Sigmoid:
      |               |                 1 ┌─────
      |               |               ╱   │
-     |           ╱───│───            ╱    │
-─────┘       ╱───    │         ───╱     │
+     |           ╱───│───            ╱   │
+─────┘       ╱───    │         ───╱      │
  Discontinuous   Smooth Curve    │ Smooth but saturates
  gradient at 0   everywhere      │
 ```
@@ -375,18 +375,18 @@ ReLU:           GELU:           Sigmoid:
 
 ```
 Unfused Operations:                    Fused Operation:
-┌─────────────────┐                   ┌─────────────────┐
-│ x³ computation  │ → temp1           │                 │
-└─────────────────┘                   │                 │
-┌─────────────────┐                   │                 │
-│ polynomial part │ → temp2           │   All operations│
-└─────────────────┘                   │   combined in   │
-┌─────────────────┐                   │   single kernel │
-│ tanh computation│ → temp3           │                 │
-└─────────────────┘                   │                 │
-┌─────────────────┐                   │                 │
-│ final multiply  │ → result          │                 │
-└─────────────────┘                   └─────────────────┘
+┌─────────────────┐                   ┌────────────────────┐
+│ x³ computation  │ → temp1           │                    │
+└─────────────────┘                   │                    │
+┌─────────────────┐                   │                    │
+│ polynomial part │ → temp2           │   All operations   │
+└─────────────────┘                   │   combined in      │
+┌─────────────────┐                   │   single kernel    │
+│ tanh computation│ → temp3           │                    │
+└─────────────────┘                   │                    │
+┌─────────────────┐                   │                    │
+│ final multiply  │ → result          │                    │
+└─────────────────┘                   └────────────────────┘
 
 5 memory round-trips                   1 memory round-trip
 ```

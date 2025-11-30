@@ -1150,7 +1150,7 @@ Timing Challenges:
 │                 Time Variance                   │
 ├─────────────────┬─────────────────┬─────────────┤
 │  System Noise   │   Cache Effects │   Thermal   │
-│                 │                 │  Throttling  │
+│                 │                 │  Throttling │
 ├─────────────────┼─────────────────┼─────────────┤
 │ Background      │ Cold start vs   │ CPU slows   │
 │ processes       │ warm caches     │ when hot    │
