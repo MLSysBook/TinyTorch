@@ -1,4 +1,4 @@
-# TinyTorch: Build ML Systems from Scratch
+# TinyTorch: Don't Import It. Build It.
 # PDF Table of Contents - Linear Structure
 
 format: jb-book
@@ -16,67 +16,67 @@ chapters:
   title: "Course Overview"
 
 # Foundation Tier (Modules 01-07)
-- file: ../modules/01_tensor/ABOUT
+- file: modules/01_tensor/ABOUT
   title: "01. Tensor"
 
-- file: ../modules/02_activations/ABOUT
+- file: modules/02_activations/ABOUT
   title: "02. Activations"
 
-- file: ../modules/03_layers/ABOUT
+- file: modules/03_layers/ABOUT
   title: "03. Layers"
 
-- file: ../modules/04_losses/ABOUT
+- file: modules/04_losses/ABOUT
   title: "04. Losses"
 
-- file: ../modules/05_autograd/ABOUT
+- file: modules/05_autograd/ABOUT
   title: "05. Autograd"
 
-- file: ../modules/06_optimizers/ABOUT
+- file: modules/06_optimizers/ABOUT
   title: "06. Optimizers"
 
-- file: ../modules/07_training/ABOUT
+- file: modules/07_training/ABOUT
   title: "07. Training"
 
 # Architecture Tier (Modules 08-13)
-- file: ../modules/08_dataloader/ABOUT
+- file: modules/08_dataloader/ABOUT
   title: "08. DataLoader"
 
-- file: ../modules/09_spatial/ABOUT
+- file: modules/09_spatial/ABOUT
   title: "09. Convolutions"
 
-- file: ../modules/10_tokenization/ABOUT
+- file: modules/10_tokenization/ABOUT
   title: "10. Tokenization"
 
-- file: ../modules/11_embeddings/ABOUT
+- file: modules/11_embeddings/ABOUT
   title: "11. Embeddings"
 
-- file: ../modules/12_attention/ABOUT
+- file: modules/12_attention/ABOUT
   title: "12. Attention"
 
-- file: ../modules/13_transformers/ABOUT
+- file: modules/13_transformers/ABOUT
   title: "13. Transformers"
 
 # Optimization Tier (Modules 14-19)
-- file: ../modules/14_profiling/ABOUT
+- file: modules/14_profiling/ABOUT
   title: "14. Profiling"
 
-- file: ../modules/15_memoization/ABOUT
-  title: "15. Memoization"
+- file: modules/15_quantization/ABOUT
+  title: "15. Quantization"
 
-- file: ../modules/16_quantization/ABOUT
-  title: "16. Quantization"
+- file: modules/16_compression/ABOUT
+  title: "16. Compression"
 
-- file: ../modules/17_compression/ABOUT
-  title: "17. Compression"
+- file: modules/17_memoization/ABOUT
+  title: "17. Memoization"
 
-- file: ../modules/18_acceleration/ABOUT
+- file: modules/18_acceleration/ABOUT
   title: "18. Acceleration"
 
-- file: ../modules/19_benchmarking/ABOUT
+- file: modules/19_benchmarking/ABOUT
   title: "19. Benchmarking"
 
 # Capstone Project
-- file: ../modules/20_capstone/ABOUT
+- file: modules/20_capstone/ABOUT
   title: "20. MLPerf® Edu Competition"
 
 # Appendices
