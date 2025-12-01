@@ -225,9 +225,49 @@ class TinyTorchCLI:
         
         return True
     
+    def _show_help(self) -> int:
+        """Show custom Rich-formatted help."""
+        from rich.table import Table
+
+        # Show ASCII logo
+        print_ascii_logo()
+
+        # Create commands table
+        table = Table(show_header=True, header_style="bold cyan", box=None, padding=(0, 2))
+        table.add_column("Command", style="green", width=15)
+        table.add_column("Description", style="dim")
+
+        # Add all commands dynamically
+        for cmd_name, cmd_class in self.commands.items():
+            cmd = cmd_class(self.config)
+            table.add_row(cmd_name, cmd.description)
+
+        self.console.print()
+        self.console.print("[bold cyan]Tiny🔥Torch CLI[/bold cyan] - Build ML systems from scratch")
+        self.console.print()
+        self.console.print("[bold]Usage:[/bold] [cyan]tito[/cyan] [yellow]COMMAND[/yellow] [dim][OPTIONS][/dim]")
+        self.console.print()
+        self.console.print("[bold cyan]Available Commands:[/bold cyan]")
+        self.console.print(table)
+        self.console.print()
+        self.console.print(self._generate_welcome_text())
+        self.console.print()
+        self.console.print("[bold cyan]Global Options:[/bold cyan]")
+        self.console.print("  [yellow]--help, -h[/yellow]      Show this help message")
+        self.console.print("  [yellow]--version[/yellow]       Show version number")
+        self.console.print("  [yellow]--verbose, -v[/yellow]   Enable verbose output")
+        self.console.print("  [yellow]--no-color[/yellow]      Disable colored output")
+        self.console.print()
+
+        return 0
+
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
+            # Check for help flag before argparse to use Rich formatting
+            if args and ('-h' in args or '--help' in args) and len(args) == 1:
+                return self._show_help()
+
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
             
