@@ -141,16 +141,18 @@ class SetupCommand(BaseCommand):
     
     def create_virtual_environment(self) -> bool:
         """Create a virtual environment for Tiny🔥Torch development."""
-        self.console.print("🐍 Setting up virtual environment...")
-        
         venv_path = self.config.project_root / ".venv"
-        
+
         if venv_path.exists():
             if not Confirm.ask(f"Virtual environment already exists at {venv_path}. Recreate?"):
+                self.console.print("[green]✅ Using existing virtual environment[/green]")
                 return True
-            
+
+            self.console.print("🐍 Recreating virtual environment...")
             import shutil
             shutil.rmtree(venv_path)
+        else:
+            self.console.print("🐍 Setting up virtual environment...")
         
         try:
             # Detect Apple Silicon and force arm64 if needed
