@@ -89,7 +89,7 @@ class ProtectCommand(BaseCommand):
         
         # Show header
         console.print(Panel.fit(
-            "🛡️ [bold blue]TinyTorch Student Protection System[/bold blue]\n"
+            "🛡️ [bold cyan]TinyTorch Student Protection System[/bold cyan]\n"
             "Prevents accidental edits to critical core functionality",
             border_style="blue"
         ))
@@ -112,7 +112,7 @@ class ProtectCommand(BaseCommand):
     
     def _enable_protection(self, console: Console, args: Namespace) -> int:
         """🔒 Enable comprehensive protection system."""
-        console.print("[blue]🔒 Enabling TinyTorch Student Protection System...[/blue]")
+        console.print("[cyan]🔒 Enabling TinyTorch Student Protection System...[/blue]")
         console.print()
         
         protection_count = 0
@@ -221,7 +221,7 @@ echo "✅ No auto-generated files being committed"
             "📝 GitHub will label files as 'Generated'\n"
             "🚫 Git prevents committing generated files\n"
             "⚙️  VSCode shows protection warnings\n\n"
-            "[blue]Students are now protected from breaking CIFAR-10 training![/blue]",
+            "[cyan]Students are now protected from breaking CIFAR-10 training![/blue]",
             border_style="green"
         ))
         
@@ -262,10 +262,10 @@ echo "✅ No auto-generated files being committed"
     
     def _show_protection_status(self, console: Console) -> int:
         """🔍 Show current protection status."""
-        console.print("[blue]🔍 TinyTorch Protection Status[/blue]")
+        console.print("[cyan]🔍 TinyTorch Protection Status[/blue]")
         console.print()
         
-        table = Table(show_header=True, header_style="bold blue")
+        table = Table(show_header=True, header_style="bold cyan")
         table.add_column("Protection Feature", style="cyan")
         table.add_column("Status", justify="center")
         table.add_column("Details", style="dim")
@@ -335,7 +335,7 @@ echo "✅ No auto-generated files being committed"
         """✅ Validate core functionality works correctly."""
         try:
             from tinytorch.core._validation import run_student_protection_checks
-            console.print("[blue]🔍 Running comprehensive validation...[/blue]")
+            console.print("[cyan]🔍 Running comprehensive validation...[/blue]")
             console.print()
             
             try:
@@ -358,7 +358,7 @@ echo "✅ No auto-generated files being committed"
     
     def _quick_health_check(self, console: Console) -> int:
         """⚡ Quick health check of critical functionality."""
-        console.print("[blue]⚡ Quick Health Check[/blue]")
+        console.print("[cyan]⚡ Quick Health Check[/blue]")
         console.print()
         
         checks = []

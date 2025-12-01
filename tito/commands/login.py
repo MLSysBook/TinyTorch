@@ -38,7 +38,7 @@ class LoginCommand(BaseCommand):
         try:
             port = receiver.start()
             target_url = f"{ENDPOINTS['cli_login']}?redirect_port={port}"
-            self.console.print(f"Opening browser to: [blue]{target_url}[/blue]")
+            self.console.print(f"Opening browser to: [cyan]{target_url}[/cyan]")
             self.console.print("Waiting for authentication...")
             webbrowser.open(target_url)
             tokens = receiver.wait_for_tokens()

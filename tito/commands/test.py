@@ -560,7 +560,7 @@ class TestCommand(BaseCommand):
         console = self.console
         
         # Summary table
-        table = Table(title="Test Summary Report", show_header=True, header_style="bold blue")
+        table = Table(title="Test Summary Report", show_header=True, header_style="bold cyan")
         table.add_column("Module", style="bold cyan", width=15)
         table.add_column("Status", width=10, justify="center")
         table.add_column("Inline Tests", width=12, justify="center")

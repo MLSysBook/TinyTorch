@@ -182,7 +182,7 @@ class GradeCommand(BaseCommand):
             "  9. tito grade export             # Export grades\n\n"
             "[dim]Note: NBGrader must be installed and configured[/dim]",
             title="Grade Help",
-            border_style="bright_blue"
+            border_style="bright_cyan"
         )
         self.console.print(help_panel)
     
