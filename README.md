@@ -14,9 +14,9 @@
 ![GitHub Stars](https://img.shields.io/github/stars/MLSysBook/TinyTorch?style=social)
 ![Contributors](https://img.shields.io/github/contributors/MLSysBook/TinyTorch)
 
-> 📢 **December 2024 Release** - TinyTorch is ready for community review! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions. **Seeking feedback on pedagogy, implementation quality, and learning progression.** Student version tooling exists but is untested. This release focuses on validating the educational content before classroom deployment.
-> 
-> 🎯 **For Reviewers**: Read the [📚 Jupyter Book](https://mlsysbook.github.io/TinyTorch/) to evaluate pedagogy. Clone the repo to run implementations. See [INSTRUCTOR.md](INSTRUCTOR.md) for classroom deployment and grading strategies.
+> 📢 **December 2025 Pre-Release** - TinyTorch CLI and educational framework are undergoing final refinements before public release! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions and interactive CLI tooling. The `tito` command-line interface provides streamlined workflows for setup, module management, testing, and progress tracking.
+>
+> 🎯 **Coming Soon**: Public release with full documentation, community features (login, leaderboard), and classroom deployment resources. See [INSTRUCTOR.md](INSTRUCTOR.md) for classroom deployment strategies.
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
@@ -141,23 +141,25 @@ TinyTorch/
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
 
-# One-command setup (handles Apple Silicon, dependencies, everything)
-./setup-environment.sh
+# One-command setup (interactive CLI handles everything)
+tito setup
 
 # Activate environment
-source activate.sh
+source .venv/bin/activate  # macOS/Linux
+# OR on Windows: .venv\Scripts\activate
 
 # Verify setup
-tito system health
+tito system doctor
 
 # Start building
-tito module start 01_tensor
+tito module start 01
 ```
 
-**That's it!** The setup script handles:
+**That's it!** The `tito setup` command handles:
 - ✅ Virtual environment creation (arm64 on Apple Silicon)
 - ✅ All required dependencies (NumPy, Rich, PyYAML, pytest, jupytext)
 - ✅ TinyTorch package installation in development mode
+- ✅ User profile creation for progress tracking
 - ✅ Architecture detection and optimization
 
 **Optional Dependencies** (for visualization and advanced features):
@@ -263,10 +265,10 @@ Track your progress through **capability-based checkpoints** that validate your 
 
 ```bash
 # Check your current progress
-tito checkpoint status
+tito milestone status
 
-# See your capability development timeline
-tito checkpoint timeline
+# See your progress across all modules
+tito module status
 ```
 
 **Module Progression:**
@@ -283,11 +285,11 @@ Each module asks: **"Can I build this capability from scratch?"** with hands-on 
 
 ```bash
 # Complete a module (automatic export + testing)
-tito module complete 01_tensor
+tito module complete 01
 
 # This automatically:
 # 1. Exports your implementation to the tinytorch package
-# 2. Runs the corresponding capability checkpoint test
+# 2. Runs comprehensive tests for the module
 # 3. Shows your achievement and suggests next steps
 ```  
 
@@ -406,14 +408,14 @@ All demos and modules are thoroughly tested:
 
 ```bash
 # Check your learning progress
-tito checkpoint status
+tito module status
 
-# Test specific capabilities
-tito checkpoint test 01  # Foundation checkpoint
-tito checkpoint test 05  # Autograd checkpoint
+# Test specific modules
+tito module test 01  # Test tensor module
+tito module test 05  # Test autograd module
 
 # Complete and test modules
-tito module complete 01_tensor  # Exports and tests
+tito module complete 01  # Exports and tests
 
 # Run comprehensive validation
 pytest tests/
@@ -574,8 +576,10 @@ Special thanks to students and contributors who helped refine this educational f
 ### Getting Started
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
-cd TinyTorch && source setup.sh
-cd modules/01_tensor && jupyter lab tensor.py
+cd TinyTorch
+tito setup
+source .venv/bin/activate
+tito module start 01
 ```
 
 ---
