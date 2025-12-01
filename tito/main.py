@@ -80,31 +80,97 @@ class TinyTorchCLI:
             'grade': GradeCommand,
             'logo': LogoCommand,
         }
+
+        # Command categorization for help display
+        self.student_commands = ['module', 'milestones', 'community', 'benchmark']
+        self.developer_commands = ['system', 'src', 'package', 'nbgrader']
+
+        # Welcome screen sections (used for both tito and tito --help)
+        self.welcome_sections = {
+            'quick_start': [
+                ('[green]tito setup[/green]', 'First-time setup'),
+                ('[green]tito module start 01[/green]', 'Start Module 01 (tensors)'),
+                ('[green]tito module complete 01[/green]', 'Test, export, and track progress'),
+            ],
+            'track_progress': [
+                ('[yellow]tito module status[/yellow]', 'View module progress'),
+                ('[yellow]tito milestones status[/yellow]', 'View unlocked capabilities'),
+            ],
+            'community': [
+                ('[cyan]tito community login[/cyan]', 'Log in to TinyTorch'),
+                ('[cyan]tito community leaderboard[/cyan]', 'View global leaderboard'),
+            ],
+            'help_docs': [
+                ('[magenta]tito system doctor[/magenta]', 'Check environment health'),
+                ('[magenta]tito --help[/magenta]', 'See all commands'),
+            ]
+        }
     
+    def _generate_welcome_text(self) -> str:
+        """Generate dynamic welcome text for interactive mode."""
+        lines = []
+
+        # Quick Start
+        lines.append("[bold cyan]Quick Start:[/bold cyan]")
+        for cmd, desc in self.welcome_sections['quick_start']:
+            lines.append(f"  {cmd:<38} {desc}")
+
+        # Track Progress
+        lines.append("\n[bold cyan]Track Progress:[/bold cyan]")
+        for cmd, desc in self.welcome_sections['track_progress']:
+            lines.append(f"  {cmd:<38} {desc}")
+
+        # Community
+        lines.append("\n[bold cyan]Community:[/bold cyan]")
+        for cmd, desc in self.welcome_sections['community']:
+            lines.append(f"  {cmd:<38} {desc}")
+
+        # Help & Docs
+        lines.append("\n[bold cyan]Help & Docs:[/bold cyan]")
+        for cmd, desc in self.welcome_sections['help_docs']:
+            lines.append(f"  {cmd:<38} {desc}")
+
+        return "\n".join(lines)
+
+    def _generate_epilog(self) -> str:
+        """Generate dynamic epilog from registered commands."""
+        lines = []
+
+        # Student Commands section
+        lines.append("Student Commands:")
+        for cmd_name in self.student_commands:
+            if cmd_name in self.commands:
+                cmd = self.commands[cmd_name](self.config)
+                # Simplify description for epilog (first sentence or shorter version)
+                desc = cmd.description.split('.')[0].split('-')[0].strip()
+                lines.append(f"  {cmd_name:<12} {desc}")
+        lines.append("")
+
+        # Developer Commands section
+        lines.append("Developer Commands:")
+        for cmd_name in self.developer_commands:
+            if cmd_name in self.commands:
+                cmd = self.commands[cmd_name](self.config)
+                desc = cmd.description.split('.')[0].split('-')[0].strip()
+                lines.append(f"  {cmd_name:<12} {desc}")
+        lines.append("")
+
+        # Quick Start section (strip Rich formatting for plain text)
+        lines.append("Quick Start:")
+        for cmd, desc in self.welcome_sections['quick_start']:
+            # Remove Rich color tags for plain epilog
+            plain_cmd = cmd.replace('[green]', '').replace('[/green]', '')
+            lines.append(f"  {plain_cmd:<28} {desc}")
+
+        return "\n".join(lines)
+
     def create_parser(self) -> argparse.ArgumentParser:
         """Create the main argument parser."""
         parser = argparse.ArgumentParser(
             prog="tito",
             description="Tiny🔥Torch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            epilog="""
-Student Commands:
-  module       Module workflow - start, work, complete modules
-  milestones   Track progress - unlock capabilities as you build
-  community    Join global community - connect with builders
-
-Developer Commands:
-  system       Environment and configuration
-  src          Export src/ to modules/ and tinytorch/
-  package      Package management (nbdev)
-  nbgrader     Auto-grading tools
-
-Quick Start:
-  tito setup                    First-time setup
-  tito module start 01          Start Module 01 (tensors)
-  tito module complete 01       Test, export, and track progress
-  tito module status            View your progress
-            """
+            epilog=self._generate_epilog()
         )
         
         # Global options
@@ -193,23 +259,9 @@ Quick Start:
                 # Show ASCII logo first
                 print_ascii_logo()
 
-                # Simple, focused welcome message
-                help_text = "[bold cyan]Quick Start:[/bold cyan]\n"
-                help_text += "  [green]tito setup[/green]                  First-time setup\n"
-                help_text += "  [green]tito module start 01[/green]        Start Module 01 (tensors)\n"
-                help_text += "  [green]tito module complete 01[/green]     Test, export, and track progress\n"
-                help_text += "\n[bold cyan]Track Progress:[/bold cyan]\n"
-                help_text += "  [yellow]tito module status[/yellow]        View module progress\n"
-                help_text += "  [yellow]tito milestones status[/yellow]    View unlocked capabilities\n"
-                help_text += "\n[bold cyan]Community:[/bold cyan]\n"
-                help_text += "  [cyan]tito community login[/cyan]         Log in to TinyTorch\n"
-                help_text += "  [cyan]tito community leaderboard[/cyan]   View global leaderboard\n"
-                help_text += "\n[bold cyan]Help & Docs:[/bold cyan]\n"
-                help_text += "  [magenta]tito system doctor[/magenta]       Check environment health\n"
-                help_text += "  [magenta]tito --help[/magenta]              See all commands"
-
+                # Generate dynamic welcome message
                 self.console.print(Panel(
-                    help_text,
+                    self._generate_welcome_text(),
                     title="Welcome to Tiny🔥Torch!",
                     border_style="bright_green"
                 ))
