@@ -16,6 +16,7 @@ from typing import Dict, Optional
 from rich.panel import Panel
 from rich.text import Text
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.prompt import Confirm
 
 from ..base import BaseCommand
 from ..view import ViewCommand
@@ -24,6 +25,8 @@ from ..export import ExportCommand
 from .reset import ModuleResetCommand
 from .test import ModuleTestCommand
 from ...core.exceptions import ModuleNotFoundError
+from ...core import auth
+from ...core.submission import SubmissionHandler
 
 class ModuleWorkflowCommand(BaseCommand):
     """Enhanced module command with natural workflow."""
@@ -521,9 +524,28 @@ class ModuleWorkflowCommand(BaseCommand):
         # Step 5: Check for milestone unlocks
         if success:
             self._check_milestone_unlocks(module_name)
+            self._trigger_submission()
+
 
         return 0 if success else 1
     
+    def _trigger_submission(self):
+        """Asks the user to submit their progress if they are logged in."""
+        self.console.print()  # Add a blank line for spacing
+        
+        if auth.is_logged_in():
+            should_submit = Confirm.ask(
+                "[bold yellow]Would you like to sync your progress with the TinyTorch website?[/bold yellow]",
+                default=True
+            )
+            if should_submit:
+                handler = SubmissionHandler(self.config, self.console)
+                total_modules = len(self.get_module_mapping())
+                handler.sync_progress(total_modules=total_modules)
+        else:
+            self.console.print("[dim]💡 Run 'tito login' to enable automatic progress syncing![/dim]")
+
+
     def run_module_tests(self, module_name: str, verbose: bool = True) -> int:
         """
         Run comprehensive tests for a module:

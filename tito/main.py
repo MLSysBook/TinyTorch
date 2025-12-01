@@ -38,6 +38,7 @@ from .commands.milestone import MilestoneCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
+from .commands.login import LoginCommand, LogoutCommand
 
 # Configure logging
 logging.basicConfig(
@@ -79,6 +80,9 @@ class TinyTorchCLI:
             'test': TestCommand,
             'grade': GradeCommand,
             'logo': LogoCommand,
+            # Authentication commands
+            'login': LoginCommand,
+            'logout': LogoutCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
