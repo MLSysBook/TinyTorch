@@ -38,7 +38,6 @@ from .commands.milestone import MilestoneCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
-from .commands.login import LoginCommand, LogoutCommand
 
 # Configure logging
 logging.basicConfig(
@@ -80,9 +79,6 @@ class TinyTorchCLI:
             'test': TestCommand,
             'grade': GradeCommand,
             'logo': LogoCommand,
-            # Authentication commands
-            'login': LoginCommand,
-            'logout': LogoutCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -206,7 +202,8 @@ Quick Start:
                 help_text += "  [yellow]tito module status[/yellow]        View module progress\n"
                 help_text += "  [yellow]tito milestones status[/yellow]    View unlocked capabilities\n"
                 help_text += "\n[bold cyan]Community:[/bold cyan]\n"
-                help_text += "  [blue]tito community join[/blue]          Connect with builders worldwide\n"
+                help_text += "  [blue]tito community login[/blue]         Log in to TinyTorch\n"
+                help_text += "  [blue]tito community leaderboard[/blue]   View global leaderboard\n"
                 help_text += "\n[bold cyan]Help & Docs:[/bold cyan]\n"
                 help_text += "  [magenta]tito system doctor[/magenta]       Check environment health\n"
                 help_text += "  [magenta]tito --help[/magenta]              See all commands"
