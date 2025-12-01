@@ -25,6 +25,17 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from .base import BaseCommand
 from ..core.console import get_console
 
+def _print_file_update(console, file_path: Path) -> None:
+    """Print a notification when a file is created or updated."""
+    try:
+        if file_path.is_relative_to(Path.home()):
+            relative_path = file_path.relative_to(Path.home())
+            console.print(f"[dim]📝 Updated: ~/{relative_path}[/dim]")
+        else:
+            console.print(f"[dim]📝 Updated: {file_path}[/dim]")
+    except (ValueError, AttributeError):
+        console.print(f"[dim]📝 Updated: {file_path}[/dim]")
+
 class SetupCommand(BaseCommand):
     """First-time setup command for Tiny🔥Torch development environment."""
     
@@ -61,19 +72,19 @@ class SetupCommand(BaseCommand):
     
     def check_existing_setup(self) -> bool:
         """Check if Tiny🔥Torch is already set up."""
-        # Check for profile file
-        profile_path = self.config.project_root / "profile.json"
-        
+        # Check for profile file in .tinytorch (flat structure)
+        profile_path = Path.home() / ".tinytorch" / "profile.json"
+
         # Check for virtual environment
         venv_paths = [
+            self.config.project_root / ".venv",
             self.config.project_root / "venv",
             self.config.project_root / "tinytorch-env",
-            Path.home() / ".tinytorch" / "venv"
         ]
-        
+
         has_profile = profile_path.exists()
         has_venv = any(venv_path.exists() for venv_path in venv_paths)
-        
+
         return has_profile and has_venv
     
     def install_packages(self) -> bool:
@@ -215,20 +226,23 @@ class SetupCommand(BaseCommand):
     def create_user_profile(self) -> Dict[str, Any]:
         """Create user profile for development tracking."""
         self.console.print("👋 Creating your Tiny🔥Torch development profile...")
-        
-        profile_path = self.config.project_root / "profile.json"
-        
+
+        # Use .tinytorch directory (flat structure, not nested under community/)
+        tinytorch_dir = Path.home() / ".tinytorch"
+        tinytorch_dir.mkdir(parents=True, exist_ok=True)
+        profile_path = tinytorch_dir / "profile.json"
+
         if profile_path.exists():
             if not Confirm.ask("Profile already exists. Update it?"):
                 import json
                 with open(profile_path, 'r') as f:
                     return json.load(f)
-        
+
         # Collect user information
         name = Prompt.ask("Your name", default="Tiny🔥Torch Developer")
         email = Prompt.ask("Your email (optional)", default="dev@tinytorch.local")
         affiliation = Prompt.ask("Your affiliation (university, company, etc.)", default="Independent")
-        
+
         # Create profile
         profile = {
             "name": name,
@@ -241,12 +255,13 @@ class SetupCommand(BaseCommand):
             "modules_completed": [],
             "last_active": datetime.datetime.now().isoformat()
         }
-        
+
         # Save profile
         import json
         with open(profile_path, 'w') as f:
             json.dump(profile, f, indent=2)
-        
+
+        _print_file_update(self.console, profile_path)
         self.console.print(f"✅ Profile created for {profile['name']}")
         return profile
     

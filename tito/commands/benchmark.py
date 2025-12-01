@@ -578,11 +578,12 @@ class BenchmarkCommand(BaseCommand):
                 console.print("[cyan]💡 To submit: Create a PR with this file or run 'tito community submit'[/cyan]")
     
     def _get_community_data(self) -> Optional[Dict[str, Any]]:
-        """Get user's community data if they've joined (project-local)."""
-        community_file = self.config.project_root / ".tinytorch" / "community" / "profile.json"
-        if community_file.exists():
+        """Get user's community profile from ~/.tinytorch (flat structure)."""
+        from pathlib import Path
+        profile_file = Path.home() / ".tinytorch" / "profile.json"
+        if profile_file.exists():
             try:
-                with open(community_file, 'r') as f:
+                with open(profile_file, 'r') as f:
                     return json.load(f)
             except Exception:
                 return None

@@ -52,6 +52,7 @@ def _ensure_dir() -> None:
 
 def save_credentials(data: Dict[str, str]) -> None:
     """Persist credentials to disk safely and atomically."""
+    from tito.core.console import get_console
     _ensure_dir()
     p = _credentials_path()
     tmp = p.with_suffix(".tmp")
@@ -64,6 +65,11 @@ def save_credentials(data: Dict[str, str]) -> None:
         os.chmod(p, 0o600)
     except OSError:
         pass
+
+    # Print file update notification
+    console = get_console()
+    relative_path = p.relative_to(Path.home())
+    console.print(f"[dim]📝 Updated: ~/{relative_path}[/dim]")
 
 def load_credentials() -> Optional[Dict[str, str]]:
     p = _credentials_path()
