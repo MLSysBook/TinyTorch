@@ -13,6 +13,7 @@ import sys
 import os
 import platform
 import datetime
+import webbrowser
 from pathlib import Path
 from argparse import ArgumentParser, Namespace
 from typing import Dict, Any, Optional
@@ -21,6 +22,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.prompt import Prompt, Confirm
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich import box
 
 from .base import BaseCommand
 from ..core.console import get_console
@@ -337,18 +339,15 @@ class SetupCommand(BaseCommand):
         success_text.append("  # On Windows: .venv\\Scripts\\activate\n\n", style="dim")
         
         success_text.append("🚀 Start building ML systems:\n\n", style="bold green")
-        success_text.append("  tito module start 01_tensor", style="bold green")
+        success_text.append("  tito module start 01", style="bold green")
         success_text.append("  # Begin with tensor foundations\n\n", style="dim")
         
         success_text.append("💡 Essential commands:\n", style="bold")
         success_text.append("  • ", style="dim")
         success_text.append("tito system health", style="green")
-        success_text.append(" - Verify setup\n", style="dim")
+        success_text.append(" - Check environment\n", style="dim")
         success_text.append("  • ", style="dim")
-        success_text.append("tito module test 01_tensor", style="green")
-        success_text.append(" - Run tests\n", style="dim")
-        success_text.append("  • ", style="dim")
-        success_text.append("tito checkpoint status", style="green")
+        success_text.append("tito module status", style="green")
         success_text.append(" - Track progress\n", style="dim")
         
         self.console.print(Panel(
@@ -356,6 +355,35 @@ class SetupCommand(BaseCommand):
             title="🔥 Tiny🔥Torch Setup Complete!",
             border_style="green"
         ))
+
+    def prompt_community_registration(self) -> None:
+        """Prompt user to join the TinyTorch community map."""
+        self.console.print()
+        self.console.print(Panel.fit(
+            "[bold cyan]🌍 Join the TinyTorch Community[/bold cyan]\n\n"
+            "Add yourself to the map at [link=https://tinytorch.ai/map]tinytorch.ai/map[/link]\n\n"
+            "[dim]• See learners worldwide\n"
+            "• Country & institution (optional)\n"
+            "• No account required[/dim]",
+            border_style="cyan",
+            box=box.ROUNDED
+        ))
+        
+        join = Confirm.ask("\n[bold]Join the community map?[/bold]", default=True)
+        
+        if join:
+            url = "https://tinytorch.ai/join"
+            self.console.print(f"\n[cyan]Opening registration...[/cyan]")
+            try:
+                webbrowser.open(url)
+                self.console.print(f"[green]✓[/green] Browser opened")
+                self.console.print(f"[dim]  {url}[/dim]")
+            except Exception:
+                self.console.print(f"[yellow]Could not open browser.[/yellow]")
+                self.console.print(f"Please visit: [cyan]{url}[/cyan]")
+            self.console.print("\n[green]Welcome to the community! 🎉[/green]")
+        else:
+            self.console.print("[dim]No problem! You can join anytime at tinytorch.ai/join[/dim]")
     
     def run(self, args: Namespace) -> int:
         """Execute the setup command."""
@@ -399,7 +427,11 @@ class SetupCommand(BaseCommand):
                 self.print_success_message(profile)
             else:
                 self.console.print("✅ Setup completed successfully!")
-                self.console.print("💡 Try: tito 01")
+                self.console.print("💡 Try: tito module start 01")
+            
+            # Prompt to join community
+            self.prompt_community_registration()
+            
             return 0
             
         except KeyboardInterrupt:
