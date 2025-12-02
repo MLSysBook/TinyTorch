@@ -16,8 +16,8 @@
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
 __all__ = ['INT8_MIN_VALUE', 'INT8_MAX_VALUE', 'INT8_RANGE', 'EPSILON', 'BYTES_PER_FLOAT32', 'BYTES_PER_INT8', 'MB_TO_BYTES',
-           'SimpleModel', 'QuantizedLinear', 'QuantizationComplete', 'quantize_int8', 'dequantize_int8',
-           'quantize_model']
+           'SimpleModel', 'QuantizedLinear', 'compare_model_sizes', 'QuantizationComplete', 'quantize_int8',
+           'dequantize_int8', 'quantize_model']
 
 # %% ../../modules/15_quantization/15_quantization.ipynb 3
 import numpy as np
@@ -197,6 +197,84 @@ class QuantizedLinear:
             'compression_ratio': original_total / quantized_total if quantized_total > 0 else 1.0
         }
         ### END SOLUTION
+
+# %% ../../modules/15_quantization/15_quantization.ipynb 24
+def compare_model_sizes(original_model, quantized_model) -> Dict[str, float]:
+    """
+    Compare memory usage between original and quantized models.
+
+    TODO: Calculate comprehensive memory comparison
+
+    APPROACH:
+    1. Count parameters in both models
+    2. Calculate bytes used (FP32 vs INT8)
+    3. Include quantization overhead
+    4. Return comparison metrics
+
+    Args:
+        original_model: Model before quantization
+        quantized_model: Model after quantization
+
+    Returns:
+        Dictionary with 'original_mb', 'quantized_mb', 'reduction_ratio', 'memory_saved_mb'
+
+    EXAMPLE:
+    >>> layer1 = Linear(100, 50)
+    >>> layer2 = Linear(50, 10)
+    >>> model = SimpleModel(layer1, layer2)
+    >>> quantize_model(model)
+    >>> stats = compare_model_sizes(model, model)  # Same model after in-place quantization
+    >>> print(f"Reduced to {stats['reduction_ratio']:.1f}x smaller")
+    Reduced to 4.0x smaller
+
+    HINTS:
+    - FP32 uses 4 bytes per parameter, INT8 uses 1 byte
+    - Include scale/zero_point overhead (2 values per quantized layer)
+    - Expected ratio: ~4x for INT8 quantization
+    """
+    ### BEGIN SOLUTION
+    # Count original model parameters
+    # SimpleModel has .layers attribute, layers may have .parameters() method
+    original_params = 0
+    original_bytes = 0
+    for layer in original_model.layers:
+        if hasattr(layer, 'parameters'):
+            params = layer.parameters()
+            for param in params:
+                original_params += param.data.size
+                original_bytes += param.data.size * BYTES_PER_FLOAT32
+
+    # Count quantized model parameters
+    quantized_params = 0
+    quantized_bytes = 0
+    for layer in quantized_model.layers:
+        if isinstance(layer, QuantizedLinear):
+            memory_info = layer.memory_usage()
+            quantized_bytes += memory_info['quantized_bytes']
+            params = layer.parameters()
+            for param in params:
+                quantized_params += param.data.size
+        else:
+            # Non-quantized layers - may have .parameters() method
+            if hasattr(layer, 'parameters'):
+                params = layer.parameters()
+                for param in params:
+                    quantized_params += param.data.size
+                    quantized_bytes += param.data.size * BYTES_PER_FLOAT32
+
+    compression_ratio = original_bytes / quantized_bytes if quantized_bytes > 0 else 1.0
+    memory_saved = original_bytes - quantized_bytes
+
+    return {
+        'original_params': original_params,
+        'quantized_params': quantized_params,
+        'original_bytes': original_bytes,
+        'quantized_bytes': quantized_bytes,
+        'compression_ratio': compression_ratio,
+        'memory_saved_mb': memory_saved / MB_TO_BYTES,
+        'memory_saved_percent': (memory_saved / original_bytes) * 100 if original_bytes > 0 else 0
+    }
+    ### END SOLUTION
 
 # %% ../../modules/15_quantization/15_quantization.ipynb 36
 class QuantizationComplete:

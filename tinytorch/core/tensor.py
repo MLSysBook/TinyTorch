@@ -146,8 +146,9 @@ class Tensor:
             new_shape[unknown_idx] = unknown_dim
             new_shape = tuple(new_shape)
         if np.prod(new_shape) != self.size:
+            target_size = int(np.prod(new_shape))
             raise ValueError(
-                f"Cannot reshape tensor of size {self.size} to shape {new_shape}"
+                f"Total elements must match: {self.size} ≠ {target_size}"
             )
         reshaped_data = np.reshape(self.data, new_shape)
         result = Tensor(reshaped_data, requires_grad=self.requires_grad)

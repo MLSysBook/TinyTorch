@@ -15,8 +15,8 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'magnitude_prune', 'structured_prune', 'KnowledgeDistillation',
-           'CompressionComplete', 'measure_sparsity', 'compress_model']
+__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'magnitude_prune', 'structured_prune', 'low_rank_approximate',
+           'KnowledgeDistillation', 'CompressionComplete', 'measure_sparsity', 'compress_model']
 
 # %% ../../modules/16_compression/16_compression.ipynb 1
 import numpy as np
@@ -143,6 +143,48 @@ def structured_prune(model, prune_ratio=0.5):
                     layer.bias.data[prune_indices] = 0
 
     return model
+    ### END SOLUTION
+
+# %% ../../modules/16_compression/16_compression.ipynb 18
+def low_rank_approximate(weight_matrix, rank_ratio=0.5):
+    """
+    Approximate weight matrix using low-rank decomposition (SVD).
+
+    TODO: Implement SVD-based low-rank approximation
+
+    APPROACH:
+    1. Perform SVD: W = U @ S @ V^T
+    2. Keep only top k singular values where k = rank_ratio * min(dimensions)
+    3. Reconstruct: W_approx = U[:,:k] @ diag(S[:k]) @ V[:k,:]
+    4. Return decomposed matrices for memory savings
+
+    EXAMPLE:
+    >>> weight = np.random.randn(100, 50)
+    >>> U, S, V = low_rank_approximate(weight, rank_ratio=0.3)
+    >>> # Original: 100*50 = 5000 params
+    >>> # Compressed: 100*15 + 15*50 = 2250 params (55% reduction)
+
+    HINTS:
+    - Use np.linalg.svd() for decomposition
+    - Choose k = int(rank_ratio * min(m, n))
+    - Return U[:,:k], S[:k], V[:k,:] for reconstruction
+    """
+    ### BEGIN SOLUTION
+    m, n = weight_matrix.shape
+
+    # Perform SVD
+    U, S, V = np.linalg.svd(weight_matrix, full_matrices=False)
+
+    # Determine target rank
+    max_rank = min(m, n)
+    target_rank = max(1, int(rank_ratio * max_rank))
+
+    # Truncate to target rank
+    U_truncated = U[:, :target_rank]
+    S_truncated = S[:target_rank]
+    V_truncated = V[:target_rank, :]
+
+    return U_truncated, S_truncated, V_truncated
     ### END SOLUTION
 
 # %% ../../modules/16_compression/16_compression.ipynb 21

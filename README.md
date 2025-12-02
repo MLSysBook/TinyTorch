@@ -317,26 +317,28 @@ tito module complete 01
 
 As you complete modules, unlock historical ML milestones demonstrating YOUR implementations:
 
-### 🧠 01. Perceptron (1957) - After Module 03
+### 🧠 01. Perceptron (1957) - After Module 07
 ```bash
 cd milestones/01_1957_perceptron
-python perceptron_trained.py
+python 01_rosenblatt_forward.py      # Forward pass demo (after Module 03)
+python 02_rosenblatt_trained.py      # Training demo (after Module 07)
 # Rosenblatt's first trainable neural network
 # YOUR Linear layer + Sigmoid recreates history!
 ```
-**Requirements**: Modules 01-03 (Tensor, Activations, Layers)  
+**Requirements**: Modules 01-07 (Tensor through Training)  
 **Achievement**: Binary classification with gradient descent
 
 ---
 
-### ⚡ 02. XOR Crisis (1969) - After Module 05
+### ⚡ 02. XOR Crisis (1969) - After Module 07
 ```bash
-cd milestones/02_1969_xor_crisis
-python xor_solved.py
+cd milestones/02_1969_xor
+python 01_xor_crisis.py              # Demonstrate the problem
+python 02_xor_solved.py              # Solve with hidden layers!
 # Solve Minsky's XOR challenge with hidden layers
 # YOUR autograd enables multi-layer learning!
 ```
-**Requirements**: Modules 01-05 (+ Autograd)  
+**Requirements**: Modules 01-07 (Tensor through Training)  
 **Achievement**: Non-linear problem solving
 
 ---

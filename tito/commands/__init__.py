@@ -14,6 +14,7 @@ from .src import SrcCommand
 from .nbgrader import NBGraderCommand
 from .benchmark import BenchmarkCommand
 from .community import CommunityCommand
+from .verify import VerifyCommand
 
 # Command groups (with subcommands organized in subfolders)
 from .system import SystemCommand
@@ -29,6 +30,7 @@ __all__ = [
     'NBGraderCommand',
     'BenchmarkCommand',
     'CommunityCommand',
+    'VerifyCommand',
     # Command groups
     'SystemCommand',
     'ModuleWorkflowCommand',

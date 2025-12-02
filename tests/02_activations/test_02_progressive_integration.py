@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestModule01Still Working:
+class TestModule01StillWorking:
     """Verify Module 01 (Setup) functionality is still intact."""
     
     def test_setup_environment_stable(self):
@@ -88,7 +88,7 @@ class TestModule03ActivationsCore:
             assert True, "Module 02: Sigmoid not implemented yet"
 
 
-class TestProgressive StackIntegration:
+class TestProgressiveStackIntegration:
     """Test that the full stack (01→02→03) works together."""
     
     def test_tensor_activation_pipeline(self):

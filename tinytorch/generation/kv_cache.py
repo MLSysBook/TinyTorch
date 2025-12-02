@@ -15,7 +15,7 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'KVCache', 'enable_kv_cache', 'disable_kv_cache']
+__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'KVCache', 'create_kv_cache', 'enable_kv_cache', 'disable_kv_cache']
 
 # %% ../../modules/17_memoization/17_memoization.ipynb 1
 import numpy as np
@@ -303,11 +303,11 @@ class KVCache:
         }
 
 # %% ../../modules/17_memoization/17_memoization.ipynb 11
-def enable_kv_cache(batch_size: int, max_seq_len: int, num_layers: int,
+def create_kv_cache(batch_size: int, max_seq_len: int, num_layers: int,
                     num_heads: int, head_dim: int) -> KVCache:
     """
     Create and return a KVCache instance for model generation.
-    
+
     This function creates a properly sized cache for the model architecture.
     Call this before starting generation, then pass the cache to your
     generation loop.

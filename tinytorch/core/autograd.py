@@ -446,6 +446,7 @@ class EmbeddingBackward(Function):
 
         return (grad_weight,)
 
+#| export
 
 class SliceBackward(Function):
     """
@@ -1298,6 +1299,6 @@ def enable_autograd(quiet=False):
         print("   - requires_grad=True enables tracking")
 
 # Auto-enable when module is imported
-# Check TINYTORCH_QUIET env var to suppress messages (for CLI tools)
+# Always quiet to avoid cluttering user imports
 import os
-enable_autograd(quiet=os.environ.get('TINYTORCH_QUIET', '').lower() in ('1', 'true', 'yes'))
+enable_autograd(quiet=True)

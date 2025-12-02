@@ -15,13 +15,115 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['DEFAULT_WARMUP_RUNS', 'DEFAULT_MEASUREMENT_RUNS', 'Benchmark', 'test_unit_benchmark', 'BenchmarkSuite',
-           'test_unit_benchmark_suite', 'TinyMLPerf', 'test_unit_tinymlperf']
+__all__ = ['DEFAULT_WARMUP_RUNS', 'DEFAULT_MEASUREMENT_RUNS', 'BenchmarkResult', 'test_unit_benchmark_result', 'Benchmark',
+           'test_unit_benchmark', 'BenchmarkSuite', 'test_unit_benchmark_suite', 'TinyMLPerf', 'test_unit_tinymlperf']
 
 # %% ../../modules/19_benchmarking/19_benchmarking.ipynb 0
 # Constants for benchmarking defaults
 DEFAULT_WARMUP_RUNS = 5  # Default warmup runs for JIT compilation and cache warming
 DEFAULT_MEASUREMENT_RUNS = 10  # Default measurement runs for statistical significance
+
+# %% ../../modules/19_benchmarking/19_benchmarking.ipynb 9
+@dataclass
+class BenchmarkResult:
+    """
+    Container for benchmark measurements with statistical analysis.
+
+    TODO: Implement a robust result container that stores measurements and metadata
+
+    APPROACH:
+    1. Store raw measurements and computed statistics
+    2. Include metadata about test conditions
+    3. Provide methods for statistical analysis
+    4. Support serialization for result persistence
+
+    EXAMPLE:
+    >>> result = BenchmarkResult("model_accuracy", [0.95, 0.94, 0.96])
+    >>> print(f"Mean: {result.mean:.3f} ± {result.std:.3f}")
+    Mean: 0.950 ± 0.010
+
+    HINTS:
+    - Use statistics module for robust mean/std calculations
+    - Store both raw data and summary statistics
+    - Include confidence intervals for professional reporting
+    """
+    ### BEGIN SOLUTION
+    metric_name: str
+    values: List[float]
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Compute statistics after initialization."""
+        if not self.values:
+            raise ValueError(
+                "BenchmarkResult requires at least one measurement.\n"
+                "  Issue: Cannot compute statistics without any measurements.\n"
+                "  Fix: Ensure benchmark runs produce at least one measurement before creating BenchmarkResult."
+            )
+
+        self.mean = statistics.mean(self.values)
+        self.std = statistics.stdev(self.values) if len(self.values) > 1 else 0.0
+        self.median = statistics.median(self.values)
+        self.min_val = min(self.values)
+        self.max_val = max(self.values)
+        self.count = len(self.values)
+
+        # 95% confidence interval for the mean
+        if len(self.values) > 1:
+            t_score = 1.96  # Approximate for large samples
+            margin_error = t_score * (self.std / np.sqrt(self.count))
+            self.ci_lower = self.mean - margin_error
+            self.ci_upper = self.mean + margin_error
+        else:
+            self.ci_lower = self.ci_upper = self.mean
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            'metric_name': self.metric_name,
+            'values': self.values,
+            'mean': self.mean,
+            'std': self.std,
+            'median': self.median,
+            'min': self.min_val,
+            'max': self.max_val,
+            'count': self.count,
+            'ci_lower': self.ci_lower,
+            'ci_upper': self.ci_upper,
+            'metadata': self.metadata
+        }
+
+    def __str__(self) -> str:
+        return f"{self.metric_name}: {self.mean:.4f} ± {self.std:.4f} (n={self.count})"
+    ### END SOLUTION
+
+def test_unit_benchmark_result():
+    """🔬 Test BenchmarkResult statistical calculations."""
+    print("🔬 Unit Test: BenchmarkResult...")
+
+    # Test basic statistics
+    values = [1.0, 2.0, 3.0, 4.0, 5.0]
+    result = BenchmarkResult("test_metric", values)
+
+    assert result.mean == 3.0
+    assert abs(result.std - statistics.stdev(values)) < 1e-10
+    assert result.median == 3.0
+    assert result.min_val == 1.0
+    assert result.max_val == 5.0
+    assert result.count == 5
+
+    # Test confidence intervals
+    assert result.ci_lower < result.mean < result.ci_upper
+
+    # Test serialization
+    result_dict = result.to_dict()
+    assert result_dict['metric_name'] == "test_metric"
+    assert result_dict['mean'] == 3.0
+
+    print("✅ BenchmarkResult works correctly!")
+
+if __name__ == "__main__":
+    test_unit_benchmark_result()
 
 # %% ../../modules/19_benchmarking/19_benchmarking.ipynb 13
 class Benchmark:

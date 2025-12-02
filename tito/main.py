@@ -38,6 +38,7 @@ from .commands.milestone import MilestoneCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
+from .commands.verify import VerifyCommand
 
 # Configure logging
 logging.basicConfig(
@@ -79,6 +80,8 @@ class TinyTorchCLI:
             'test': TestCommand,
             'grade': GradeCommand,
             'logo': LogoCommand,
+            # Verification
+            'verify': VerifyCommand,
         }
 
         # Command categorization for help display
@@ -91,6 +94,7 @@ class TinyTorchCLI:
                 ('[green]tito setup[/green]', 'First-time setup'),
                 ('[green]tito module start 01[/green]', 'Start Module 01 (tensors)'),
                 ('[green]tito module complete 01[/green]', 'Test, export, and track progress'),
+                ('[green]tito verify[/green]', 'Verify installation and join community'),
             ],
             'track_progress': [
                 ('[yellow]tito module status[/yellow]', 'View module progress'),

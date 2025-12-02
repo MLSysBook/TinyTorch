@@ -15,7 +15,7 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['Dataset', 'TensorDataset', 'DataLoader']
+__all__ = ['Dataset', 'TensorDataset', 'DataLoader', 'RandomHorizontalFlip', 'RandomCrop', 'Compose']
 
 # %% ../../modules/08_dataloader/08_dataloader.ipynb 0
 #| default_exp data.loader
@@ -262,3 +262,210 @@ class DataLoader:
 
         return tuple(batched_tensors)
         ### END SOLUTION
+
+# %% ../../modules/08_dataloader/08_dataloader.ipynb 12
+class RandomHorizontalFlip:
+    """
+    Randomly flip images horizontally with given probability.
+    
+    A simple but effective augmentation for most image datasets.
+    Flipping is appropriate when horizontal orientation doesn't change class
+    (cats, dogs, cars - not digits or text!).
+    
+    Args:
+        p: Probability of flipping (default: 0.5)
+    """
+    
+    def __init__(self, p=0.5):
+        """
+        Initialize RandomHorizontalFlip.
+        
+        TODO: Store flip probability
+        
+        EXAMPLE:
+        >>> flip = RandomHorizontalFlip(p=0.5)  # 50% chance to flip
+        """
+        ### BEGIN SOLUTION
+        if not 0.0 <= p <= 1.0:
+            raise ValueError(f"Probability must be between 0 and 1, got {p}")
+        self.p = p
+        ### END SOLUTION
+    
+    def __call__(self, x):
+        """
+        Apply random horizontal flip to input.
+        
+        TODO: Implement random horizontal flip
+        
+        APPROACH:
+        1. Generate random number in [0, 1)
+        2. If random < p, flip horizontally
+        3. Otherwise, return unchanged
+        
+        Args:
+            x: Input array with shape (..., H, W) or (..., H, W, C)
+               Flips along the last-1 axis (width dimension)
+        
+        Returns:
+            Flipped or unchanged array (same shape as input)
+        
+        EXAMPLE:
+        >>> flip = RandomHorizontalFlip(0.5)
+        >>> img = np.array([[1, 2, 3], [4, 5, 6]])  # 2x3 image
+        >>> # 50% chance output is [[3, 2, 1], [6, 5, 4]]
+        
+        HINT: Use np.flip(x, axis=-1) to flip along width axis
+        """
+        ### BEGIN SOLUTION
+        if np.random.random() < self.p:
+            # Flip along the width axis (last axis for HW format, second-to-last for HWC)
+            # Using axis=-1 works for both (..., H, W) and (..., H, W, C)
+            if isinstance(x, Tensor):
+                return Tensor(np.flip(x.data, axis=-1).copy())
+            else:
+                return np.flip(x, axis=-1).copy()
+        return x
+        ### END SOLUTION
+
+#| export
+
+class RandomCrop:
+    """
+    Randomly crop image after padding.
+    
+    This is the standard augmentation for CIFAR-10:
+    1. Pad image by `padding` pixels on each side
+    2. Randomly crop back to original size
+    
+    This simulates small translations in the image, forcing the model
+    to recognize objects regardless of their exact position.
+    
+    Args:
+        size: Output crop size (int for square, or tuple (H, W))
+        padding: Pixels to pad on each side before cropping (default: 4)
+    """
+    
+    def __init__(self, size, padding=4):
+        """
+        Initialize RandomCrop.
+        
+        TODO: Store crop parameters
+        
+        EXAMPLE:
+        >>> crop = RandomCrop(32, padding=4)  # CIFAR-10 standard
+        >>> # Pads to 40x40, then crops back to 32x32
+        """
+        ### BEGIN SOLUTION
+        if isinstance(size, int):
+            self.size = (size, size)
+        else:
+            self.size = size
+        self.padding = padding
+        ### END SOLUTION
+    
+    def __call__(self, x):
+        """
+        Apply random crop after padding.
+        
+        TODO: Implement random crop with padding
+        
+        APPROACH:
+        1. Add zero-padding to all sides
+        2. Choose random top-left corner for crop
+        3. Extract crop of target size
+        
+        Args:
+            x: Input image with shape (C, H, W) or (H, W) or (H, W, C)
+               Assumes spatial dimensions are H, W
+        
+        Returns:
+            Cropped image with target size
+        
+        EXAMPLE:
+        >>> crop = RandomCrop(32, padding=4)
+        >>> img = np.random.randn(3, 32, 32)  # CIFAR-10 format (C, H, W)
+        >>> out = crop(img)
+        >>> print(out.shape)  # (3, 32, 32)
+        
+        HINTS:
+        - Use np.pad for adding zeros
+        - Handle both (C, H, W) and (H, W) formats
+        - Random offsets should be in [0, 2*padding]
+        """
+        ### BEGIN SOLUTION
+        is_tensor = isinstance(x, Tensor)
+        data = x.data if is_tensor else x
+        
+        target_h, target_w = self.size
+        
+        # Determine image format and dimensions
+        if len(data.shape) == 2:
+            # (H, W) format
+            h, w = data.shape
+            padded = np.pad(data, self.padding, mode='constant', constant_values=0)
+            
+            # Random crop position
+            top = np.random.randint(0, 2 * self.padding + h - target_h + 1)
+            left = np.random.randint(0, 2 * self.padding + w - target_w + 1)
+            
+            cropped = padded[top:top + target_h, left:left + target_w]
+            
+        elif len(data.shape) == 3:
+            if data.shape[0] <= 4:  # Likely (C, H, W) format
+                c, h, w = data.shape
+                # Pad only spatial dimensions
+                padded = np.pad(data, 
+                              ((0, 0), (self.padding, self.padding), (self.padding, self.padding)),
+                              mode='constant', constant_values=0)
+                
+                # Random crop position
+                top = np.random.randint(0, 2 * self.padding + 1)
+                left = np.random.randint(0, 2 * self.padding + 1)
+                
+                cropped = padded[:, top:top + target_h, left:left + target_w]
+            else:  # Likely (H, W, C) format
+                h, w, c = data.shape
+                padded = np.pad(data,
+                              ((self.padding, self.padding), (self.padding, self.padding), (0, 0)),
+                              mode='constant', constant_values=0)
+                
+                top = np.random.randint(0, 2 * self.padding + 1)
+                left = np.random.randint(0, 2 * self.padding + 1)
+                
+                cropped = padded[top:top + target_h, left:left + target_w, :]
+        else:
+            raise ValueError(f"Expected 2D or 3D input, got shape {data.shape}")
+        
+        return Tensor(cropped) if is_tensor else cropped
+        ### END SOLUTION
+
+#| export
+
+class Compose:
+    """
+    Compose multiple transforms into a pipeline.
+    
+    Applies transforms in sequence, passing output of each
+    as input to the next.
+    
+    Args:
+        transforms: List of transform callables
+    """
+    
+    def __init__(self, transforms):
+        """
+        Initialize Compose with list of transforms.
+        
+        EXAMPLE:
+        >>> transforms = Compose([
+        ...     RandomHorizontalFlip(0.5),
+        ...     RandomCrop(32, padding=4)
+        ... ])
+        """
+        self.transforms = transforms
+    
+    def __call__(self, x):
+        """Apply all transforms in sequence."""
+        for transform in self.transforms:
+            x = transform(x)
+        return x

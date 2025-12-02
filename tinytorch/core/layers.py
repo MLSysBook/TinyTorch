@@ -15,7 +15,7 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['XAVIER_SCALE_FACTOR', 'HE_SCALE_FACTOR', 'DROPOUT_MIN_PROB', 'DROPOUT_MAX_PROB', 'Layer', 'Linear', 'Dropout']
+__all__ = ['XAVIER_SCALE_FACTOR', 'HE_SCALE_FACTOR', 'DROPOUT_MIN_PROB', 'DROPOUT_MAX_PROB', 'Layer', 'Linear', 'Dense', 'Dropout']
 
 # %% ../../modules/03_layers/03_layers.ipynb 1
 import numpy as np
@@ -273,3 +273,7 @@ class Dropout(Layer):
 
     def __repr__(self):
         return f"Dropout(p={self.p})"
+
+# Alias for compatibility - Dense is the same as Linear
+# Some frameworks use Dense, some use Linear - they're identical
+Dense = Linear

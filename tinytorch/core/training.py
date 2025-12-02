@@ -15,7 +15,7 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['DEFAULT_MAX_LR', 'DEFAULT_MIN_LR', 'DEFAULT_TOTAL_EPOCHS', 'CosineSchedule', 'Trainer']
+__all__ = ['DEFAULT_MAX_LR', 'DEFAULT_MIN_LR', 'DEFAULT_TOTAL_EPOCHS', 'CosineSchedule', 'clip_grad_norm', 'Trainer']
 
 # %% ../../modules/07_training/07_training.ipynb 1
 import numpy as np
@@ -74,6 +74,67 @@ class CosineSchedule:
         # Cosine annealing formula
         cosine_factor = (1 + np.cos(np.pi * epoch / self.total_epochs)) / 2
         return self.min_lr + (self.max_lr - self.min_lr) * cosine_factor
+    ### END SOLUTION
+
+# %% ../../modules/07_training/07_training.ipynb 10
+def clip_grad_norm(parameters: List, max_norm: float = 1.0) -> float:
+    """
+    Clip gradients by global norm to prevent exploding gradients.
+
+    This is crucial for training stability, especially with RNNs and deep networks.
+    Instead of clipping each gradient individually, we compute the global norm
+    across all parameters and scale uniformly if needed.
+
+    TODO: Implement gradient clipping by global norm
+
+    APPROACH:
+    1. Compute total norm: sqrt(sum of squared gradients across all parameters)
+    2. If total_norm > max_norm, compute clip_coef = max_norm / total_norm
+    3. Scale all gradients by clip_coef: grad *= clip_coef
+    4. Return the original norm for monitoring
+
+    EXAMPLE:
+    >>> params = [Tensor([1, 2, 3], requires_grad=True)]
+    >>> params[0].grad = Tensor([10, 20, 30])  # Large gradients
+    >>> original_norm = clip_grad_norm(params, max_norm=1.0)
+    >>> print(f"Clipped norm: {np.linalg.norm(params[0].grad.data):.2f}")  # Should be ≤ 1.0
+
+    HINTS:
+    - Use np.linalg.norm() to compute norms
+    - Only clip if total_norm > max_norm
+    - Modify gradients in-place for efficiency
+    """
+    ### BEGIN SOLUTION
+    if not parameters:
+        return 0.0
+
+    # Collect all gradients and compute global norm
+    total_norm = 0.0
+    for param in parameters:
+        if param.grad is not None:
+            # Handle both Tensor gradients and numpy array gradients
+            if isinstance(param.grad, np.ndarray):
+                grad_data = param.grad
+            else:
+                # Trust that Tensor has .data attribute
+                grad_data = param.grad.data
+            total_norm += np.sum(grad_data ** 2)
+
+    total_norm = np.sqrt(total_norm)
+
+    # Clip if necessary
+    if total_norm > max_norm:
+        clip_coef = max_norm / total_norm
+        for param in parameters:
+            if param.grad is not None:
+                # Handle both Tensor gradients and numpy array gradients
+                if isinstance(param.grad, np.ndarray):
+                    param.grad = param.grad * clip_coef
+                else:
+                    # Trust that Tensor has .data attribute
+                    param.grad.data = param.grad.data * clip_coef
+
+    return float(total_norm)
     ### END SOLUTION
 
 # %% ../../modules/07_training/07_training.ipynb 14
