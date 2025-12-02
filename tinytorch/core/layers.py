@@ -15,7 +15,7 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['XAVIER_SCALE_FACTOR', 'HE_SCALE_FACTOR', 'DROPOUT_MIN_PROB', 'DROPOUT_MAX_PROB', 'Layer', 'Linear', 'Dense', 'Dropout']
+__all__ = ['Layer', 'Linear', 'Dropout']
 
 # %% ../../modules/03_layers/03_layers.ipynb 1
 import numpy as np

@@ -18,7 +18,7 @@ __version__ = "0.1.0"
 # ============================================================================
 from .core.tensor import Tensor
 from .core.activations import Sigmoid, ReLU, Tanh, GELU, Softmax
-from .core.layers import Layer, Linear, Dense, Dropout
+from .core.layers import Layer, Linear, Dropout
 from .core.losses import MSELoss, CrossEntropyLoss, BinaryCrossEntropyLoss
 from .core.optimizers import SGD, Adam, AdamW
 from .core.training import Trainer, CosineSchedule, clip_grad_norm
@@ -27,11 +27,12 @@ from .core.training import Trainer, CosineSchedule, clip_grad_norm
 # Data Loading (Module 08)
 # ============================================================================
 from .data.loader import Dataset, TensorDataset, DataLoader
+from .data.loader import RandomHorizontalFlip, RandomCrop, Compose  # Augmentation
 
 # ============================================================================
 # Spatial Operations (Module 09)
 # ============================================================================
-from .core.spatial import Conv2d, MaxPool2d
+from .core.spatial import Conv2d, MaxPool2d, AvgPool2d, BatchNorm2d
 
 # ============================================================================
 # Text Processing (Modules 10-11)
@@ -68,7 +69,7 @@ __all__ = [
     'Sigmoid', 'ReLU', 'Tanh', 'GELU', 'Softmax',
     
     # Core - Layers
-    'Layer', 'Linear', 'Dense', 'Dropout',
+    'Layer', 'Linear', 'Dropout',
     
     # Core - Losses
     'MSELoss', 'CrossEntropyLoss', 'BinaryCrossEntropyLoss',
@@ -81,9 +82,10 @@ __all__ = [
     
     # Data Loading
     'Dataset', 'TensorDataset', 'DataLoader',
+    'RandomHorizontalFlip', 'RandomCrop', 'Compose',
     
     # Core - Spatial (CNN)
-    'Conv2d', 'MaxPool2d',
+    'Conv2d', 'MaxPool2d', 'AvgPool2d', 'BatchNorm2d',
     
     # Text/NLP
     'Tokenizer', 'CharTokenizer', 'BPETokenizer',
