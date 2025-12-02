@@ -43,8 +43,9 @@ class TestTensorFoundation:
         t = Tensor(data)
         
         assert t.shape == (3, 4, 5)
-        assert t.dtype == data.dtype
-        assert np.array_equal(t.data, data)
+        # TinyTorch uses float32 for efficiency
+        assert t.dtype == np.float32
+        assert np.allclose(t.data, data)
     
     def test_tensor_for_neural_networks(self):
         """Test tensor supports operations needed by neural networks."""

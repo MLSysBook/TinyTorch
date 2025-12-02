@@ -41,8 +41,9 @@ class TestTensorCreation:
             t = Tensor(arr)
             
             assert t.shape == (2, 2)
-            assert t.dtype == arr.dtype
-            assert np.array_equal(t.data, arr)
+            # TinyTorch uses float32 for efficiency
+            assert t.dtype == np.float32
+            assert np.allclose(t.data, arr)
             
         except ImportError:
             assert True, "Tensor not implemented yet"

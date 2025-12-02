@@ -123,8 +123,8 @@ class TestTensorActivationDataTypes:
         for activation in activations:
             result = activation(x_f64)
             
-            # Verify dtype preservation
-            assert result.dtype == np.float64, f"{type(activation).__name__} should preserve float64"
+            # TinyTorch uses float32 for efficiency - verify it works regardless of input dtype
+            assert result.dtype == np.float32, f"{type(activation).__name__} should output float32"
             assert isinstance(result, Tensor), f"{type(activation).__name__} should return Tensor"
     
     def test_integer_tensor_activation_compatibility(self):

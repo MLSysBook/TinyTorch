@@ -28,7 +28,7 @@ try:
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.autograd import Variable
     from tinytorch.core.training import CrossEntropyLoss, MeanSquaredError as MSELoss
-    from tinytorch.core.dataloader import DataLoader
+    from tinytorch.data.loader import DataLoader
     IMPORTS_AVAILABLE = True
 except ImportError as e:
     print(f"❌ Import failed: {e}")

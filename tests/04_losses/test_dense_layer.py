@@ -23,7 +23,7 @@ class TestDenseExports:
         """Test Dense layer can be created."""
         from tinytorch.core.layers import Dense
         layer = Dense(10, 5)
-        assert layer.weights.shape == (10, 5)
+        assert layer.weight.shape == (10, 5)
 
 
 class TestDenseForward:
@@ -45,7 +45,7 @@ class TestDenseForward:
         from tinytorch.core.layers import Dense
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, use_bias=True)
+        layer = Dense(10, 5, bias=True)
         x = Tensor(np.zeros((1, 10)))
         output = layer(x)
         
@@ -57,7 +57,7 @@ class TestDenseForward:
         from tinytorch.core.layers import Dense
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, use_bias=False)
+        layer = Dense(10, 5, bias=False)
         x = Tensor(np.zeros((1, 10)))
         output = layer(x)
         
@@ -76,8 +76,8 @@ class TestDenseIntegration:
         layer = Dense(10, 5)
         
         # Weights and bias should be Tensors
-        assert isinstance(layer.weights, Tensor)
-        if layer.use_bias:
+        assert isinstance(layer.weight, Tensor)
+        if layer.bias is not None:
             assert isinstance(layer.bias, Tensor)
     
     def test_dense_with_activations(self):

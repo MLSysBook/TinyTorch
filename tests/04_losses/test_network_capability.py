@@ -21,8 +21,8 @@ class TestXORCapability:
         from tinytorch.core.tensor import Tensor
         
         # Build XOR network: 2 -> 4 -> 1
-        hidden = Dense(2, 4, use_bias=True)
-        output = Dense(4, 1, use_bias=True)
+        hidden = Dense(2, 4, bias=True)
+        output = Dense(4, 1, bias=True)
         relu = ReLU()
         sigmoid = Sigmoid()
         

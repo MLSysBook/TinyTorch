@@ -174,7 +174,7 @@ def test_classification_training():
 def test_dataset_iteration():
     """Dataset and DataLoader work together."""
     try:
-        from tinytorch.core.dataloader import Dataset, DataLoader
+        from tinytorch.data.loader import Dataset, DataLoader
         
         class SimpleDataset(Dataset):
             def __init__(self, size):
@@ -206,7 +206,7 @@ def test_dataset_iteration():
 def test_data_augmentation_pipeline():
     """Data augmentation in loading pipeline."""
     try:
-        from tinytorch.core.dataloader import Dataset, DataLoader
+        from tinytorch.data.loader import Dataset, DataLoader
         
         class AugmentedDataset(Dataset):
             def __init__(self, size):

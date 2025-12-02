@@ -59,7 +59,7 @@ class TestAutogradLayerIntegration:
             from tinytorch.core.layers import Dense
             
             # Create layer
-            layer = Dense(2, 1, use_bias=False)
+            layer = Dense(2, 1, bias=False)
             
             # Input with gradients
             x = Variable(np.array([[1.0, 2.0]]), requires_grad=True)

@@ -401,7 +401,7 @@ def test_transformer_gradient_flow():
 def test_loss_gradient_correctness():
     """Loss functions produce correct gradients."""
     # Simple case where we can verify gradient analytically
-    model = Linear(2, 1, use_bias=False)
+    model = Linear(2, 1, bias=False)
     model.weights.data = np.array([[1.0], [1.0]])  # Known weights
     
     x = Tensor(np.array([[1.0, 0.0], [0.0, 1.0]]))

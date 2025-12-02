@@ -138,6 +138,13 @@ class TestLayerChaining:
         from tinytorch.core.layers import Layer
         from tinytorch.core.tensor import Tensor
         
+        class MultiplyLayer(Layer):
+            def __init__(self, factor):
+                self.factor = factor
+            
+            def forward(self, x):
+                return Tensor(x.data * self.factor)
+        
         class ReshapeLayer(Layer):
             def __init__(self, new_shape):
                 self.new_shape = new_shape

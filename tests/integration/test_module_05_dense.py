@@ -56,7 +56,7 @@ class TestDenseLayerFunctionality:
         from tinytorch.core.layers import Dense
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, use_bias=True)
+        layer = Dense(10, 5, bias=True)
         assert hasattr(layer, 'bias'), "Layer should have bias"
         assert layer.bias is not None, "Bias should be initialized"
         
@@ -69,7 +69,7 @@ class TestDenseLayerFunctionality:
         from tinytorch.core.layers import Dense
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, use_bias=False)
+        layer = Dense(10, 5, bias=False)
         assert layer.bias is None, "Bias should be None when disabled"
         
         x = Tensor(np.random.randn(1, 10))

@@ -122,7 +122,7 @@ def test_dense_with_tensor():
     from tinytorch.core.layers import Dense
     from tinytorch.core.tensor import Tensor
     
-    layer = Dense(10, 5, use_bias=True)
+    layer = Dense(10, 5, bias=True)
     
     # Check weights and bias are Tensors
     assert isinstance(layer.weights, Tensor), "Weights should be Tensor"

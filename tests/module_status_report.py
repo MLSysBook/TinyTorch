@@ -32,7 +32,7 @@ def check_module_imports():
         ("07_optimizers", "tinytorch.core.optimizers"),
         ("08_training", "tinytorch.core.training"),
         ("09_spatial", "tinytorch.core.spatial"),
-        ("10_dataloader", "tinytorch.core.dataloader"),
+        ("10_dataloader", "tinytorch.data.loader"),
         ("11_tokenization", "tinytorch.core.tokenization"),
         ("12_embeddings", "tinytorch.core.embeddings"),
         ("13_attention", "tinytorch.core.attention"),
