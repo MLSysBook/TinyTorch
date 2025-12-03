@@ -29,7 +29,6 @@ __all__ = [
     'NBGraderCommand',
     'BenchmarkCommand',
     'CommunityCommand',
-    'VerifyCommand',
     # Command groups
     'SystemCommand',
     'ModuleWorkflowCommand',
