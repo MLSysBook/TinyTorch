@@ -199,7 +199,8 @@ class TestCNNGradientFlow:
         output = conv.forward(x)
         
         # Create a simple loss (sum of all outputs)
-        loss = Tensor(np.sum(output.data))
+        # IMPORTANT: Use tensor operation to maintain computation graph!
+        loss = output.sum()
         
         # Backward pass
         loss.backward()
@@ -242,8 +243,8 @@ class TestCNNGradientFlow:
         conv2.weight.requires_grad = True
         out3 = conv2.forward(out2)
         
-        # Loss
-        loss = Tensor(np.mean(out3.data))
+        # Loss - use tensor operation to maintain computation graph
+        loss = out3.sum()
         
         # Backward
         loss.backward()

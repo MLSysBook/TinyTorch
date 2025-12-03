@@ -138,8 +138,8 @@ class TestAttentionGradientFlow:
         # Forward pass (self-attention - single input for Q, K, V)
         output = attention.forward(x)
         
-        # Simple loss
-        loss = Tensor(np.array([[output.data.sum()]]), requires_grad=True)
+        # Simple loss - use tensor operation to maintain computation graph
+        loss = output.sum()
         loss.backward()
         
         # All projection matrices should have gradients
@@ -152,7 +152,6 @@ class TestAttentionGradientFlow:
                         f"{proj_name} did not receive gradients!"
                     )
     
-    @pytest.mark.xfail(reason="Known issue: Attention gradient flow needs fix - see Module 12")
     def test_attention_input_receives_gradients(self):
         """Input to attention must receive gradients for residual connections"""
         try:
@@ -171,7 +170,8 @@ class TestAttentionGradientFlow:
         )
         
         output = attention.forward(x)
-        loss = Tensor(np.array([[output.data.sum()]]), requires_grad=True)
+        # Use tensor operation to maintain computation graph
+        loss = output.sum()
         loss.backward()
         
         assert x.grad is not None, (
