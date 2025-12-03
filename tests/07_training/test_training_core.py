@@ -89,7 +89,8 @@ class TestTrainingLoop:
         
         # Simple linear regression
         layer = Linear(1, 1)
-        optimizer = SGD(layer.parameters(), lr=0.1)
+        # Use smaller learning rate to prevent gradient explosion
+        optimizer = SGD(layer.parameters(), lr=0.01)
         
         # Target: y = 2x
         x = Tensor([[1.0], [2.0], [3.0]])
