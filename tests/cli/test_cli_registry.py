@@ -169,12 +169,13 @@ class TestCommandFiles:
         expected_files = {
             # Registered top-level commands
             'setup.py', 'src.py', 'nbgrader.py',
-            'milestone.py', 'leaderboard.py', 'olympics.py', 'benchmark.py',
-            'community.py', 'export.py', 'test.py', 'book.py',
-            'grade.py', 'demo.py', 'logo.py',
-            # Known internal/deprecated (not top-level)
-            'notebooks.py', 'status.py', 'clean.py', 'clean_workspace.py',
-            'help.py', 'version.py', 'check.py', 'view.py', 'protect.py', 'report.py'
+            'milestone.py', 'benchmark.py',
+            'community.py', 'export.py', 'test.py',
+            'grade.py', 'logo.py',
+            # Known internal/subcommand files (not top-level)
+            'login.py',  # Subcommand of community
+            'clean_workspace.py', 'version.py', 'check.py', 'view.py', 
+            'protect.py', 'report.py'
         }
 
         orphaned = []
