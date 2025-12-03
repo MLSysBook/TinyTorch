@@ -24,7 +24,7 @@ def test_autograd_integration():
     print("Test 1: Gradient flow through layers")
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.training import MeanSquaredError
         
         # Create simple network

@@ -18,12 +18,12 @@ class TestDenseModuleExports:
     
     def test_dense_class_exports(self):
         """Test Dense class exports from layers module."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         assert Dense is not None, "Dense class should be exported"
         
     def test_dense_is_callable(self):
         """Test Dense can be instantiated."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         layer = Dense(10, 5)
         assert layer is not None, "Should create Dense layer instance"
         assert hasattr(layer, 'forward'), "Dense should have forward method"
@@ -34,7 +34,7 @@ class TestDenseLayerFunctionality:
     
     def test_dense_forward_pass(self):
         """Test Dense layer forward pass produces correct shape."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.tensor import Tensor
         
         # Create layer
@@ -53,7 +53,7 @@ class TestDenseLayerFunctionality:
     
     def test_dense_with_bias(self):
         """Test Dense layer with bias enabled."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.tensor import Tensor
         
         layer = Dense(10, 5, bias=True)
@@ -66,7 +66,7 @@ class TestDenseLayerFunctionality:
     
     def test_dense_without_bias(self):
         """Test Dense layer with bias disabled."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.tensor import Tensor
         
         layer = Dense(10, 5, bias=False)
@@ -78,7 +78,7 @@ class TestDenseLayerFunctionality:
     
     def test_dense_callable_interface(self):
         """Test Dense layer can be called directly."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.tensor import Tensor
         
         layer = Dense(10, 5)
@@ -109,7 +109,7 @@ class TestNetworkComposition:
     
     def test_multi_layer_network(self):
         """Test building a multi-layer network."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.tensor import Tensor
         
@@ -141,7 +141,7 @@ class TestXORCapability:
     
     def test_xor_network_structure(self):
         """Test building XOR network structure."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.tensor import Tensor
         

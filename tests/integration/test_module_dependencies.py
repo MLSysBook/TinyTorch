@@ -104,7 +104,7 @@ def test_layer_integration():
 
 def test_dense_integration():
     """Test Dense layer integration with Tensor."""
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     from tinytorch.core.tensor import Tensor
     import numpy as np
     
@@ -119,7 +119,7 @@ def test_dense_integration():
 
 def test_dense_with_tensor():
     """Test that Dense properly uses Tensor for weights/bias."""
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     from tinytorch.core.tensor import Tensor
     
     layer = Dense(10, 5, use_bias=True)
@@ -133,7 +133,7 @@ def test_dense_with_tensor():
 
 def test_dense_with_activations():
     """Test Dense layer works with activation functions."""
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     from tinytorch.core.activations import ReLU, Sigmoid
     from tinytorch.core.tensor import Tensor
     import numpy as np
@@ -163,7 +163,7 @@ def test_dense_with_activations():
 
 def test_multi_layer_network():
     """Test building multi-layer networks with Dense."""
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     from tinytorch.core.tensor import Tensor
     import numpy as np
     
@@ -269,7 +269,7 @@ def test_autograd_integration():
 def test_optimizer_integration():
     """Test optimizers work with layers."""
     from tinytorch.core.optimizers import SGD
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     
     layer = Dense(10, 5)
     optimizer = SGD(learning_rate=0.01)
@@ -282,7 +282,7 @@ def test_optimizer_integration():
 def test_training_loop_integration():
     """Test training loop integrates optimizer and autograd."""
     from tinytorch.core.training import Trainer
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear as Dense
     from tinytorch.core.optimizers import SGD
     from tinytorch.core.losses import MSELoss
     from tinytorch.core.tensor import Tensor

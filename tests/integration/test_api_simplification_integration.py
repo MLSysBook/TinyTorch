@@ -172,7 +172,7 @@ def test_modern_api_integration():
         # Test 5: Backward compatibility integration
         try:
             # Test old names still work
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear as Dense
             from tinytorch.core.spatial import MultiChannelConv2D
             
             dense = Dense(5, 3)

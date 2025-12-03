@@ -24,7 +24,7 @@ def test_layers_integration():
     print("Test 1: Layer + Tensor integration")
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear as Dense
         
         layer = Dense(3, 2)
         x = Tensor(np.random.randn(5, 3))
