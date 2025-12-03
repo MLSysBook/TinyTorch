@@ -813,6 +813,16 @@ html[data-theme="dark"] {
     --pst-color-code-text: #e0e0e0;
 }
 
+/* Dark mode - Logo treatment */
+html[data-theme="dark"] .sidebar-brand-container img,
+html[data-theme="dark"] .navbar-brand img,
+html[data-theme="dark"] img.logo {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 /* Dark mode - Main content area */
 html[data-theme="dark"] body {
     background-color: #1a1a1a;
