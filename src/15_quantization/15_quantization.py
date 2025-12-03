@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-#| default_exp optimization.quantization
+#| default_exp perf.quantization
 
 # %% [markdown]
 """
@@ -47,17 +47,17 @@ Let's make models 4× smaller!
 ## 📦 Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/15_quantization/quantization_dev.py`
-**Building Side:** Code exports to `tinytorch.optimization.quantization`
+**Building Side:** Code exports to `tinytorch.perf.quantization`
 
 ```python
 # How to use this module:
-from tinytorch.optimization.quantization import quantize_int8, QuantizedLinear, quantize_model
+from tinytorch.perf.quantization import quantize_int8, QuantizedLinear, quantize_model
 ```
 
 **Why this matters:**
 - **Learning:** Complete quantization system in one focused module for deep understanding
 - **Production:** Proper organization like PyTorch's torch.quantization with all optimization components together
-- **Consistency:** All quantization operations and calibration tools in optimization.quantization
+- **Consistency:** All quantization operations and calibration tools in perf.quantization
 - **Integration:** Works seamlessly with existing models for complete optimization pipeline
 """
 
@@ -108,7 +108,7 @@ FP32 weights actually consume. This will show us why reduced precision matters.
 # %%
 def demo_motivation_profiling():
     """Profile model memory usage to discover the quantization problem."""
-    from tinytorch.optimization.profiling import Profiler
+    from tinytorch.perf.profiling import Profiler
 
     profiler = Profiler()
 
@@ -1489,7 +1489,7 @@ This is the production workflow: measure → compress → validate → deploy.
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-quantization", "solution": true}
 # Import Profiler from Module 14
-from tinytorch.optimization.profiling import Profiler
+from tinytorch.perf.profiling import Profiler
 
 def demo_quantization_with_profiler():
     """📊 Demonstrate memory savings using Profiler from Module 14."""

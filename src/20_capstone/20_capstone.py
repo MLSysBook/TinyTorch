@@ -378,7 +378,7 @@ class SimpleMLP:
         return x
 
     def parameters(self):
-        """Return model parameters for optimization."""
+        """Return model parameters for perf."""
         return [self.fc1.weight, self.fc1.bias, self.fc2.weight, self.fc2.bias]
 
     def count_parameters(self):
@@ -973,14 +973,14 @@ def run_optimization_workflow_example():
     # Demonstrate API imports (students can use these for their own optimizations)
     print("\n🔧 Importing optimization APIs...")
     try:
-        from tinytorch.optimization.profiling import Profiler, quick_profile
+        from tinytorch.perf.profiling import Profiler, quick_profile
         print("  ✅ Module 14 (Profiling) imported")
     except ImportError:
         print("  ⚠️  Module 14 (Profiling) not available - using basic profiling")
         Profiler = None
 
     try:
-        from tinytorch.optimization.compression import magnitude_prune, structured_prune
+        from tinytorch.perf.compression import magnitude_prune, structured_prune
         print("  ✅ Module 16 (Compression) imported")
     except ImportError:
         print("  ⚠️  Module 16 (Compression) not available - skipping pruning demo")

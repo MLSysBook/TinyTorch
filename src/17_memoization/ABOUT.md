@@ -356,7 +356,7 @@ The module includes comprehensive validation with performance measurement:
 ### Manual Testing Examples
 
 ```python
-from tinytorch.optimization.memoization import KVCache, enable_kv_cache
+from tinytorch.perf.memoization import KVCache, enable_kv_cache
 
 # Test cache with small transformer
 cache = KVCache(
@@ -522,7 +522,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 
 ```python
 # When students install tinytorch, they import your work like this:
-from tinytorch.optimization.memoization import KVCache, enable_kv_cache, disable_kv_cache
+from tinytorch.perf.memoization import KVCache, enable_kv_cache, disable_kv_cache
 from tinytorch.nn import MultiHeadAttention  # Base class from Module 12
 from tinytorch.core.transformer import GPT  # Architecture from Module 13
 

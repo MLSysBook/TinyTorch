@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-#| default_exp optimization.acceleration
+#| default_exp perf.acceleration
 #| export
 
 # %% [markdown]
@@ -915,7 +915,7 @@ def analyze_arithmetic_intensity():
 """
 ### 📊 Memory Efficiency Analysis
 
-Understanding memory allocation patterns is crucial for optimization.
+Understanding memory allocation patterns is crucial for perf.
 Let's measure how different implementations use memory.
 """
 
@@ -1149,7 +1149,7 @@ This is how professional ML engineers work: profile → optimize → measure →
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-acceleration", "solution": true}
 # Import Profiler from Module 14 (Module 18 comes after Module 14)
-from tinytorch.optimization.profiling import Profiler
+from tinytorch.perf.profiling import Profiler
 
 def demo_acceleration_with_profiler():
     """📊 Demonstrate acceleration gains using Profiler from Module 14."""

@@ -21,7 +21,7 @@ learning_objectives:
 
 The Acceleration module teaches you to extract maximum performance from modern CPUs through hardware-aware optimization techniques. You'll learn to leverage optimized BLAS libraries for vectorized matrix operations, implement cache-friendly algorithms that exploit memory hierarchy, and apply kernel fusion to eliminate memory bandwidth bottlenecks. By mastering the roofline model and arithmetic intensity analysis, you'll develop the systematic thinking needed to accelerate real ML systems from research prototypes to production deployments.
 
-This is CPU-focused acceleration—the foundation for understanding GPU optimization. You'll work with NumPy's BLAS backend (MKL, OpenBLAS) to achieve 10-100x speedups over naive Python, understand why most operations are memory-bound rather than compute-bound, and learn the measurement-driven optimization workflow used by PyTorch, TensorFlow, and production ML systems.
+This is CPU-focused acceleration—the foundation for understanding GPU perf. You'll work with NumPy's BLAS backend (MKL, OpenBLAS) to achieve 10-100x speedups over naive Python, understand why most operations are memory-bound rather than compute-bound, and learn the measurement-driven optimization workflow used by PyTorch, TensorFlow, and production ML systems.
 
 ## Learning Objectives
 
@@ -494,7 +494,7 @@ print(f"Speedup: {unfused_time/fused_time:.2f}x")
 print(f"Numerically equivalent: {np.allclose(y_fused.data, y_unfused.data)}")
 
 # Measure with profiler
-from tinytorch.optimization.profiling import Profiler
+from tinytorch.perf.profiling import Profiler
 
 profiler = Profiler()
 

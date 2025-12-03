@@ -353,7 +353,7 @@ if __name__ == "__main__":
 """
 ## SGD - Stochastic Gradient Descent
 
-SGD is the foundation of neural network optimization. It implements the simple but powerful idea: "move in the direction opposite to the gradient."
+SGD is the foundation of neural network perf. It implements the simple but powerful idea: "move in the direction opposite to the gradient."
 
 ### Why SGD Works
 

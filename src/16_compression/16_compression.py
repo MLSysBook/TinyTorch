@@ -42,22 +42,22 @@ Let's get started!
 ## 📦 Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/16_compression/compression_dev.py`
-**Building Side:** Code exports to `tinytorch.optimization.compression`
+**Building Side:** Code exports to `tinytorch.perf.compression`
 
 ```python
 # How to use this module:
-from tinytorch.optimization.compression import magnitude_prune, structured_prune, measure_sparsity
+from tinytorch.perf.compression import magnitude_prune, structured_prune, measure_sparsity
 ```
 
 **Why this matters:**
 - **Learning:** Complete compression system in one focused module for deep understanding
 - **Production:** Proper organization like real compression libraries with all techniques together
-- **Consistency:** All compression operations and sparsity management in optimization.compression
+- **Consistency:** All compression operations and sparsity management in perf.compression
 - **Integration:** Works seamlessly with models and quantization for complete optimization pipeline
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
-#| default_exp optimization.compression
+#| default_exp perf.compression
 #| export
 
 import numpy as np
@@ -145,7 +145,7 @@ distribution. We'll discover that many weights are tiny and might not matter muc
 # %%
 # Profile weight distribution to discover pruning opportunities
 # Module 14 (Profiling) must be completed before Module 16
-from tinytorch.optimization.profiling import Profiler, analyze_weight_distribution
+from tinytorch.perf.profiling import Profiler, analyze_weight_distribution
 
 def show_weight_distribution_motivation():
     """Display weight distribution analysis - motivates compression techniques."""

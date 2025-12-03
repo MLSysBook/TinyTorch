@@ -537,7 +537,7 @@ After implementing autograd yourself, you understand that `loss.backward()` trav
 ```{admonition} Systems Reality Check
 :class: tip
 
-**Production Context**: PyTorch's autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph optimization. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.
+**Production Context**: PyTorch's autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph perf. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.
 
 **Performance Note**: For ResNet-50 (25M parameters), the computational graph stores ~100MB of intermediate activations during forward pass. Gradient checkpointing reduces this to ~10MB by recomputing activations, trading 30% extra computation for 90% memory savings - critical for training larger models on limited GPU memory.
 

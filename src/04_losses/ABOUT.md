@@ -19,7 +19,7 @@ learning_objectives:
 
 ## Overview
 
-Loss functions are the mathematical conscience of machine learning. They quantify prediction error and provide the scalar signal that drives optimization. This module implements MSE for regression and CrossEntropy for classification, with careful attention to numerical stability through the log-sum-exp trick. You'll build the feedback mechanisms used in billions of training runs across GPT models, ResNets, and all production ML systems.
+Loss functions are the mathematical conscience of machine learning. They quantify prediction error and provide the scalar signal that drives perf. This module implements MSE for regression and CrossEntropy for classification, with careful attention to numerical stability through the log-sum-exp trick. You'll build the feedback mechanisms used in billions of training runs across GPT models, ResNets, and all production ML systems.
 
 ## Learning Objectives
 

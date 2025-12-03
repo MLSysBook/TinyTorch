@@ -265,8 +265,8 @@ def run_optimization_workflow_example():
     print("="*70)
 
     # Import optimization APIs
-    from tinytorch.optimization.profiling import Profiler, quick_profile
-    from tinytorch.optimization.compression import magnitude_prune
+    from tinytorch.perf.profiling import Profiler, quick_profile
+    from tinytorch.perf.compression import magnitude_prune
     from tinytorch.benchmarking import Benchmark, BenchmarkResult
 
     # Step 1: Profile baseline model (Module 14)
@@ -324,7 +324,7 @@ def run_optimization_workflow_example():
     return submission
 ```
 
-**Why This Workflow Matters**: Shows how TinyTorch modules work together as a cohesive framework. Students see the complete optimization story: measure → optimize → validate → submit. This workflow pattern applies to real production ML optimization.
+**Why This Workflow Matters**: Shows how TinyTorch modules work together as a cohesive framework. Students see the complete optimization story: measure → optimize → validate → submit. This workflow pattern applies to real production ML perf.
 
 ### Connection to TinyTorch Optimization Tier
 

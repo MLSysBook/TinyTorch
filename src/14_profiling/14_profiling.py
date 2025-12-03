@@ -53,7 +53,7 @@ Let's build the measurement foundation for ML systems optimization!
 
 ```python
 # How to use this module:
-from tinytorch.optimization.profiling import Profiler, profile_forward_pass, profile_backward_pass
+from tinytorch.perf.profiling import Profiler, profile_forward_pass, profile_backward_pass
 ```
 
 **Why this matters:**
@@ -64,7 +64,7 @@ from tinytorch.optimization.profiling import Profiler, profile_forward_pass, pro
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
-#| default_exp optimization.profiling
+#| default_exp perf.profiling
 #| export
 
 import sys
@@ -1053,7 +1053,7 @@ if __name__ == "__main__":
 """
 ## Memory Profiling - Understanding Memory Usage Patterns
 
-Memory profiling reveals how much RAM your model consumes during training and inference. This is critical for deployment planning and optimization.
+Memory profiling reveals how much RAM your model consumes during training and inference. This is critical for deployment planning and perf.
 
 ### Memory Usage Breakdown
 ```
@@ -1250,7 +1250,7 @@ A forward pass profile combines all our measurements to understand model behavio
 """
 ### Backward Pass Profiling - Training Analysis
 
-Training requires both forward and backward passes. The backward pass typically uses 2× the compute and adds gradient memory. Understanding this is crucial for training optimization.
+Training requires both forward and backward passes. The backward pass typically uses 2× the compute and adds gradient memory. Understanding this is crucial for training perf.
 
 ### Training Memory Visualization
 ```

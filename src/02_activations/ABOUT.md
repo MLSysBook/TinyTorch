@@ -171,7 +171,7 @@ class GELU:
 - Non-monotonic behavior (slight negative region) helps representation learning
 - Used in GPT, BERT, RoBERTa, Vision Transformers
 
-**Comparison to ReLU**: GELU is smoother (differentiable everywhere) but more expensive (requires exponential). In transformers, the extra cost is negligible compared to attention computation, and the smoothness helps optimization.
+**Comparison to ReLU**: GELU is smoother (differentiable everywhere) but more expensive (requires exponential). In transformers, the extra cost is negligible compared to attention computation, and the smoothness helps perf.
 
 ### Softmax - The Probability Distributor
 
