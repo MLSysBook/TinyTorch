@@ -111,12 +111,12 @@ def main():
         console.print("  [green]✓[/green] Profiler (YOUR Module 14 implementation)")
         
         # YOUR Quantization (Module 15)
-        from tinytorch.optimization.quantization import QuantizationComplete
-        console.print("  [green]✓[/green] QuantizationComplete (YOUR Module 15 implementation)")
+        from tinytorch.perf.quantization import Quantizer
+        console.print("  [green]✓[/green] Quantizer (YOUR Module 15 implementation)")
         
         # YOUR Compression (Module 16) 
-        from tinytorch.optimization.compression import CompressionComplete
-        console.print("  [green]✓[/green] CompressionComplete (YOUR Module 16 implementation)")
+        from tinytorch.perf.compression import Compressor
+        console.print("  [green]✓[/green] Compressor (YOUR Module 16 implementation)")
         
     except ImportError as e:
         console.print(Panel(
