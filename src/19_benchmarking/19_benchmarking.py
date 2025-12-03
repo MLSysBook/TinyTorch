@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-#| default_exp benchmarking.benchmark
+#| default_exp bench
 #| export
 
 # Constants for benchmarking defaults

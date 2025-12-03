@@ -84,16 +84,6 @@ BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 BYTES_PER_INT8 = 1  # INT8 size in bytes
 MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
-# SimpleModel helper for testing (TinyTorch doesn't use Sequential)
-class SimpleModel:
-    """Simple model container for testing - demonstrates explicit composition."""
-    def __init__(self, *layers):
-        self.layers = list(layers)
-    def forward(self, x):
-        for layer in self.layers:
-            x = layer.forward(x)
-        return x
-
 if __name__ == "__main__":
     print("✅ Quantization module imports complete")
 
@@ -1707,7 +1697,7 @@ for export to the tinytorch package. This allows milestones to use the complete 
 
 # %% nbgrader={"grade": false, "grade_id": "quantization_export", "solution": true}
 #| export
-class QuantizationComplete:
+class Quantizer:
     """
     Complete quantization system for milestone use.
     
@@ -1759,7 +1749,7 @@ class QuantizationComplete:
                 original_size += param_size
                 
                 # Quantize parameter
-                q_param, scale, zp = QuantizationComplete.quantize_tensor(param)
+                q_param, scale, zp = Quantizer.quantize_tensor(param)
                 quantized_size += q_param.data.nbytes
                 
                 quantized_layers[f'param_{param_idx}'] = {
@@ -1790,15 +1780,15 @@ class QuantizationComplete:
 # Convenience functions for backward compatibility
 def quantize_int8(tensor: Tensor) -> Tuple[Tensor, float, int]:
     """Quantize FP32 tensor to INT8."""
-    return QuantizationComplete.quantize_tensor(tensor)
+    return Quantizer.quantize_tensor(tensor)
 
 def dequantize_int8(q_tensor: Tensor, scale: float, zero_point: int) -> Tensor:
     """Dequantize INT8 tensor back to FP32."""
-    return QuantizationComplete.dequantize_tensor(q_tensor, scale, zero_point)
+    return Quantizer.dequantize_tensor(q_tensor, scale, zero_point)
 
 def quantize_model(model, calibration_data: Optional[List[Tensor]] = None) -> Dict[str, any]:
     """Quantize entire model to INT8."""
-    return QuantizationComplete.quantize_model(model, calibration_data)
+    return Quantizer.quantize_model(model, calibration_data)
 
 # %% [markdown] nbgrader={"grade": false, "grade_id": "quantization-systems-thinking", "solution": true, "schema_version": 3}
 """

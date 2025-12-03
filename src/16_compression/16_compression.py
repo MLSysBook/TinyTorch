@@ -106,34 +106,6 @@ output = layer2.forward(x)
 - Educational value comes from seeing layer interactions explicitly
 """
 
-# %%
-# Helper class for testing only - demonstrates explicit composition pattern
-class SimpleModel:
-    """
-    Simple model container for testing - demonstrates explicit composition.
-
-    EDUCATIONAL NOTE: This is a TEST HELPER, not a core module component!
-    In real code, students should write explicit forward passes.
-    """
-    def __init__(self, *layers):
-        self.layers = list(layers)
-
-    def forward(self, x):
-        """Explicit forward pass through layers."""
-        for layer in self.layers:
-            x = layer.forward(x)
-        return x
-
-    def __call__(self, x):
-        return self.forward(x)
-
-    def parameters(self):
-        """Collect parameters from all layers."""
-        params = []
-        for layer in self.layers:
-            params.extend(layer.parameters())
-        return params
-
 # %% [markdown]
 """
 ## 🔬 Motivation: Why Compression Matters
@@ -1659,7 +1631,7 @@ for export to the tinytorch package. This allows milestones to use the complete 
 
 # %% nbgrader={"grade": false, "grade_id": "compression_export", "solution": false}
 #| export
-class CompressionComplete:
+class Compressor:
     """
     Complete compression system for milestone use.
     
@@ -1735,22 +1707,22 @@ class CompressionComplete:
             Compressed model with sparsity stats
         """
         stats = {
-            'original_sparsity': CompressionComplete.measure_sparsity(model)
+            'original_sparsity': Compressor.measure_sparsity(model)
         }
         
         # Apply magnitude pruning
         if 'magnitude_sparsity' in compression_config:
-            model = CompressionComplete.magnitude_prune(
+            model = Compressor.magnitude_prune(
                 model, compression_config['magnitude_sparsity']
             )
         
         # Apply structured pruning
         if 'structured_prune_ratio' in compression_config:
-            model = CompressionComplete.structured_prune(
+            model = Compressor.structured_prune(
                 model, compression_config['structured_prune_ratio']
             )
         
-        stats['final_sparsity'] = CompressionComplete.measure_sparsity(model)
+        stats['final_sparsity'] = Compressor.measure_sparsity(model)
         stats['compression_ratio'] = 1.0 / (1.0 - stats['final_sparsity']) if stats['final_sparsity'] < 1.0 else float('inf')
         
         return model, stats
@@ -1758,19 +1730,19 @@ class CompressionComplete:
 # Convenience functions for backward compatibility
 def measure_sparsity(model) -> float:
     """Measure model sparsity."""
-    return CompressionComplete.measure_sparsity(model)
+    return Compressor.measure_sparsity(model)
 
 def magnitude_prune(model, sparsity=0.5):
     """Apply magnitude-based pruning."""
-    return CompressionComplete.magnitude_prune(model, sparsity)
+    return Compressor.magnitude_prune(model, sparsity)
 
 def structured_prune(model, prune_ratio=0.5):
     """Apply structured pruning."""
-    return CompressionComplete.structured_prune(model, prune_ratio)
+    return Compressor.structured_prune(model, prune_ratio)
 
 def compress_model(model, compression_config: Dict[str, Any]):
     """Apply complete compression pipeline."""
-    return CompressionComplete.compress_model(model, compression_config)
+    return Compressor.compress_model(model, compression_config)
 
 # %% [markdown]
 """
