@@ -279,238 +279,107 @@ pre.mermaid.align-center {
 }
 
 /* Work-in-Progress Banner Styles - Construction Theme */
-.wip-banner {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
-    border-bottom: 2px solid #1e40af;
+/* TinyTorch Top Bar - Simple branding bar */
+.tinytorch-bar {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-bottom: 1px solid #1e40af;
     color: #ffffff;
-    padding: 0.6rem 1rem;
-    text-align: center;
+    padding: 0.5rem 1.5rem;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+    box-shadow: 0 1px 4px rgba(30, 64, 175, 0.2);
     z-index: 9999;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Push down Jupyter Book header to make room for banner */
+.tinytorch-bar-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tinytorch-bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.tinytorch-bar-brand:hover {
+    color: #e2e8f0;
+}
+
+.tinytorch-bar-brand .icon {
+    font-size: 1rem;
+}
+
+.tinytorch-bar-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tinytorch-bar-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tinytorch-bar-links a:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.tinytorch-bar-links .link-icon {
+    font-size: 0.85rem;
+}
+
+.tinytorch-bar-links .link-text {
+    font-size: 0.85rem;
+}
+
+/* Responsive: hide text on small screens, keep icons */
+@media (max-width: 768px) {
+    .tinytorch-bar-links .link-text {
+        display: none;
+    }
+    
+    .tinytorch-bar-links a {
+        padding: 0.4rem;
+    }
+    
+    .tinytorch-bar-links .link-icon {
+        font-size: 1rem;
+    }
+    
+    .tinytorch-bar-links {
+        gap: 0.25rem;
+    }
+}
+
+/* Push down Jupyter Book header to make room for bar */
 header.bd-header {
-    margin-top: 4rem !important;
+    margin-top: 2.5rem !important;
 }
 
 /* Add spacing to main content area */
 .bd-container {
-    padding-top: 1rem !important;
-}
-
-/* Add spacing after the banner */
-.wip-banner + * {
-    margin-top: 2.5rem !important;
-}
-
-.wip-banner.collapsed {
-    padding: 0.5rem 1rem;
-}
-
-.wip-banner-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;  /* Stack title and description vertically */
-    flex-wrap: nowrap;
-    gap: 0.25rem;
-    padding-right: 2rem;  /* Space for toggle button */
-}
-
-.wip-banner-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    color: #ffffff;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.wip-banner-title .icon {
-    font-size: 1.1rem;
-}
-
-.wip-banner-description {
-    font-size: 0.9rem;
-    margin: 0;
-    line-height: 1.4;
-    transition: all 0.3s ease;
-    color: #e2e8f0;
-    font-weight: 400;
-    max-width: 700px;
-    flex-shrink: 1;
-    text-align: center;
-}
-
-.wip-banner-description a {
-    color: #93c5fd;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.wip-banner-description a:hover {
-    color: #bfdbfe;
-    text-decoration: underline;
-}
-
-.wip-banner-description .separator {
-    margin: 0 0.5rem;
-    color: #60a5fa;
-}
-
-
-.wip-banner.collapsed .wip-banner-description {
-    display: none;
-}
-
-.wip-banner-toggle {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    font-size: 0.875rem;
-    cursor: pointer;
-    padding: 0.25rem 0.375rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    opacity: 0.7;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wip-banner-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    opacity: 1;
-    transform: translateY(-50%) scale(1.05);
-}
-
-.wip-banner-close {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    color: #000000;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    opacity: 0.8;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-}
-
-.wip-banner-close:hover {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(0, 0, 0, 0.4);
-    opacity: 1;
-    transform: translateY(-50%) scale(1.1);
-}
-
-.wip-banner.hidden {
-    display: none;
-}
-
-@keyframes attention-pulse {
-    0%, 100% {
-        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
-    }
-    50% {
-        box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
-    }
-}
-
-@keyframes construction-blink {
-    0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-    25% { transform: scale(1.1) rotate(-5deg); }
-    50% { opacity: 0.8; transform: scale(0.95) rotate(0deg); }
-    75% { transform: scale(1.1) rotate(5deg); }
-}
-
-/* Adjust banner when sidebar is expanded or on smaller screens */
-@media (max-width: 1200px) {
-    .wip-banner-title {
-        font-size: 0.9rem;
-    }
-
-    .wip-banner-title .icon {
-        font-size: 1rem;
-    }
-
-    .wip-banner-title span:nth-child(2),  /* Hide second icon */
-    .wip-banner-title span:nth-child(4) {  /* Hide fourth icon */
-        display: none;
-    }
-}
-
-/* Mobile responsiveness for banner */
-@media (max-width: 768px) {
-    .wip-banner {
-        padding: 0.625rem 0.75rem;
-    }
-
-    .wip-banner-content {
-        flex-direction: column;  /* Stack vertically on mobile */
-        gap: 0.25rem;
-        padding-right: 2rem;
-    }
-
-    .wip-banner-title {
-        font-size: 0.8rem;
-        flex-wrap: nowrap;
-    }
-
-    .wip-banner-title span:nth-child(2),  /* Hide warning icon on mobile */
-    .wip-banner-title span:nth-child(4),  /* Hide hammer icon on mobile */
-    .wip-banner-title span:nth-child(5) {  /* Hide last construction icon */
-        display: none;
-    }
-
-    .wip-banner-description {
-        font-size: 0.7rem;
-        margin: 0;
-        line-height: 1.2;
-    }
-
-    .wip-banner-toggle {
-        right: 2rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        font-size: 0.75rem;
-    }
-
-    .wip-banner-close {
-        right: 0.375rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        font-size: 0.75rem;
-    }
+    padding-top: 0.5rem !important;
 }
 
 /* ============================================

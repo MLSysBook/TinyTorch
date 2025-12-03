@@ -1,2 +1,1 @@
-# E2E Test Package
-
+"""End-to-End user journey tests for TinyTorch."""

@@ -38,6 +38,7 @@ from .commands.milestone import MilestoneCommand
 from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
+from .commands.dev import DevCommand
 
 # Configure logging
 logging.basicConfig(
@@ -66,6 +67,7 @@ class TinyTorchCLI:
             'system': SystemCommand,
             'module': ModuleWorkflowCommand,
             # Developer tools
+            'dev': DevCommand,
             'src': SrcCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
@@ -83,7 +85,7 @@ class TinyTorchCLI:
 
         # Command categorization for help display
         self.student_commands = ['module', 'milestones', 'community', 'benchmark']
-        self.developer_commands = ['system', 'src', 'package', 'nbgrader']
+        self.developer_commands = ['dev', 'system', 'src', 'package', 'nbgrader']
 
         # Welcome screen sections (used for both tito and tito --help)
         self.welcome_sections = {
@@ -280,7 +282,12 @@ class TinyTorchCLI:
                 self.config.no_color = True
             
             # Show banner for interactive commands (except logo which has its own display)
-            if parsed_args.command and not self.config.no_color and parsed_args.command != 'logo':
+            # Skip banner for dev command with --json flag (CI/CD output)
+            skip_banner = (
+                parsed_args.command == 'logo' or
+                (parsed_args.command == 'dev' and hasattr(parsed_args, 'json') and parsed_args.json)
+            )
+            if parsed_args.command and not self.config.no_color and not skip_banner:
                 print_banner()
             
             # Validate environment for most commands (skip for doctor)
