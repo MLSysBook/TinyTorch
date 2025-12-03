@@ -33,12 +33,13 @@ The key insight: Students implement the core algorithms (conv, linear transforms
 while this infrastructure provides the clean API they expect from PyTorch.
 """
 
-# Import Module base class
-from ..core.layers import Module
+# Import Layer base class (aliased as Module for PyTorch compatibility)
+from ..core.layers import Layer as Module
+from ..core.layers import Layer
 
 # Import layers from core (these contain the student implementations)  
-from ..core.layers import Linear, ReLU, Dropout
-from ..core.activations import Sigmoid
+from ..core.layers import Linear, Dropout
+from ..core.activations import ReLU, Sigmoid, Softmax, Tanh
 from ..core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 # Import transformer components

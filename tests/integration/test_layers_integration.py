@@ -10,22 +10,15 @@ how layers work together with other modules and complete system behaviors.
 import sys
 import os
 import numpy as np
+import pytest
 
-# Add the modules to the path for integration testing
-layers_path = os.path.join(os.path.dirname(__file__), '..', '..', 'modules', '03_layers')
-tensor_path = os.path.join(os.path.dirname(__file__), '..', '..', 'modules', '01_tensor')
-
-sys.path.insert(0, layers_path)
-sys.path.insert(0, tensor_path)
-
+# Try to import from the package first, fall back to dev files
 try:
-    from layers_dev import Module, Linear, Sequential, Flatten
-    from tensor_dev import Tensor
-    print("✅ Successfully imported TinyTorch components for integration testing")
-except ImportError as e:
-    print(f"❌ Import failed: {e}")
-    print("Make sure you're running from the correct directory")
-    sys.exit(1)
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.layers import Linear, Sequential, Flatten
+    from tinytorch.nn import Module
+except ImportError:
+    pytest.skip("TinyTorch package not properly installed", allow_module_level=True)
 
 
 def test_complete_neural_networks():

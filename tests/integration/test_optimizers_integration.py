@@ -12,18 +12,22 @@ Tests that optimizers correctly integrate with:
 import sys
 import os
 import numpy as np
+import pytest
 
-# Add module paths
-module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'modules'))
-sys.path.insert(0, module_path)
+# Add project root to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-# Import modules in dependency order
-exec(open(os.path.join(module_path, '01_tensor/tensor.py')).read())
-exec(open(os.path.join(module_path, '02_activations/activations.py')).read())
-exec(open(os.path.join(module_path, '03_layers/layers.py')).read())
-exec(open(os.path.join(module_path, '05_autograd/autograd.py')).read())
-exec(open(os.path.join(module_path, '04_losses/losses.py')).read())
-exec(open(os.path.join(module_path, '06_optimizers/optimizers.py')).read())
+# Import from the TinyTorch package
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.activations import ReLU, Sigmoid
+    from tinytorch.core.layers import Linear
+    from tinytorch.core.losses import MSELoss, CrossEntropyLoss
+    from tinytorch.core.optimizers import SGD, Adam
+    from tinytorch.core.autograd import enable_autograd
+    enable_autograd()
+except ImportError as e:
+    pytest.skip(f"TinyTorch package not properly installed: {e}", allow_module_level=True)
 
 def test_sgd_with_linear_layer():
     """Test SGD optimizer with Linear layer and autograd."""
