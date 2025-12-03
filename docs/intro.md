@@ -1,15 +1,3 @@
-<!-- Top affiliation bar -->
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0;">
-  <span style="font-size: 1.25rem; font-weight: 700;">
-    <span style="color: #f97316;">🔥</span> TinyTorch
-  </span>
-  <span style="font-size: 0.9rem; color: #64748b;">
-    Part of <a href="https://mlsysbook.ai" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 500;">MLSysBook</a>
-    <span style="margin: 0 0.5rem;">•</span>
-    <a href="https://github.com/harvard-edge/TinyTorch" target="_blank" style="color: #64748b; text-decoration: none;">GitHub ⭐</a>
-  </span>
-</div>
-
 <!-- Main heading -->
 <h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework

@@ -29,6 +29,19 @@ else
     exit 1
 fi
 
+# Switch to Node.js v20 (required for Jupyter Book compatibility)
+if command -v nvm &> /dev/null; then
+    echo "🔧 Switching to Node.js v20..."
+    source "$HOME/.nvm/nvm.sh"
+    nvm use 20
+    echo ""
+elif [ -s "$HOME/.nvm/nvm.sh" ]; then
+    echo "🔧 Switching to Node.js v20..."
+    source "$HOME/.nvm/nvm.sh"
+    nvm use 20
+    echo ""
+fi
+
 # Activate virtual environment if it exists and we're not already in it
 if [ -z "$VIRTUAL_ENV" ] && [ -f "$PROJECT_ROOT/.venv/bin/activate" ]; then
     echo "🔧 Activating virtual environment..."
@@ -52,7 +65,7 @@ echo ""
 # Clean previous build
 if [ -d "_build" ]; then
     echo "🧹 Cleaning previous build..."
-    jupyter-book clean .
+    rm -rf _build
     echo ""
 fi
 
@@ -65,6 +78,6 @@ echo ""
 echo "✅ Build complete!"
 echo ""
 echo "📖 To view the site locally:"
-echo "   python -m http.server 8000 --directory _build/html"
-echo "   Then open: http://localhost:8000"
+echo "   jupyter-book start"
+echo "   (This will start a MyST server and open your browser)"
 echo ""

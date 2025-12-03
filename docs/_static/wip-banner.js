@@ -1,23 +1,25 @@
 /**
- * Work-in-Progress Banner JavaScript
- * Handles banner injection and toggle/collapse functionality
+ * TinyTorch Announcement Banner
+ * Displays branding and quick links on every page
  */
 
 document.addEventListener('DOMContentLoaded', function() {
     // Banner injection: Create banner dynamically if not present in HTML
-    // This allows the banner to work even if not included in the page template
     let banner = document.getElementById('wip-banner');
     if (!banner) {
         const bannerHTML = `
             <div class="wip-banner" id="wip-banner">
                 <div class="wip-banner-content">
                     <div class="wip-banner-title">
-                        <span class="icon">🚧</span>
-                        <span>Under Construction</span>
-                        <span class="icon">🚧</span>
+                        <span class="icon">🔥</span>
+                        <span>Tiny🔥Torch</span>
                     </div>
                     <div class="wip-banner-description">
-                        TinyTorch is currently under active development. Public release planned for December 2025. Expect changes and improvements!
+                        Hands-on labs for <a href="https://mlsysbook.ai" target="_blank">MLSysBook</a>
+                        <span class="separator">•</span>
+                        <a href="https://tinytorch.ai/join" target="_blank">Join the Community</a>
+                        <span class="separator">•</span>
+                        <a href="https://github.com/harvard-edge/TinyTorch" target="_blank">GitHub ⭐</a>
                     </div>
                 </div>
                 <button class="wip-banner-toggle" id="wip-banner-toggle" title="Collapse banner" aria-label="Toggle banner">▲</button>
