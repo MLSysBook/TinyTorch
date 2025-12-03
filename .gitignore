@@ -137,9 +137,8 @@ Thumbs.db
 tito-cli.log
 COMMIT_LOG.txt
 
-# Tito CLI backups and cache
-.tito/backups/
-.tito/cache/
+# Tito CLI user state and cache (local to each user)
+.tito/
 
 # Downloaded datasets (not source-controlled, too large)
 data/

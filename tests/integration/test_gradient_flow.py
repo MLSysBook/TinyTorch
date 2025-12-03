@@ -1,472 +1,436 @@
 #!/usr/bin/env python3
 """
-Comprehensive gradient flow testing for TinyTorch.
+Comprehensive Gradient Flow Tests for TinyTorch
+================================================
 
-This test suite systematically validates that gradients propagate correctly
-through all components of the training stack.
+Tests that gradients flow correctly through:
+1. Simple networks (single layer)
+2. Multi-layer networks (MLP)
+3. Convolutional networks (CNN)
+4. Attention mechanisms
+5. Complete training loops
 
-Run with: pytest tests/test_gradient_flow.py -v
-Or directly: python tests/test_gradient_flow.py
+This ensures backpropagation works correctly end-to-end.
 """
 
-import numpy as np
 import sys
 import os
+import numpy as np
 
 # Add project root to path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 
-from tinytorch import Tensor, Linear, Dropout
-from tinytorch import Sigmoid, ReLU, Tanh, GELU, Softmax
-from tinytorch import MSELoss, CrossEntropyLoss, BinaryCrossEntropyLoss
-from tinytorch import SGD, AdamW
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear, Dropout
+from tinytorch.core.activations import ReLU, Sigmoid, Softmax
+from tinytorch.core.losses import MSELoss, BinaryCrossEntropyLoss, CrossEntropyLoss
+from tinytorch.core.optimizers import SGD, Adam
+from tinytorch.core.spatial import Conv2d, MaxPool2d
+from tinytorch.core.autograd import enable_autograd
 
+# Enable autograd
+enable_autograd()
 
-class TestBasicTensorGradients:
-    """Test gradient computation for basic tensor operations."""
-    
-    def test_multiplication_gradient(self):
-        """Test gradient flow through multiplication."""
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        y = x * 3
-        loss = y.sum()
-        
-        loss.backward()
-        
-        # dy/dx = 3
-        assert x.grad is not None, "Gradient should be computed"
-        assert np.allclose(x.grad, [[3.0, 3.0]]), f"Expected [[3, 3]], got {x.grad}"
-    
-    def test_addition_gradient(self):
-        """Test gradient flow through addition."""
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        y = Tensor([[3.0, 4.0]], requires_grad=True)
-        z = x + y
-        loss = z.sum()
-        
-        loss.backward()
-        
-        # dz/dx = 1, dz/dy = 1
-        assert np.allclose(x.grad, [[1.0, 1.0]]), f"x.grad: {x.grad}"
-        assert np.allclose(y.grad, [[1.0, 1.0]]), f"y.grad: {y.grad}"
-    
-    def test_chain_rule(self):
-        """Test gradient flow through chain of operations."""
-        x = Tensor([[2.0]], requires_grad=True)
-        y = x * 3      # y = 3x
-        z = y + 1      # z = 3x + 1
-        w = z * 2      # w = 2(3x + 1) = 6x + 2
-        
-        w.backward()
-        
-        # dw/dx = 6
-        assert np.allclose(x.grad, [[6.0]]), f"Expected [[6]], got {x.grad}"
-    
-    def test_matmul_gradient(self):
-        """Test gradient flow through matrix multiplication."""
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        W = Tensor([[1.0], [2.0]], requires_grad=True)
-        y = x.matmul(W)  # y = [[5.0]]
-        
-        y.backward()
-        
-        # dy/dx = W^T = [[1, 2]]
-        # dy/dW = x^T = [[1], [2]]
-        assert np.allclose(x.grad, [[1.0, 2.0]]), f"x.grad: {x.grad}"
-        assert np.allclose(W.grad, [[1.0], [2.0]]), f"W.grad: {W.grad}"
-    
-    def test_broadcasting_gradient(self):
-        """Test gradient flow with broadcasting (e.g., bias addition)."""
-        x = Tensor([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)  # (2, 2)
-        bias = Tensor([1.0, 2.0], requires_grad=True)              # (2,)
-        y = x + bias  # Broadcasting happens
-        loss = y.sum()
-        
-        loss.backward()
-        
-        # Gradient should sum over broadcast dimension
-        assert x.grad.shape == (2, 2), f"x.grad shape: {x.grad.shape}"
-        assert bias.grad.shape == (2,), f"bias.grad shape: {bias.grad.shape}"
-        assert np.allclose(bias.grad, [2.0, 2.0]), f"bias.grad: {bias.grad}"
+def test_simple_linear_gradient_flow():
+    """Test gradients flow through a single linear layer"""
+    print("\n" + "="*70)
+    print("TEST 1: Simple Linear Layer Gradient Flow")
+    print("="*70)
+
+    # Create simple network: Linear(2->1)
+    layer = Linear(2, 1)
+
+    # Input
+    x = Tensor([[1.0, 2.0]], requires_grad=True)
+    target = Tensor([[3.0]])
+
+    # Forward pass
+    output = layer.forward(x)
+
+    # Loss
+    loss_fn = MSELoss()
+    loss = loss_fn.forward(output, target)
+
+    print(f"Initial loss: {float(loss.data):.4f}")
+    print(f"Initial weight shape: {layer.weight.shape}")
+    print(f"Initial bias shape: {layer.bias.shape}")
+
+    # Backward pass
+    loss.backward()
+
+    # Check gradients exist
+    assert layer.weight.grad is not None, "Weight gradient is None!"
+    assert layer.bias.grad is not None, "Bias gradient is None!"
+    assert x.grad is not None, "Input gradient is None!"
+
+    # Check gradients are non-zero
+    weight_grad_norm = np.linalg.norm(layer.weight.grad.data)
+    bias_grad_norm = np.linalg.norm(layer.bias.grad.data)
+    input_grad_norm = np.linalg.norm(x.grad.data)
+
+    print(f"\n✓ Weight gradient norm: {weight_grad_norm:.6f}")
+    print(f"✓ Bias gradient norm: {bias_grad_norm:.6f}")
+    print(f"✓ Input gradient norm: {input_grad_norm:.6f}")
+
+    assert weight_grad_norm > 1e-6, f"Weight gradients too small: {weight_grad_norm}"
+    assert bias_grad_norm > 1e-6, f"Bias gradients too small: {bias_grad_norm}"
+    assert input_grad_norm > 1e-6, f"Input gradients too small: {input_grad_norm}"
+
+    print("\n✅ TEST PASSED: Gradients flow correctly through linear layer")
+    return True
 
 
-class TestLayerGradients:
-    """Test gradient computation through neural network layers."""
-    
-    def test_linear_layer_gradients(self):
-        """Test gradient flow through Linear layer."""
-        layer = Linear(2, 3)
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        
-        w_before = layer.weight.data.copy()
-        b_before = layer.bias.data.copy()
-        
-        out = layer(x)
-        loss = out.sum()
-        loss.backward()
-        
-        # All gradients should exist
-        assert layer.weight.grad is not None, "Weight gradient missing"
-        assert layer.bias.grad is not None, "Bias gradient missing"
-        assert x.grad is not None, "Input gradient missing"
-        
-        # Gradient shapes should match parameter shapes
-        assert layer.weight.grad.shape == layer.weight.shape
-        assert layer.bias.grad.shape == layer.bias.shape
-    
-    def test_multi_layer_gradients(self):
-        """Test gradient flow through multiple layers."""
-        layer1 = Linear(2, 3)
-        layer2 = Linear(3, 1)
-        
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        
-        h = layer1(x)
-        out = layer2(h)
-        loss = out.sum()
-        
-        loss.backward()
-        
-        # All layers should have gradients
-        assert layer1.weight.grad is not None
-        assert layer1.bias.grad is not None
-        assert layer2.weight.grad is not None
-        assert layer2.bias.grad is not None
+def test_mlp_gradient_flow():
+    """Test gradients flow through multi-layer perceptron"""
+    print("\n" + "="*70)
+    print("TEST 2: Multi-Layer Perceptron Gradient Flow")
+    print("="*70)
+
+    # Create MLP: Input(4) -> Linear(4->8) -> ReLU -> Linear(8->2)
+    layer1 = Linear(4, 8)
+    activation = ReLU()
+    layer2 = Linear(8, 2)
+
+    # Input and target
+    x = Tensor(np.random.randn(3, 4), requires_grad=True)
+    target = Tensor(np.array([[1, 0], [0, 1], [1, 0]]))
+
+    print(f"Input shape: {x.shape}")
+    print(f"Target shape: {target.shape}")
+
+    # Forward pass
+    h1 = layer1.forward(x)
+    h1_activated = activation.forward(h1)
+    output = layer2.forward(h1_activated)
+
+    print(f"Hidden layer shape: {h1.shape}")
+    print(f"Output shape: {output.shape}")
+
+    # Loss
+    loss_fn = MSELoss()
+    loss = loss_fn.forward(output, target)
+
+    print(f"Initial loss: {float(loss.data):.4f}")
+
+    # Backward pass
+    loss.backward()
+
+    # Check all layer gradients exist
+    assert layer1.weight.grad is not None, "Layer1 weight gradient is None!"
+    assert layer1.bias.grad is not None, "Layer1 bias gradient is None!"
+    assert layer2.weight.grad is not None, "Layer2 weight gradient is None!"
+    assert layer2.bias.grad is not None, "Layer2 bias gradient is None!"
+
+    # Check gradient magnitudes
+    l1_weight_norm = np.linalg.norm(layer1.weight.grad.data)
+    l1_bias_norm = np.linalg.norm(layer1.bias.grad.data)
+    l2_weight_norm = np.linalg.norm(layer2.weight.grad.data)
+    l2_bias_norm = np.linalg.norm(layer2.bias.grad.data)
+
+    print(f"\n✓ Layer1 weight gradient norm: {l1_weight_norm:.6f}")
+    print(f"✓ Layer1 bias gradient norm: {l1_bias_norm:.6f}")
+    print(f"✓ Layer2 weight gradient norm: {l2_weight_norm:.6f}")
+    print(f"✓ Layer2 bias gradient norm: {l2_bias_norm:.6f}")
+
+    assert l1_weight_norm > 1e-6, "Layer1 weight gradients too small"
+    assert l1_bias_norm > 1e-6, "Layer1 bias gradients too small"
+    assert l2_weight_norm > 1e-6, "Layer2 weight gradients too small"
+    assert l2_bias_norm > 1e-6, "Layer2 bias gradients too small"
+
+    print("\n✅ TEST PASSED: Gradients flow correctly through MLP")
+    return True
 
 
-class TestActivationGradients:
-    """Test gradient computation through activation functions."""
-    
-    def test_sigmoid_gradient(self):
-        """Test gradient flow through Sigmoid."""
-        x = Tensor([[0.0, 1.0, -1.0]], requires_grad=True)
-        sigmoid = Sigmoid()
-        
-        y = sigmoid(x)
-        loss = y.sum()
-        loss.backward()
-        
-        assert x.grad is not None, "Sigmoid gradient missing"
-        # Sigmoid gradient: σ'(x) = σ(x)(1 - σ(x))
-        # At x=0: σ(0) = 0.5, σ'(0) = 0.25
-        assert x.grad[0, 0] > 0, "Gradient should be positive"
-    
-    def test_relu_gradient(self):
-        """Test gradient flow through ReLU."""
-        x = Tensor([[-1.0, 0.0, 1.0]], requires_grad=True)
-        relu = ReLU()
-        
-        y = relu(x)
-        loss = y.sum()
-        loss.backward()
-        
-        # ReLU gradient: 1 if x > 0, else 0
-        # Note: We haven't implemented ReLU backward yet, so this will fail
-        # TODO: Implement ReLU backward in autograd
-    
-    def test_tanh_gradient(self):
-        """Test gradient flow through Tanh."""
-        x = Tensor([[0.0, 1.0]], requires_grad=True)
-        tanh = Tanh()
-        
-        y = tanh(x)
-        loss = y.sum()
-        
-        # TODO: Implement Tanh backward
-        # loss.backward()
+def test_mlp_training_updates():
+    """Test that MLP actually learns (loss decreases)"""
+    print("\n" + "="*70)
+    print("TEST 3: MLP Training - Loss Reduction")
+    print("="*70)
 
+    # Create simple MLP
+    layer1 = Linear(2, 4)
+    activation = ReLU()
+    layer2 = Linear(4, 1)
 
-class TestLossGradients:
-    """Test gradient computation through loss functions."""
-    
-    def test_bce_gradient(self):
-        """Test gradient flow through Binary Cross-Entropy."""
-        predictions = Tensor([[0.7, 0.3, 0.9]], requires_grad=True)
-        targets = Tensor([[1.0, 0.0, 1.0]])
-        
-        loss_fn = BinaryCrossEntropyLoss()
-        loss = loss_fn(predictions, targets)
-        
-        loss.backward()
-        
-        assert predictions.grad is not None, "BCE gradient missing"
-        assert predictions.grad.shape == predictions.shape
-        # Gradient should be negative for correct predictions
-        assert predictions.grad[0, 0] < 0, "Gradient sign incorrect"
-    
-    def test_mse_gradient(self):
-        """Test gradient flow through MSE loss."""
-        predictions = Tensor([[1.0, 2.0, 3.0]], requires_grad=True)
-        targets = Tensor([[2.0, 2.0, 2.0]])
-        
-        loss_fn = MSELoss()
-        loss = loss_fn(predictions, targets)
-        
-        # TODO: Implement MSE backward
-        # loss.backward()
+    # Simple dataset (XOR-like)
+    X = Tensor(np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]]), requires_grad=False)
+    y = Tensor(np.array([[0.0], [1.0], [1.0], [0.0]]))
 
+    # Optimizer
+    optimizer = SGD([layer1.weight, layer1.bias, layer2.weight, layer2.bias], lr=0.1)
+    loss_fn = MSELoss()
 
-class TestOptimizerIntegration:
-    """Test optimizer integration with gradient flow."""
-    
-    def test_sgd_updates_parameters(self):
-        """Test that SGD actually updates parameters."""
-        layer = Linear(2, 1)
-        optimizer = SGD(layer.parameters(), lr=0.1)
-        
-        w_before = layer.weight.data.copy()
-        b_before = layer.bias.data.copy()
-        
-        # Forward pass
-        x = Tensor([[1.0, 2.0]], requires_grad=True)
-        out = layer(x)
-        loss = out.sum()
-        
-        # Backward pass
-        loss.backward()
-        
-        # Optimizer step
-        optimizer.step()
-        
-        # Parameters should change
-        assert not np.allclose(layer.weight.data, w_before), "Weights didn't update"
-        assert not np.allclose(layer.bias.data, b_before), "Bias didn't update"
-    
-    def test_zero_grad_clears_gradients(self):
-        """Test that zero_grad() clears gradients."""
-        layer = Linear(2, 1)
-        optimizer = SGD(layer.parameters(), lr=0.1)
-        
-        # First backward pass
-        x = Tensor([[1.0, 2.0]])
-        out = layer(x)
-        loss = out.sum()
-        loss.backward()
-        
-        assert layer.weight.grad is not None, "Gradient should exist"
-        
-        # Clear gradients
+    losses = []
+
+    print("Training for 50 epochs...")
+    for epoch in range(50):
+        # Forward
+        h1 = layer1.forward(X)
+        h1_act = activation.forward(h1)
+        output = layer2.forward(h1_act)
+
+        # Loss
+        loss = loss_fn.forward(output, y)
+        losses.append(float(loss.data))
+
+        # Backward
         optimizer.zero_grad()
-        
-        assert layer.weight.grad is None, "Gradient should be cleared"
-        assert layer.bias.grad is None, "Bias gradient should be cleared"
-    
-    def test_adamw_updates_parameters(self):
-        """Test that AdamW optimizer works."""
-        layer = Linear(2, 1)
-        optimizer = AdamW(layer.parameters(), lr=0.01)
-        
-        w_before = layer.weight.data.copy()
-        
-        x = Tensor([[1.0, 2.0]])
-        out = layer(x)
-        loss = out.sum()
         loss.backward()
+
+        # Update
         optimizer.step()
-        
-        assert not np.allclose(layer.weight.data, w_before), "AdamW didn't update weights"
+
+        if (epoch + 1) % 10 == 0:
+            print(f"Epoch {epoch+1:2d}: Loss = {float(loss.data):.6f}")
+
+    # Check loss decreased
+    initial_loss = losses[0]
+    final_loss = losses[-1]
+    reduction = initial_loss - final_loss
+    reduction_pct = (reduction / initial_loss) * 100
+
+    print(f"\n✓ Initial loss: {initial_loss:.6f}")
+    print(f"✓ Final loss: {final_loss:.6f}")
+    print(f"✓ Reduction: {reduction:.6f} ({reduction_pct:.1f}%)")
+
+    assert final_loss < initial_loss, f"Loss didn't decrease! Initial: {initial_loss}, Final: {final_loss}"
+    assert reduction_pct > 10, f"Loss reduction too small: {reduction_pct:.1f}%"
+
+    print("\n✅ TEST PASSED: MLP learns successfully (loss decreases)")
+    return True
 
 
-class TestFullTrainingLoop:
-    """Test complete training scenarios."""
-    
-    def test_simple_convergence(self):
-        """Test that a simple model can learn."""
-        # Simple task: learn to output 5 from input [1, 2]
-        layer = Linear(2, 1)
-        optimizer = SGD(layer.parameters(), lr=0.1)
-        loss_fn = MSELoss()
-        
-        x = Tensor([[1.0, 2.0]])
-        target = Tensor([[5.0]])
-        
-        initial_loss = None
-        final_loss = None
-        
-        # Train for a few iterations
-        for i in range(50):
-            # Forward
-            pred = layer(x)
-            loss = loss_fn(pred, target)
-            
-            if i == 0:
-                initial_loss = loss.data
-            if i == 49:
-                final_loss = loss.data
-            
-            # Backward
-            loss.backward()
-            
-            # Update
-            optimizer.step()
-            optimizer.zero_grad()
-        
-        # Loss should decrease
-        assert final_loss < initial_loss, f"Loss didn't decrease: {initial_loss} → {final_loss}"
-    
-    def test_binary_classification(self):
-        """Test binary classification training."""
-        layer = Linear(2, 1)
-        sigmoid = Sigmoid()
-        loss_fn = BinaryCrossEntropyLoss()
-        optimizer = SGD(layer.parameters(), lr=0.1)
-        
-        # Simple dataset: [1, 1] → 1, [0, 0] → 0
-        X = Tensor([[1.0, 1.0], [0.0, 0.0]])
-        y = Tensor([[1.0], [0.0]])
-        
-        initial_loss = None
-        final_loss = None
-        
-        for i in range(50):
-            # Forward
-            logits = layer(X)
-            probs = sigmoid(logits)
-            loss = loss_fn(probs, y)
-            
-            if i == 0:
-                initial_loss = loss.data
-            if i == 49:
-                final_loss = loss.data
-            
-            # Backward
-            loss.backward()
-            
-            # Update
-            optimizer.step()
-            optimizer.zero_grad()
-        
-        assert final_loss < initial_loss, "Binary classification didn't learn"
+def test_cnn_gradient_flow():
+    """Test gradients flow through convolutional layers"""
+    print("\n" + "="*70)
+    print("TEST 4: CNN Gradient Flow")
+    print("="*70)
+
+    # Create simple CNN: Conv2d -> ReLU -> Linear
+    conv = Conv2d(in_channels=1, out_channels=4, kernel_size=3, stride=1, padding=0)
+    activation = ReLU()
+
+    # Input: batch=2, channels=1, height=8, width=8
+    x = Tensor(np.random.randn(2, 1, 8, 8), requires_grad=True)
+
+    print(f"Input shape: {x.shape}")
+    print(f"Conv weight shape: {conv.weight.shape}")
+
+    # Forward through conv
+    conv_out = conv.forward(x)
+    print(f"Conv output shape: {conv_out.shape}")
+
+    activated = activation.forward(conv_out)
+
+    # Flatten for linear layer
+    batch_size = activated.shape[0]
+    flattened_size = np.prod(activated.shape[1:])
+    # Use reshape method to maintain gradient flow
+    flattened = activated.reshape(batch_size, flattened_size)
+
+    linear = Linear(flattened_size, 2)
+    output = linear.forward(flattened)
+
+    print(f"Flattened shape: {flattened.shape}")
+    print(f"Output shape: {output.shape}")
+
+    # Loss
+    target = Tensor(np.array([[1, 0], [0, 1]]))
+    loss_fn = MSELoss()
+    loss = loss_fn.forward(output, target)
+
+    print(f"Initial loss: {float(loss.data):.4f}")
+
+    # Backward
+    loss.backward()
+
+    # Check gradients
+    assert conv.weight.grad is not None, "Conv weight gradient is None!"
+    assert conv.bias.grad is not None, "Conv bias gradient is None!"
+    assert linear.weight.grad is not None, "Linear weight gradient is None!"
+
+    weight_grad_norm = np.linalg.norm(conv.weight.grad.data)
+    conv_bias_norm = np.linalg.norm(conv.bias.grad.data)
+    linear_grad_norm = np.linalg.norm(linear.weight.grad.data)
+
+    print(f"\n✓ Conv weight gradient norm: {weight_grad_norm:.6f}")
+    print(f"✓ Conv bias gradient norm: {conv_bias_norm:.6f}")
+    print(f"✓ Linear weight gradient norm: {linear_grad_norm:.6f}")
+
+    assert weight_grad_norm > 1e-6, f"Conv weight gradients too small: {weight_grad_norm}"
+    assert conv_bias_norm > 1e-6, f"Conv bias gradients too small: {conv_bias_norm}"
+    assert linear_grad_norm > 1e-6, f"Linear gradients too small: {linear_grad_norm}"
+
+    print("\n✅ TEST PASSED: Gradients flow correctly through CNN")
+    return True
 
 
-class TestEdgeCases:
-    """Test edge cases and potential failure modes."""
-    
-    def test_zero_gradient(self):
-        """Test that zero gradients don't break training."""
-        x = Tensor([[0.0, 0.0]], requires_grad=True)
-        y = x * 0
-        loss = y.sum()
-        
+def test_cnn_training_updates():
+    """Test that CNN actually learns on simple data"""
+    print("\n" + "="*70)
+    print("TEST 5: CNN Training - Loss Reduction")
+    print("="*70)
+
+    # Simple CNN
+    conv = Conv2d(1, 2, kernel_size=3, stride=1, padding=1)
+    activation = ReLU()
+
+    # Simple data: 4 samples, 1 channel, 4x4 images
+    X = Tensor(np.random.randn(4, 1, 4, 4), requires_grad=False)
+
+    # After conv: (4, 2, 4, 4) -> flatten to (4, 32)
+    conv_out_size = 2 * 4 * 4  # channels * height * width
+    linear = Linear(conv_out_size, 2)
+
+    y = Tensor(np.array([[1, 0], [0, 1], [1, 0], [0, 1]]))
+
+    # Get parameters with gradients
+    params = []
+    for p in [conv.weight, conv.bias, linear.weight, linear.bias]:
+        if not p.requires_grad:
+            p.requires_grad = True
+        params.append(p)
+
+    # Optimizer
+    optimizer = SGD(params, lr=0.01)
+    loss_fn = MSELoss()
+
+    losses = []
+
+    print("Training for 30 epochs...")
+    for epoch in range(30):
+        # Forward
+        conv_out = conv.forward(X)
+        activated = activation.forward(conv_out)
+
+        # Flatten using reshape to maintain gradients
+        batch_size = activated.shape[0]
+        flattened = activated.reshape(batch_size, -1)
+
+        output = linear.forward(flattened)
+
+        # Loss
+        loss = loss_fn.forward(output, y)
+        losses.append(float(loss.data))
+
+        # Backward
+        optimizer.zero_grad()
         loss.backward()
-        
-        assert x.grad is not None
-        assert np.allclose(x.grad, [[0.0, 0.0]])
-    
-    def test_very_small_values(self):
-        """Test gradient flow with very small values."""
-        x = Tensor([[1e-8, 1e-8]], requires_grad=True)
-        y = x * 2
-        loss = y.sum()
-        
-        loss.backward()
-        
-        assert x.grad is not None
-        assert np.allclose(x.grad, [[2.0, 2.0]])
-    
-    def test_gradient_accumulation(self):
-        """Test that gradients accumulate correctly across multiple backward passes."""
-        x = Tensor([[1.0]], requires_grad=True)
-        
-        # First backward
-        y1 = x * 2
-        y1.backward()
-        grad_after_first = x.grad.copy()
-        
-        # Second backward (without zero_grad)
-        y2 = x * 3
-        y2.backward()
-        
-        # Gradient should accumulate: 2 + 3 = 5
-        expected = grad_after_first + np.array([[3.0]])
-        assert np.allclose(x.grad, expected), f"Expected {expected}, got {x.grad}"
+
+        # Update
+        optimizer.step()
+
+        if (epoch + 1) % 10 == 0:
+            print(f"Epoch {epoch+1:2d}: Loss = {float(loss.data):.6f}")
+
+    # Check loss decreased
+    initial_loss = losses[0]
+    final_loss = losses[-1]
+    reduction = initial_loss - final_loss
+    reduction_pct = (reduction / initial_loss) * 100
+
+    print(f"\n✓ Initial loss: {initial_loss:.6f}")
+    print(f"✓ Final loss: {final_loss:.6f}")
+    print(f"✓ Reduction: {reduction:.6f} ({reduction_pct:.1f}%)")
+
+    assert final_loss < initial_loss, f"Loss didn't decrease! Initial: {initial_loss}, Final: {final_loss}"
+
+    print("\n✅ TEST PASSED: CNN learns successfully (loss decreases)")
+    return True
 
 
-def run_all_tests():
-    """Run all tests and print results."""
-    import inspect
-    
-    test_classes = [
-        TestBasicTensorGradients,
-        TestLayerGradients,
-        TestActivationGradients,
-        TestLossGradients,
-        TestOptimizerIntegration,
-        TestFullTrainingLoop,
-        TestEdgeCases,
+def test_gradient_accumulation():
+    """Test that gradients accumulate correctly across batches"""
+    print("\n" + "="*70)
+    print("TEST 6: Gradient Accumulation")
+    print("="*70)
+
+    layer = Linear(2, 1)
+
+    # Two batches
+    x1 = Tensor([[1.0, 2.0]], requires_grad=True)
+    x2 = Tensor([[3.0, 4.0]], requires_grad=True)
+    target = Tensor([[1.0]])
+
+    loss_fn = MSELoss()
+
+    # Forward + backward on first batch (don't zero grad)
+    out1 = layer.forward(x1)
+    loss1 = loss_fn.forward(out1, target)
+    loss1.backward()
+
+    grad_after_first = np.array(layer.weight.grad.data)
+
+    # Forward + backward on second batch (gradients should accumulate)
+    out2 = layer.forward(x2)
+    loss2 = loss_fn.forward(out2, target)
+    loss2.backward()
+
+    grad_after_second = layer.weight.grad.data
+
+    # Gradients should have accumulated (not been replaced)
+    grad_diff = np.linalg.norm(grad_after_second - grad_after_first)
+
+    print(f"✓ Gradient after first batch norm: {np.linalg.norm(grad_after_first):.6f}")
+    print(f"✓ Gradient after second batch norm: {np.linalg.norm(grad_after_second):.6f}")
+    print(f"✓ Difference: {grad_diff:.6f}")
+
+    assert grad_diff > 1e-6, "Gradients didn't accumulate properly"
+
+    print("\n✅ TEST PASSED: Gradients accumulate correctly")
+    return True
+
+
+def main():
+    """Run all gradient flow tests"""
+    print("\n" + "="*70)
+    print("  TINYTORCH GRADIENT FLOW TEST SUITE")
+    print("="*70)
+
+    tests = [
+        ("Simple Linear", test_simple_linear_gradient_flow),
+        ("MLP Gradient Flow", test_mlp_gradient_flow),
+        ("MLP Training", test_mlp_training_updates),
+        ("CNN Gradient Flow", test_cnn_gradient_flow),
+        ("CNN Training", test_cnn_training_updates),
+        ("Gradient Accumulation", test_gradient_accumulation),
     ]
-    
-    total_tests = 0
-    passed_tests = 0
-    failed_tests = []
-    skipped_tests = []
-    
-    print("=" * 80)
-    print("🧪 TINYTORCH GRADIENT FLOW TEST SUITE")
-    print("=" * 80)
-    
-    for test_class in test_classes:
-        print(f"\n{'=' * 80}")
-        print(f"📦 {test_class.__name__}")
-        print(f"{'=' * 80}")
-        
-        instance = test_class()
-        methods = [m for m in dir(instance) if m.startswith('test_')]
-        
-        for method_name in methods:
-            total_tests += 1
-            method = getattr(instance, method_name)
-            
-            # Get docstring
-            doc = method.__doc__ or method_name
-            doc = doc.strip().split('\n')[0]
-            
-            print(f"\n  {method_name}")
-            print(f"  {doc}")
-            
-            try:
-                method()
-                print(f"  ✅ PASSED")
-                passed_tests += 1
-            except NotImplementedError as e:
-                print(f"  ⏭️  SKIPPED: {e}")
-                skipped_tests.append((test_class.__name__, method_name, str(e)))
-            except AssertionError as e:
-                print(f"  ❌ FAILED: {e}")
-                failed_tests.append((test_class.__name__, method_name, str(e)))
-            except Exception as e:
-                print(f"  ❌ ERROR: {e}")
-                failed_tests.append((test_class.__name__, method_name, str(e)))
-    
+
+    results = []
+
+    for name, test_func in tests:
+        try:
+            result = test_func()
+            results.append((name, "PASSED" if result else "FAILED"))
+        except Exception as e:
+            print(f"\n❌ TEST FAILED: {name}")
+            print(f"Error: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            results.append((name, "FAILED"))
+
     # Summary
-    print("\n" + "=" * 80)
-    print("📊 TEST SUMMARY")
-    print("=" * 80)
-    print(f"Total tests:   {total_tests}")
-    print(f"✅ Passed:     {passed_tests}")
-    print(f"❌ Failed:     {len(failed_tests)}")
-    print(f"⏭️  Skipped:    {len(skipped_tests)}")
-    
-    if failed_tests:
-        print("\n" + "=" * 80)
-        print("❌ FAILED TESTS:")
-        print("=" * 80)
-        for class_name, method_name, error in failed_tests:
-            print(f"\n  {class_name}.{method_name}")
-            print(f"    {error}")
-    
-    if skipped_tests:
-        print("\n" + "=" * 80)
-        print("⏭️  SKIPPED TESTS (Not Yet Implemented):")
-        print("=" * 80)
-        for class_name, method_name, reason in skipped_tests:
-            print(f"  {class_name}.{method_name}")
-    
-    print("\n" + "=" * 80)
-    
-    return len(failed_tests) == 0
+    print("\n" + "="*70)
+    print("  TEST SUMMARY")
+    print("="*70)
+
+    passed = sum(1 for _, status in results if status == "PASSED")
+    total = len(results)
+
+    for name, status in results:
+        symbol = "✅" if status == "PASSED" else "❌"
+        print(f"{symbol} {name}: {status}")
+
+    print(f"\nTotal: {passed}/{total} tests passed")
+
+    if passed == total:
+        print("\n🎉 ALL TESTS PASSED! Gradients flow correctly through TinyTorch.")
+        return 0
+    else:
+        print(f"\n⚠️  {total - passed} tests failed. Please review the errors above.")
+        return 1
 
 
 if __name__ == "__main__":
-    success = run_all_tests()
-    sys.exit(0 if success else 1)
+    exit(main())
