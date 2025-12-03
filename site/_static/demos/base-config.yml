@@ -1,0 +1,60 @@
+# Shared Terminalizer configuration for all TinyTorch carousel demos
+# This file contains common settings used across all workflow demos
+
+config:
+  # Terminal dimensions - optimized for carousel
+  cols: 100
+  rows: 24
+
+  # Quality and performance
+  quality: 100
+  frameDelay: auto
+  maxIdleTime: 2000
+  repeat: 0
+
+  # Visual styling
+  frameBox:
+    type: solid
+    style:
+      boxShadow: none
+      margin: 0px
+      fontSize: 20px
+      fontWeight: bold
+
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+
+  # Cursor and font settings
+  cursorStyle: block
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  fontSize: 14
+  lineHeight: 1
+  letterSpacing: 0
+
+  # Color theme - vibrant with good contrast
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
