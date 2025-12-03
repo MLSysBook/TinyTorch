@@ -24,6 +24,7 @@ from typing import List, Dict, Optional, Any, Callable, Tuple
 import time
 import platform
 import os
+import statistics
 import numpy as np
 from tinytorch.profiling.profiler import Profiler
 

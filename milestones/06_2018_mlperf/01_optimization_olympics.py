@@ -118,6 +118,10 @@ def main():
         from tinytorch.perf.compression import Compressor
         console.print("  [green]✓[/green] Compressor (YOUR Module 16 implementation)")
         
+        # YOUR Benchmarking (Module 19)
+        from tinytorch.benchmarking.benchmark import Benchmark, TinyMLPerf
+        console.print("  [green]✓[/green] Benchmark, TinyMLPerf (YOUR Module 19 implementation)")
+        
     except ImportError as e:
         console.print(Panel(
             f"[red]Import Error: {e}[/red]\n\n"
@@ -257,25 +261,35 @@ def main():
     # Estimate model size
     param_bytes = param_count * 4  # FP32 = 4 bytes
     
-    # Measure inference latency
+    # Count FLOPs (computational cost)
+    input_shape = (1, 64)
+    flops = profiler.count_flops(model, input_shape)
+    
+    # Measure inference latency with proper statistics
     sample_input = Tensor(np.random.randn(1, 64).astype(np.float32))
     latency_ms = profiler.measure_latency(model, sample_input, warmup=3, iterations=10)
+    
+    # Calculate throughput
+    throughput = 1000 / latency_ms if latency_ms > 0 else 0
     
     # Calculate baseline accuracy
     outputs = model(X_test)
     predictions = np.argmax(outputs.data, axis=1)
     baseline_acc = np.mean(predictions == y_test) * 100
     
-    # Show baseline metrics
-    table = Table(title="📊 Baseline Profile (YOUR Profiler)", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Value", style="yellow")
+    # Show baseline metrics - comprehensive profile
+    table = Table(title="📊 Baseline Profile (YOUR Profiler - Module 14)", box=box.DOUBLE)
+    table.add_column("Metric", style="cyan", width=18)
+    table.add_column("Value", style="yellow", justify="right")
     table.add_column("Notes", style="dim")
     
     table.add_row("Parameters", f"{param_count:,}", "Total trainable weights")
     table.add_row("Size", f"{param_bytes:,} bytes", "FP32 precision")
+    table.add_row("FLOPs", f"{flops:,}", "Operations per inference")
+    table.add_row("", "", "")
     table.add_row("Accuracy", f"{baseline_acc:.1f}%", "Test set performance")
     table.add_row("Latency", f"{latency_ms:.3f} ms", "Per-sample inference")
+    table.add_row("Throughput", f"{throughput:.0f} samples/sec", "Inference speed")
     
     console.print(table)
     console.print()
@@ -370,54 +384,76 @@ def main():
     console.print()
     
     # ========================================================================
-    # STEP 4: BENCHMARK (TinyMLPerf style)
+    # STEP 4: BENCHMARK (Using YOUR Benchmark & Profiler - Modules 14 & 19)
     # ========================================================================
     
     console.print(Panel(
-        "[bold green]🏁 STEP 4: Benchmark Performance[/bold green]\n"
-        "MLPerf-style standardized measurements\n"
+        "[bold green]🏁 STEP 4: Benchmark with YOUR Modules 14 & 19[/bold green]\n"
+        "Using Benchmark class for standardized measurements\n"
         "Reproducible, statistically rigorous",
         border_style="green"
     ))
     
-    console.print("  Running standardized benchmark...")
+    console.print("  Running standardized benchmark with YOUR implementations...")
     
-    # The TinyMLPerf class handles proper warmup and measurement
-    # We'll simulate a simplified benchmark here
-    latencies = []
-    for _ in range(10):
-        start = time.time()
-        _ = model(Tensor(np.random.randn(1, 64).astype(np.float32)))
-        latencies.append((time.time() - start) * 1000)
+    # Use YOUR Benchmark class from Module 19
+    # Benchmark needs models and datasets
+    test_dataset = [(X_test, y_test)]
+    benchmark = Benchmark(models=[model], datasets=test_dataset)
     
-    mean_latency = np.mean(latencies)
-    std_latency = np.std(latencies)
+    # Run latency benchmark using YOUR implementation
+    latency_results = benchmark.run_latency_benchmark(input_shape=(1, 64))
+    bench_result = list(latency_results.values())[0]  # Get first model's result
+    
+    # Extract metrics from YOUR BenchmarkResult
+    mean_latency = bench_result.mean
+    std_latency = bench_result.std
+    min_latency = bench_result.min_val
+    max_latency = bench_result.max_val
+    # Calculate P95 from values
+    sorted_vals = sorted(bench_result.values)
+    p95_idx = int(len(sorted_vals) * 0.95)
+    p95_latency = sorted_vals[min(p95_idx, len(sorted_vals) - 1)]
+    
+    # Calculate derived metrics
+    throughput = 1000 / mean_latency if mean_latency > 0 else 0
     
     # Show benchmark results
-    table = Table(title="🏁 TinyMLPerf Results (YOUR Implementation)", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Value", style="yellow")
-    table.add_column("MLPerf Standard", style="dim")
+    table = Table(title="🏁 Benchmark Results (YOUR Modules 14 & 19)", box=box.DOUBLE)
+    table.add_column("Metric", style="cyan", width=18)
+    table.add_column("Value", style="yellow", justify="right")
+    table.add_column("Target", style="dim")
     
     table.add_row(
         "Latency (mean)",
         f"{mean_latency:.3f} ms",
-        "< 100ms target"
+        "< 100ms"
     )
     table.add_row(
         "Latency (std)",
         f"± {std_latency:.3f} ms",
-        "Low variance = stable"
+        "Low = stable"
     )
     table.add_row(
+        "Latency (min/max)",
+        f"{min_latency:.3f} / {max_latency:.3f} ms",
+        "Tight range"
+    )
+    table.add_row(
+        "P95 Latency",
+        f"{p95_latency:.3f} ms",
+        "< 2× mean"
+    )
+    table.add_row("", "", "")
+    table.add_row(
         "Throughput",
-        f"{1000/mean_latency:.0f} samples/sec",
+        f"{throughput:.0f} samples/sec",
         "Higher = better"
     )
     table.add_row(
         "Accuracy",
         f"{baseline_acc:.1f}%",
-        "> 80% target"
+        "> 80%"
     )
     
     console.print(table)
