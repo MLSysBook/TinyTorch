@@ -1049,11 +1049,13 @@ class MilestoneCommand(BaseCommand):
             padding=(1, 2)
         ))
 
-        try:
-            input("\n[yellow]Press Enter to begin...[/yellow] ")
-        except EOFError:
-            # Non-interactive mode, proceed automatically
-            pass
+        # Only prompt if in interactive terminal
+        import sys
+        if sys.stdin.isatty() and sys.stdout.isatty():
+            try:
+                input("\n[yellow]Press Enter to begin...[/yellow] ")
+            except EOFError:
+                pass
 
         # Run all milestone scripts
         all_passed = True
@@ -1080,12 +1082,16 @@ class MilestoneCommand(BaseCommand):
                     all_passed = False
                     console.print(f"[yellow]⚠️ Part {script_name} completed with errors[/yellow]")
                     if len(scripts_to_run) > 1:
-                        # Ask if they want to continue
-                        try:
-                            cont = input("\n[yellow]Continue to next part? (y/n): [/yellow] ")
-                            if cont.lower() != 'y':
+                        # Ask if they want to continue (only in interactive mode)
+                        if sys.stdin.isatty() and sys.stdout.isatty():
+                            try:
+                                cont = input("\n[yellow]Continue to next part? (y/n): [/yellow] ")
+                                if cont.lower() != 'y':
+                                    return result.returncode
+                            except EOFError:
                                 return result.returncode
-                        except EOFError:
+                        else:
+                            # Non-interactive: stop on first failure
                             return result.returncode
                             
             except KeyboardInterrupt:
