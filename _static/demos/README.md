@@ -1,120 +1,369 @@
-# TinyTorch Carousel Demo Recordings
+# TinyTorch Demo Generation
 
-This directory contains Terminalizer configurations and generated GIF demos for the TinyTorch workflow carousel.
+One script to rule them all.
 
 ## Quick Start
 
-### Regenerate all GIFs
 ```bash
-./render-all.sh
+# Interactive mode (asks questions)
+./docs/_static/demos/scripts/tito-demo.sh
 ```
 
-This will render all 4 carousel GIFs using the pre-configured Terminalizer YAML files.
+That's it! The script will ask what you want to do and guide you through.
 
-## Requirements
+## What It Does
 
-- **Node.js v16** (managed via nvm) - Required for Terminalizer
-- **Terminalizer** - Terminal session recorder/renderer
-- **macOS with GUI session** - Electron requires desktop environment
+The script handles everything in one go:
 
-### Installation
+### **Full Workflow** (Recommended)
+1. **Validate** - Tests all demo commands work (clones TinyTorch to `/tmp`, runs setup, etc.)
+2. **Time** - Measures command execution times during validation (smart - no duplicate runs!)
+3. **Generate** - Creates demo GIF using VHS
+
+### **Individual Steps** (If Needed)
+- **Validate only** - Just test commands without timing or generation
+- **Generate only** - Create GIF without validation (risky if commands changed)
+
+## Interactive Mode
 
 ```bash
-# 1. Install nvm (Node Version Manager) if not already installed
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-
-# 2. Reload shell or run:
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-# 3. Install Node v16
-nvm install 16
-nvm use 16
-
-# 4. Install Terminalizer globally
-npm install -g terminalizer
-
-# 5. Verify installation
-terminalizer --version
+./docs/_static/demos/scripts/tito-demo.sh
 ```
 
-### Configuration
-
-All demo configs inherit settings from `base-config.yml`:
-- **Dimensions:** 100 columns × 24 rows (optimized for carousel display)
-- **Theme:** Vibrant color scheme with good contrast
-- **Font:** Monaco/Lucida Console monospace at 14px
-- **Quality:** 100% for crisp, clean output
-
-**Note:** Terminalizer doesn't support config inheritance. `base-config.yml` serves as the reference/source of truth. To change styling across all demos, update `base-config.yml` then manually sync to individual `*.yml` files.
-
-## Files
+You'll see:
 
 ```
-site/_static/demos/
-├── base-config.yml             # Shared config (source of truth for styling)
-├── 01-clone-setup.yml          # Demo config: Clone & Setup
-├── 01-clone-setup.gif          # Generated GIF
-├── 02-build-jupyter.yml        # Demo config: Build in Jupyter
-├── 02-build-jupyter.gif        # Generated GIF
-├── 03-export-tito.yml          # Demo config: Export with TITO
-├── 03-export-tito.gif          # Generated GIF
-├── 04-validate-history.yml     # Demo config: Validate with History
-├── 04-validate-history.gif     # Generated GIF
-├── render-all.sh               # Script to regenerate all GIFs
-└── README.md                   # This file
+  ╔═══════════════════════════════════════╗
+  ║   🔥 TinyTorch Demo Studio 🎬        ║
+  ╚═══════════════════════════════════════╝
+
+What would you like to do?
+
+  1) Validate only (test all commands work)
+  2) Generate demo GIF only
+  3) Full workflow (validate + timing + generate) ← Recommended
+  4) Exit
+
+Choose [1-4]:
 ```
 
-## Usage
+Pick option 3 (Full workflow), answer which demo you want, done.
 
-### Render individual GIFs
+## Live Progress
+
+The script shows live output as commands run (not silent!):
+
+```
+📋 Step 1: Validation + Timing Collection
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏳ Testing: git clone
+
+  │ Cloning into 'TinyTorch_validate'...
+  │ remote: Enumerating objects: 1234, done.
+  │ remote: Counting objects: 100% (456/456), done.
+  │ remote: Compressing objects: 100% (234/234), done.
+  │ remote: Total 1234 (delta 123), reused 789 (delta 56)
+  │ Receiving objects: 100% (1234/1234), 2.34 MiB | 1.23 MiB/s, done.
+  │ Resolving deltas: 100% (567/567), done.
+
+  ✓ PASS (12.45s)
+
+⏳ Testing: setup-environment.sh
+
+  │ 🔥 TinyTorch Environment Setup
+  │ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  │ 
+  │ 📦 Creating virtual environment...
+  │   ✓ Virtual environment created
+  │ 
+  │ 📦 Installing dependencies...
+  │   ✓ numpy installed
+  │   ✓ pytest installed
+  │   ...
+  │ 
+  │ ✅ TinyTorch environment setup complete
+
+  ✓ PASS (45.23s)
+
+⏳ Testing: tito module status
+
+  │ Module Status
+  │ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  │ 01_tensor          ⬜ Not Started
+  │ 02_activations     ⬜ Not Started
+  │ ...
+
+  ✓ PASS (0.87s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱  Timing Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command                        Time (s)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+git clone                         12.45s
+setup-environment.sh              45.23s
+tito module status                 0.87s
+
+💡 VHS wait syntax for tape files:
+   Wait+Line@10ms /profvjreddi/
+
+✅ All tests passed!
+
+🎬 Step 2: Generate Demo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏳ Step 2.1: Cleaning /tmp/TinyTorch...
+  ✓ Clean
+
+⏳ Step 2.2: Recording with VHS (1-2 minutes)...
+
+  Setting up terminal...
+  Executing commands...
+  Recording frames...
+  Generating GIF...
+
+✅ Recording complete! (took 87s)
+
+⏳ Step 2.3: Moving to docs/_static/demos/
+  ✓ Saved: docs/_static/demos/01-zero-to-ready.gif (2.3M)
+
+💡 Preview with:
+  open docs/_static/demos/01-zero-to-ready.gif
+
+🎉 Complete! All steps done successfully.
+```
+
+**You see everything happen in real-time** - no silent waiting! Perfect for long-running commands like git clone and setup.
+
+## Command Line Mode (Optional)
+
+If you prefer non-interactive:
+
 ```bash
-nvm use 16
-cd site/_static/demos
-terminalizer render 01-clone-setup -o 01-clone-setup.gif
+# Full workflow (recommended)
+./docs/_static/demos/scripts/tito-demo.sh full 01
+
+# Just validate (no timing, no generation)
+./docs/_static/demos/scripts/tito-demo.sh validate
+
+# Just generate demo 01 (skip validation)
+./docs/_static/demos/scripts/tito-demo.sh generate 01
 ```
 
-### Render all GIFs at once
+### Debug Mode (Skip Git Clone)
+
+If you have slow internet or are iterating quickly, skip the git clone:
+
 ```bash
-./render-all.sh
+# Interactive mode will ask if you want to skip clone
+./docs/_static/demos/scripts/tito-demo.sh
+
+# Or use --skip-clone flag directly
+./docs/_static/demos/scripts/tito-demo.sh validate --skip-clone
+./docs/_static/demos/scripts/tito-demo.sh full 01 --skip-clone
 ```
 
-### Edit configurations
-Edit the `*.yml` files to modify the terminal sessions. Each YAML file contains:
-- Terminal appearance settings (theme, font, size)
-- Typed commands and delays
-- Simulated output text
+This will:
+- Skip the git clone step (saves 10-30s depending on internet)
+- Use existing `/tmp/TinyTorch_validate` if present
+- Otherwise copy from your current repo directory
+- Run all other validation tests normally
 
-## How It Works
+**Perfect for:** Debugging, slow internet, rapid iteration
 
-Terminalizer uses Electron to render pre-scripted terminal sessions as animated GIFs:
+**Tip:** Use `full 01` for the safest workflow - validates, times, and generates in one command.
 
-1. YAML configs define what to type and display
-2. Terminalizer renders frames using Electron
-3. Frames are merged into animated GIF
-4. GIFs are displayed in the website carousel with emoji fallbacks
+## Available Demos
+
+- `00` - Quick test (5 seconds, verifies VHS setup)
+- `01` - Zero to Ready (clone → setup → activate)
+- `02` - Build, Test, Ship (module completion workflow)
+- `03` - Milestone Unlocked (achievement system)
+- `04` - Share Your Journey (community features)
+
+## Prerequisites
+
+Install VHS (terminal recorder):
+
+```bash
+# macOS
+brew install vhs
+
+# Linux
+go install github.com/charmbracelet/vhs@latest
+```
+
+## File Structure
+
+```
+docs/_static/demos/
+├── README.md                # This file
+├── scripts/
+│   ├── tito-demo.sh        # 🎯 ONE SCRIPT (interactive)
+│   ├── validate_demos.sh   # [Legacy - use tito-demo.sh instead]
+│   └── demo.sh             # [Legacy - use tito-demo.sh instead]
+├── tapes/                  # VHS tape files (source of truth)
+│   ├── 00-test.tape
+│   ├── 01-zero-to-ready.tape
+│   ├── 02-build-test-ship.tape
+│   ├── 03-milestone-unlocked.tape
+│   └── 04-share-journey.tape
+└── *.gif                   # Generated demos (gitignored)
+```
+
+## VHS Tape Files
+
+Each `.tape` file is a script for VHS to record a terminal session:
+
+```vhs
+# Example: 01-zero-to-ready.tape
+Output "01-zero-to-ready.gif"
+
+Set Width 1280
+Set Height 720
+Set Shell bash
+Env PS1 "@profvjreddi 🔥 › "
+
+Type "git clone https://github.com/mlsysbook/TinyTorch.git"
+Enter
+Wait+Line@10ms /profvjreddi/ 120s  # Wait for clone (max 120s)
+
+Type "cd TinyTorch"
+Enter
+Wait+Line@10ms /profvjreddi/
+
+Type "./setup-environment.sh"
+Enter
+Wait+Line@10ms /profvjreddi/ 120s  # Wait for setup
+
+# ... more commands
+```
+
+### Key Patterns
+
+**Robust Waiting:**
+```vhs
+Wait+Line@10ms /profvjreddi/ 120s  # Wait for prompt (max 120s)
+```
+
+Instead of fixed `Sleep` times, wait for the prompt to return. This works regardless of machine speed.
+
+**Custom Prompt:**
+```vhs
+Env PS1 "@profvjreddi 🔥 › "  # Sets prompt in the recording
+```
+
+Makes it easy to detect when commands finish.
 
 ## Troubleshooting
 
-### "Cannot read property 'dock' of undefined"
-- Terminalizer requires a GUI session (Electron/app.dock API)
-- Make sure you're running in a full macOS desktop environment
-- Won't work over SSH or in headless mode
+### Validation fails
 
-### "node-pty build failed"
-- You're using Node v17+
-- Switch to Node v16: `nvm use 16`
+The script will show which test failed and suggest debug commands:
 
-### Want to update the carousel?
-- Edit the YAML files to change the terminal sessions
-- Run `./render-all.sh` to regenerate GIFs
-- Rebuild the site: `jupyter-book build site`
-- GIFs will automatically display (with emoji fallbacks if missing)
+```bash
+❌ Some tests failed
 
-## Architecture
+Debug:
+  cd /tmp/TinyTorch_validate
+  source activate.sh
+  # Run failing command manually
+```
 
-The carousel in `site/intro.md` references these GIFs with fallback emojis:
-- If GIF exists: displays animated terminal recording
-- If GIF missing: displays emoji icon (💻 📓 🛠️ 🏆)
+### Demo times out
 
-This ensures the carousel always works, even without generating GIFs.
+If VHS waits 120s then fails, your network/machine might be slow:
+
+```bash
+# Test manually to see timing
+cd /tmp
+rm -rf TinyTorch
+time git clone https://github.com/mlsysbook/TinyTorch.git
+
+# If > 120s, edit the tape file and increase timeout
+```
+
+### GIF is too large (>5MB)
+
+Edit the tape file and reduce quality:
+
+```vhs
+Set Framerate 24  # Lower from 30
+Set Width 1024    # Reduce from 1280
+Set Height 576    # Reduce from 720
+```
+
+## Manual Recording (Alternative Tools)
+
+If you prefer to use Terminalizer, Asciinema, or other recording tools instead of VHS:
+
+### Extract Command List
+
+Use the converter script to extract commands from VHS tape files:
+
+```bash
+# Convert VHS tape to Terminalizer config
+./docs/_static/demos/scripts/vhs-to-terminalizer.sh docs/_static/demos/tapes/01-zero-to-ready.tape
+
+# This creates a .yml file with:
+# - All commands extracted
+# - Timing information converted
+# - Terminal settings (dimensions, theme)
+```
+
+### Manual Recording Workflow
+
+1. **Extract commands** from the tape file (see above)
+2. **Review the .yml config** to see the command sequence
+3. **Record manually** with your preferred tool:
+   ```bash
+   # With Terminalizer
+   terminalizer record demo-01 -c 01-zero-to-ready.yml
+
+   # With Asciinema
+   asciinema rec demo-01.cast
+
+   # Or just read the tape file directly - it's human-readable!
+   cat docs/_static/demos/tapes/01-zero-to-ready.tape
+   ```
+4. **Type commands** from the sequence during recording
+5. **Render to GIF** using your tool's output format
+
+### Why Use VHS?
+
+- **Fully automated** - No manual typing during recording
+- **Reproducible** - Same GIF every time
+- **Version controlled** - Tape files track command changes
+- **Fast iteration** - Edit tape, re-record, done
+
+### Why Use Manual Tools?
+
+- **More polish** - Fine-tune pauses and interactions
+- **Custom workflows** - Your own recording preferences
+- **Tool familiarity** - Stick with what you know
+
+**Tip:** The VHS tape files are human-readable scripts. You can use them as a reference for manual recording even without the converter!
+
+## Development Tips
+
+1. **Edit tape files directly** - They're in `tapes/*.tape`
+2. **Test with Demo 00** - Quick 5-second validation
+3. **Calibrate if timing issues** - Only needed if demos timeout
+4. **Preview before committing** - Always check the GIF looks good
+
+## CI/CD (Future)
+
+The validation can run in GitHub Actions:
+
+```yaml
+- name: Validate demos
+  run: ./docs/_static/demos/scripts/tito-demo.sh validate
+```
+
+## Resources
+
+- [VHS Documentation](https://github.com/charmbracelet/vhs)
+- [VHS Examples](https://github.com/charmbracelet/vhs/tree/main/examples)
+- [Tape File Format](https://github.com/charmbracelet/vhs#tape-file-format)

@@ -18,7 +18,7 @@
 ```bash
 cd TinyTorch
 source activate.sh
-tito system doctor
+tito system health
 ```
 
 This checks:
@@ -148,7 +148,7 @@ which pip  # Should show TinyTorch/venv/bin/pip
 **Symptom**:
 ```bash
 $ tito module complete 03
-❌ Export failed: SyntaxError in modules/03_layers/layers_dev.py
+❌ Export failed: SyntaxError in source file
 ```
 
 **Causes**:
@@ -160,8 +160,8 @@ $ tito module complete 03
 
 **Step 1: Check syntax**:
 ```bash
-# Test Python syntax directly
-python -m py_compile modules/03_layers/layers_dev.py
+# Test Python syntax directly (for developers)
+python -m py_compile src/03_layers/03_layers.py
 ```
 
 **Step 2: Open in Jupyter and test**:
@@ -273,9 +273,9 @@ tito module start 01
 
 <div style="background: #fff5f5; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #e74c3c; margin: 1.5rem 0;">
 
-**Symptom**: Edit in Jupyter Lab, but `modules/XX_name/name_dev.py` doesn't change.
+**Symptom**: Edit in Jupyter Lab, but changes don't persist.
 
-**Cause**: Jupytext sync issues or file permissions.
+**Cause**: File permissions or save issues.
 
 **Solution**:
 
@@ -287,18 +287,19 @@ File → Save File (or Cmd/Ctrl + S)
 
 **Step 2: Check file permissions**:
 ```bash
-ls -la modules/01_tensor/tensor_dev.py
+ls -la modules/01_tensor/01_tensor.ipynb
 # Should be writable (not read-only)
 ```
 
 **Step 3: If read-only, fix permissions**:
 ```bash
-chmod u+w modules/01_tensor/tensor_dev.py
+chmod u+w modules/01_tensor/01_tensor.ipynb
 ```
 
-**Step 4: Verify changes**:
+**Step 4: Verify changes saved**:
 ```bash
-cat modules/01_tensor/tensor_dev.py | head -20
+# Check the notebook was updated
+ls -l modules/01_tensor/01_tensor.ipynb
 ```
 
 </div>
@@ -525,7 +526,7 @@ Error: .tito/progress.json not found
 
 **Option 1: Let TinyTorch recreate it (fresh start)**:
 ```bash
-tito system doctor
+tito system health
 # Recreates .tito/ structure with empty progress
 ```
 
@@ -822,9 +823,9 @@ python -c "from tinytorch import Tensor" 2>&1 | less
    source activate.sh
    ```
 
-2. **Run `tito system doctor` regularly**:
+2. **Run `tito system health` regularly**:
    ```bash
-   tito system doctor
+   tito system health
    ```
 
 3. **Test in Jupyter before exporting**:
@@ -860,7 +861,7 @@ python -c "from tinytorch import Tensor" 2>&1 | less
 | `ModuleNotFoundError: tinytorch` | `pip install -e .` |
 | `SyntaxError` in export | Fix Python syntax, test in Jupyter first |
 | `ImportError` in milestone | Re-export required modules |
-| `.tito/progress.json not found` | `tito system doctor` to recreate |
+| `.tito/progress.json not found` | `tito system health` to recreate |
 | `Jupyter Lab won't start` | `pkill -f jupyter && tito module start XX` |
 | `Permission denied` | `chmod +x setup-environment.sh activate.sh` |
 | `Tests fail` during export | Debug in Jupyter, check test assertions |
@@ -879,4 +880,4 @@ python -c "from tinytorch import Tensor" 2>&1 | less
 
 ---
 
-*Most issues have simple fixes. Start with `tito system doctor`, read error messages carefully, and remember: your code is always safe in `modules/` - only progress tracking can be reset.*
+*Most issues have simple fixes. Start with `tito system health`, read error messages carefully, and remember: your code is always safe in `modules/` - only progress tracking can be reset.*

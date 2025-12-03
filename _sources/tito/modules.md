@@ -37,7 +37,7 @@ See [Student Workflow](../student-workflow.md) for the complete development cycl
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
 <h4 style="margin: 0 0 0.5rem 0; color: #1976d2;">Check Environment</h4>
-<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system doctor</code>
+<code style="background: #263238; color: #ffffff; padding: 0.5rem; border-radius: 0.25rem; display: block; margin: 0.5rem 0;">tito system health</code>
 <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #64748b;">Verify your setup is ready before starting</p>
 </div>
 
@@ -79,7 +79,7 @@ Here's what a complete session looks like:
 ```bash
 cd TinyTorch
 source activate.sh
-tito system doctor         # Verify environment
+tito system health         # Verify environment
 ```
 
 **2. Start or Resume Module**
@@ -95,7 +95,7 @@ This opens Jupyter Lab with the module notebook.
 
 **3. Edit in Jupyter Lab**
 ```python
-# In modules/03_layers/layers_dev.py
+# In the generated notebook
 class Linear:
     def __init__(self, in_features, out_features):
         # YOUR implementation here
@@ -143,7 +143,7 @@ tito module status
 
 **Check Setup (Run This First)**
 ```bash
-tito system doctor
+tito system health
 ```
 
 Verifies:
@@ -203,7 +203,7 @@ tito module start 01
 tito module start 05  # Start Module 05 (Autograd)
 ```
 
-Jupyter Lab opens with `modules/05_autograd/autograd_dev.py`
+Jupyter Lab opens with the generated notebook for Module 05
 
 </div>
 
@@ -329,8 +329,9 @@ When you run `tito module complete XX`, here's what happens:
 
 **Step 2: Export**
 ```
-✓ Converting modules/XX_name/name_dev.py
-  → tinytorch/path/name.py
+✓ Converting src/XX_name/XX_name.py
+  → modules/XX_name/XX_name.ipynb (notebook)
+  → tinytorch/path/name.py (package)
 ✓ Adding "DO NOT EDIT" warning
 ✓ Making file read-only
 ```
@@ -355,16 +356,24 @@ When you run `tito module complete XX`, here's what happens:
 
 ## Module Structure
 
-### Where You Edit
+### Development Structure
 
 ```
-modules/
+src/                          ← Developer source code
 ├── 01_tensor/
-│   └── tensor_dev.py       ← YOU EDIT THIS
+│   └── 01_tensor.py         ← SOURCE OF TRUTH (devs edit)
 ├── 02_activations/
-│   └── activations_dev.py  ← YOU EDIT THIS
+│   └── 02_activations.py    ← SOURCE OF TRUTH (devs edit)
 └── 03_layers/
-    └── layers_dev.py       ← YOU EDIT THIS
+    └── 03_layers.py         ← SOURCE OF TRUTH (devs edit)
+
+modules/                      ← Generated notebooks (students use)
+├── 01_tensor/
+│   └── 01_tensor.ipynb      ← AUTO-GENERATED for students
+├── 02_activations/
+│   └── 02_activations.ipynb ← AUTO-GENERATED for students
+└── 03_layers/
+    └── 03_layers.ipynb      ← AUTO-GENERATED for students
 ```
 
 ### Where Code Exports
@@ -379,11 +388,11 @@ tinytorch/
 └── ...
 ```
 
-**IMPORTANT**: Never edit files in `tinytorch/` directly!
-- They have "DO NOT EDIT" warnings
-- They're auto-generated from `modules/`
-- Changes will be lost on re-export
-- Always edit in `modules/` instead
+**IMPORTANT**: Understanding the flow
+- **Developers**: Edit `src/XX_name/XX_name.py` → Run `tito source export` → Generates notebooks & package
+- **Students**: Work in generated `modules/XX_name/XX_name.ipynb` notebooks
+- **Never edit** `tinytorch/` directly - it's auto-generated
+- Changes in `tinytorch/` will be lost on re-export
 
 ---
 
@@ -393,7 +402,7 @@ tinytorch/
 
 <div style="background: #fff5f5; padding: 1.5rem; border: 1px solid #fed7d7; border-radius: 0.5rem; margin: 1rem 0;">
 
-**Problem**: `tito system doctor` shows errors
+**Problem**: `tito system health` shows errors
 
 **Solution**:
 ```bash
@@ -402,7 +411,7 @@ tinytorch/
 source activate.sh
 
 # Verify
-tito system doctor
+tito system health
 ```
 
 </div>

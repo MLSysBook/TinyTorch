@@ -99,7 +99,7 @@ You need TWO things to start building:
 
 ### Python & NumPy
 
-**[NumPy Quickstart Tutorial](https://numpy.org/doc/stable/user/quickstart.html)**
+**[NumPy Quickstart Tutorial](https://numpy.org/doc/stable/user/quickstart.md)**
 - Essential NumPy operations and array manipulation
 - **Review before Module 01** if NumPy is unfamiliar
 
@@ -121,14 +121,14 @@ You need TWO things to start building:
 ## Next Steps
 
 **Ready to Build:**
-- See [Quick Start Guide](quickstart-guide.html) for hands-on experience
-- See [Student Workflow](student-workflow.html) for development process
-- See [Course Structure](chapters/00-introduction.html) for full curriculum
+- See [Quick Start Guide](quickstart-guide.md) for hands-on experience
+- See [Student Workflow](student-workflow.md) for development process
+- See [Course Structure](chapters/00-introduction.md) for full curriculum
 
 **Need More Context:**
-- See [Additional Resources](resources.html) for broader ML learning materials
-- See [FAQ](faq.html) for common questions about TinyTorch
-- See [Community](community.html) to connect with other learners
+- See [Additional Resources](resources.md) for broader ML learning materials
+- See [FAQ](faq.md) for common questions about TinyTorch
+- See [Community](community.md) to connect with other learners
 
 ---
 

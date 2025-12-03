@@ -2,6 +2,51 @@
    TinyTorch Design System - ML Systems Education
    ============================================ */
 
+/* ============================================
+   Header Icons - Hide Download & Align
+   ============================================ */
+
+/* Hide download button completely */
+.dropdown-download-buttons,
+.dropdown.dropdown-download,
+.btn.dropdown-toggle[aria-label*="download"],
+button[aria-label*="Download"],
+.header-article-item:has(.dropdown-download),
+.download-button {
+    display: none !important;
+}
+
+/* Align header article icons properly */
+.header-article-items {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.header-article-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Make all header buttons same size and aligned */
+.header-article-items button,
+.header-article-items .btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem !important;
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+}
+
+/* Dropdown buttons container alignment */
+.dropdown-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+}
+
 /* Hide intro page from sidebar navigation */
 .bd-sidebar nav a[href="intro.html"],
 .bd-sidebar nav a[href="./intro.html"],
@@ -278,227 +323,156 @@ pre.mermaid.align-center {
     max-width: none !important;
 }
 
-/* Work-in-Progress Banner Styles - Construction Theme */
-.wip-banner {
-    background: linear-gradient(135deg, #ffc107 0%, #ffb300 25%, #ff9800 50%, #ffc107 100%);
-    border-bottom: 3px solid #ff6f00;
-    color: #000000;
-    padding: 0.75rem 1rem;
-    text-align: center;
+/* TinyTorch Top Bar - Fire-themed navigation */
+.tinytorch-bar {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    color: #ffffff;
+    padding: 0;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
     z-index: 9999;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    animation: attention-pulse 4s ease-in-out infinite;
+    transition: transform 0.3s ease;
+    height: 56px;
+    border-bottom: 2px solid #f97316;
 }
 
-/* Push down Jupyter Book header to make room for banner */
+.tinytorch-bar.hidden {
+    transform: translateY(-100%);
+}
+
+.tinytorch-bar-content {
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tinytorch-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+}
+
+.tinytorch-bar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+}
+
+.tinytorch-bar-brand:hover {
+    color: #fbbf24;
+}
+
+.tinytorch-bar-brand .brand-fire {
+    font-size: 1.1rem;
+}
+
+.tinytorch-bar-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+    padding: 0.3rem 0.75rem;
+    border-radius: 4px;
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.tinytorch-bar-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 100%;
+}
+
+.tinytorch-bar-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e5e7eb;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    background: transparent;
+    border: none;
+}
+
+.tinytorch-bar-links a:hover {
+    background: rgba(249, 115, 22, 0.15);
+    color: #ffffff;
+}
+
+.tinytorch-bar-links .link-icon {
+    font-size: 1rem;
+}
+
+.tinytorch-bar-links .link-text {
+    font-size: 0.9rem;
+}
+
+/* Subscribe link - same as others, no special treatment */
+.tinytorch-bar-links a.subscribe-trigger {
+    background: transparent;
+}
+
+.tinytorch-bar-links a.subscribe-trigger:hover {
+    background: rgba(249, 115, 22, 0.15);
+}
+
+/* Responsive: hide text on small screens, keep icons */
+@media (max-width: 768px) {
+    .tinytorch-bar-links .link-text {
+        display: none;
+    }
+    
+    .tinytorch-bar-links a {
+        padding: 0.5rem;
+    }
+    
+    .tinytorch-bar-links .link-icon {
+        font-size: 1.1rem;
+    }
+    
+    .tinytorch-bar-badge {
+        display: none;
+    }
+    
+    .tinytorch-bar-left {
+        gap: 0.5rem;
+    }
+    
+    .tinytorch-bar-content {
+        padding: 0 0.75rem;
+    }
+    
+    .tinytorch-bar {
+        height: 44px;
+    }
+}
+
+/* Push down Jupyter Book header to make room for bar */
 header.bd-header {
-    margin-top: 4rem !important;
+    margin-top: 3.5rem !important;
 }
 
 /* Add spacing to main content area */
 .bd-container {
-    padding-top: 1rem !important;
-}
-
-/* Add spacing after the banner */
-.wip-banner + * {
-    margin-top: 2.5rem !important;
-}
-
-.wip-banner.collapsed {
-    padding: 0.5rem 1rem;
-}
-
-.wip-banner-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;  /* Stack title and description vertically */
-    flex-wrap: nowrap;
-    gap: 0.25rem;
-    padding-right: 2rem;  /* Space for toggle button */
-}
-
-.wip-banner-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3rem;  /* Reduced gap to prevent wrapping */
-    color: #000000;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;  /* Prevent text wrapping */
-    flex-shrink: 0;  /* Don't shrink the title */
-}
-
-.wip-banner-title .icon {
-    font-size: 1.2rem;
-    animation: construction-blink 2s infinite ease-in-out;
-}
-
-.wip-banner-description {
-    font-size: 0.85rem;
-    margin: 0;
-    line-height: 1.4;
-    transition: all 0.3s ease;
-    color: #212121;
-    font-weight: 500;
-    max-width: 600px;
-    flex-shrink: 1;  /* Allow description to shrink if needed */
-    text-align: center;
-}
-
-
-.wip-banner.collapsed .wip-banner-description {
-    display: none;
-}
-
-.wip-banner-toggle {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    color: #000000;
-    font-size: 0.875rem;
-    cursor: pointer;
-    padding: 0.25rem 0.375rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    opacity: 0.8;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wip-banner-toggle:hover {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(0, 0, 0, 0.4);
-    opacity: 1;
-    transform: translateY(-50%) scale(1.05);
-}
-
-.wip-banner-close {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    color: #000000;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    opacity: 0.8;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-}
-
-.wip-banner-close:hover {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(0, 0, 0, 0.4);
-    opacity: 1;
-    transform: translateY(-50%) scale(1.1);
-}
-
-.wip-banner.hidden {
-    display: none;
-}
-
-@keyframes attention-pulse {
-    0%, 100% {
-        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
-    }
-    50% {
-        box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
-    }
-}
-
-@keyframes construction-blink {
-    0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-    25% { transform: scale(1.1) rotate(-5deg); }
-    50% { opacity: 0.8; transform: scale(0.95) rotate(0deg); }
-    75% { transform: scale(1.1) rotate(5deg); }
-}
-
-/* Adjust banner when sidebar is expanded or on smaller screens */
-@media (max-width: 1200px) {
-    .wip-banner-title {
-        font-size: 0.9rem;
-    }
-
-    .wip-banner-title .icon {
-        font-size: 1rem;
-    }
-
-    .wip-banner-title span:nth-child(2),  /* Hide second icon */
-    .wip-banner-title span:nth-child(4) {  /* Hide fourth icon */
-        display: none;
-    }
-}
-
-/* Mobile responsiveness for banner */
-@media (max-width: 768px) {
-    .wip-banner {
-        padding: 0.625rem 0.75rem;
-    }
-
-    .wip-banner-content {
-        flex-direction: column;  /* Stack vertically on mobile */
-        gap: 0.25rem;
-        padding-right: 2rem;
-    }
-
-    .wip-banner-title {
-        font-size: 0.8rem;
-        flex-wrap: nowrap;
-    }
-
-    .wip-banner-title span:nth-child(2),  /* Hide warning icon on mobile */
-    .wip-banner-title span:nth-child(4),  /* Hide hammer icon on mobile */
-    .wip-banner-title span:nth-child(5) {  /* Hide last construction icon */
-        display: none;
-    }
-
-    .wip-banner-description {
-        font-size: 0.7rem;
-        margin: 0;
-        line-height: 1.2;
-    }
-
-    .wip-banner-toggle {
-        right: 2rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        font-size: 0.75rem;
-    }
-
-    .wip-banner-close {
-        right: 0.375rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        font-size: 0.75rem;
-    }
+    padding-top: 0.5rem !important;
 }
 
 /* ============================================
@@ -882,6 +856,16 @@ html[data-theme="dark"] {
     /* Code block colors */
     --pst-color-code-bg: #2d2d2d;
     --pst-color-code-text: #e0e0e0;
+}
+
+/* Dark mode - Logo treatment */
+html[data-theme="dark"] .sidebar-brand-container img,
+html[data-theme="dark"] .navbar-brand img,
+html[data-theme="dark"] img.logo {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Dark mode - Main content area */

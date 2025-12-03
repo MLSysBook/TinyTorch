@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>TinyTorch Datasets &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,44 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
-    <script src="_static/ml-timeline.js"></script>
-    <script src="_static/wip-banner.js"></script>
-    <script src="_static/marimo-badges.js"></script>
-    <script src="_static/sidebar-link.js"></script>
-    <script src="_static/hero-carousel.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'datasets';</script>
-    <link rel="shortcut icon" href="_static/favicon.svg"/>
+    <script src="_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="_static/marimo-badges.js?v=e6289128"></script>
+    <script src="_static/sidebar-link.js?v=404b701b"></script>
+    <script src="_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Community Ecosystem" href="community.html" />
@@ -112,8 +108,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -170,60 +166,38 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="tiers/foundation.html">📖 Tier Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/01_tensor_ABOUT.html">01. Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/02_activations_ABOUT.html">02. Activations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/03_layers_ABOUT.html">03. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/04_losses_ABOUT.html">04. Losses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/05_autograd_ABOUT.html">05. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/06_optimizers_ABOUT.html">06. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/07_training_ABOUT.html">07. Training</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏛️ Architecture Tier (08-13)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="tiers/architecture.html">📖 Tier Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/08_dataloader_ABOUT.html">08. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/09_spatial_ABOUT.html">09. Convolutions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/10_tokenization_ABOUT.html">10. Tokenization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/11_embeddings_ABOUT.html">11. Embeddings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/12_attention_ABOUT.html">12. Attention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/13_transformers_ABOUT.html">13. Transformers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">⏱️ Optimization Tier (14-19)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="tiers/optimization.html">📖 Tier Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/14_profiling_ABOUT.html">14. Profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/15_quantization_ABOUT.html">15. Quantization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/16_compression_ABOUT.html">16. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/17_memoization_ABOUT.html">17. Memoization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/18_acceleration_ABOUT.html">18. Acceleration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/19_benchmarking_ABOUT.html">19. Benchmarking</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Capstone Competition</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="tiers/olympics.html">📖 Competition Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/20_capstone_ABOUT.html">20. Torch Olympics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
@@ -276,9 +250,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -288,70 +262,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/datasets.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fdatasets.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -436,9 +346,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -495,14 +405,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="tinytorch-datasets">
-<h1>TinyTorch Datasets<a class="headerlink" href="#tinytorch-datasets" title="Permalink to this heading">#</a></h1>
+<h1>TinyTorch Datasets<a class="headerlink" href="#tinytorch-datasets" title="Link to this heading">#</a></h1>
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">Ship-with-Repo Datasets for Fast Learning</h2>
 <p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Small datasets for instant iteration + standard benchmarks for validation</p>
 </div>
 <p><strong>Purpose</strong>: Understand TinyTorch’s dataset strategy and where to find each dataset used in milestones.</p>
 <section id="design-philosophy">
-<h2>Design Philosophy<a class="headerlink" href="#design-philosophy" title="Permalink to this heading">#</a></h2>
+<h2>Design Philosophy<a class="headerlink" href="#design-philosophy" title="Link to this heading">#</a></h2>
 <p>TinyTorch uses a two-tier dataset approach:</p>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
 <div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1.5rem; border-radius: 0.5rem;">
@@ -532,9 +442,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="shipped-datasets-included-with-tinytorch">
-<h2>Shipped Datasets (Included with TinyTorch)<a class="headerlink" href="#shipped-datasets-included-with-tinytorch" title="Permalink to this heading">#</a></h2>
+<h2>Shipped Datasets (Included with TinyTorch)<a class="headerlink" href="#shipped-datasets-included-with-tinytorch" title="Link to this heading">#</a></h2>
 <section id="tinydigits-handwritten-digit-recognition">
-<h3>TinyDigits - Handwritten Digit Recognition<a class="headerlink" href="#tinydigits-handwritten-digit-recognition" title="Permalink to this heading">#</a></h3>
+<h3>TinyDigits - Handwritten Digit Recognition<a class="headerlink" href="#tinydigits-handwritten-digit-recognition" title="Link to this heading">#</a></h3>
 <div style="background: #fff5f5; border-left: 4px solid #e74c3c; padding: 1.5rem; margin: 1.5rem 0;">
 <p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">datasets/tinydigits/</span></code><br />
 <strong>Size</strong>: ~310 KB<br />
@@ -565,7 +475,7 @@ document.write(`
 </div>
 </section>
 <section id="tinytalks-conversational-q-a-dataset">
-<h3>TinyTalks - Conversational Q&amp;A Dataset<a class="headerlink" href="#tinytalks-conversational-q-a-dataset" title="Permalink to this heading">#</a></h3>
+<h3>TinyTalks - Conversational Q&amp;A Dataset<a class="headerlink" href="#tinytalks-conversational-q-a-dataset" title="Link to this heading">#</a></h3>
 <div style="background: #f0fff4; border-left: 4px solid #22c55e; padding: 1.5rem; margin: 1.5rem 0;">
 <p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">datasets/tinytalks/</span></code><br />
 <strong>Size</strong>: ~40 KB<br />
@@ -606,10 +516,10 @@ A: 60 km/h
 </section>
 <hr class="docutils" />
 <section id="downloaded-datasets-auto-downloaded-on-demand">
-<h2>Downloaded Datasets (Auto-Downloaded On-Demand)<a class="headerlink" href="#downloaded-datasets-auto-downloaded-on-demand" title="Permalink to this heading">#</a></h2>
+<h2>Downloaded Datasets (Auto-Downloaded On-Demand)<a class="headerlink" href="#downloaded-datasets-auto-downloaded-on-demand" title="Link to this heading">#</a></h2>
 <p>These standard benchmarks download automatically when you run relevant milestone scripts:</p>
 <section id="mnist-handwritten-digit-classification">
-<h3>MNIST - Handwritten Digit Classification<a class="headerlink" href="#mnist-handwritten-digit-classification" title="Permalink to this heading">#</a></h3>
+<h3>MNIST - Handwritten Digit Classification<a class="headerlink" href="#mnist-handwritten-digit-classification" title="Link to this heading">#</a></h3>
 <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0;">
 <p><strong>Downloads to</strong>: <code class="docutils literal notranslate"><span class="pre">milestones/datasets/mnist/</span></code><br />
 <strong>Size</strong>: ~10 MB (compressed)<br />
@@ -633,7 +543,7 @@ A: 60 km/h
 </div>
 </section>
 <section id="cifar-10-natural-image-classification">
-<h3>CIFAR-10 - Natural Image Classification<a class="headerlink" href="#cifar-10-natural-image-classification" title="Permalink to this heading">#</a></h3>
+<h3>CIFAR-10 - Natural Image Classification<a class="headerlink" href="#cifar-10-natural-image-classification" title="Link to this heading">#</a></h3>
 <div style="background: #fdf2f8; border-left: 4px solid #ec4899; padding: 1.5rem; margin: 1.5rem 0;">
 <p><strong>Downloads to</strong>: <code class="docutils literal notranslate"><span class="pre">milestones/datasets/cifar-10/</span></code><br />
 <strong>Size</strong>: ~170 MB (compressed)<br />
@@ -659,9 +569,9 @@ A: 60 km/h
 </section>
 <hr class="docutils" />
 <section id="dataset-selection-rationale">
-<h2>Dataset Selection Rationale<a class="headerlink" href="#dataset-selection-rationale" title="Permalink to this heading">#</a></h2>
+<h2>Dataset Selection Rationale<a class="headerlink" href="#dataset-selection-rationale" title="Link to this heading">#</a></h2>
 <section id="why-these-specific-datasets">
-<h3>Why These Specific Datasets?<a class="headerlink" href="#why-these-specific-datasets" title="Permalink to this heading">#</a></h3>
+<h3>Why These Specific Datasets?<a class="headerlink" href="#why-these-specific-datasets" title="Link to this heading">#</a></h3>
 <p><strong>TinyDigits (not full MNIST):</strong></p>
 <ul class="simple">
 <li><p>100× faster training iterations</p></li>
@@ -694,9 +604,9 @@ A: 60 km/h
 </section>
 <hr class="docutils" />
 <section id="accessing-datasets">
-<h2>Accessing Datasets<a class="headerlink" href="#accessing-datasets" title="Permalink to this heading">#</a></h2>
+<h2>Accessing Datasets<a class="headerlink" href="#accessing-datasets" title="Link to this heading">#</a></h2>
 <section id="for-students">
-<h3>For Students<a class="headerlink" href="#for-students" title="Permalink to this heading">#</a></h3>
+<h3>For Students<a class="headerlink" href="#for-students" title="Link to this heading">#</a></h3>
 <p><strong>You don’t need to manually download anything!</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Just run milestone scripts</span>
 <span class="nb">cd</span><span class="w"> </span>milestones/03_1986_mlp
@@ -708,7 +618,7 @@ python<span class="w"> </span>02_rumelhart_mnist.py<span class="w">       </span
 <p>The milestones handle all data loading automatically.</p>
 </section>
 <section id="for-developers-researchers">
-<h3>For Developers/Researchers<a class="headerlink" href="#for-developers-researchers" title="Permalink to this heading">#</a></h3>
+<h3>For Developers/Researchers<a class="headerlink" href="#for-developers-researchers" title="Link to this heading">#</a></h3>
 <p><strong>Direct dataset access:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Shipped datasets (always available)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datasets.tinydigits</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_tinydigits</span>
@@ -725,7 +635,7 @@ python<span class="w"> </span>02_rumelhart_mnist.py<span class="w">       </span
 </section>
 <hr class="docutils" />
 <section id="dataset-sizes-summary">
-<h2>Dataset Sizes Summary<a class="headerlink" href="#dataset-sizes-summary" title="Permalink to this heading">#</a></h2>
+<h2>Dataset Sizes Summary<a class="headerlink" href="#dataset-sizes-summary" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Dataset</p></th>
@@ -768,7 +678,7 @@ python<span class="w"> </span>02_rumelhart_mnist.py<span class="w">       </span
 </section>
 <hr class="docutils" />
 <section id="why-ship-with-repo-matters">
-<h2>Why Ship-with-Repo Matters<a class="headerlink" href="#why-ship-with-repo-matters" title="Permalink to this heading">#</a></h2>
+<h2>Why Ship-with-Repo Matters<a class="headerlink" href="#why-ship-with-repo-matters" title="Link to this heading">#</a></h2>
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0;">
 <p><strong>Traditional ML courses:</strong></p>
 <ul class="simple">
@@ -789,7 +699,7 @@ python<span class="w"> </span>02_rumelhart_mnist.py<span class="w">       </span
 </section>
 <hr class="docutils" />
 <section id="frequently-asked-questions">
-<h2>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading">#</a></h2>
+<h2>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">#</a></h2>
 <p><strong>Q: Why not use full MNIST from the start?</strong><br />
 A: TinyDigits trains 100× faster, enabling rapid iteration during learning. MNIST validates your complete implementation later.</p>
 <p><strong>Q: Can I use my own datasets?</strong><br />
@@ -803,11 +713,11 @@ A: Yes! You can work through most milestones using only shipped datasets. Downlo
 </section>
 <hr class="docutils" />
 <section id="related-documentation">
-<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Permalink to this heading">#</a></h2>
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="chapters/milestones.html"><span class="doc std std-doc">Milestones Guide</span></a> - See how each dataset is used in historical achievements</p></li>
-<li><p><a class="reference internal" href="student-workflow.html"><span class="doc std std-doc">Student Workflow</span></a> - Learn the development cycle</p></li>
-<li><p><a class="reference internal" href="quickstart-guide.html"><span class="doc std std-doc">Quick Start</span></a> - Start building in 15 minutes</p></li>
+<li><p><a class="reference internal" href="chapters/milestones.html"><span class="std std-doc">Milestones Guide</span></a> - See how each dataset is used in historical achievements</p></li>
+<li><p><span class="xref myst">Student Workflow</span> - Learn the development cycle</p></li>
+<li><p><span class="xref myst">Quick Start</span> - Start building in 15 minutes</p></li>
 </ul>
 <p><strong>Dataset implementation details</strong>: See <code class="docutils literal notranslate"><span class="pre">datasets/tinydigits/README.md</span></code> and <code class="docutils literal notranslate"><span class="pre">datasets/tinytalks/README.md</span></code> for technical specifications.</p>
 </section>

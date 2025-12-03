@@ -1,65 +1,71 @@
 /**
- * Work-in-Progress Banner JavaScript
- * Handles banner injection and toggle/collapse functionality
+ * TinyTorch Top Bar
+ * Elegant navigation bar matching MLSysBook style
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Banner injection: Create banner dynamically if not present in HTML
-    // This allows the banner to work even if not included in the page template
-    let banner = document.getElementById('wip-banner');
-    if (!banner) {
-        const bannerHTML = `
-            <div class="wip-banner" id="wip-banner">
-                <div class="wip-banner-content">
-                    <div class="wip-banner-title">
-                        <span class="icon">🚧</span>
-                        <span>Under Construction</span>
-                        <span class="icon">🚧</span>
-                    </div>
-                    <div class="wip-banner-description">
-                        TinyTorch is currently under active development. Public release planned for December 2025. Expect changes and improvements!
-                    </div>
+    // Only inject if not already present
+    if (document.getElementById('tinytorch-bar')) return;
+    
+    const barHTML = `
+        <div class="tinytorch-bar" id="tinytorch-bar">
+            <div class="tinytorch-bar-content">
+                <div class="tinytorch-bar-left">
+                    <a href="intro.html" class="tinytorch-bar-brand">
+                        <span class="brand-fire">🔥</span>Tiny<span class="brand-fire">🔥</span>Torch
+                    </a>
+                    <span class="tinytorch-bar-badge">Under Construction</span>
                 </div>
-                <button class="wip-banner-toggle" id="wip-banner-toggle" title="Collapse banner" aria-label="Toggle banner">▲</button>
+                <div class="tinytorch-bar-links">
+                    <a href="https://mlsysbook.ai" target="_blank">
+                        <span class="link-icon">📖</span>
+                        <span class="link-text">MLSysBook</span>
+                    </a>
+                    <a href="#" class="subscribe-trigger" onclick="event.preventDefault(); if(window.openSubscribeModal) openSubscribeModal();">
+                        <span class="link-icon">✉️</span>
+                        <span class="link-text">Subscribe</span>
+                    </a>
+                    <a href="https://github.com/mlsysbook/TinyTorch" target="_blank">
+                        <span class="link-icon">⭐</span>
+                        <span class="link-text">Star</span>
+                    </a>
+                    <a href="https://tinytorch.ai/join" target="_blank">
+                        <span class="link-icon">🌍</span>
+                        <span class="link-text">Community</span>
+                    </a>
+                </div>
             </div>
-        `;
-        document.body.insertAdjacentHTML('afterbegin', bannerHTML);
-        banner = document.getElementById('wip-banner');
-    }
-
-    const toggleBtn = document.getElementById('wip-banner-toggle');
-
-    if (!banner) return;
-
-    // Check if banner was previously collapsed
-    const collapsed = localStorage.getItem('wip-banner-collapsed');
-    if (collapsed === 'true') {
-        banner.classList.add('collapsed');
-        if (toggleBtn) {
-            toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-            toggleBtn.title = 'Expand banner';
+        </div>
+    `;
+    document.body.insertAdjacentHTML('afterbegin', barHTML);
+    
+    // Smart sticky: hide on scroll down, show on scroll up
+    const bar = document.getElementById('tinytorch-bar');
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    
+    function updateBar() {
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY < 50) {
+            // Always show at top of page
+            bar.classList.remove('hidden');
+        } else if (currentScrollY > lastScrollY) {
+            // Scrolling down - hide
+            bar.classList.add('hidden');
+        } else {
+            // Scrolling up - show
+            bar.classList.remove('hidden');
         }
+        
+        lastScrollY = currentScrollY;
+        ticking = false;
     }
-
-    // Toggle collapse/expand
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            const isCollapsed = banner.classList.contains('collapsed');
-
-            if (isCollapsed) {
-                banner.classList.remove('collapsed');
-                toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                toggleBtn.title = 'Collapse banner';
-                localStorage.setItem('wip-banner-collapsed', 'false');
-            } else {
-                banner.classList.add('collapsed');
-                toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                toggleBtn.title = 'Expand banner';
-                localStorage.setItem('wip-banner-collapsed', 'true');
-            }
-        });
-    }
-
-    // Add smooth transitions
-    banner.style.transition = 'all 0.3s ease';
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateBar);
+            ticking = true;
+        }
+    }, { passive: true });
 });

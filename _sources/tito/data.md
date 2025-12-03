@@ -128,8 +128,9 @@ TinyTorch/
 
 **`backups/`** - Module Backups
 - Automatic backups before operations
-- Timestamped copies of your work
+- Timestamped copies of your implementations
 - Safety net for module development
+- Format: `XX_name_YYYYMMDD_HHMMSS.py`
 
 </div>
 
@@ -316,7 +317,7 @@ cp .tito/backups/03_layers_20251115_180000.py modules/03_layers/layers_dev.py
 
 ```bash
 # If .tito/ is deleted, next command recreates it
-tito system doctor
+tito system health
 ```
 
 **What happens**:
@@ -326,7 +327,7 @@ tito system doctor
 4. Your code in `modules/` and `tinytorch/` is safe
 5. You can continue from where you left off
 
-**Important**: Your actual code (in `modules/` and `tinytorch/`) is separate from progress tracking (in `.tito/`). Deleting `.tito/` only resets progress tracking, not your implementations.
+**Important**: Your actual code (source in `src/`, notebooks in `modules/`, package in `tinytorch/`) is separate from progress tracking (in `.tito/`). Deleting `.tito/` only resets progress tracking, not your implementations.
 
 </div>
 
@@ -339,7 +340,7 @@ tito system doctor
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 
 ```bash
-tito system doctor
+tito system health
 ```
 
 **Now includes data health checks**:
@@ -393,7 +394,7 @@ Or restore from backup:
 
 2. **Verify environment before work**:
    ```bash
-   tito system doctor
+   tito system health
    ```
    Catch issues early
 
@@ -452,7 +453,7 @@ Or restore from backup:
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
 
 **TinyTorch does NOT track**:
-- Your actual code implementations (those live in `modules/` and `tinytorch/`)
+- Your actual code implementations (source in `src/`, notebooks in `modules/`, package in `tinytorch/`)
 - How long you spent on each module
 - How many times you edited files
 - Your test scores or grades
@@ -482,7 +483,7 @@ tito reset all
 tito module start 01
 ```
 
-**Result**: Clean slate, progress tracking reset, code in `modules/` untouched
+**Result**: Clean slate, progress tracking reset, your code untouched
 
 </div>
 
@@ -509,7 +510,7 @@ tito milestone run 04
 
 ```bash
 # Just run any tito command
-tito system doctor
+tito system health
 
 # OR
 
@@ -543,7 +544,7 @@ cp -r .tito_backup_YYYYMMDD/ ~/Desktop/my-tinytorch-progress/
 
 ### Q: Will resetting delete my code?
 
-**A**: No! Reset commands only affect progress tracking in `.tito/`. Your implementations in `modules/` and exported code in `tinytorch/` are never touched.
+**A**: No! Reset commands only affect progress tracking in `.tito/`. Your source code in `src/`, notebooks in `modules/`, and exported code in `tinytorch/` are never touched.
 
 ### Q: Can I manually edit progress.json?
 
