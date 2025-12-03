@@ -131,46 +131,58 @@ def main():
     console.print("\n[green]✅ All YOUR implementations loaded successfully![/green]\n")
     
     # ========================================================================
-    # BUILD THE SAME MLP FROM MILESTONE 03
+    # IMPORT NETWORKS FROM PREVIOUS MILESTONES
     # ========================================================================
     
     console.print(Panel(
-        "[bold cyan]🧠 Building YOUR MLP (just like Milestone 03)[/bold cyan]\n"
-        "Same architecture, now we'll optimize it!",
+        "[bold cyan]🧠 Loading Networks from Previous Milestones[/bold cyan]\n"
+        "Using the same architectures you built earlier!",
         border_style="cyan"
     ))
     
-    # Create the same simple MLP from earlier milestones
-    class SimpleMLP:
-        """The same MLP you built in Milestone 03 - now the optimization target."""
+    # Import networks from the shared milestone networks module
+    try:
+        # Add milestones to path
+        sys.path.insert(0, str(Path(__file__).parent.parent))
+        from networks import DigitMLP, SimpleCNN, MinimalTransformer, Perceptron
         
-        def __init__(self, input_size=64, hidden_size=32, num_classes=10):
-            self.fc1 = Linear(input_size, hidden_size)
-            self.relu = ReLU()
-            self.fc2 = Linear(hidden_size, num_classes)
-            self.layers = [self.fc1, self.fc2]  # For parameter iteration
-            self.name = "SimpleMLP"
+        console.print("  [green]✓[/green] Perceptron (Milestone 01)")
+        console.print("  [green]✓[/green] DigitMLP (Milestone 03)")
+        console.print("  [green]✓[/green] SimpleCNN (Milestone 04)")
+        console.print("  [green]✓[/green] MinimalTransformer (Milestone 05)")
+    except ImportError as e:
+        console.print(f"[yellow]⚠️ Could not import milestone networks: {e}[/yellow]")
+        console.print("[dim]Falling back to inline MLP definition[/dim]")
+        
+        # Fallback: define inline
+        class DigitMLP:
+            def __init__(self, input_size=64, hidden_size=32, num_classes=10):
+                self.fc1 = Linear(input_size, hidden_size)
+                self.relu = ReLU()
+                self.fc2 = Linear(hidden_size, num_classes)
+                self.layers = [self.fc1, self.fc2]
+                self.name = "DigitMLP"
+                
+            def forward(self, x):
+                if len(x.shape) > 2:
+                    x = x.reshape(x.shape[0], -1)
+                x = self.fc1(x)
+                x = self.relu(x)
+                x = self.fc2(x)
+                return x
             
-        def forward(self, x):
-            # Flatten input if needed (8x8 images → 64 features)
-            if len(x.shape) > 2:
-                x = x.reshape(x.shape[0], -1)
-            x = self.fc1(x)
-            x = self.relu(x)
-            x = self.fc2(x)
-            return x
-        
-        def __call__(self, x):
-            return self.forward(x)
-        
-        def parameters(self):
-            params = []
-            for layer in self.layers:
-                params.extend(layer.parameters())
-            return params
+            def __call__(self, x):
+                return self.forward(x)
+            
+            def parameters(self):
+                params = []
+                for layer in self.layers:
+                    params.extend(layer.parameters())
+                return params
     
-    model = SimpleMLP()
-    console.print("  [green]✓[/green] SimpleMLP created (64 → 32 → 10)")
+    # Use the MLP from Milestone 03
+    model = DigitMLP()
+    console.print(f"\n  [bold green]Using: {model.name}[/bold green] (same as Milestone 03)")
     
     # Load TinyDigits for testing
     console.print("\n[bold cyan]📊 Loading TinyDigits dataset...[/bold cyan]")
@@ -319,7 +331,7 @@ def main():
     ))
     
     # Create a copy for pruning
-    model_copy = SimpleMLP()
+    model_copy = DigitMLP()
     for i, layer in enumerate(model.layers):
         for j, param in enumerate(layer.parameters()):
             model_copy.layers[i].parameters()[j].data = param.data.copy()
