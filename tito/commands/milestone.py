@@ -91,8 +91,19 @@ MILESTONE_SCRIPTS = {
         "name": "MLPerf Benchmarks (2018)",
         "year": 2018,
         "title": "The Optimization Olympics",
-        "script": "milestones/06_2018_mlperf/01_optimization_olympics.py",
-        "required_modules": list(range(1, 17)),  # Needs up to Module 16 (Compression)
+        "scripts": [
+            {
+                "name": "Model Compression",
+                "script": "milestones/06_2018_mlperf/01_optimization_olympics.py",
+                "description": "Profiling + Quantization + Pruning on MLP"
+            },
+            {
+                "name": "Generation Speedup",
+                "script": "milestones/06_2018_mlperf/02_generation_speedup.py",
+                "description": "KV Caching for 10× faster Transformer"
+            }
+        ],
+        "required_modules": list(range(1, 18)),  # Needs up to Module 17 (Memoization)
         "description": "Compress and accelerate your neural network",
         "historical_context": "MLPerf standardized ML benchmarks",
         "emoji": "🏆"
@@ -924,17 +935,24 @@ class MilestoneCommand(BaseCommand):
 
         milestone = MILESTONE_SCRIPTS[milestone_id]
 
-        # Check if script exists
-        script_path = Path(milestone["script"])
-        if not script_path.exists():
-            console.print(Panel(
-                f"[red]Milestone script not found![/red]\n\n"
-                f"Expected: {milestone['script']}\n"
-                f"[dim]This milestone may not be implemented yet.[/dim]",
-                title="Script Not Found",
-                border_style="red"
-            ))
-            return 1
+        # Handle both single script and multiple scripts
+        if "scripts" in milestone:
+            scripts_to_run = [(s["name"], s["script"], s.get("description", "")) for s in milestone["scripts"]]
+        else:
+            scripts_to_run = [("Main", milestone["script"], milestone.get("description", ""))]
+        
+        # Check if all scripts exist
+        for script_name, script_file, _ in scripts_to_run:
+            script_path = Path(script_file)
+            if not script_path.exists():
+                console.print(Panel(
+                    f"[red]Milestone script not found![/red]\n\n"
+                    f"Expected: {script_file}\n"
+                    f"[dim]This milestone may not be implemented yet.[/dim]",
+                    title="Script Not Found",
+                    border_style="red"
+                ))
+                return 1
 
         # Check prerequisites and validate exports/tests (unless skipped)
         if not args.skip_checks:
@@ -1007,6 +1025,14 @@ class MilestoneCommand(BaseCommand):
                 return 1
 
         # Show milestone banner
+        scripts_info = ""
+        if len(scripts_to_run) > 1:
+            scripts_info = "[bold]📂 Parts:[/bold]\n" + "\n".join(
+                f"  • {name}: {desc}" for name, _, desc in scripts_to_run
+            )
+        else:
+            scripts_info = f"[bold]📂 Running:[/bold] {scripts_to_run[0][1]}"
+        
         console.print(Panel(
             f"[bold magenta]╔════════════════════════════════════════════════╗[/bold magenta]\n"
             f"[bold magenta]║[/bold magenta]  {milestone['emoji']} Milestone {milestone_id}: {milestone['name']:<30} [bold magenta]║[/bold magenta]\n"
@@ -1016,7 +1042,7 @@ class MilestoneCommand(BaseCommand):
             f"{milestone['historical_context']}\n\n"
             f"[bold]🎯 What You'll Do:[/bold]\n"
             f"{milestone['description']}\n\n"
-            f"[bold]📂 Running:[/bold] {milestone['script']}\n\n"
+            f"{scripts_info}\n\n"
             f"[dim]All code uses YOUR TinyTorch implementations![/dim]",
             title=f"🏆 Milestone {milestone_id} ({milestone['year']})",
             border_style="bright_magenta",
@@ -1029,85 +1055,105 @@ class MilestoneCommand(BaseCommand):
             # Non-interactive mode, proceed automatically
             pass
 
-        # Run the milestone script
-        console.print(f"\n[bold green]🚀 Starting Milestone {milestone_id}...[/bold green]\n")
-        console.print("━" * 80 + "\n")
-
-        try:
-            result = subprocess.run(
-                [sys.executable, str(script_path)],
-                capture_output=False,
-                text=True
-            )
-
-            console.print("\n" + "━" * 80)
-
-            if result.returncode == 0:
-                # Success! Mark milestone as complete
-                self._mark_milestone_complete(milestone_id)
-
-                console.print(Panel(
-                    f"[bold green]🏆 MILESTONE ACHIEVED![/bold green]\n\n"
-                    f"[green]You completed Milestone {milestone_id}: {milestone['name']}[/green]\n"
-                    f"[yellow]{milestone['title']}[/yellow]\n\n"
-                    f"[bold]What makes this special:[/bold]\n"
-                    f"• Every line of code: YOUR implementations\n"
-                    f"• Every tensor operation: YOUR Tensor class\n"
-                    f"• Every gradient: YOUR autograd\n\n"
-                    f"[cyan]Achievement saved locally![/cyan]",
-                    title="✨ Achievement Unlocked ✨",
-                    border_style="bright_green",
-                    padding=(1, 2)
-                ))
-                
-                # Offer to sync progress (uses centralized SubmissionHandler)
-                self._offer_progress_sync(milestone_id, milestone['name'])
-
-                # Show next steps
-                next_id = str(int(milestone_id) + 1).zfill(2)
-                if next_id in MILESTONE_SCRIPTS:
-                    next_milestone = MILESTONE_SCRIPTS[next_id]
-                    console.print(f"\n[bold yellow]🎯 What's Next:[/bold yellow]")
-                    console.print(f"[dim]Milestone {next_id}: {next_milestone['name']} ({next_milestone['year']})[/dim]")
-
-                    # Get completed modules for checking next milestone
-                    progress_file = Path(".tito") / "progress.json"
-                    completed_modules = []
-                    if progress_file.exists():
-                        try:
-                            with open(progress_file, 'r') as f:
-                                progress_data = json.load(f)
-                                for mod in progress_data.get("completed_modules", []):
-                                    try:
-                                        completed_modules.append(int(mod.split("_")[0]))
-                                    except (ValueError, IndexError):
-                                        pass
-                        except (json.JSONDecodeError, IOError):
-                            pass
-
-                    # Check if unlocked
-                    missing = [m for m in next_milestone["required_modules"] if m not in completed_modules]
-                    if missing:
-                        console.print(f"[dim]Unlock by completing modules: {', '.join(f'{m:02d}' for m in missing[:3])}[/dim]")
-                    else:
-                        console.print(f"[green]Ready to run: tito milestone run {next_id}[/green]")
-
-                return 0
+        # Run all milestone scripts
+        all_passed = True
+        for part_idx, (script_name, script_file, script_desc) in enumerate(scripts_to_run):
+            if len(scripts_to_run) > 1:
+                console.print(f"\n[bold cyan]━━━ Part {part_idx + 1}/{len(scripts_to_run)}: {script_name} ━━━[/bold cyan]")
+                if script_desc:
+                    console.print(f"[dim]{script_desc}[/dim]\n")
             else:
-                console.print(f"[yellow]⚠️ Milestone completed with errors (exit code: {result.returncode})[/yellow]")
-                return result.returncode
+                console.print(f"\n[bold green]🚀 Starting Milestone {milestone_id}...[/bold green]\n")
+            
+            console.print("━" * 80 + "\n")
 
-        except KeyboardInterrupt:
-            console.print(f"\n\n[yellow]⚠️ Milestone interrupted by user[/yellow]")
-            return 130
-        except Exception as e:
+            try:
+                result = subprocess.run(
+                    [sys.executable, script_file],
+                    capture_output=False,
+                    text=True
+                )
+                
+                console.print("\n" + "━" * 80)
+                
+                if result.returncode != 0:
+                    all_passed = False
+                    console.print(f"[yellow]⚠️ Part {script_name} completed with errors[/yellow]")
+                    if len(scripts_to_run) > 1:
+                        # Ask if they want to continue
+                        try:
+                            cont = input("\n[yellow]Continue to next part? (y/n): [/yellow] ")
+                            if cont.lower() != 'y':
+                                return result.returncode
+                        except EOFError:
+                            return result.returncode
+                            
+            except KeyboardInterrupt:
+                console.print(f"\n\n[yellow]⚠️ Milestone interrupted by user[/yellow]")
+                return 130
+            except Exception as e:
+                console.print(f"[red]Error running {script_name}: {e}[/red]")
+                all_passed = False
+
+        if all_passed:
+            # Success! Mark milestone as complete
+            self._mark_milestone_complete(milestone_id)
+            
+            parts_text = ""
+            if len(scripts_to_run) > 1:
+                parts_text = f"\n\n[bold]All {len(scripts_to_run)} parts completed:[/bold]\n" + "\n".join(
+                    f"  ✅ {name}" for name, _, _ in scripts_to_run
+                )
+
             console.print(Panel(
-                f"[red]❌ Error running milestone: {e}[/red]\n\n"
-                f"[dim]You can try running manually:[/dim]\n"
-                f"[dim]python {milestone['script']}[/dim]",
-                title="Execution Error",
-                border_style="red"
+                f"[bold green]🏆 MILESTONE ACHIEVED![/bold green]\n\n"
+                f"[green]You completed Milestone {milestone_id}: {milestone['name']}[/green]\n"
+                f"[yellow]{milestone['title']}[/yellow]{parts_text}\n\n"
+                f"[bold]What makes this special:[/bold]\n"
+                f"• Every line of code: YOUR implementations\n"
+                f"• Every tensor operation: YOUR Tensor class\n"
+                f"• Every gradient: YOUR autograd\n\n"
+                f"[cyan]Achievement saved locally![/cyan]",
+                title="✨ Achievement Unlocked ✨",
+                border_style="bright_green",
+                padding=(1, 2)
             ))
+            
+            # Offer to sync progress (uses centralized SubmissionHandler)
+            self._offer_progress_sync(milestone_id, milestone['name'])
+
+            # Show next steps
+            next_id = str(int(milestone_id) + 1).zfill(2)
+            if next_id in MILESTONE_SCRIPTS:
+                next_milestone = MILESTONE_SCRIPTS[next_id]
+                console.print(f"\n[bold yellow]🎯 What's Next:[/bold yellow]")
+                console.print(f"[dim]Milestone {next_id}: {next_milestone['name']} ({next_milestone['year']})[/dim]")
+
+                # Get completed modules for checking next milestone
+                progress_file = Path(".tito") / "progress.json"
+                completed_modules = []
+                if progress_file.exists():
+                    try:
+                        with open(progress_file, 'r') as f:
+                            progress_data = json.load(f)
+                            for mod in progress_data.get("completed_modules", []):
+                                try:
+                                    completed_modules.append(int(mod.split("_")[0]))
+                                except (ValueError, IndexError):
+                                    pass
+                    except (json.JSONDecodeError, IOError):
+                        pass
+
+                # Check if unlocked
+                missing = [m for m in next_milestone["required_modules"] if m not in completed_modules]
+                if missing:
+                    console.print(f"[dim]Unlock by completing modules: {', '.join(f'{m:02d}' for m in missing[:3])}[/dim]")
+                else:
+                    console.print(f"[green]Ready to run: tito milestone run {next_id}[/green]")
+
+            return 0
+        else:
+            console.print(f"[yellow]⚠️ Milestone completed with errors[/yellow]")
             return 1
 
     def _handle_info_command(self, args: Namespace) -> int:
@@ -1156,7 +1202,13 @@ class MilestoneCommand(BaseCommand):
             else:
                 info_text += f"  [red]✗[/red] Module {mod:02d}\n"
 
-        info_text += f"\n[yellow]📂 Script:[/yellow] {milestone['script']}\n"
+        # Show scripts
+        if "scripts" in milestone:
+            info_text += f"\n[yellow]📂 Scripts ({len(milestone['scripts'])} parts):[/yellow]\n"
+            for s in milestone["scripts"]:
+                info_text += f"  • {s['name']}: {s['script']}\n"
+        else:
+            info_text += f"\n[yellow]📂 Script:[/yellow] {milestone['script']}\n"
 
         if prereqs_met:
             info_text += f"\n[bold green]✅ Ready to run![/bold green]\n[cyan]tito milestone run {milestone_id}[/cyan]"
