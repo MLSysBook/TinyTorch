@@ -44,20 +44,25 @@ These tests validate that each module works correctly in isolation.
 
 ## Running Tests
 
-### All tests
+### Standard Mode
 ```bash
-pytest tests/ -v
+pytest tests/ -v                    # All tests
+pytest tests/integration/ -v        # Integration tests only
+pytest tests/01_tensor/ -v          # Specific module
 ```
 
-### Integration tests only (recommended for debugging training issues)
+### 🎓 Educational Mode (Recommended for Students)
 ```bash
-pytest tests/integration/ -v
+pytest tests/ --tinytorch           # Rich output with WHAT/WHY context
+pytest tests/01_tensor/ --tinytorch # Single module with education
 ```
 
-### Specific test
-```bash
-pytest tests/integration/test_gradient_flow.py -v
-```
+**Educational mode shows:**
+- Module groupings before running
+- What each test does (WHAT)
+- Why it matters (WHY) 
+- Learning tips on failure (STUDENT LEARNING)
+- Clear pass/fail indicators with Rich formatting
 
 ### Run without pytest
 ```bash
@@ -70,6 +75,25 @@ python tests/integration/test_gradient_flow.py
 2. **Descriptive names**: Test names should explain what they test
 3. **Good error messages**: When tests fail, students should understand why
 4. **Pedagogical value**: Tests teach correct usage patterns
+
+## Educational Test Docstrings
+
+All `*_core.py` test files use a structured docstring format:
+
+```python
+def test_tensor_addition(self):
+    """
+    WHAT: Element-wise tensor addition.
+    
+    WHY: Addition is used everywhere in neural networks:
+    - Adding bias to layer output: y = Wx + b
+    - Residual connections: output = layer(x) + x
+    
+    STUDENT LEARNING: Operations return new Tensors (functional style).
+    """
+```
+
+This format enables the `--tinytorch` flag to show educational context when tests run.
 
 ## Adding New Tests
 
