@@ -74,6 +74,26 @@ Each milestone has a README explaining:
 
 See [Milestones Guide](chapters/milestones.md) for the full progression.
 
+## Testing Your Implementation
+
+TinyTorch includes comprehensive tests to validate your work:
+
+```bash
+# Run tests for a specific module
+tito module test 03
+
+# Run with educational output (recommended)
+pytest tests/03_layers/ --tinytorch
+```
+
+**Educational Test Mode** (`--tinytorch`):
+- Shows **WHAT** each test checks
+- Explains **WHY** it matters
+- Provides **learning tips** when tests fail
+- Groups tests by module for clarity
+
+Each test file has descriptive docstrings that teach while testing.
+
 ## Module Progression
 
 TinyTorch has 20 modules organized in three tiers:
