@@ -52,8 +52,9 @@ class TestCommandExecution:
         )
 
         assert result.returncode == 0
-        assert "usage: tito" in result.stdout
-        assert "positional arguments:" in result.stdout or "COMMAND" in result.stdout
+        # Custom help displays logo and commands
+        assert "TinyTorch" in result.stdout or "TORCH" in result.stdout
+        assert "Quick Start" in result.stdout or "module" in result.stdout
 
     def test_tito_version(self):
         """Test 'tito --version' shows version."""
