@@ -1,5 +1,16 @@
-<!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework"
-     for clearer value proposition and action-oriented messaging -->
+<!-- Top affiliation bar -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0;">
+  <span style="font-size: 1.25rem; font-weight: 700;">
+    <span style="color: #f97316;">🔥</span> TinyTorch
+  </span>
+  <span style="font-size: 0.9rem; color: #64748b;">
+    Part of <a href="https://mlsysbook.ai" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 500;">MLSysBook</a>
+    <span style="margin: 0 0.5rem;">•</span>
+    <a href="https://github.com/harvard-edge/TinyTorch" target="_blank" style="color: #64748b; text-decoration: none;">GitHub ⭐</a>
+  </span>
+</div>
+
+<!-- Main heading -->
 <h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework
 </h1>
@@ -247,4 +258,34 @@ Perfect if you want to **debug ML systems**, **implement custom operations**, or
 
 ---
 
+## 🌍 Join the Community
+
+<div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #f1f5f9; font-size: 1.25rem; margin: 0 0 0.5rem 0; font-weight: 600;">
+    See learners building ML systems worldwide
+  </p>
+  <p style="color: #94a3b8; margin: 0 0 1.5rem 0;">
+    Add yourself to the map • Share your progress • Connect with builders
+  </p>
+  <a href="https://tinytorch.ai/join" target="_blank" 
+     style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); 
+            color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; 
+            text-decoration: none; font-weight: 600; font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+    Join the Map →
+  </a>
+</div>
+
+---
+
 **Next Steps**: **[Quick Start Guide](quickstart-guide)** (15 min) • **[Course Structure](chapters/00-introduction)** • **[FAQ](faq.md)**
+
+<div style="text-align: center; padding: 1.5rem 0; margin-top: 2rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">
+  <span style="color: #f97316;">🔥</span> <strong>TinyTorch</strong> 
+  <span style="margin: 0 0.75rem;">•</span> 
+  <a href="https://mlsysbook.ai" style="color: #64748b; text-decoration: none;">MLSysBook</a>
+  <span style="margin: 0 0.75rem;">•</span>
+  <a href="https://github.com/harvard-edge/TinyTorch" style="color: #64748b; text-decoration: none;">GitHub</a>
+  <span style="margin: 0 0.75rem;">•</span>
+  <a href="https://tinytorch.ai/leaderboard" style="color: #64748b; text-decoration: none;">Leaderboard</a>
+</div>
