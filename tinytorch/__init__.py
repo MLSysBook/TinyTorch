@@ -44,7 +44,7 @@ from .text.embeddings import Embedding, PositionalEncoding, EmbeddingLayer
 # Attention & Transformers (Modules 12-13)
 # ============================================================================
 from .core.attention import MultiHeadAttention, scaled_dot_product_attention
-from .models.transformer import LayerNorm, MLP, TransformerBlock, GPT
+from .core.transformer import LayerNorm, MLP, TransformerBlock, GPT, create_causal_mask
 
 # ============================================================================
 # Enable Autograd (CRITICAL - must happen after imports)
@@ -94,6 +94,6 @@ __all__ = [
     # Core - Attention
     'MultiHeadAttention', 'scaled_dot_product_attention',
     
-    # Models
-    'LayerNorm', 'MLP', 'TransformerBlock', 'GPT',
+    # Models - Transformers
+    'LayerNorm', 'MLP', 'TransformerBlock', 'GPT', 'create_causal_mask',
 ]

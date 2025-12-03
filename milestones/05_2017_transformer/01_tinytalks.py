@@ -61,10 +61,10 @@ def main():
     
     try:
         from tinytorch import Tensor, Linear, ReLU, CrossEntropyLoss
+        from tinytorch import LayerNorm, create_causal_mask
         from tinytorch.core.optimizers import Adam
         from tinytorch.text.embeddings import Embedding, PositionalEncoding
         from tinytorch.core.attention import MultiHeadAttention
-        from tinytorch.models.transformer import LayerNorm
         
         console.print("  [green]✓[/green] All YOUR implementations loaded!")
         
@@ -134,13 +134,7 @@ def main():
     param_count = sum(p.data.size for p in all_params)
     console.print(f"  [green]✓[/green] Model: {param_count:,} parameters\n")
     
-    def create_causal_mask(seq_len):
-        """
-        Create causal mask: 1 = can attend, 0 = cannot attend
-        Lower triangular matrix allows attending to past + current only.
-        """
-        mask = np.tril(np.ones((seq_len, seq_len), dtype=np.float32))
-        return Tensor(mask[np.newaxis, :, :])  # Add batch dim
+    # Using create_causal_mask from tinytorch.models.transformer (Module 13)
     
     def forward(tokens):
         """Forward pass with causal masking for autoregressive generation."""

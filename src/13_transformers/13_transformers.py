@@ -60,6 +60,39 @@ from tinytorch.core.embeddings import Embedding, PositionalEncoding
 BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
+
+def create_causal_mask(seq_len: int) -> Tensor:
+    """
+    Create a causal (autoregressive) attention mask.
+    
+    This mask ensures that position i can only attend to positions j where j ≤ i.
+    Essential for autoregressive language models like GPT.
+    
+    Args:
+        seq_len: Length of the sequence
+        
+    Returns:
+        Tensor of shape (1, seq_len, seq_len) with:
+        - 1.0 for positions that CAN be attended to (lower triangle)
+        - 0.0 for positions that CANNOT be attended to (upper triangle)
+        
+    Example:
+        For seq_len=4, creates:
+        [[1, 0, 0, 0],
+         [1, 1, 0, 0],
+         [1, 1, 1, 0],
+         [1, 1, 1, 1]]
+         
+    Usage:
+        >>> from tinytorch.models.transformer import create_causal_mask
+        >>> mask = create_causal_mask(seq_len=10)
+        >>> output = attention(x, mask=mask)
+    """
+    # Lower triangular matrix: 1 = can attend, 0 = cannot attend
+    mask = np.tril(np.ones((seq_len, seq_len), dtype=np.float32))
+    return Tensor(mask[np.newaxis, :, :])  # Add batch dimension
+
+
 # %% [markdown]
 """
 ## 📦 Where This Code Lives in the Final Package
