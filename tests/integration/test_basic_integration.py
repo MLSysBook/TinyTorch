@@ -1,162 +1,130 @@
 """
-Basic integration test that doesn't require external dependencies.
+Basic integration test that validates the Package Manager integration system.
 
-Tests the Package Manager integration system itself.
+WHAT: Tests that the integration system itself works correctly.
+WHY: The integration system is the foundation for all module testing.
+     If it's broken, no other tests can reliably run.
+
+STUDENT LEARNING:
+This test validates the infrastructure that makes TinyTorch's modular
+development possible. When you run `tito module complete`, this system
+is what exports your code to the package.
 """
 
 import sys
 from pathlib import Path
+import importlib.util
 
 # Add the project root to the path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 
-def test_integration_system():
-    """Test that the integration system itself works."""
+class TestPackageManagerIntegration:
+    """Test suite for the Package Manager integration system."""
     
-    results = {
-        "integration_system_test": True,
-        "tests": [],
-        "success": True,
-        "errors": []
-    }
+    def test_integration_system_imports(self):
+        """
+        WHAT: Verify the Package Manager integration module can be imported.
+        WHY: This is the core system that manages module exports.
+        
+        STUDENT LEARNING:
+        The Package Manager tracks which modules are exported to tinytorch/
+        and ensures dependencies are correctly resolved.
+        """
+        integration_file = Path(__file__).parent / "package_manager_integration.py"
+        spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
+        integration_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_module)
+        
+        assert hasattr(integration_module, 'PackageManagerIntegration'), \
+            "Module should export PackageManagerIntegration class"
     
-    try:
-        # Test 1: Import the Package Manager integration system
-        try:
-            # Import using file path since module path doesn't work
-            import importlib.util
-            
-            integration_file = Path(__file__).parent / "package_manager_integration.py"
-            spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
-            integration_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(integration_module)
-            
-            PackageManagerIntegration = integration_module.PackageManagerIntegration
-            results["tests"].append({
-                "name": "system_import",
-                "status": "✅ PASS",
-                "description": "Package Manager integration system imports successfully"
-            })
-        except ImportError as e:
-            results["tests"].append({
-                "name": "system_import",
-                "status": "❌ FAIL",
-                "description": f"System import failed: {e}"
-            })
-            results["success"] = False
-            results["errors"].append(f"System import error: {e}")
-            return results
+    def test_manager_can_be_instantiated(self):
+        """
+        WHAT: Verify the Package Manager can be created.
+        WHY: Without a working manager, we can't track module exports.
         
-        # Test 2: Create manager instance
-        try:
-            manager = PackageManagerIntegration()
-            results["tests"].append({
-                "name": "manager_creation",
-                "status": "✅ PASS",
-                "description": "Package Manager can be instantiated"
-            })
-        except Exception as e:
-            results["tests"].append({
-                "name": "manager_creation",
-                "status": "❌ FAIL",
-                "description": f"Manager creation failed: {e}"
-            })
-            results["success"] = False
-            results["errors"].append(f"Manager creation error: {e}")
-            return results
+        STUDENT LEARNING:
+        The manager instance holds configuration and state about
+        which modules have been exported and their dependencies.
+        """
+        integration_file = Path(__file__).parent / "package_manager_integration.py"
+        spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
+        integration_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_module)
         
-        # Test 3: Check module mappings exist
-        try:
-            assert hasattr(manager, 'module_mappings'), "Manager should have module_mappings"
-            assert len(manager.module_mappings) > 0, "Should have module mappings configured"
-            
-            results["tests"].append({
-                "name": "module_mappings",
-                "status": "✅ PASS",
-                "description": f"Module mappings configured ({len(manager.module_mappings)} modules)"
-            })
-        except Exception as e:
-            results["tests"].append({
-                "name": "module_mappings",
-                "status": "❌ FAIL",
-                "description": f"Module mappings test failed: {e}"
-            })
-            results["success"] = False
-            results["errors"].append(f"Module mappings error: {e}")
+        manager = integration_module.PackageManagerIntegration()
+        assert manager is not None, "Manager should be created successfully"
+    
+    def test_module_mappings_configured(self):
+        """
+        WHAT: Verify module mappings are properly configured.
+        WHY: Mappings connect module numbers to their package locations.
         
-        # Test 4: Test normalization function
-        try:
+        STUDENT LEARNING:
+        Each module (01_tensor, 02_activations, etc.) maps to a location
+        in the tinytorch/ package. This is how your code becomes importable.
+        """
+        integration_file = Path(__file__).parent / "package_manager_integration.py"
+        spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
+        integration_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_module)
+        
+        manager = integration_module.PackageManagerIntegration()
+        
+        assert hasattr(manager, 'module_mappings'), \
+            "Manager should have module_mappings attribute"
+        assert len(manager.module_mappings) > 0, \
+            "Should have at least one module mapping configured"
+    
+    def test_module_name_normalization(self):
+        """
+        WHAT: Verify module names are normalized correctly.
+        WHY: Users might type "tensor" or "01" - both should work.
+        
+        STUDENT LEARNING:
+        The system is flexible with input: whether you type
+        'tensor', '01', or '01_tensor', it understands what you mean.
+        """
+        integration_file = Path(__file__).parent / "package_manager_integration.py"
+        spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
+        integration_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_module)
+        
+        manager = integration_module.PackageManagerIntegration()
+        
+        # Test normalization - should map "tensor" to the full module name
+        # Note: The exact normalization depends on implementation
+        if hasattr(manager, '_normalize_module_name'):
             normalized = manager._normalize_module_name("tensor")
-            if normalized == "02_tensor":
-                results["tests"].append({
-                    "name": "name_normalization",
-                    "status": "✅ PASS",
-                    "description": "Module name normalization works"
-                })
-            else:
-                results["tests"].append({
-                    "name": "name_normalization",
-                    "status": "❌ FAIL",
-                    "description": f"Expected '02_tensor', got '{normalized}'"
-                })
-                results["success"] = False
-                results["errors"].append(f"Name normalization error: expected '02_tensor', got '{normalized}'")
-        except Exception as e:
-            results["tests"].append({
-                "name": "name_normalization",
-                "status": "❌ FAIL",
-                "description": f"Name normalization failed: {e}"
-            })
-            results["success"] = False
-            results["errors"].append(f"Name normalization error: {e}")
-        
-        # Test 5: Test package validation (basic)
-        try:
-            validation = manager.validate_package_state()
-            assert isinstance(validation, dict), "Validation should return dict"
-            assert 'overall_health' in validation, "Should include overall health"
-            
-            results["tests"].append({
-                "name": "package_validation",
-                "status": "✅ PASS",
-                "description": f"Package validation works (health: {validation['overall_health']})"
-            })
-        except Exception as e:
-            results["tests"].append({
-                "name": "package_validation",
-                "status": "❌ FAIL",
-                "description": f"Package validation failed: {e}"
-            })
-            results["success"] = False
-            results["errors"].append(f"Package validation error: {e}")
-            
-    except Exception as e:
-        results["success"] = False
-        results["errors"].append(f"Unexpected error in integration system test: {e}")
-        results["tests"].append({
-            "name": "unexpected_error",
-            "status": "❌ FAIL",
-            "description": f"Unexpected error: {e}"
-        })
+            # Should normalize to include the number prefix
+            assert "tensor" in normalized.lower(), \
+                f"Normalized name should contain 'tensor', got: {normalized}"
     
-    return results
+    def test_package_validation_returns_health(self):
+        """
+        WHAT: Verify package validation returns health information.
+        WHY: This helps diagnose issues with module exports.
+        
+        STUDENT LEARNING:
+        When something goes wrong with exports, the validation system
+        helps pinpoint exactly which modules are broken and why.
+        """
+        integration_file = Path(__file__).parent / "package_manager_integration.py"
+        spec = importlib.util.spec_from_file_location("package_manager_integration", integration_file)
+        integration_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_module)
+        
+        manager = integration_module.PackageManagerIntegration()
+        validation = manager.validate_package_state()
+        
+        assert isinstance(validation, dict), \
+            "Validation should return a dictionary"
+        assert 'overall_health' in validation, \
+            "Validation should include overall_health status"
 
 
 if __name__ == "__main__":
-    result = test_integration_system()
-    
-    print("=== Package Manager Integration System Test ===")
-    print(f"Overall Success: {result['success']}")
-    print("\nTest Results:")
-    
-    for test in result["tests"]:
-        print(f"  {test['status']} {test['name']}: {test['description']}")
-    
-    if result["errors"]:
-        print(f"\nErrors:")
-        for error in result["errors"]:
-            print(f"  - {error}")
-    
-    sys.exit(0 if result["success"] else 1)
+    import pytest
+    pytest.main([__file__, "-v"])

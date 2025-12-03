@@ -76,23 +76,58 @@ See [Milestones Guide](chapters/milestones.md) for the full progression.
 
 ## Testing Your Implementation
 
-TinyTorch includes comprehensive tests to validate your work:
+TinyTorch uses a **three-phase testing approach** to ensure your code works correctly at every level:
 
 ```bash
-# Run tests for a specific module
+# Run comprehensive tests for a module
 tito module test 03
-
-# Run with educational output (recommended)
-pytest tests/03_layers/ --tinytorch
 ```
 
-**Educational Test Mode** (`--tinytorch`):
+### Three-Phase Testing
+
+When you run `tito module test`, it executes three phases:
+
+**Phase 1: Inline Unit Tests** (Yellow)
+- Quick sanity checks from the module source file
+- Tests the core functionality you just implemented
+- Fast feedback loop
+
+**Phase 2: Module Tests** (Blue)
+- Runs pytest with educational output (`--tinytorch`)
 - Shows **WHAT** each test checks
-- Explains **WHY** it matters
+- Explains **WHY** it matters  
 - Provides **learning tips** when tests fail
 - Groups tests by module for clarity
 
-Each test file has descriptive docstrings that teach while testing.
+**Phase 3: Integration Tests** (Magenta)
+- Verifies your module works with all previous modules
+- Tests gradient flow, layer composition, training loops
+- Catches "it works in isolation but fails in the system" bugs
+
+### Testing Options
+
+```bash
+# Full three-phase testing (recommended)
+tito module test 03
+
+# Only inline unit tests (quick check)
+tito module test 03 --unit-only
+
+# Skip integration tests (faster feedback)
+tito module test 03 --no-integration
+
+# Verbose output with details
+tito module test 03 -v
+```
+
+### Why Integration Tests Matter
+
+A common mistake is implementing a module that passes its own tests but breaks when combined with others. For example:
+- Your Layer might compute forward passes correctly but have wrong gradient shapes
+- Your Optimizer might update weights but break the computation graph
+- Your Attention might work for one head but fail with multiple heads
+
+Integration tests catch these issues early, before you spend hours debugging in milestones.
 
 ## Module Progression
 

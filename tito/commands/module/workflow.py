@@ -94,10 +94,10 @@ class ModuleWorkflowCommand(BaseCommand):
             help='Complete all modules (test + export all)'
         )
 
-        # TEST command - run module tests
+        # TEST command - run module tests (three-phase testing)
         test_parser = subparsers.add_parser(
             'test',
-            help='Run module tests to verify implementation'
+            help='Run module tests: inline → pytest → integration'
         )
         test_parser.add_argument(
             'module_number',
@@ -118,6 +118,16 @@ class ModuleWorkflowCommand(BaseCommand):
             '--stop-on-fail',
             action='store_true',
             help='Stop testing if a module fails (only with --all)'
+        )
+        test_parser.add_argument(
+            '--unit-only',
+            action='store_true',
+            help='Run only inline unit tests (skip pytest and integration)'
+        )
+        test_parser.add_argument(
+            '--no-integration',
+            action='store_true',
+            help='Skip integration tests'
         )
 
         # RESET command - reset module to clean state

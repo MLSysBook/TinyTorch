@@ -2,30 +2,42 @@
 Module Test Command for TinyTorch CLI.
 
 Provides comprehensive module testing functionality:
-- Run individual module tests
-- Run all module tests in sequence
-- Display detailed test results
+- Run individual module tests with educational output
+- Three-phase testing: Inline → Module → Integration
+- Display detailed test results with WHAT/WHY context
 - Track test failures and successes
 
-This enables students to verify their implementations are correct.
+This enables students to verify their implementations and understand
+what each test is checking and why it matters.
+
+TESTING PHILOSOPHY:
+==================
+When a student runs `tito module test 05`, we want them to understand:
+1. Does my implementation work? (Inline tests)
+2. Does it handle edge cases? (Module tests with --tinytorch)
+3. Does it integrate correctly with previous modules? (Integration tests)
+
+Each phase builds confidence and understanding.
 """
 
 import subprocess
 import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+from rich.console import Console, Group
+from rich.rule import Rule
 
 from ..base import BaseCommand
 
 
 class ModuleTestCommand(BaseCommand):
-    """Command to test module implementations."""
+    """Command to test module implementations with educational output."""
 
     @property
     def name(self) -> str:
@@ -62,6 +74,16 @@ class ModuleTestCommand(BaseCommand):
             action="store_true",
             help="Show only summary without running tests",
         )
+        parser.add_argument(
+            "--unit-only",
+            action="store_true",
+            help="Run only inline unit tests (skip pytest and integration)",
+        )
+        parser.add_argument(
+            "--no-integration",
+            action="store_true",
+            help="Skip integration tests",
+        )
 
     def get_module_mapping(self) -> Dict[str, str]:
         """Get mapping from numbers to module names."""
@@ -94,14 +116,14 @@ class ModuleTestCommand(BaseCommand):
             return f"{int(module_input):02d}"
         return module_input
 
-    def test_module(
+    def run_inline_tests(
         self, module_name: str, module_number: str, verbose: bool = False
     ) -> Tuple[bool, str]:
         """
-        Test a single module.
+        Phase 1: Run inline unit tests from the module source file.
 
-        Returns:
-            (success, output) tuple
+        These are the quick sanity checks embedded in the module itself,
+        triggered by the if __name__ == "__main__" block.
         """
         console = self.console
         src_dir = self.config.project_root / "src"
@@ -110,16 +132,13 @@ class ModuleTestCommand(BaseCommand):
         if not module_file.exists():
             return False, f"Module file not found: {module_file}"
 
-        console.print(f"[cyan]Testing Module {module_number}: {module_name}[/cyan]")
-
         try:
-            # Run the module as a script (this triggers the if __name__ == "__main__" block)
             result = subprocess.run(
                 [sys.executable, str(module_file)],
                 capture_output=True,
                 text=True,
                 cwd=self.config.project_root,
-                timeout=300,  # 5 minute timeout per module
+                timeout=300,
             )
 
             if verbose:
@@ -129,22 +148,236 @@ class ModuleTestCommand(BaseCommand):
                     console.print("[yellow]" + result.stderr + "[/yellow]")
 
             if result.returncode == 0:
-                console.print(f"[green]✓ Module {module_number} tests PASSED[/green]")
                 return True, result.stdout
             else:
-                console.print(f"[red]✗ Module {module_number} tests FAILED (exit code: {result.returncode})[/red]")
-                if not verbose and result.stderr:
-                    console.print(f"[red]{result.stderr}[/red]")
                 return False, result.stderr
 
         except subprocess.TimeoutExpired:
-            error_msg = f"Test timeout (>5 minutes)"
-            console.print(f"[red]✗ Module {module_number} TIMEOUT[/red]")
-            return False, error_msg
+            return False, "Test timeout (>5 minutes)"
         except Exception as e:
-            error_msg = f"Test execution failed: {str(e)}"
-            console.print(f"[red]✗ Module {module_number} ERROR: {e}[/red]")
-            return False, error_msg
+            return False, f"Test execution failed: {str(e)}"
+
+    def run_module_pytest(
+        self, module_name: str, module_number: str, verbose: bool = False
+    ) -> Tuple[bool, str]:
+        """
+        Phase 2: Run pytest on module-specific tests with educational output.
+        
+        These tests use the --tinytorch flag to provide WHAT/WHY context
+        for each test, helping students understand what's being checked.
+        """
+        console = self.console
+        tests_dir = self.config.project_root / "tests" / module_name
+
+        if not tests_dir.exists():
+            # No module-specific tests - that's OK
+            return True, "No module-specific tests found"
+
+        try:
+            # Run pytest with --tinytorch for educational output
+            cmd = [
+                sys.executable, "-m", "pytest",
+                str(tests_dir),
+                "--tinytorch",
+                "-v" if verbose else "-q",
+                "--tb=short",
+            ]
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=self.config.project_root,
+                timeout=300,
+            )
+
+            # Always show pytest output for educational value
+            if result.stdout:
+                console.print(result.stdout)
+            if result.stderr and verbose:
+                console.print("[yellow]" + result.stderr + "[/yellow]")
+
+            if result.returncode == 0:
+                return True, result.stdout
+            else:
+                return False, result.stderr or result.stdout
+
+        except subprocess.TimeoutExpired:
+            return False, "Pytest timeout (>5 minutes)"
+        except Exception as e:
+            return False, f"Pytest execution failed: {str(e)}"
+
+    def run_integration_tests(
+        self, module_number: str, verbose: bool = False
+    ) -> Tuple[bool, str]:
+        """
+        Phase 3: Run integration tests for modules 01 through N.
+        
+        This verifies that the student's implementation works correctly
+        with all the previous modules they've built.
+        """
+        console = self.console
+        integration_dir = self.config.project_root / "tests" / "integration"
+        
+        if not integration_dir.exists():
+            return True, "No integration tests directory"
+
+        # Find integration tests relevant to this module and earlier
+        module_num = int(module_number)
+        
+        # Key integration test files that should run progressively
+        relevant_tests = []
+        
+        # Map module numbers to relevant integration tests
+        integration_test_map = {
+            1: ["test_basic_integration.py"],
+            2: ["test_basic_integration.py"],
+            3: ["test_layers_integration.py"],
+            4: ["test_loss_gradients.py"],
+            5: ["test_gradient_flow.py"],
+            6: ["test_training_flow.py"],
+            7: ["test_training_flow.py"],
+            8: ["test_dataloader_integration.py"],
+            9: ["test_cnn_integration.py"],
+            10: [],  # Tokenization is self-contained
+            11: [],  # Embeddings tested in NLP pipeline
+            12: ["test_nlp_pipeline_flow.py"],
+            13: ["test_nlp_pipeline_flow.py"],
+        }
+        
+        # Collect all relevant tests up to and including this module
+        for i in range(1, module_num + 1):
+            if i in integration_test_map:
+                for test_file in integration_test_map[i]:
+                    test_path = integration_dir / test_file
+                    if test_path.exists() and str(test_path) not in relevant_tests:
+                        relevant_tests.append(str(test_path))
+
+        if not relevant_tests:
+            return True, "No relevant integration tests for this module"
+
+        try:
+            cmd = [
+                sys.executable, "-m", "pytest",
+                *relevant_tests,
+                "--tinytorch",
+                "-v" if verbose else "-q",
+                "--tb=short",
+            ]
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=self.config.project_root,
+                timeout=600,  # 10 minute timeout for integration tests
+            )
+
+            if result.stdout:
+                console.print(result.stdout)
+            if result.stderr and verbose:
+                console.print("[yellow]" + result.stderr + "[/yellow]")
+
+            if result.returncode == 0:
+                return True, result.stdout
+            else:
+                return False, result.stderr or result.stdout
+
+        except subprocess.TimeoutExpired:
+            return False, "Integration tests timeout (>10 minutes)"
+        except Exception as e:
+            return False, f"Integration tests failed: {str(e)}"
+
+    def test_module(
+        self, module_name: str, module_number: str, verbose: bool = False,
+        unit_only: bool = False, no_integration: bool = False
+    ) -> Tuple[bool, str]:
+        """
+        Run comprehensive tests for a single module in three phases:
+        
+        Phase 1 - Inline Tests: Quick sanity checks from the module itself
+        Phase 2 - Module Tests: Detailed pytest with educational output  
+        Phase 3 - Integration Tests: Verify compatibility with earlier modules
+        
+        Returns:
+            (success, output) tuple
+        """
+        console = self.console
+        all_passed = True
+        all_output = []
+        
+        # Header
+        console.print()
+        console.print(Panel(
+            f"[bold cyan]Testing Module {module_number}: {module_name}[/bold cyan]\n\n"
+            "[dim]Three-phase testing ensures your implementation is correct,[/dim]\n"
+            "[dim]handles edge cases, and integrates with previous modules.[/dim]",
+            border_style="cyan",
+        ))
+        console.print()
+
+        # ─────────────────────────────────────────────────────────────
+        # Phase 1: Inline Unit Tests
+        # ─────────────────────────────────────────────────────────────
+        console.print(Rule("[bold yellow]Phase 1: Inline Unit Tests[/bold yellow]", style="yellow"))
+        console.print("[dim]Running quick sanity checks from the module source...[/dim]")
+        console.print()
+        
+        success, output = self.run_inline_tests(module_name, module_number, verbose)
+        all_output.append(output)
+        
+        if success:
+            console.print("[green]✓ Phase 1 PASSED: Inline unit tests[/green]")
+        else:
+            console.print("[red]✗ Phase 1 FAILED: Inline unit tests[/red]")
+            if not verbose:
+                console.print(f"[dim]{output[:500]}...[/dim]" if len(output) > 500 else f"[dim]{output}[/dim]")
+            all_passed = False
+        
+        console.print()
+
+        # Stop here if unit-only mode
+        if unit_only:
+            return all_passed, "\n".join(all_output)
+
+        # ─────────────────────────────────────────────────────────────
+        # Phase 2: Module Pytest Tests
+        # ─────────────────────────────────────────────────────────────
+        console.print(Rule("[bold blue]Phase 2: Module Tests (with educational output)[/bold blue]", style="blue"))
+        console.print("[dim]Running pytest with WHAT/WHY context for each test...[/dim]")
+        console.print()
+        
+        success, output = self.run_module_pytest(module_name, module_number, verbose)
+        all_output.append(output)
+        
+        if success:
+            console.print("[green]✓ Phase 2 PASSED: Module tests[/green]")
+        else:
+            console.print("[red]✗ Phase 2 FAILED: Module tests[/red]")
+            all_passed = False
+        
+        console.print()
+
+        # ─────────────────────────────────────────────────────────────
+        # Phase 3: Integration Tests (optional)
+        # ─────────────────────────────────────────────────────────────
+        if not no_integration:
+            console.print(Rule("[bold magenta]Phase 3: Integration Tests[/bold magenta]", style="magenta"))
+            console.print(f"[dim]Verifying Module {module_number} works with modules 01-{module_number}...[/dim]")
+            console.print()
+            
+            success, output = self.run_integration_tests(module_number, verbose)
+            all_output.append(output)
+            
+            if success:
+                console.print("[green]✓ Phase 3 PASSED: Integration tests[/green]")
+            else:
+                console.print("[red]✗ Phase 3 FAILED: Integration tests[/red]")
+                all_passed = False
+            
+            console.print()
+
+        return all_passed, "\n".join(all_output)
 
     def test_all_modules(
         self, verbose: bool = False, stop_on_fail: bool = False
@@ -310,16 +543,21 @@ class ModuleTestCommand(BaseCommand):
 
         module_name = module_mapping[normalized]
 
-        # Test single module
-        console.print()
-        success, output = self.test_module(module_name, normalized, args.verbose)
-        console.print()
+        # Test single module with enhanced three-phase testing
+        success, output = self.test_module(
+            module_name, 
+            normalized, 
+            verbose=args.verbose,
+            unit_only=getattr(args, "unit_only", False),
+            no_integration=getattr(args, "no_integration", False),
+        )
 
         if success:
             console.print(
                 Panel(
-                    f"[bold green]✅ Module {normalized} tests passed![/bold green]\n\n"
-                    f"[green]All tests completed successfully[/green]",
+                    f"[bold green]✅ Module {normalized} - All Tests Passed![/bold green]\n\n"
+                    f"[green]Your {module_name} implementation is working correctly[/green]\n"
+                    f"[green]and integrates well with previous modules.[/green]",
                     title=f"✓ {module_name}",
                     border_style="green",
                 )
@@ -328,8 +566,13 @@ class ModuleTestCommand(BaseCommand):
         else:
             console.print(
                 Panel(
-                    f"[bold red]❌ Module {normalized} tests failed[/bold red]\n\n"
-                    f"[dim]Use -v flag for detailed output[/dim]",
+                    f"[bold red]❌ Module {normalized} - Some Tests Failed[/bold red]\n\n"
+                    f"[yellow]Review the test output above to understand what failed.[/yellow]\n"
+                    f"[dim]Each test includes WHAT it's checking and WHY it matters.[/dim]\n\n"
+                    f"[dim]Tips:[/dim]\n"
+                    f"[dim]  • Use -v flag for more detailed output[/dim]\n"
+                    f"[dim]  • Use --unit-only to test just inline tests[/dim]\n"
+                    f"[dim]  • Use --no-integration to skip integration tests[/dim]",
                     title=f"✗ {module_name}",
                     border_style="red",
                 )
