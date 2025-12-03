@@ -1,6 +1,6 @@
 /**
  * TinyTorch Top Bar
- * Simple branding bar with navigation links on every page
+ * Smart sticky bar: hides on scroll down, shows on scroll up
  * Matches MLSysBook navbar style for consistency
  */
 
@@ -11,10 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const barHTML = `
         <div class="tinytorch-bar" id="tinytorch-bar">
             <div class="tinytorch-bar-content">
-                <a href="intro.html" class="tinytorch-bar-brand">
-                    <span class="icon">🔥</span>
-                    <span>Tiny🔥Torch</span>
-                </a>
+                <div class="tinytorch-bar-left">
+                    <a href="intro.html" class="tinytorch-bar-brand">
+                        <span class="icon">🔥</span>
+                        <span>Tiny🔥Torch</span>
+                    </a>
+                    <span class="tinytorch-bar-wip">🚧 Under Construction</span>
+                </div>
                 <div class="tinytorch-bar-links">
                     <a href="https://mlsysbook.ai" target="_blank" class="link-book">
                         <span class="link-icon">📖</span>
@@ -37,4 +40,34 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
     document.body.insertAdjacentHTML('afterbegin', barHTML);
+    
+    // Smart sticky: hide on scroll down, show on scroll up
+    const bar = document.getElementById('tinytorch-bar');
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    
+    function updateBar() {
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY < 50) {
+            // Always show at top of page
+            bar.classList.remove('hidden');
+        } else if (currentScrollY > lastScrollY) {
+            // Scrolling down - hide
+            bar.classList.add('hidden');
+        } else {
+            // Scrolling up - show
+            bar.classList.remove('hidden');
+        }
+        
+        lastScrollY = currentScrollY;
+        ticking = false;
+    }
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateBar);
+            ticking = true;
+        }
+    }, { passive: true });
 });

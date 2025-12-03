@@ -278,8 +278,7 @@ pre.mermaid.align-center {
     max-width: none !important;
 }
 
-/* Work-in-Progress Banner Styles - Construction Theme */
-/* TinyTorch Top Bar - Simple branding bar */
+/* TinyTorch Top Bar - Smart sticky navigation */
 .tinytorch-bar {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
     border-bottom: 1px solid #1e40af;
@@ -292,6 +291,11 @@ pre.mermaid.align-center {
     box-shadow: 0 1px 4px rgba(30, 64, 175, 0.2);
     z-index: 9999;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: transform 0.3s ease;
+}
+
+.tinytorch-bar.hidden {
+    transform: translateY(-100%);
 }
 
 .tinytorch-bar-content {
@@ -300,6 +304,12 @@ pre.mermaid.align-center {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.tinytorch-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .tinytorch-bar-brand {
@@ -318,6 +328,16 @@ pre.mermaid.align-center {
 
 .tinytorch-bar-brand .icon {
     font-size: 1rem;
+}
+
+.tinytorch-bar-wip {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.15);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
 .tinytorch-bar-links {
@@ -369,6 +389,14 @@ pre.mermaid.align-center {
     
     .tinytorch-bar-links {
         gap: 0.25rem;
+    }
+    
+    .tinytorch-bar-wip {
+        display: none;
+    }
+    
+    .tinytorch-bar-left {
+        gap: 0.5rem;
     }
 }
 

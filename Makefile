@@ -44,8 +44,11 @@ help:
 
 # Quick preflight check - run this before starting work
 preflight:
-	@chmod +x scripts/preflight.sh
-	@./scripts/preflight.sh
+	python -m tito.main dev preflight
+
+# Quick preflight (faster)
+preflight-quick:
+	python -m tito.main dev preflight --quick
 
 # Standard test suite
 test:
@@ -97,8 +100,12 @@ test-module-%:
 
 # Full release validation - run this before any release
 release:
-	@chmod +x scripts/preflight.sh
-	@./scripts/preflight.sh --full
+	python -m tito.main dev preflight --release
+
+# Full release validation with all tests
+release-full:
+	python -m tito.main dev preflight --release
+	python -m pytest tests/ -v --tb=short
 
 # Pre-release checklist (manual verification)
 release-check:
@@ -150,13 +157,23 @@ clean:
 
 # CI smoke test (fast, for every commit)
 ci-smoke:
-	python -m pytest tests/e2e/test_user_journey.py -k quick --tb=short -q
+	python -m tito.main dev preflight --quick --ci
 
-# CI full test (for PRs)
+# CI standard test (for PRs)
+ci-standard:
+	python -m tito.main dev preflight --ci
+	python -m pytest tests/e2e/ -k quick --tb=short -q
+
+# CI full test (for releases)
 ci-full:
+	python -m tito.main dev preflight --full --ci
 	python -m pytest tests/ -v --ignore=tests/milestones --tb=short
 
-# CI release validation (for releases)
+# CI release validation (comprehensive)
 ci-release:
-	@./scripts/preflight.sh --full
+	python -m tito.main dev preflight --release --ci
+
+# CI JSON output (for automation/parsing)
+ci-json:
+	python -m tito.main dev preflight --json
 
