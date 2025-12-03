@@ -84,7 +84,7 @@ def create_causal_mask(seq_len: int) -> Tensor:
          [1, 1, 1, 1]]
          
     Usage:
-        >>> from tinytorch.models.transformer import create_causal_mask
+        >>> from tinytorch.core.transformer import create_causal_mask
         >>> mask = create_causal_mask(seq_len=10)
         >>> output = attention(x, mask=mask)
     """
@@ -98,7 +98,7 @@ def create_causal_mask(seq_len: int) -> Tensor:
 ## 📦 Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/13_transformers/transformers_dev.py`
-**Building Side:** Code exports to `tinytorch.models.transformer`
+**Building Side:** Code exports to `tinytorch.core.transformer`
 
 ```python
 # How to use this module:
@@ -108,7 +108,7 @@ from tinytorch.core.transformer import TransformerBlock, GPT, LayerNorm, MLP
 **Why this matters:**
 - **Learning:** Complete transformer system showcasing how all components work together
 - **Production:** Matches PyTorch's transformer implementation with proper model organization
-- **Consistency:** All transformer components and generation logic in models.transformer
+- **Consistency:** All transformer components and generation logic in core.transformer
 - **Integration:** Demonstrates the power of modular design by combining all previous modules
 """
 

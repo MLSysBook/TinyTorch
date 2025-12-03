@@ -54,7 +54,7 @@ def validate_installation() -> Dict[str, bool]:
         ("optimizers", "tinytorch.core.optimizers", "SGD"),
         ("spatial", "tinytorch.core.spatial", "Conv2d"),
         ("attention", "tinytorch.core.attention", "MultiHeadAttention"),
-        ("transformers", "tinytorch.models.transformer", "GPT"),
+        ("transformers", "tinytorch.core.transformer", "GPT"),
     ]
     
     for name, module_path, class_name in core_modules:

@@ -134,7 +134,7 @@ def main():
     param_count = sum(p.data.size for p in all_params)
     console.print(f"  [green]✓[/green] Model: {param_count:,} parameters\n")
     
-    # Using create_causal_mask from tinytorch.models.transformer (Module 13)
+    # Using create_causal_mask from tinytorch.core.transformer (Module 13)
     
     def forward(tokens):
         """Forward pass with causal masking for autoregressive generation."""

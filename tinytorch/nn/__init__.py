@@ -45,7 +45,7 @@ from ..core.spatial import Conv2d, MaxPool2d, AvgPool2d
 # Import transformer components
 from ..text.embeddings import Embedding, PositionalEncoding
 from ..core.attention import MultiHeadAttention, scaled_dot_product_attention
-from ..models.transformer import LayerNorm, TransformerBlock
+from ..core.transformer import LayerNorm, TransformerBlock
 
 # Functional interface (if it exists)
 try:

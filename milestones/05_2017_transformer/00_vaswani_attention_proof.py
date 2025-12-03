@@ -133,7 +133,7 @@ from tinytorch import Tensor, Linear, ReLU, CrossEntropyLoss
 from tinytorch.core.optimizers import Adam
 from tinytorch.text.embeddings import Embedding, PositionalEncoding
 from tinytorch.core.attention import MultiHeadAttention
-from tinytorch.models.transformer import LayerNorm
+from tinytorch.core.transformer import LayerNorm
 
 # Rich for beautiful output
 from rich.console import Console
