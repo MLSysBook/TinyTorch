@@ -170,6 +170,12 @@ class ModuleWorkflowCommand(BaseCommand):
             'status',
             help='Show module completion status and progress'
         )
+        
+        # LIST command - show available modules
+        list_parser = subparsers.add_parser(
+            'list',
+            help='List all available modules'
+        )
     
     def get_module_mapping(self) -> Dict[str, str]:
         """Get mapping from numbers to module names."""
@@ -949,6 +955,59 @@ class ModuleWorkflowCommand(BaseCommand):
                 border_style="gold1"
             ))
     
+    def list_modules(self) -> int:
+        """List all available modules with descriptions."""
+        from rich.table import Table
+        from rich import box
+        
+        # Module descriptions for educational context
+        module_info = {
+            "01": ("Tensor", "Fundamental data structure for all deep learning"),
+            "02": ("Activations", "Non-linear functions that enable learning"),
+            "03": ("Layers", "Building blocks for neural networks"),
+            "04": ("Losses", "Objective functions to minimize"),
+            "05": ("Autograd", "Automatic differentiation for backprop"),
+            "06": ("Optimizers", "SGD, Adam - how models learn"),
+            "07": ("Training", "Complete training loop"),
+            "08": ("Spatial", "Convolutions for computer vision"),
+            "09": ("DataLoader", "Efficient data loading and batching"),
+            "10": ("Tokenization", "Text → numbers conversion"),
+            "11": ("Embeddings", "Learned vector representations"),
+            "12": ("Attention", "Focus mechanism for transformers"),
+            "13": ("Transformers", "Modern architecture for NLP"),
+            "14": ("Profiling", "Performance measurement tools"),
+            "15": ("Acceleration", "Speed optimizations"),
+            "16": ("Quantization", "Model compression with integers"),
+            "17": ("Compression", "Pruning and sparsification"),
+            "18": ("Caching", "KV cache for fast inference"),
+            "19": ("Benchmarking", "TinyMLPerf performance suite"),
+            "20": ("Capstone", "Full system integration"),
+            "21": ("MLOps", "Production deployment")
+        }
+        
+        # Build table
+        table = Table(
+            title="📚 TinyTorch Modules",
+            box=box.ROUNDED,
+            show_header=True,
+            header_style="bold blue"
+        )
+        table.add_column("#", style="cyan", width=3)
+        table.add_column("Module", style="bold")
+        table.add_column("Description")
+        
+        for num, (name, desc) in module_info.items():
+            table.add_row(num, name, desc)
+        
+        self.console.print()
+        self.console.print(table)
+        self.console.print()
+        self.console.print("[dim]Start a module: [bold]tito module start 01[/bold][/dim]")
+        self.console.print("[dim]Check progress: [bold]tito module status[/bold][/dim]")
+        self.console.print()
+        
+        return 0
+    
     def show_status(self) -> int:
         """Show module completion status with enhanced visuals."""
         from rich.table import Table
@@ -1128,6 +1187,8 @@ class ModuleWorkflowCommand(BaseCommand):
                 return reset_command.run(args)
             elif args.module_command == 'status':
                 return self.show_status()
+            elif args.module_command == 'list':
+                return self.list_modules()
         
         # Show help if no valid command
         self.console.print(Panel(
