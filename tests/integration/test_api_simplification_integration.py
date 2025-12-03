@@ -69,7 +69,7 @@ def test_modern_api_integration():
             
             # Create model and optimizer
             model = SimpleMLP()
-            optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
+            optimizer = optim.Adam(model.parameters(), lr=0.001)
             
             # Test forward pass
             x = Tensor([[1.0, 2.0, 3.0, 4.0]])
@@ -109,7 +109,7 @@ def test_modern_api_integration():
             
             # Create model and optimizer
             model = SimpleCNN()
-            optimizer = optim.SGD(model.parameters(), learning_rate=0.01)
+            optimizer = optim.SGD(model.parameters(), lr=0.01)
             
             # Verify CNN integration
             params = list(model.parameters())
@@ -220,7 +220,7 @@ def test_modern_api_integration():
             assert len(params) == 8, f"Expected 8 parameters from nested modules, got {len(params)}"
             
             # Test optimizer works with nested parameters
-            optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
+            optimizer = optim.Adam(model.parameters(), lr=0.001)
             assert len(optimizer.parameters) == 8, "Optimizer should get nested parameters"
             
             results["tests"].append({
@@ -293,7 +293,7 @@ def test_pytorch_api_compatibility():
                     return x
             
             model = PyTorchLikeModel()
-            optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
+            optimizer = optim.Adam(model.parameters(), lr=0.001)
             
             # Should work exactly like PyTorch
             assert callable(model), "Model should be callable"
@@ -318,7 +318,7 @@ def test_pytorch_api_compatibility():
         try:
             # This should look exactly like PyTorch code
             model = nn.Linear(784, 10)
-            optimizer = optim.SGD(model.parameters(), learning_rate=0.01)
+            optimizer = optim.SGD(model.parameters(), lr=0.01)
             
             # Test that syntax matches PyTorch
             params = model.parameters()

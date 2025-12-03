@@ -55,7 +55,7 @@ class SimpleTinyGPT:
         # Token representation
         if EMBEDDINGS_AVAILABLE:
             self.embedding = Embedding(vocab_size, embed_dim)
-            self.pos_encoding = PositionalEncoding(embed_dim, max_length)
+            self.pos_encoding = PositionalEncoding(max_length, embed_dim)
         else:
             # Fallback: simple linear embedding
             self.embedding = Dense(vocab_size, embed_dim)
@@ -153,7 +153,7 @@ def test_transformer_components():
         print(f"    Embedding: {tokens.shape} -> {embedded.shape}")
         
         print("  ✓ Testing Positional Encoding")
-        pos_enc = PositionalEncoding(embed_dim=32, max_length=10)
+        pos_enc = PositionalEncoding(max_seq_len=10, embed_dim=32)
         pos_embedded = pos_enc(embedded)
         assert pos_embedded.shape == embedded.shape, "Positional encoding should preserve shape"
         print(f"    Pos encoding: {embedded.shape} -> {pos_embedded.shape}")

@@ -107,7 +107,7 @@ class TestXORIntegration:
         
         # Components that MUST work together
         model = XORNet()
-        optimizer = optim.SGD(model.parameters(), learning_rate=0.1)
+        optimizer = optim.SGD(model.parameters(), lr=0.1)
         criterion = MSELoss()
         
         # XOR dataset
@@ -152,7 +152,7 @@ class TestMNISTIntegration:
         
         # This MUST work for MNIST example to succeed
         model = SimpleMLP()
-        optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
         criterion = CrossEntropyLoss()
         
         assert len(list(model.parameters())) > 0, "Model must have parameters"
@@ -205,7 +205,7 @@ class TestMNISTIntegration:
                 return x
         
         model = SimpleMLP()
-        optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
         criterion = CrossEntropyLoss()
         
         # Sample data
@@ -351,8 +351,8 @@ class TestModernAPIComponents:
         model = SimpleModel()
         
         # Both optimizers must work with model.parameters()
-        adam_opt = optim.Adam(model.parameters(), learning_rate=0.001)
-        sgd_opt = optim.SGD(model.parameters(), learning_rate=0.01)
+        adam_opt = optim.Adam(model.parameters(), lr=0.001)
+        sgd_opt = optim.SGD(model.parameters(), lr=0.01)
         
         # Test optimizer functionality
         assert hasattr(adam_opt, 'step'), "Optimizer must have step() method"
