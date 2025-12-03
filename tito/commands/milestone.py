@@ -210,7 +210,7 @@ class MilestoneSystem:
                 status["next_milestone"] = milestone_id
         
         status["total_unlocked"] = unlocked_count
-        status["overall_progress"] = (unlocked_count / total_milestones) * 100
+        status["overall_progress"] = (unlocked_count / total_milestones) * 100 if total_milestones > 0 else 0
         
         return status
     
