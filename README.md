@@ -267,6 +267,9 @@ tito milestone status
 
 # See your progress across all modules
 tito module status
+
+# List all available modules with descriptions
+tito module list
 ```
 
 **Module Progression:**
