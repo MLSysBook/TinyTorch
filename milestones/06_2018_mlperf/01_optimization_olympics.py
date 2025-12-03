@@ -140,10 +140,10 @@ def main():
         border_style="cyan"
     ))
     
-    # Import networks from the shared milestone networks module
+    # Import networks (same architectures from earlier milestones, pre-built for optimization)
     try:
-        # Add milestones to path
-        sys.path.insert(0, str(Path(__file__).parent.parent))
+        # Import from local networks.py (same folder)
+        sys.path.insert(0, str(Path(__file__).parent))
         from networks import DigitMLP, SimpleCNN, MinimalTransformer, Perceptron
         
         console.print("  [green]✓[/green] Perceptron (Milestone 01)")

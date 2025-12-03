@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    📦 Milestone Networks Library                              ║
-║           Reusable network definitions from all TinyTorch milestones         ║
+║                    📦 Pre-Built Networks for Optimization                     ║
+║                  (Same architectures from Milestones 01-05)                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-This module provides the canonical network architectures from each milestone,
-allowing later milestones (like MLPerf) to import and optimize them.
+These are the SAME network architectures you built in earlier milestones:
+- Perceptron: Milestone 01 (1957 Rosenblatt)
+- DigitMLP: Milestone 03 (1986 Rumelhart)
+- SimpleCNN: Milestone 04 (1998 LeCun)
+- MinimalTransformer: Milestone 05 (2017 Vaswani)
+
+In Milestone 06 (MLPerf), we focus on OPTIMIZING these networks, not building them.
+You've already proven you can build them - now let's make them production-ready!
 
 Usage:
-    from milestones.networks import DigitMLP, SimpleCNN, MinimalTransformer
+    from networks import DigitMLP, SimpleCNN, MinimalTransformer
     
-    # Get a fresh network
-    mlp = DigitMLP()
-    cnn = SimpleCNN()
-    transformer = MinimalTransformer()
+    # These use YOUR TinyTorch implementations under the hood!
+    mlp = DigitMLP()       # YOUR Linear, ReLU
+    cnn = SimpleCNN()      # YOUR Conv2d, MaxPool2d
+    transformer = MinimalTransformer()  # YOUR Attention, Embeddings
 """
 
 import numpy as np
