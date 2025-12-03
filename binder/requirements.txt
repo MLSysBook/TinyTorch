@@ -23,6 +23,9 @@ matplotlib>=3.9.0
 # Type checking support
 typing-extensions>=4.12.0
 
+# Jupytext (required to convert src/*.py to notebooks)
+jupytext>=1.16.0
+
 # Note: tinytorch package itself is installed via postBuild script
 # This ensures the latest code from the repository is used
 

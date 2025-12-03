@@ -14,8 +14,13 @@ This directory contains configuration files for running TinyTorch in cloud envir
 When users click the "Launch Binder" button on any notebook page in the TinyTorch documentation:
 
 1. Binder reads `binder/requirements.txt` to install Python dependencies
-2. Binder runs `binder/postBuild` to install the TinyTorch package (`pip install -e .`)
-3. Users get a fully configured JupyterLab environment with TinyTorch ready to use
+2. Binder runs `binder/postBuild` which:
+   - Installs the TinyTorch package (`pip install -e .`)
+   - Generates student notebooks from `src/*.py` files using Jupytext
+   - Populates `modules/` with ready-to-use Jupyter notebooks
+3. Users get a fully configured JupyterLab environment with TinyTorch and all notebooks ready to use
+
+**Note**: The `modules/` directory is gitignored because notebooks are generated from the source `.py` files. This ensures students always get notebooks that match the current code.
 
 **Binder URL Format:**
 ```
