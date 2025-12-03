@@ -33,7 +33,7 @@ def print_banner(compact: bool = False):
         banner_text.append("Tiny", style="dim cyan")
         banner_text.append("🔥", style="red")
         banner_text.append("TORCH", style="bold orange1")
-        banner_text.append(": Don't just import it. Build it.", style="dim")
+        banner_text.append(": Don't import it. Build it.", style="dim")
         console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
 def print_compact_banner():
@@ -44,7 +44,7 @@ def print_compact_banner():
     banner_text.append("Tiny", style="dim cyan")
     banner_text.append("\n🔥", style="red")
     banner_text.append("TORCH", style="bold orange1")
-    banner_text.append(": Don't just import it. Build it.", style="dim")
+    banner_text.append(": Don't import it. Build it.", style="dim")
     console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
 def print_ascii_logo(compact: bool = False):

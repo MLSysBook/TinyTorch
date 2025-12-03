@@ -89,5 +89,5 @@ Sleep 4s  # Longer pause for the final message
 # CLOSING: Reinforce the core message
 # ==============================================================================
 
-Type "# Don't just import it. Build it. ✨🔥"
+Type "# Don't import it. Build it. ✨🔥"
 Sleep 3s

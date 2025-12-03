@@ -10,7 +10,7 @@ Hands-on labs for the <span style="font-weight: 600; color: #475569;">Machine Le
 </p>
 
 <h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 1.5rem 0 1rem 0; font-weight: 700;">
-Don't just import it. Build it.
+Don't import it. Build it.
 </h2>
 
 <!-- Enhanced description: Added "machine learning (ML)" clarification and "under the hood"

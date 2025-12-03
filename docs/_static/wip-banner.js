@@ -15,9 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span>Tiny🔥Torch</span>
                     </div>
                     <div class="wip-banner-description">
-                        Hands-on labs for <a href="https://mlsysbook.ai" target="_blank">MLSysBook</a>
+                        Don't import it. Build it.
                         <span class="separator">•</span>
-                        <a href="https://tinytorch.ai/join" target="_blank">Join the Community</a>
+                        <a href="https://mlsysbook.ai" target="_blank">MLSysBook</a>
+                        <span class="separator">•</span>
+                        <a href="https://tinytorch.ai/join" target="_blank">Join Community</a>
                         <span class="separator">•</span>
                         <a href="https://github.com/harvard-edge/TinyTorch" target="_blank">GitHub ⭐</a>
                     </div>
