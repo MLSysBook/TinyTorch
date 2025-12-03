@@ -32,7 +32,7 @@ from .data.loader import RandomHorizontalFlip, RandomCrop, Compose  # Augmentati
 # ============================================================================
 # Spatial Operations (Module 09)
 # ============================================================================
-from .core.spatial import Conv2d, MaxPool2d, AvgPool2d, BatchNorm2d
+from .core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 # ============================================================================
 # Text Processing (Modules 10-11)
@@ -53,7 +53,7 @@ import os
 from .core.autograd import enable_autograd
 
 # Enable autograd quietly when imported by CLI tools
-enable_autograd(quiet=os.environ.get('TINYTORCH_QUIET', '').lower() in ('1', 'true', 'yes'))
+enable_autograd()
 
 # ============================================================================
 # Public API
@@ -85,7 +85,7 @@ __all__ = [
     'RandomHorizontalFlip', 'RandomCrop', 'Compose',
     
     # Core - Spatial (CNN)
-    'Conv2d', 'MaxPool2d', 'AvgPool2d', 'BatchNorm2d',
+    'Conv2d', 'MaxPool2d', 'AvgPool2d',
     
     # Text/NLP
     'Tokenizer', 'CharTokenizer', 'BPETokenizer',

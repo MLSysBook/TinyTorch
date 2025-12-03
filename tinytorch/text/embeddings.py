@@ -15,10 +15,9 @@
 # ║     The tinytorch/ directory is generated code - edit source files instead!  ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'Embedding', 'PositionalEncoding', 'create_sinusoidal_embeddings',
-           'EmbeddingLayer']
+__all__ = ['BYTES_PER_FLOAT32', 'MB_TO_BYTES', 'Embedding', 'PositionalEncoding', 'EmbeddingLayer']
 
-# %% ../../modules/11_embeddings/11_embeddings.ipynb 2
+# %% ../../modules/11_embeddings/embeddings.ipynb 2
 import numpy as np
 import math
 from typing import List, Optional, Tuple
@@ -31,7 +30,7 @@ from ..core.autograd import EmbeddingBackward
 BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
-# %% ../../modules/11_embeddings/11_embeddings.ipynb 6
+# %% ../../modules/11_embeddings/embeddings.ipynb 6
 class Embedding:
     """
     Learnable embedding layer that maps token indices to dense vectors.
@@ -122,7 +121,7 @@ class Embedding:
         return f"Embedding(vocab_size={self.vocab_size}, embed_dim={self.embed_dim})"
     ### END SOLUTION
 
-# %% ../../modules/11_embeddings/11_embeddings.ipynb 10
+# %% ../../modules/11_embeddings/embeddings.ipynb 10
 class PositionalEncoding:
     """
     Learnable positional encoding layer.
@@ -227,68 +226,7 @@ class PositionalEncoding:
         return f"PositionalEncoding(max_seq_len={self.max_seq_len}, embed_dim={self.embed_dim})"
     ### END SOLUTION
 
-# %% ../../modules/11_embeddings/11_embeddings.ipynb 14
-def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
-    """
-    Create sinusoidal positional encodings as used in "Attention Is All You Need".
-
-    These fixed encodings use sine and cosine functions to create unique
-    positional patterns that don't require training and can extrapolate
-    to longer sequences than seen during training.
-
-    TODO: Implement sinusoidal positional encoding generation
-
-    APPROACH:
-    1. Create position indices: [0, 1, 2, ..., max_seq_len-1]
-    2. Create dimension indices for frequency calculation
-    3. Apply sine to even dimensions, cosine to odd dimensions
-    4. Use the transformer paper formula with 10000 base
-
-    MATHEMATICAL FORMULA:
-    PE(pos, 2i) = sin(pos / 10000^(2i/embed_dim))
-    PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))
-
-    EXAMPLE:
-    >>> pe = create_sinusoidal_embeddings(512, 64)
-    >>> print(pe.shape)
-    (512, 64)
-    >>> # Position 0: [0, 1, 0, 1, 0, 1, ...] (sin(0)=0, cos(0)=1)
-    >>> # Each position gets unique trigonometric signature
-
-    HINTS:
-    - Use np.arange to create position and dimension arrays
-    - Calculate div_term using exponential for frequency scaling
-    - Apply different formulas to even/odd dimensions
-    - The 10000 base creates different frequencies for different dimensions
-    """
-
-    ### BEGIN SOLUTION
-    # Create position indices [0, 1, 2, ..., max_seq_len-1]
-    position = np.arange(max_seq_len, dtype=np.float32)[:, np.newaxis]  # (max_seq_len, 1)
-
-    # Create dimension indices for calculating frequencies
-    div_term = np.exp(
-        np.arange(0, embed_dim, 2, dtype=np.float32) *
-        -(math.log(10000.0) / embed_dim)
-    )  # (embed_dim//2,)
-
-    # Initialize the positional encoding matrix
-    pe = np.zeros((max_seq_len, embed_dim), dtype=np.float32)
-
-    # Apply sine to even indices (0, 2, 4, ...)
-    pe[:, 0::2] = np.sin(position * div_term)
-
-    # Apply cosine to odd indices (1, 3, 5, ...)
-    if embed_dim % 2 == 1:
-        # Handle odd embed_dim by only filling available positions
-        pe[:, 1::2] = np.cos(position * div_term[:-1])
-    else:
-        pe[:, 1::2] = np.cos(position * div_term)
-
-    return Tensor(pe)
-    ### END SOLUTION
-
-# %% ../../modules/11_embeddings/11_embeddings.ipynb 18
+# %% ../../modules/11_embeddings/embeddings.ipynb 18
 class EmbeddingLayer:
     """
     Complete embedding system combining token and positional embeddings.

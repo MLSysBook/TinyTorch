@@ -20,7 +20,7 @@ __all__ = ['EPSILON', 'Function', 'AddBackward', 'MulBackward', 'SubBackward', '
            'SumBackward', 'ReLUBackward', 'SigmoidBackward', 'SoftmaxBackward', 'GELUBackward', 'MSEBackward',
            'BCEBackward', 'CrossEntropyBackward', 'enable_autograd']
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 1
+# %% ../../modules/05_autograd/autograd.ipynb 1
 import numpy as np
 from typing import Optional, List, Tuple
 import sys
@@ -31,7 +31,7 @@ from .tensor import Tensor
 # Constants for numerical differentiation
 EPSILON = 1e-7  # Small perturbation for numerical gradient computation
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 6
+# %% ../../modules/05_autograd/autograd.ipynb 6
 class Function:
     """
     Base class for differentiable operations.
@@ -85,7 +85,7 @@ class Function:
         """
         raise NotImplementedError("Each Function must implement apply() method")
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 9
+# %% ../../modules/05_autograd/autograd.ipynb 9
 class AddBackward(Function):
     """
     Gradient computation for tensor addition.
@@ -126,7 +126,7 @@ class AddBackward(Function):
 
         return grad_a, grad_b
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 11
+# %% ../../modules/05_autograd/autograd.ipynb 11
 class MulBackward(Function):
     """
     Gradient computation for tensor multiplication.
@@ -170,7 +170,7 @@ class MulBackward(Function):
 
         return grad_a, grad_b
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 13
+# %% ../../modules/05_autograd/autograd.ipynb 13
 class SubBackward(Function):
     """
     Gradient computation for tensor subtraction.
@@ -196,7 +196,7 @@ class SubBackward(Function):
 
         return grad_a, grad_b
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 15
+# %% ../../modules/05_autograd/autograd.ipynb 15
 class DivBackward(Function):
     """
     Gradient computation for tensor division.
@@ -229,7 +229,7 @@ class DivBackward(Function):
 
         return grad_a, grad_b
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 17
+# %% ../../modules/05_autograd/autograd.ipynb 17
 class MatmulBackward(Function):
     """
     Gradient computation for matrix multiplication.
@@ -285,7 +285,7 @@ class MatmulBackward(Function):
 
         return grad_a, grad_b
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 18
+# %% ../../modules/05_autograd/autograd.ipynb 18
 class TransposeBackward(Function):
     """
     Gradient computation for transpose operation.
@@ -346,7 +346,7 @@ class TransposeBackward(Function):
 
         return (grad_x,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 19
+# %% ../../modules/05_autograd/autograd.ipynb 19
 class PermuteBackward(Function):
     """
     Gradient computation for arbitrary axis permutation (general transpose).
@@ -392,7 +392,7 @@ class PermuteBackward(Function):
 
         return (grad_x,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 20
+# %% ../../modules/05_autograd/autograd.ipynb 20
 class EmbeddingBackward(Function):
     """
     Gradient computation for embedding lookup operation.
@@ -446,7 +446,6 @@ class EmbeddingBackward(Function):
 
         return (grad_weight,)
 
-#| export
 
 class SliceBackward(Function):
     """
@@ -513,7 +512,7 @@ class SliceBackward(Function):
 
         return (grad_input,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 21
+# %% ../../modules/05_autograd/autograd.ipynb 21
 class ReshapeBackward(Function):
     """
     Gradient computation for reshape operation.
@@ -560,7 +559,7 @@ class ReshapeBackward(Function):
 
         return (grad_x,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 23
+# %% ../../modules/05_autograd/autograd.ipynb 23
 class SumBackward(Function):
     """
     Gradient computation for tensor sum.
@@ -594,7 +593,7 @@ class SumBackward(Function):
             return np.ones_like(tensor.data) * grad_output,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 28
+# %% ../../modules/05_autograd/autograd.ipynb 28
 class ReLUBackward(Function):
     """
     Gradient computation for ReLU activation.
@@ -617,7 +616,7 @@ class ReLUBackward(Function):
             return grad_output * relu_grad,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 29
+# %% ../../modules/05_autograd/autograd.ipynb 29
 class SigmoidBackward(Function):
     """
     Gradient computation for sigmoid activation.
@@ -647,7 +646,7 @@ class SigmoidBackward(Function):
             return grad_output * sigmoid_grad,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 30
+# %% ../../modules/05_autograd/autograd.ipynb 30
 class SoftmaxBackward(Function):
     """
     Gradient computation for softmax activation.
@@ -697,7 +696,7 @@ class SoftmaxBackward(Function):
             return (grad_x,)
         return (None,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 31
+# %% ../../modules/05_autograd/autograd.ipynb 31
 class GELUBackward(Function):
     """
     Gradient computation for GELU activation.
@@ -741,7 +740,7 @@ class GELUBackward(Function):
             return (grad_output * gelu_grad,)
         return (None,)
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 32
+# %% ../../modules/05_autograd/autograd.ipynb 32
 class MSEBackward(Function):
     """
     Gradient computation for Mean Squared Error Loss.
@@ -767,7 +766,7 @@ class MSEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 33
+# %% ../../modules/05_autograd/autograd.ipynb 33
 class BCEBackward(Function):
     """
     Gradient computation for Binary Cross-Entropy Loss.
@@ -797,7 +796,7 @@ class BCEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 34
+# %% ../../modules/05_autograd/autograd.ipynb 34
 class CrossEntropyBackward(Function):
     """
     Gradient computation for Cross-Entropy Loss.
@@ -842,16 +841,13 @@ class CrossEntropyBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/05_autograd/05_autograd.ipynb 35
-def enable_autograd(quiet=False):
+# %% ../../modules/05_autograd/autograd.ipynb 35
+def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.
 
     This function enhances the existing Tensor class with autograd capabilities.
     Call this once to activate gradients globally.
-
-    **Args:**
-        quiet (bool): If True, suppress status messages. Default: False.
 
     **What it does:**
     - Replaces Tensor operations with gradient-tracking versions
@@ -881,7 +877,7 @@ def enable_autograd(quiet=False):
     # 3. _autograd_enabled is a marker attribute we add at runtime
     # This is the CORRECT use of hasattr() for dynamic class modification
     if hasattr(Tensor, '_autograd_enabled'):
-        # Silently return if already enabled - no need to warn
+        print("⚠️ Autograd already enabled")
         return
 
     # Store original operations
@@ -1292,13 +1288,10 @@ def enable_autograd(quiet=False):
     # Mark as enabled
     Tensor._autograd_enabled = True
 
-    if not quiet:
-        print("✅ Autograd enabled! Tensors now track gradients.")
-        print("   - Operations build computation graphs")
-        print("   - backward() computes gradients")
-        print("   - requires_grad=True enables tracking")
+    print("✅ Autograd enabled! Tensors now track gradients.")
+    print("   - Operations build computation graphs")
+    print("   - backward() computes gradients")
+    print("   - requires_grad=True enables tracking")
 
 # Auto-enable when module is imported
-# Always quiet to avoid cluttering user imports
-import os
-enable_autograd(quiet=True)
+enable_autograd()

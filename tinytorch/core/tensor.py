@@ -17,7 +17,7 @@
 # %% auto 0
 __all__ = ['BYTES_PER_FLOAT32', 'KB_TO_BYTES', 'MB_TO_BYTES', 'Tensor']
 
-# %% ../../modules/01_tensor/01_tensor.ipynb 1
+# %% ../../modules/01_tensor/tensor.ipynb 1
 import numpy as np
 
 # Constants for memory calculations
@@ -25,7 +25,7 @@ BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
 MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
-# %% ../../modules/01_tensor/01_tensor.ipynb 7
+# %% ../../modules/01_tensor/tensor.ipynb 7
 class Tensor:
     """Educational tensor that grows with student knowledge.
 
@@ -146,9 +146,8 @@ class Tensor:
             new_shape[unknown_idx] = unknown_dim
             new_shape = tuple(new_shape)
         if np.prod(new_shape) != self.size:
-            target_size = int(np.prod(new_shape))
             raise ValueError(
-                f"Total elements must match: {self.size} ≠ {target_size}"
+                f"Cannot reshape tensor of size {self.size} to shape {new_shape}"
             )
         reshaped_data = np.reshape(self.data, new_shape)
         result = Tensor(reshaped_data, requires_grad=self.requires_grad)

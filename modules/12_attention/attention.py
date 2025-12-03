@@ -649,11 +649,8 @@ class MultiHeadAttention:
         mask_reshaped = mask
         if mask is not None and len(mask.shape) == 3:
              # Add head dimension: (batch, seq, seq) -> (batch, 1, seq, seq)
-             # Note: Tensor.reshape doesn't support adding dims easily without full shape
-             # But we can use numpy reshape on data and wrap in Tensor?
-             # Or just rely on broadcasting if mask is 2D?
-             # In the proof script, mask is None, so this is fine.
-             pass
+             batch_size_m, seq1, seq2 = mask.shape
+             mask_reshaped = Tensor(mask.data.reshape(batch_size_m, 1, seq1, seq2))
 
         attended, _ = scaled_dot_product_attention(Q, K, V, mask=mask_reshaped)
 

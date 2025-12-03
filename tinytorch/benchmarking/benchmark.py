@@ -19,6 +19,14 @@ __all__ = ['DEFAULT_WARMUP_RUNS', 'DEFAULT_MEASUREMENT_RUNS', 'BenchmarkResult',
            'test_unit_benchmark', 'BenchmarkSuite', 'test_unit_benchmark_suite', 'TinyMLPerf', 'test_unit_tinymlperf']
 
 # %% ../../modules/19_benchmarking/19_benchmarking.ipynb 0
+from dataclasses import dataclass, field
+from typing import List, Dict, Optional, Any, Callable, Tuple
+import time
+import platform
+import os
+import numpy as np
+from tinytorch.profiling.profiler import Profiler
+
 # Constants for benchmarking defaults
 DEFAULT_WARMUP_RUNS = 5  # Default warmup runs for JIT compilation and cache warming
 DEFAULT_MEASUREMENT_RUNS = 10  # Default measurement runs for statistical significance

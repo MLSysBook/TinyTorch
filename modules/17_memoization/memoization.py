@@ -108,8 +108,8 @@ def profile_naive_generation():
 
         # Attention: Q @ K.T then @ V
         # This is O(seq_len²) in complexity
-        scores = q @ k.T  # (1, seq_len, seq_len)
-        output = scores @ v
+        scores = q.matmul(k.transpose())  # (1, seq_len, seq_len)
+        output = scores.matmul(v)
 
         return output
 
@@ -122,13 +122,18 @@ def profile_naive_generation():
     latencies = []
 
     for seq_len in sequence_lengths:
-        # Measure latency for this sequence length
-        latency = profiler.measure_latency(
-            lambda: naive_attention_step(seq_len),
-            None,
-            warmup=5,
-            iterations=20
-        )
+        # Measure latency for this sequence length using simple timing
+        import time
+        # Warmup
+        for _ in range(5):
+            naive_attention_step(seq_len)
+        # Measure
+        times = []
+        for _ in range(20):
+            start = time.perf_counter()
+            naive_attention_step(seq_len)
+            times.append((time.perf_counter() - start) * 1000)  # ms
+        latency = sorted(times)[len(times)//2]  # median
         latencies.append(latency)
 
         # Calculate growth rate
