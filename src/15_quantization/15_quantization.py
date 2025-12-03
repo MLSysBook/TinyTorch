@@ -1743,14 +1743,15 @@ class Quantizer:
         # Iterate through model parameters
         # SimpleModel has .layers, each layer has .parameters() method
         param_idx = 0
+        total_elements = 0
         for layer in model.layers:
             for param in layer.parameters():
                 param_size = param.data.nbytes
                 original_size += param_size
+                total_elements += param.data.size
                 
                 # Quantize parameter
                 q_param, scale, zp = Quantizer.quantize_tensor(param)
-                quantized_size += q_param.data.nbytes
                 
                 quantized_layers[f'param_{param_idx}'] = {
                     'quantized': q_param,
@@ -1759,6 +1760,10 @@ class Quantizer:
                     'original_shape': param.data.shape
                 }
                 param_idx += 1
+        
+        # Calculate theoretical quantized size: 1 byte per element for INT8
+        # (Note: Tensor class converts to float32 internally, but INT8 storage would be 1 byte)
+        quantized_size = total_elements  # 1 byte per element
         
         return {
             'quantized_layers': quantized_layers,

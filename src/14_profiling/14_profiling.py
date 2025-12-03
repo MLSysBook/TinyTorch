@@ -390,8 +390,8 @@ class Profiler:
                     total_flops = (output_h * output_w * kernel_h * kernel_w *
                                  in_channels * out_channels * 2)
 
-            elif model_name == 'Sequential':
-                # Sequential model: sum FLOPs of all layers
+            elif model_name == 'Sequential' or hasattr(model, 'layers'):
+                # Sequential model or model with layers: sum FLOPs of all layers
                 current_shape = input_shape
                 for layer in model.layers:
                     layer_flops = self.count_flops(layer, current_shape)

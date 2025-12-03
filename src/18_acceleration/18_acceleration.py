@@ -65,6 +65,7 @@ from tinytorch.nn.acceleration import vectorized_matmul, fused_gelu
 """
 
 # %% nbgrader={"grade": false, "grade_id": "cell-imports-core", "solution": false}
+#| export
 import numpy as np
 import time
 from typing import Dict, List, Tuple, Optional, Any, Union
@@ -148,6 +149,7 @@ Real-world performance wins:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-import", "solution": true}
+#| export
 # Import from TinyTorch package (previous modules must be completed and exported)
 from tinytorch.core.tensor import Tensor
 

@@ -381,11 +381,12 @@ def main():
         f"{sparsity_after:.1%}",
         f"[green]{sparsity_after:.0%} weights zeroed[/green]"
     )
+    prune_acc_delta = pruned_acc - baseline_acc
     table.add_row(
         "Accuracy",
         f"{baseline_acc:.1f}%",
         f"{pruned_acc:.1f}%",
-        f"[{'green' if abs(baseline_acc - pruned_acc) < 10 else 'yellow'}]{baseline_acc - pruned_acc:+.1f}%[/]"
+        f"[{'green' if prune_acc_delta >= 0 else 'red'}]{prune_acc_delta:+.1f}%[/]"
     )
     
     console.print(table)
