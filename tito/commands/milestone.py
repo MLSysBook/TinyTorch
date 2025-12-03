@@ -1045,10 +1045,6 @@ class MilestoneCommand(BaseCommand):
             if result.returncode == 0:
                 # Success! Mark milestone as complete
                 self._mark_milestone_complete(milestone_id)
-                
-                # Progress tracking is handled by _mark_milestone_complete
-                # which updates .tito/milestones.json
-                pass
 
                 console.print(Panel(
                     f"[bold green]🏆 MILESTONE ACHIEVED![/bold green]\n\n"
@@ -1058,11 +1054,14 @@ class MilestoneCommand(BaseCommand):
                     f"• Every line of code: YOUR implementations\n"
                     f"• Every tensor operation: YOUR Tensor class\n"
                     f"• Every gradient: YOUR autograd\n\n"
-                    f"[cyan]Achievement saved to your progress![/cyan]",
+                    f"[cyan]Achievement saved locally![/cyan]",
                     title="✨ Achievement Unlocked ✨",
                     border_style="bright_green",
                     padding=(1, 2)
                 ))
+                
+                # Offer to sync progress (uses centralized SubmissionHandler)
+                self._offer_progress_sync(milestone_id, milestone['name'])
 
                 # Show next steps
                 next_id = str(int(milestone_id) + 1).zfill(2)
@@ -1222,3 +1221,39 @@ class MilestoneCommand(BaseCommand):
                 json.dump(milestone_data, f, indent=2)
         except IOError:
             pass
+
+    def _offer_progress_sync(self, milestone_id: str, milestone_name: str) -> None:
+        """
+        Offer to sync progress after milestone completion.
+        Uses the centralized SubmissionHandler for all progress syncing.
+        """
+        from ..core import auth
+        from ..core.submission import SubmissionHandler
+        from rich.prompt import Confirm
+        
+        console = self.console
+        
+        # Check if user is logged in
+        if auth.is_logged_in():
+            console.print()
+            should_sync = Confirm.ask(
+                f"[cyan]Would you like to sync this achievement to your profile?[/cyan]",
+                default=True
+            )
+            
+            if should_sync:
+                try:
+                    # Use the centralized SubmissionHandler
+                    handler = SubmissionHandler(self.config, console)
+                    
+                    # Sync progress (includes modules and milestones)
+                    # The handler reads from both progress.json and .tito/milestones.json
+                    handler.sync_progress()
+                    
+                    console.print(f"[green]✅ Milestone {milestone_id} synced to your profile![/green]")
+                except Exception as e:
+                    console.print(f"[yellow]⚠️ Could not sync: {e}[/yellow]")
+                    console.print("[dim]Your progress is saved locally and will sync next time.[/dim]")
+        else:
+            console.print()
+            console.print("[dim]💡 Run 'tito login' to sync your achievements to the leaderboard![/dim]")

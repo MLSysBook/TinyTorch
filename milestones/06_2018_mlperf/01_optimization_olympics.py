@@ -451,27 +451,6 @@ def main():
     console.print(table)
     console.print()
     
-    # ========================================================================
-    # STEP 4: COMBINED
-    # ========================================================================
-    
-    console.print(Panel(
-        "[bold green]🎯 STEP 4: Combined Optimization[/bold green]\n"
-        "Apply BOTH quantization AND pruning",
-        border_style="green"
-    ))
-    
-    # Apply both
-    combined_weights = prune_weights(baseline_weights, sparsity=0.5)
-    combined_weights = quantize_weights(combined_weights, bits=8)
-    model.set_weights(combined_weights)
-    
-    combined_size = quant_size  # Still quantized
-    combined_acc = evaluate_accuracy(model, X_test, y_test)
-    
-    # Calculate effective compression (quantization + sparsity)
-    effective_compression = 4 * 2  # 4× from quantization, potential 2× from sparsity
-    
     console.print()
     
     # ========================================================================
@@ -483,35 +462,29 @@ def main():
     console.print()
     
     # Final comparison table
-    table = Table(title="🎖️ Final Standings", box=box.DOUBLE)
-    table.add_column("Configuration", style="cyan", width=20)
+    table = Table(title="🎖️ Optimization Results", box=box.DOUBLE)
+    table.add_column("Technique", style="cyan", width=20)
     table.add_column("Size", style="yellow", justify="right")
     table.add_column("Accuracy", style="green", justify="right")
     table.add_column("Compression", style="bold magenta", justify="right")
     
     table.add_row(
-        "🥇 Baseline (FP32)",
+        "📊 Baseline (FP32)",
         f"{baseline_size:,} B",
         f"{baseline_acc:.1f}%",
         "1×"
     )
     table.add_row(
-        "🥈 + Quantization",
+        "🗜️ Quantization (INT8)",
         f"{quant_size:,} B",
         f"{quant_acc:.1f}%",
         "[green]4×[/green]"
     )
     table.add_row(
-        "🥉 + Pruning",
+        "✂️ Pruning (50%)",
         f"~{baseline_size//2:,} B*",
         f"{pruned_acc:.1f}%",
         "[green]2×[/green]"
-    )
-    table.add_row(
-        "🏆 Combined",
-        f"~{baseline_size//8:,} B*",
-        f"{combined_acc:.1f}%",
-        f"[bold green]{effective_compression}×[/bold green]"
     )
     
     console.print(table)
@@ -529,32 +502,33 @@ def main():
         f"   • {sparsity:.0f}% weights removed\n"
         f"   • {abs(baseline_acc - pruned_acc):.1f}% accuracy impact\n"
         f"   • [dim]Used by: Mobile models, edge deployment[/dim]\n\n"
-        f"✅ [cyan]Combined:[/cyan]\n"
-        f"   • {effective_compression}× total compression\n"
-        f"   • {abs(baseline_acc - combined_acc):.1f}% accuracy impact\n"
-        f"   • [dim]The secret sauce of production ML![/dim]",
+        f"💡 [yellow]Challenge: Combine Both![/yellow]\n"
+        f"   • Can you achieve 8× compression with <5% accuracy loss?\n"
+        f"   • [dim]This is a future competition track![/dim]",
         border_style="cyan",
         box=box.ROUNDED
     ))
     
-    # Verdict
-    accuracy_drop = baseline_acc - combined_acc
+    # Verdict - based on best individual technique
+    best_compression = max(4, int(sparsity / 25))  # Rough estimate
+    accuracy_drop = max(abs(baseline_acc - quant_acc), abs(baseline_acc - pruned_acc))
     if accuracy_drop < 5:
         verdict = "[bold green]🏆 EXCELLENT![/bold green] Great compression with minimal accuracy loss!"
-    elif accuracy_drop < 10:
+    elif accuracy_drop < 15:
         verdict = "[bold yellow]🥈 GOOD![/bold yellow] Solid compression, acceptable accuracy tradeoff."
     else:
-        verdict = "[bold red]⚠️  HIGH LOSS[/bold red] - Consider less aggressive settings."
+        verdict = "[bold red]⚠️  HIGH LOSS[/bold red] - The model may need more training first."
     
     console.print(Panel(
         f"{verdict}\n\n"
-        f"[dim]You achieved {effective_compression}× compression with {accuracy_drop:.1f}% accuracy loss.[/dim]\n\n"
+        f"[dim]Quantization: 4× compression, {abs(baseline_acc - quant_acc):.1f}% accuracy change[/dim]\n"
+        f"[dim]Pruning: {sparsity:.0f}% sparsity, {abs(baseline_acc - pruned_acc):.1f}% accuracy change[/dim]\n\n"
         "[bold cyan]What you learned:[/bold cyan]\n"
-        "  ✅ How to profile ML models\n"
+        "  ✅ How to profile ML models (parameters, size, latency)\n"
         "  ✅ Quantization: reduce precision for smaller models\n"
         "  ✅ Pruning: remove weights for sparser models\n"
-        "  ✅ The accuracy-efficiency tradeoff\n\n"
-        "[bold]This is how production ML systems are deployed![/bold]",
+        "  ✅ The accuracy-efficiency tradeoff in production ML\n\n"
+        "[bold]This is how production ML systems are optimized![/bold]",
         title="🎯 Milestone 06 Complete",
         border_style="green",
         box=box.DOUBLE
