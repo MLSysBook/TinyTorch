@@ -32,7 +32,7 @@ from rich import box
 from tinytorch.models.transformer import GPT
 from tinytorch.text.tokenization import CharTokenizer
 from tinytorch.core.tensor import Tensor
-from tinytorch.profiling.profiler import ProfilerComplete
+from tinytorch.profiling.profiler import Profiler
 from tinytorch.generation.kv_cache import enable_kv_cache, disable_kv_cache
 
 console = Console()
@@ -313,7 +313,7 @@ def main():
         max_seq_len=64
     )
     
-    profiler = ProfilerComplete()
+    profiler = Profiler()
     console.print("[green]✅ Model initialized[/green]\n")
     
     # Profile architecture

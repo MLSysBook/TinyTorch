@@ -23,6 +23,7 @@ from ..core.tensor import Tensor
 from ..core.layers import Linear
 from ..core.attention import MultiHeadAttention
 from ..core.activations import GELU
+from ..core.embeddings import Embedding
 
 # %% ../../modules/source/13_transformers/transformers_dev.ipynb 9
 class LayerNorm:
