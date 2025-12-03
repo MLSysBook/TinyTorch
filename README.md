@@ -2,17 +2,15 @@
 
 **Build ML Systems From First Principles**
 
-<!-- Core Badges -->
+<!-- CI & Status Badges -->
+[![CI](https://github.com/MLSysBook/TinyTorch/actions/workflows/ci.yml/badge.svg)](https://github.com/MLSysBook/TinyTorch/actions/workflows/ci.yml)
+[![Documentation](https://github.com/MLSysBook/TinyTorch/actions/workflows/publish-live.yml/badge.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-[![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
-![Status](https://img.shields.io/badge/status-alpha-orange.svg)
 
-<!-- Activity Badges -->
-![Last Commit](https://img.shields.io/github/last-commit/MLSysBook/TinyTorch)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/MLSysBook/TinyTorch)
+<!-- Community Badges -->
 ![GitHub Stars](https://img.shields.io/github/stars/MLSysBook/TinyTorch?style=social)
-![Contributors](https://img.shields.io/github/contributors/MLSysBook/TinyTorch)
+![Last Commit](https://img.shields.io/github/last-commit/MLSysBook/TinyTorch)
 
 > 📢 **December 2025 Pre-Release** - TinyTorch CLI and educational framework are undergoing final refinements before public release! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions and interactive CLI tooling. The `tito` command-line interface provides streamlined workflows for setup, module management, testing, and progress tracking.
 >
