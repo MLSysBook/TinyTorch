@@ -595,7 +595,7 @@ class BenchmarkCommand(BaseCommand):
         default_config = {
             "website": {
                 "base_url": "https://tinytorch.ai",
-                "community_map_url": "https://tinytorch.ai/community",
+                "community_map_url": "https://tinytorch.ai/map",
                 "api_url": None,  # Set when API is available
                 "enabled": False  # Set to True when website integration is ready
             },

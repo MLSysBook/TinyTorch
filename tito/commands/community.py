@@ -95,7 +95,7 @@ class CommunityCommand(BaseCommand):
         """Open community leaderboard in browser."""
         import webbrowser
 
-        leaderboard_url = "https://tinytorch.ai/community/leaderboard"
+        leaderboard_url = "https://tinytorch.ai/leaderboard"
 
         self.console.print(f"[cyan]🏆 Opening leaderboard...[/cyan]")
         try:
@@ -111,7 +111,7 @@ class CommunityCommand(BaseCommand):
         """Open competitions page in browser."""
         import webbrowser
 
-        compete_url = "https://tinytorch.ai/community/compete"
+        compete_url = "https://tinytorch.ai/compete"
 
         self.console.print(f"[cyan]🎯 Opening competitions...[/cyan]")
         try:
