@@ -118,6 +118,14 @@ def main():
         from tinytorch.perf.compression import Compressor
         console.print("  [green]✓[/green] Compressor (YOUR Module 16 implementation)")
         
+        # YOUR KV Cache (Module 17)
+        from tinytorch.perf.memoization import KVCache
+        console.print("  [green]✓[/green] KVCache (YOUR Module 17 implementation)")
+        
+        # YOUR Acceleration (Module 18)
+        from tinytorch.perf.acceleration import vectorized_matmul, fused_gelu
+        console.print("  [green]✓[/green] vectorized_matmul, fused_gelu (YOUR Module 18 implementation)")
+        
         # YOUR Benchmarking (Module 19)
         from tinytorch.benchmarking.benchmark import Benchmark, TinyMLPerf
         console.print("  [green]✓[/green] Benchmark, TinyMLPerf (YOUR Module 19 implementation)")
@@ -384,11 +392,101 @@ def main():
     console.print()
     
     # ========================================================================
-    # STEP 4: BENCHMARK (Using YOUR Benchmark & Profiler - Modules 14 & 19)
+    # STEP 4: KV CACHE (Using YOUR Module 17 - Transformers Only)
     # ========================================================================
     
     console.print(Panel(
-        "[bold green]🏁 STEP 4: Benchmark with YOUR Modules 14 & 19[/bold green]\n"
+        "[bold cyan]⚡ STEP 4: KV Cache with YOUR Module 17[/bold cyan]\n"
+        "Using KVCache for transformer generation speedup\n"
+        "Caches K,V to avoid recomputation during autoregressive generation",
+        border_style="cyan"
+    ))
+    
+    # Demo KV Cache with transformer architecture
+    try:
+        transformer = MinimalTransformer(vocab_size=27, embed_dim=32, num_heads=2, seq_len=8)
+        
+        # Create KV Cache for the transformer
+        kv_cache = KVCache(
+            batch_size=1,
+            max_seq_len=8,
+            num_layers=1,  # MinimalTransformer has 1 attention layer
+            num_heads=2,
+            head_dim=16  # embed_dim / num_heads = 32/2 = 16
+        )
+        
+        # Show cache statistics
+        cache_memory = kv_cache.batch_size * kv_cache.max_seq_len * kv_cache.num_layers * kv_cache.num_heads * kv_cache.head_dim * 2 * 4  # K+V, float32
+        
+        table = Table(title="⚡ KV Cache Stats (YOUR Module 17)", box=box.ROUNDED)
+        table.add_column("Property", style="cyan")
+        table.add_column("Value", style="yellow")
+        table.add_column("Notes", style="dim")
+        
+        table.add_row("Max Sequence", f"{kv_cache.max_seq_len}", "Tokens cacheable")
+        table.add_row("Num Layers", f"{kv_cache.num_layers}", "Transformer layers")
+        table.add_row("Num Heads", f"{kv_cache.num_heads}", "Attention heads")
+        table.add_row("Cache Memory", f"{cache_memory:,} bytes", "Pre-allocated K+V")
+        table.add_row("", "", "")
+        table.add_row("Speedup", "~N× (N=seq_len)", "Avoids recomputation")
+        
+        console.print(table)
+        console.print("  [green]✓[/green] KV Cache ready for generation!")
+        
+    except Exception as e:
+        console.print(f"  [yellow]⚠️ KV Cache demo skipped: {e}[/yellow]")
+    
+    console.print()
+    
+    # ========================================================================
+    # STEP 5: ACCELERATION (Using YOUR Module 18)
+    # ========================================================================
+    
+    console.print(Panel(
+        "[bold magenta]🚀 STEP 5: Acceleration with YOUR Module 18[/bold magenta]\n"
+        "Using vectorized operations for compute speedup\n"
+        "BLAS-optimized matmul and fused operations",
+        border_style="magenta"
+    ))
+    
+    # Demo vectorized matmul speedup
+    import time
+    
+    # Create test matrices
+    A = Tensor(np.random.randn(64, 128).astype(np.float32))
+    B = Tensor(np.random.randn(128, 64).astype(np.float32))
+    
+    # Time standard operation
+    start = time.time()
+    for _ in range(100):
+        C_standard = Tensor(np.dot(A.data, B.data))
+    standard_time = (time.time() - start) * 1000  # ms
+    
+    # Time vectorized operation
+    start = time.time()
+    for _ in range(100):
+        C_vectorized = vectorized_matmul(A, B)
+    vectorized_time = (time.time() - start) * 1000  # ms
+    
+    table = Table(title="🚀 Acceleration Results (YOUR Module 18)", box=box.ROUNDED)
+    table.add_column("Operation", style="cyan")
+    table.add_column("Time (100 runs)", style="yellow")
+    table.add_column("Notes", style="dim")
+    
+    table.add_row("Standard np.dot", f"{standard_time:.2f} ms", "Baseline")
+    table.add_row("vectorized_matmul", f"{vectorized_time:.2f} ms", "YOUR implementation")
+    table.add_row("Matrix Shape", f"{A.shape} @ {B.shape}", f"→ {C_vectorized.shape}")
+    
+    console.print(table)
+    console.print("  [green]✓[/green] Vectorized operations ready!")
+    console.print()
+    
+    # ========================================================================
+    # STEP 6: BENCHMARK (Using YOUR Benchmark & Profiler - Modules 14 & 19)
+    # ========================================================================
+    
+    console.print(Panel(
+        "[bold green]🏁 STEP 6: Benchmark with YOUR Modules 14 & 19[/bold green]\n"
         "Using Benchmark class for standardized measurements\n"
         "Reproducible, statistically rigorous",
         border_style="green"
@@ -514,7 +612,7 @@ def main():
     console.print(Panel(
         "[bold green]🎓 KEY INSIGHTS[/bold green]\n\n"
         f"✅ [cyan]YOUR Profiler (Module 14):[/cyan]\n"
-        f"   • Measured {param_count:,} parameters\n"
+        f"   • Measured {param_count:,} parameters, {flops:,} FLOPs\n"
         f"   • Found baseline latency: {latency_ms:.3f}ms\n\n"
         f"✅ [cyan]YOUR Quantization (Module 15):[/cyan]\n"
         f"   • Achieved {quant_result['compression_ratio']:.1f}× compression\n"
@@ -522,9 +620,15 @@ def main():
         f"✅ [cyan]YOUR Compression (Module 16):[/cyan]\n"
         f"   • Pruned to {sparsity_after:.0%} sparsity\n"
         f"   • {abs(baseline_acc - pruned_acc):.1f}% accuracy impact\n\n"
+        f"✅ [cyan]YOUR KV Cache (Module 17):[/cyan]\n"
+        f"   • Pre-allocated cache for transformer generation\n"
+        f"   • ~N× speedup for sequence length N\n\n"
+        f"✅ [cyan]YOUR Acceleration (Module 18):[/cyan]\n"
+        f"   • BLAS-optimized matrix operations\n"
+        f"   • Vectorized compute kernels\n\n"
         f"💡 [yellow]Challenge: Combine All Techniques![/yellow]\n"
-        f"   • Quantize + Prune = even smaller model\n"
-        f"   • This is the future competition track!",
+        f"   • Quantize + Prune + KV Cache = production-ready\n"
+        f"   • This is real ML systems engineering!",
         border_style="cyan",
         box=box.ROUNDED
     ))
@@ -535,14 +639,18 @@ def main():
         "[green]You used YOUR implementations from:[/green]\n"
         "  • Module 01-03: Tensor, Linear, ReLU\n"
         "  • Module 14: Profiler\n"
-        "  • Module 15: QuantizationComplete\n"
-        "  • Module 16: CompressionComplete\n"
-        "  • Module 19: TinyMLPerf\n\n"
+        "  • Module 15: Quantizer\n"
+        "  • Module 16: Compressor\n"
+        "  • Module 17: KVCache\n"
+        "  • Module 18: vectorized_matmul\n"
+        "  • Module 19: Benchmark\n\n"
         "[bold]Everything you built... now works together![/bold]\n\n"
         "[cyan]What you learned:[/cyan]\n"
         "  ✅ Profile models systematically\n"
         "  ✅ Quantize for memory efficiency\n"
         "  ✅ Prune for sparse models\n"
+        "  ✅ Cache K,V for fast generation\n"
+        "  ✅ Accelerate with vectorized ops\n"
         "  ✅ Benchmark with scientific rigor\n\n"
         "[bold]You've learned ML Systems Engineering![/bold]",
         title="🎯 Milestone 06 Complete",
