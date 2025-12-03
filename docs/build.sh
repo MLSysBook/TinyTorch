@@ -69,6 +69,19 @@ if [ -d "_build" ]; then
     echo ""
 fi
 
+# Copy module ABOUT.md files from src/ to docs/modules/
+echo "📋 Copying module ABOUT files..."
+mkdir -p modules
+for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do
+    src_dir=$(find "$PROJECT_ROOT/src" -maxdepth 1 -type d -name "${i}_*" | head -1)
+    if [ -n "$src_dir" ] && [ -f "$src_dir/ABOUT.md" ]; then
+        module_name=$(basename "$src_dir")
+        cp "$src_dir/ABOUT.md" "modules/${module_name}_ABOUT.md"
+    fi
+done
+echo "   Copied $(ls modules/*_ABOUT.md 2>/dev/null | wc -l | tr -d ' ') module files"
+echo ""
+
 # Build the site
 echo "🚀 Building Jupyter Book site..."
 echo ""
