@@ -1,7 +1,6 @@
 /**
  * TinyTorch Top Bar
- * Smart sticky bar: hides on scroll down, shows on scroll up
- * Matches MLSysBook navbar style for consistency
+ * Elegant navigation bar matching MLSysBook style
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,25 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="tinytorch-bar-content">
                 <div class="tinytorch-bar-left">
                     <a href="intro.html" class="tinytorch-bar-brand">
-                        <span class="icon">🔥</span>
-                        <span>Tiny🔥Torch</span>
+                        <span class="brand-fire">🔥</span>Tiny<span class="brand-fire">🔥</span>Torch
                     </a>
-                    <span class="tinytorch-bar-wip">🚧 Under Construction</span>
+                    <span class="tinytorch-bar-badge">Under Construction</span>
                 </div>
                 <div class="tinytorch-bar-links">
-                    <a href="https://mlsysbook.ai" target="_blank" class="link-book">
+                    <a href="https://mlsysbook.ai" target="_blank">
                         <span class="link-icon">📖</span>
                         <span class="link-text">MLSysBook</span>
                     </a>
-                    <a href="https://buttondown.email/mlsysbook" target="_blank" class="link-subscribe">
+                    <a href="#" class="subscribe-trigger" onclick="event.preventDefault(); if(window.openSubscribeModal) openSubscribeModal();">
                         <span class="link-icon">✉️</span>
                         <span class="link-text">Subscribe</span>
                     </a>
-                    <a href="https://github.com/harvard-edge/TinyTorch" target="_blank" class="link-star">
+                    <a href="https://github.com/mlsysbook/TinyTorch" target="_blank">
                         <span class="link-icon">⭐</span>
                         <span class="link-text">Star</span>
                     </a>
-                    <a href="https://tinytorch.ai/join" target="_blank" class="link-community">
+                    <a href="https://tinytorch.ai/join" target="_blank">
                         <span class="link-icon">🌍</span>
                         <span class="link-text">Community</span>
                     </a>
