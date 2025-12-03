@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-#| default_exp text.tokenization
+#| default_exp core.tokenization
 #| export
 
 import numpy as np
@@ -73,7 +73,7 @@ Let's get started!
 
 ```python
 # How to use this module:
-from tinytorch.text.tokenization import Tokenizer, CharTokenizer, BPETokenizer
+from tinytorch.core.tokenization import Tokenizer, CharTokenizer, BPETokenizer
 ```
 
 **Why this matters:**

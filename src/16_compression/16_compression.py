@@ -145,7 +145,7 @@ distribution. We'll discover that many weights are tiny and might not matter muc
 # %%
 # Profile weight distribution to discover pruning opportunities
 # Module 14 (Profiling) must be completed before Module 16
-from tinytorch.profiling.profiler import Profiler, analyze_weight_distribution
+from tinytorch.optimization.profiling import Profiler, analyze_weight_distribution
 
 def show_weight_distribution_motivation():
     """Display weight distribution analysis - motivates compression techniques."""

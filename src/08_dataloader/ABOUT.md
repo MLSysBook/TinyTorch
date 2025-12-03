@@ -280,7 +280,7 @@ python modules/08_dataloader/dataloader.py
 
 ```python
 from tinytorch.core.tensor import Tensor
-from tinytorch.data.loader import TensorDataset, DataLoader
+from tinytorch.core.dataloader import TensorDataset, DataLoader
 
 # Create synthetic dataset
 features = Tensor([[1, 2], [3, 4], [5, 6], [7, 8]])

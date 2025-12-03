@@ -265,7 +265,7 @@ def run_optimization_workflow_example():
     print("="*70)
 
     # Import optimization APIs
-    from tinytorch.profiling.profiler import Profiler, quick_profile
+    from tinytorch.optimization.profiling import Profiler, quick_profile
     from tinytorch.optimization.compression import magnitude_prune
     from tinytorch.benchmarking import Benchmark, BenchmarkResult
 

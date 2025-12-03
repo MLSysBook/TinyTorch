@@ -973,7 +973,7 @@ def run_optimization_workflow_example():
     # Demonstrate API imports (students can use these for their own optimizations)
     print("\n🔧 Importing optimization APIs...")
     try:
-        from tinytorch.profiling.profiler import Profiler, quick_profile
+        from tinytorch.optimization.profiling import Profiler, quick_profile
         print("  ✅ Module 14 (Profiling) imported")
     except ImportError:
         print("  ⚠️  Module 14 (Profiling) not available - using basic profiling")

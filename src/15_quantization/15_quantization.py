@@ -108,7 +108,7 @@ FP32 weights actually consume. This will show us why reduced precision matters.
 # %%
 def demo_motivation_profiling():
     """Profile model memory usage to discover the quantization problem."""
-    from tinytorch.profiling.profiler import Profiler
+    from tinytorch.optimization.profiling import Profiler
 
     profiler = Profiler()
 
@@ -1489,7 +1489,7 @@ This is the production workflow: measure → compress → validate → deploy.
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-quantization", "solution": true}
 # Import Profiler from Module 14
-from tinytorch.profiling.profiler import Profiler
+from tinytorch.optimization.profiling import Profiler
 
 def demo_quantization_with_profiler():
     """📊 Demonstrate memory savings using Profiler from Module 14."""

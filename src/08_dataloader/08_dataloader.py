@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-#| default_exp data.loader
+#| default_exp core.dataloader
 #| export
 
 # %% [markdown]
@@ -49,8 +49,8 @@ Let's transform scattered data into organized learning batches!
 
 ```python
 # How to use this module:
-from tinytorch.data.loader import Dataset, DataLoader, TensorDataset
-from tinytorch.data.loader import download_mnist, download_cifar10
+from tinytorch.core.dataloader import Dataset, DataLoader, TensorDataset
+from tinytorch.core.dataloader import download_mnist, download_cifar10
 ```
 
 **Why this matters:**

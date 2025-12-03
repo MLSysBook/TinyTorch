@@ -223,7 +223,7 @@ except ImportError:
             pass
 
 # Import Profiler from Module 14 for measurement reuse
-from tinytorch.profiling.profiler import Profiler
+from tinytorch.optimization.profiling import Profiler
 
 # %%
 from enum import Enum

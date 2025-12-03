@@ -53,7 +53,7 @@ Let's build the measurement foundation for ML systems optimization!
 
 ```python
 # How to use this module:
-from tinytorch.profiling.profiler import Profiler, profile_forward_pass, profile_backward_pass
+from tinytorch.optimization.profiling import Profiler, profile_forward_pass, profile_backward_pass
 ```
 
 **Why this matters:**
@@ -64,7 +64,7 @@ from tinytorch.profiling.profiler import Profiler, profile_forward_pass, profile
 """
 
 # %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
-#| default_exp profiling.profiler
+#| default_exp optimization.profiling
 #| export
 
 import sys

@@ -41,7 +41,7 @@ Let's get started!
 """
 
 # %%
-#| default_exp models.transformer
+#| default_exp core.transformer
 
 # %%
 #| export
@@ -54,7 +54,7 @@ from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Linear
 from tinytorch.core.attention import MultiHeadAttention
 from tinytorch.core.activations import GELU
-from tinytorch.text.embeddings import Embedding, PositionalEncoding
+from tinytorch.core.embeddings import Embedding, PositionalEncoding
 
 # Constants for memory calculations
 BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
@@ -69,7 +69,7 @@ MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
 ```python
 # How to use this module:
-from tinytorch.models.transformer import TransformerBlock, GPT, LayerNorm, MLP
+from tinytorch.core.transformer import TransformerBlock, GPT, LayerNorm, MLP
 ```
 
 **Why this matters:**

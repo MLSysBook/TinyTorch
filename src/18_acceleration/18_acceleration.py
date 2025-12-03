@@ -1149,7 +1149,7 @@ This is how professional ML engineers work: profile → optimize → measure →
 
 # %% nbgrader={"grade": false, "grade_id": "demo-profiler-acceleration", "solution": true}
 # Import Profiler from Module 14 (Module 18 comes after Module 14)
-from tinytorch.profiling.profiler import Profiler
+from tinytorch.optimization.profiling import Profiler
 
 def demo_acceleration_with_profiler():
     """📊 Demonstrate acceleration gains using Profiler from Module 14."""

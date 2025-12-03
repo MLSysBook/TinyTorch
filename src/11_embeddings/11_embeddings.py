@@ -45,7 +45,7 @@ Let's transform tokens into intelligence!
 
 ```python
 # How to use this module:
-from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
+from tinytorch.core.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
 ```
 
 **Why this matters:**
@@ -56,7 +56,7 @@ from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinu
 """
 
 # %%
-#| default_exp text.embeddings
+#| default_exp core.embeddings
 
 # %%
 #| export

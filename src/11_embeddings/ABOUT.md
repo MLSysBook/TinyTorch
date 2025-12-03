@@ -379,7 +379,7 @@ The module includes comprehensive unit tests during development:
 Test your embedding implementation interactively:
 
 ```python
-from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
+from tinytorch.core.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
 
 # Create embedding layer
 vocab_size, embed_dim = 10000, 256

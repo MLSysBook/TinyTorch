@@ -494,7 +494,7 @@ print(f"Speedup: {unfused_time/fused_time:.2f}x")
 print(f"Numerically equivalent: {np.allclose(y_fused.data, y_unfused.data)}")
 
 # Measure with profiler
-from tinytorch.profiling.profiler import Profiler
+from tinytorch.optimization.profiling import Profiler
 
 profiler = Profiler()
 

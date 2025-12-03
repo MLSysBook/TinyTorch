@@ -46,7 +46,7 @@ Let's make inference blazingly fast through computational reuse!
 
 ```python
 # How to use this module:
-from tinytorch.generation.kv_cache import KVCache, enable_kv_cache
+from tinytorch.optimization.memoization import KVCache, enable_kv_cache
 ```
 
 **Why this matters:**
@@ -57,7 +57,7 @@ from tinytorch.generation.kv_cache import KVCache, enable_kv_cache
 """
 
 # %%
-#| default_exp generation.kv_cache
+#| default_exp optimization.memoization
 #| export
 
 import numpy as np
@@ -91,7 +91,7 @@ def profile_naive_generation():
     This function runs ONLY when the module is executed directly,
     not when imported (avoiding side effects during imports).
     """
-    from tinytorch.profiling.profiler import Profiler
+    from tinytorch.optimization.profiling import Profiler
     import matplotlib.pyplot as plt
 
     profiler = Profiler()
@@ -987,7 +987,7 @@ def enable_kv_cache(model):
         cache: KVCache object for this model
 
     EXAMPLE:
-    >>> from tinytorch.models.transformer import GPT
+    >>> from tinytorch.core.transformer import GPT
     >>> model = GPT(vocab_size=100, embed_dim=128, num_layers=4, num_heads=4)
     >>> cache = enable_kv_cache(model)
     >>> hasattr(model, '_kv_cache')  # True

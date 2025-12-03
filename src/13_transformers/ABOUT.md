@@ -476,11 +476,11 @@ print(f"Generated {generated.shape[1] - prompt.shape[1]} new tokens")
 
 ```python
 # When students install tinytorch, they import your work like this:
-from tinytorch.models.transformer import GPT, TransformerBlock
+from tinytorch.core.transformer import GPT, TransformerBlock
 from tinytorch.nn import LayerNorm, MLP  # Your normalization and feed-forward implementations
 from tinytorch.core.tensor import Tensor  # Foundation from Module 01
 from tinytorch.core.attention import MultiHeadAttention  # From Module 12
-from tinytorch.text.embeddings import Embedding  # From Module 11
+from tinytorch.core.embeddings import Embedding  # From Module 11
 
 # Example: Build a GPT-2 scale model
 gpt2 = GPT(
