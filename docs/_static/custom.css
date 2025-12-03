@@ -2,6 +2,51 @@
    TinyTorch Design System - ML Systems Education
    ============================================ */
 
+/* ============================================
+   Header Icons - Hide Download & Align
+   ============================================ */
+
+/* Hide download button completely */
+.dropdown-download-buttons,
+.dropdown.dropdown-download,
+.btn.dropdown-toggle[aria-label*="download"],
+button[aria-label*="Download"],
+.header-article-item:has(.dropdown-download),
+.download-button {
+    display: none !important;
+}
+
+/* Align header article icons properly */
+.header-article-items {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.header-article-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Make all header buttons same size and aligned */
+.header-article-items button,
+.header-article-items .btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.5rem !important;
+    min-width: 2.5rem !important;
+    min-height: 2.5rem !important;
+}
+
+/* Dropdown buttons container alignment */
+.dropdown-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+}
+
 /* Hide intro page from sidebar navigation */
 .bd-sidebar nav a[href="intro.html"],
 .bd-sidebar nav a[href="./intro.html"],
