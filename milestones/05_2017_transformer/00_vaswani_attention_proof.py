@@ -241,19 +241,38 @@ class ReversalTransformer:
         return self._params
 
 
-def generate_reversal_dataset(num_samples=200, seq_len=6, vocab_size=10):
+def generate_reversal_dataset(num_samples=200, seq_len=6, vocab_size=26):
     """
-    Generate sequence reversal dataset.
+    Generate sequence reversal dataset using letters A-Z.
     
     Each sample is (input_seq, target_seq) where target = reverse(input)
+    More intuitive than numbers: "CAT" → "TAC", "HELLO" → "OLLEH"
     """
     dataset = []
     for _ in range(num_samples):
-        # Generate random sequence (avoid 0 for clarity)
-        seq = np.random.randint(1, vocab_size, size=seq_len)
+        # Generate random sequence of letters (1-26 maps to A-Z)
+        seq = np.random.randint(1, min(vocab_size, 27), size=seq_len)
         reversed_seq = seq[::-1].copy()
         dataset.append((seq, reversed_seq))
     return dataset
+
+
+def tokens_to_letters(tokens):
+    """Convert token indices to readable letters (1=A, 2=B, ...)"""
+    return ''.join(chr(ord('A') + t - 1) if 1 <= t <= 26 else '?' for t in tokens)
+
+
+# Fun word examples for demonstration
+FUN_WORDS = [
+    "PYTHON",
+    "TORCH", 
+    "NEURAL",
+    "TENSOR",
+    "ATTEND",
+    "VASWANI",
+    "QUERY",
+    "HELLO",
+]
 
 
 def train_epoch(model, dataset, optimizer, loss_fn):
@@ -327,9 +346,9 @@ def main():
     console.print("="*70)
     console.print()
     
-    # Hyperparameters
-    vocab_size = 10
-    seq_len = 6
+    # Hyperparameters  
+    vocab_size = 27  # 0 (padding) + A-Z (1-26)
+    seq_len = 6      # 6-letter "words"
     embed_dim = 32
     num_heads = 4
     lr = 0.001
@@ -339,12 +358,12 @@ def main():
     
     console.print(Panel(
         f"[bold]Hyperparameters[/bold]\n"
-        f"  Vocabulary size: [cyan]{vocab_size}[/cyan] (tokens 0-9)\n"
-        f"  Sequence length: [cyan]{seq_len}[/cyan]\n"
-        f"  Embedding dim:   [cyan]{embed_dim}[/cyan]\n"
-        f"  Attention heads: [cyan]{num_heads}[/cyan]\n"
-        f"  Learning rate:   [cyan]{lr}[/cyan]\n"
-        f"  Epochs:          [cyan]{epochs}[/cyan]",
+        f"  Vocabulary: [cyan]{vocab_size}[/cyan] tokens (A-Z letters)\n"
+        f"  Sequence:   [cyan]{seq_len}[/cyan] letters per word\n"
+        f"  Embedding:  [cyan]{embed_dim}[/cyan] dimensions\n"
+        f"  Attention:  [cyan]{num_heads}[/cyan] heads\n"
+        f"  Learning:   [cyan]{lr}[/cyan]\n"
+        f"  Epochs:     [cyan]{epochs}[/cyan]",
         title="⚙️  Configuration",
         border_style="blue"
     ))
@@ -352,16 +371,17 @@ def main():
     
     # Generate data
     console.print("📊 Generating reversal dataset...")
+    console.print("   [dim]Task: Reverse letters like PYTHON → NOHTYP[/dim]")
     train_data = generate_reversal_dataset(num_samples=train_size, seq_len=seq_len, vocab_size=vocab_size)
     test_data = generate_reversal_dataset(num_samples=test_size, seq_len=seq_len, vocab_size=vocab_size)
     console.print(f"  ✓ Training samples: {len(train_data)}")
     console.print(f"  ✓ Test samples: {len(test_data)}\n")
     
-    # Show example
+    # Show example with letters
     console.print("🔍 Example:")
     ex_in, ex_out = train_data[0]
-    console.print(f"  Input:  {ex_in.tolist()}")
-    console.print(f"  Target: {ex_out.tolist()}")
+    console.print(f"  Input:  [cyan]{tokens_to_letters(ex_in)}[/cyan] → Target: [green]{tokens_to_letters(ex_out)}[/green]")
+    console.print(f"  [dim](Numbers: {ex_in.tolist()} → {ex_out.tolist()})[/dim]")
     console.print()
     
     # Build model
@@ -458,7 +478,7 @@ def main():
     console.print(table)
     console.print()
     
-    # Show sample predictions
+    # Show sample predictions with letters
     console.print(Panel("[bold]Sample Predictions[/bold]", border_style="blue"))
     console.print()
     
@@ -466,9 +486,13 @@ def main():
         match = "✓" if np.array_equal(pred, target) else "✗"
         style = "green" if np.array_equal(pred, target) else "red"
         
-        console.print(f"  [{style}]{match}[/{style}] Input:  {inp.tolist()}")
-        console.print(f"     Target: {target.tolist()}")
-        console.print(f"     Pred:   {pred.tolist()}\n")
+        inp_str = tokens_to_letters(inp)
+        target_str = tokens_to_letters(target)
+        pred_str = tokens_to_letters(pred)
+        
+        console.print(f"  [{style}]{match}[/{style}] Input:  [cyan]{inp_str}[/cyan]")
+        console.print(f"     Target: [green]{target_str}[/green]")
+        console.print(f"     Pred:   [{style}]{pred_str}[/{style}]\n")
     
     # Verdict
     console.print("="*70)

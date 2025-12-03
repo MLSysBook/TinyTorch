@@ -80,9 +80,9 @@ MILESTONE_SCRIPTS = {
         "name": "Transformer Era (2017)",
         "year": 2017,
         "title": "Attention is All You Need",
-        "script": "milestones/05_2017_transformer/03_quickdemo.py",
+        "script": "milestones/05_2017_transformer/00_vaswani_attention_proof.py",
         "required_modules": list(range(1, 14)),
-        "description": "Build transformer with self-attention",
+        "description": "Prove attention works with sequence reversal",
         "historical_context": "Vaswani et al. revolutionized NLP",
         "emoji": "🤖"
     },
@@ -90,10 +90,10 @@ MILESTONE_SCRIPTS = {
         "id": "06",
         "name": "MLPerf Benchmarks (2018)",
         "year": 2018,
-        "title": "Production ML Systems",
-        "script": "milestones/06_2018_mlperf/02_compression.py",
-        "required_modules": list(range(1, 20)),
-        "description": "Optimize for production deployment",
+        "title": "The Optimization Olympics",
+        "script": "milestones/06_2018_mlperf/01_optimization_olympics.py",
+        "required_modules": list(range(1, 17)),  # Needs up to Module 16 (Compression)
+        "description": "Compress and accelerate your neural network",
         "historical_context": "MLPerf standardized ML benchmarks",
         "emoji": "🏆"
     }
