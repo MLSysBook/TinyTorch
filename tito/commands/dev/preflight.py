@@ -26,6 +26,8 @@ from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.console import Group
 from rich.text import Text
+from rich.live import Live
+from rich.status import Status
 from rich import box
 
 from ..base import BaseCommand
@@ -47,6 +49,9 @@ class CheckResult:
     message: str = ""
     duration_ms: int = 0
     details: List[str] = field(default_factory=list)
+    command: str = ""  # The command that was run
+    stdout: str = ""   # Captured stdout
+    stderr: str = ""   # Captured stderr
 
 
 @dataclass
@@ -115,11 +120,26 @@ class PreflightCommand(BaseCommand):
             action='store_true',
             help='Attempt to auto-fix common issues'
         )
+        parser.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='Show commands as they execute'
+        )
 
     def run(self, args: Namespace) -> int:
         console = self.console
         project_root = Path.cwd()
         start_time = time.time()
+        
+        # Setup log file for debugging
+        log_dir = project_root / ".tito" / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        self.log_file = log_dir / f"preflight_{timestamp}.log"
+        self.log_lines: List[str] = []
+        self._log(f"TinyTorch Preflight - {timestamp}")
+        self._log(f"Project root: {project_root}")
+        self._log("-" * 60)
 
         # Determine check level
         if args.release:
@@ -140,13 +160,14 @@ class PreflightCommand(BaseCommand):
             level_desc = "Standard Preflight"
 
         is_ci = args.ci or args.json
+        verbose = getattr(args, 'verbose', False)
 
         # Show header (unless JSON output)
         if not args.json:
             console.print(Panel(
                 f"[bold cyan]{level_emoji} {level_desc}[/bold cyan]\n\n"
                 f"Running verification checks before {'CI/CD' if is_ci else 'your next step'}...\n"
-                f"[dim]Level: {level} | CI Mode: {is_ci}[/dim]",
+                f"[dim]Level: {level} | CI Mode: {is_ci} | Verbose: {verbose}[/dim]",
                 title="TinyTorch Preflight",
                 border_style="bright_cyan"
             ))
@@ -156,23 +177,23 @@ class PreflightCommand(BaseCommand):
         categories = []
 
         # Level 1: Quick checks (always run)
-        categories.append(self._check_structure(project_root))
-        categories.append(self._check_cli(project_root))
-        categories.append(self._check_imports(project_root))
+        categories.append(self._check_structure(project_root, verbose))
+        categories.append(self._check_cli(project_root, verbose))
+        categories.append(self._check_imports(project_root, verbose))
 
         # Level 2: Standard checks
         if level in ["standard", "full", "release"]:
-            categories.append(self._check_git_state(project_root))
+            categories.append(self._check_git_state(project_root, verbose))
 
         # Level 3: Full checks
         if level in ["full", "release"]:
-            categories.append(self._check_module_tests(project_root, quick=(level != "release")))
+            categories.append(self._check_module_tests(project_root, quick=(level != "release"), verbose=verbose))
 
         # Level 4: Release checks
         if level == "release":
-            categories.append(self._check_milestones(project_root))
-            categories.append(self._check_e2e(project_root))
-            categories.append(self._check_docs(project_root))
+            categories.append(self._check_milestones(project_root, verbose))
+            categories.append(self._check_e2e(project_root, verbose))
+            categories.append(self._check_docs(project_root, verbose))
 
         # Calculate totals
         total_passed = sum(c.passed for c in categories)
@@ -183,16 +204,43 @@ class PreflightCommand(BaseCommand):
 
         duration = time.time() - start_time
 
+        # Save log file
+        self._log("-" * 60)
+        self._log(f"Completed in {duration:.2f}s")
+        self._log(f"Result: {'PASS' if all_passed else 'FAIL'}")
+        self._save_log()
+
         # Output results
         if args.json:
             self._output_json(categories, all_passed, duration)
         else:
-            self._output_rich(categories, all_passed, duration, total_passed, total_failed, total_warned, total_checks, level, is_ci)
+            self._output_rich(categories, all_passed, duration, total_passed, total_failed, total_warned, total_checks, level, is_ci, verbose)
+            
+            # Show log location on failure
+            if not all_passed:
+                console.print(f"\n[dim]📋 Debug log: {self.log_file}[/dim]")
 
         return 0 if all_passed else 1
 
-    def _run_command(self, cmd: List[str], cwd: Path, timeout: int = 60) -> Tuple[int, str, str]:
+    def _log(self, message: str) -> None:
+        """Add a line to the log."""
+        self.log_lines.append(f"[{time.strftime('%H:%M:%S')}] {message}")
+
+    def _save_log(self) -> None:
+        """Save the log file."""
+        try:
+            self.log_file.write_text("\n".join(self.log_lines))
+        except Exception:
+            pass  # Don't fail if we can't write log
+
+    def _run_command(self, cmd: List[str], cwd: Path, timeout: int = 60, verbose: bool = False) -> Tuple[int, str, str]:
         """Run a command and return (exit_code, stdout, stderr)."""
+        cmd_str = " ".join(cmd)
+        self._log(f"Running: {cmd_str}")
+        
+        if verbose:
+            self.console.print(f"[dim]  $ {cmd_str}[/dim]")
+        
         try:
             result = subprocess.run(
                 cmd,
@@ -201,13 +249,25 @@ class PreflightCommand(BaseCommand):
                 text=True,
                 timeout=timeout
             )
+            
+            # Log output
+            if result.stdout.strip():
+                for line in result.stdout.strip().split('\n')[:20]:  # First 20 lines
+                    self._log(f"  stdout: {line}")
+            if result.stderr.strip():
+                for line in result.stderr.strip().split('\n')[:10]:  # First 10 lines
+                    self._log(f"  stderr: {line}")
+            self._log(f"  exit code: {result.returncode}")
+            
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
+            self._log(f"  TIMEOUT after {timeout}s")
             return -1, "", "Command timed out"
         except Exception as e:
+            self._log(f"  ERROR: {str(e)}")
             return -1, "", str(e)
 
-    def _check_structure(self, project_root: Path) -> CheckCategory:
+    def _check_structure(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check project structure and required files."""
         category = CheckCategory(name="Project Structure", emoji="📁")
 
@@ -283,9 +343,12 @@ class PreflightCommand(BaseCommand):
 
         return category
 
-    def _check_cli(self, project_root: Path) -> CheckCategory:
+    def _check_cli(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check CLI commands work."""
         category = CheckCategory(name="CLI Commands", emoji="🖥️")
+        
+        if verbose:
+            self.console.print(f"\n[bold]🖥️ CLI Commands[/bold]")
 
         cli_checks = [
             (["--version"], "tito --version"),
@@ -298,7 +361,9 @@ class PreflightCommand(BaseCommand):
         for args, name in cli_checks:
             start = time.time()
             cmd = [sys.executable, "-m", "tito.main"] + args
-            code, stdout, stderr = self._run_command(cmd, project_root, timeout=30)
+            cmd_str = f"python -m tito.main {' '.join(args)}"
+            
+            code, stdout, stderr = self._run_command(cmd, project_root, timeout=30, verbose=verbose)
 
             duration = int((time.time() - start) * 1000)
 
@@ -306,21 +371,36 @@ class PreflightCommand(BaseCommand):
                 category.checks.append(CheckResult(
                     name=name,
                     status=CheckStatus.PASS,
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=cmd_str,
+                    stdout=stdout[:500],  # Capture first 500 chars
+                    stderr=stderr[:500]
                 ))
+                if verbose:
+                    self.console.print(f"    [green]✓[/green] {name} [dim]({duration}ms)[/dim]")
             else:
                 category.checks.append(CheckResult(
                     name=name,
                     status=CheckStatus.FAIL,
                     message=stderr[:100] if stderr else "Command failed",
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=cmd_str,
+                    stdout=stdout[:1000],
+                    stderr=stderr[:1000]
                 ))
+                if verbose:
+                    self.console.print(f"    [red]✗[/red] {name}")
+                    if stderr:
+                        self.console.print(f"      [dim red]{stderr[:200]}[/dim red]")
 
         return category
 
-    def _check_imports(self, project_root: Path) -> CheckCategory:
+    def _check_imports(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check that key imports work."""
         category = CheckCategory(name="Package Imports", emoji="📦")
+        
+        if verbose:
+            self.console.print(f"\n[bold]📦 Package Imports[/bold]")
 
         imports = [
             ("import tinytorch", "tinytorch package"),
@@ -331,7 +411,7 @@ class PreflightCommand(BaseCommand):
         for import_stmt, name in imports:
             start = time.time()
             cmd = [sys.executable, "-c", import_stmt]
-            code, stdout, stderr = self._run_command(cmd, project_root, timeout=10)
+            code, stdout, stderr = self._run_command(cmd, project_root, timeout=10, verbose=verbose)
 
             duration = int((time.time() - start) * 1000)
 
@@ -339,20 +419,27 @@ class PreflightCommand(BaseCommand):
                 category.checks.append(CheckResult(
                     name=name,
                     status=CheckStatus.PASS,
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=import_stmt,
+                    stderr=stderr
                 ))
+                if verbose:
+                    self.console.print(f"    [green]✓[/green] {name}")
             else:
-                # Import failures might be expected if module not exported yet
                 category.checks.append(CheckResult(
                     name=name,
                     status=CheckStatus.WARN,
                     message="Import failed (may need export)",
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=import_stmt,
+                    stderr=stderr[:500]
                 ))
+                if verbose:
+                    self.console.print(f"    [yellow]⚠[/yellow] {name} - {stderr[:100] if stderr else 'failed'}")
 
         return category
 
-    def _check_git_state(self, project_root: Path) -> CheckCategory:
+    def _check_git_state(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check git repository state."""
         category = CheckCategory(name="Git State", emoji="🔀")
 
@@ -405,19 +492,20 @@ class PreflightCommand(BaseCommand):
 
         return category
 
-    def _check_module_tests(self, project_root: Path, quick: bool = True) -> CheckCategory:
+    def _check_module_tests(self, project_root: Path, quick: bool = True, verbose: bool = False) -> CheckCategory:
         """Run module tests."""
         category = CheckCategory(name="Module Tests", emoji="🧪")
+        
+        if verbose:
+            self.console.print(f"\n[bold]🧪 Module Tests[/bold]")
 
         # Determine which tests to run
         if quick:
-            # Just run a few key tests
             test_targets = [
                 ("tests/01_tensor/", "Module 01 tests"),
                 ("tests/02_activations/", "Module 02 tests"),
             ]
         else:
-            # Run all module tests
             test_targets = [
                 ("tests/", "All tests"),
             ]
@@ -436,13 +524,13 @@ class PreflightCommand(BaseCommand):
                 continue
 
             cmd = [sys.executable, "-m", "pytest", str(full_path), "-v", "--tb=short", "-q"]
+            cmd_str = f"pytest {test_path} -v --tb=short -q"
             timeout = 300 if not quick else 60
 
-            code, stdout, stderr = self._run_command(cmd, project_root, timeout=timeout)
+            code, stdout, stderr = self._run_command(cmd, project_root, timeout=timeout, verbose=verbose)
             duration = int((time.time() - start) * 1000)
 
             if code == 0:
-                # Parse test count from output
                 passed_count = "all"
                 for line in stdout.split('\n'):
                     if 'passed' in line:
@@ -453,10 +541,14 @@ class PreflightCommand(BaseCommand):
                     name=name,
                     status=CheckStatus.PASS,
                     message=passed_count,
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=cmd_str,
+                    stdout=stdout[-2000:],  # Last 2000 chars
+                    stderr=stderr
                 ))
+                if verbose:
+                    self.console.print(f"    [green]✓[/green] {name}: {passed_count}")
             else:
-                # Extract failure info
                 failed_info = "Tests failed"
                 for line in stdout.split('\n'):
                     if 'failed' in line.lower() or 'error' in line.lower():
@@ -467,14 +559,26 @@ class PreflightCommand(BaseCommand):
                     name=name,
                     status=CheckStatus.FAIL,
                     message=failed_info,
-                    duration_ms=duration
+                    duration_ms=duration,
+                    command=cmd_str,
+                    stdout=stdout[-3000:],  # More output on failure
+                    stderr=stderr
                 ))
+                if verbose:
+                    self.console.print(f"    [red]✗[/red] {name}: {failed_info}")
+                    # Show last few lines of output
+                    last_lines = stdout.strip().split('\n')[-5:]
+                    for line in last_lines:
+                        self.console.print(f"      [dim]{line}[/dim]")
 
         return category
 
-    def _check_milestones(self, project_root: Path) -> CheckCategory:
+    def _check_milestones(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check milestone scripts exist and are runnable."""
         category = CheckCategory(name="Milestones", emoji="🏆")
+        
+        if verbose:
+            self.console.print(f"\n[bold]🏆 Milestones[/bold]")
 
         milestones_dir = project_root / "milestones"
         if not milestones_dir.exists():
@@ -485,7 +589,6 @@ class PreflightCommand(BaseCommand):
             ))
             return category
 
-        # Check key milestone scripts exist
         milestone_scripts = [
             ("01_1957_perceptron/02_rosenblatt_trained.py", "Perceptron script"),
             ("02_1969_xor/02_xor_solved.py", "XOR script"),
@@ -502,6 +605,8 @@ class PreflightCommand(BaseCommand):
                     status=CheckStatus.PASS,
                     duration_ms=int((time.time() - start) * 1000)
                 ))
+                if verbose:
+                    self.console.print(f"    [green]✓[/green] {name}")
             else:
                 category.checks.append(CheckResult(
                     name=name,
@@ -509,12 +614,17 @@ class PreflightCommand(BaseCommand):
                     message="Script not found",
                     duration_ms=int((time.time() - start) * 1000)
                 ))
+                if verbose:
+                    self.console.print(f"    [yellow]⚠[/yellow] {name} - not found")
 
         return category
 
-    def _check_e2e(self, project_root: Path) -> CheckCategory:
+    def _check_e2e(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Run E2E tests."""
         category = CheckCategory(name="E2E Tests", emoji="🔄")
+        
+        if verbose:
+            self.console.print(f"\n[bold]🔄 E2E Tests[/bold]")
 
         e2e_dir = project_root / "tests" / "e2e"
         if not e2e_dir.exists():
@@ -525,29 +635,42 @@ class PreflightCommand(BaseCommand):
             ))
             return category
 
-        # Run quick E2E tests
         start = time.time()
         cmd = [sys.executable, "-m", "pytest", str(e2e_dir), "-v", "-k", "quick", "--tb=short"]
-        code, stdout, stderr = self._run_command(cmd, project_root, timeout=120)
+        cmd_str = "pytest tests/e2e/ -v -k quick --tb=short"
+        
+        code, stdout, stderr = self._run_command(cmd, project_root, timeout=120, verbose=verbose)
         duration = int((time.time() - start) * 1000)
 
         if code == 0:
             category.checks.append(CheckResult(
                 name="E2E quick tests",
                 status=CheckStatus.PASS,
-                duration_ms=duration
+                duration_ms=duration,
+                command=cmd_str,
+                stdout=stdout[-2000:]
             ))
+            if verbose:
+                self.console.print(f"    [green]✓[/green] E2E quick tests passed")
         else:
             category.checks.append(CheckResult(
                 name="E2E quick tests",
                 status=CheckStatus.FAIL,
                 message="E2E tests failed",
-                duration_ms=duration
+                duration_ms=duration,
+                command=cmd_str,
+                stdout=stdout[-3000:],
+                stderr=stderr
             ))
+            if verbose:
+                self.console.print(f"    [red]✗[/red] E2E quick tests failed")
+                last_lines = stdout.strip().split('\n')[-5:]
+                for line in last_lines:
+                    self.console.print(f"      [dim]{line}[/dim]")
 
         return category
 
-    def _check_docs(self, project_root: Path) -> CheckCategory:
+    def _check_docs(self, project_root: Path, verbose: bool = False) -> CheckCategory:
         """Check documentation exists."""
         category = CheckCategory(name="Documentation", emoji="📚")
 
@@ -616,7 +739,7 @@ class PreflightCommand(BaseCommand):
 
     def _output_rich(self, categories: List[CheckCategory], all_passed: bool, duration: float,
                      total_passed: int, total_failed: int, total_warned: int, total_checks: int,
-                     level: str, is_ci: bool):
+                     level: str, is_ci: bool, verbose: bool = False):
         """Output results with rich formatting."""
         console = self.console
 
@@ -655,6 +778,21 @@ class PreflightCommand(BaseCommand):
 
             console.print(f"\n[bold]{category.emoji} {category.name}[/bold] {status_summary}")
             console.print(table)
+            
+            # Show failure details (always show for failures, not just verbose)
+            for check in category.checks:
+                if check.status == CheckStatus.FAIL and (check.stdout or check.stderr):
+                    console.print(f"\n  [bold red]Failed: {check.name}[/bold red]")
+                    if check.command:
+                        console.print(f"  [dim]Command: {check.command}[/dim]")
+                    if check.stderr:
+                        console.print(f"  [dim red]Error:[/dim red]")
+                        for line in check.stderr.strip().split('\n')[:5]:
+                            console.print(f"    [dim]{line}[/dim]")
+                    if check.stdout and not check.stderr:
+                        console.print(f"  [dim]Output (last lines):[/dim]")
+                        for line in check.stdout.strip().split('\n')[-5:]:
+                            console.print(f"    [dim]{line}[/dim]")
 
         # Summary
         console.print()
