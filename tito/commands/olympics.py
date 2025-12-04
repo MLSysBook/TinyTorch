@@ -116,7 +116,7 @@ class OlympicsCommand(BaseCommand):
 
         console.print(Panel(
             content,
-            title="⚡ NEURAL NETWORKS OLYMPICS ⚡",
+            title="⚡ TINYTORCH OLYMPICS ⚡",
             border_style="bright_yellow",
             padding=(1, 2)
         ))
