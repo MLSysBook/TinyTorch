@@ -19,8 +19,6 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Confirm
 
 from ..base import BaseCommand
-from ..view import ViewCommand
-from ..test import TestCommand
 from ..export import ExportCommand
 from .reset import ModuleResetCommand
 from .test import ModuleTestCommand
@@ -395,13 +393,33 @@ class ModuleWorkflowCommand(BaseCommand):
     
     def _open_jupyter(self, module_name: str) -> int:
         """Open Jupyter Lab for a module."""
-        # Use the existing view command
-        fake_args = Namespace()
-        fake_args.module = module_name
-        fake_args.force = False
-        
-        view_command = ViewCommand(self.config)
-        return view_command.run(fake_args)
+        try:
+            module_dir = self.config.modules_dir / module_name
+            if not module_dir.exists():
+                self.console.print(f"[yellow]⚠️  Module directory not found: {module_name}[/yellow]")
+                return 1
+
+            self.console.print(f"\n[cyan]🚀 Opening Jupyter Lab for module {module_name}...[/cyan]")
+
+            # Launch Jupyter Lab in the module directory
+            subprocess.Popen(
+                ["jupyter", "lab", "--no-browser"],
+                cwd=str(module_dir),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
+            self.console.print("[green]✅ Jupyter Lab started![/green]")
+            self.console.print(f"[dim]Working directory: {module_dir}[/dim]")
+            return 0
+
+        except FileNotFoundError:
+            self.console.print("[yellow]⚠️  Jupyter Lab not found. Install with:[/yellow]")
+            self.console.print("[dim]pip install jupyterlab[/dim]")
+            return 1
+        except Exception as e:
+            self.console.print(f"[red]❌ Failed to launch Jupyter: {e}[/red]")
+            return 1
     
     def complete_module(self, module_number: Optional[str] = None, skip_tests: bool = False, skip_export: bool = False) -> int:
         """Complete a module with enhanced visual feedback and celebration."""
