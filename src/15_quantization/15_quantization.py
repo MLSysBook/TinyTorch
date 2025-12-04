@@ -1882,6 +1882,46 @@ In mobile/edge deployment scenarios:
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Quantization Shrinks Models
+
+**What you built:** Quantization that converts FP32 weights to INT8, reducing model size 4×.
+
+**Why it matters:** A 400MB model becomes 100MB—small enough to run on a phone! Quantization
+is how production ML deploys large models to edge devices. The 4× reduction comes from using
+8 bits per weight instead of 32 bits.
+
+In the MLPerf milestone, you'll see quantization in action, measuring real memory savings.
+"""
+
+# %%
+def demo_quantization():
+    """🎯 See quantization shrink model size."""
+    print("🎯 AHA MOMENT: Quantization Shrinks Models")
+    print("=" * 45)
+    
+    # Create FP32 weights
+    weights = Tensor(np.random.randn(256, 128).astype(np.float32))
+    original_bytes = weights.data.nbytes
+    
+    # Quantize to INT8
+    q_weights, scale, zero_point = Quantizer.quantize_tensor(weights)
+    quantized_bytes = q_weights.data.size  # 1 byte per INT8 element
+    
+    print(f"Original FP32: {original_bytes:,} bytes")
+    print(f"Quantized INT8: {quantized_bytes:,} bytes")
+    print(f"\nCompression: {original_bytes / quantized_bytes:.0f}× smaller!")
+    print(f"INT8 range: [{q_weights.data.min()}, {q_weights.data.max()}]")
+    
+    print("\n✨ Same values, 4× less memory!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_quantization()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Quantization
 
 Congratulations! You've built a complete INT8 quantization system that can reduce model size by 4× with minimal accuracy loss!

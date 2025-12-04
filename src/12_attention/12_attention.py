@@ -1183,6 +1183,49 @@ Training requires storing activations for backward pass. How much extra memory d
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Attention Finds Relationships
+
+**What you built:** Attention mechanisms that let tokens interact with each other.
+
+**Why it matters:** Before attention, models processed tokens independently. Attention lets
+each token "look at" every other token and decide what's relevant. This is how transformers
+understand that "it" refers to "the cat" in a sentence!
+
+In the next module, you'll combine attention with MLPs to build full transformer blocks.
+"""
+
+# %%
+def demo_attention():
+    """🎯 See attention compute relationships."""
+    print("🎯 AHA MOMENT: Attention Finds Relationships")
+    print("=" * 45)
+    
+    # Create Q, K, V for 4 tokens with 8-dim embeddings
+    Q = Tensor(np.random.randn(1, 4, 8))
+    K = Tensor(np.random.randn(1, 4, 8))
+    V = Tensor(np.random.randn(1, 4, 8))
+    
+    # Compute attention
+    output, weights = scaled_dot_product_attention(Q, K, V)
+    
+    print(f"Sequence length: 4 tokens")
+    print(f"Embedding dim:   8")
+    print(f"\nAttention weights shape: {weights.shape}")
+    print(f"Each token attends to all 4 positions!")
+    
+    print(f"\nToken 0 attention: {weights.data[0, 0, :].round(2)}")
+    print("(sums to 1.0 - it's a probability distribution)")
+    
+    print("\n✨ Attention lets tokens communicate!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_attention()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Attention
 
 Congratulations! You've built the attention mechanism that revolutionized deep learning!

@@ -1622,6 +1622,53 @@ These questions test your systems understanding of loss functions - not just "ho
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Loss Guides Learning
+
+**What you built:** Loss functions that measure how wrong predictions are.
+
+**Why it matters:** Without loss, there's no learning. The loss function is the "coach"
+that tells the network whether its predictions are good or bad. Lower loss = better
+predictions. Every training step aims to reduce this number.
+
+In the next module, you'll add autograd which computes gradients of this loss—the
+direction to adjust weights to make predictions better!
+"""
+
+# %%
+def demo_losses():
+    """🎯 See how loss responds to prediction quality."""
+    print("🎯 AHA MOMENT: Loss Guides Learning")
+    print("=" * 45)
+    
+    loss_fn = MSELoss()
+    target = Tensor(np.array([1.0, 0.0, 0.0]))
+    
+    # Perfect prediction
+    perfect = Tensor(np.array([1.0, 0.0, 0.0]))
+    loss_perfect = loss_fn(perfect, target)
+    
+    # Close prediction
+    close = Tensor(np.array([0.9, 0.1, 0.1]))
+    loss_close = loss_fn(close, target)
+    
+    # Wrong prediction
+    wrong = Tensor(np.array([0.0, 1.0, 1.0]))
+    loss_wrong = loss_fn(wrong, target)
+    
+    print(f"Perfect prediction → Loss: {float(loss_perfect.data):.4f}")
+    print(f"Close prediction   → Loss: {float(loss_close.data):.4f}")
+    print(f"Wrong prediction   → Loss: {float(loss_wrong.data):.4f}")
+    
+    print("\n✨ Lower loss = better predictions! Training minimizes this.")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_losses()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Losses
 
 Congratulations! You've built the measurement system that enables all machine learning!

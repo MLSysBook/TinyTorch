@@ -1422,6 +1422,56 @@ For edge deployment (memory critical, stability required, hardware diverse):
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Vectorization and Fusion Speed Things Up
+
+**What you built:** Vectorized operations and fused kernels that reduce memory traffic.
+
+**Why it matters:** Individual operations like x + y + z require reading and writing memory
+multiple times. Fused operations like fused_gelu do everything in one pass! This reduces
+memory bandwidth by 60-80%, a huge win since memory is often the bottleneck.
+
+Combined with vectorization (SIMD), these techniques make neural networks 2-5× faster.
+"""
+
+# %%
+def demo_acceleration():
+    """🎯 See fused operations reduce memory traffic."""
+    print("🎯 AHA MOMENT: Fusion Reduces Memory Traffic")
+    print("=" * 45)
+    
+    # Create a tensor
+    x = Tensor(np.random.randn(1000, 1000))
+    
+    import time
+    
+    # Unfused GELU (multiple operations)
+    start = time.perf_counter()
+    for _ in range(10):
+        # Manual GELU: 0.5 * x * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))
+        t = x.data
+        unfused = 0.5 * t * (1 + np.tanh(np.sqrt(2/np.pi) * (t + 0.044715 * t**3)))
+    unfused_time = (time.perf_counter() - start) / 10
+    
+    # Fused GELU (single operation)
+    start = time.perf_counter()
+    for _ in range(10):
+        fused = fused_gelu(x)
+    fused_time = (time.perf_counter() - start) / 10
+    
+    print(f"Unfused GELU: {unfused_time*1000:.2f} ms")
+    print(f"Fused GELU:   {fused_time*1000:.2f} ms")
+    print(f"\nSpeedup: {unfused_time/fused_time:.1f}×")
+    
+    print("\n✨ Same result, fewer memory accesses!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_acceleration()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Acceleration
 
 Congratulations! You've mastered the fundamental techniques for accelerating neural networks!

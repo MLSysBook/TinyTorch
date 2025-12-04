@@ -1358,12 +1358,46 @@ def test_module():
     print("\n🚀 Ready for: Attention mechanisms, transformers, and language models!")
     print("Export with: tito module complete 11")
 
-# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": true}
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Tokens Become Vectors
+
+**What you built:** An embedding layer that converts token IDs to dense vectors.
+
+**Why it matters:** Tokens are just integers (like word IDs), but embeddings give them meaning!
+Each token gets a learned vector that captures its semantic properties. Similar words end up
+with similar vectors—this is how models understand language.
+
+In the next module, you'll use attention to let these embeddings interact with each other.
+"""
+
+# %%
+def demo_embeddings():
+    """🎯 See tokens become vectors."""
+    print("🎯 AHA MOMENT: Tokens Become Vectors")
+    print("=" * 45)
+    
+    # Create embedding layer: 100 vocab, 32-dimensional embeddings
+    embed = Embedding(vocab_size=100, embed_dim=32)
+    
+    # Some token IDs
+    tokens = Tensor(np.array([5, 10, 15]))
+    
+    # Look up embeddings
+    vectors = embed(tokens)
+    
+    print(f"Token IDs: {tokens.data}")
+    print(f"Embedding shape: {vectors.shape}  ← 3 tokens, 32 dims each")
+    print(f"\nToken 5 vector (first 5 dims): {vectors.data[0, :5].round(3)}")
+    print(f"Token 10 vector (first 5 dims): {vectors.data[1, :5].round(3)}")
+    
+    print("\n✨ Each token has its own learned representation!")
+
+# %%
 if __name__ == "__main__":
-    """Main execution block for module validation."""
-    print("🚀 Running Embeddings module...")
     test_module()
-    print("✅ Module validation complete!")
+    print("\n")
+    demo_embeddings()
 
 # %% [markdown]
 """

@@ -1739,11 +1739,49 @@ def test_module():
 if __name__ == "__main__":
     test_module()
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Know Your Model
+
+**What you built:** A profiler that measures parameters, FLOPs, memory, and latency.
+
+**Why it matters:** You can't optimize what you can't measure! Before making a model faster
+or smaller, you need to know where the time and memory go. Your profiler reveals these secrets,
+telling you exactly what your model costs in compute and memory.
+
+In the next modules, you'll use profiling to guide quantization and compression decisions.
+"""
+
+# %%
+def demo_profiling():
+    """🎯 See your profiler reveal model secrets."""
+    print("🎯 AHA MOMENT: Know Your Model")
+    print("=" * 45)
+    
+    # Create a simple model
+    layer = Linear(784, 128)
+    
+    # Profile it
+    profiler = Profiler()
+    params = profiler.count_parameters(layer)
+    flops = profiler.count_flops(layer, input_shape=(1, 784))
+    
+    print(f"Model: Linear(784 → 128)")
+    print(f"\nParameters: {params:,}")
+    print(f"  = 784 × 128 weights + 128 biases")
+    
+    print(f"\nFLOPs: {flops:,}")
+    print(f"  = 784 × 128 × 2 (multiply-add per output)")
+    
+    print(f"\nMemory: {params * 4 / 1024:.1f} KB (at FP32)")
+    
+    print("\n✨ Profiling reveals optimization opportunities!")
+
 # %%
 if __name__ == "__main__":
-    print("🚀 Running Profiling module...")
     test_module()
-    print("✅ Module validation complete!")
+    print("\n")
+    demo_profiling()
 
 # %% [markdown]
 """

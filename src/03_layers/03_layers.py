@@ -1110,11 +1110,47 @@ if __name__ == "__main__":
     print("\n" + "=" * 70)
     print("✅ MODULE 03 COMPLETE!")
     print("=" * 70)
-    print("\nNext steps:")
-    print("1. Review the ML Systems Questions above")
-    print("2. Export with: tito module complete 03_layers")
-    print("3. Continue to Module 04: Loss Functions")
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Layers Transform Shapes
+
+**What you built:** Linear layers that transform data from one dimension to another.
+
+**Why it matters:** A Linear layer is the workhorse of neural networks. The transformation
+from 784 features (a flattened 28×28 image) to 10 classes (digits 0-9) is exactly what
+happens in digit recognition. You just built the core component!
+
+In the next module, you'll add loss functions that measure how wrong predictions are.
+Combined with your layers, this creates the foundation for learning.
+"""
+
+# %%
+def demo_layers():
+    """🎯 See how layers transform shapes."""
+    print("🎯 AHA MOMENT: Layers Transform Shapes")
+    print("=" * 45)
+    
+    # Create a layer that transforms 784 → 10 (like MNIST)
+    layer = Linear(784, 10)
+    
+    # Simulate a batch of 32 flattened images
+    batch = Tensor(np.random.randn(32, 784))
+    
+    # Forward pass
+    output = layer(batch)
+    
+    print(f"Input shape:  {batch.shape}  ← 32 images, 784 pixels each")
+    print(f"Output shape: {output.shape}  ← 32 images, 10 classes each")
+    print(f"Parameters:   {784 * 10 + 10:,} (weights + biases)")
+    
+    print("\n✨ Your layer transforms images to class predictions!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_layers()
 
 # %% [markdown]
 """

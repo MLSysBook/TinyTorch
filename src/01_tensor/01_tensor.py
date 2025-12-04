@@ -340,9 +340,37 @@ class Tensor:
                     f"Cannot perform matrix multiplication: {self.shape} @ {other.shape}. "
                     f"Inner dimensions must match: {self.shape[-1]} ≠ {other.shape[-2]}"
                 )
-        result_data = np.matmul(self.data, other.data)
+        
+        # Educational implementation: explicit loops to show what matrix multiplication does
+        # This is intentionally slower than np.matmul to demonstrate the value of vectorization
+        # In Module 18 (Acceleration), students will learn to use optimized BLAS operations
+        
+        a = self.data
+        b = other.data
+        
+        # Handle 2D matrices with explicit loops (educational)
+        if len(a.shape) == 2 and len(b.shape) == 2:
+            M, K = a.shape
+            K2, N = b.shape
+            result_data = np.zeros((M, N), dtype=a.dtype)
+            
+            # Explicit nested loops - students can see exactly what's happening!
+            # Each output element is a dot product of a row from A and a column from B
+            for i in range(M):
+                for j in range(N):
+                    # Dot product of row i from A with column j from B
+                    result_data[i, j] = np.dot(a[i, :], b[:, j])
+        else:
+            # For batched operations (3D+), use np.matmul for correctness
+            # Students will understand this once they grasp the 2D case
+            result_data = np.matmul(a, b)
+        
         return Tensor(result_data)
         ### END SOLUTION
+    
+    def __matmul__(self, other):
+        """Enable @ operator for matrix multiplication."""
+        return self.matmul(other)
     
     def __getitem__(self, key):
         """Enable indexing and slicing operations on Tensors."""
@@ -1527,6 +1555,54 @@ def custom_activation(tensor):
 
 **Key insight**: Algorithmic complexity (Big-O) doesn't tell the whole performance story. Constant factors from vectorization, cache behavior, and parallelism dominate in practice.
 """
+
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Your Tensor Works Like NumPy
+
+**What you built:** A complete Tensor class with arithmetic operations and matrix multiplication.
+
+**Why it matters:** Your Tensor is the foundation of everything to come. Every neural network
+operation—from simple addition to complex attention mechanisms—will use this class. The fact
+that it works exactly like NumPy means you've built something production-ready.
+
+In the next modules, you'll add activations, layers, and autograd on top of this foundation.
+Every operation you just implemented will be called millions of times during training!
+"""
+
+# %%
+def demo_tensor():
+    """🎯 See your Tensor work just like NumPy."""
+    print("🎯 AHA MOMENT: Your Tensor Works Like NumPy")
+    print("=" * 45)
+    
+    # Create tensors
+    a = Tensor(np.array([1, 2, 3]))
+    b = Tensor(np.array([4, 5, 6]))
+    
+    # Tensor operations
+    tensor_sum = a + b
+    tensor_prod = a * b
+    
+    # NumPy equivalents
+    np_sum = np.array([1, 2, 3]) + np.array([4, 5, 6])
+    np_prod = np.array([1, 2, 3]) * np.array([4, 5, 6])
+    
+    print(f"Tensor a + b: {tensor_sum.data}")
+    print(f"NumPy  a + b: {np_sum}")
+    print(f"Match: {np.allclose(tensor_sum.data, np_sum)}")
+    
+    print(f"\nTensor a * b: {tensor_prod.data}")
+    print(f"NumPy  a * b: {np_prod}")
+    print(f"Match: {np.allclose(tensor_prod.data, np_prod)}")
+    
+    print("\n✨ Your Tensor is NumPy-compatible—ready for ML!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_tensor()
 
 # %% [markdown]
 """

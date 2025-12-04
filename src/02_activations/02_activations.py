@@ -1071,6 +1071,47 @@ class Sigmoid:
 ```
 """
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Activations Transform Data
+
+**What you built:** Five activation functions that introduce nonlinearity to neural networks.
+
+**Why it matters:** Without activations, stacking layers would just be matrix multiplication—
+a linear operation. ReLU's simple "zero out negatives" rule is what allows networks to learn
+complex patterns like recognizing faces or understanding language.
+
+In the next module, you'll combine these activations with Linear layers to build complete
+neural network architectures. The nonlinearity you just implemented is the secret sauce!
+"""
+
+# %%
+def demo_activations():
+    """🎯 See how activations transform data."""
+    print("🎯 AHA MOMENT: Activations Transform Data")
+    print("=" * 45)
+    
+    # Test input with positive and negative values
+    x = Tensor(np.array([-2.0, -1.0, 0.0, 1.0, 2.0]))
+    print(f"Input: {x.data}")
+    
+    # ReLU - zeros out negatives
+    relu = ReLU()
+    relu_out = relu(x)
+    print(f"ReLU:  {relu_out.data}  ← Negatives become 0!")
+    
+    # Sigmoid - squashes to (0, 1)
+    sigmoid = Sigmoid()
+    sigmoid_out = sigmoid(x)
+    print(f"Sigmoid: {np.round(sigmoid_out.data, 2)}  ← Squashed to (0,1)")
+    
+    print("\n✨ Activations add nonlinearity—the key to deep learning!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_activations()
 
 # %% [markdown]
 """

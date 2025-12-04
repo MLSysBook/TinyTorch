@@ -1268,10 +1268,60 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 07")
 
-# %% nbgrader={"grade": false, "grade_id": "main", "locked": false, "solution": false}
-# Run comprehensive module test when executed directly
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Training Just Works
+
+**What you built:** A complete training infrastructure with Trainer, schedulers, and checkpoints.
+
+**Why it matters:** You've assembled all the pieces: tensors → layers → losses → autograd →
+optimizers → training loop. This is the complete ML training pipeline! The Trainer orchestrates
+forward pass, loss computation, backward pass, and weight updates—just like PyTorch Lightning.
+
+In the milestones, you'll use this training infrastructure to train real models on real data!
+"""
+
+# %%
+def demo_training():
+    """🎯 See the training loop in action."""
+    print("🎯 AHA MOMENT: Training Just Works")
+    print("=" * 45)
+    
+    # Simple linear regression: learn y = 2x + 1
+    np.random.seed(42)
+    X = Tensor(np.random.randn(20, 1))
+    y = Tensor(X.data * 2 + 1)  # True relationship
+    
+    # Simple model: one weight, one bias
+    w = Tensor(np.array([[0.0]]), requires_grad=True)
+    b = Tensor(np.array([0.0]), requires_grad=True)
+    
+    optimizer = SGD([w, b], lr=0.1)
+    loss_fn = MSELoss()
+    
+    print("Learning y = 2x + 1:")
+    for epoch in range(5):
+        # Forward
+        pred = X.matmul(w) + b
+        loss = loss_fn(pred, y)
+        
+        # Backward
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        
+        print(f"  Epoch {epoch+1}: w={w.data[0,0]:.2f}, b={b.data[0]:.2f}, loss={float(loss.data):.4f}")
+    
+    print(f"\nLearned: y = {w.data[0,0]:.1f}x + {b.data[0]:.1f}")
+    print("Target:  y = 2.0x + 1.0")
+    
+    print("\n✨ Your training loop learned the pattern!")
+
+# %%
 if __name__ == "__main__":
     test_module()
+    print("\n")
+    demo_training()
 
 # %% [markdown]
 """

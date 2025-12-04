@@ -1782,6 +1782,50 @@ For deploying on a mobile device with 50MB model limit and 100ms latency require
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Pruning Removes Unimportant Weights
+
+**What you built:** Pruning that zeros out small weights, creating sparse models.
+
+**Why it matters:** Most neural network weights are close to zero—and removing them barely
+affects accuracy! At 50% sparsity, half your weights are gone, but the model still works.
+This is how you make models faster and smaller without retraining.
+
+Combined with quantization, pruning can shrink models 8× or more.
+"""
+
+# %%
+def demo_compression():
+    """🎯 See pruning create sparsity."""
+    print("🎯 AHA MOMENT: Pruning Removes Weights")
+    print("=" * 45)
+    
+    # Create a model
+    layer = Linear(128, 64)
+    
+    original_nonzero = np.count_nonzero(layer.weight.data)
+    original_total = layer.weight.data.size
+    
+    # Apply 50% pruning
+    Compressor.magnitude_prune(layer, sparsity=0.5)
+    
+    pruned_nonzero = np.count_nonzero(layer.weight.data)
+    sparsity = 1 - (pruned_nonzero / original_total)
+    
+    print(f"Original: {original_nonzero:,} non-zero weights")
+    print(f"After 50% pruning: {pruned_nonzero:,} non-zero weights")
+    print(f"\nActual sparsity: {sparsity:.1%}")
+    print(f"Half the weights are now zero!")
+    
+    print("\n✨ Smaller weights removed—model still works!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_compression()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Compression
 
 Congratulations! You've built a comprehensive model compression system that can dramatically reduce model size while preserving intelligence!

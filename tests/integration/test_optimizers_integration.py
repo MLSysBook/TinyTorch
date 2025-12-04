@@ -112,16 +112,16 @@ def test_optimizer_with_mse_loss():
     optimizer = SGD(layer.parameters(), lr=0.01)
     loss_fn = MSELoss()
 
-    # Forward pass
+            # Forward pass
     x = Tensor(np.random.randn(4, 3), requires_grad=True)
     target = Tensor(np.random.randn(4, 1))
     output = layer(x)
     loss = loss_fn(output, target)
 
     # Backward and update
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
     print("✅ Optimizer integrates with MSE loss!")
 
@@ -148,9 +148,9 @@ def test_optimizer_with_activations():
         "Sigmoid should output in [0, 1]"
 
     loss = output.sum()
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
     print("✅ Optimizer works with activation functions!")
 
@@ -226,7 +226,7 @@ def test_unit_shape_manipulation():
     # Valid reshape
     reshaped = t.reshape(2, 3)
     assert reshaped.shape == (2, 3)
-    
+
     # Invalid reshape should raise
     try:
         t.reshape(2, 2)  # 6 elements can't fit in 2×2=4

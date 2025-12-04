@@ -1547,11 +1547,46 @@ def test_module():
 if __name__ == "__main__":
     test_module()
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Text Becomes Tokens
+
+**What you built:** Tokenizers that convert text into numerical sequences.
+
+**Why it matters:** Neural networks can't read text—they need numbers! Your tokenizer bridges
+this gap, converting words into token IDs that can be embedded and processed. Every language
+model from GPT to Claude uses tokenization as the first step.
+
+In the next module, you'll convert these tokens into dense vector representations.
+"""
+
+# %%
+def demo_tokenization():
+    """🎯 See text become tokens."""
+    print("🎯 AHA MOMENT: Text Becomes Tokens")
+    print("=" * 45)
+    
+    # Create and fit a character tokenizer
+    tokenizer = CharTokenizer()
+    text = "hello world"
+    tokenizer.fit(text)
+    
+    # Encode and decode
+    tokens = tokenizer.encode("hello")
+    decoded = tokenizer.decode(tokens)
+    
+    print(f"Original: '{text}'")
+    print(f"Vocab size: {tokenizer.vocab_size}")
+    print(f"\nEncode 'hello': {tokens}")
+    print(f"Decode back:    '{decoded}'")
+    
+    print("\n✨ Text → numbers → text (perfect round-trip)!")
+
 # %%
 if __name__ == "__main__":
-    print("🚀 Running Tokenization module...")
     test_module()
-    print("✅ Module validation complete!")
+    print("\n")
+    demo_tokenization()
 
 # %% [markdown]
 """

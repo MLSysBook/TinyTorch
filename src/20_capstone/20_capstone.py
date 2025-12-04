@@ -1531,10 +1531,49 @@ print("✅ Test module defined")
 When run as a script, this demonstrates the complete workflow.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "main", "solution": true}
+# %% [markdown]
+"""
+## 🎯 Aha Moment: You Built a Complete ML System
+
+**What you built:** A professional benchmarking and submission system for your TinyTorch models.
+
+**Why it matters:** You've gone from raw tensors to complete ML systems! Your capstone ties
+together everything: models, training, optimization, profiling, and benchmarking. The
+submission format you created is how real ML competitions and production deployments work.
+
+Congratulations—you've built a deep learning framework from scratch!
+"""
+
+# %%
+def demo_capstone():
+    """🎯 See your complete system come together."""
+    print("🎯 AHA MOMENT: You Built a Complete ML System")
+    print("=" * 45)
+    
+    print("📚 Your TinyTorch Journey:")
+    print()
+    print("  Modules 01-08: Foundation")
+    print("    Tensor → Activations → Layers → Losses")
+    print("    → Autograd → Optimizers → Training → DataLoader")
+    print()
+    print("  Modules 09-13: Neural Architectures")
+    print("    Conv2d → Tokenization → Embeddings")
+    print("    → Attention → Transformers")
+    print()
+    print("  Modules 14-19: Production Optimization")
+    print("    Profiling → Quantization → Compression")
+    print("    → KV Caching → Acceleration → Benchmarking")
+    print()
+    print("  Module 20: Capstone")
+    print("    Complete benchmarking and submission system")
+    print()
+    print("✨ From np.array to production ML—congratulations!")
+
+# %%
 if __name__ == "__main__":
-    # Run the test module to validate everything works
     test_module()
+    print("\n")
+    demo_capstone()
 
 # %% [markdown]
 """

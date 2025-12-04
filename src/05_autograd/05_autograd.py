@@ -2152,6 +2152,47 @@ These questions prepare you for Module 06 (Optimizers), where you'll use these g
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Gradients Flow Automatically
+
+**What you built:** An autograd engine that computes gradients through computation graphs.
+
+**Why it matters:** Before autograd, you had to derive and code gradients by hand for every
+operation—error-prone and tedious. Your engine does this automatically! When you call
+`backward()`, gradients flow from the loss back through every operation to every parameter.
+
+This is the magic behind deep learning. PyTorch, TensorFlow, and JAX all have autograd
+engines at their core. You just built one yourself!
+"""
+
+# %%
+def demo_autograd():
+    """🎯 See gradients computed automatically."""
+    print("🎯 AHA MOMENT: Gradients Flow Automatically")
+    print("=" * 45)
+    
+    # Simple example: y = x^2, so dy/dx = 2x
+    x = Tensor(np.array([3.0]), requires_grad=True)
+    y = x * x  # y = x²
+    
+    print(f"x = {x.data[0]}")
+    print(f"y = x² = {y.data[0]}")
+    
+    # Backward pass computes gradient
+    y.backward()
+    
+    print(f"\ndy/dx = 2x = 2 × {x.data[0]} = {x.grad.data[0]}")
+    print(f"Computed automatically: {x.grad.data[0]}")
+    
+    print("\n✨ Gradients computed automatically—no manual derivatives!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_autograd()
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Autograd Engine
 
 Congratulations! You've built the gradient engine that makes neural networks learn!

@@ -1993,7 +1993,7 @@ def test_unit_complete_pipeline():
     # history = pipeline.train(dataloader, epochs=1)
     # assert 'losses' in history, "History should contain losses"
     # assert len(history['losses']) == 1, "Should have one epoch of losses"
-    
+
     # Skip optimization test as it depends on training
     # pipeline.optimize_model(quantize=True, prune_sparsity=0.5)
 

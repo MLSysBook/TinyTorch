@@ -2254,6 +2254,46 @@ Why do mobile ML models prefer depthwise-separable convolutions over standard Co
 
 # %% [markdown]
 """
+## 🎯 Aha Moment: Convolution Extracts Features
+
+**What you built:** Convolutional layers that process spatial data like images.
+
+**Why it matters:** Conv2d looks at local neighborhoods, detecting edges, textures, and patterns.
+Unlike Linear layers that see pixels independently, Conv2d understands that nearby pixels are
+related. This is why CNNs revolutionized computer vision!
+
+In the milestones, you'll use these spatial operations to build a CNN that recognizes digits.
+"""
+
+# %%
+def demo_spatial():
+    """🎯 See Conv2d process spatial data."""
+    print("🎯 AHA MOMENT: Convolution Extracts Features")
+    print("=" * 45)
+    
+    # Create a simple 8x8 "image" with 1 channel
+    image = Tensor(np.random.randn(1, 1, 8, 8))
+    
+    # Conv2d: 1 input channel → 4 feature maps
+    conv = Conv2d(in_channels=1, out_channels=4, kernel_size=3)
+    
+    output = conv(image)
+    
+    print(f"Input:  {image.shape}  ← 1 image, 1 channel, 8×8")
+    print(f"Output: {output.shape}  ← 1 image, 4 features, 6×6")
+    print(f"\nConv kernel: 3×3 sliding window")
+    print(f"Output smaller: 8 - 3 + 1 = 6 (no padding)")
+    
+    print("\n✨ Conv2d detects spatial patterns in images!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_spatial()
+
+# %% [markdown]
+"""
 ## 9. Module Summary
 
 ## 🎯 MODULE SUMMARY: Spatial Operations

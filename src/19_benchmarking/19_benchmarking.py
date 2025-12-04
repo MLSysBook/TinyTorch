@@ -2289,8 +2289,55 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 19")
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Measurement Enables Optimization
+
+**What you built:** A benchmarking system with warmup, statistics, and reproducibility.
+
+**Why it matters:** "Premature optimization is the root of all evil"—but you can't optimize
+without measuring! Your benchmarking system produces reliable, comparable numbers: warmup
+iterations eliminate cold-start effects, multiple runs give confidence intervals.
+
+This is how production ML teams make decisions: measure, compare, improve, repeat.
+"""
+
+# %%
+def demo_benchmarking():
+    """🎯 See professional benchmarking in action."""
+    print("🎯 AHA MOMENT: Measurement Enables Optimization")
+    print("=" * 45)
+    
+    # Create a simple model and input
+    layer = Linear(512, 256)
+    x = Tensor(np.random.randn(32, 512))
+    
+    # Benchmark with proper methodology
+    benchmark = Benchmark(
+        models=[layer],
+        datasets=[(x, None)],
+        warmup_iterations=3,
+        measurement_iterations=10
+    )
+    
+    results = benchmark.run()
+    result = results[0]
+    
+    print(f"Model: Linear(512 → 256)")
+    print(f"Batch: 32 samples")
+    print(f"\nBenchmark Results (10 iterations):")
+    print(f"  Mean latency: {result.mean*1000:.2f} ms")
+    print(f"  Std dev:      {result.std*1000:.2f} ms")
+    print(f"  Min:          {result.min*1000:.2f} ms")
+    print(f"  Max:          {result.max*1000:.2f} ms")
+    
+    print("\n✨ Reliable measurements guide optimization decisions!")
+
+# %%
 if __name__ == "__main__":
     test_module()
+    print("\n")
+    demo_benchmarking()
 
 # %% [markdown]
 """

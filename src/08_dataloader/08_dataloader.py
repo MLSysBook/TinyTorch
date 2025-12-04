@@ -1618,13 +1618,48 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 08")
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: DataLoader Batches Your Data
+
+**What you built:** A data pipeline that efficiently batches and shuffles training data.
+
+**Why it matters:** Neural networks learn better from shuffled, batched data. Your DataLoader
+handles all of this—grouping samples into batches for efficient vectorized operations, and
+shuffling each epoch to prevent the model from memorizing the order.
+
+In the milestones, you'll use this DataLoader to feed real images to your networks!
+"""
+
 # %%
-# Run comprehensive module test
+def demo_dataloader():
+    """🎯 See your DataLoader batch data correctly."""
+    print("🎯 AHA MOMENT: DataLoader Batches Your Data")
+    print("=" * 45)
+    
+    # Create a dataset
+    X = Tensor(np.random.randn(100, 64))
+    y = Tensor(np.arange(100))
+    dataset = TensorDataset(X, y)
+    
+    # Create DataLoader with batching
+    loader = DataLoader(dataset, batch_size=32, shuffle=True)
+    
+    print(f"Dataset: {len(dataset)} samples")
+    print(f"Batch size: 32")
+    print(f"Number of batches: {len(loader)}")
+    
+    print("\nBatches:")
+    for i, (batch_x, batch_y) in enumerate(loader):
+        print(f"  Batch {i+1}: {batch_x.shape[0]} samples, shape {batch_x.shape}")
+    
+    print("\n✨ Your DataLoader organizes data for efficient training!")
+
+# %%
 if __name__ == "__main__":
     test_module()
-
-
-
+    print("\n")
+    demo_dataloader()
 
 # %% [markdown]
 """

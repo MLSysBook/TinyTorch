@@ -1456,10 +1456,46 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 06_optimizers")
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Optimizers Update Weights
+
+**What you built:** Optimization algorithms (SGD, Adam) that update neural network weights.
+
+**Why it matters:** Gradients tell us which direction reduces the loss, but someone has to
+actually move the weights. That's what optimizers do! SGD takes simple steps, while Adam
+adapts the learning rate for each parameter—like having a personal trainer for each weight.
+
+In the next module, you'll combine optimizers with a training loop to actually train networks!
+"""
+
 # %%
-# Run comprehensive module test
+def demo_optimizers():
+    """🎯 See optimizers update weights."""
+    print("🎯 AHA MOMENT: Optimizers Update Weights")
+    print("=" * 45)
+    
+    # Create a parameter with a gradient
+    weight = Tensor(np.array([5.0]), requires_grad=True)
+    weight.grad = np.array([1.0])  # Gradient pointing "uphill"
+    
+    print(f"Initial weight: {weight.data[0]:.2f}")
+    print(f"Gradient:       {weight.grad[0]:.2f} (pointing uphill)")
+    
+    # SGD takes a step in the opposite direction
+    optimizer = SGD([weight], lr=0.5)
+    optimizer.step()
+    
+    print(f"\nAfter SGD step: {weight.data[0]:.2f}")
+    print(f"Moved: {5.0 - weight.data[0]:.2f} (opposite to gradient)")
+    
+    print("\n✨ Optimizer moves weights to reduce loss!")
+
+# %%
 if __name__ == "__main__":
     test_module()
+    print("\n")
+    demo_optimizers()
 
 # %% [markdown]
 """

@@ -1665,6 +1665,54 @@ ChatGPT serves millions of users. Each user's conversation needs its own KV cach
   caches on disk and reload as needed (slower but cheaper)? What's the trade-off?
 """
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: KV Cache Avoids Recomputation
+
+**What you built:** A KV Cache that stores key-value pairs to avoid redundant attention computation.
+
+**Why it matters:** When generating text token-by-token, naive attention recomputes the same
+K,V values for all previous tokens at each step. With KV caching, you compute once and reuse!
+This is why ChatGPT responds so fast—it's not recomputing everything every token.
+
+This optimization turns O(n²) generation into O(n), enabling practical LLM deployment.
+"""
+
+# %%
+def demo_memoization():
+    """🎯 See KV cache store and reuse values."""
+    print("🎯 AHA MOMENT: KV Cache Avoids Recomputation")
+    print("=" * 45)
+    
+    # Create a cache for 2-layer transformer
+    # (batch=1, max_seq=100, layers=2, heads=4, head_dim=64)
+    cache = KVCache(batch_size=1, max_seq_len=100, num_layers=2,
+                    num_heads=4, head_dim=64)
+    
+    # Simulate generating 5 tokens one at a time
+    print("Generating tokens and caching K,V pairs...")
+    for token_idx in range(5):
+        # For each new token, compute K,V (shape: batch, heads, 1, head_dim)
+        new_k = Tensor(np.random.randn(1, 4, 1, 64))
+        new_v = Tensor(np.random.randn(1, 4, 1, 64))
+        
+        # Update cache for layer 0
+        cache.update(0, new_k, new_v)
+        cache.advance()  # Move to next position
+    
+    print(f"Cached K,V for {cache.seq_pos} tokens")
+    
+    # Retrieve all cached values
+    k_all, v_all = cache.get(0)
+    print(f"Retrieved: K{k_all.shape}, V{v_all.shape}")
+    
+    print("\n✨ Compute once, reuse forever—10× faster generation!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_memoization()
 
 # %% [markdown]
 """

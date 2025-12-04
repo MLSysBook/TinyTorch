@@ -1697,12 +1697,48 @@ def test_module():
 # Call the comprehensive test
 # test_module()  # Only run in __main__ block below
 
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Transformer Processes Sequences
+
+**What you built:** A complete transformer block with attention, MLPs, and residual connections.
+
+**Why it matters:** This is THE architecture behind GPT, Claude, LLaMA, and every modern
+language model. The transformer block combines attention (for relationships) with MLPs
+(for processing) and residual connections (for trainability).
+
+In the milestones, you'll stack these blocks to build a working language model!
+"""
+
+# %%
+def demo_transformers():
+    """🎯 See a transformer block process a sequence."""
+    print("🎯 AHA MOMENT: Transformer Processes Sequences")
+    print("=" * 45)
+    
+    # Create a transformer block
+    block = TransformerBlock(embed_dim=64, num_heads=4, ff_dim=256)
+    
+    # Input: batch of 2 sequences, 8 tokens each, 64 dims
+    x = Tensor(np.random.randn(2, 8, 64))
+    
+    output = block(x)
+    
+    print(f"Input shape:  {x.shape}")
+    print(f"Output shape: {output.shape}")
+    print(f"\nTransformerBlock contains:")
+    print(f"  • Multi-head attention (4 heads)")
+    print(f"  • MLP (64 → 256 → 64)")
+    print(f"  • Residual connections")
+    print(f"  • Layer normalization")
+    
+    print("\n✨ The building block of GPT, Claude, and more!")
+
 # %%
 if __name__ == "__main__":
-    print("🚀 Running Transformers module...")
-    demonstrate_transformer_integration()
     test_module()
-    print("✅ Module validation complete!")
+    print("\n")
+    demo_transformers()
 
 # %% [markdown]
 """
