@@ -8,9 +8,9 @@ from argparse import ArgumentParser, Namespace
 from rich.panel import Panel
 from rich.align import Align
 from rich.text import Text
+from rich.console import Group
 
 from .base import BaseCommand
-
 
 class OlympicsCommand(BaseCommand):
     """🏅 TinyTorch Olympics - Future competition events"""
@@ -25,43 +25,70 @@ class OlympicsCommand(BaseCommand):
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add olympics subcommands (coming soon)."""
-        pass
+        subparsers = parser.add_subparsers(
+            dest='olympics_command',
+            help='Olympics operations',
+            metavar='COMMAND'
+        )
+        
+        # Logo subcommand
+        subparsers.add_parser(
+            'logo',
+            help='Display the Neural Networks Olympics logo'
+        )
+        
+        # Status/info subcommand
+        subparsers.add_parser(
+            'status',
+            help='Check your Olympics participation status'
+        )
 
     def run(self, args: Namespace) -> int:
         """Show coming soon message with Olympics branding."""
         console = self.console
+        
+        # Handle subcommands
+        if hasattr(args, 'olympics_command') and args.olympics_command == 'logo':
+            print_olympics_logo(console)
+            return 0
 
-        # ASCII Olympics Logo
-        logo = """
-    ╔════════════════════════════════════════════════════════════╗
-    ║                                                            ║
-    ║        🏅  TINYTORCH OLYMPICS  🏅                          ║
-    ║                                                            ║
-    ║           ⚡ Learn • Build • Compete ⚡                    ║
-    ║                                                            ║
-    ║        🔥🔥🔥  COMING SOON  🔥🔥🔥                         ║
-    ║                                                            ║
-    ╚════════════════════════════════════════════════════════════╝
-        """
+        # Build the content with logo inside the panel
+        # Olympic rings ASCII art with colors
+        # Blue (ring 1), White (ring 2), Red (ring 3) on top
+        # Yellow (ring 4), Green (ring 5) on bottom, interlocking
+        logo_lines = [
+            "[blue]⠀⠀⢀⣠⢖⠗⠟⠛⠛⠟⢶⢦⣀[/]⠀⠀⠀⠀⠀⠀⠀[bright_white]⣠⣶⡿⠿⠿⠿⣿⣷⣦⣄[/]⠀⠀⠀⠀⠀⠀⠀[red]⣄⡴⡳⠛⠛⠛⠟⢞⣦⣄[/]⠀⠀⠀",
+            "[blue]⠀⣠⢾⠑⠁⠀⠀⠀⠀⠀⠀⠉⠫⣷⡀[/]⠀⠀⠀[bright_white]⣠⣾⡟⠉⠀⠀⠀⠀⠀⠀⠙⢻⣷⣄[/]⠀⠀⠀[red]⢠⢾⠕⠉⠀⠀⠀⠀⠀⠀⠈⠚⡷⡄[/]⠀",
+            "[blue]⢰⡯⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣳⠄[/]⠀[bright_white]⣰⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⡆[/]⠀[red]⢠⣟⠅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣟⠆[/]",
+            "[blue]⢞⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣹⢇[/][yellow]⢀[/][bright_white]⢾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢽⣯[/][green]⣀[/][red]⡺⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡳[/]",
+            "[blue]⢟⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⣀⠒⠅⢺⡃[/][yellow]⠂⢦⡕⢑⠢⡀[/]⠀⠀⠀⠀⠀⠀[green]⣠⢖⠏⢿⡿⠙[/][red][green]⢸⡝⠻⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀[red]⢸⡕[/]",
+            "[blue]⠸⣷⡀⠀⠀⠀⠀⠀⠀[yellow]⢀⢎⠐⠁[blue]⣠⢿⠁[/]⠀[bright_white]⠹⣿⡄[yellow]⠁⠪⢢[/]⠀⠀⠀[green]⢠⠼⡕⠁[bright_white]⣠⣿⠇[/]⠀[red]⠘⣽⡄⠀[green]⠫⣧⡀⠀⠀⠀⠀⠀⠀[red]⢠⣞⠃[/]",
+            "[blue]⠀⠱⢷⣄⡀⠀⠀⠀[yellow]⢀⢎⠂[blue]⣀⡴⡫⠃[/]⠀⠀⠀[bright_white]⠹⣿⣦⡀[yellow]⠑⠥[/]⠀⠀[green]⣞⠇[bright_white]⢀⣴⣿⠏[/]⠀⠀⠀[red]⠘⢾⣄⡀[green]⢱⡳⡀⠀⠀⠀[red]⢀⡴⡫⠊[/]⠀",
+            "[blue]⠀⠀⠀⠙⠽⡲⢶⢤⡆⠢⡞⠵⠉[/]⠀⠀⠀⠀⠀⠀[yellow][bright_white]⠈⠛⢿⣷⣷⣧⣼[green]⡣[/][bright_white]⣷⡿⠛⠁[/]⠀⠀⠀⠀⠀⠀[red]⠀⠉⠟⢶⡹⡴⡦⡳⠯⠊[/]⠀⠀⠀",
+            "[blue]  ⠀⠀⠀⠀  [yellow]⠡⡣[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⠠⡪⠉[bright_white]⠩[/][green]⣞⠄[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[green]⢀⡯⠌[/]⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⠪⣂[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⢀⠜⠄[/]⠀⠀[green]⢹⣣⡀[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀[green]⢀⡼⡙[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⠐⠕⡄⡀⠀⠀⠀⠀⠀⡀⠤⡊⠌[/]⠀⠀⠀⠀[green]⠑⢷⢤⡀⠀⠀⠀⠀⠀⢀⡤⣞⠕[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[yellow]⠈⠌⠊⡒⢔⠑⠌⠊⠂[/]⠀⠀⠀⠀⠀⠀⠀⠀[green]⠑⠫⠛⡖⡶⣙⠞⠝⠊[/]⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+        ]
+
+        logo = Text.from_markup("\n".join(logo_lines) + "\n\n")
 
         message = Text()
-        message.append(logo, style="bold yellow")
-        message.append("\n\n")
         message.append("🎯 What's Coming:\n\n", style="bold cyan")
         message.append("  • ", style="cyan")
-        message.append("Speed Challenges", style="bold white")
+        message.append("🏃 Speed Challenges", style="bold white")
         message.append(" - Optimize inference latency\n", style="dim")
         message.append("  • ", style="cyan")
-        message.append("Compression Competitions", style="bold white")
+        message.append("📦 Compression Competitions", style="bold white")
         message.append(" - Smallest model, best accuracy\n", style="dim")
         message.append("  • ", style="cyan")
-        message.append("Accuracy Leaderboards", style="bold white")
+        message.append("🎯 Accuracy Leaderboards", style="bold white")
         message.append(" - Push the limits on TinyML datasets\n", style="dim")
         message.append("  • ", style="cyan")
-        message.append("Innovation Awards", style="bold white")
+        message.append("💡 Innovation Awards", style="bold white")
         message.append(" - Novel architectures and techniques\n", style="dim")
         message.append("  • ", style="cyan")
-        message.append("Team Events", style="bold white")
+        message.append("👥 Team Events", style="bold white")
         message.append(" - Collaborate and compete together\n\n", style="dim")
 
         message.append("🏆 Why Olympics?\n\n", style="bold yellow")
@@ -81,9 +108,15 @@ class OlympicsCommand(BaseCommand):
         message.append("  • Join community:  ", style="white")
         message.append("tito community login\n", style="cyan")
 
-        console.print(Panel(
+        # Combine logo and message
+        content = Group(
+            Align.center(logo),
             Align.center(message),
-            title="🔥 TinyTorch Olympics 🔥",
+        )
+
+        console.print(Panel(
+            content,
+            title="⚡ NEURAL NETWORKS OLYMPICS ⚡",
             border_style="bright_yellow",
             padding=(1, 2)
         ))
