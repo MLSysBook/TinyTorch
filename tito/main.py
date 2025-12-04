@@ -39,6 +39,7 @@ from .commands.setup import SetupCommand
 from .commands.benchmark import BenchmarkCommand
 from .commands.community import CommunityCommand
 from .commands.dev import DevCommand
+from .commands.olympics import OlympicsCommand
 
 # Configure logging
 logging.basicConfig(
@@ -76,6 +77,7 @@ class TinyTorchCLI:
             # Community
             'community': CommunityCommand,
             'benchmark': BenchmarkCommand,
+            'olympics': OlympicsCommand,
             # Shortcuts
             'export': ExportCommand,
             'test': TestCommand,
@@ -84,7 +86,7 @@ class TinyTorchCLI:
         }
 
         # Command categorization for help display
-        self.student_commands = ['module', 'milestones', 'community', 'benchmark']
+        self.student_commands = ['module', 'milestones', 'community', 'benchmark', 'olympics']
         self.developer_commands = ['dev', 'system', 'src', 'package', 'nbgrader']
 
         # Welcome screen sections (used for both tito and tito --help)
