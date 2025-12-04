@@ -1360,47 +1360,6 @@ def test_module():
 
 # %% [markdown]
 """
-## 🎯 Aha Moment: Tokens Become Vectors
-
-**What you built:** An embedding layer that converts token IDs to dense vectors.
-
-**Why it matters:** Tokens are just integers (like word IDs), but embeddings give them meaning!
-Each token gets a learned vector that captures its semantic properties. Similar words end up
-with similar vectors—this is how models understand language.
-
-In the next module, you'll use attention to let these embeddings interact with each other.
-"""
-
-# %%
-def demo_embeddings():
-    """🎯 See tokens become vectors."""
-    print("🎯 AHA MOMENT: Tokens Become Vectors")
-    print("=" * 45)
-    
-    # Create embedding layer: 100 vocab, 32-dimensional embeddings
-    embed = Embedding(vocab_size=100, embed_dim=32)
-    
-    # Some token IDs
-    tokens = Tensor(np.array([5, 10, 15]))
-    
-    # Look up embeddings
-    vectors = embed(tokens)
-    
-    print(f"Token IDs: {tokens.data}")
-    print(f"Embedding shape: {vectors.shape}  ← 3 tokens, 32 dims each")
-    print(f"\nToken 5 vector (first 5 dims): {vectors.data[0, :5].round(3)}")
-    print(f"Token 10 vector (first 5 dims): {vectors.data[1, :5].round(3)}")
-    
-    print("\n✨ Each token has its own learned representation!")
-
-# %%
-if __name__ == "__main__":
-    test_module()
-    print("\n")
-    demo_embeddings()
-
-# %% [markdown]
-"""
 ## 🤔 ML Systems Thinking: Embedding Foundations
 
 ### Question 1: Memory Scaling
@@ -1427,6 +1386,47 @@ Your complete EmbeddingLayer combines token and positional embeddings.
 - If you wanted to reduce memory usage by 50%, which would be more effective: halving vocab_size or halving embed_dim? _____
 - Why might sinusoidal PE be preferred for models that need to handle variable sequence lengths? _____
 """
+
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Tokens Become Vectors
+
+**What you built:** An embedding layer that converts token IDs to dense vectors.
+
+**Why it matters:** Tokens are just integers (like word IDs), but embeddings give them meaning!
+Each token gets a learned vector that captures its semantic properties. Similar words end up
+with similar vectors—this is how models understand language.
+
+In the next module, you'll use attention to let these embeddings interact with each other.
+"""
+
+# %%
+def demo_embeddings():
+    """🎯 See tokens become vectors."""
+    print("🎯 AHA MOMENT: Tokens Become Vectors")
+    print("=" * 45)
+
+    # Create embedding layer: 100 vocab, 32-dimensional embeddings
+    embed = Embedding(vocab_size=100, embed_dim=32)
+
+    # Some token IDs
+    tokens = Tensor(np.array([5, 10, 15]))
+
+    # Look up embeddings
+    vectors = embed(tokens)
+
+    print(f"Token IDs: {tokens.data}")
+    print(f"Embedding shape: {vectors.shape}  ← 3 tokens, 32 dims each")
+    print(f"\nToken 5 vector (first 5 dims): {vectors.data[0, :5].round(3)}")
+    print(f"Token 10 vector (first 5 dims): {vectors.data[1, :5].round(3)}")
+
+    print("\n✨ Each token has its own learned representation!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_embeddings()
 
 # %% [markdown]
 """

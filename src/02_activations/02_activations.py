@@ -952,6 +952,119 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking
+
+Now that you've built activation functions, let's think about their systems-level characteristics.
+Understanding computational cost, numerical stability, and gradient behavior helps you make
+informed choices when building neural networks.
+
+### Computational Cost Analysis
+
+Different activations have different computational profiles:
+
+**ReLU: O(n) comparisons**
+- Simple element-wise comparison: max(0, x)
+- Fastest activation function (baseline)
+- No exponentials, no divisions
+- Ideal for large hidden layers
+
+**Sigmoid/Tanh: O(n) exponentials**
+- Each element requires exp() computation
+- 3-4× slower than ReLU
+- Exponentials are expensive operations
+- Use sparingly in hidden layers
+
+**GELU: O(n) exponentials + multiplications**
+- Approximation involves sigmoid (exponential)
+- 4-5× slower than ReLU
+- Worth the cost in transformers (better gradients)
+- Trade-off: performance vs. optimization quality
+
+**Softmax: O(n) exponentials + O(n) sum + O(n) divisions**
+- Most expensive: exp, sum, divide for entire vector
+- Use only for output layers (not hidden layers)
+- Requires synchronization across dimension
+- Numerical stability tricks add overhead
+
+### Numerical Stability Considerations
+
+Activations can fail catastrophically without proper handling:
+
+**Sigmoid/Tanh overflow:**
+```
+Problem: exp(1000) = inf, exp(-1000) = 0
+Solution: Clip inputs to reasonable range (±500)
+Your implementation: Uses stable computation for Sigmoid
+```
+
+**Softmax catastrophic overflow:**
+```
+Problem: exp(1000) = inf, causing NaN
+Solution: Subtract max before exp (doesn't change result)
+Your implementation: Uses max subtraction in Softmax.forward()
+```
+
+**ReLU dying neurons:**
+```
+Problem: Large negative gradient → weights become negative → ReLU always outputs 0
+Solution: Monitor dead neuron percentage, use LeakyReLU variants
+Your implementation: Basic ReLU (watch for this in Module 07 training)
+```
+
+### Gradient Behavior Preview
+
+While you'll implement gradients in Module 05, understanding gradient characteristics helps:
+
+**ReLU gradient: Sharp discontinuity**
+- Gradient = 1 if x > 0, else 0
+- Sharp corner at zero
+- Dead neurons never recover (gradient = 0 forever)
+
+**Sigmoid/Tanh gradient: Vanishing problem**
+- Gradient ≈ 0 for large |x|
+- Deep networks struggle (gradients die in early layers)
+- Why ReLU replaced sigmoid in hidden layers
+
+**GELU gradient: Smooth everywhere**
+- No sharp corners (unlike ReLU)
+- No vanishing at extremes (like sigmoid)
+- Best of both worlds (modern architectures use this)
+
+**Softmax gradient: Coupled across dimension**
+- Changing one input affects all outputs
+- Jacobian matrix (not element-wise)
+- More complex backward pass than others
+
+### Memory Considerations
+
+**Forward pass memory:**
+- All activations: Same size as input (element-wise operations)
+- Softmax temporary buffers: exp array + sum array (small overhead)
+
+**Backward pass memory (Module 05):**
+- Must cache inputs for gradient computation
+- 2× memory per activation layer (input + gradient)
+- For 1000-layer network: Memory adds up!
+
+### Key Insights for Module 02
+
+**For early modules, focus on correctness:**
+- Your activations work correctly (test_module validates this)
+- Numerical stability is handled (Sigmoid clipping, Softmax max-subtraction)
+- Integration ready (Module 03 will use these in layers)
+
+**Systems awareness for later:**
+- ReLU is fastest, use for hidden layers by default
+- Sigmoid/Tanh: Output layers only (or special cases like gates)
+- GELU: Worth the cost in transformers (Module 13)
+- Softmax: Output layer for classification only
+
+You've built activations that are both correct AND production-ready!
+"""
+
+
+# %% [markdown]
+"""
 ## 5. Real-World Production Context
 
 Now that you've implemented these activations, let's understand how they're used in real ML systems.

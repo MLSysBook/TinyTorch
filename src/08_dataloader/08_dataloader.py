@@ -1620,15 +1620,203 @@ def test_module():
 
 # %% [markdown]
 """
-## 🎯 Aha Moment: DataLoader Batches Your Data
+## 🤔 ML Systems Thinking
 
-**What you built:** A data pipeline that efficiently batches and shuffles training data.
+Now that you've implemented DataLoader, let's explore the critical systems trade-offs that affect real training pipelines. Understanding these decisions will help you build efficient ML systems in production.
 
-**Why it matters:** Neural networks learn better from shuffled, batched data. Your DataLoader
-handles all of this—grouping samples into batches for efficient vectorized operations, and
-shuffling each epoch to prevent the model from memorizing the order.
+### Question 1: The Batch Size Dilemma
 
-In the milestones, you'll use this DataLoader to feed real images to your networks!
+You're training a ResNet-50 on ImageNet. Your GPU has 16GB memory. Consider these batch size choices:
+
+**Option A: batch_size=256**
+- Peak memory: 14GB (near limit)
+- Training time: 12 hours
+- Final accuracy: 76.2%
+
+**Option B: batch_size=32**
+- Peak memory: 4GB (plenty of headroom)
+- Training time: 18 hours
+- Final accuracy: 75.1%
+
+**Which would you choose and why?** Consider:
+- What happens if Option A occasionally spikes to 17GB during certain layers?
+- How does batch size affect gradient noise and convergence?
+- What's the real cost difference between 12 and 18 hours?
+- Could you use gradient accumulation to get benefits of both?
+
+**Systems insight**: Batch size creates a three-way trade-off between memory usage, training speed, and model convergence. The "right" answer depends on whether you're memory-constrained, time-constrained, or accuracy-constrained.
+
+### Question 2: To Shuffle or Not to Shuffle?
+
+You're training on a medical dataset where samples are ordered by patient (first 1000 samples = Patient A, next 1000 = Patient B, etc.). Consider these scenarios:
+
+**Scenario 1: Training with shuffle=True**
+```
+Epoch 1 batches: [Patient B, Patient C, Patient A, Patient D...]
+Epoch 2 batches: [Patient D, Patient A, Patient C, Patient B...]
+```
+
+**Scenario 2: Training with shuffle=False**
+```
+Epoch 1 batches: [Patient A, Patient A, Patient A, Patient B...]
+Epoch 2 batches: [Patient A, Patient A, Patient A, Patient B...]
+```
+
+**What happens in Scenario 2?**
+- The model sees 30+ batches of only Patient A's data first
+- It might overfit to Patient A's specific characteristics
+- Early batches update weights strongly toward Patient A's patterns
+- This is called "catastrophic learning" of patient-specific features
+
+**Your DataLoader's shuffle prevents this by mixing patients in every batch!**
+
+**Systems insight**: Shuffling isn't just about randomness—it's about ensuring the model sees representative samples in every batch, preventing order-dependent biases.
+
+### Question 3: Data Loading Bottlenecks
+
+Your training loop reports these timings per batch:
+
+```
+Data loading:    45ms
+Forward pass:    30ms
+Backward pass:   35ms
+Optimizer step:  10ms
+Total:          120ms
+```
+
+**Where's the bottleneck?** Data loading takes 37.5% of the time!
+
+**What's causing it?**
+- Disk I/O: Reading images from storage
+- Decompression: JPEG/PNG decoding
+- Augmentation: Random crops, flips, color jitter
+- Collation: Stacking individual samples into batches
+
+**How to fix it:**
+
+**Option 1: Prefetch next batch during computation**
+```python
+# While GPU computes current batch, CPU loads next batch
+DataLoader(..., num_workers=4)  # PyTorch feature
+```
+Result: Data loading and compute overlap, ~30% speedup
+
+**Option 2: Cache decoded images in memory**
+```python
+# Decode once, reuse across epochs
+cached_dataset = [decode_image(path) for path in paths]
+```
+Result: Eliminate repeated decode overhead
+
+**Option 3: Use faster image formats**
+- Replace JPEG (slow decode) with WebP (fast decode)
+- Or pre-convert to NumPy .npy files (fastest)
+
+**In your implementation:** You used TensorDataset with pre-loaded tensors, avoiding I/O entirely! This is why research code often loads MNIST/CIFAR-10 fully into memory.
+
+**Systems insight**: Data loading is often the hidden bottleneck in training. Profile first, optimize second.
+
+### Question 4: Memory Explosion with Large Datasets
+
+You're training on 100GB of high-resolution medical scans. Your DataLoader code:
+
+```python
+# ❌ This tries to load ALL data into memory!
+all_images = Tensor(np.load('100gb_scans.npy'))
+dataset = TensorDataset(all_images, labels)
+loader = DataLoader(dataset, batch_size=32)
+```
+
+**Problem:** This crashes immediately (OOM) because you're loading 100GB into RAM before training even starts!
+
+**Solution: Lazy Loading Dataset**
+```python
+class LazyImageDataset(Dataset):
+    def __init__(self, image_paths, labels):
+        self.image_paths = image_paths  # Just store paths (tiny memory)
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        # Load image ONLY when requested (lazy)
+        image = load_image(self.image_paths[idx])
+        return Tensor(image), Tensor(self.labels[idx])
+
+# Memory usage: Only 32 images × batch_size at a time!
+dataset = LazyImageDataset(paths, labels)
+loader = DataLoader(dataset, batch_size=32)
+```
+
+**Memory comparison:**
+- TensorDataset: 100GB (all data loaded upfront)
+- LazyImageDataset: ~500MB (only current batch + buffer)
+
+**Your TensorDataset is perfect for small datasets (MNIST, CIFAR) but won't scale to ImageNet!**
+
+**Systems insight**: For large datasets, load data on-demand rather than upfront. Your DataLoader's `__getitem__` is called only when needed, enabling lazy loading patterns.
+
+### Question 5: The Shuffle Memory Trap
+
+You implement shuffling like this:
+
+```python
+def __iter__(self):
+    # ❌ This loads ALL data into memory for shuffling!
+    all_samples = [self.dataset[i] for i in range(len(self.dataset))]
+    random.shuffle(all_samples)
+
+    for i in range(0, len(all_samples), self.batch_size):
+        yield self._collate_batch(all_samples[i:i + self.batch_size])
+```
+
+**For a 50GB dataset, this requires 50GB RAM just to shuffle!**
+
+**Your implementation is smarter:**
+```python
+def __iter__(self):
+    # ✅ Only shuffle INDICES (tiny memory footprint)
+    indices = list(range(len(self.dataset)))  # Just integers!
+    random.shuffle(indices)  # Shuffles integers, not data
+
+    for i in range(0, len(indices), self.batch_size):
+        batch_indices = indices[i:i + self.batch_size]
+        batch = [self.dataset[idx] for idx in batch_indices]  # Load only batch
+        yield self._collate_batch(batch)
+```
+
+**Memory usage:**
+- Bad shuffle: 50GB (all samples in memory)
+- Your shuffle: 400KB (50M indices × 8 bytes each)
+
+**Why this matters:** You can shuffle 100 million samples using just 800MB of RAM!
+
+**Systems insight**: Shuffle indices, not data. This is a classic systems pattern—operate on lightweight proxies (indices) rather than expensive objects (actual data).
+
+### The Big Picture: Data Pipeline Design Patterns
+
+Your DataLoader implements three fundamental patterns:
+
+**1. Iterator Protocol** (memory efficiency)
+```python
+for batch in loader:  # Loads one batch at a time, not all batches
+    train_step(batch)  # Previous batch memory is freed
+```
+
+**2. Lazy Evaluation** (on-demand computation)
+```python
+dataset[42]  # Computed only when requested, not upfront
+```
+
+**3. Separation of Concerns** (modularity)
+```python
+Dataset:    HOW to access individual samples
+DataLoader: HOW to group samples into batches
+Training:   WHAT to do with batches
+```
+
+These patterns are why PyTorch's DataLoader scales from 1,000 samples (your laptop) to 1 billion samples (Google's TPU pods) using the same API!
 """
 
 # %%

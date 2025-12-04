@@ -1549,47 +1549,6 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Aha Moment: Text Becomes Tokens
-
-**What you built:** Tokenizers that convert text into numerical sequences.
-
-**Why it matters:** Neural networks can't read text—they need numbers! Your tokenizer bridges
-this gap, converting words into token IDs that can be embedded and processed. Every language
-model from GPT to Claude uses tokenization as the first step.
-
-In the next module, you'll convert these tokens into dense vector representations.
-"""
-
-# %%
-def demo_tokenization():
-    """🎯 See text become tokens."""
-    print("🎯 AHA MOMENT: Text Becomes Tokens")
-    print("=" * 45)
-    
-    # Create and fit a character tokenizer
-    tokenizer = CharTokenizer()
-    text = "hello world"
-    tokenizer.fit(text)
-    
-    # Encode and decode
-    tokens = tokenizer.encode("hello")
-    decoded = tokenizer.decode(tokens)
-    
-    print(f"Original: '{text}'")
-    print(f"Vocab size: {tokenizer.vocab_size}")
-    print(f"\nEncode 'hello': {tokens}")
-    print(f"Decode back:    '{decoded}'")
-    
-    print("\n✨ Text → numbers → text (perfect round-trip)!")
-
-# %%
-if __name__ == "__main__":
-    test_module()
-    print("\n")
-    demo_tokenization()
-
-# %% [markdown]
-"""
 ## 🤔 ML Systems Thinking: Text Processing Foundations
 
 ### Question 1: Vocabulary Size vs Memory
@@ -1614,6 +1573,61 @@ Your BPE tokenizer handles unknown words by decomposing into subwords.
 - What happens to model performance when many tokens map to <UNK>? _____
 - How does vocabulary size affect the number of unknown decompositions? _____
 """
+
+# %% [markdown]
+"""
+## 🎯 Aha Moment: Text Becomes Tokens
+
+**What you built:** Tokenizers that convert text into numerical sequences.
+
+**Why it matters:** Neural networks can't read text—they need numbers! Your tokenizer bridges
+this gap, converting words into token IDs that can be embedded and processed. Every language
+model from GPT to Claude uses tokenization as the first step.
+
+In the next module, you'll convert these tokens into dense vector representations.
+"""
+
+# %%
+def demo_tokenization():
+    """🎯 See text become tokens."""
+    print("🎯 AHA MOMENT: Text Becomes Tokens")
+    print("=" * 45)
+
+    # Create and train a character tokenizer on sample corpus
+    corpus = ["hello world", "hello there"]
+    tokenizer = CharTokenizer()
+    tokenizer.build_vocab(corpus)
+
+    # Encode and decode a test phrase
+    text = "hello"
+    tokens = tokenizer.encode(text)
+    decoded = tokenizer.decode(tokens)
+
+    print(f"Input text:       '{text}'")
+    print(f"Token IDs:        {tokens}")
+    print(f"Vocab size:       {tokenizer.vocab_size}")
+    print(f"Decoded back:     '{decoded}'")
+    print(f"Match:            {decoded == text}")
+
+    # Show how BPE compresses better
+    print("\n--- Comparing Tokenization Strategies ---")
+    test_text = "hello world"
+    char_tokens = tokenizer.encode(test_text)
+
+    bpe_tokenizer = create_tokenizer("bpe", vocab_size=50, corpus=corpus)
+    bpe_tokens = bpe_tokenizer.encode(test_text)
+
+    print(f"Character tokenizer: {len(char_tokens)} tokens")
+    print(f"BPE tokenizer:       {len(bpe_tokens)} tokens")
+    print(f"Compression ratio:   {len(char_tokens) / len(bpe_tokens):.1f}x")
+
+    print("\n✨ Text → tokens → text (language models start here)!")
+
+# %%
+if __name__ == "__main__":
+    test_module()
+    print("\n")
+    demo_tokenization()
 
 # %% [markdown]
 """

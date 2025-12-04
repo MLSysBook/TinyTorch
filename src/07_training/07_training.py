@@ -1121,38 +1121,7 @@ def analyze_checkpoint_overhead():
 
 # %% [markdown]
 """
-## 🤔 Part 6: ML Systems Reflection Questions
-
-Before we complete this module, let's reflect on the systems aspects of training infrastructure.
-
-Use only knowledge from Modules 01-07 to answer these questions:
-
-**1. Memory Trade-offs:**
-   - If you have a model with 1 million parameters and use Adam optimizer, estimate the total training memory required (parameters + gradients + optimizer state).
-   - How does gradient accumulation help when you want batch_size=128 but can only fit batch_size=32 in memory?
-
-**2. Gradient Clipping:**
-   - Why do we clip gradients by *global norm* rather than clipping each gradient independently?
-   - What happens to training if gradients consistently exceed max_norm? What does this signal?
-
-**3. Learning Rate Scheduling:**
-   - Why does cosine annealing start with high learning rate and end with low learning rate?
-   - Compare training with fixed lr=0.1 vs cosine schedule (0.1 → 0.01). When might fixed LR be better?
-
-**4. Checkpointing Strategy:**
-   - You're training for 100 epochs. Checkpoints are large (1GB each). How often should you save checkpoints?
-   - What information MUST be in a checkpoint to resume training exactly where you left off?
-
-**5. Train vs Eval Modes:**
-   - Why is it crucial to set model.training = False during evaluation?
-   - What would happen if you forgot to zero gradients between training steps?
-
-**Think about these questions. The answers reveal deep understanding of training systems!**
-"""
-
-# %% [markdown]
-"""
-## 🧪 Part 7: Module Integration Test
+## 🧪 Part 6: Module Integration Test
 
 Final validation that everything works together correctly.
 """
@@ -1268,6 +1237,40 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 07")
 
+if __name__ == "__main__":
+    test_module()
+
+# %% [markdown]
+"""
+## 🤔 Part 7: ML Systems Reflection Questions
+
+Before we complete this module, let's reflect on the systems aspects of training infrastructure.
+
+Use only knowledge from Modules 01-07 to answer these questions:
+
+**1. Memory Trade-offs:**
+   - If you have a model with 1 million parameters and use Adam optimizer, estimate the total training memory required (parameters + gradients + optimizer state).
+   - How does gradient accumulation help when you want batch_size=128 but can only fit batch_size=32 in memory?
+
+**2. Gradient Clipping:**
+   - Why do we clip gradients by *global norm* rather than clipping each gradient independently?
+   - What happens to training if gradients consistently exceed max_norm? What does this signal?
+
+**3. Learning Rate Scheduling:**
+   - Why does cosine annealing start with high learning rate and end with low learning rate?
+   - Compare training with fixed lr=0.1 vs cosine schedule (0.1 → 0.01). When might fixed LR be better?
+
+**4. Checkpointing Strategy:**
+   - You're training for 100 epochs. Checkpoints are large (1GB each). How often should you save checkpoints?
+   - What information MUST be in a checkpoint to resume training exactly where you left off?
+
+**5. Train vs Eval Modes:**
+   - Why is it crucial to set model.training = False during evaluation?
+   - What would happen if you forgot to zero gradients between training steps?
+
+**Think about these questions. The answers reveal deep understanding of training systems!**
+"""
+
 # %% [markdown]
 """
 ## 🎯 Aha Moment: Training Just Works
@@ -1325,7 +1328,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Part 8: MODULE SUMMARY - Training
+## 🎯 MODULE SUMMARY: Training
 
 Congratulations! You've built a complete training infrastructure that orchestrates the entire machine learning training process!
 

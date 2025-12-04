@@ -1458,6 +1458,77 @@ def test_module():
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking
+
+Now that your optimizers work, let's explore the systems trade-offs between them. Every optimizer choice affects memory usage, convergence speed, and training stability.
+
+### Questions to Consider
+
+**Q1: Memory vs Performance**
+You've implemented SGD (2× memory) and Adam (3× memory). For a model with 10 billion parameters at float32 (4 bytes each):
+- How much total memory does each optimizer require?
+- At what model size does Adam's extra 50% memory overhead become prohibitive?
+- What real-world constraints might force you to choose SGD over Adam?
+
+**Q2: Learning Rate Sensitivity**
+SGD uses a fixed learning rate for all parameters, while Adam adapts per-parameter:
+- Why might Adam converge faster on problems with parameters at different scales?
+- When might SGD's uniform learning rate actually be an advantage?
+- How does momentum in SGD relate to Adam's first moment estimation?
+
+**Q3: Optimizer State Management**
+Adam and AdamW maintain momentum buffers (m, v) that persist across training steps:
+- What happens to these buffers when you checkpoint during training?
+- If you resume training with different hyperparameters, should you restore the old buffers?
+- How does optimizer state affect distributed training across multiple GPUs?
+
+**Q4: Weight Decay Trade-offs**
+AdamW decouples weight decay from gradient updates:
+- Why does Adam's coupled weight decay behave inconsistently?
+- In what scenarios would AdamW's consistent regularization matter most?
+- How does weight decay interact with learning rate schedules?
+
+### Systems Implications
+
+**Memory Hierarchy:**
+```
+Model Size: 1B parameters (4GB)
+├─ SGD:     8GB total (4GB params + 4GB momentum)
+├─ Adam:    12GB total (4GB params + 4GB m + 4GB v)
+└─ Impact:  May not fit in GPU memory, forcing:
+            • Smaller batch sizes
+            • Model parallelism
+            • Optimizer state sharding (ZeRO optimization)
+```
+
+**Convergence Patterns:**
+- **SGD + Momentum:** Steady progress, may need learning rate tuning
+- **Adam:** Fast initial convergence, may overfit without proper regularization
+- **AdamW:** Adam's speed + better generalization, standard for transformers
+
+**Production Considerations:**
+- **Training cost:** Adam's extra memory means fewer models per GPU
+- **Hyperparameter tuning:** SGD more sensitive to learning rate choice
+- **Model generalization:** AdamW often generalizes better than Adam
+- **Checkpoint size:** Adam checkpoints are 1.5× larger than SGD
+
+### Performance Analysis
+
+Our earlier analysis functions revealed:
+- `analyze_optimizer_memory_usage()`: Adam requires exactly 1.5× SGD's memory
+- `analyze_optimizer_convergence_behavior()`: Adam often converges in fewer steps
+
+**The Key Insight:**
+Optimizer choice is a systems trade-off between:
+- **Memory budget** (can you afford 3× parameter memory?)
+- **Convergence speed** (how many training steps can you afford?)
+- **Generalization quality** (does your model perform well on unseen data?)
+
+There's no universally best optimizer—only the right choice for your constraints!
+"""
+
+# %% [markdown]
+"""
 ## 🎯 Aha Moment: Optimizers Update Weights
 
 **What you built:** Optimization algorithms (SGD, Adam) that update neural network weights.

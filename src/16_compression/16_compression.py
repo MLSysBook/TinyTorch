@@ -1506,120 +1506,6 @@ if __name__ == "__main__":
     analyze_distillation_effectiveness()
 
 # %% [markdown]
-"""
-## 9. Module Integration Test
-
-Final validation that all compression techniques work together correctly.
-"""
-
-# %%
-def test_module():
-    """🧪 Module Test: Complete Integration
-
-    Comprehensive test of entire compression module functionality.
-
-    This final test runs before module summary to ensure:
-    - All unit tests pass
-    - Functions work together correctly
-    - Module is ready for integration with TinyTorch
-    """
-    print("🧪 RUNNING MODULE INTEGRATION TEST")
-    print("=" * 50)
-
-    # Run all unit tests
-    print("Running unit tests...")
-    test_unit_measure_sparsity()
-    test_unit_magnitude_prune()
-    test_unit_structured_prune()
-    test_unit_low_rank_approximate()
-    test_unit_knowledge_distillation()
-    test_unit_compress_model()
-
-    print("\nRunning integration scenarios...")
-
-    # Test 1: Complete compression pipeline
-    print("🔬 Integration Test: Complete compression pipeline...")
-
-    # Create a realistic model with explicit layers - students see the architecture
-    input_layer = Linear(784, 512)    # Input layer (like MNIST)
-    hidden1 = Linear(512, 256)         # Hidden layer 1
-    hidden2 = Linear(256, 128)         # Hidden layer 2
-    output_layer = Linear(128, 10)     # Output layer
-    model = SimpleModel(input_layer, hidden1, hidden2, output_layer)
-
-    original_params = sum(p.size for p in model.parameters())
-    print(f"Original model: {original_params:,} parameters")
-
-    # Apply comprehensive compression - students see each technique
-    compression_config = {
-        'magnitude_prune': 0.8,    # Remove 80% of smallest weights
-        'structured_prune': 0.3     # Remove 30% of channels
-    }
-
-    stats = compress_model(model, compression_config)
-    final_sparsity = measure_sparsity(model)
-
-    # Validate compression results
-    assert final_sparsity > 70, f"Expected >70% sparsity, got {final_sparsity:.1f}%"
-    assert stats['sparsity_increase'] > 70, "Should achieve significant compression"
-    assert len(stats['applied_techniques']) == 2, "Should apply both techniques"
-
-    print(f"✅ Achieved {final_sparsity:.1f}% sparsity with {len(stats['applied_techniques'])} techniques")
-
-    # Test 2: Knowledge distillation setup
-    print("🔬 Integration Test: Knowledge distillation...")
-
-    # Create teacher with more capacity - explicit layers show architecture
-    teacher_l1 = Linear(100, 200)
-    teacher_l2 = Linear(200, 50)
-    teacher = SimpleModel(teacher_l1, teacher_l2)
-
-    # Create smaller student - explicit shows size difference
-    student_l1 = Linear(100, 50)
-    student = SimpleModel(student_l1)  # 3x fewer parameters
-
-    kd = KnowledgeDistillation(teacher, student, temperature=4.0, alpha=0.8)
-
-    # Verify setup
-    teacher_params = sum(p.size for p in teacher.parameters())
-    student_params = sum(p.size for p in student.parameters())
-    compression_ratio = student_params / teacher_params
-
-    assert compression_ratio < 0.5, f"Student should be <50% of teacher size, got {compression_ratio:.2f}"
-    assert kd.temperature == 4.0, "Temperature should be set correctly"
-    assert kd.alpha == 0.8, "Alpha should be set correctly"
-
-    print(f"✅ Knowledge distillation: {compression_ratio:.2f}x size reduction")
-
-    # Test 3: Low-rank approximation
-    print("🔬 Integration Test: Low-rank approximation...")
-
-    large_matrix = np.random.randn(200, 150)
-    U, S, V = low_rank_approximate(large_matrix, rank_ratio=0.3)
-
-    original_size = large_matrix.size
-    compressed_size = U.size + S.size + V.size
-    compression_ratio = compressed_size / original_size
-
-    assert compression_ratio < 0.7, f"Should achieve compression, got ratio {compression_ratio:.2f}"
-
-    # Test reconstruction
-    reconstructed = U @ np.diag(S) @ V
-    error = np.linalg.norm(large_matrix - reconstructed) / np.linalg.norm(large_matrix)
-    # Low-rank approximation trades accuracy for compression - some error is expected
-    assert error < 0.7, f"Reconstruction error too high: {error:.3f}"
-
-    print(f"✅ Low-rank: {compression_ratio:.2f}x compression, {error:.3f} error")
-
-    print("\n" + "=" * 50)
-    print("🎉 ALL TESTS PASSED! Module ready for export.")
-    print("Run: tito module complete 16")
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Compression module...")
-    test_module()
-    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
@@ -1781,6 +1667,120 @@ For deploying on a mobile device with 50MB model limit and 100ms latency require
 """
 
 # %% [markdown]
+"""
+## 9. Module Integration Test
+
+Final validation that all compression techniques work together correctly.
+"""
+
+# %%
+def test_module():
+    """🧪 Module Test: Complete Integration
+
+    Comprehensive test of entire compression module functionality.
+
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
+    print("=" * 50)
+
+    # Run all unit tests
+    print("Running unit tests...")
+    test_unit_measure_sparsity()
+    test_unit_magnitude_prune()
+    test_unit_structured_prune()
+    test_unit_low_rank_approximate()
+    test_unit_knowledge_distillation()
+    test_unit_compress_model()
+
+    print("\nRunning integration scenarios...")
+
+    # Test 1: Complete compression pipeline
+    print("🔬 Integration Test: Complete compression pipeline...")
+
+    # Create a realistic model with explicit layers - students see the architecture
+    input_layer = Linear(784, 512)    # Input layer (like MNIST)
+    hidden1 = Linear(512, 256)         # Hidden layer 1
+    hidden2 = Linear(256, 128)         # Hidden layer 2
+    output_layer = Linear(128, 10)     # Output layer
+    model = SimpleModel(input_layer, hidden1, hidden2, output_layer)
+
+    original_params = sum(p.size for p in model.parameters())
+    print(f"Original model: {original_params:,} parameters")
+
+    # Apply comprehensive compression - students see each technique
+    compression_config = {
+        'magnitude_prune': 0.8,    # Remove 80% of smallest weights
+        'structured_prune': 0.3     # Remove 30% of channels
+    }
+
+    stats = compress_model(model, compression_config)
+    final_sparsity = measure_sparsity(model)
+
+    # Validate compression results
+    assert final_sparsity > 70, f"Expected >70% sparsity, got {final_sparsity:.1f}%"
+    assert stats['sparsity_increase'] > 70, "Should achieve significant compression"
+    assert len(stats['applied_techniques']) == 2, "Should apply both techniques"
+
+    print(f"✅ Achieved {final_sparsity:.1f}% sparsity with {len(stats['applied_techniques'])} techniques")
+
+    # Test 2: Knowledge distillation setup
+    print("🔬 Integration Test: Knowledge distillation...")
+
+    # Create teacher with more capacity - explicit layers show architecture
+    teacher_l1 = Linear(100, 200)
+    teacher_l2 = Linear(200, 50)
+    teacher = SimpleModel(teacher_l1, teacher_l2)
+
+    # Create smaller student - explicit shows size difference
+    student_l1 = Linear(100, 50)
+    student = SimpleModel(student_l1)  # 3x fewer parameters
+
+    kd = KnowledgeDistillation(teacher, student, temperature=4.0, alpha=0.8)
+
+    # Verify setup
+    teacher_params = sum(p.size for p in teacher.parameters())
+    student_params = sum(p.size for p in student.parameters())
+    compression_ratio = student_params / teacher_params
+
+    assert compression_ratio < 0.5, f"Student should be <50% of teacher size, got {compression_ratio:.2f}"
+    assert kd.temperature == 4.0, "Temperature should be set correctly"
+    assert kd.alpha == 0.8, "Alpha should be set correctly"
+
+    print(f"✅ Knowledge distillation: {compression_ratio:.2f}x size reduction")
+
+    # Test 3: Low-rank approximation
+    print("🔬 Integration Test: Low-rank approximation...")
+
+    large_matrix = np.random.randn(200, 150)
+    U, S, V = low_rank_approximate(large_matrix, rank_ratio=0.3)
+
+    original_size = large_matrix.size
+    compressed_size = U.size + S.size + V.size
+    compression_ratio = compressed_size / original_size
+
+    assert compression_ratio < 0.7, f"Should achieve compression, got ratio {compression_ratio:.2f}"
+
+    # Test reconstruction
+    reconstructed = U @ np.diag(S) @ V
+    error = np.linalg.norm(large_matrix - reconstructed) / np.linalg.norm(large_matrix)
+    # Low-rank approximation trades accuracy for compression - some error is expected
+    assert error < 0.7, f"Reconstruction error too high: {error:.3f}"
+
+    print(f"✅ Low-rank: {compression_ratio:.2f}x compression, {error:.3f} error")
+
+    print("\n" + "=" * 50)
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 16")
+
+# %%
+if __name__ == "__main__":
+    print("🚀 Running Compression module...")
+    test_module()
+    print("✅ Module validation complete!")
 """
 ## 🎯 Aha Moment: Pruning Removes Unimportant Weights
 

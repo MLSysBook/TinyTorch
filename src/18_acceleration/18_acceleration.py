@@ -1242,6 +1242,33 @@ def demo_acceleration_with_profiler():
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking: Acceleration and Performance
+
+### Question 1: Arithmetic Intensity Analysis
+You implemented vectorized matrix multiplication and fused GELU.
+- Matrix multiplication (1024×1024): Performs ~2.1 billion FLOPs, reads ~12 MB data
+- Arithmetic intensity: _____ FLOPs/byte
+- Compared to element-wise addition (0.33 FLOPs/byte): _____× higher intensity
+- Why does this make matrix multiplication ideal for GPUs? _____
+
+### Question 2: Kernel Fusion Memory Benefits
+Your fused_gelu combines 7 operations into a single expression.
+- Unfused version memory accesses: 7 reads + 7 writes = _____ per element
+- Fused version memory accesses: 1 read + 1 write = _____ per element
+- Memory bandwidth reduction: _____%
+- Why is this critical for transformer inference? _____
+
+### Question 4: Production Optimization Strategy
+Based on your decision framework analysis:
+For edge deployment (memory critical, stability required, hardware diverse):
+- Priority 1 technique: _____ (low risk, universal)
+- Priority 2 technique: _____ (memory benefits)
+- Skip technique: _____ (why: _____)
+- What's the primary constraint: memory, compute, or power? _____
+"""
+
+# %% [markdown]
+"""
 ## 6. Module Integration Test
 
 Final validation that all acceleration components work together correctly.
@@ -1395,33 +1422,6 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Acceleration and Performance
-
-### Question 1: Arithmetic Intensity Analysis
-You implemented vectorized matrix multiplication and fused GELU.
-- Matrix multiplication (1024×1024): Performs ~2.1 billion FLOPs, reads ~12 MB data
-- Arithmetic intensity: _____ FLOPs/byte
-- Compared to element-wise addition (0.33 FLOPs/byte): _____× higher intensity
-- Why does this make matrix multiplication ideal for GPUs? _____
-
-### Question 2: Kernel Fusion Memory Benefits
-Your fused_gelu combines 7 operations into a single expression.
-- Unfused version memory accesses: 7 reads + 7 writes = _____ per element
-- Fused version memory accesses: 1 read + 1 write = _____ per element
-- Memory bandwidth reduction: _____%
-- Why is this critical for transformer inference? _____
-
-### Question 4: Production Optimization Strategy
-Based on your decision framework analysis:
-For edge deployment (memory critical, stability required, hardware diverse):
-- Priority 1 technique: _____ (low risk, universal)
-- Priority 2 technique: _____ (memory benefits)
-- Skip technique: _____ (why: _____)
-- What's the primary constraint: memory, compute, or power? _____
-"""
-
-# %% [markdown]
-"""
 ## 🎯 Aha Moment: Vectorization and Fusion Speed Things Up
 
 **What you built:** Vectorized operations and fused kernels that reduce memory traffic.
@@ -1435,34 +1435,32 @@ Combined with vectorization (SIMD), these techniques make neural networks 2-5× 
 
 # %%
 def demo_acceleration():
-    """🎯 See fused operations reduce memory traffic."""
-    print("🎯 AHA MOMENT: Fusion Reduces Memory Traffic")
+    """🎯 See fused operations produce correct results."""
+    print("🎯 AHA MOMENT: Fused Operations Match Reference")
     print("=" * 45)
-    
-    # Create a tensor
-    x = Tensor(np.random.randn(1000, 1000))
-    
-    import time
-    
-    # Unfused GELU (multiple operations)
-    start = time.perf_counter()
-    for _ in range(10):
-        # Manual GELU: 0.5 * x * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))
-        t = x.data
-        unfused = 0.5 * t * (1 + np.tanh(np.sqrt(2/np.pi) * (t + 0.044715 * t**3)))
-    unfused_time = (time.perf_counter() - start) / 10
-    
-    # Fused GELU (single operation)
-    start = time.perf_counter()
-    for _ in range(10):
-        fused = fused_gelu(x)
-    fused_time = (time.perf_counter() - start) / 10
-    
-    print(f"Unfused GELU: {unfused_time*1000:.2f} ms")
-    print(f"Fused GELU:   {fused_time*1000:.2f} ms")
-    print(f"\nSpeedup: {unfused_time/fused_time:.1f}×")
-    
-    print("\n✨ Same result, fewer memory accesses!")
+
+    # Use concrete small values for clear demonstration
+    x = Tensor([-2.0, -1.0, 0.0, 1.0, 2.0])
+
+    # Compute GELU using fused implementation
+    result_fused = fused_gelu(x)
+
+    # Compute reference using NumPy directly
+    sqrt_2_over_pi = np.sqrt(2.0 / np.pi)
+    result_reference = 0.5 * x.data * (
+        1.0 + np.tanh(sqrt_2_over_pi * (x.data + 0.044715 * x.data**3))
+    )
+
+    # Display inputs and outputs
+    print(f"Input: {x.data}")
+    print(f"GELU output: {result_fused.data}")
+    print(f"Reference:   {result_reference}")
+
+    # Validate results match
+    match = np.allclose(result_fused.data, result_reference)
+    print(f"\nResults match: {match}")
+
+    print("\n✨ Same math, optimized execution!")
 
 # %%
 if __name__ == "__main__":
