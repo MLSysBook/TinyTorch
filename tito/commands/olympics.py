@@ -56,7 +56,7 @@ class OlympicsCommand(BaseCommand):
         # Olympic rings ASCII art with colors
         # Blue (ring 1), White (ring 2), Red (ring 3) on top
         # Yellow (ring 4), Green (ring 5) on bottom, interlocking
-        logo_lines = [
+        logo_lines = ["",
             "[blue]⠀⠀⢀⣠⢖⠗⠟⠛⠛⠟⢶⢦⣀[/]⠀⠀⠀⠀⠀⠀⠀[bright_white]⣠⣶⡿⠿⠿⠿⣿⣷⣦⣄[/]⠀⠀⠀⠀⠀⠀⠀[red]⣄⡴⡳⠛⠛⠛⠟⢞⣦⣄[/]⠀⠀⠀",
             "[blue]⠀⣠⢾⠑⠁⠀⠀⠀⠀⠀⠀⠉⠫⣷⡀[/]⠀⠀⠀[bright_white]⣠⣾⡟⠉⠀⠀⠀⠀⠀⠀⠙⢻⣷⣄[/]⠀⠀⠀[red]⢠⢾⠕⠉⠀⠀⠀⠀⠀⠀⠈⠚⡷⡄[/]⠀",
             "[blue]⢰⡯⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣳⠄[/]⠀[bright_white]⣰⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⡆[/]⠀[red]⢠⣟⠅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣟⠆[/]",
