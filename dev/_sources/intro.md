@@ -256,13 +256,13 @@ Perfect if you want to **debug ML systems**, **implement custom operations**, or
     Add yourself to the map • Share your progress • Connect with builders
   </p>
   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-    <a href="https://tinytorch.ai/join" target="_blank" 
-       style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); 
-              color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; 
-              text-decoration: none; font-weight: 600; font-size: 1rem;
-              box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-      Join the Map →
-    </a>
+  <a href="https://tinytorch.ai/join" target="_blank" 
+     style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); 
+            color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; 
+            text-decoration: none; font-weight: 600; font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+    Join the Map →
+  </a>
     <a href="#" onclick="event.preventDefault(); if(window.openSubscribeModal) openSubscribeModal();" 
        style="display: inline-block; background: rgba(255,255,255,0.1); 
               border: 1px solid rgba(255,255,255,0.2);
