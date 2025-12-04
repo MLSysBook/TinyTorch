@@ -9,7 +9,7 @@ Required modules:
 - Module 01: Setup 
 - Module 02: Tensor - Data structures
 - Module 03: Activations - ReLU, Sigmoid
-- Module 04: Layers - Dense layers
+- Module 04: Layers - Linear layers
 
 This demonstrates the milestone: "Can build a network that learns XOR"
 """
@@ -21,15 +21,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.activations import ReLU, Sigmoid
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 
 class SimpleXORNet:
     """Simple 2-layer network for XOR problem."""
-    
+
     def __init__(self):
-        self.layer1 = Dense(2, 4)  # Input layer: 2 -> 4 hidden
+        self.layer1 = Linear(2, 4)  # Input layer: 2 -> 4 hidden
         self.relu = ReLU()
-        self.layer2 = Dense(4, 1)  # Output layer: 4 -> 1 output  
+        self.layer2 = Linear(4, 1)  # Output layer: 4 -> 1 output
         self.sigmoid = Sigmoid()
     
     def forward(self, x):
@@ -58,10 +58,10 @@ def test_xor_network_components():
     x = Tensor([[0, 1], [1, 0]])
     assert x.shape == (2, 2), f"Expected shape (2, 2), got {x.shape}"
     
-    # Test Dense layer
-    print("  ✓ Testing Dense layer")
-    dense = Dense(2, 3)
-    out = dense(x)
+    # Test Linear layer
+    print("  ✓ Testing Linear layer")
+    linear = Linear(2, 3)
+    out = linear(x)
     assert out.shape == (2, 3), f"Expected shape (2, 3), got {out.shape}"
     
     # Test ReLU activation
@@ -169,8 +169,8 @@ def run_xor_integration_test():
         print()
         print("✅ Milestone Achieved: Can build networks that learn XOR")
         print("   • Tensors handle data flow")
-        print("   • Activations add nonlinearity") 
-        print("   • Dense layers transform representations")
+        print("   • Activations add nonlinearity")
+        print("   • Linear layers transform representations")
         print("   • Architecture supports learning")
         print()
         print("🚀 Ready for Module 5: Training loops!")

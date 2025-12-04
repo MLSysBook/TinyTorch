@@ -20,7 +20,7 @@ def test_checkpoint_06_attention():
     try:
         from tinytorch.core.tensor import Tensor
         from tinytorch.core.attention import MultiHeadAttention, ScaledDotProductAttention
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
     except ImportError as e:
         pytest.fail(f"❌ Cannot import required classes - complete Modules 2-7 first: {e}")
     
@@ -129,8 +129,8 @@ def test_checkpoint_06_attention():
     attention_layer = MultiHeadAttention(d_model=d_model, num_heads=3)
     
     # Feed-forward layers
-    ff1 = Dense(d_model, d_model * 4)  # Expansion
-    ff2 = Dense(d_model * 4, d_model)  # Projection back
+    ff1 = Linear(d_model, d_model * 4)  # Expansion
+    ff2 = Linear(d_model * 4, d_model)  # Projection back
     
     # Build transformer block: Attention → FFN
     attended = attention_layer(input_seq, input_seq, input_seq)

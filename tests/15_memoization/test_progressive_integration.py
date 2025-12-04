@@ -25,7 +25,7 @@ class TestEntireTinyTorchSystemStable:
         # Complete production ML system should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.spatial import Conv2D
             from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.optimizers import Adam
@@ -35,7 +35,7 @@ class TestEntireTinyTorchSystemStable:
             from tinytorch.core.mlops import ModelMonitor
             
             # Foundation components
-            model = Dense(16, 8)
+            model = Linear(16, 8)
             x = Tensor(np.random.randn(4, 16))
             output = model(x)
             assert output.shape == (4, 8), "Foundation broken"
@@ -347,7 +347,7 @@ class TestCompleteSystemIntegration:
         try:
             from tinytorch.core.transformers import TinyGPT
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.tensor import Tensor
             
@@ -360,7 +360,7 @@ class TestCompleteSystemIntegration:
                     self.conv2 = Conv2D(16, 32, kernel_size=3)
                     
                     # Vision to language bridge
-                    self.vision_proj = Dense(32 * 7 * 7, 128)  # Approximate after conv/pool
+                    self.vision_proj = Linear(32 * 7 * 7, 128)  # Approximate after conv/pool
                     
                     # Language model
                     self.language_model = TinyGPT(
@@ -421,7 +421,7 @@ class TestCapstoneSystemValidation:
         """Test that students can build complete ML systems from scratch."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.spatial import Conv2D
             from tinytorch.core.attention import MultiHeadAttention
@@ -433,7 +433,7 @@ class TestCapstoneSystemValidation:
             # Students should be able to build:
             
             # 1. Classic neural networks
-            mlp = Dense(784, 10)
+            mlp = Linear(784, 10)
             x_mlp = Tensor(np.random.randn(32, 784))
             out_mlp = mlp(x_mlp)
             assert out_mlp.shape == (32, 10), "MLP capability broken"
@@ -476,9 +476,9 @@ class TestCapstoneSystemValidation:
             from tinytorch.core.kernels import optimized_matmul, enable_optimizations
             from tinytorch.core.benchmarking import benchmark_model, profile_memory
             from tinytorch.core.mlops import ModelMonitor, deploy_model
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            model = Dense(100, 50)
+            model = Linear(100, 50)
             
             # Students should understand:
             
@@ -706,12 +706,12 @@ class TestRegressionPrevention:
         # Complete system should still work perfectly
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             
             # Complete system integration
-            model = Dense(16, 8)
+            model = Linear(16, 8)
             optimizer = Adam(model.parameters(), lr=0.001)
             trainer = Trainer(model, optimizer)
             
@@ -744,14 +744,14 @@ class TestRegressionPrevention:
         # Complete ML system level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import prune_weights
             from tinytorch.core.kernels import optimized_matmul
             
             # Complete production system should work
-            model = Dense(20, 10)
+            model = Linear(20, 10)
             optimizer = Adam(model.parameters(), lr=0.001)
             trainer = Trainer(model, optimizer)
             

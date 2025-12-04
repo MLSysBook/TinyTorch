@@ -19,14 +19,14 @@ def test_checkpoint_03_components():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
     except ImportError as e:
         pytest.fail(f"❌ Cannot import required classes - complete Modules 2-4 first: {e}")
     
     # Test 1: Dense layer creation with parameters
     print("🔧 Testing Dense layer creation...")
-    layer = Dense(input_size=10, output_size=5)
+    layer = Linear(input_size=10, output_size=5)
     
     assert hasattr(layer, 'weights'), "Dense layer should have weights"
     assert hasattr(layer, 'bias'), "Dense layer should have bias"
@@ -78,8 +78,8 @@ def test_checkpoint_03_components():
     
     # Test 6: Multiple layer types
     print("🏗️ Testing different layer configurations...")
-    small_layer = Dense(5, 3)
-    large_layer = Dense(100, 50)
+    small_layer = Linear(5, 3)
+    large_layer = Linear(100, 50)
     
     small_test = Tensor(np.random.randn(2, 5))
     large_test = Tensor(np.random.randn(1, 100))

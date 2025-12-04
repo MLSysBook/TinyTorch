@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.activations import ReLU, Sigmoid
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 
 def test_basic_tensor_operations():
     """Test basic tensor operations."""
@@ -74,7 +74,7 @@ def test_dense_layer_basic():
     print("🏗️  Testing Dense Layer...")
     
     # Create a simple dense layer
-    dense = Dense(3, 2)  # 3 inputs, 2 outputs
+    dense = Linear(3, 2)  # 3 inputs, 2 outputs
     
     # Test with simple input
     x = Tensor([[1, 0, 1]])  # batch_size=1, input_size=3
@@ -83,8 +83,8 @@ def test_dense_layer_basic():
     print(f"  ✓ Dense layer forward pass successful")
     print(f"    Input shape: {x.shape}")
     print(f"    Output shape: {output.shape}")
-    print(f"    Weights shape: {dense.weights.shape}")
-    print(f"    Bias shape: {dense.bias.shape}")
+    print(f"    Weights shape: {linear.weights.shape}")
+    print(f"    Bias shape: {linear.bias.shape}")
     
     # Check output shape is correct
     assert output.shape == (1, 2), f"Expected output shape (1, 2), got {output.shape}"
@@ -102,8 +102,8 @@ def test_simple_forward_pass():
     print("🚀 Testing Simple Forward Pass...")
     
     # Create simple 2-layer network manually
-    layer1 = Dense(2, 3)  # 2 -> 3
-    layer2 = Dense(3, 1)  # 3 -> 1
+    layer1 = Linear(2, 3)  # 2 -> 3
+    layer2 = Linear(3, 1)  # 3 -> 1
     relu = ReLU()
     sigmoid = Sigmoid()
     

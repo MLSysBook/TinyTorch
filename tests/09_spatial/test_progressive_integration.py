@@ -106,14 +106,14 @@ class TestProgressiveStackIntegration:
         """Test neural network enhanced with attention."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.attention import MultiHeadAttention
             
             # Build network: dense → attention → dense
-            encoder = Dense(64, 64)
+            encoder = Linear(64, 64)
             attention = MultiHeadAttention(embed_dim=64, num_heads=8)
-            decoder = Dense(64, 10)
+            decoder = Linear(64, 10)
             relu = ReLU()
             
             # Sequence input
@@ -134,14 +134,14 @@ class TestProgressiveStackIntegration:
         """Test building transformer-style blocks."""
         try:
             from tinytorch.core.attention import MultiHeadAttention
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.tensor import Tensor
             
             # Transformer block components
             attention = MultiHeadAttention(embed_dim=128, num_heads=8)
-            ff1 = Dense(128, 512)
-            ff2 = Dense(512, 128)
+            ff1 = Linear(128, 512)
+            ff2 = Linear(512, 128)
             relu = ReLU()
             
             # Input sequence
@@ -237,21 +237,21 @@ class TestNLPReadiness:
         """Test architecture suitable for language modeling."""
         try:
             from tinytorch.core.attention import MultiHeadAttention
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Language model components
             vocab_size, embed_dim, seq_len = 1000, 256, 32
             
             # Embedding layer (simplified)
-            embedding = Dense(vocab_size, embed_dim)
+            embedding = Linear(vocab_size, embed_dim)
             
             # Attention layers
             attention1 = MultiHeadAttention(embed_dim=embed_dim, num_heads=8)
             attention2 = MultiHeadAttention(embed_dim=embed_dim, num_heads=8)
             
             # Output projection
-            output_proj = Dense(embed_dim, vocab_size)
+            output_proj = Linear(embed_dim, vocab_size)
             
             # Token sequence (as embeddings)
             batch_size = 4
@@ -316,10 +316,10 @@ class TestRegressionPrevention:
         # Foundation level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Should still be able to build neural networks
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             x = Tensor(np.random.randn(4, 10))
             output = layer(x)
             assert output.shape == (4, 5), "Foundation level broken"

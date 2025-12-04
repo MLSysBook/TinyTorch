@@ -20,7 +20,7 @@ def test_checkpoint_17_compression():
     try:
         # Import compression components
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense, Conv2D
+        from tinytorch.core.layers import Linear, Conv2D
         from tinytorch.core.activations import ReLU
         from tinytorch.core.networks import Sequential
         from tinytorch.nn.utils.prune import MagnitudePruner, prune_conv_filters, CompressionAnalyzer
@@ -116,13 +116,13 @@ def test_checkpoint_17_compression():
     try:
         # Create test model
         test_model = Sequential([
-            Dense(100, 200),
+            Linear(100, 200),
             ReLU(),
-            Dense(200, 100),
+            Linear(200, 100),
             ReLU(),
-            Dense(100, 50),
+            Linear(100, 50),
             ReLU(),
-            Dense(50, 10)
+            Linear(50, 10)
         ])
 
         # Simulate model weights

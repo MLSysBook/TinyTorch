@@ -57,7 +57,7 @@ class TestCompleteMLSystemStillWorks:
             # Test complete ML system still works
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
@@ -69,7 +69,7 @@ class TestCompleteMLSystemStillWorks:
                     self.conv1 = Conv2D(3, 16, kernel_size=3, padding=1)
                     self.pool = MaxPool2D(kernel_size=2)
                     self.conv2 = Conv2D(16, 32, kernel_size=3, padding=1)
-                    self.fc = Dense(32 * 8 * 8, 10)
+                    self.fc = Linear(32 * 8 * 8, 10)
                     self.relu = ReLU()
                     self.softmax = Softmax()
                 
@@ -188,13 +188,13 @@ class TestCompleteMLSystemStillWorks:
         """
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer, MSELoss
             from tinytorch.core.autograd import Variable
             
             # Test training system
-            model = Dense(5, 3)
+            model = Linear(5, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             loss_fn = MSELoss()
             trainer = Trainer(model, optimizer)
@@ -264,11 +264,11 @@ class TestModule14BenchmarkingCore:
         """
         try:
             from tinytorch.core.benchmarking import benchmark_model
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Test model benchmarking
-            model = Dense(100, 50)
+            model = Linear(100, 50)
             input_shape = (32, 100)  # Batch size 32, 100 features
             
             # Run benchmark
@@ -398,16 +398,16 @@ class TestModule14BenchmarkingCore:
         """
         try:
             from tinytorch.core.benchmarking import profile_model, ProfilerContext
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.tensor import Tensor
             
             # Test profiling functionality
             class TestModel:
                 def __init__(self):
-                    self.layer1 = Dense(100, 200)
+                    self.layer1 = Linear(100, 200)
                     self.relu = ReLU()
-                    self.layer2 = Dense(200, 50)
+                    self.layer2 = Linear(200, 50)
                 
                 def __call__(self, x):
                     h1 = self.layer1(x)
@@ -538,12 +538,12 @@ class TestModule14BenchmarkingCore:
         """
         try:
             from tinytorch.core.benchmarking import compare_models, PerformanceComparator
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Test model comparison
-            model_small = Dense(50, 25)
-            model_large = Dense(100, 50)
+            model_small = Linear(50, 25)
+            model_large = Linear(100, 50)
             
             input_shape = (16, 50)
             
@@ -682,13 +682,13 @@ class TestBenchmarkingIntegration:
         try:
             from tinytorch.core.benchmarking import benchmark_training
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer, MSELoss
             from tinytorch.core.data import Dataset, DataLoader
             
             # Create training setup
-            model = Dense(50, 10)
+            model = Linear(50, 10)
             optimizer = SGD(model.parameters(), lr=0.01)
             loss_fn = MSELoss()
             trainer = Trainer(model, optimizer)
@@ -824,7 +824,7 @@ class TestBenchmarkingIntegration:
             from tinytorch.core.benchmarking import benchmark_inference
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             
             # Create inference model (CNN for image classification)
@@ -833,7 +833,7 @@ class TestBenchmarkingIntegration:
                     self.conv1 = Conv2D(3, 32, kernel_size=3, padding=1)
                     self.pool = MaxPool2D(kernel_size=2)
                     self.conv2 = Conv2D(32, 64, kernel_size=3, padding=1)
-                    self.fc = Dense(64 * 8 * 8, 1000)  # ImageNet-like
+                    self.fc = Linear(64 * 8 * 8, 1000)  # ImageNet-like
                     self.relu = ReLU()
                 
                 def __call__(self, x):
@@ -968,12 +968,12 @@ class TestBenchmarkingIntegration:
         try:
             from tinytorch.core.benchmarking import analyze_hardware_performance
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.spatial import Conv2D
             
             # Test hardware analysis
             models_for_analysis = [
-                ("cpu_intensive", Dense(1000, 1000)),       # CPU-friendly
+                ("cpu_intensive", Linear(1000, 1000)),       # CPU-friendly
                 ("memory_intensive", Conv2D(3, 512, 7)),    # Memory-bound
             ]
             
@@ -999,7 +999,7 @@ class TestBenchmarkingIntegration:
             
             # Test basic hardware characteristic analysis
             # CPU-intensive model (many small operations)
-            cpu_model = Dense(500, 500)
+            cpu_model = Linear(500, 500)
             cpu_input = Tensor(np.random.randn(1, 500))
             
             # Memory-intensive model (large feature maps)
@@ -1111,9 +1111,9 @@ class TestModule14Completion:
         try:
             # Test 1: Model benchmarking
             from tinytorch.core.benchmarking import benchmark_model
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            model = Dense(50, 25)
+            model = Linear(50, 25)
             results = benchmark_model(model, (16, 50))
             assert 'latency' in results and 'throughput' in results
             benchmarking_capabilities["Model benchmarking"] = True
@@ -1137,8 +1137,8 @@ class TestModule14Completion:
                 benchmarking_capabilities["Performance comparison"] = True
             except ImportError:
                 # Can compare manually
-                model1_results = benchmark_model(Dense(25, 10), (8, 25))
-                model2_results = benchmark_model(Dense(50, 10), (8, 50))
+                model1_results = benchmark_model(Linear(25, 10), (8, 25))
+                model2_results = benchmark_model(Linear(50, 10), (8, 50))
                 assert model1_results['latency'] != model2_results['latency']
                 benchmarking_capabilities["Performance comparison"] = True
             
@@ -1174,8 +1174,8 @@ class TestModule14Completion:
             
             # Test 6: Hardware analysis (basic structure)
             # Analyze different model sizes
-            small_model = Dense(10, 5)
-            large_model = Dense(1000, 500)
+            small_model = Linear(10, 5)
+            large_model = Linear(1000, 500)
             
             small_results = benchmark_model(small_model, (4, 10))
             large_results = benchmark_model(large_model, (4, 1000))
@@ -1192,7 +1192,7 @@ class TestModule14Completion:
             class ComplexModel:
                 def __init__(self):
                     self.conv = Conv2D(3, 16, 3)
-                    self.dense = Dense(16 * 30 * 30, 10)
+                    self.dense = Linear(16 * 30 * 30, 10)
                     self.relu = ReLU()
                 
                 def __call__(self, x):

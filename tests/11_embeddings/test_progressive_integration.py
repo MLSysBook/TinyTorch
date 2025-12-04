@@ -25,12 +25,12 @@ class TestPriorStackStillWorking:
         # Complete training should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
             
             # All training components should be available
-            model = Dense(8, 3)
+            model = Linear(8, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             trainer = Trainer(model, optimizer)
             
@@ -70,11 +70,11 @@ class TestModule12CompressionCore:
         """Test quantization techniques."""
         try:
             from tinytorch.core.compression import Quantizer, quantize_weights
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Create model to quantize
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             
             # Test weight quantization
             if 'quantize_weights' in locals():
@@ -105,10 +105,10 @@ class TestModule12CompressionCore:
         """Test weight pruning and sparsity."""
         try:
             from tinytorch.core.compression import prune_weights, MagnitudePruner
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Create model to prune
-            layer = Dense(20, 10)
+            layer = Linear(20, 10)
             original_weights = layer.weights.data.copy()
             
             # Test magnitude-based pruning
@@ -144,12 +144,12 @@ class TestModule12CompressionCore:
         """Test knowledge distillation compression."""
         try:
             from tinytorch.core.compression import DistillationLoss, KnowledgeDistiller
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Teacher and student models
-            teacher = Dense(10, 5)  # Large model
-            student = Dense(10, 5)  # Smaller model (same size for simplicity)
+            teacher = Linear(10, 5)  # Large model
+            student = Linear(10, 5)  # Smaller model (same size for simplicity)
             
             # Test distillation loss
             if 'DistillationLoss' in locals():
@@ -185,14 +185,14 @@ class TestProgressiveStackIntegration:
         """Test training with compressed models."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import prune_weights, quantize_weights
             from tinytorch.core.data import Dataset, DataLoader
             
             # Create model
-            model = Dense(20, 5)
+            model = Linear(20, 5)
             
             # Apply compression
             if 'prune_weights' in locals():
@@ -222,13 +222,13 @@ class TestProgressiveStackIntegration:
         """Test compression with CNN models."""
         try:
             from tinytorch.core.spatial import Conv2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.compression import prune_weights, quantize_weights
             from tinytorch.core.tensor import Tensor
             
             # CNN model
             conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
-            fc = Dense(16 * 30 * 30, 10)  # Approximate size
+            fc = Linear(16 * 30 * 30, 10)  # Approximate size
             
             # Apply compression to CNN
             if 'prune_weights' in locals() and hasattr(conv1, 'weights'):
@@ -285,10 +285,10 @@ class TestEfficiencyAndPerformance:
         """Test memory reduction from compression."""
         try:
             from tinytorch.core.compression import prune_weights, quantize_weights
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Large model for memory testing
-            large_model = Dense(1000, 500)
+            large_model = Linear(1000, 500)
             original_size = large_model.weights.data.nbytes
             
             # Test pruning memory reduction
@@ -319,16 +319,16 @@ class TestEfficiencyAndPerformance:
         """Test inference speedup from compression."""
         try:
             from tinytorch.core.compression import prune_weights, quantize_weights
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             import time
             
             # Model for speed testing
-            model = Dense(500, 200)
+            model = Linear(500, 200)
             
             # Apply compression
             if 'prune_weights' in locals():
-                compressed_model = Dense(500, 200)
+                compressed_model = Linear(500, 200)
                 compressed_model.weights = prune_weights(model.weights, sparsity=0.8)
                 
                 # Test inference time (simplified)
@@ -356,10 +356,10 @@ class TestEfficiencyAndPerformance:
         """Test model size reduction techniques."""
         try:
             from tinytorch.core.compression import compress_model, ModelCompressor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Model to compress
-            model = Dense(100, 50)
+            model = Linear(100, 50)
             original_param_count = model.weights.data.size
             if hasattr(model, 'bias') and model.bias is not None:
                 original_param_count += model.bias.data.size
@@ -392,10 +392,10 @@ class TestProductionCompressionFeatures:
         """Test gradual pruning during training."""
         try:
             from tinytorch.core.compression import GradualPruner
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(50, 20)
+            model = Linear(50, 20)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Gradual pruner
@@ -423,10 +423,10 @@ class TestProductionCompressionFeatures:
         try:
             from tinytorch.core.compression import MixedPrecisionCompressor
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             
-            model = Dense(30, 10)
+            model = Linear(30, 10)
             optimizer = Adam(model.parameters(), lr=0.001)
             
             # Mixed precision + compression
@@ -449,10 +449,10 @@ class TestProductionCompressionFeatures:
         """Test compression-aware training techniques."""
         try:
             from tinytorch.core.compression import CompressionAwareTrainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(40, 15)
+            model = Linear(40, 15)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Compression-aware training
@@ -482,12 +482,12 @@ class TestRegressionPrevention:
         # Training pipeline should still work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
             
             # Complete training pipeline should work
-            model = Dense(5, 3)
+            model = Linear(5, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             trainer = Trainer(model, optimizer)
             
@@ -542,12 +542,12 @@ class TestRegressionPrevention:
         # Complete training pipeline level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
             
             # Complete training system should work
-            model = Dense(8, 4)
+            model = Linear(8, 4)
             optimizer = SGD(model.parameters(), lr=0.01)
             trainer = Trainer(model, optimizer)
             

@@ -25,10 +25,10 @@ class TestPriorStackStillWorking:
         # Core functionality should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Should still be able to build networks
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             x = Tensor(np.random.randn(4, 10))
             output = layer(x)
             assert output.shape == (4, 5), "Foundation broken: Neural network"
@@ -145,7 +145,7 @@ class TestProgressiveStackIntegration:
         try:
             from tinytorch.core.data import DataLoader, Dataset
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             
             # Create dataset
@@ -165,8 +165,8 @@ class TestProgressiveStackIntegration:
             dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
             
             # Create model using prior modules
-            layer1 = Dense(10, 16)
-            layer2 = Dense(16, 3)
+            layer1 = Linear(10, 16)
+            layer2 = Linear(16, 3)
             relu = ReLU()
             softmax = Softmax()
             
@@ -190,7 +190,7 @@ class TestProgressiveStackIntegration:
         try:
             from tinytorch.core.data import DataLoader, Dataset  
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Image dataset
@@ -212,7 +212,7 @@ class TestProgressiveStackIntegration:
             # CNN components
             conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
             pool = MaxPool2D(kernel_size=2)
-            fc = Dense(16 * 15 * 15, 5)  # Approximate after conv/pool
+            fc = Linear(16 * 15 * 15, 5)  # Approximate after conv/pool
             
             # Test CNN pipeline
             for batch_x, batch_y in dataloader:
@@ -373,10 +373,10 @@ class TestRegressionPrevention:
         # Foundation level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Neural networks should still work
-            layer = Dense(5, 3)
+            layer = Linear(5, 3)
             x = Tensor(np.random.randn(2, 5))
             output = layer(x)
             assert output.shape == (2, 3), "Foundation level broken"

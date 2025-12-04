@@ -187,14 +187,14 @@ class TestArchitectureCheckpoint:
         from tinytorch.core.layers import Layer, Dense
         
         # Test layer exists and is usable
-        layer = Dense(10, 5)
+        layer = Linear(10, 5)
         assert hasattr(layer, 'forward')
         assert hasattr(layer, 'weights')
         assert hasattr(layer, 'bias')
     
     def test_dense_networks(self):
         """Test that dense module enables fully-connected networks."""
-        from tinytorch.core.dense import DenseNetwork
+        from tinytorch.core.dense import LinearNetwork
         from tinytorch.core.tensor import Tensor
         
         # Create network
@@ -262,10 +262,10 @@ class TestTrainingCheckpoint:
     def test_optimizers(self):
         """Test that optimizers update parameters correctly."""
         from tinytorch.core.optimizers import SGD, Adam
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         
         # Create layer with parameters
-        layer = Dense(10, 5)
+        layer = Linear(10, 5)
         
         # Test SGD
         sgd = SGD([layer.weights, layer.bias], lr=0.01)
@@ -376,7 +376,7 @@ class TestServingCheckpoint:
         try:
             # Test all major imports work
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.networks import Sequential
             from tinytorch.core.optimizers import Adam
@@ -385,9 +385,9 @@ class TestServingCheckpoint:
             
             # Test building a complete model
             model = Sequential([
-                Dense(784, 128),
+                Linear(784, 128),
                 ReLU(),
-                Dense(128, 10)
+                Linear(128, 10)
             ])
             
             # Test model has expected structure
@@ -454,9 +454,9 @@ def test_capability_statements():
     
     # Test Architecture capability
     try:
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.networks import Sequential
-        model = Sequential([Dense(10, 5), Dense(5, 2)])
+        model = Sequential([Linear(10, 5), Linear(5, 2)])
         capabilities_achieved.append("architecture")
     except:
         pass

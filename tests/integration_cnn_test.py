@@ -20,7 +20,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU
 from tinytorch.core.training import CrossEntropyLoss
 
@@ -44,12 +44,12 @@ class SimpleCNN:
             self.flatten = Flatten()
             
             # Dense layers  
-            self.fc1 = Dense(64 * 5 * 5, 256)  # Assuming 32x32 input -> 5x5 after conv+pool
-            self.fc2 = Dense(256, num_classes)
+            self.fc1 = Linear(64 * 5 * 5, 256)  # Assuming 32x32 input -> 5x5 after conv+pool
+            self.fc2 = Linear(256, num_classes)
         else:
             # Fallback: treat as flattened MLP
-            self.fc1 = Dense(32*32*3, 256)
-            self.fc2 = Dense(256, num_classes)
+            self.fc1 = Linear(32*32*3, 256)
+            self.fc2 = Linear(256, num_classes)
             
         self.relu = ReLU()
     

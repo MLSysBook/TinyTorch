@@ -1,5 +1,5 @@
 """
-Integration test for Module 04: Dense
+Integration test for Module 04: Linear
 
 Validates that the dense module integrates correctly with the TinyTorch package.
 This is a quick validation test, not a comprehensive capability test.
@@ -26,13 +26,13 @@ def test_dense_module_integration():
     }
     
     try:
-        # Test 1: Dense networks import from package
+        # Test 1: Linear networks import from package
         try:
-            from tinytorch.core.dense import MLP, DenseNetwork
+            from tinytorch.core.dense import MLP, LinearNetwork
             results["tests"].append({
                 "name": "dense_import",
                 "status": "✅ PASS",
-                "description": "Dense network classes import from package"
+                "description": "Linear network classes import from package"
             })
         except ImportError as e:
             # Try alternative imports
@@ -41,34 +41,34 @@ def test_dense_module_integration():
                 results["tests"].append({
                     "name": "dense_import",
                     "status": "✅ PASS",
-                    "description": "Dense networks import from alternative location"
+                    "description": "Linear networks import from alternative location"
                 })
             except ImportError:
                 results["tests"].append({
                     "name": "dense_import",
                     "status": "❌ FAIL",
-                    "description": f"Dense import failed: {e}"
+                    "description": f"Linear import failed: {e}"
                 })
                 results["success"] = False
-                results["errors"].append(f"Dense import error: {e}")
+                results["errors"].append(f"Linear import error: {e}")
                 return results
         
-        # Test 2: Dense network instantiation
+        # Test 2: Linear network instantiation
         try:
             mlp = MLP(input_size=4, hidden_sizes=[8, 4], output_size=2)
             results["tests"].append({
                 "name": "dense_creation",
                 "status": "✅ PASS",
-                "description": "Dense networks can be instantiated"
+                "description": "Linear networks can be instantiated"
             })
         except Exception as e:
             results["tests"].append({
                 "name": "dense_creation",
                 "status": "❌ FAIL",
-                "description": f"Dense creation failed: {e}"
+                "description": f"Linear creation failed: {e}"
             })
             results["success"] = False
-            results["errors"].append(f"Dense creation error: {e}")
+            results["errors"].append(f"Linear creation error: {e}")
             return results
         
         # Test 3: Integration with previous modules
@@ -86,7 +86,7 @@ def test_dense_module_integration():
             results["tests"].append({
                 "name": "module_integration",
                 "status": "✅ PASS",
-                "description": "Dense networks work with previous modules"
+                "description": "Linear networks work with previous modules"
             })
         except ImportError as e:
             results["tests"].append({
@@ -111,7 +111,7 @@ def test_dense_module_integration():
             results["tests"].append({
                 "name": "network_structure",
                 "status": "✅ PASS",
-                "description": "Dense network has proper layer structure"
+                "description": "Linear network has proper layer structure"
             })
         except Exception as e:
             results["tests"].append({
@@ -135,7 +135,7 @@ def test_dense_module_integration():
                 results["tests"].append({
                     "name": "required_methods",
                     "status": "✅ PASS",
-                    "description": "Dense network has all required methods"
+                    "description": "Linear network has all required methods"
                 })
             else:
                 results["tests"].append({

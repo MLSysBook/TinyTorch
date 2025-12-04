@@ -175,7 +175,7 @@ def test_modern_api_integration():
             from tinytorch.core.layers import Linear as Dense
             from tinytorch.core.spatial import MultiChannelConv2D
             
-            dense = Dense(5, 3)
+            dense = Linear(5, 3)
             conv = MultiChannelConv2D(3, 8, (3, 3))
             
             # Should be the same classes as new names

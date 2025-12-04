@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU
 from tinytorch.core.training import CrossEntropyLoss
 
@@ -29,9 +29,9 @@ class SimpleMLP:
     """Simple MLP for MNIST-style classification."""
     
     def __init__(self, input_size=784, hidden_size=128, num_classes=10):
-        self.fc1 = Dense(input_size, hidden_size)
+        self.fc1 = Linear(input_size, hidden_size)
         self.relu = ReLU()
-        self.fc2 = Dense(hidden_size, num_classes)
+        self.fc2 = Linear(hidden_size, num_classes)
     
     def forward(self, x):
         """Forward pass."""

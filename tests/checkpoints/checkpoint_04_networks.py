@@ -19,15 +19,15 @@ def test_checkpoint_04_networks():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
     except ImportError as e:
         pytest.fail(f"❌ Cannot import required classes - complete Modules 2-5 first: {e}")
     
     # Test 1: Simple 2-layer network
     print("🏗️ Testing 2-layer network construction...")
-    input_layer = Dense(input_size=4, output_size=8)
-    output_layer = Dense(input_size=8, output_size=3)
+    input_layer = Linear(input_size=4, output_size=8)
+    output_layer = Linear(input_size=8, output_size=3)
     activation = ReLU()
     
     # Test network architecture
@@ -43,10 +43,10 @@ def test_checkpoint_04_networks():
     
     # Test 2: Deep network (3+ layers)
     print("🏢 Testing deep network construction...")
-    layer1 = Dense(10, 16)
-    layer2 = Dense(16, 8) 
-    layer3 = Dense(8, 4)
-    layer4 = Dense(4, 1)
+    layer1 = Linear(10, 16)
+    layer2 = Linear(16, 8) 
+    layer3 = Linear(8, 4)
+    layer4 = Linear(4, 1)
     relu = ReLU()
     sigmoid = Sigmoid()
     
@@ -68,20 +68,20 @@ def test_checkpoint_04_networks():
     
     # Wide network
     wide_net = [
-        Dense(5, 50),
+        Linear(5, 50),
         ReLU(),
-        Dense(50, 50),
+        Linear(50, 50),
         ReLU(), 
-        Dense(50, 10)
+        Linear(50, 10)
     ]
     
     # Narrow network
     narrow_net = [
-        Dense(20, 10),
+        Linear(20, 10),
         ReLU(),
-        Dense(10, 5),
+        Linear(10, 5),
         ReLU(),
-        Dense(5, 2)
+        Linear(5, 2)
     ]
     
     # Test both architectures
@@ -137,11 +137,11 @@ def test_checkpoint_04_networks():
     
     # Simple approximator network
     approx_net = [
-        Dense(1, 5),
+        Linear(1, 5),
         ReLU(),
-        Dense(5, 5), 
+        Linear(5, 5), 
         ReLU(),
-        Dense(5, 1)
+        Linear(5, 1)
     ]
     
     # Test that network can process the data

@@ -31,9 +31,9 @@ class TestModuleCapabilities:
         """Test a real-world usage scenario."""
         # Example for Optimizer:
         # from tinytorch.core.optimizers import Adam
-        # from tinytorch.core.layers import Dense
+        # from tinytorch.core.layers import Linear
         # 
-        # layer = Dense(10, 5)
+        # layer = Linear(10, 5)
         # optimizer = Adam(learning_rate=0.001)
         # 
         # # Simulate training step

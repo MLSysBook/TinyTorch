@@ -21,7 +21,7 @@ def test_checkpoint_14_deployment():
         from tinytorch.core.tensor import Tensor
         from tinytorch.core.mlops import ModelMonitor, DriftDetector, RetrainingTrigger, MLOpsPipeline
         from tinytorch.core.networks import Sequential
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Softmax
         from tinytorch.core.training import Trainer, CrossEntropyLoss, Accuracy
         from tinytorch.core.compression import quantize_layer_weights, prune_weights_by_magnitude
@@ -47,9 +47,9 @@ def test_checkpoint_14_deployment():
         
         # Test model registration
         model = Sequential([
-            Dense(10, 20),
+            Linear(10, 20),
             ReLU(),
-            Dense(20, 5),
+            Linear(20, 5),
             Softmax()
         ])
         
@@ -203,8 +203,8 @@ def test_checkpoint_14_deployment():
     
     try:
         # Simulate model versions
-        model_v1 = Sequential([Dense(10, 5), ReLU(), Dense(5, 3)])
-        model_v2 = Sequential([Dense(10, 8), ReLU(), Dense(8, 3)])  # Improved architecture
+        model_v1 = Sequential([Linear(10, 5), ReLU(), Linear(5, 3)])
+        model_v2 = Sequential([Linear(10, 8), ReLU(), Linear(8, 3)])  # Improved architecture
         
         model_registry = {
             'v1.0': {
@@ -251,11 +251,11 @@ def test_checkpoint_14_deployment():
     try:
         # Test model compression for deployment
         production_model = Sequential([
-            Dense(50, 100),
+            Linear(50, 100),
             ReLU(),
-            Dense(100, 50),
+            Linear(100, 50),
             ReLU(),
-            Dense(50, 10)
+            Linear(50, 10)
         ])
         
         # Original model size
@@ -343,8 +343,8 @@ def test_checkpoint_14_deployment():
     
     try:
         # Simulate A/B test between two model versions
-        model_a = Sequential([Dense(10, 15), ReLU(), Dense(15, 5)])  # Control
-        model_b = Sequential([Dense(10, 20), ReLU(), Dense(20, 5)])  # Treatment
+        model_a = Sequential([Linear(10, 15), ReLU(), Linear(15, 5)])  # Control
+        model_b = Sequential([Linear(10, 20), ReLU(), Linear(20, 5)])  # Treatment
         
         # Simulate user requests
         test_requests = 100

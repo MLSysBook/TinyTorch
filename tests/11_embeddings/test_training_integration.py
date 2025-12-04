@@ -17,15 +17,15 @@ class TestTrainingLoopIntegration:
     def test_basic_training_loop(self):
         """Test basic training loop components work together."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.losses import MSELoss
             
             # Build simple network
-            layer1 = Dense(2, 4)
+            layer1 = Linear(2, 4)
             relu = ReLU()
-            layer2 = Dense(4, 1)
+            layer2 = Linear(4, 1)
             sigmoid = Sigmoid()
             
             # Create loss function
@@ -53,11 +53,11 @@ class TestTrainingLoopIntegration:
     def test_optimizer_integration(self):
         """Test optimizer works with model parameters."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.tensor import Tensor
             
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             optimizer = SGD(learning_rate=0.01)
             
             # Get parameters
@@ -110,7 +110,7 @@ class TestDataLoaderIntegration:
     def test_batch_processing(self):
         """Test training handles batches correctly."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.dataloader import DataLoader
             
@@ -121,7 +121,7 @@ class TestDataLoaderIntegration:
             dataset = list(zip(X, y))
             dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
             
-            model = Dense(10, 1)
+            model = Linear(10, 1)
             
             # Process one batch
             for batch_X, batch_y in dataloader:
@@ -140,11 +140,11 @@ class TestDataLoaderIntegration:
     def test_epoch_training(self):
         """Test training for multiple epochs."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.losses import MSELoss
             
-            model = Dense(5, 1)
+            model = Linear(5, 1)
             loss_fn = MSELoss()
             
             # Training data
@@ -206,9 +206,9 @@ class TestModelEvaluation:
     def test_model_evaluation_mode(self):
         """Test model can switch between training and evaluation."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            model = Dense(10, 5)
+            model = Linear(10, 5)
             
             # Check if model has train/eval methods
             if hasattr(model, 'train') and hasattr(model, 'eval'):
@@ -231,7 +231,7 @@ class TestCompleteMLPipeline:
     def test_xor_training_pipeline(self):
         """Test complete XOR training pipeline."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             from tinytorch.core.losses import MSELoss
             from tinytorch.core.tensor import Tensor
@@ -241,9 +241,9 @@ class TestCompleteMLPipeline:
             y = Tensor(np.array([[0], [1], [1], [0]], dtype=np.float32))
             
             # Build network
-            hidden = Dense(2, 4, use_bias=True)
+            hidden = Linear(2, 4, use_bias=True)
             relu = ReLU()
-            output = Dense(4, 1, use_bias=True)
+            output = Linear(4, 1, use_bias=True)
             sigmoid = Sigmoid()
             
             loss_fn = MSELoss()

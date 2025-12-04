@@ -21,6 +21,10 @@ __all__ = ['vectorized_matmul', 'fused_gelu', 'tiled_matmul']
 #| default_exp optimization.acceleration
 #| export
 
+# %% ../../modules/18_acceleration/18_acceleration.ipynb 5
+# Import from TinyTorch package (previous modules must be completed and exported)
+from tinytorch.core.tensor import Tensor
+
 # %% ../../modules/18_acceleration/18_acceleration.ipynb 7
 def vectorized_matmul(a: Tensor, b: Tensor) -> Tensor:
     """

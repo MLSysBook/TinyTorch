@@ -20,7 +20,7 @@ def test_checkpoint_20_capstone():
     try:
         # Import all TinyTorch components for complete integration
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense, Embedding
+        from tinytorch.core.layers import Linear, Embedding
         from tinytorch.core.activations import ReLU, Sigmoid, Softmax, GELU
         from tinytorch.core.networks import Sequential
         from tinytorch.core.spatial import Conv2D, MaxPool2D

@@ -25,12 +25,12 @@ class TestPriorStackStillWorking:
         # Complete pipeline should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.data import Dataset, DataLoader
             from tinytorch.core.optimizers import SGD
             
             # All components should be available
-            layer = Dense(5, 2)
+            layer = Linear(5, 2)
             optimizer = SGD(layer.parameters(), lr=0.01)
             
             # Basic functionality should work
@@ -45,10 +45,10 @@ class TestPriorStackStillWorking:
         """Verify Module 10 (Optimizers) still works."""
         try:
             from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Optimizers should work
-            layer = Dense(3, 1)
+            layer = Linear(3, 1)
             sgd = SGD(layer.parameters(), lr=0.01)
             adam = Adam(layer.parameters(), lr=0.001)
             
@@ -66,12 +66,12 @@ class TestModule11TrainingCore:
         """Test basic training loop functionality."""
         try:
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.data import Dataset, DataLoader
             
             # Create model and optimizer
-            model = Dense(10, 3)
+            model = Linear(10, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Create simple dataset
@@ -155,7 +155,7 @@ class TestProgressiveStackIntegration:
         """Test complete end-to-end training process."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer, CrossEntropyLoss
@@ -164,9 +164,9 @@ class TestProgressiveStackIntegration:
             # Create complete model
             class SimpleModel:
                 def __init__(self):
-                    self.layer1 = Dense(10, 16)
+                    self.layer1 = Linear(10, 16)
                     self.relu = ReLU()
-                    self.layer2 = Dense(16, 3)
+                    self.layer2 = Linear(16, 3)
                     self.softmax = Softmax()
                 
                 def __call__(self, x):
@@ -228,7 +228,7 @@ class TestProgressiveStackIntegration:
         """Test CNN training with spatial operations."""
         try:
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.data import Dataset, DataLoader
@@ -240,7 +240,7 @@ class TestProgressiveStackIntegration:
                     self.conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
                     self.pool = MaxPool2D(kernel_size=2)
                     self.relu = ReLU()
-                    self.fc = Dense(16 * 15 * 15, 5)  # Approximate size
+                    self.fc = Linear(16 * 15 * 15, 5)  # Approximate size
                 
                 def __call__(self, x):
                     h = self.relu(self.conv1(x))
@@ -297,12 +297,12 @@ class TestAdvancedTrainingFeatures:
         """Test validation during training."""
         try:
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.data import Dataset, DataLoader
             
             # Model and optimizer
-            model = Dense(5, 2)
+            model = Linear(5, 2)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Train and validation datasets
@@ -337,10 +337,10 @@ class TestAdvancedTrainingFeatures:
         """Test model checkpointing and early stopping."""
         try:
             from tinytorch.core.training import Trainer, ModelCheckpoint, EarlyStopping
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(5, 1)
+            model = Linear(5, 1)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Checkpointing
@@ -366,9 +366,9 @@ class TestAdvancedTrainingFeatures:
         try:
             from tinytorch.core.training import LRScheduler, StepLR
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            model = Dense(5, 1)
+            model = Linear(5, 1)
             optimizer = SGD(model.parameters(), lr=0.1)
             
             # Learning rate scheduler
@@ -398,10 +398,10 @@ class TestProductionTrainingFeatures:
         """Test distributed training capabilities."""
         try:
             from tinytorch.core.training import DistributedTrainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(10, 3)
+            model = Linear(10, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Distributed trainer (if available)
@@ -416,10 +416,10 @@ class TestProductionTrainingFeatures:
         """Test mixed precision training support."""
         try:
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             
-            model = Dense(20, 10)
+            model = Linear(20, 10)
             optimizer = Adam(model.parameters(), lr=0.001)
             
             # Mixed precision trainer
@@ -435,10 +435,10 @@ class TestProductionTrainingFeatures:
         """Test gradient accumulation for large effective batch sizes."""
         try:
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(10, 3)
+            model = Linear(10, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             # Trainer with gradient accumulation
@@ -462,12 +462,12 @@ class TestRegressionPrevention:
         # Complete pipeline should still work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.data import Dataset
             
             # All pipeline components should work
-            layer = Dense(3, 2)
+            layer = Linear(3, 2)
             optimizer = SGD(layer.parameters(), lr=0.01)
             
             x = Tensor(np.random.randn(1, 3))
@@ -523,11 +523,11 @@ class TestRegressionPrevention:
         # Complete ML pipeline level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             
             # Complete training components should work together
-            model = Dense(5, 2)
+            model = Linear(5, 2)
             optimizer = SGD(model.parameters(), lr=0.01)
             
             x = Tensor(np.random.randn(3, 5))

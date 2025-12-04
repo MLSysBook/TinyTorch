@@ -1,6 +1,6 @@
 """
 Module 04: Progressive Integration Tests
-Tests that Module 05 (Dense/Networks) works correctly AND that the entire foundation stack works.
+Tests that Module 05 (Linear/Networks) works correctly AND that the entire foundation stack works.
 
 DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense
 This is the FOUNDATION MILESTONE - everything should work together for neural networks!
@@ -81,41 +81,41 @@ class TestEntireFoundationStack:
             assert True, "Layer foundation not implemented yet"
 
 
-class TestDenseNetworkCapability:
+class TestLinearNetworkCapability:
     """Test that Module 05 enables full neural network capability."""
     
     def test_dense_layer_creation(self):
-        """Test Dense layer works with the foundation."""
+        """Test Linear layer works with the foundation."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
-            # Create Dense layer
-            layer = Dense(10, 5)
+            # Create Linear layer
+            layer = Linear(10, 5)
             
             # Should have proper weights and bias
-            assert hasattr(layer, 'weight'), "Dense broken: No weights"
-            assert layer.weight.shape == (10, 5), "Dense broken: Wrong weight shape"
+            assert hasattr(layer, 'weight'), "Linear broken: No weights"
+            assert layer.weight.shape == (10, 5), "Linear broken: Wrong weight shape"
             
             # Should work with tensor input
             x = Tensor(np.random.randn(32, 10))
             output = layer(x)
             
-            assert output.shape == (32, 5), "Dense broken: Wrong output shape"
+            assert output.shape == (32, 5), "Linear broken: Wrong output shape"
             
         except ImportError:
-            assert True, "Dense layer not implemented yet"
+            assert True, "Linear layer not implemented yet"
     
     def test_multi_layer_network(self):
         """Test building multi-layer networks."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             from tinytorch.core.tensor import Tensor
             
             # Build 3-layer network for XOR
-            hidden = Dense(2, 4, bias=True)
-            output = Dense(4, 1, bias=True)
+            hidden = Linear(2, 4, bias=True)
+            output = Linear(4, 1, bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -123,7 +123,7 @@ class TestDenseNetworkCapability:
             X = Tensor(np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32))
             
             # Forward pass through complete network
-            h = hidden(X)           # Dense transformation
+            h = hidden(X)           # Linear transformation
             h_act = relu(h)         # Non-linear activation
             out = output(h_act)     # Output transformation
             predictions = sigmoid(out)  # Output activation
@@ -142,7 +142,7 @@ class TestXORProblemSolution:
     def test_xor_network_architecture(self):
         """Test XOR network architecture is possible."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             from tinytorch.core.tensor import Tensor
             
@@ -151,8 +151,8 @@ class TestXORProblemSolution:
             y_target = np.array([[0], [1], [1], [0]], dtype=np.float32)
             
             # Network: 2 -> 4 -> 1 (sufficient for XOR)
-            hidden = Dense(2, 4, bias=True)
-            output = Dense(4, 1, bias=True)
+            hidden = Linear(2, 4, bias=True)
+            output = Linear(4, 1, bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -179,14 +179,14 @@ class TestXORProblemSolution:
     def test_nonlinear_problem_solvability(self):
         """Test that non-linear problems are now solvable."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.tensor import Tensor
             
             # Create network that can solve non-linear problems
-            layer1 = Dense(2, 10)
+            layer1 = Linear(2, 10)
             relu = ReLU()
-            layer2 = Dense(10, 1)
+            layer2 = Linear(10, 1)
             
             # Test various non-linear patterns
             patterns = [
@@ -214,14 +214,14 @@ class TestFoundationMilestoneReadiness:
     def test_mnist_mlp_architecture_possible(self):
         """Test we can build MNIST MLP architecture."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.tensor import Tensor
             
             # MNIST MLP: 784 -> 128 -> 64 -> 10
-            layer1 = Dense(784, 128)
-            layer2 = Dense(128, 64)
-            layer3 = Dense(64, 10)
+            layer1 = Linear(784, 128)
+            layer2 = Linear(128, 64)
+            layer3 = Linear(64, 10)
             relu = ReLU()
             softmax = Softmax()
             
@@ -246,13 +246,13 @@ class TestFoundationMilestoneReadiness:
     def test_classification_capability(self):
         """Test basic classification capability."""
         try:
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.tensor import Tensor
             
             # Simple classifier: features -> hidden -> classes
-            feature_layer = Dense(20, 10)
-            classifier = Dense(10, 3)  # 3 classes
+            feature_layer = Linear(20, 10)
+            classifier = Linear(10, 3)  # 3 classes
             relu = ReLU()
             softmax = Softmax()
             
@@ -280,7 +280,7 @@ class TestCompleteStackValidation:
         """Test complete neural network from scratch."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             
             # End-to-end test: Build and run a complete neural network
@@ -290,9 +290,9 @@ class TestCompleteStackValidation:
             X = Tensor(np.random.randn(10, 5))
             
             # 2. Network architecture (from layers foundation)
-            layer1 = Dense(5, 8)
-            layer2 = Dense(8, 3)
-            layer3 = Dense(3, 1)
+            layer1 = Linear(5, 8)
+            layer2 = Linear(8, 3)
+            layer3 = Linear(3, 1)
             
             # 3. Activations (from activation foundation)
             relu = ReLU()
@@ -320,13 +320,13 @@ class TestCompleteStackValidation:
         """Test foundation remains stable under computational load."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             
             # Stress test: Large network
-            layer1 = Dense(100, 200)
-            layer2 = Dense(200, 100)
-            layer3 = Dense(100, 10)
+            layer1 = Linear(100, 200)
+            layer2 = Linear(200, 100)
+            layer3 = Linear(100, 10)
             relu = ReLU()
             
             # Large batch

@@ -99,3 +99,4 @@ def get_capabilities(module_num: str) -> dict:
     return MODULE_CAPABILITIES.get(module_num, {})
 
 
+

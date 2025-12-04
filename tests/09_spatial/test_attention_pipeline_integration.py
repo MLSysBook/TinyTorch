@@ -15,7 +15,7 @@ setup_integration_test()
 # Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.attention import scaled_dot_product_attention, SelfAttention, create_causal_mask
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU, Softmax
 from tinytorch.core.dense import Sequential
 
@@ -29,7 +29,7 @@ class TestAttentionDensePipelineInterface:
         
         # Create attention and dense components
         self_attn = SelfAttention(d_model)
-        dense = Dense(input_size=d_model, output_size=10)
+        dense = Linear(input_size=d_model, output_size=10)
         
         # Create input
         x = Tensor(np.random.randn(seq_len, d_model))
@@ -54,7 +54,7 @@ class TestAttentionDensePipelineInterface:
         input_tensor = Tensor(np.random.randn(4, 6))
         
         # Step 1: Dense layer to project to d_model
-        projection = Dense(input_size=6, output_size=d_model)
+        projection = Linear(input_size=6, output_size=d_model)
         projected = projection(input_tensor)
         
         # Step 2: Attention processing (simulating attention in pipeline)
@@ -62,7 +62,7 @@ class TestAttentionDensePipelineInterface:
         attn_output, _ = self_attn(projected.data)
         
         # Step 3: Back to Dense layer
-        output_projection = Dense(input_size=d_model, output_size=3)
+        output_projection = Linear(input_size=d_model, output_size=3)
         final_outputs = []
         for i in range(4):
             pos_input = Tensor(attn_output[i:i+1])
@@ -82,7 +82,7 @@ class TestAttentionDensePipelineInterface:
         # Create components
         self_attn = SelfAttention(d_model)
         relu = ReLU()
-        dense = Dense(input_size=d_model, output_size=d_model)
+        dense = Linear(input_size=d_model, output_size=d_model)
         
         # Test pipeline: Input → Attention → Activation → Dense
         x = Tensor(np.random.randn(seq_len, d_model))
@@ -112,7 +112,7 @@ class TestAttentionMultiModuleWorkflows:
         
         # Source processing (encoder-style)
         src = Tensor(np.random.randn(src_len, d_model))
-        src_projection = Dense(input_size=d_model, output_size=d_model)
+        src_projection = Linear(input_size=d_model, output_size=d_model)
         src_projected = src_projection(src)
         
         encoder_attn = SelfAttention(d_model)
@@ -120,7 +120,7 @@ class TestAttentionMultiModuleWorkflows:
         
         # Target processing (decoder-style)
         tgt = Tensor(np.random.randn(tgt_len, d_model))
-        tgt_projection = Dense(input_size=d_model, output_size=d_model)
+        tgt_projection = Linear(input_size=d_model, output_size=d_model)
         tgt_projected = tgt_projection(tgt)
         
         # Cross-attention interface test
@@ -131,7 +131,7 @@ class TestAttentionMultiModuleWorkflows:
         )
         
         # Final processing
-        output_projection = Dense(input_size=d_model, output_size=10)
+        output_projection = Linear(input_size=d_model, output_size=10)
         final_outputs = []
         for i in range(tgt_len):
             pos_input = Tensor(cross_output[i:i+1])
@@ -151,7 +151,7 @@ class TestAttentionMultiModuleWorkflows:
         
         # Initial processing
         x = Tensor(np.random.randn(seq_len, d_model))
-        embedding_projection = Dense(input_size=d_model, output_size=d_model)
+        embedding_projection = Linear(input_size=d_model, output_size=d_model)
         current_repr = embedding_projection(x).data
         
         # Multi-layer processing with residuals
@@ -162,9 +162,9 @@ class TestAttentionMultiModuleWorkflows:
             
             # Feedforward network (using Dense layers)
             ff_network = Sequential([
-                Dense(input_size=d_model, output_size=d_model * 2),
+                Linear(input_size=d_model, output_size=d_model * 2),
                 ReLU(),
-                Dense(input_size=d_model * 2, output_size=d_model)
+                Linear(input_size=d_model * 2, output_size=d_model)
             ])
             
             # Process each position through feedforward
@@ -189,7 +189,7 @@ class TestAttentionMultiModuleWorkflows:
         
         # Input processing
         sentence = Tensor(np.random.randn(seq_len, d_model))
-        input_projection = Dense(input_size=d_model, output_size=d_model)
+        input_projection = Linear(input_size=d_model, output_size=d_model)
         projected_input = input_projection(sentence)
         
         # Attention processing
@@ -201,9 +201,9 @@ class TestAttentionMultiModuleWorkflows:
         
         # Classification head (using Sequential)
         classifier = Sequential([
-            Dense(input_size=d_model, output_size=d_model // 2),
+            Linear(input_size=d_model, output_size=d_model // 2),
             ReLU(),
-            Dense(input_size=d_model // 2, output_size=num_classes)
+            Linear(input_size=d_model // 2, output_size=num_classes)
         ])
         
         # Final classification
@@ -231,13 +231,13 @@ class TestAttentionDataFlowCompatibility:
             x = Tensor(np.random.randn(seq_len, d_model))
             
             # Processing pipeline
-            input_proj = Dense(input_size=d_model, output_size=d_model)
+            input_proj = Linear(input_size=d_model, output_size=d_model)
             projected = input_proj(x)
             
             attn = SelfAttention(d_model)
             attn_out, _ = attn(projected.data)
             
-            output_proj = Dense(input_size=d_model, output_size=d_model // 2)
+            output_proj = Linear(input_size=d_model, output_size=d_model // 2)
             
             # Test shape flow
             for i in range(seq_len):
@@ -254,7 +254,7 @@ class TestAttentionDataFlowCompatibility:
         # Test float32 flow
         x_f32 = Tensor(np.random.randn(seq_len, d_model).astype(np.float32))
         
-        dense_f32 = Dense(input_size=d_model, output_size=d_model)
+        dense_f32 = Linear(input_size=d_model, output_size=d_model)
         projected_f32 = dense_f32(x_f32)
         
         attn_f32 = SelfAttention(d_model)
@@ -280,7 +280,7 @@ class TestAttentionDataFlowCompatibility:
         attn_out, _ = attn(x.data)
         
         # This should fail gracefully
-        incompatible_dense = Dense(input_size=dense_dim, output_size=10)
+        incompatible_dense = Linear(input_size=dense_dim, output_size=10)
         
         try:
             pos_tensor = Tensor(attn_out[0:1])  # Shape (1, 8)
@@ -311,9 +311,9 @@ class TestAttentionSystemLevelIntegration:
         
         # 3. Feedforward network
         ff_net = Sequential([
-            Dense(input_size=d_model, output_size=d_model * 4),
+            Linear(input_size=d_model, output_size=d_model * 4),
             ReLU(),
-            Dense(input_size=d_model * 4, output_size=d_model)
+            Linear(input_size=d_model * 4, output_size=d_model)
         ])
         
         # Process each position through feedforward
@@ -350,7 +350,7 @@ class TestAttentionSystemLevelIntegration:
             SelfAttention(d_model),  # Another instance
         ]
         
-        dense_postprocess = Dense(input_size=d_model, output_size=8)
+        dense_postprocess = Linear(input_size=d_model, output_size=8)
         
         # Test that all variants work in same pipeline
         for i, attn_variant in enumerate(attention_variants):

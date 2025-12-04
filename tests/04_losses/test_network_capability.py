@@ -16,13 +16,13 @@ class TestXORCapability:
     
     def test_xor_network_structure(self):
         """Test building network for XOR problem."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.tensor import Tensor
         
         # Build XOR network: 2 -> 4 -> 1
-        hidden = Dense(2, 4, bias=True)
-        output = Dense(4, 1, bias=True)
+        hidden = Linear(2, 4, bias=True)
+        output = Linear(4, 1, bias=True)
         relu = ReLU()
         sigmoid = Sigmoid()
         
@@ -40,11 +40,11 @@ class TestXORCapability:
     
     def test_xor_network_expressiveness(self):
         """Test that network has enough capacity for XOR."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         
         # XOR needs at least 2 hidden units
-        hidden = Dense(2, 4)  # 4 hidden units is sufficient
-        output = Dense(4, 1)
+        hidden = Linear(2, 4)  # 4 hidden units is sufficient
+        output = Linear(4, 1)
         
         # Count parameters
         hidden_params = 2 * 4 + 4  # weights + bias
@@ -56,13 +56,13 @@ class TestXORCapability:
     
     def test_nonlinearity_required(self):
         """Test that non-linearity is essential for XOR."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
         from tinytorch.core.tensor import Tensor
         
         # Without activation, network is just linear
-        layer1 = Dense(2, 4)
-        layer2 = Dense(4, 1)
+        layer1 = Linear(2, 4)
+        layer2 = Linear(4, 1)
         relu = ReLU()
         
         X = Tensor(np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32))
@@ -82,14 +82,14 @@ class TestMLPCapabilities:
     
     def test_universal_approximation(self):
         """Test that MLPs can approximate continuous functions."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
         from tinytorch.core.tensor import Tensor
         
         # Wide hidden layer can approximate any function
-        layer1 = Dense(1, 100)  # Wide hidden layer
+        layer1 = Linear(1, 100)  # Wide hidden layer
         relu = ReLU()
-        layer2 = Dense(100, 1)
+        layer2 = Linear(100, 1)
         
         # Test on simple function: sin(x)
         x = np.linspace(-np.pi, np.pi, 50).reshape(-1, 1)
@@ -105,16 +105,16 @@ class TestMLPCapabilities:
     
     def test_deep_network(self):
         """Test building deep networks."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
         # Build 5-layer network
         layers = [
-            Dense(100, 50),
-            Dense(50, 25),
-            Dense(25, 12),
-            Dense(12, 6),
-            Dense(6, 1)
+            Linear(100, 50),
+            Linear(50, 25),
+            Linear(25, 12),
+            Linear(12, 6),
+            Linear(6, 1)
         ]
         
         x = Tensor(np.random.randn(16, 100))

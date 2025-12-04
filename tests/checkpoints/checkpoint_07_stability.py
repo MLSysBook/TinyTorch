@@ -20,7 +20,7 @@ def test_checkpoint_07_stability():
     try:
         from tinytorch.core.tensor import Tensor
         from tinytorch.core.normalization import BatchNorm1D, LayerNorm
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
     except ImportError as e:
         pytest.fail(f"❌ Cannot import required classes - complete Modules 2-8 first: {e}")
@@ -69,16 +69,16 @@ def test_checkpoint_07_stability():
     
     # Build deep network with normalization
     layers = [
-        Dense(16, 32),
+        Linear(16, 32),
         BatchNorm1D(32),
         ReLU(),
-        Dense(32, 32),
+        Linear(32, 32),
         BatchNorm1D(32), 
         ReLU(),
-        Dense(32, 16),
+        Linear(32, 16),
         BatchNorm1D(16),
         ReLU(),
-        Dense(16, 1)
+        Linear(16, 1)
     ]
     
     # Test forward pass through deep normalized network
@@ -101,21 +101,21 @@ def test_checkpoint_07_stability():
     # Compare networks with and without normalization
     # Create identical architectures
     normalized_net = [
-        Dense(10, 20),
+        Linear(10, 20),
         BatchNorm1D(20),
         ReLU(),
-        Dense(20, 10),
+        Linear(20, 10),
         BatchNorm1D(10),
         ReLU(),
-        Dense(10, 1)
+        Linear(10, 1)
     ]
     
     unnormalized_net = [
-        Dense(10, 20),
+        Linear(10, 20),
         ReLU(),
-        Dense(20, 10), 
+        Linear(20, 10), 
         ReLU(),
-        Dense(10, 1)
+        Linear(10, 1)
     ]
     
     test_input = Tensor(np.random.randn(5, 10))

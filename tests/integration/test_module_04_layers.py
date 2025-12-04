@@ -26,7 +26,7 @@ def test_layers_integration():
         from tinytorch.core.tensor import Tensor
         from tinytorch.core.layers import Linear as Dense
         
-        layer = Dense(3, 2)
+        layer = Linear(3, 2)
         x = Tensor(np.random.randn(5, 3))
         output = layer(x)
         
@@ -41,9 +41,9 @@ def test_layers_integration():
     try:
         from tinytorch.core.activations import ReLU, Sigmoid
         
-        layer1 = Dense(4, 8)
+        layer1 = Linear(4, 8)
         relu = ReLU()
-        layer2 = Dense(8, 4)
+        layer2 = Linear(8, 4)
         sigmoid = Sigmoid()
         
         x = Tensor(np.random.randn(2, 4))
@@ -60,11 +60,11 @@ def test_layers_integration():
     print("Test 3: Multi-layer network construction")
     try:
         layers = [
-            Dense(10, 20),
+            Linear(10, 20),
             ReLU(),
-            Dense(20, 15),
+            Linear(20, 15),
             ReLU(),
-            Dense(15, 5)
+            Linear(15, 5)
         ]
         
         x = Tensor(np.random.randn(3, 10))
@@ -80,7 +80,7 @@ def test_layers_integration():
     # Test 4: Parameter access
     print("Test 4: Parameter management")
     try:
-        layer = Dense(5, 3)
+        layer = Linear(5, 3)
         
         assert hasattr(layer, 'weights'), "Layer missing weights"
         assert hasattr(layer, 'bias'), "Layer missing bias"

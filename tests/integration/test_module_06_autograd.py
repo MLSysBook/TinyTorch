@@ -28,7 +28,7 @@ def test_autograd_integration():
         from tinytorch.core.training import MeanSquaredError
         
         # Create simple network
-        layer = Dense(2, 1)
+        layer = Linear(2, 1)
         layer.weights.requires_grad = True
         layer.bias.requires_grad = True
         
@@ -57,9 +57,9 @@ def test_autograd_integration():
     try:
         from tinytorch.core.activations import ReLU, Sigmoid
         
-        layer1 = Dense(2, 3)
+        layer1 = Linear(2, 3)
         relu = ReLU()
-        layer2 = Dense(3, 1)
+        layer2 = Linear(3, 1)
         sigmoid = Sigmoid()
         
         # Enable gradients
@@ -85,9 +85,9 @@ def test_autograd_integration():
     print("Test 3: Multi-layer backpropagation setup")
     try:
         # Build 3-layer network
-        layer1 = Dense(4, 8)
-        layer2 = Dense(8, 4)
-        layer3 = Dense(4, 1)
+        layer1 = Linear(4, 8)
+        layer2 = Linear(8, 4)
+        layer3 = Linear(4, 1)
         
         # Enable all gradients
         for layer in [layer1, layer2, layer3]:

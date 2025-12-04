@@ -24,7 +24,7 @@ def test_checkpoint_13_benchmarking():
             StatisticalValidation, StatisticalValidator, TinyTorchPerf, PerformanceReporter
         )
         from tinytorch.core.networks import Sequential
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Softmax
         from tinytorch.core.training import Trainer, CrossEntropyLoss
     except ImportError as e:
@@ -60,11 +60,11 @@ def test_checkpoint_13_benchmarking():
     try:
         # Create a simple model for benchmarking
         model = Sequential([
-            Dense(10, 50),
+            Linear(10, 50),
             ReLU(),
-            Dense(50, 20),
+            Linear(50, 20),
             ReLU(),
-            Dense(20, 5),
+            Linear(20, 5),
             Softmax()
         ])
         
@@ -136,13 +136,13 @@ def test_checkpoint_13_benchmarking():
     
     try:
         # Create models of different complexities
-        simple_model = Sequential([Dense(10, 5), ReLU()])
+        simple_model = Sequential([Linear(10, 5), ReLU()])
         complex_model = Sequential([
-            Dense(100, 200), ReLU(),
-            Dense(200, 400), ReLU(), 
-            Dense(400, 200), ReLU(),
-            Dense(200, 50), ReLU(),
-            Dense(50, 10)
+            Linear(100, 200), ReLU(),
+            Linear(200, 400), ReLU(), 
+            Linear(400, 200), ReLU(),
+            Linear(200, 50), ReLU(),
+            Linear(50, 10)
         ])
         
         models = [("simple", simple_model), ("complex", complex_model)]
@@ -214,7 +214,7 @@ def test_checkpoint_13_benchmarking():
     
     try:
         # Test how performance scales with input size
-        model = Sequential([Dense(50, 20), ReLU(), Dense(20, 10)])
+        model = Sequential([Linear(50, 20), ReLU(), Linear(20, 10)])
         
         sizes = [1, 10, 50, 100]
         scaling_results = []
@@ -349,7 +349,7 @@ def test_checkpoint_13_benchmarking():
     
     try:
         # Test integration with TinyTorch training
-        model = Sequential([Dense(20, 10), ReLU(), Dense(10, 5)])
+        model = Sequential([Linear(20, 10), ReLU(), Linear(10, 5)])
         
         # Set up training components
         X_train = Tensor(np.random.randn(100, 20))

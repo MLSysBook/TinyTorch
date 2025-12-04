@@ -20,7 +20,7 @@ def test_checkpoint_19_competition():
     try:
         # Import competition benchmarking components
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense, Conv2D
+        from tinytorch.core.layers import Linear, Conv2D
         from tinytorch.core.activations import ReLU, Softmax
         from tinytorch.core.networks import Sequential
         from tinytorch.utils.benchmark import (
@@ -82,11 +82,11 @@ def test_checkpoint_19_competition():
 
         # Create test model for profiling
         test_model = Sequential([
-            Dense(784, 128),
+            Linear(784, 128),
             ReLU(),
-            Dense(128, 64),
+            Linear(128, 64),
             ReLU(),
-            Dense(64, 10),
+            Linear(64, 10),
             Softmax()
         ])
 
@@ -132,11 +132,11 @@ def test_checkpoint_19_competition():
 
         # Create optimized model for submission
         optimized_model = Sequential([
-            Dense(784, 64),   # Smaller than baseline
+            Linear(784, 64),   # Smaller than baseline
             ReLU(),
-            Dense(64, 32),    # Further reduction
+            Linear(64, 32),    # Further reduction
             ReLU(),
-            Dense(32, 10),
+            Linear(32, 10),
             Softmax()
         ])
 
@@ -253,8 +253,8 @@ def test_checkpoint_19_competition():
         competition_results = runner.run_competition(
             event="mlp_sprint",
             submission_models=[
-                ("baseline", Sequential([Dense(784, 128), ReLU(), Dense(128, 10), Softmax()])),
-                ("optimized", Sequential([Dense(784, 64), ReLU(), Dense(64, 10), Softmax()]))
+                ("baseline", Sequential([Linear(784, 128), ReLU(), Linear(128, 10), Softmax()])),
+                ("optimized", Sequential([Linear(784, 64), ReLU(), Linear(64, 10), Softmax()]))
             ],
             max_time_budget=30.0  # 30 second time budget
         )

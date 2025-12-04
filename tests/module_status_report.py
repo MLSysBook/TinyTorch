@@ -101,9 +101,9 @@ def check_core_functionality():
     # Test Dense Layers
     print("\n🏗️  Testing Dense Layers...")
     try:
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         
-        dense = Dense(3, 2)
+        dense = Linear(3, 2)
         x = Tensor([[1, 0, 1]])
         output = dense(x)
         
@@ -193,12 +193,12 @@ def test_milestone_capabilities():
     print("\n🔥 Milestone 1: XOR Learning Capability")
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
         
         # Build simple XOR network
-        layer1 = Dense(2, 4)
-        layer2 = Dense(4, 1)
+        layer1 = Linear(2, 4)
+        layer2 = Linear(4, 1)
         relu = ReLU()
         sigmoid = Sigmoid()
         
@@ -218,9 +218,9 @@ def test_milestone_capabilities():
     print("\n🖼️  Milestone 2: MNIST Classification Capability")
     try:
         # Test MLP for image classification
-        model = Dense(784, 128)
+        model = Linear(784, 128)
         relu = ReLU()
-        classifier = Dense(128, 10)
+        classifier = Linear(128, 10)
         
         # Fake MNIST batch
         images = Tensor(np.random.randn(32, 784))
@@ -240,12 +240,12 @@ def test_milestone_capabilities():
     print("\n📷 Milestone 3: CNN Image Classification Capability")
     try:
         # Test basic CNN components (fallback if spatial not available)
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
         
         # Simulate CNN with dense layers (fallback)
-        cnn_features = Dense(3*32*32, 256)  # Simulate conv layers
-        classifier = Dense(256, 10)
+        cnn_features = Linear(3*32*32, 256)  # Simulate conv layers
+        classifier = Linear(256, 10)
         relu = ReLU()
         
         # Fake CIFAR batch (flattened)
@@ -267,12 +267,12 @@ def test_milestone_capabilities():
     try:
         from tinytorch.core.embeddings import Embedding
         from tinytorch.core.transformers import LayerNorm
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         
         # Simple transformer components
         embedding = Embedding(vocab_size=1000, embedding_dim=128)
         layer_norm = LayerNorm(embed_dim=128)
-        output_proj = Dense(128, 1000)
+        output_proj = Linear(128, 1000)
         
         # Test sequence processing
         tokens = Tensor(np.array([[1, 2, 3, 4, 5]]))

@@ -25,13 +25,13 @@ class TestPriorStackStillWorking:
         # Complete ML system should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import prune_weights
             
             # All ML system components should be available
-            model = Dense(10, 5)
+            model = Linear(10, 5)
             optimizer = Adam(model.parameters(), lr=0.001)
             trainer = Trainer(model, optimizer)
             
@@ -54,10 +54,10 @@ class TestPriorStackStillWorking:
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import quantize_weights
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Efficiency features should work
-            model = Dense(8, 3)
+            model = Linear(8, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             trainer = Trainer(model, optimizer)
             
@@ -180,7 +180,7 @@ class TestProgressiveStackIntegration:
         """Test training pipeline with kernel acceleration."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             from tinytorch.core.kernels import enable_optimizations
@@ -193,9 +193,9 @@ class TestProgressiveStackIntegration:
             # Create accelerated training pipeline
             class AcceleratedModel:
                 def __init__(self):
-                    self.layer1 = Dense(50, 100)
-                    self.layer2 = Dense(100, 20)
-                    self.layer3 = Dense(20, 5)
+                    self.layer1 = Linear(50, 100)
+                    self.layer2 = Linear(100, 20)
+                    self.layer3 = Linear(20, 5)
                 
                 def __call__(self, x):
                     h1 = self.layer1(x)
@@ -514,9 +514,9 @@ class TestHardwareAcceleration:
             # Data parallel operations
             if 'data_parallel' in locals():
                 # Test data parallel wrapper
-                from tinytorch.core.layers import Dense
+                from tinytorch.core.layers import Linear
                 
-                model = Dense(10, 5)
+                model = Linear(10, 5)
                 parallel_model = data_parallel(model, device_ids=[0])  # Single device for testing
                 
                 assert hasattr(parallel_model, 'forward'), "Data parallel wrapper broken"
@@ -536,13 +536,13 @@ class TestRegressionPrevention:
         # Complete ML system should still work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import prune_weights
             
             # All components should work together
-            model = Dense(8, 4)
+            model = Linear(8, 4)
             optimizer = Adam(model.parameters(), lr=0.001)
             trainer = Trainer(model, optimizer)
             
@@ -565,10 +565,10 @@ class TestRegressionPrevention:
             from tinytorch.core.training import Trainer
             from tinytorch.core.compression import quantize_weights
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Efficiency features should still work
-            model = Dense(6, 3)
+            model = Linear(6, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
             trainer = Trainer(model, optimizer)
             
@@ -595,12 +595,12 @@ class TestRegressionPrevention:
         # Complete ML system level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             
             # Complete system should work
-            model = Dense(10, 5)
+            model = Linear(10, 5)
             optimizer = Adam(model.parameters(), lr=0.001)
             trainer = Trainer(model, optimizer)
             

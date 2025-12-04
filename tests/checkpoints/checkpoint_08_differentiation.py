@@ -19,7 +19,7 @@ def test_checkpoint_08_differentiation():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.losses import MeanSquaredError
     except ImportError as e:
@@ -50,7 +50,7 @@ def test_checkpoint_08_differentiation():
     print("🧠 Testing neural network gradients...")
     
     # Create simple network
-    layer = Dense(input_size=2, output_size=1)
+    layer = Linear(input_size=2, output_size=1)
     activation = Sigmoid()
     loss_fn = MeanSquaredError()
     
@@ -96,9 +96,9 @@ def test_checkpoint_08_differentiation():
     print("🏗️ Testing multi-layer network gradients...")
     
     # Build deeper network
-    layer1 = Dense(3, 5)
-    layer2 = Dense(5, 2)
-    layer3 = Dense(2, 1)
+    layer1 = Linear(3, 5)
+    layer2 = Linear(5, 2)
+    layer3 = Linear(2, 1)
     relu = ReLU()
     
     # Enable gradients for all parameters

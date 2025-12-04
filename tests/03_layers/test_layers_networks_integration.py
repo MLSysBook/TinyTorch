@@ -14,7 +14,7 @@ setup_integration_test()
 
 # Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.dense import Sequential, create_mlp, MLP
 from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
@@ -25,8 +25,8 @@ class TestLayersDenseNetworkInterface:
     def test_dense_layer_to_sequential_network(self):
         """Test that Dense layers can be integrated into Sequential networks."""
         # Create individual dense layers
-        layer1 = Dense(input_size=4, output_size=8)
-        layer2 = Dense(input_size=8, output_size=3)
+        layer1 = Linear(input_size=4, output_size=8)
+        layer2 = Linear(input_size=8, output_size=3)
         
         # Test integration into Sequential
         network = Sequential([layer1, ReLU(), layer2])
@@ -42,7 +42,7 @@ class TestLayersDenseNetworkInterface:
     def test_dense_layer_compatibility_with_mlp(self):
         """Test that Dense layers are compatible with MLP construction."""
         # Test that MLP uses same interface as individual Dense layers
-        individual_layer = Dense(input_size=6, output_size=10)
+        individual_layer = Linear(input_size=6, output_size=10)
         mlp_network = create_mlp(input_size=6, hidden_sizes=[10], output_size=3)
         
         # Test same input works with both
@@ -63,13 +63,13 @@ class TestLayersDenseNetworkInterface:
     def test_layer_output_as_network_input(self):
         """Test that Dense layer output can be used as network input."""
         # Create preprocessing layer
-        preprocessor = Dense(input_size=5, output_size=8)
+        preprocessor = Linear(input_size=5, output_size=8)
         
         # Create network that processes preprocessor output
         network = Sequential([
-            Dense(input_size=8, output_size=12),
+            Linear(input_size=8, output_size=12),
             ReLU(),
-            Dense(input_size=12, output_size=4)
+            Linear(input_size=12, output_size=4)
         ])
         
         # Test pipeline: input → layer → network
@@ -88,7 +88,7 @@ class TestLayersDenseNetworkInterface:
         base_network = create_mlp(input_size=4, hidden_sizes=[6], output_size=8)
         
         # Add additional processing layer
-        final_layer = Dense(input_size=8, output_size=2)
+        final_layer = Linear(input_size=8, output_size=2)
         
         # Test composition
         x = Tensor(np.random.randn(2, 4))
@@ -117,11 +117,11 @@ class TestLayerNetworkDataFlow:
         
         for batch_size, input_size, hidden_size, output_size in shape_configs:
             # Create layer and network
-            layer = Dense(input_size=input_size, output_size=hidden_size)
+            layer = Linear(input_size=input_size, output_size=hidden_size)
             network = Sequential([
-                Dense(input_size=hidden_size, output_size=hidden_size),
+                Linear(input_size=hidden_size, output_size=hidden_size),
             ReLU(),
-                Dense(input_size=hidden_size, output_size=output_size)
+                Linear(input_size=hidden_size, output_size=output_size)
             ])
         
             # Test data flow
@@ -136,7 +136,7 @@ class TestLayerNetworkDataFlow:
     def test_dtype_preservation_across_layer_network_boundary(self):
         """Test data type preservation across layer-network boundaries."""
         # Test float32 flow
-        layer_f32 = Dense(input_size=4, output_size=6)
+        layer_f32 = Linear(input_size=4, output_size=6)
         network_f32 = create_mlp(input_size=6, hidden_sizes=[8], output_size=2)
         
         x_f32 = Tensor(np.random.randn(2, 4).astype(np.float32))
@@ -148,7 +148,7 @@ class TestLayerNetworkDataFlow:
         assert network_out_f32.dtype == np.float32, "Network should preserve float32 from layer"
         
         # Test float64 flow
-        layer_f64 = Dense(input_size=4, output_size=6)
+        layer_f64 = Linear(input_size=4, output_size=6)
         network_f64 = create_mlp(input_size=6, hidden_sizes=[8], output_size=2)
         
         x_f64 = Tensor(np.random.randn(2, 4).astype(np.float64))
@@ -162,8 +162,8 @@ class TestLayerNetworkDataFlow:
     def test_error_handling_at_layer_network_boundary(self):
         """Test error handling when layer-network interfaces are incompatible."""
         # Create mismatched layer and network
-        layer = Dense(input_size=4, output_size=6)
-        mismatched_network = Sequential([Dense(input_size=8, output_size=2)])  # Expects 8, gets 6
+        layer = Linear(input_size=4, output_size=6)
+        mismatched_network = Sequential([Linear(input_size=8, output_size=2)])  # Expects 8, gets 6
         
         x = Tensor(np.random.randn(1, 4))
         layer_output = layer(x)  # Shape (1, 6)
@@ -183,17 +183,17 @@ class TestLayerNetworkSystemIntegration:
     def test_multi_stage_processing_pipeline(self):
         """Test multi-stage processing using layers and networks."""
         # Stage 1: Preprocessing layer
-        preprocessor = Dense(input_size=8, output_size=12)
+        preprocessor = Linear(input_size=8, output_size=12)
         
         # Stage 2: Feature extraction network
         feature_extractor = Sequential([
-            Dense(input_size=12, output_size=16),
+            Linear(input_size=12, output_size=16),
             ReLU(),
-            Dense(input_size=16, output_size=10)
+            Linear(input_size=16, output_size=10)
         ])
         
         # Stage 3: Classification layer
-        classifier = Dense(input_size=10, output_size=3)
+        classifier = Linear(input_size=10, output_size=3)
         
         # Test complete pipeline
         x = Tensor(np.random.randn(4, 8))
@@ -211,15 +211,15 @@ class TestLayerNetworkSystemIntegration:
     def test_parallel_layer_processing(self):
         """Test parallel processing with multiple layers feeding into network."""
         # Create parallel processing layers
-        branch1 = Dense(input_size=6, output_size=4)
-        branch2 = Dense(input_size=6, output_size=4)
-        branch3 = Dense(input_size=6, output_size=4)
+        branch1 = Linear(input_size=6, output_size=4)
+        branch2 = Linear(input_size=6, output_size=4)
+        branch3 = Linear(input_size=6, output_size=4)
         
         # Fusion network
         fusion_network = Sequential([
-            Dense(input_size=12, output_size=8),  # 4+4+4=12 from parallel branches
+            Linear(input_size=12, output_size=8),  # 4+4+4=12 from parallel branches
             ReLU(),
-            Dense(input_size=8, output_size=2)
+            Linear(input_size=8, output_size=2)
         ])
         
         # Test parallel processing
@@ -249,18 +249,18 @@ class TestLayerNetworkSystemIntegration:
         """Test that layers and networks can be replaced modularly."""
         # Create modular components
         input_processors = [
-            Dense(input_size=5, output_size=8),
-            Dense(input_size=5, output_size=8),  # Different instance
+            Linear(input_size=5, output_size=8),
+            Linear(input_size=5, output_size=8),  # Different instance
         ]
         
         core_networks = [
             create_mlp(input_size=8, hidden_sizes=[10], output_size=6),
-            Sequential([Dense(input_size=8, output_size=6)]),  # Different architecture
+            Sequential([Linear(input_size=8, output_size=6)]),  # Different architecture
         ]
         
         output_processors = [
-            Dense(input_size=6, output_size=3),
-            Dense(input_size=6, output_size=3),  # Different instance
+            Linear(input_size=6, output_size=3),
+            Linear(input_size=6, output_size=3),  # Different instance
         ]
         
         # Test all combinations work
@@ -286,8 +286,8 @@ class TestLayerNetworkInterfaceStandards:
         """Test that layers and networks have consistent callable interface."""
         # Create different components
         components = [
-            Dense(input_size=4, output_size=6),
-            Sequential([Dense(input_size=4, output_size=6)]),
+            Linear(input_size=4, output_size=6),
+            Sequential([Linear(input_size=4, output_size=6)]),
             create_mlp(input_size=4, hidden_sizes=[8], output_size=6),
             MLP([4, 8, 6])
         ]
@@ -307,8 +307,8 @@ class TestLayerNetworkInterfaceStandards:
     def test_component_property_consistency(self):
         """Test that layers and networks have consistent properties."""
         # Create components
-        layer = Dense(input_size=3, output_size=5)
-        network = Sequential([Dense(input_size=3, output_size=5)])
+        layer = Linear(input_size=3, output_size=5)
+        network = Sequential([Linear(input_size=3, output_size=5)])
         mlp = create_mlp(input_size=3, hidden_sizes=[], output_size=5)
         
         # Test that all components can be used interchangeably

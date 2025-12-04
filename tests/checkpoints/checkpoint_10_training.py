@@ -19,7 +19,7 @@ def test_checkpoint_10_training():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.losses import MeanSquaredError, BinaryCrossEntropy
         from tinytorch.core.optimizers import Adam, SGD
@@ -37,7 +37,7 @@ def test_checkpoint_10_training():
     y_data = y_data.reshape(-1, 1)
     
     # Create model
-    model = Dense(2, 1)
+    model = Linear(2, 1)
     model.weights.requires_grad = True
     model.bias.requires_grad = True
     
@@ -73,7 +73,7 @@ def test_checkpoint_10_training():
         dataloader = DataLoader(X_data, y_data, batch_size=16, shuffle=True)
         
         # Batch training
-        model_batch = Dense(2, 1)
+        model_batch = Linear(2, 1)
         model_batch.weights.requires_grad = True
         model_batch.bias.requires_grad = True
         optimizer_batch = SGD([model_batch.weights, model_batch.bias], lr=0.01)
@@ -134,9 +134,9 @@ def test_checkpoint_10_training():
     
     # Classification model
     classifier = [
-        Dense(3, 5),
+        Linear(3, 5),
         ReLU(),
-        Dense(5, 1),
+        Linear(5, 1),
         Sigmoid()
     ]
     
@@ -182,7 +182,7 @@ def test_checkpoint_10_training():
     y_train, y_val = y_data[:split_idx], y_data[split_idx:]
     
     # Fresh model for validation testing
-    model_val = Dense(2, 1)
+    model_val = Linear(2, 1)
     model_val.weights.requires_grad = True
     model_val.bias.requires_grad = True
     optimizer_val = Adam([model_val.weights, model_val.bias], lr=0.01)
@@ -228,7 +228,7 @@ def test_checkpoint_10_training():
     print("📈 Testing learning curves...")
     
     # Demonstrate learning progress
-    model_curve = Dense(2, 1)
+    model_curve = Linear(2, 1)
     model_curve.weights.requires_grad = True
     model_curve.bias.requires_grad = True
     optimizer_curve = SGD([model_curve.weights, model_curve.bias], lr=0.1)
@@ -263,7 +263,7 @@ def test_checkpoint_10_training():
     try:
         # Try using Trainer class if available
         trainer = Trainer(
-            model=Dense(2, 1),
+            model=Linear(2, 1),
             optimizer=Adam,
             loss_fn=MeanSquaredError(),
             lr=0.01
@@ -288,7 +288,7 @@ def test_checkpoint_10_training():
         print("⚠️ Trainer class not available, pipeline tested via manual steps")
         
         # Manual pipeline demonstration
-        pipeline_model = Dense(2, 1)
+        pipeline_model = Linear(2, 1)
         pipeline_model.weights.requires_grad = True
         pipeline_model.bias.requires_grad = True
         

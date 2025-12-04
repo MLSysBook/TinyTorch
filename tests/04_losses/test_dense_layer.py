@@ -1,5 +1,5 @@
 """
-Tests for Module 04: Dense/Networks
+Tests for Module 04: Linear/Networks
 """
 
 import pytest
@@ -11,30 +11,30 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestDenseExports:
-    """Test that Dense layer is properly exported."""
+class TestLinearExports:
+    """Test that Linear layer is properly exported."""
     
     def test_dense_import(self):
-        """Test Dense can be imported from correct location."""
-        from tinytorch.core.layers import Dense
-        assert Dense is not None
+        """Test Linear can be imported from correct location."""
+        from tinytorch.core.layers import Linear
+        assert Linear is not None
     
     def test_dense_creation(self):
-        """Test Dense layer can be created."""
-        from tinytorch.core.layers import Dense
-        layer = Dense(10, 5)
+        """Test Linear layer can be created."""
+        from tinytorch.core.layers import Linear
+        layer = Linear(10, 5)
         assert layer.weight.shape == (10, 5)
 
 
-class TestDenseForward:
-    """Test Dense layer forward pass."""
+class TestLinearForward:
+    """Test Linear layer forward pass."""
     
     def test_forward_shape(self):
         """Test output shape is correct."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5)
+        layer = Linear(10, 5)
         x = Tensor(np.random.randn(32, 10))
         output = layer(x)
         
@@ -42,10 +42,10 @@ class TestDenseForward:
     
     def test_forward_with_bias(self):
         """Test forward pass with bias."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, bias=True)
+        layer = Linear(10, 5, bias=True)
         x = Tensor(np.zeros((1, 10)))
         output = layer(x)
         
@@ -54,10 +54,10 @@ class TestDenseForward:
     
     def test_forward_without_bias(self):
         """Test forward pass without bias."""
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5, bias=False)
+        layer = Linear(10, 5, bias=False)
         x = Tensor(np.zeros((1, 10)))
         output = layer(x)
         
@@ -65,15 +65,15 @@ class TestDenseForward:
         assert np.allclose(output.data, 0)
 
 
-class TestDenseIntegration:
-    """Test Dense layer integration with other modules."""
+class TestLinearIntegration:
+    """Test Linear layer integration with other modules."""
     
     def test_dense_with_tensor(self):
-        """Test Dense works with Tensor (Module 02)."""
-        from tinytorch.core.layers import Dense
+        """Test Linear works with Tensor (Module 02)."""
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5)
+        layer = Linear(10, 5)
         
         # Weights and bias should be Tensors
         assert isinstance(layer.weight, Tensor)
@@ -81,12 +81,12 @@ class TestDenseIntegration:
             assert isinstance(layer.bias, Tensor)
     
     def test_dense_with_activations(self):
-        """Test Dense works with activations (Module 03)."""
-        from tinytorch.core.layers import Dense
+        """Test Linear works with activations (Module 03)."""
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU, Sigmoid
         from tinytorch.core.tensor import Tensor
         
-        layer = Dense(10, 5)
+        layer = Linear(10, 5)
         relu = ReLU()
         sigmoid = Sigmoid()
         
@@ -100,13 +100,13 @@ class TestDenseIntegration:
         assert np.all(h_sigmoid.data >= 0) and np.all(h_sigmoid.data <= 1)
     
     def test_dense_chain(self):
-        """Test chaining multiple Dense layers."""
-        from tinytorch.core.layers import Dense
+        """Test chaining multiple Linear layers."""
+        from tinytorch.core.layers import Linear
         from tinytorch.core.tensor import Tensor
         
-        layer1 = Dense(784, 128)
-        layer2 = Dense(128, 64)
-        layer3 = Dense(64, 10)
+        layer1 = Linear(784, 128)
+        layer2 = Linear(128, 64)
+        layer3 = Linear(64, 10)
         
         x = Tensor(np.random.randn(32, 784))
         h1 = layer1(x)

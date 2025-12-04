@@ -56,10 +56,10 @@ class TestAutogradLayerIntegration:
         """Test gradients flow through Dense layer."""
         try:
             from tinytorch.core.autograd import Variable
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Create layer
-            layer = Dense(2, 1, bias=False)
+            layer = Linear(2, 1, bias=False)
             
             # Input with gradients
             x = Variable(np.array([[1.0, 2.0]]), requires_grad=True)
@@ -185,9 +185,9 @@ class TestAutogradOptimizationIntegration:
         """Test parameter updates work correctly."""
         try:
             from tinytorch.core.autograd import Variable
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            layer = Dense(1, 1)
+            layer = Linear(1, 1)
             
             # Convert layer parameters to Variables if needed
             if not isinstance(layer.weights, Variable):

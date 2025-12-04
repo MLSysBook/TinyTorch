@@ -25,11 +25,11 @@ class TestPriorStackStillWorking:
         # Neural networks + data should work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.data import Dataset
             
             # Complete ML pipeline components should work
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             x = Tensor(np.random.randn(4, 10))
             output = layer(x)
             assert output.shape == (4, 5), "Foundation broken: Neural network"
@@ -63,11 +63,11 @@ class TestModule10OptimizersCore:
         """Test SGD optimizer creation and basic functionality."""
         try:
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Create model with parameters
-            layer = Dense(5, 3)
+            layer = Linear(5, 3)
             
             # Create SGD optimizer
             optimizer = SGD(layer.parameters(), lr=0.01)
@@ -91,10 +91,10 @@ class TestModule10OptimizersCore:
         """Test Adam optimizer creation and advanced features."""
         try:
             from tinytorch.core.optimizers import Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Create model
-            layer = Dense(10, 5)
+            layer = Linear(10, 5)
             
             # Create Adam optimizer with hyperparameters
             optimizer = Adam(layer.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-8)
@@ -115,12 +115,12 @@ class TestModule10OptimizersCore:
         """Test that optimizers actually update parameters."""
         try:
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.autograd import Variable
             
             # Create simple model
-            layer = Dense(2, 1)
+            layer = Linear(2, 1)
             optimizer = SGD(layer.parameters(), lr=0.1)
             
             # Get initial weights
@@ -157,7 +157,7 @@ class TestProgressiveStackIntegration:
         """Test complete training step: forward → backward → optimize."""
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.data import Dataset, DataLoader
@@ -176,8 +176,8 @@ class TestProgressiveStackIntegration:
                     return Tensor(self.data[idx]), Tensor(self.targets[idx])
             
             # Create model
-            layer1 = Dense(5, 10)
-            layer2 = Dense(10, 1)
+            layer1 = Linear(5, 10)
+            layer2 = Linear(10, 1)
             relu = ReLU()
             
             # Create optimizer
@@ -222,14 +222,14 @@ class TestProgressiveStackIntegration:
         """Test optimization with convolutional networks."""
         try:
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.tensor import Tensor
             
             # CNN architecture
             conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
             pool = MaxPool2D(kernel_size=2)
-            fc = Dense(16 * 15 * 15, 10)  # Approximate size
+            fc = Linear(16 * 15 * 15, 10)  # Approximate size
             
             # Collect CNN parameters
             params = []
@@ -265,12 +265,12 @@ class TestOptimizationAlgorithms:
         """Test SGD vs Adam optimization behavior."""
         try:
             from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Create identical models
-            model_sgd = Dense(10, 1)
-            model_adam = Dense(10, 1)
+            model_sgd = Linear(10, 1)
+            model_adam = Linear(10, 1)
             
             # Make weights identical
             model_adam.weights.data = model_sgd.weights.data.copy()
@@ -298,9 +298,9 @@ class TestOptimizationAlgorithms:
         """Test learning rate scheduling capabilities."""
         try:
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            layer = Dense(5, 1)
+            layer = Linear(5, 1)
             optimizer = SGD(layer.parameters(), lr=0.1)
             
             initial_lr = optimizer.lr
@@ -327,10 +327,10 @@ class TestOptimizationAlgorithms:
         """Test optimizer memory usage and efficiency."""
         try:
             from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             # Large model to test memory
-            large_model = Dense(1000, 500)
+            large_model = Linear(1000, 500)
             
             # SGD should use less memory than Adam
             sgd_optimizer = SGD(large_model.parameters(), lr=0.01)
@@ -361,10 +361,10 @@ class TestProductionOptimization:
         """Test gradient clipping for stable training."""
         try:
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
-            layer = Dense(10, 1)
+            layer = Linear(10, 1)
             optimizer = SGD(layer.parameters(), lr=0.1)
             
             # Simulate large gradients
@@ -387,9 +387,9 @@ class TestProductionOptimization:
         """Test saving and loading optimizer state."""
         try:
             from tinytorch.core.optimizers import Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            layer = Dense(5, 1)
+            layer = Linear(5, 1)
             optimizer = Adam(layer.parameters(), lr=0.001)
             
             # Take some steps to build state
@@ -423,9 +423,9 @@ class TestRegressionPrevention:
         # Neural networks should still work
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
-            layer = Dense(5, 3)
+            layer = Linear(5, 3)
             x = Tensor(np.random.randn(2, 5))
             output = layer(x)
             assert output.shape == (2, 3), "Foundation regression: Neural network broken"
@@ -471,11 +471,11 @@ class TestRegressionPrevention:
         # ML pipeline level (if available)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.data import Dataset
             
             # Complete ML components should work together
-            layer = Dense(3, 2)
+            layer = Linear(3, 2)
             x = Tensor(np.random.randn(1, 3))
             output = layer(x)
             assert output.shape == (1, 2), "ML pipeline level broken"

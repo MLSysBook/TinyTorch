@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestModule01Still Working:
+class TestModule01StillWorking:
     """Verify Module 01 (Setup) functionality is still intact."""
     
     def test_setup_environment_stable(self):

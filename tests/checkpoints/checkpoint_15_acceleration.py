@@ -20,7 +20,7 @@ def test_checkpoint_15_acceleration():
     try:
         # Import acceleration components
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense, Conv2D
+        from tinytorch.core.layers import Linear, Conv2D
         from tinytorch.core.activations import ReLU
         from tinytorch.core.networks import Sequential
         from tinytorch.core.kernels import (
@@ -300,11 +300,11 @@ def test_checkpoint_15_acceleration():
     try:
         # Create model for end-to-end acceleration
         model = Sequential([
-            Dense(128, 256),
+            Linear(128, 256),
             ReLU(),
-            Dense(256, 128),
+            Linear(256, 128),
             ReLU(),
-            Dense(128, 10)
+            Linear(128, 10)
         ])
 
         # Test data

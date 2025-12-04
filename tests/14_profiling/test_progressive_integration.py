@@ -57,7 +57,7 @@ class TestCompleteTinyTorchSystemStillWorks:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
             from tinytorch.core.attention import MultiHeadAttention
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
@@ -71,15 +71,15 @@ class TestCompleteTinyTorchSystemStillWorks:
                     # Vision pathway
                     self.vision_conv = Conv2D(3, 64, kernel_size=3, padding=1)
                     self.vision_pool = MaxPool2D(kernel_size=2)
-                    self.vision_proj = Dense(64 * 16 * 16, 256)
+                    self.vision_proj = Linear(64 * 16 * 16, 256)
                     
                     # Language pathway
-                    self.language_embed = Dense(1000, 256)  # vocab_size=1000
+                    self.language_embed = Linear(1000, 256)  # vocab_size=1000
                     self.attention = MultiHeadAttention(embed_dim=256, num_heads=8)
                     
                     # Fusion
-                    self.fusion = Dense(512, 128)
-                    self.classifier = Dense(128, 10)
+                    self.fusion = Linear(512, 128)
+                    self.classifier = Linear(128, 10)
                     
                     # Activations
                     self.relu = ReLU()
@@ -221,13 +221,13 @@ class TestCompleteTinyTorchSystemStillWorks:
         """
         try:
             from tinytorch.core.benchmarking import benchmark_model
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.spatial import Conv2D
             from tinytorch.core.tensor import Tensor
             
             # Test that benchmarking still works
             models_to_benchmark = [
-                ("dense_model", Dense(100, 50)),
+                ("dense_model", Linear(100, 50)),
                 ("conv_model", Conv2D(3, 16, kernel_size=3))
             ]
             
@@ -307,11 +307,11 @@ class TestModule15MLOpsCore:
         """
         try:
             from tinytorch.core.mlops import ModelMonitor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Test model monitoring setup
-            model = Dense(50, 10)
+            model = Linear(50, 10)
             monitor = ModelMonitor(model, metrics=['accuracy', 'latency', 'drift'])
             
             # Should track the model
@@ -493,11 +493,11 @@ class TestModule15MLOpsCore:
         """
         try:
             from tinytorch.core.mlops import ModelServer, deploy_model
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Test model deployment
-            model = Dense(20, 5)
+            model = Linear(20, 5)
             
             # Test model server
             if 'ModelServer' in locals():
@@ -665,7 +665,7 @@ class TestModule15MLOpsCore:
         try:
             from tinytorch.core.mlops import MLPipeline, PipelineStep
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
             
@@ -717,7 +717,7 @@ class TestModule15MLOpsCore:
             # Test simpler pipeline coordination
             # Simulate ML pipeline steps
             pipeline_state = {
-                'model': Dense(10, 3),
+                'model': Linear(10, 3),
                 'optimizer': None,
                 'trainer': None,
                 'metrics': {},
@@ -839,7 +839,7 @@ class TestMLOpsIntegration:
         """
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer, MSELoss
             from tinytorch.core.data import Dataset, DataLoader
@@ -849,7 +849,7 @@ class TestMLOpsIntegration:
             # Production ML workflow simulation
             
             # Step 1: Model Development
-            model = Dense(50, 10)
+            model = Linear(50, 10)
             optimizer = Adam(model.parameters(), lr=0.001)
             loss_fn = MSELoss()
             trainer = Trainer(model, optimizer)
@@ -991,7 +991,7 @@ class TestMLOpsIntegration:
         try:
             from tinytorch.core.mlops import ModelValidator, DataValidator
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.benchmarking import benchmark_model
             
             # CI/ML workflow simulation
@@ -1008,7 +1008,7 @@ class TestMLOpsIntegration:
                     f"❌ Data validation failed: {validation_result.get('errors')}"
             
             # Step 2: Model Testing
-            model = Dense(50, 10)
+            model = Linear(50, 10)
             
             if 'ModelValidator' in locals():
                 model_validator = ModelValidator()
@@ -1169,7 +1169,7 @@ class TestMLOpsIntegration:
         """
         try:
             from tinytorch.core.mlops import ModelRegistry, ABTestManager
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
             # Model lifecycle management
@@ -1179,8 +1179,8 @@ class TestMLOpsIntegration:
                 registry = ModelRegistry()
                 
                 # Register models
-                model_v1 = Dense(50, 10)
-                model_v2 = Dense(50, 10)  # Improved version
+                model_v1 = Linear(50, 10)
+                model_v2 = Linear(50, 10)  # Improved version
                 
                 registry.register_model("production_classifier", model_v1, version="1.0")
                 registry.register_model("production_classifier", model_v2, version="2.0")
@@ -1200,8 +1200,8 @@ class TestMLOpsIntegration:
                 ab_manager = ABTestManager()
                 
                 # Setup A/B test
-                model_a = Dense(50, 10)  # Current model
-                model_b = Dense(50, 10)  # New model
+                model_a = Linear(50, 10)  # Current model
+                model_b = Linear(50, 10)  # New model
                 
                 ab_manager.setup_test("classifier_experiment", 
                                     model_a=model_a, 
@@ -1228,9 +1228,9 @@ class TestMLOpsIntegration:
             # Step 3: Manual lifecycle simulation
             lifecycle_state = {
                 'models': {
-                    'v1.0': Dense(50, 10),
-                    'v2.0': Dense(50, 10),
-                    'v2.1': Dense(50, 10),
+                    'v1.0': Linear(50, 10),
+                    'v2.0': Linear(50, 10),
+                    'v2.1': Linear(50, 10),
                 },
                 'current_version': 'v2.1',
                 'rollback_version': 'v2.0',
@@ -1396,10 +1396,10 @@ class TestModule15Completion:
         try:
             # Test 1: Model monitoring
             from tinytorch.core.mlops import ModelMonitor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.tensor import Tensor
             
-            model = Dense(20, 5)
+            model = Linear(20, 5)
             monitor = ModelMonitor(model)
             
             # Test monitoring functionality
@@ -1458,9 +1458,9 @@ class TestModule15Completion:
             # Test 5: Lifecycle management
             # Model versioning simulation
             model_versions = {
-                'v1.0': Dense(20, 5),
-                'v2.0': Dense(20, 5),
-                'v2.1': Dense(20, 5)
+                'v1.0': Linear(20, 5),
+                'v2.0': Linear(20, 5),
+                'v2.1': Linear(20, 5)
             }
             
             current_version = 'v2.1'
@@ -1481,14 +1481,14 @@ class TestModule15Completion:
             from tinytorch.core.compression import prune_weights
             
             # Model optimization
-            original_model = Dense(100, 50)
+            original_model = Linear(100, 50)
             optimized_weights = prune_weights(original_model.weights, sparsity=0.3)
             
             # Performance comparison
             original_results = benchmark_model(original_model, (16, 100))
             
             # Optimized model should maintain functionality
-            optimized_model = Dense(100, 50)
+            optimized_model = Linear(100, 50)
             optimized_model.weights = optimized_weights
             
             optimized_input = Tensor(np.random.randn(4, 100))

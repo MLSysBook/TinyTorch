@@ -20,7 +20,7 @@ def test_checkpoint_16_quantization():
     try:
         # Import quantization components
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense, Conv2D
+        from tinytorch.core.layers import Linear, Conv2D
         from tinytorch.core.activations import ReLU
         from tinytorch.core.networks import Sequential
         from tinytorch.core.quantization import INT8Quantizer, QuantizedCNN, calibrate_and_quantize_model
@@ -73,7 +73,7 @@ def test_checkpoint_16_quantization():
             ReLU(),
             Conv2D(in_channels=16, out_channels=32, kernel_size=3),
             ReLU(),
-            Dense(32 * 26 * 26, 10)  # Assuming 28x28 input
+            Linear(32 * 26 * 26, 10)  # Assuming 28x28 input
         ])
 
         # Generate test data
@@ -120,11 +120,11 @@ def test_checkpoint_16_quantization():
 
         # Performance test model
         test_model = Sequential([
-            Dense(256, 512),
+            Linear(256, 512),
             ReLU(),
-            Dense(512, 256),
+            Linear(512, 256),
             ReLU(),
-            Dense(256, 10)
+            Linear(256, 10)
         ])
 
         # Test data
@@ -166,8 +166,8 @@ def test_checkpoint_16_quantization():
         realistic_cnn = Sequential([
             Conv2D(1, 8, 3), ReLU(),
             Conv2D(8, 16, 3), ReLU(),
-            Dense(16 * 24 * 24, 32), ReLU(),
-            Dense(32, 10)
+            Linear(16 * 24 * 24, 32), ReLU(),
+            Linear(32, 10)
         ])
 
         # Generate representative calibration dataset
@@ -211,9 +211,9 @@ def test_checkpoint_16_quantization():
     try:
         # Simulate quantization-aware training concepts
         training_model = Sequential([
-            Dense(20, 40),
+            Linear(20, 40),
             ReLU(),
-            Dense(40, 10)
+            Linear(40, 10)
         ])
 
         # Generate training data

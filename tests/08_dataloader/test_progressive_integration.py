@@ -57,7 +57,7 @@ class TestCompleteMLPipelineStillWorks:
             # Test complete pipeline still works
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.data import Dataset, DataLoader
             
@@ -76,7 +76,7 @@ class TestCompleteMLPipelineStillWorks:
             # Create model components
             conv = Conv2D(3, 16, kernel_size=3, padding=1)
             pool = MaxPool2D(kernel_size=2)
-            dense = Dense(16 * 16 * 16, 10)  # 4096 -> 10
+            dense = Linear(16 * 16 * 16, 10)  # 4096 -> 10
             relu = ReLU()
             softmax = Softmax()
             
@@ -171,7 +171,7 @@ class TestCompleteMLPipelineStillWorks:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D
             from tinytorch.core.attention import MultiHeadAttention
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             
             # Test sophisticated architecture integration
@@ -179,7 +179,7 @@ class TestCompleteMLPipelineStillWorks:
             
             # Vision processing
             cnn = Conv2D(3, 64, kernel_size=3, padding=1)
-            vision_proj = Dense(64 * 32 * 32, 256)  # Project spatial features
+            vision_proj = Linear(64 * 32 * 32, 256)  # Project spatial features
             
             # Attention processing
             attention = MultiHeadAttention(embed_dim=256, num_heads=8)
@@ -233,7 +233,7 @@ class TestCompleteMLPipelineStillWorks:
             Test each component separately:
             1. CNN: conv = Conv2D(3, 16, 3); out = conv(x)
             2. Attention: attn = MultiHeadAttention(64, 4); out = attn(x)
-            3. Dense: dense = Dense(100, 50); out = dense(x)
+            3. Dense: dense = Linear(100, 50); out = dense(x)
             4. Integration: Combine all components step by step
             """
 
@@ -556,7 +556,7 @@ class TestAutogradIntegration:
         try:
             from tinytorch.core.autograd import Variable
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             
             # Test gradients through layers
@@ -566,7 +566,7 @@ class TestAutogradIntegration:
             x = Variable(Tensor(np.random.randn(2, 5)), requires_grad=True)
             
             # Create layers
-            dense = Dense(5, 3)
+            dense = Linear(5, 3)
             relu = ReLU()
             
             # Forward pass through layers
@@ -616,7 +616,7 @@ class TestAutogradIntegration:
             
             Eventually layers need to support:
             
-            class Dense(Layer):
+            class Linear(Layer):
                 def __init__(self, in_features, out_features):
                     # Parameters as Variables
                     self.weights = Variable(Tensor(...), requires_grad=True)
@@ -1167,8 +1167,8 @@ class TestModule09Completion:
             autograd_capabilities["Loss function gradients"] = True
             
             # Test 6: Layer integration (basic structure)
-            from tinytorch.core.layers import Dense
-            layer = Dense(5, 3)
+            from tinytorch.core.layers import Linear
+            layer = Linear(5, 3)
             # Layers exist, integration will be implemented
             autograd_capabilities["Layer integration ready"] = True
             

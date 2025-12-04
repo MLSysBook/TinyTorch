@@ -58,7 +58,7 @@ class SimpleTinyGPT:
             self.pos_encoding = PositionalEncoding(max_length, embed_dim)
         else:
             # Fallback: simple linear embedding
-            self.embedding = Dense(vocab_size, embed_dim)
+            self.embedding = Linear(vocab_size, embed_dim)
         
         # Transformer layers
         if TRANSFORMERS_AVAILABLE and ATTENTION_AVAILABLE:
@@ -73,13 +73,13 @@ class SimpleTinyGPT:
         else:
             # Fallback: simple feedforward layers
             self.layers = [
-                Dense(embed_dim, embed_dim * 2),
+                Linear(embed_dim, embed_dim * 2),
                 ReLU(),
-                Dense(embed_dim * 2, embed_dim)
+                Linear(embed_dim * 2, embed_dim)
             ]
         
         # Output projection
-        self.output_proj = Dense(embed_dim, vocab_size)
+        self.output_proj = Linear(embed_dim, vocab_size)
     
     def forward(self, x):
         """Forward pass."""

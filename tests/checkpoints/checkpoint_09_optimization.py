@@ -19,7 +19,7 @@ def test_checkpoint_09_optimization():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
         from tinytorch.core.losses import MeanSquaredError
         from tinytorch.core.optimizers import SGD, Adam, RMSprop
@@ -30,7 +30,7 @@ def test_checkpoint_09_optimization():
     print("📈 Testing SGD optimizer...")
     
     # Create simple model and data
-    model = Dense(2, 1)
+    model = Linear(2, 1)
     model.weights.requires_grad = True
     model.bias.requires_grad = True
     
@@ -62,7 +62,7 @@ def test_checkpoint_09_optimization():
     print("🚀 Testing Adam optimizer...")
     
     # Reset model
-    model_adam = Dense(2, 1)
+    model_adam = Linear(2, 1)
     model_adam.weights.requires_grad = True
     model_adam.bias.requires_grad = True
     
@@ -92,7 +92,7 @@ def test_checkpoint_09_optimization():
     # Test 3: RMSprop optimizer
     print("📊 Testing RMSprop optimizer...")
     
-    model_rms = Dense(2, 1)
+    model_rms = Linear(2, 1)
     model_rms.weights.requires_grad = True
     model_rms.bias.requires_grad = True
     
@@ -116,8 +116,8 @@ def test_checkpoint_09_optimization():
     lr_small = 0.001
     lr_large = 0.1
     
-    model_small = Dense(2, 1)
-    model_large = Dense(2, 1)
+    model_small = Linear(2, 1)
+    model_large = Linear(2, 1)
     
     # Make models identical initially
     model_large.weights.data = model_small.weights.data.copy()
@@ -152,7 +152,7 @@ def test_checkpoint_09_optimization():
     print("💾 Testing optimizer state...")
     
     # Adam maintains moving averages
-    model_state = Dense(1, 1)
+    model_state = Linear(1, 1)
     model_state.weights.requires_grad = True
     model_state.bias.requires_grad = True
     
@@ -179,8 +179,8 @@ def test_checkpoint_09_optimization():
     print("🎛️ Testing parameter groups...")
     
     # Create model with different parameter groups
-    layer1 = Dense(3, 4)
-    layer2 = Dense(4, 1)
+    layer1 = Linear(3, 4)
+    layer2 = Linear(4, 1)
     
     layer1.weights.requires_grad = True
     layer1.bias.requires_grad = True
@@ -213,7 +213,7 @@ def test_checkpoint_09_optimization():
     print("🎯 Testing convergence...")
     
     # Simple linear regression: learn y = 2x + 1
-    model_conv = Dense(1, 1)
+    model_conv = Linear(1, 1)
     model_conv.weights.requires_grad = True
     model_conv.bias.requires_grad = True
     

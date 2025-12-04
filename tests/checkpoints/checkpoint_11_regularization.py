@@ -19,7 +19,7 @@ def test_checkpoint_11_regularization():
     
     try:
         from tinytorch.core.tensor import Tensor
-        from tinytorch.core.layers import Dense
+        from tinytorch.core.layers import Linear
         from tinytorch.core.activations import ReLU
         from tinytorch.core.regularization import Dropout, L1Regularization, L2Regularization
         from tinytorch.core.losses import MeanSquaredError
@@ -68,7 +68,7 @@ def test_checkpoint_11_regularization():
     print("⚖️ Testing L2 regularization...")
     
     # Create model with large weights
-    model = Dense(5, 3)
+    model = Linear(5, 3)
     model.weights.data = np.random.randn(5, 3) * 2  # Larger weights
     model.bias.data = np.random.randn(3) * 2
     model.weights.requires_grad = True
@@ -112,13 +112,13 @@ def test_checkpoint_11_regularization():
     
     # Complex model (prone to overfitting)
     model_reg = [
-        Dense(10, 50),
+        Linear(10, 50),
         ReLU(),
         Dropout(p=0.3),
-        Dense(50, 50),
+        Linear(50, 50),
         ReLU(), 
         Dropout(p=0.3),
-        Dense(50, 1)
+        Linear(50, 1)
     ]
     
     # Set requires_grad for all layers
@@ -176,7 +176,7 @@ def test_checkpoint_11_regularization():
     y_train, y_test = y_full[:split], y_full[split:]
     
     # Train regularized model
-    gen_model = Dense(8, 1)
+    gen_model = Linear(8, 1)
     gen_model.weights.requires_grad = True
     gen_model.bias.requires_grad = True
     
@@ -231,13 +231,13 @@ def test_checkpoint_11_regularization():
     print("🏗️ Testing model complexity trade-offs...")
     
     # Compare simple vs complex models
-    simple_model = Dense(8, 1)
+    simple_model = Linear(8, 1)
     complex_model = [
-        Dense(8, 32),
+        Linear(8, 32),
         ReLU(),
-        Dense(32, 16),
+        Linear(32, 16),
         ReLU(),
-        Dense(16, 1)
+        Linear(16, 1)
     ]
     
     # Set requires_grad
@@ -276,7 +276,7 @@ def test_checkpoint_11_regularization():
     strength_results = []
     
     for strength in strengths:
-        temp_model = Dense(5, 1)
+        temp_model = Linear(5, 1)
         temp_model.weights.requires_grad = True
         temp_model.bias.requires_grad = True
         

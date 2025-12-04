@@ -55,11 +55,11 @@ class TestFoundationStackStillWorks:
         try:
             # Test foundation components still work
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             
             # Create simple neural network
-            dense = Dense(10, 5)
+            dense = Linear(10, 5)
             relu = ReLU()
             
             # Test forward pass
@@ -86,7 +86,7 @@ class TestFoundationStackStillWorks:
             4. Run: tito module complete 05_dense
             5. Test imports individually:
                from tinytorch.core.tensor import Tensor
-               from tinytorch.core.layers import Dense
+               from tinytorch.core.layers import Linear
                from tinytorch.core.activations import ReLU
             
             💡 FOUNDATION REQUIREMENTS:
@@ -109,7 +109,7 @@ class TestFoundationStackStillWorks:
             
             💡 DEBUG STEPS:
             1. Test each component separately
-            2. Check Dense layer: dense = Dense(5, 3); print(dense.weights.shape)
+            2. Check Dense layer: dense = Linear(5, 3); print(linear.weights.shape)
             3. Check ReLU: relu = ReLU(); print(relu(Tensor([-1, 1])).data)
             4. Run foundation tests: python tests/run_all_modules.py --module module_05
             """
@@ -128,12 +128,12 @@ class TestFoundationStackStillWorks:
         """
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Sigmoid
             
             # Build 3-layer network for XOR problem
-            layer1 = Dense(2, 4, use_bias=True)
-            layer2 = Dense(4, 1, use_bias=True)
+            layer1 = Linear(2, 4, use_bias=True)
+            layer2 = Linear(4, 1, use_bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -509,7 +509,7 @@ class TestSpatialIntegration:
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             
             # Build mini CNN for CIFAR-10 style classification
@@ -523,8 +523,8 @@ class TestSpatialIntegration:
             
             # Dense layers (after flattening)
             # 32 channels * 8 * 8 = 2048 features
-            fc1 = Dense(32 * 8 * 8, 128)
-            fc2 = Dense(128, 10)
+            fc1 = Linear(32 * 8 * 8, 128)
+            fc2 = Linear(128, 10)
             
             # Activations
             relu = ReLU()
@@ -812,7 +812,7 @@ class TestComputerVisionCapabilities:
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU, Softmax
             
             # Build classifier for 10 classes (CIFAR-10 style)
@@ -825,8 +825,8 @@ class TestComputerVisionCapabilities:
                     self.pool2 = MaxPool2D(kernel_size=2)
                     
                     # Classification (dense layers)
-                    self.fc1 = Dense(64 * 8 * 8, 128)  # Assuming 32x32 input
-                    self.fc2 = Dense(128, num_classes)
+                    self.fc1 = Linear(64 * 8 * 8, 128)  # Assuming 32x32 input
+                    self.fc2 = Linear(128, num_classes)
                     
                     # Activations
                     self.relu = ReLU()
@@ -1213,7 +1213,7 @@ class TestModule06Completion:
             
             # Test 4: CNN architecture building
             from tinytorch.core.activations import ReLU
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.layers import Linear
             
             relu = ReLU()
             h1 = relu(conv_out)
@@ -1221,7 +1221,7 @@ class TestModule06Completion:
             
             # Flatten and connect to dense
             flattened = Tensor(h1_pool.data.reshape(2, -1))
-            dense = Dense(flattened.shape[1], 10)
+            dense = Linear(flattened.shape[1], 10)
             output = dense(flattened)
             
             assert output.shape == (2, 10)
@@ -1251,7 +1251,7 @@ class TestModule06Completion:
             
             # Test 8: Foundation integration
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense, Layer
+            from tinytorch.core.layers import Linear, Layer
             from tinytorch.core.activations import ReLU
             
             # All foundation components should work together
