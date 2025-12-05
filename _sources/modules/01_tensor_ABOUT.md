@@ -192,10 +192,10 @@ This is the first module - no prerequisites! Verify your environment is ready:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Check system health
-tito system doctor
+tito system health
 ```
 
 All checks should pass (Python 3.8+, NumPy, pytest installed) before starting.

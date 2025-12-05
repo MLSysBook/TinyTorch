@@ -269,10 +269,10 @@ Ensure you've completed profiling fundamentals:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module profiling
+tito test profiling
 ```
 
 **Required Understanding:**
@@ -288,7 +288,7 @@ tito test --module profiling
 4. **Build QuantizedLinear**: Replace Linear layers with quantized versions
 5. **Add calibration logic**: Percentile-based scale selection
 6. **Implement quantize_model()**: Convert entire networks to quantized form
-7. **Export and verify**: `tito module complete 15 && tito test --module quantization`
+7. **Export and verify**: `tito module complete 15 && tito test quantization`
 
 ## Testing
 
@@ -298,7 +298,7 @@ Run the full test suite to verify quantization functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module quantization
+tito test quantization
 
 # Direct pytest execution
 python -m pytest tests/ -k quantization -v

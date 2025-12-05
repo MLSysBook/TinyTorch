@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>11. Embeddings - Token to Vector Representations &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,44 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/11_embeddings_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="12. Attention - The Mechanism That Powers Modern AI" href="12_attention_ABOUT.html" />
@@ -112,8 +108,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -170,24 +166,22 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -276,9 +270,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -288,70 +282,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/modules/11_embeddings_ABOUT.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/11_embeddings_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -436,9 +366,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -500,15 +430,15 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="embeddings-token-to-vector-representations">
-<h1>11. Embeddings - Token to Vector Representations<a class="headerlink" href="#embeddings-token-to-vector-representations" title="Permalink to this heading">#</a></h1>
+<h1>11. Embeddings - Token to Vector Representations<a class="headerlink" href="#embeddings-token-to-vector-representations" title="Link to this heading">#</a></h1>
 <p><strong>ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Build the embedding systems that transform discrete token IDs into dense, learnable vector representations - the bridge between symbolic text and neural computation. This module implements lookup tables, positional encodings, and the optimization techniques that power every modern language model from word2vec to GPT-4’s input layers.</p>
 <p>You’ll discover why embeddings aren’t just “lookup tables” but sophisticated parameter spaces where semantic meaning emerges through training. By implementing both token embeddings and positional encodings from scratch, you’ll understand the architectural choices that shape how transformers process language and why certain design decisions (sinusoidal vs learned positions, embedding dimensions, initialization strategies) have profound implications for model capacity, memory usage, and inference performance.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Implement embedding layers</strong>: Build efficient lookup tables for token-to-vector conversion with proper Xavier initialization and gradient flow</p></li>
@@ -519,7 +449,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement embedding lookup tables with trainable parameters, sinusoidal positional encodings using mathematical patterns, learned position embeddings, and complete token+position combination systems</p></li>
@@ -533,9 +463,9 @@ document.write(`
 </div>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="embedding-layer-the-token-lookup-table">
-<h3>Embedding Layer - The Token Lookup Table<a class="headerlink" href="#embedding-layer-the-token-lookup-table" title="Permalink to this heading">#</a></h3>
+<h3>Embedding Layer - The Token Lookup Table<a class="headerlink" href="#embedding-layer-the-token-lookup-table" title="Link to this heading">#</a></h3>
 <p>The fundamental building block that maps discrete token IDs to continuous dense vectors. This is where semantic meaning will eventually be learned through training.</p>
 <p><strong>Core Implementation Pattern:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Embedding</span><span class="p">:</span>
@@ -592,7 +522,7 @@ document.write(`
 </ul>
 </section>
 <section id="sinusoidal-positional-encoding-transformer-style">
-<h3>Sinusoidal Positional Encoding (Transformer-Style)<a class="headerlink" href="#sinusoidal-positional-encoding-transformer-style" title="Permalink to this heading">#</a></h3>
+<h3>Sinusoidal Positional Encoding (Transformer-Style)<a class="headerlink" href="#sinusoidal-positional-encoding-transformer-style" title="Link to this heading">#</a></h3>
 <p>Fixed mathematical encodings that capture position without learned parameters. The original “Attention is All You Need” approach that enables extrapolation to longer sequences.</p>
 <p><strong>Mathematical Foundation:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_sinusoidal_embeddings</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
@@ -645,7 +575,7 @@ document.write(`
 </ul>
 </section>
 <section id="learned-positional-encoding-gpt-style">
-<h3>Learned Positional Encoding (GPT-Style)<a class="headerlink" href="#learned-positional-encoding-gpt-style" title="Permalink to this heading">#</a></h3>
+<h3>Learned Positional Encoding (GPT-Style)<a class="headerlink" href="#learned-positional-encoding-gpt-style" title="Link to this heading">#</a></h3>
 <p>Trainable position embeddings that can adapt to task-specific patterns. Used in GPT models and other architectures where positional patterns may be learnable.</p>
 <p><strong>Implementation Pattern:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PositionalEncoding</span><span class="p">:</span>
@@ -710,7 +640,7 @@ document.write(`
 </ul>
 </section>
 <section id="complete-embedding-system">
-<h3>Complete Embedding System<a class="headerlink" href="#complete-embedding-system" title="Permalink to this heading">#</a></h3>
+<h3>Complete Embedding System<a class="headerlink" href="#complete-embedding-system" title="Link to this heading">#</a></h3>
 <p>Production-ready integration of token and positional embeddings used in real transformer implementations.</p>
 <p><strong>Full Pipeline:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingLayer</span><span class="p">:</span>
@@ -770,9 +700,9 @@ document.write(`
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Before starting this module, ensure you have completed:</p>
 <ul class="simple">
 <li><p><strong>Module 01 (Tensor)</strong>: Provides the foundational Tensor class with gradient tracking and operations</p></li>
@@ -780,33 +710,33 @@ document.write(`
 </ul>
 <p>Verify your prerequisites:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tokenization
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tokenization
 </pre></div>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development notebook</strong>: <code class="docutils literal notranslate"><span class="pre">modules/11_embeddings/embeddings_dev.ipynb</span></code></p></li>
 <li><p><strong>Implement Embedding class</strong>: Create lookup table with Xavier initialization and efficient indexing</p></li>
 <li><p><strong>Build sinusoidal encodings</strong>: Compute sine/cosine position representations using mathematical formula</p></li>
 <li><p><strong>Create learned positions</strong>: Add trainable position embedding table with proper initialization</p></li>
 <li><p><strong>Integrate complete system</strong>: Combine token and position embeddings with flexible encoding strategies</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">11</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">embeddings</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">11</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">embeddings</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify embedding functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>embeddings
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>embeddings
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>embeddings<span class="w"> </span>-v
@@ -814,7 +744,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>Embedding lookup correctness</strong>: Verify token IDs map to correct vector rows in weight table</p></li>
 <li><p>✅ <strong>Gradient flow verification</strong>: Ensure sparse gradient updates accumulate properly during backpropagation</p></li>
@@ -824,42 +754,42 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-validation">
-<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive unit tests during development:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🔬 Unit Test: Embedding layer...
-✅ Lookup table created: 10K vocab × 256 dims = 2.56M parameters
-✅ Forward pass shape correct: (32, 20, 256) for batch of 32 sequences
-✅ Backward pass sparse gradients accumulate correctly
-✅ Xavier initialization keeps variance stable
-📈 Progress: Embedding Layer ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example inline test output</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Embedding</span> <span class="n">layer</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Lookup</span> <span class="n">table</span> <span class="n">created</span><span class="p">:</span> <span class="mi">10</span><span class="n">K</span> <span class="n">vocab</span> <span class="err">×</span> <span class="mi">256</span> <span class="n">dims</span> <span class="o">=</span> <span class="mf">2.56</span><span class="n">M</span> <span class="n">parameters</span>
+<span class="err">✅</span> <span class="n">Forward</span> <span class="k">pass</span> <span class="n">shape</span> <span class="n">correct</span><span class="p">:</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="k">for</span> <span class="n">batch</span> <span class="n">of</span> <span class="mi">32</span> <span class="n">sequences</span>
+<span class="err">✅</span> <span class="n">Backward</span> <span class="k">pass</span> <span class="n">sparse</span> <span class="n">gradients</span> <span class="n">accumulate</span> <span class="n">correctly</span>
+<span class="err">✅</span> <span class="n">Xavier</span> <span class="n">initialization</span> <span class="n">keeps</span> <span class="n">variance</span> <span class="n">stable</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Embedding</span> <span class="n">Layer</span> <span class="err">✓</span>
 
-🔬 Unit Test: Sinusoidal positional encoding...
-✅ Encodings computed for 512 positions × 256 dimensions
-✅ Sine/cosine patterns verified (pos 0: [0, 1, 0, 1, ...])
-✅ Different positions have unique signatures
-✅ Frequency spectrum correct (high to low across dimensions)
-📈 Progress: Sinusoidal Positions ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Sinusoidal</span> <span class="n">positional</span> <span class="n">encoding</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Encodings</span> <span class="n">computed</span> <span class="k">for</span> <span class="mi">512</span> <span class="n">positions</span> <span class="err">×</span> <span class="mi">256</span> <span class="n">dimensions</span>
+<span class="err">✅</span> <span class="n">Sine</span><span class="o">/</span><span class="n">cosine</span> <span class="n">patterns</span> <span class="n">verified</span> <span class="p">(</span><span class="n">pos</span> <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+<span class="err">✅</span> <span class="n">Different</span> <span class="n">positions</span> <span class="n">have</span> <span class="n">unique</span> <span class="n">signatures</span>
+<span class="err">✅</span> <span class="n">Frequency</span> <span class="n">spectrum</span> <span class="n">correct</span> <span class="p">(</span><span class="n">high</span> <span class="n">to</span> <span class="n">low</span> <span class="n">across</span> <span class="n">dimensions</span><span class="p">)</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Sinusoidal</span> <span class="n">Positions</span> <span class="err">✓</span>
 
-🔬 Unit Test: Learned positional encoding...
-✅ Trainable position embeddings initialized
-✅ Addition with token embeddings preserves gradients
-✅ Batch broadcasting handled correctly
-📈 Progress: Learned Positions ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Learned</span> <span class="n">positional</span> <span class="n">encoding</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Trainable</span> <span class="n">position</span> <span class="n">embeddings</span> <span class="n">initialized</span>
+<span class="err">✅</span> <span class="n">Addition</span> <span class="k">with</span> <span class="n">token</span> <span class="n">embeddings</span> <span class="n">preserves</span> <span class="n">gradients</span>
+<span class="err">✅</span> <span class="n">Batch</span> <span class="n">broadcasting</span> <span class="n">handled</span> <span class="n">correctly</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Learned</span> <span class="n">Positions</span> <span class="err">✓</span>
 
-🔬 Unit Test: Complete embedding system...
-✅ Token + position combination works for all strategies
-✅ Embedding scaling (√d) applied correctly
-✅ Variable sequence lengths handled gracefully
-✅ Parameter counting correct for each configuration
-📈 Progress: Complete System ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Complete</span> <span class="n">embedding</span> <span class="n">system</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Token</span> <span class="o">+</span> <span class="n">position</span> <span class="n">combination</span> <span class="n">works</span> <span class="k">for</span> <span class="nb">all</span> <span class="n">strategies</span>
+<span class="err">✅</span> <span class="n">Embedding</span> <span class="n">scaling</span> <span class="p">(</span><span class="err">√</span><span class="n">d</span><span class="p">)</span> <span class="n">applied</span> <span class="n">correctly</span>
+<span class="err">✅</span> <span class="n">Variable</span> <span class="n">sequence</span> <span class="n">lengths</span> <span class="n">handled</span> <span class="n">gracefully</span>
+<span class="err">✅</span> <span class="n">Parameter</span> <span class="n">counting</span> <span class="n">correct</span> <span class="k">for</span> <span class="n">each</span> <span class="n">configuration</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Complete</span> <span class="n">System</span> <span class="err">✓</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <p>Test your embedding implementation interactively:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.text.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">PositionalEncoding</span><span class="p">,</span> <span class="n">create_sinusoidal_embeddings</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">PositionalEncoding</span><span class="p">,</span> <span class="n">create_sinusoidal_embeddings</span>
 
 <span class="c1"># Create embedding layer</span>
 <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">256</span>
@@ -890,9 +820,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Large Language Models (GPT-4, Claude, Llama)</strong>: Embedding tables often contain 20-40% of total model parameters. GPT-3’s 50K vocab × 12K dims = 617M embedding parameters alone (2.4GB at FP32). This makes embeddings a major memory consumer in serving infrastructure.</p></li>
 <li><p><strong>Recommendation Systems (YouTube, Netflix, Spotify)</strong>: Billion-scale item embeddings for personalized content retrieval. YouTube’s embedding space contains hundreds of millions of video embeddings, enabling fast nearest-neighbor search for recommendations in milliseconds.</p></li>
@@ -901,7 +831,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="mathematical-foundations">
-<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Embedding Geometry</strong>: Why do word embeddings exhibit linear relationships like “king - man + woman ≈ queen”? The training objective (predicting context words in word2vec, or next tokens in language models) creates geometric structure where semantic relationships become linear vector operations. This emerges without explicit supervision.</p></li>
 <li><p><strong>Dimensionality Trade-offs</strong>: Higher dimensions increase expressiveness (more capacity to separate distinct concepts) but require more memory and computation. BERT-base uses 768 dimensions, BERT-large uses 1024 - carefully chosen based on performance-cost Pareto analysis. Doubling dimensions doubles memory but may only improve accuracy by a few percentage points.</p></li>
@@ -910,7 +840,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory Scaling</strong>: Embedding tables grow as O(vocab_size × embedding_dim). At FP32 (4 bytes per parameter): 50K vocab × 768 dims = 153MB, 100K vocab × 1024 dims = 410MB. Mixed precision (FP16) cuts this in half, but vocabulary size dominates scaling for large models.</p></li>
 <li><p><strong>Bandwidth Bottleneck</strong>: Every token lookup reads embedding_dim × sizeof(dtype) bytes from memory. With 768 dims at FP32, that’s 3KB per token. Processing a 2048-token context requires reading 6MB from the embedding table - memory bandwidth becomes the bottleneck, not compute.</p></li>
@@ -920,7 +850,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the embedding systems that power modern AI language understanding. These lookup tables and positional encodings are the bridge between discrete tokens (words, subwords, characters) and the continuous vector spaces where neural networks operate. What seems like a simple “array lookup” is actually the foundation of how language models represent meaning.</p>
 <p>What makes this module special is understanding not just <em>how</em> embeddings work, but <em>why</em> certain design choices matter. Why do we need positional encodings when embeddings already contain token information? Why sparse gradients instead of dense updates? How does embedding dimension affect model capacity versus memory footprint? These aren’t just implementation details - they’re fundamental design principles that shape every production language model’s architecture.</p>
 <p>By building embeddings from scratch, you’ll gain intuition for memory-computation trade-offs in deep learning systems. You’ll understand why GPT-3’s embedding table consumes 2.4GB of memory, and why that matters for serving costs at scale (more memory = more expensive GPUs = higher operational costs). You’ll see how sinusoidal encodings allow transformers to process sequences longer than training data, while learned positions might perform better on specific tasks with known maximum lengths.</p>
@@ -935,7 +865,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/11_embeddings/embeddings_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/11_embeddings/embeddings_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -944,7 +874,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -953,7 +883,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Jupyter notebook source and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/11_embeddings/embeddings_dev.ipynb</span></a></div>
 </div>
 </div>
 </div>

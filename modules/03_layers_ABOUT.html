@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>03. Layers &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,44 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/03_layers_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="04. Loss Functions" href="04_losses_ABOUT.html" />
@@ -112,8 +108,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -170,24 +166,22 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="current nav bd-sidenav">
@@ -276,9 +270,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -288,70 +282,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/modules/03_layers_ABOUT.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/03_layers_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -436,9 +366,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -500,14 +430,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="layers">
-<h1>03. Layers<a class="headerlink" href="#layers" title="Permalink to this heading">#</a></h1>
+<h1>03. Layers<a class="headerlink" href="#layers" title="Link to this heading">#</a></h1>
 <p><strong>FOUNDATION TIER</strong> | Difficulty: ⭐⭐ (2/4) | Time: 4-5 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Build the fundamental building blocks that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, with learnable parameters that define the transformation. You’ll implement Linear layers (the workhorse of deep learning) and Dropout regularization, understanding how these simple abstractions enable arbitrarily complex architectures through composition.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Understand Layer Abstraction</strong>: Recognize layers as composable functions with parameters, mirroring PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> design pattern</p></li>
@@ -518,7 +448,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement Linear and Dropout layer classes with proper initialization, forward passes, and parameter tracking</p></li>
@@ -527,9 +457,9 @@ document.write(`
 </ol>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="linear-layer-the-neural-network-workhorse">
-<h3>Linear Layer: The Neural Network Workhorse<a class="headerlink" href="#linear-layer-the-neural-network-workhorse" title="Permalink to this heading">#</a></h3>
+<h3>Linear Layer: The Neural Network Workhorse<a class="headerlink" href="#linear-layer-the-neural-network-workhorse" title="Link to this heading">#</a></h3>
 <p>The Linear layer implements the fundamental transformation <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>
 
@@ -554,7 +484,7 @@ document.write(`
 </ul>
 </section>
 <section id="dropout-preventing-overfitting">
-<h3>Dropout: Preventing Overfitting<a class="headerlink" href="#dropout-preventing-overfitting" title="Permalink to this heading">#</a></h3>
+<h3>Dropout: Preventing Overfitting<a class="headerlink" href="#dropout-preventing-overfitting" title="Link to this heading">#</a></h3>
 <p>Dropout randomly zeros elements during training to force network robustness:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropout</span>
 
@@ -576,7 +506,7 @@ document.write(`
 During training, surviving elements are scaled by <code class="docutils literal notranslate"><span class="pre">1/(1-p)</span></code> so that expected values match during inference. This eliminates the need to scale during evaluation, making deployment simpler.</p>
 </section>
 <section id="layer-composition-building-neural-networks">
-<h3>Layer Composition: Building Neural Networks<a class="headerlink" href="#layer-composition-building-neural-networks" title="Permalink to this heading">#</a></h3>
+<h3>Layer Composition: Building Neural Networks<a class="headerlink" href="#layer-composition-building-neural-networks" title="Link to this heading">#</a></h3>
 <p>Layers compose through sequential application - no container needed:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>
@@ -615,40 +545,40 @@ During training, surviving elements are scaled by <code class="docutils literal 
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you’ve completed the prerequisite modules:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify Module 01 (Tensor) is complete</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tensor
 
 <span class="c1"># Verify Module 02 (Activations) is complete</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>activations
 </pre></div>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/03_layers/layers_dev.py</span></code></p></li>
 <li><p><strong>Implement Linear layer</strong>: Build <code class="docutils literal notranslate"><span class="pre">__init__</span></code> with Xavier initialization, <code class="docutils literal notranslate"><span class="pre">forward</span></code> with matrix multiplication, and <code class="docutils literal notranslate"><span class="pre">parameters()</span></code> method</p></li>
 <li><p><strong>Add Dropout layer</strong>: Implement training/inference mode switching with proper mask generation and scaling</p></li>
 <li><p><strong>Test layer composition</strong>: Verify manual composition of multi-layer networks with mixed layer types</p></li>
 <li><p><strong>Analyze systems behavior</strong>: Run memory analysis to understand parameter scaling with network size</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">03</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">layers</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">03</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">layers</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify layer functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>layers
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>layers<span class="w"> </span>-v
@@ -656,7 +586,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>Linear Layer Functionality</strong>: Verify <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code> computation with correct matrix dimensions and broadcasting</p></li>
 <li><p>✅ <strong>Xavier Initialization</strong>: Ensure weights scaled by <code class="docutils literal notranslate"><span class="pre">sqrt(1/in_features)</span></code> for gradient stability</p></li>
@@ -668,35 +598,35 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-validation">
-<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive inline tests with educational feedback:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🔬 Unit Test: Linear Layer...
-✅ Linear layer computes y = xW + b correctly
-✅ Weight initialization within expected Xavier range
-✅ Bias initialized to zeros
-✅ Output shape matches expected dimensions (32, 256)
-✅ Parameter list contains weight and bias tensors
-📈 Progress: Linear Layer ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example inline test output</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Linear</span> <span class="n">Layer</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Linear</span> <span class="n">layer</span> <span class="n">computes</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xW</span> <span class="o">+</span> <span class="n">b</span> <span class="n">correctly</span>
+<span class="err">✅</span> <span class="n">Weight</span> <span class="n">initialization</span> <span class="n">within</span> <span class="n">expected</span> <span class="n">Xavier</span> <span class="nb">range</span>
+<span class="err">✅</span> <span class="n">Bias</span> <span class="n">initialized</span> <span class="n">to</span> <span class="n">zeros</span>
+<span class="err">✅</span> <span class="n">Output</span> <span class="n">shape</span> <span class="n">matches</span> <span class="n">expected</span> <span class="n">dimensions</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="err">✅</span> <span class="n">Parameter</span> <span class="nb">list</span> <span class="n">contains</span> <span class="n">weight</span> <span class="ow">and</span> <span class="n">bias</span> <span class="n">tensors</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Linear</span> <span class="n">Layer</span> <span class="err">✓</span>
 
-🔬 Unit Test: Dropout Layer...
-✅ Inference mode passes through unchanged
-✅ Training mode zeros ~50% of elements
-✅ Survivors scaled by 1/(1-p) = 2.0
-✅ Zero dropout (p=0.0) preserves all values
-✅ Full dropout (p=1.0) zeros everything
-📈 Progress: Dropout Layer ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Dropout</span> <span class="n">Layer</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Inference</span> <span class="n">mode</span> <span class="n">passes</span> <span class="n">through</span> <span class="n">unchanged</span>
+<span class="err">✅</span> <span class="n">Training</span> <span class="n">mode</span> <span class="n">zeros</span> <span class="o">~</span><span class="mi">50</span><span class="o">%</span> <span class="n">of</span> <span class="n">elements</span>
+<span class="err">✅</span> <span class="n">Survivors</span> <span class="n">scaled</span> <span class="n">by</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="err">✅</span> <span class="n">Zero</span> <span class="n">dropout</span> <span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">preserves</span> <span class="nb">all</span> <span class="n">values</span>
+<span class="err">✅</span> <span class="n">Full</span> <span class="n">dropout</span> <span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="n">zeros</span> <span class="n">everything</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Dropout</span> <span class="n">Layer</span> <span class="err">✓</span>
 
-🔬 Integration Test: Multi-layer Network...
-✅ 3-layer network processes batch: (32, 784) → (32, 10)
-✅ Parameter count: 235,146 parameters across 6 tensors
-✅ All parameters have requires_grad=True
-📈 Progress: Layer Composition ✓
+<span class="err">🔬</span> <span class="n">Integration</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Multi</span><span class="o">-</span><span class="n">layer</span> <span class="n">Network</span><span class="o">...</span>
+<span class="err">✅</span> <span class="mi">3</span><span class="o">-</span><span class="n">layer</span> <span class="n">network</span> <span class="n">processes</span> <span class="n">batch</span><span class="p">:</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span> <span class="err">→</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="err">✅</span> <span class="n">Parameter</span> <span class="n">count</span><span class="p">:</span> <span class="mi">235</span><span class="p">,</span><span class="mi">146</span> <span class="n">parameters</span> <span class="n">across</span> <span class="mi">6</span> <span class="n">tensors</span>
+<span class="err">✅</span> <span class="n">All</span> <span class="n">parameters</span> <span class="n">have</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Layer</span> <span class="n">Composition</span> <span class="err">✓</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReLU</span>
@@ -727,9 +657,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Computer Vision</strong>: How do Linear layers in ResNet-50’s final classification head transform 2048 feature maps to 1000 class logits? What determines this bottleneck layer’s size?</p></li>
 <li><p><strong>Language Models</strong>: GPT-3 uses Linear layers with 12,288 input features. How much memory do these layers consume, and why does this limit model deployment?</p></li>
@@ -738,7 +668,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="mathematical-foundations">
-<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Xavier Initialization</strong>: Why does <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">sqrt(1/fan_in)</span></code> preserve gradient variance through layers? What happens in a 20-layer network without proper initialization?</p></li>
 <li><p><strong>Matrix Multiplication Complexity</strong>: A Linear(1024, 1024) layer with batch size 128 performs how many FLOPs? How does this compare to a Dropout layer on the same tensor?</p></li>
@@ -747,7 +677,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="architecture-design-patterns">
-<h3>Architecture Design Patterns<a class="headerlink" href="#architecture-design-patterns" title="Permalink to this heading">#</a></h3>
+<h3>Architecture Design Patterns<a class="headerlink" href="#architecture-design-patterns" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Layer Width vs Depth</strong>: A 784→512→10 network vs 784→256→256→10 - which has more parameters? Which typically generalizes better and why?</p></li>
 <li><p><strong>Dropout Placement</strong>: Should you place Dropout before or after activation functions? What’s the difference between <code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">ReLU</span> <span class="pre">→</span> <span class="pre">Dropout</span></code> vs <code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">Dropout</span> <span class="pre">→</span> <span class="pre">ReLU</span></code>?</p></li>
@@ -756,7 +686,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory Hierarchy</strong>: A Linear(4096, 4096) layer has 16M parameters (64MB). Does this fit in L3 cache? How does cache performance affect training speed?</p></li>
 <li><p><strong>Batch Size Scaling</strong>: Measuring throughput from batch_size=1 to 512, why does samples/sec increase but eventually plateau? What’s the bottleneck?</p></li>
@@ -766,7 +696,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the abstractions that power every neural network in production. Linear layers might seem deceptively simple - just matrix multiplication and bias addition - but this simplicity is the foundation of extraordinary complexity. From ResNet’s 25 million parameters to GPT-3’s 175 billion, every learned transformation ultimately reduces to chains of <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">xW</span> <span class="pre">+</span> <span class="pre">b</span></code>.</p>
 <p>Understanding layer composition is crucial for systems thinking. When you see “ResNet-50,” you’ll know exactly how parameter counts scale with depth. When debugging vanishing gradients, you’ll understand why Xavier initialization matters. When deploying to mobile devices, you’ll calculate memory footprints in your head.</p>
 <p>Take your time with this module. Test each component thoroughly. Analyze the memory patterns. Build the intuition for how these simple building blocks compose into intelligence. This is where deep learning becomes real.</p>
@@ -780,7 +710,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/03_layers/layers_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/03_layers/layers_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/03_layers/layers_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -789,7 +719,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -798,7 +728,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/03_layers/layers_dev.py</span></a></div>
 </div>
 </div>
 </div>

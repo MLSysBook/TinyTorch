@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>19. Benchmarking - Fair Performance Comparison &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,44 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/19_benchmarking_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="🏅 Torch Olympics (Module 20)" href="../tiers/olympics.html" />
@@ -112,8 +108,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -170,24 +166,22 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -276,9 +270,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -288,70 +282,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/modules/19_benchmarking_ABOUT.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/19_benchmarking_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -436,9 +366,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -510,14 +440,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="benchmarking-fair-performance-comparison">
-<h1>19. Benchmarking - Fair Performance Comparison<a class="headerlink" href="#benchmarking-fair-performance-comparison" title="Permalink to this heading">#</a></h1>
+<h1>19. Benchmarking - Fair Performance Comparison<a class="headerlink" href="#benchmarking-fair-performance-comparison" title="Link to this heading">#</a></h1>
 <p><strong>OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 5-6 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>You’ll build a rigorous performance measurement system that enables fair comparison of all your optimizations. This module implements educational benchmarking with statistical testing, normalized metrics, and reproducible protocols. Your benchmarking framework provides the measurement methodology used in Module 20’s competition workflow, where you’ll apply these tools to validate optimizations systematically.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Understand benchmark design principles</strong>: Reproducibility requirements; representative workload selection; measurement methodology; controlling for confounding variables; fair comparison protocols</p></li>
@@ -528,7 +458,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-analyze">
-<h2>Build → Use → Analyze<a class="headerlink" href="#build-use-analyze" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Analyze<a class="headerlink" href="#build-use-analyze" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Analyze</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement benchmarking framework with statistical testing (confidence intervals, t-tests), normalized metrics (speedup, compression, efficiency), warmup protocols, and automated report generation</p></li>
@@ -537,12 +467,12 @@ document.write(`
 </ol>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="core-benchmarking-components">
-<h3>Core Benchmarking Components<a class="headerlink" href="#core-benchmarking-components" title="Permalink to this heading">#</a></h3>
+<h3>Core Benchmarking Components<a class="headerlink" href="#core-benchmarking-components" title="Link to this heading">#</a></h3>
 <p>Your benchmarking framework implements four key systems:</p>
 <section id="statistical-measurement-infrastructure">
-<h4>1. Statistical Measurement Infrastructure<a class="headerlink" href="#statistical-measurement-infrastructure" title="Permalink to this heading">#</a></h4>
+<h4>1. Statistical Measurement Infrastructure<a class="headerlink" href="#statistical-measurement-infrastructure" title="Link to this heading">#</a></h4>
 <p><strong>Why Multiple Runs Matter</strong></p>
 <p>Single measurements are meaningless in ML systems. Performance varies 10-30% across runs due to:</p>
 <ul class="simple">
@@ -570,7 +500,7 @@ document.write(`
 <p><strong>What This Reveals</strong>: If confidence intervals overlap between baseline and optimized, the difference might be noise. Statistical rigor prevents false claims.</p>
 </section>
 <section id="warmup-and-measurement-protocol">
-<h4>2. Warmup and Measurement Protocol<a class="headerlink" href="#warmup-and-measurement-protocol" title="Permalink to this heading">#</a></h4>
+<h4>2. Warmup and Measurement Protocol<a class="headerlink" href="#warmup-and-measurement-protocol" title="Link to this heading">#</a></h4>
 <p><strong>The Warmup Problem</strong></p>
 <p>First run: 120ms. Second run: 100ms. Third run: 98ms. What happened?</p>
 <ul class="simple">
@@ -602,7 +532,7 @@ document.write(`
 <p><strong>Why This Matters</strong>: Warmup runs discard cold-start effects. Measurement runs capture true steady-state performance.</p>
 </section>
 <section id="normalized-metrics-for-fair-comparison">
-<h4>3. Normalized Metrics for Fair Comparison<a class="headerlink" href="#normalized-metrics-for-fair-comparison" title="Permalink to this heading">#</a></h4>
+<h4>3. Normalized Metrics for Fair Comparison<a class="headerlink" href="#normalized-metrics-for-fair-comparison" title="Link to this heading">#</a></h4>
 <p><strong>Hardware-Independent Speedup</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Speedup ratio: baseline_time / optimized_time</span>
 <span class="n">speedup</span> <span class="o">=</span> <span class="n">baseline_result</span><span class="o">.</span><span class="n">mean</span> <span class="o">/</span> <span class="n">optimized_result</span><span class="o">.</span><span class="n">mean</span>
@@ -631,7 +561,7 @@ document.write(`
 <p><strong>Why Normalized Metrics</strong>: Speedup ratios work on any hardware. “2x faster” is meaningful whether you have M1 Mac or Intel i9. Absolute times (100ms → 50ms) are hardware-specific.</p>
 </section>
 <section id="comprehensive-benchmark-suite">
-<h4>4. Comprehensive Benchmark Suite<a class="headerlink" href="#comprehensive-benchmark-suite" title="Permalink to this heading">#</a></h4>
+<h4>4. Comprehensive Benchmark Suite<a class="headerlink" href="#comprehensive-benchmark-suite" title="Link to this heading">#</a></h4>
 <p><strong>Multiple Benchmark Types</strong></p>
 <p>Your <code class="docutils literal notranslate"><span class="pre">BenchmarkSuite</span></code> runs:</p>
 <ol class="arabic simple">
@@ -655,10 +585,10 @@ document.write(`
 </section>
 </section>
 <section id="real-world-benchmarking-principles">
-<h3>Real-World Benchmarking Principles<a class="headerlink" href="#real-world-benchmarking-principles" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Benchmarking Principles<a class="headerlink" href="#real-world-benchmarking-principles" title="Link to this heading">#</a></h3>
 <p>Your implementation teaches industry-standard methodology:</p>
 <section id="reproducibility-requirements">
-<h4>Reproducibility Requirements<a class="headerlink" href="#reproducibility-requirements" title="Permalink to this heading">#</a></h4>
+<h4>Reproducibility Requirements<a class="headerlink" href="#reproducibility-requirements" title="Link to this heading">#</a></h4>
 <p>Every benchmark run documents:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">system_info</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;platform&#39;</span><span class="p">:</span> <span class="s1">&#39;macOS-14.2-arm64&#39;</span><span class="p">,</span>  <span class="c1"># OS version</span>
@@ -672,7 +602,7 @@ document.write(`
 <p><strong>Why</strong>: Colleague should reproduce your results given same environment. Missing details make verification impossible.</p>
 </section>
 <section id="fair-comparison-protocol">
-<h4>Fair Comparison Protocol<a class="headerlink" href="#fair-comparison-protocol" title="Permalink to this heading">#</a></h4>
+<h4>Fair Comparison Protocol<a class="headerlink" href="#fair-comparison-protocol" title="Link to this heading">#</a></h4>
 <p><strong>Don’t Compare</strong>:</p>
 <ul class="simple">
 <li><p>GPU-optimized code vs CPU baseline (unfair hardware)</p></li>
@@ -689,7 +619,7 @@ document.write(`
 </ul>
 </section>
 <section id="statistical-significance-testing">
-<h4>Statistical Significance Testing<a class="headerlink" href="#statistical-significance-testing" title="Permalink to this heading">#</a></h4>
+<h4>Statistical Significance Testing<a class="headerlink" href="#statistical-significance-testing" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 
 <span class="n">baseline_times</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">99</span><span class="p">]</span>  <span class="c1"># ms</span>
@@ -708,7 +638,7 @@ document.write(`
 </section>
 </section>
 <section id="connection-to-competition-workflow-module-20">
-<h3>Connection to Competition Workflow (Module 20)<a class="headerlink" href="#connection-to-competition-workflow-module-20" title="Permalink to this heading">#</a></h3>
+<h3>Connection to Competition Workflow (Module 20)<a class="headerlink" href="#connection-to-competition-workflow-module-20" title="Link to this heading">#</a></h3>
 <p>This benchmarking infrastructure provides the measurement harness used in Module 20’s competition workflow:</p>
 <p><strong>How Module 20 Uses This Framework</strong></p>
 <ol class="arabic simple">
@@ -727,39 +657,39 @@ document.write(`
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you understand the optimization foundations:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>profiling
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>quantization
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>compression
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>profiling
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>quantization
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>compression
 </pre></div>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/19_benchmarking/benchmarking_dev.py</span></code></p></li>
 <li><p><strong>Implement BenchmarkResult</strong>: Container for measurements with statistical analysis</p></li>
 <li><p><strong>Build Benchmark class</strong>: Runner with warmup, multiple runs, metrics collection</p></li>
 <li><p><strong>Create BenchmarkSuite</strong>: Full evaluation with latency/accuracy/memory/energy</p></li>
 <li><p><strong>Add reporting</strong>: Automated report generation with visualizations</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">19</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">benchmarking</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">19</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">benchmarking</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify benchmarking functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>benchmarking
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>benchmarking
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>benchmarking<span class="w"> </span>-v
@@ -767,7 +697,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>Statistical Calculations</strong>: Mean, std, median, confidence intervals computed correctly</p></li>
 <li><p>✅ <strong>Multiple Runs</strong>: Warmup and measurement phases work properly</p></li>
@@ -780,31 +710,31 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-validation">
-<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Validation<a class="headerlink" href="#inline-testing-validation" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive unit tests:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>🔬 Unit Test: BenchmarkResult...
-✅ Mean calculation correct: 3.0
-✅ Std calculation matches statistics module
-✅ Confidence intervals bound mean
-✅ Serialization preserves data
-📈 Progress: BenchmarkResult ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">BenchmarkResult</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Mean</span> <span class="n">calculation</span> <span class="n">correct</span><span class="p">:</span> <span class="mf">3.0</span>
+<span class="err">✅</span> <span class="n">Std</span> <span class="n">calculation</span> <span class="n">matches</span> <span class="n">statistics</span> <span class="n">module</span>
+<span class="err">✅</span> <span class="n">Confidence</span> <span class="n">intervals</span> <span class="n">bound</span> <span class="n">mean</span>
+<span class="err">✅</span> <span class="n">Serialization</span> <span class="n">preserves</span> <span class="n">data</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">BenchmarkResult</span> <span class="err">✓</span>
 
-🔬 Unit Test: Benchmark latency...
-✅ Warmup runs executed before measurement
-✅ Multiple measurement runs collected
-✅ Results include mean ± CI
-📈 Progress: Benchmark ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">Benchmark</span> <span class="n">latency</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Warmup</span> <span class="n">runs</span> <span class="n">executed</span> <span class="n">before</span> <span class="n">measurement</span>
+<span class="err">✅</span> <span class="n">Multiple</span> <span class="n">measurement</span> <span class="n">runs</span> <span class="n">collected</span>
+<span class="err">✅</span> <span class="n">Results</span> <span class="n">include</span> <span class="n">mean</span> <span class="err">±</span> <span class="n">CI</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">Benchmark</span> <span class="err">✓</span>
 
-🔬 Unit Test: BenchmarkSuite...
-✅ All benchmark types run (latency, accuracy, memory, energy)
-✅ Results organized by metric type
-✅ Visualizations generated
-📈 Progress: BenchmarkSuite ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">BenchmarkSuite</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">All</span> <span class="n">benchmark</span> <span class="n">types</span> <span class="n">run</span> <span class="p">(</span><span class="n">latency</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+<span class="err">✅</span> <span class="n">Results</span> <span class="n">organized</span> <span class="n">by</span> <span class="n">metric</span> <span class="nb">type</span>
+<span class="err">✅</span> <span class="n">Visualizations</span> <span class="n">generated</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">BenchmarkSuite</span> <span class="err">✓</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.benchmarking.benchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">Benchmark</span><span class="p">,</span> <span class="n">BenchmarkSuite</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -843,9 +773,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Production ML Deployment</strong>: PyTorch runs continuous benchmarking before merging optimizations—statistical rigor prevents performance regressions</p></li>
 <li><p><strong>Hardware Evaluation</strong>: Google’s TPU teams benchmark every architecture iteration—measurements justify billion-dollar hardware investments</p></li>
@@ -854,7 +784,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="statistical-foundations">
-<h3>Statistical Foundations<a class="headerlink" href="#statistical-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Statistical Foundations<a class="headerlink" href="#statistical-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Central Limit Theorem</strong>: Multiple measurements → normal distribution → confidence intervals and significance testing</p></li>
 <li><p><strong>Measurement Uncertainty</strong>: Every measurement has variance—systematic errors (timer overhead) and random errors (thermal noise)</p></li>
@@ -863,7 +793,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Warmup Effects</strong>: First run 20% slower than steady-state—cold cache, JIT compilation, memory allocation</p></li>
 <li><p><strong>System Noise Sources</strong>: Thermal throttling (CPU frequency drops), OS interrupts (background tasks), memory pressure (GC pauses), network interference</p></li>
@@ -873,7 +803,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’ve reached the penultimate module of the Optimization Tier. This benchmarking framework validates all your previous work from Modules 14-18, transforming subjective claims (“feels faster”) into objective data (“1.8x speedup, p &lt; 0.01, 95% CI [1.6x, 2.0x]”).</p>
 <p>Your benchmarking infrastructure provides the measurement foundation for Module 20’s competition workflow, where you’ll use these tools to validate optimizations systematically. Fair measurement methodology ensures your innovation is recognized—not who got lucky with thermal throttling.</p>
 <p>Module 20 teaches how to use your benchmarking framework in a competition context—generating submissions, validating constraints, and packaging results. Your benchmarking framework measures cumulative impact with statistical rigor. This is how production ML teams validate optimizations before deployment—rigorous measurement prevents regressions and quantifies improvements.</p>
@@ -888,7 +818,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/19_benchmarking/benchmarking_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/19_benchmarking/benchmarking_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/19_benchmarking/benchmarking_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -897,7 +827,7 @@ Launch Binder</div>
 Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -906,7 +836,7 @@ Open in Colab</div>
 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/19_benchmarking/benchmarking_dev.py</span></a></div>
 </div>
 </div>
 </div>

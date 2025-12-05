@@ -291,11 +291,11 @@ Ensure you understand the mathematical foundations:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor
-tito test --module autograd
+tito test tensor
+tito test autograd
 ```
 
 **Required Background:**
@@ -311,7 +311,7 @@ tito test --module autograd
 3. **Build SGD with momentum**: Add velocity accumulation for smoother convergence
 4. **Create Adam optimizer**: Implement adaptive learning rates with moment estimation and bias correction
 5. **Add AdamW optimizer**: Build decoupled weight decay for proper regularization
-6. **Export and verify**: `tito module complete 06 && tito test --module optimizers`
+6. **Export and verify**: `tito module complete 06 && tito test optimizers`
 
 **Development Tips:**
 - Test each optimizer on simple quadratic functions (f(x) = x²) where you can verify analytical convergence
@@ -328,7 +328,7 @@ Run the full test suite to verify optimization algorithm correctness:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module optimizers
+tito test optimizers
 
 # Direct pytest execution
 python -m pytest tests/ -k optimizers -v

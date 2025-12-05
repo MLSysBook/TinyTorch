@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>13. Transformers - Complete GPT Architecture &#8212; Tiny🔥Torch</title>
   
@@ -29,47 +28,44 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/13_transformers_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="⏱️ Optimization Tier (Modules 14-19)" href="../tiers/optimization.html" />
@@ -112,8 +108,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -170,24 +166,22 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -276,9 +270,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -288,70 +282,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/modules/13_transformers_ABOUT.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/13_transformers_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -436,9 +366,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -503,14 +433,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="transformers-complete-gpt-architecture">
-<h1>13. Transformers - Complete GPT Architecture<a class="headerlink" href="#transformers-complete-gpt-architecture" title="Permalink to this heading">#</a></h1>
+<h1>13. Transformers - Complete GPT Architecture<a class="headerlink" href="#transformers-complete-gpt-architecture" title="Link to this heading">#</a></h1>
 <p><strong>ARCHITECTURE TIER</strong> | Difficulty: ⭐⭐⭐⭐ (4/4) | Time: 6-8 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>You’ll build the complete GPT transformer architecture—the decoder-only foundation powering ChatGPT, GPT-4, Claude, and virtually all modern large language models. This module combines everything you’ve learned about attention, embeddings, and neural networks into a production-ready autoregressive language model capable of text generation. You’ll implement layer normalization, feed-forward networks, transformer blocks with residual connections, and the complete GPT model that matches PyTorch’s <code class="docutils literal notranslate"><span class="pre">nn.TransformerDecoder</span></code> design.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Implement complete transformer blocks</strong> with multi-head self-attention, position-wise feed-forward networks (4x expansion), layer normalization, and residual connections for gradient highways enabling deep networks (12+ layers)</p></li>
@@ -521,7 +451,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Reflect</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement LayerNorm with learnable scale/shift, MLP feed-forward networks with 4x expansion and GELU activation, TransformerBlock combining attention+MLP with pre-norm residual connections, complete GPT decoder with causal masking and generation</p></li>
@@ -535,9 +465,9 @@ document.write(`
 </div>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="layernorm-training-stability-for-deep-networks">
-<h3>LayerNorm - Training Stability for Deep Networks<a class="headerlink" href="#layernorm-training-stability-for-deep-networks" title="Permalink to this heading">#</a></h3>
+<h3>LayerNorm - Training Stability for Deep Networks<a class="headerlink" href="#layernorm-training-stability-for-deep-networks" title="Link to this heading">#</a></h3>
 <p>Layer normalization stabilizes training by normalizing activations across the feature dimension for each sample independently. Unlike batch normalization (normalizes across batch), LayerNorm works with any batch size including batch=1 during inference—essential for variable-length sequences.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LayerNorm</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Layer normalization for transformer training stability.</span>
@@ -605,7 +535,7 @@ document.write(`
 </div>
 </section>
 <section id="mlp-position-wise-feed-forward-network">
-<h3>MLP - Position-Wise Feed-Forward Network<a class="headerlink" href="#mlp-position-wise-feed-forward-network" title="Permalink to this heading">#</a></h3>
+<h3>MLP - Position-Wise Feed-Forward Network<a class="headerlink" href="#mlp-position-wise-feed-forward-network" title="Link to this heading">#</a></h3>
 <p>The MLP provides non-linear transformation capacity in each transformer block. It’s a simple two-layer network with a 4x expansion pattern applied identically to each sequence position.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MLP</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-Layer Perceptron (Feed-Forward Network) for transformer blocks.</span>
@@ -645,7 +575,7 @@ document.write(`
 </ul>
 </section>
 <section id="transformerblock-complete-layer-with-attention-and-mlp">
-<h3>TransformerBlock - Complete Layer with Attention and MLP<a class="headerlink" href="#transformerblock-complete-layer-with-attention-and-mlp" title="Permalink to this heading">#</a></h3>
+<h3>TransformerBlock - Complete Layer with Attention and MLP<a class="headerlink" href="#transformerblock-complete-layer-with-attention-and-mlp" title="Link to this heading">#</a></h3>
 <p>A single transformer layer combining multi-head self-attention with feed-forward processing using pre-norm residual architecture. This is the core building block stacked 12-120 times in production models.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TransformerBlock</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete transformer layer with self-attention, MLP, and residual connections.</span>
@@ -715,7 +645,7 @@ document.write(`
 </ol>
 </section>
 <section id="gpt-complete-decoder-only-architecture">
-<h3>GPT - Complete Decoder-Only Architecture<a class="headerlink" href="#gpt-complete-decoder-only-architecture" title="Permalink to this heading">#</a></h3>
+<h3>GPT - Complete Decoder-Only Architecture<a class="headerlink" href="#gpt-complete-decoder-only-architecture" title="Link to this heading">#</a></h3>
 <p>GPT (Generative Pre-trained Transformer) is the complete autoregressive language model combining embeddings, transformer blocks, and generation capability. It’s <strong>decoder-only</strong> with causal masking preventing future token leakage.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">GPT</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete GPT decoder for autoregressive language modeling.</span>
@@ -837,7 +767,7 @@ After softmax: -∞ → probability 0
 </ul>
 </section>
 <section id="decoder-only-architecture-choice">
-<h3>Decoder-Only Architecture Choice<a class="headerlink" href="#decoder-only-architecture-choice" title="Permalink to this heading">#</a></h3>
+<h3>Decoder-Only Architecture Choice<a class="headerlink" href="#decoder-only-architecture-choice" title="Link to this heading">#</a></h3>
 <p>This module implements <strong>decoder-only GPT architecture</strong>. Here’s why this choice dominates modern LLMs:</p>
 <p><strong>Decoder-Only (GPT) - What We Build:</strong></p>
 <ul class="simple">
@@ -870,16 +800,16 @@ After softmax: -∞ → probability 0
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you understand the foundations from previous modules:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>embeddings
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>attention
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>embeddings
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>attention
 </pre></div>
 </div>
 <p><strong>Required Background:</strong></p>
@@ -891,24 +821,24 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/13_transformers/transformers.py</span></code></p></li>
 <li><p><strong>Implement LayerNorm</strong>: Normalize across feature dimension with learnable scale/shift parameters (gamma, beta)</p></li>
 <li><p><strong>Build MLP</strong>: Two linear layers with 4x expansion ratio and GELU activation (position-wise transformation)</p></li>
 <li><p><strong>Create TransformerBlock</strong>: Combine attention and MLP with pre-norm residual connections (LayerNorm before sub-layers)</p></li>
 <li><p><strong>Add GPT model</strong>: Stack transformer blocks with token+positional embeddings, causal masking, and generation</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">13</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">transformers</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">13</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">transformers</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify transformer functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>transformers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>transformers
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>transformers<span class="w"> </span>-v
@@ -916,7 +846,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>LayerNorm</strong>: Feature-wise normalization (mean≈0, std≈1), learnable gamma/beta parameters, numerical stability with epsilon</p></li>
 <li><p>✅ <strong>MLP</strong>: 4x expansion ratio (embed_dim → 4*embed_dim → embed_dim), GELU activation, shape preservation</p></li>
@@ -926,36 +856,36 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-architecture-validation">
-<h3>Inline Testing &amp; Architecture Validation<a class="headerlink" href="#inline-testing-architecture-validation" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Architecture Validation<a class="headerlink" href="#inline-testing-architecture-validation" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive architecture validation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🔬 Unit Test: LayerNorm...
-✅ Mean ≈ 0, std ≈ 1 after normalization
-✅ Learnable gamma/beta parameters work
-📈 Progress: LayerNorm ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example inline test output</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">LayerNorm</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Mean</span> <span class="err">≈</span> <span class="mi">0</span><span class="p">,</span> <span class="n">std</span> <span class="err">≈</span> <span class="mi">1</span> <span class="n">after</span> <span class="n">normalization</span>
+<span class="err">✅</span> <span class="n">Learnable</span> <span class="n">gamma</span><span class="o">/</span><span class="n">beta</span> <span class="n">parameters</span> <span class="n">work</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">LayerNorm</span> <span class="err">✓</span>
 
-🔬 Unit Test: MLP...
-✅ 4x expansion ratio correct (embed_dim → 4*embed_dim)
-✅ Shape preserved (input: [2,10,64] → output: [2,10,64])
-✅ GELU activation applied
-📈 Progress: MLP ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">MLP</span><span class="o">...</span>
+<span class="err">✅</span> <span class="mi">4</span><span class="n">x</span> <span class="n">expansion</span> <span class="n">ratio</span> <span class="n">correct</span> <span class="p">(</span><span class="n">embed_dim</span> <span class="err">→</span> <span class="mi">4</span><span class="o">*</span><span class="n">embed_dim</span><span class="p">)</span>
+<span class="err">✅</span> <span class="n">Shape</span> <span class="n">preserved</span> <span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">64</span><span class="p">]</span> <span class="err">→</span> <span class="n">output</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">64</span><span class="p">])</span>
+<span class="err">✅</span> <span class="n">GELU</span> <span class="n">activation</span> <span class="n">applied</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">MLP</span> <span class="err">✓</span>
 
-🔬 Unit Test: TransformerBlock...
-✅ Pre-norm residual connections work
-✅ Attention + MLP sub-layers compose correctly
-✅ Causal mask prevents future information leak
-📈 Progress: TransformerBlock ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">TransformerBlock</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Pre</span><span class="o">-</span><span class="n">norm</span> <span class="n">residual</span> <span class="n">connections</span> <span class="n">work</span>
+<span class="err">✅</span> <span class="n">Attention</span> <span class="o">+</span> <span class="n">MLP</span> <span class="n">sub</span><span class="o">-</span><span class="n">layers</span> <span class="n">compose</span> <span class="n">correctly</span>
+<span class="err">✅</span> <span class="n">Causal</span> <span class="n">mask</span> <span class="n">prevents</span> <span class="n">future</span> <span class="n">information</span> <span class="n">leak</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">TransformerBlock</span> <span class="err">✓</span>
 
-🔬 Unit Test: GPT Model...
-✅ Forward pass: [2,8] tokens → [2,8,100] logits
-✅ Generation: [1,5] prompt + 3 new → [1,8] sequence
-✅ Parameter counting validates all components
-📈 Progress: GPT Model ✓
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">GPT</span> <span class="n">Model</span><span class="o">...</span>
+<span class="err">✅</span> <span class="n">Forward</span> <span class="k">pass</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span> <span class="n">tokens</span> <span class="err">→</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">100</span><span class="p">]</span> <span class="n">logits</span>
+<span class="err">✅</span> <span class="n">Generation</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="n">prompt</span> <span class="o">+</span> <span class="mi">3</span> <span class="n">new</span> <span class="err">→</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span> <span class="n">sequence</span>
+<span class="err">✅</span> <span class="n">Parameter</span> <span class="n">counting</span> <span class="n">validates</span> <span class="nb">all</span> <span class="n">components</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">GPT</span> <span class="n">Model</span> <span class="err">✓</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span><span class="p">,</span> <span class="n">TransformerBlock</span><span class="p">,</span> <span class="n">LayerNorm</span><span class="p">,</span> <span class="n">MLP</span>
 
 <span class="c1"># Test LayerNorm</span>
@@ -988,14 +918,14 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="where-this-code-lives-in-the-final-package">
-<h2>Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<h2>Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Link to this heading">#</a></h2>
 <p><strong>Package Export:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.models.transformer</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When students install tinytorch, they import your work like this:</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.models.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span><span class="p">,</span> <span class="n">TransformerBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span><span class="p">,</span> <span class="n">TransformerBlock</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">LayerNorm</span><span class="p">,</span> <span class="n">MLP</span>  <span class="c1"># Your normalization and feed-forward implementations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>  <span class="c1"># Foundation from Module 01</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.attention</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiHeadAttention</span>  <span class="c1"># From Module 12</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.text.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span>  <span class="c1"># From Module 11</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span>  <span class="c1"># From Module 11</span>
 
 <span class="c1"># Example: Build a GPT-2 scale model</span>
 <span class="n">gpt2</span> <span class="o">=</span> <span class="n">GPT</span><span class="p">(</span>
@@ -1039,9 +969,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-applications">
-<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Large Language Models (OpenAI, Anthropic, Google)</strong>: GPT-4 uses ~120-layer decoder stack trained on trillions of tokens. ChatGPT is GPT-3.5 with 96 layers and RLHF fine-tuning. Claude uses decoder-only architecture with constitutional AI training. All modern LLMs are transformer decoders because decoder-only architecture scales predictably with parameters and data—every 10× parameter increase yields ~5× better performance.</p></li>
 <li><p><strong>Code Generation Systems (GitHub, Google, Meta)</strong>: Copilot uses GPT-based decoder trained on billions of lines of GitHub code. AlphaCode uses transformer decoder for competitive programming. CodeLlama specialized 70B decoder for code completion. All leverage causal attention for autoregressive generation because programming requires left-to-right token prediction matching code syntax.</p></li>
@@ -1050,7 +980,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="architectural-foundations">
-<h3>Architectural Foundations<a class="headerlink" href="#architectural-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Architectural Foundations<a class="headerlink" href="#architectural-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Residual Connections Enable Deep Networks</strong>: Without residuals, gradients vanish exponentially with depth—in a 12-layer network without residuals, gradients at layer 1 are ~0.1¹² ≈ 10⁻¹² smaller than output gradients. Residuals create gradient highways: ∂Loss/∂x = ∂Loss/∂output × (1 + ∂F(x)/∂x), ensuring gradient magnitude ≥ output gradient. This enables 100+ layer transformers (GPT-4 has ~120 layers).</p></li>
 <li><p><strong>Pre-Norm vs Post-Norm Architecture</strong>: Pre-norm (LayerNorm before sub-layers) provides better gradient flow for deep models. In post-norm, gradients must flow through LayerNorm’s division operation which can amplify small gradient differences. Pre-norm gives each sub-layer clean normalized inputs (mean=0, var=1) while residuals bypass the normalization during backprop. GPT-3, GPT-4, LLaMA all use pre-norm.</p></li>
@@ -1059,7 +989,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="performance-characteristics">
-<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Quadratic Attention Memory Growth</strong>: Attention computes (batch, heads, seq_len, seq_len) matrix requiring batch×heads×seq_len² elements. For GPT-3 with seq_len=2048, batch=4, heads=96: 4×96×2048² ≈ 1.6B elements × 4 bytes = 6.4GB per layer just for attention matrices. Doubling sequence length quadruples attention memory. This is why 8K context requires 4× memory vs 4K context.</p></li>
 <li><p><strong>Parameter Scaling</strong>: Total parameters ≈ vocab_size×embed_dim (embeddings) + num_layers×[4×embed_dim² (attention) + 8×embed_dim² (MLP)] ≈ num_layers×12×embed_dim². GPT-3 has embed_dim=12,288, num_layers=96 → 96×12×12,288² ≈ 175B parameters. Storage: 175B × 2 bytes (FP16) = 350GB. Training requires 4× memory for gradients and optimizer states = 1.4TB per GPU.</p></li>
@@ -1070,7 +1000,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="reflection-questions">
-<h2>Reflection Questions<a class="headerlink" href="#reflection-questions" title="Permalink to this heading">#</a></h2>
+<h2>Reflection Questions<a class="headerlink" href="#reflection-questions" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><strong>Residual Connection Necessity</strong>: Remove residual connections from a 12-layer transformer. What happens during training? Calculate gradient flow: if each layer multiplies gradients by 0.5, what’s the gradient at layer 1 after 12 layers? (0.5¹² ≈ 0.0002). How do residuals solve this by providing gradient highways that bypass layer computations?</p></li>
 <li><p><strong>Pre-Norm vs Post-Norm Trade-offs</strong>: Original Transformer paper used post-norm (LayerNorm after sub-layers). Modern transformers use pre-norm (LayerNorm before). Why? Consider gradient flow: in post-norm, gradients pass through LayerNorm’s division which can amplify noise. In pre-norm, residuals bypass normalization. When does pre-norm become critical (how many layers)?</p></li>
@@ -1081,7 +1011,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ol>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the transformer architecture that powers virtually all modern AI systems! The decoder-only GPT architecture you’ll build is the exact design used in ChatGPT, GPT-4, Claude, and every major language model. This isn’t a simplified educational version—it’s the real production architecture that revolutionized AI.</p>
 <p>Understanding transformers from first principles—implementing layer normalization, feed-forward networks, residual connections, and causal attention yourself—will give you deep insight into how production ML systems work. You’ll understand why GPT-4 has 120 layers, why residual connections prevent gradient vanishing in deep networks, why pre-norm architecture enables training very deep models, and how attention memory scales quadratically with sequence length.</p>
 <p>This module is the culmination of your Architecture Tier journey. You’ve built tensors (Module 01), activations (Module 02), layers (Module 03), embeddings (Module 11), and attention (Module 12). Now you’ll compose them into the complete transformer model that matches PyTorch’s <code class="docutils literal notranslate"><span class="pre">nn.TransformerDecoder</span></code> and powers billion-dollar AI systems. Take your time, test thoroughly, and enjoy building the architecture behind ChatGPT, Claude, and the AI revolution!</p>
@@ -1095,7 +1025,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/13_transformers/transformers.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/13_transformers/transformers.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/13_transformers/transformers.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1104,7 +1034,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1113,7 +1043,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/13_transformers/transformers.py</span></a></div>
 </div>
 </div>
 </div>

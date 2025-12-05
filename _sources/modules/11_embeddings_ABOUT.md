@@ -302,11 +302,11 @@ Verify your prerequisites:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor
-tito test --module tokenization
+tito test tensor
+tito test tokenization
 ```
 
 ### Development Workflow
@@ -316,7 +316,7 @@ tito test --module tokenization
 3. **Build sinusoidal encodings**: Compute sine/cosine position representations using mathematical formula
 4. **Create learned positions**: Add trainable position embedding table with proper initialization
 5. **Integrate complete system**: Combine token and position embeddings with flexible encoding strategies
-6. **Export and verify**: `tito module complete 11 && tito test --module embeddings`
+6. **Export and verify**: `tito module complete 11 && tito test embeddings`
 
 ## Testing
 
@@ -326,7 +326,7 @@ Run the full test suite to verify embedding functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module embeddings
+tito test embeddings
 
 # Direct pytest execution
 python -m pytest tests/ -k embeddings -v
@@ -379,7 +379,7 @@ The module includes comprehensive unit tests during development:
 Test your embedding implementation interactively:
 
 ```python
-from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
+from tinytorch.core.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
 
 # Create embedding layer
 vocab_size, embed_dim = 10000, 256

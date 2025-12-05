@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>17. Memoization - Computational Reuse for Inference &#8212; Tiny🔥Torch</title>
   
@@ -29,48 +28,39 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/ml-timeline.js"></script>
-    <script src="../_static/wip-banner.js"></script>
-    <script src="../_static/marimo-badges.js"></script>
-    <script src="../_static/sidebar-link.js"></script>
-    <script src="../_static/hero-carousel.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
 
@@ -434,7 +424,13 @@ const load = async () => {
 window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/17_memoization_ABOUT';</script>
-    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+    <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
+    <script src="../_static/sidebar-link.js?v=404b701b"></script>
+    <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="18. Acceleration - CPU Vectorization &amp; Cache Optimization" href="18_acceleration_ABOUT.html" />
@@ -477,8 +473,8 @@ window.addEventListener("load", load);
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -535,24 +531,22 @@ window.addEventListener("load", load);
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
-                    Getting Started
-                </a>
-            </li>
-        </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../student-workflow.html">Student Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/ta-guide.html">TA Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/team-onboarding.html">Team Onboarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Complete Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗 Foundation Tier (01-07)</span></p>
 <ul class="nav bd-sidenav">
@@ -641,9 +635,9 @@ window.addEventListener("load", load);
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -653,70 +647,6 @@ window.addEventListener("load", load);
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/site/modules/17_memoization_ABOUT.md" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmodules/17_memoization_ABOUT.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -801,9 +731,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -899,15 +829,15 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="memoization-computational-reuse-for-inference">
-<h1>17. Memoization - Computational Reuse for Inference<a class="headerlink" href="#memoization-computational-reuse-for-inference" title="Permalink to this heading">#</a></h1>
+<h1>17. Memoization - Computational Reuse for Inference<a class="headerlink" href="#memoization-computational-reuse-for-inference" title="Link to this heading">#</a></h1>
 <p><strong>OPTIMIZATION TIER</strong> | Difficulty: ⭐⭐⭐ (3/4) | Time: 4-5 hours</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Memoization is a fundamental optimization pattern: cache computational results to avoid redundant work. You’ll apply this pattern to transformers through KV (Key-Value) caching, transforming O(n²) autoregressive generation into O(n) complexity and achieving 10-15x speedup. This optimization makes production language model serving economically viable.</p>
 <p>This is inference-only optimization - you’ll implement caching patterns used in every production LLM from ChatGPT to Claude to GitHub Copilot.</p>
 </section>
 <section id="learning-objectives">
-<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
 <li><p><strong>Understand Memoization Pattern</strong>: Recognize when computational reuse through caching applies to ML problems and understand the memory-speed trade-off</p></li>
@@ -918,7 +848,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-optimize">
-<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Link to this heading">#</a></h2>
 <p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Implement KVCache data structure with efficient updates, cached attention integration, and multi-layer cache management</p></li>
@@ -927,9 +857,9 @@ document.write(`
 </ol>
 </section>
 <section id="why-this-matters">
-<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Permalink to this heading">#</a></h2>
+<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Link to this heading">#</a></h2>
 <section id="kv-cache-optimization-flow">
-<h3>KV Cache Optimization Flow<a class="headerlink" href="#kv-cache-optimization-flow" title="Permalink to this heading">#</a></h3>
+<h3>KV Cache Optimization Flow<a class="headerlink" href="#kv-cache-optimization-flow" title="Link to this heading">#</a></h3>
 <p>Caching stores computed keys and values, avoiding recomputation for each new token:</p>
 <pre  class="mermaid">
         graph LR
@@ -948,7 +878,7 @@ document.write(`
     </pre><p><strong>Optimization</strong>: Compute K,V once → Cache → Reuse for all future tokens → O(n²) → O(n) complexity</p>
 </section>
 <section id="the-autoregressive-generation-problem">
-<h3>The Autoregressive Generation Problem<a class="headerlink" href="#the-autoregressive-generation-problem" title="Permalink to this heading">#</a></h3>
+<h3>The Autoregressive Generation Problem<a class="headerlink" href="#the-autoregressive-generation-problem" title="Link to this heading">#</a></h3>
 <p>Without caching, transformer generation has quadratic complexity:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Naive Generation (O(n²) complexity):
 Step 1: Generate token 1  → Compute attention for [t₀]                (1 computation)
@@ -964,7 +894,7 @@ For 100 tokens: ~5,050 redundant K,V computations
 <p><strong>The Key Insight</strong>: K and V matrices for previous tokens NEVER change, yet we recompute them every step!</p>
 </section>
 <section id="the-caching-solution">
-<h3>The Caching Solution<a class="headerlink" href="#the-caching-solution" title="Permalink to this heading">#</a></h3>
+<h3>The Caching Solution<a class="headerlink" href="#the-caching-solution" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Cached Generation (O(n) complexity):
 Step 1: Compute K₁, V₁ → Cache them → Attention with cached[K₁, V₁]
 Step 2: Compute K₂, V₂ → Cache them → Attention with cached[K₁, K₂, V₁, V₂]  (reuse K₁, V₁!)
@@ -975,7 +905,7 @@ Total: 1 + 1 + 1 + ... + 1 = n computations (50x reduction for n=100!)
 </div>
 </section>
 <section id="production-impact">
-<h3>Production Impact<a class="headerlink" href="#production-impact" title="Permalink to this heading">#</a></h3>
+<h3>Production Impact<a class="headerlink" href="#production-impact" title="Link to this heading">#</a></h3>
 <p>KV caching is mandatory for all production LLM serving:</p>
 <ul class="simple">
 <li><p><strong>ChatGPT/GPT-4</strong>: Would be 50-100x slower without caching, making conversational AI economically infeasible</p></li>
@@ -986,7 +916,7 @@ Total: 1 + 1 + 1 + ... + 1 = n computations (50x reduction for n=100!)
 <p>Without KV caching, the computational cost would make these services prohibitively expensive.</p>
 </section>
 <section id="memory-speed-trade-off">
-<h3>Memory-Speed Trade-off<a class="headerlink" href="#memory-speed-trade-off" title="Permalink to this heading">#</a></h3>
+<h3>Memory-Speed Trade-off<a class="headerlink" href="#memory-speed-trade-off" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Traditional Approach (No Cache):
 Memory:  O(1)          Cost: Negligible
 Compute: O(n²)         Cost: Prohibitive for long sequences
@@ -1002,12 +932,12 @@ Use O(n) memory to save O(n²) compute.
 </section>
 </section>
 <section id="implementation-guide">
-<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permalink to this heading">#</a></h2>
+<h2>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">#</a></h2>
 <section id="core-components">
-<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading">#</a></h3>
+<h3>Core Components<a class="headerlink" href="#core-components" title="Link to this heading">#</a></h3>
 <p>You’ll implement three main components:</p>
 <section id="kvcache-data-structure">
-<h4>1. KVCache Data Structure<a class="headerlink" href="#kvcache-data-structure" title="Permalink to this heading">#</a></h4>
+<h4>1. KVCache Data Structure<a class="headerlink" href="#kvcache-data-structure" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KVCache</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Efficient key-value cache for autoregressive generation.</span>
@@ -1038,7 +968,7 @@ Use O(n) memory to save O(n²) compute.
 </ul>
 </section>
 <section id="non-invasive-cache-integration">
-<h4>2. Non-Invasive Cache Integration<a class="headerlink" href="#non-invasive-cache-integration" title="Permalink to this heading">#</a></h4>
+<h4>2. Non-Invasive Cache Integration<a class="headerlink" href="#non-invasive-cache-integration" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">enable_kv_cache</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Enable KV caching WITHOUT modifying Module 12/13 code.</span>
@@ -1066,7 +996,7 @@ Use O(n) memory to save O(n²) compute.
 </ul>
 </section>
 <section id="cached-attention-logic">
-<h4>3. Cached Attention Logic<a class="headerlink" href="#cached-attention-logic" title="Permalink to this heading">#</a></h4>
+<h4>3. Cached Attention Logic<a class="headerlink" href="#cached-attention-logic" title="Link to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cached_forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cache-aware attention with three paths:</span>
@@ -1091,9 +1021,9 @@ Use O(n) memory to save O(n²) compute.
 </section>
 </section>
 <section id="implementation-steps">
-<h3>Implementation Steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading">#</a></h3>
+<h3>Implementation Steps<a class="headerlink" href="#implementation-steps" title="Link to this heading">#</a></h3>
 <section id="step-1-design-kvcache-structure">
-<h4>Step 1: Design KVCache Structure<a class="headerlink" href="#step-1-design-kvcache-structure" title="Permalink to this heading">#</a></h4>
+<h4>Step 1: Design KVCache Structure<a class="headerlink" href="#step-1-design-kvcache-structure" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Initialize cache storage for all layers</p></li>
 <li><p>Pre-allocate tensors with maximum sequence length</p></li>
@@ -1103,7 +1033,7 @@ Use O(n) memory to save O(n²) compute.
 </ol>
 </section>
 <section id="step-2-implement-cache-updates">
-<h4>Step 2: Implement Cache Updates<a class="headerlink" href="#step-2-implement-cache-updates" title="Permalink to this heading">#</a></h4>
+<h4>Step 2: Implement Cache Updates<a class="headerlink" href="#step-2-implement-cache-updates" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Validate layer index and sequence position</p></li>
 <li><p>Write new K,V to current position (indexed assignment)</p></li>
@@ -1112,7 +1042,7 @@ Use O(n) memory to save O(n²) compute.
 </ol>
 </section>
 <section id="step-3-enable-non-invasive-integration">
-<h4>Step 3: Enable Non-Invasive Integration<a class="headerlink" href="#step-3-enable-non-invasive-integration" title="Permalink to this heading">#</a></h4>
+<h4>Step 3: Enable Non-Invasive Integration<a class="headerlink" href="#step-3-enable-non-invasive-integration" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Validate model has required attributes (embed_dim, num_layers, etc.)</p></li>
 <li><p>Calculate head_dim from embed_dim and num_heads</p></li>
@@ -1122,7 +1052,7 @@ Use O(n) memory to save O(n²) compute.
 </ol>
 </section>
 <section id="step-4-implement-cached-attention-forward">
-<h4>Step 4: Implement Cached Attention Forward<a class="headerlink" href="#step-4-implement-cached-attention-forward" title="Permalink to this heading">#</a></h4>
+<h4>Step 4: Implement Cached Attention Forward<a class="headerlink" href="#step-4-implement-cached-attention-forward" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Detect path: training (seq_len &gt; 1), first token (cache empty), or cached generation</p></li>
 <li><p>For cached path: Compute Q,K,V projections for new token only</p></li>
@@ -1134,7 +1064,7 @@ Use O(n) memory to save O(n²) compute.
 </ol>
 </section>
 <section id="step-5-validate-correctness">
-<h4>Step 5: Validate Correctness<a class="headerlink" href="#step-5-validate-correctness" title="Permalink to this heading">#</a></h4>
+<h4>Step 5: Validate Correctness<a class="headerlink" href="#step-5-validate-correctness" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p>Test cache initialization and memory calculation</p></li>
 <li><p>Verify single-token and multi-token updates</p></li>
@@ -1145,7 +1075,7 @@ Use O(n) memory to save O(n²) compute.
 </section>
 </section>
 <section id="why-data-instead-of-tensor-operations">
-<h3>Why .data Instead of Tensor Operations?<a class="headerlink" href="#why-data-instead-of-tensor-operations" title="Permalink to this heading">#</a></h3>
+<h3>Why .data Instead of Tensor Operations?<a class="headerlink" href="#why-data-instead-of-tensor-operations" title="Link to this heading">#</a></h3>
 <p>In cached attention, we use NumPy via <code class="docutils literal notranslate"><span class="pre">.data</span></code> for three reasons:</p>
 <ol class="arabic simple">
 <li><p><strong>Explicit Intent</strong>: Makes it crystal clear this is inference-only</p>
@@ -1171,16 +1101,16 @@ Use O(n) memory to save O(n²) compute.
 </section>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <p>Ensure you understand transformers and profiling:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
-<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+<span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>transformers
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>profiling
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>transformers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>profiling
 </pre></div>
 </div>
 <p><strong>Required Understanding</strong>:</p>
@@ -1192,7 +1122,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/17_memoization/memoization_dev.ipynb</span></code></p></li>
 <li><p><strong>Profile naive generation</strong>: Measure O(n²) growth in latency as sequence lengthens</p></li>
@@ -1201,17 +1131,17 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <li><p><strong>Implement enable_kv_cache()</strong>: Non-invasively patch model attention layers</p></li>
 <li><p><strong>Build cached attention forward</strong>: Three-path logic (training, first token, cached generation)</p></li>
 <li><p><strong>Measure speedup</strong>: Profile cached vs non-cached generation, validate O(n) complexity</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">17</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">memoization</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">17</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">memoization</span></code></p></li>
 </ol>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
-<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify memoization functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>memoization
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>memoization
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>memoization<span class="w"> </span>-v
@@ -1219,7 +1149,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 </section>
 <section id="test-coverage-areas">
-<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>KVCache Initialization</strong>: Validate cache creation, memory calculation, and initial state</p></li>
 <li><p>✅ <strong>Cache Updates</strong>: Test single-token append, multi-token sequences, and O(1) update performance</p></li>
@@ -1232,40 +1162,40 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="inline-testing-profiling">
-<h3>Inline Testing &amp; Profiling<a class="headerlink" href="#inline-testing-profiling" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing &amp; Profiling<a class="headerlink" href="#inline-testing-profiling" title="Link to this heading">#</a></h3>
 <p>The module includes comprehensive validation with performance measurement:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Unit Test: KVCache Implementation
-🔬 Unit Test: KVCache Implementation...
-   Cache initialized: 0.59 MB
-✅ Cache initialization successful
-✅ Append and retrieval work correctly
-✅ Multi-layer caching validated
-✅ Reset functionality verified
-📈 Progress: KVCache ✓
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Unit Test: KVCache Implementation</span>
+<span class="err">🔬</span> <span class="n">Unit</span> <span class="n">Test</span><span class="p">:</span> <span class="n">KVCache</span> <span class="n">Implementation</span><span class="o">...</span>
+   <span class="n">Cache</span> <span class="n">initialized</span><span class="p">:</span> <span class="mf">0.59</span> <span class="n">MB</span>
+<span class="err">✅</span> <span class="n">Cache</span> <span class="n">initialization</span> <span class="n">successful</span>
+<span class="err">✅</span> <span class="n">Append</span> <span class="ow">and</span> <span class="n">retrieval</span> <span class="n">work</span> <span class="n">correctly</span>
+<span class="err">✅</span> <span class="n">Multi</span><span class="o">-</span><span class="n">layer</span> <span class="n">caching</span> <span class="n">validated</span>
+<span class="err">✅</span> <span class="n">Reset</span> <span class="n">functionality</span> <span class="n">verified</span>
+<span class="err">📈</span> <span class="n">Progress</span><span class="p">:</span> <span class="n">KVCache</span> <span class="err">✓</span>
 
-# Integration Test: Performance Measurement
-🔬 Profiling Transformer Generation (Without Caching):
-   Seq Len  |  Latency (ms)  |  Growth
-   ---------|----------------|----------
-    10      |    2.34        |  baseline
-    20      |    4.89        |  2.09×
-    40      |   10.12        |  2.07×
-    80      |   21.45        |  2.12×
-   160      |   45.67        |  2.13×
+<span class="c1"># Integration Test: Performance Measurement</span>
+<span class="err">🔬</span> <span class="n">Profiling</span> <span class="n">Transformer</span> <span class="n">Generation</span> <span class="p">(</span><span class="n">Without</span> <span class="n">Caching</span><span class="p">):</span>
+   <span class="n">Seq</span> <span class="n">Len</span>  <span class="o">|</span>  <span class="n">Latency</span> <span class="p">(</span><span class="n">ms</span><span class="p">)</span>  <span class="o">|</span>  <span class="n">Growth</span>
+   <span class="o">---------|----------------|----------</span>
+    <span class="mi">10</span>      <span class="o">|</span>    <span class="mf">2.34</span>        <span class="o">|</span>  <span class="n">baseline</span>
+    <span class="mi">20</span>      <span class="o">|</span>    <span class="mf">4.89</span>        <span class="o">|</span>  <span class="mf">2.09</span><span class="err">×</span>
+    <span class="mi">40</span>      <span class="o">|</span>   <span class="mf">10.12</span>        <span class="o">|</span>  <span class="mf">2.07</span><span class="err">×</span>
+    <span class="mi">80</span>      <span class="o">|</span>   <span class="mf">21.45</span>        <span class="o">|</span>  <span class="mf">2.12</span><span class="err">×</span>
+   <span class="mi">160</span>      <span class="o">|</span>   <span class="mf">45.67</span>        <span class="o">|</span>  <span class="mf">2.13</span><span class="err">×</span>
 
-💡 Key Observations:
-   • Latency grows QUADRATICALLY with sequence length
-   • Each new token forces recomputation of ALL previous K,V pairs
-   • For 160 tokens: ~4× time vs 80 tokens (2² growth)
+<span class="err">💡</span> <span class="n">Key</span> <span class="n">Observations</span><span class="p">:</span>
+   <span class="err">•</span> <span class="n">Latency</span> <span class="n">grows</span> <span class="n">QUADRATICALLY</span> <span class="k">with</span> <span class="n">sequence</span> <span class="n">length</span>
+   <span class="err">•</span> <span class="n">Each</span> <span class="n">new</span> <span class="n">token</span> <span class="n">forces</span> <span class="n">recomputation</span> <span class="n">of</span> <span class="n">ALL</span> <span class="n">previous</span> <span class="n">K</span><span class="p">,</span><span class="n">V</span> <span class="n">pairs</span>
+   <span class="err">•</span> <span class="n">For</span> <span class="mi">160</span> <span class="n">tokens</span><span class="p">:</span> <span class="o">~</span><span class="mi">4</span><span class="err">×</span> <span class="n">time</span> <span class="n">vs</span> <span class="mi">80</span> <span class="n">tokens</span> <span class="p">(</span><span class="mi">2</span><span class="err">²</span> <span class="n">growth</span><span class="p">)</span>
 
-🎯 The Solution: CACHE the K,V values! (That&#39;s memoization)
-✅ Speedup: 10-15× for typical generation
+<span class="err">🎯</span> <span class="n">The</span> <span class="n">Solution</span><span class="p">:</span> <span class="n">CACHE</span> <span class="n">the</span> <span class="n">K</span><span class="p">,</span><span class="n">V</span> <span class="n">values</span><span class="err">!</span> <span class="p">(</span><span class="n">That</span><span class="s1">&#39;s memoization)</span>
+<span class="err">✅</span> <span class="n">Speedup</span><span class="p">:</span> <span class="mi">10</span><span class="o">-</span><span class="mi">15</span><span class="err">×</span> <span class="k">for</span> <span class="n">typical</span> <span class="n">generation</span>
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
-<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.generation.kv_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">KVCache</span><span class="p">,</span> <span class="n">enable_kv_cache</span>
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.perf.memoization</span><span class="w"> </span><span class="kn">import</span> <span class="n">KVCache</span><span class="p">,</span> <span class="n">enable_kv_cache</span>
 
 <span class="c1"># Test cache with small transformer</span>
 <span class="n">cache</span> <span class="o">=</span> <span class="n">KVCache</span><span class="p">(</span>
@@ -1304,9 +1234,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="systems-thinking-questions">
-<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Permalink to this heading">#</a></h2>
+<h2>Systems Thinking Questions<a class="headerlink" href="#systems-thinking-questions" title="Link to this heading">#</a></h2>
 <section id="real-world-production-challenges">
-<h3>Real-World Production Challenges<a class="headerlink" href="#real-world-production-challenges" title="Permalink to this heading">#</a></h3>
+<h3>Real-World Production Challenges<a class="headerlink" href="#real-world-production-challenges" title="Link to this heading">#</a></h3>
 <p><strong>Memory-Speed Trade-off Analysis</strong>:</p>
 <ul class="simple">
 <li><p>KV cache uses ~18MB per batch for GPT-2 (FP16). For batch=32, that’s 576MB.</p></li>
@@ -1337,7 +1267,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="production-optimization-patterns">
-<h3>Production Optimization Patterns<a class="headerlink" href="#production-optimization-patterns" title="Permalink to this heading">#</a></h3>
+<h3>Production Optimization Patterns<a class="headerlink" href="#production-optimization-patterns" title="Link to this heading">#</a></h3>
 <p><strong>Multi-Level Caching</strong>:</p>
 <ul class="simple">
 <li><p>What if you cache not just K,V but intermediate layer activations?</p></li>
@@ -1353,7 +1283,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="mathematical-foundations">
-<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h3>
 <p><strong>Complexity Reduction</strong>:</p>
 <ul class="simple">
 <li><p>Why does KV caching transform O(n²) into O(n)?</p></li>
@@ -1374,7 +1304,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 </section>
 <section id="huggingface-cache-patterns-comparison">
-<h3>HuggingFace Cache Patterns Comparison<a class="headerlink" href="#huggingface-cache-patterns-comparison" title="Permalink to this heading">#</a></h3>
+<h3>HuggingFace Cache Patterns Comparison<a class="headerlink" href="#huggingface-cache-patterns-comparison" title="Link to this heading">#</a></h3>
 <p><strong>Static vs Dynamic Cache</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch (Module 17): Static pre-allocation</span>
 <span class="n">cache</span> <span class="o">=</span> <span class="n">KVCache</span><span class="p">(</span><span class="n">max_seq_len</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>  <span class="c1"># Fixed size, O(1) updates</span>
@@ -1397,9 +1327,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </section>
 </section>
 <section id="performance-characteristics">
-<h2>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h2>
+<h2>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading">#</a></h2>
 <section id="expected-speedup-by-sequence-length">
-<h3>Expected Speedup by Sequence Length<a class="headerlink" href="#expected-speedup-by-sequence-length" title="Permalink to this heading">#</a></h3>
+<h3>Expected Speedup by Sequence Length<a class="headerlink" href="#expected-speedup-by-sequence-length" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Speedup Characteristics (GPT-2 on CPU):
 ┌─────────────┬──────────────┬──────────────┬──────────┐
 │ Seq Length  │ No Cache     │ With Cache   │ Speedup  │
@@ -1416,7 +1346,7 @@ Why? Longer sequences = more redundant computation without cache.
 </div>
 </section>
 <section id="memory-usage-by-model-size">
-<h3>Memory Usage by Model Size<a class="headerlink" href="#memory-usage-by-model-size" title="Permalink to this heading">#</a></h3>
+<h3>Memory Usage by Model Size<a class="headerlink" href="#memory-usage-by-model-size" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Cache Memory Requirements (FP16, batch_size=1):
 ┌──────────────┬────────┬────────┬─────────┬──────────────┐
 │ Model        │ Layers │ Heads  │ Seq Len │ Cache Memory │
@@ -1432,7 +1362,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </div>
 </section>
 <section id="throughput-impact">
-<h3>Throughput Impact<a class="headerlink" href="#throughput-impact" title="Permalink to this heading">#</a></h3>
+<h3>Throughput Impact<a class="headerlink" href="#throughput-impact" title="Link to this heading">#</a></h3>
 <p><strong>Single Sequence Generation</strong>:</p>
 <ul class="simple">
 <li><p>Without cache: Throughput decreases as sequence grows (O(n²) bottleneck)</p></li>
@@ -1447,12 +1377,12 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </section>
 </section>
 <section id="where-this-code-lives-in-the-final-package">
-<h2>Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<h2>Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Link to this heading">#</a></h2>
 <p><strong>Package Export</strong>: Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.generation.kv_cache</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When students install tinytorch, they import your work like this:</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.generation.kv_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">KVCache</span><span class="p">,</span> <span class="n">enable_kv_cache</span><span class="p">,</span> <span class="n">disable_kv_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.perf.memoization</span><span class="w"> </span><span class="kn">import</span> <span class="n">KVCache</span><span class="p">,</span> <span class="n">enable_kv_cache</span><span class="p">,</span> <span class="n">disable_kv_cache</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiHeadAttention</span>  <span class="c1"># Base class from Module 12</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.models.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span>  <span class="c1"># Architecture from Module 13</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span>  <span class="c1"># Architecture from Module 13</span>
 
 <span class="c1"># Usage in generation:</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">GPT</span><span class="p">(</span><span class="n">vocab_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">num_layers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -1468,9 +1398,9 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 <p>Your KV caching implementation becomes the foundation for efficient inference in the TinyTorch package, used by subsequent modules for text generation, chat applications, and deployment scenarios.</p>
 </section>
 <section id="common-challenges-and-solutions">
-<h2>Common Challenges and Solutions<a class="headerlink" href="#common-challenges-and-solutions" title="Permalink to this heading">#</a></h2>
+<h2>Common Challenges and Solutions<a class="headerlink" href="#common-challenges-and-solutions" title="Link to this heading">#</a></h2>
 <section id="challenge-1-cache-synchronization-across-layers">
-<h3>Challenge 1: Cache Synchronization Across Layers<a class="headerlink" href="#challenge-1-cache-synchronization-across-layers" title="Permalink to this heading">#</a></h3>
+<h3>Challenge 1: Cache Synchronization Across Layers<a class="headerlink" href="#challenge-1-cache-synchronization-across-layers" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Keeping cache consistent when different layers process at different speeds or batch items have variable lengths.</p>
 <p><strong>Solution</strong>:</p>
 <ul class="simple">
@@ -1489,7 +1419,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </div>
 </section>
 <section id="challenge-2-memory-overhead-for-large-models">
-<h3>Challenge 2: Memory Overhead for Large Models<a class="headerlink" href="#challenge-2-memory-overhead-for-large-models" title="Permalink to this heading">#</a></h3>
+<h3>Challenge 2: Memory Overhead for Large Models<a class="headerlink" href="#challenge-2-memory-overhead-for-large-models" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Cache memory grows with sequence length and batch size, potentially exceeding GPU memory.</p>
 <p><strong>Solution</strong>:</p>
 <ul class="simple">
@@ -1508,7 +1438,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </div>
 </section>
 <section id="challenge-3-correctness-validation">
-<h3>Challenge 3: Correctness Validation<a class="headerlink" href="#challenge-3-correctness-validation" title="Permalink to this heading">#</a></h3>
+<h3>Challenge 3: Correctness Validation<a class="headerlink" href="#challenge-3-correctness-validation" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Cached generation must produce identical outputs to non-cached generation.</p>
 <p><strong>Solution</strong>:</p>
 <ul class="simple">
@@ -1531,7 +1461,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </div>
 </section>
 <section id="challenge-4-integration-without-breaking-existing-code">
-<h3>Challenge 4: Integration Without Breaking Existing Code<a class="headerlink" href="#challenge-4-integration-without-breaking-existing-code" title="Permalink to this heading">#</a></h3>
+<h3>Challenge 4: Integration Without Breaking Existing Code<a class="headerlink" href="#challenge-4-integration-without-breaking-existing-code" title="Link to this heading">#</a></h3>
 <p><strong>Problem</strong>: Adding caching shouldn’t require modifying Modules 12-13 (attention, transformer).</p>
 <p><strong>Solution</strong>:</p>
 <ul class="simple">
@@ -1554,7 +1484,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 </section>
 </section>
 <section id="ready-to-build">
-<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>You’re about to implement the optimization that makes production language models economically viable! KV caching is THE technique that transformed LLMs from research toys into products used by millions daily.</p>
 <p>This is where theory meets practice in ML systems engineering. You’ll see firsthand how a simple idea - “don’t recompute what never changes” - can deliver 10-15x speedup and make the impossible possible.</p>
 <p><strong>What makes this module special</strong>: Unlike many optimizations that require deep algorithmic changes, KV caching is conceptually simple but profoundly impactful. You’ll implement it from scratch, measure the dramatic speedup, and understand the memory-speed trade-offs that guide production deployments.</p>
@@ -1570,7 +1500,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/17_memoization/memoization_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/17_memoization/memoization_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/17_memoization/memoization_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1579,7 +1509,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 ⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -1588,7 +1518,7 @@ Formula: memory = num_layers × num_heads × max_seq_len × head_dim × 2 × 2 b
 📖 View Source</div>
 <p class="sd-card-text">Browse the Jupyter notebook source and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/17_memoization/memoization_dev.ipynb</span></a></div>
 </div>
 </div>
 </div>

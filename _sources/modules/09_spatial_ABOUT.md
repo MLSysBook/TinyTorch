@@ -233,13 +233,13 @@ Ensure you understand the foundations from previous modules:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify prerequisite modules are complete
-tito test --module tensor      # Module 01: Tensor operations
-tito test --module activations # Module 02: ReLU activation
-tito test --module layers      # Module 03: Linear layers
-tito test --module dataloader  # Module 08: Batch loading
+tito test tensor      # Module 01: Tensor operations
+tito test activations # Module 02: ReLU activation
+tito test layers      # Module 03: Linear layers
+tito test dataloader  # Module 08: Batch loading
 ```
 
 **Why These Prerequisites**:
@@ -255,7 +255,7 @@ tito test --module dataloader  # Module 08: Batch loading
 3. **Create MaxPool2d and AvgPool2d**: Implement spatial downsampling with different aggregation strategies
 4. **Build Flatten operation**: Connect spatial feature maps to dense layers
 5. **Design SimpleCNN architecture**: Compose spatial and dense layers into complete CNN
-6. **Export and verify**: `tito module complete 09 && tito test --module spatial`
+6. **Export and verify**: `tito module complete 09 && tito test spatial`
 
 **Development Tips**:
 - Start with small inputs (8×8 images) to debug convolution logic before scaling to 32×32
@@ -271,7 +271,7 @@ Run the full test suite to verify spatial operation functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module spatial
+tito test spatial
 
 # Direct pytest execution
 python -m pytest tests/ -k spatial -v

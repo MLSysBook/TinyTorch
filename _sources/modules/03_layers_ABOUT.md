@@ -137,13 +137,13 @@ Ensure you've completed the prerequisite modules:
 
 ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+source scripts/activate-tinytorch
 
 # Verify Module 01 (Tensor) is complete
-tito test --module tensor
+tito test tensor
 
 # Verify Module 02 (Activations) is complete
-tito test --module activations
+tito test activations
 ```
 
 ### Development Workflow
@@ -153,7 +153,7 @@ tito test --module activations
 3. **Add Dropout layer**: Implement training/inference mode switching with proper mask generation and scaling
 4. **Test layer composition**: Verify manual composition of multi-layer networks with mixed layer types
 5. **Analyze systems behavior**: Run memory analysis to understand parameter scaling with network size
-6. **Export and verify**: `tito module complete 03 && tito test --module layers`
+6. **Export and verify**: `tito module complete 03 && tito test layers`
 
 ## Testing
 
@@ -163,7 +163,7 @@ Run the full test suite to verify layer functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module layers
+tito test layers
 
 # Direct pytest execution
 python -m pytest tests/ -k layers -v
