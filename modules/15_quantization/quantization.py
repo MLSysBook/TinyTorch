@@ -1331,7 +1331,90 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Systems Analysis - Quantization in Production
+## 5. Verification - Proving Optimization Works
+
+Before analyzing quantization in production, let's verify that our optimization actually works using real measurements.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "verify_quantization", "solution": false}
+def verify_quantization_works(original_model, quantized_model):
+    """
+    Verify quantization actually reduces memory using real .nbytes measurements.
+
+    This is NOT a theoretical calculation - we measure actual bytes consumed
+    by numpy arrays to prove the optimization is real.
+
+    Args:
+        original_model: Model with FP32 parameters
+        quantized_model: Model with INT8 quantized parameters
+
+    Returns:
+        dict: Verification results with actual_reduction, original_mb, quantized_mb
+
+    Example:
+        >>> original = Linear(100, 50)
+        >>> quantized = Linear(100, 50)
+        >>> quantize_model(SimpleModel(quantized))
+        >>> results = verify_quantization_works(SimpleModel(original), SimpleModel(quantized))
+        >>> assert results['actual_reduction'] >= 3.5  # Real 4× reduction
+    """
+    print("🔬 Verifying actual memory reduction with .nbytes...")
+
+    # Collect actual bytes from original FP32 model
+    original_bytes = 0
+    for param in original_model.parameters():
+        if hasattr(param, 'data') and hasattr(param.data, 'nbytes'):
+            original_bytes += param.data.nbytes
+
+    # Collect actual bytes from quantized INT8 model
+    quantized_bytes = 0
+    for layer in quantized_model.layers:
+        if isinstance(layer, QuantizedLinear):
+            quantized_bytes += layer.q_weight.data.nbytes
+            if layer.q_bias is not None:
+                quantized_bytes += layer.q_bias.data.nbytes
+
+    # Calculate actual reduction
+    actual_reduction = original_bytes / max(quantized_bytes, 1)
+
+    # Display results
+    print(f"   Original model: {original_bytes / MB_TO_BYTES:.2f} MB (FP32)")
+    print(f"   Quantized model: {quantized_bytes / MB_TO_BYTES:.2f} MB (INT8)")
+    print(f"   Actual reduction: {actual_reduction:.1f}×")
+    print(f"   {'✓' if actual_reduction >= 3.5 else '✗'} Meets 4× reduction target")
+
+    # Verify target met
+    assert actual_reduction >= 3.5, f"Expected ~4× reduction, got {actual_reduction:.1f}×"
+
+    print(f"\n✅ VERIFIED: Quantization achieves real {actual_reduction:.1f}× memory reduction!")
+    print(f"   This is measured using actual .nbytes (not theoretical calculation)")
+
+    return {
+        'actual_reduction': actual_reduction,
+        'original_mb': original_bytes / MB_TO_BYTES,
+        'quantized_mb': quantized_bytes / MB_TO_BYTES,
+        'verified': actual_reduction >= 3.5
+    }
+
+# Run verification example when developing
+if __name__ == "__main__":
+    # Create test models
+    orig = Linear(100, 50)
+    orig.weight = Tensor(np.random.randn(100, 50))
+    orig.bias = Tensor(np.random.randn(50))
+    original_test = SimpleModel(orig)
+
+    quant = Linear(100, 50)
+    quant.weight = Tensor(np.random.randn(100, 50))
+    quant.bias = Tensor(np.random.randn(50))
+    quantized_test = SimpleModel(quant)
+    quantize_model(quantized_test)
+
+    verify_quantization_works(original_test, quantized_test)
+
+# %% [markdown]
+"""
+## 6. Systems Analysis - Quantization in Production
 
 Now let's measure the real-world impact of quantization through systematic analysis.
 """
@@ -1677,45 +1760,16 @@ def test_module():
 
     print("✅ Edge cases handled correctly!")
 
-    # ✨ VERIFICATION: Actual Optimization Effects
-    print("\n🔬 VERIFICATION: Actual Optimization Effects...")
-    print("=" * 50)
-
-    print("\n✓ Verifying actual memory reduction with .nbytes...")
-    # Collect actual bytes from original FP32 model
-    original_bytes = 0
-    for layer in [orig_layer1, orig_layer2, orig_layer3]:
-        if isinstance(layer, Linear):
-            original_bytes += layer.weight.data.nbytes
-            if layer.bias is not None:
-                original_bytes += layer.bias.data.nbytes
-
-    # Collect actual bytes from quantized INT8 model
-    quantized_bytes = 0
-    for layer in model.layers:
-        if isinstance(layer, QuantizedLinear):
-            quantized_bytes += layer.q_weight.data.nbytes
-            if layer.q_bias is not None:
-                quantized_bytes += layer.q_bias.data.nbytes
-
-    actual_reduction = original_bytes / max(quantized_bytes, 1)
-
-    print(f"   Original model: {original_bytes / MB_TO_BYTES:.2f} MB (FP32)")
-    print(f"   Quantized model: {quantized_bytes / MB_TO_BYTES:.2f} MB (INT8)")
-    print(f"   Actual reduction: {actual_reduction:.1f}×")
-    print(f"   {'✓' if actual_reduction >= 3.5 else '✗'} Meets 4× reduction target")
-
-    assert actual_reduction >= 3.5, f"Insufficient reduction: {actual_reduction:.1f}×"
-
-    print(f"\n✅ VERIFIED: Quantization achieves real {actual_reduction:.1f}× memory reduction!")
-    print(f"   This is measured using actual .nbytes (not theoretical calculation)")
+    # Verify quantization actually works
+    print()
+    verification_results = verify_quantization_works(original_model, model)
 
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("📈 Quantization system provides:")
     print(f"   • {memory_comparison['compression_ratio']:.1f}× memory reduction")
     print(f"   • <{relative_error:.1%} accuracy loss")
-    print(f"   • ✓ VERIFIED with actual .nbytes measurements")
+    print(f"   • ✓ VERIFIED: {verification_results['actual_reduction']:.1f}× actual reduction")
     print(f"   • Production-ready INT8 quantization")
     print("Run: tito module complete 15")
 
