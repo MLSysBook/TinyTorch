@@ -43,10 +43,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r docs/requirements.txt
-          
+          pip install -r site/requirements.txt
+
       - name: Build Jupyter Book
-        working-directory: ./docs
+        working-directory: ./site
         run: |
           jupyter-book build . --all
           # Ensure .nojekyll exists in build output for GitHub Pages
@@ -58,12 +58,12 @@ jobs:
             touch _build/html/.nojekyll
             echo "✅ Created .nojekyll in build output"
           fi
-          
+
       - name: Deploy to /dev/ subdirectory
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_build/html
+          publish_dir: ./site/_build/html
           destination_dir: dev  # Deploy to /dev/ subdirectory
           publish_branch: gh-pages  # Deploy to same branch as main site
           user_name: 'github-actions[bot]'

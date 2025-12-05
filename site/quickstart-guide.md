@@ -41,7 +41,7 @@ See [TITO CLI Reference](tito/overview.md) for detailed workflow and troubleshoo
 
 ```bash
 # Run system diagnostics
-tito system doctor
+tito system health
 ```
 
 You should see all green checkmarks. This confirms your environment is ready for hands-on ML systems building.
@@ -74,7 +74,7 @@ tito benchmark baseline
 - Your "Hello World" moment!
 - Generates score and saves results locally
 
-See [Community Guide](community.html) for complete features.
+See [Community Guide](community.md) for complete features.
 
 </div>
 
@@ -84,7 +84,7 @@ Let's build your first neural network component following the **TinyTorch workfl
 
 ```{mermaid}
 graph TD
-    Start[Clone & Setup] --> Edit[Edit Module<br/>tensor_dev.ipynb]
+    Start[Clone & Setup] --> Edit[Edit Module<br/>01_tensor.ipynb]
     Edit --> Export[Export to Package<br/>tito module complete 01]
     Export --> Test[Test Import<br/>from tinytorch import Tensor]
     Test --> Next[Continue to Module 02]

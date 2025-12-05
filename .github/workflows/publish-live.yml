@@ -6,14 +6,14 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'docs/**'
+      - 'site/**'
       - 'src/**'
       - '.github/workflows/publish-live.yml'
       - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
     paths:
-      - 'docs/**'
+      - 'site/**'
       - 'src/**'
       - 'tito/**'
   workflow_dispatch:
@@ -45,18 +45,18 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r docs/requirements.txt
+        pip install -r site/requirements.txt
 
     - name: Build Jupyter Book
       run: |
-        cd docs
+        cd site
         jupyter-book clean . || true
         jupyter-book build .
         # Ensure .nojekyll exists in build output for GitHub Pages
         # This prevents Jekyll from processing and ignoring _static/ files
         touch _build/html/.nojekyll
         echo "✅ Created .nojekyll in build output"
-        echo "=== Contents of docs after build ==="
+        echo "=== Contents of site after build ==="
         ls -la
         echo "=== Contents of _build/html ==="
         ls -la _build/html/ || echo "_build/html doesn't exist"
@@ -67,7 +67,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build/html
+        publish_dir: ./site/_build/html
         destination_dir: .  # Deploy to root of gh-pages branch
         publish_branch: gh-pages
         user_name: 'github-actions[bot]'

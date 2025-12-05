@@ -6,7 +6,7 @@
 # Workflow:
 # 1. Uses existing assignment notebooks if available (from tito nbgrader generate)
 # 2. Falls back to generating notebooks from modules if needed
-# 3. Copies notebooks to site/chapters/modules/ for Jupyter Book launch buttons
+# 3. Copies notebooks to docs/chapters/modules/ for Jupyter Book launch buttons
 
 set -e
 

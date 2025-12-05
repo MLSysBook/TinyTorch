@@ -86,16 +86,15 @@ TinyTorch/
 │   ├── 19_benchmarking/  # Module 19: Performance measurement
 │   └── 20_capstone/      # Module 20: Complete ML systems
 │
-├── site/              # 🌐 Course website (Jupyter Book)
+├── site/              # 🌐 Course website & documentation (Jupyter Book)
 │   ├── intro.md          # Landing page
 │   ├── _toc.yml          # Site navigation (links to modules)
-│   └── chapters/         # Site-specific content
-│
-├── docs/              # 📚 PDF book generation
+│   ├── _config.yml       # HTML website configuration
 │   ├── _config_pdf.yml   # PDF-specific configuration
-│   ├── _toc_pdf.yml      # Linear chapter ordering
-│   ├── cover.md          # Book cover
-│   └── preface.md        # Book preface
+│   ├── _toc_pdf.yml      # Linear chapter ordering for PDF
+│   ├── chapters/         # Course content chapters
+│   ├── modules/          # Module documentation
+│   └── tito/             # CLI reference documentation
 │
 ├── milestones/        # 🏆 Historical ML evolution - prove what you built!
 │   ├── 01_1957_perceptron/   # Rosenblatt's first trainable network
@@ -438,20 +437,20 @@ pytest tests/
 
 ### 🎓 For Students
 - **[Interactive Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete learning platform
-- **[Getting Started Guide](docs/README.md)** - Installation and first steps
-- **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Achieving the north star goal
+- **[Getting Started Guide](site/README.md)** - Installation and first steps
+- **[CIFAR-10 Training Guide](site/cifar10-training-guide.md)** - Achieving the north star goal
 - **[Module READMEs](/modules/)** - Individual module documentation
 
 ### 👨‍🏫 For Instructors
 - **[Instructor Guide](INSTRUCTOR.md)** - Complete teaching resources
 - **[TA Guide](TA_GUIDE.md)** - Teaching assistant preparation and common student errors
-- **[Team Onboarding](docs/TEAM_ONBOARDING.md)** - Getting started as an instructor or TA
-- **[NBGrader Integration](docs/nbgrader/)** - Automated grading setup and style guide
+- **[Team Onboarding](site/TEAM_ONBOARDING.md)** - Getting started as an instructor or TA
+- **[NBGrader Integration](site/nbgrader/)** - Automated grading setup and style guide
 
 ### 🛠️ For Developers
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to TinyTorch
-- **[Module Development](docs/development/module-rules.md)** - Creating and maintaining modules
-- **[Privacy & Data](docs/PRIVACY_DATA_RETENTION.md)** - Data handling policies
+- **[Module Development](site/development/module-rules.md)** - Creating and maintaining modules
+- **[Privacy & Data](site/PRIVACY_DATA_RETENTION.md)** - Data handling policies
 
 ## TinyMLPerf Competition & Leaderboard
 

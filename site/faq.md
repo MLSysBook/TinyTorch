@@ -228,7 +228,7 @@ Each milestone proves your framework works by running actual ML experiments.
 - Helpful for self-assessment
 - Use `tito checkpoint status` to view progress
 
-**📖 See [Student Workflow](student-workflow.md)** for the core development cycle.
+**📖 See [Module Workflow](tito/modules.md)** for the core development cycle.
 
 ---
 
@@ -248,14 +248,14 @@ cd TinyTorch
 source activate.sh
 
 # 3. Verify setup
-tito system doctor
+tito system health
 
 # 4. Start first module
 cd modules/01_tensor
 jupyter lab tensor_dev.py
 ```
 
-**📖 See [Quick Start Guide](quickstart-guide.md)** for detailed setup.
+**📖 See [Getting Started Guide](getting-started.md)** for detailed setup.
 
 ### What's the typical workflow?
 
@@ -272,7 +272,7 @@ cd ../../milestones/01_1957_perceptron
 python rosenblatt_forward.py  # Uses YOUR implementation!
 ```
 
-**📖 See [Student Workflow](student-workflow.md)** for complete details.
+**📖 See [Module Workflow](tito/modules.md)** for complete details.
 
 ### Can I use this in my classroom?
 
@@ -378,7 +378,7 @@ TinyTorch is developed at the intersection of academia and education:
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; color: #495057;">Ready to Start Building?</h3>
 <p style="margin: 0 0 1.5rem 0; color: #6c757d;">Jump in and start implementing ML systems from scratch</p>
-<a href="quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">15-Minute Start →</a>
+<a href="getting-started.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">Getting Started →</a>
 <a href="intro.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Learn More →</a>
 </div>
 

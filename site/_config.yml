@@ -35,15 +35,15 @@ exclude_patterns:
 # GitHub repository configuration for GitHub Pages
 repository:
   url: https://github.com/mlsysbook/TinyTorch
-  path_to_book: site
+  path_to_book: docs
   branch: main
 
 # HTML output configuration
 html:
-  use_issues_button: true
-  use_repository_button: true
-  use_edit_page_button: true
-  use_download_button: true
+  use_issues_button: false
+  use_repository_button: false
+  use_edit_page_button: false
+  use_download_button: false
   use_fullscreen_button: true
   
   # Custom styling
@@ -53,6 +53,7 @@ html:
   # Custom JavaScript
   extra_js:
     - _static/wip-banner.js
+    - _static/subscribe-modal.js
     - _static/ml-timeline.js
     - _static/hero-carousel.js
     - _static/sidebar-link.js
@@ -81,6 +82,11 @@ sphinx:
     - sphinxcontrib.mermaid
   config:
     mermaid_version: "10.6.1"
+    # Sidebar collapsible sections configuration
+    html_theme_options:
+      show_navbar_depth: 1  # Initial expanded depth (1 = top-level only)
+      collapse_navigation: false  # Allow navigation to be collapsible
+      navigation_depth: 4  # Maximum depth for navigation tree
 
 # Parse configuration for MyST Markdown
 parse:

@@ -55,7 +55,7 @@ if [ -f "_build/latex/tinytorch-course.pdf" ]; then
     PDF_SIZE=$(du -h "_build/latex/tinytorch-course.pdf" | cut -f1)
     echo ""
     echo "✅ PDF build complete!"
-    echo "📄 Output: site/_build/latex/tinytorch-course.pdf"
+    echo "📄 Output: docs/_build/latex/tinytorch-course.pdf"
     echo "📊 Size: ${PDF_SIZE}"
     echo ""
     echo "To view the PDF:"

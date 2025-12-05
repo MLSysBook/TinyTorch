@@ -8,7 +8,7 @@ TinyTorch follows a simple three-step cycle:
 
 ```{mermaid}
 graph LR
-    A[Edit Modules<br/>modules/NN_name/] --> B[Export to Package<br/>tito module complete N]
+    A[Work in Notebooks<br/>modules/NN_name.ipynb] --> B[Export to Package<br/>tito module complete N]
     B --> C[Validate with Milestones<br/>Run milestone scripts]
     C --> A
 
@@ -24,7 +24,7 @@ Work on module notebooks in `modules/`:
 ```bash
 # Example: Working on Module 03 (Layers)
 cd modules/03_layers
-jupyter lab layers_dev.ipynb
+jupyter lab 03_layers.ipynb
 ```
 
 Each module is a Jupyter notebook that you edit interactively. You'll:
@@ -73,6 +73,61 @@ Each milestone has a README explaining:
 - What you're learning
 
 See [Milestones Guide](chapters/milestones.md) for the full progression.
+
+## Testing Your Implementation
+
+TinyTorch uses a **three-phase testing approach** to ensure your code works correctly at every level:
+
+```bash
+# Run comprehensive tests for a module
+tito module test 03
+```
+
+### Three-Phase Testing
+
+When you run `tito module test`, it executes three phases:
+
+**Phase 1: Inline Unit Tests** (Yellow)
+- Quick sanity checks from the module source file
+- Tests the core functionality you just implemented
+- Fast feedback loop
+
+**Phase 2: Module Tests** (Blue)
+- Runs pytest with educational output (`--tinytorch`)
+- Shows **WHAT** each test checks
+- Explains **WHY** it matters  
+- Provides **learning tips** when tests fail
+- Groups tests by module for clarity
+
+**Phase 3: Integration Tests** (Magenta)
+- Verifies your module works with all previous modules
+- Tests gradient flow, layer composition, training loops
+- Catches "it works in isolation but fails in the system" bugs
+
+### Testing Options
+
+```bash
+# Full three-phase testing (recommended)
+tito module test 03
+
+# Only inline unit tests (quick check)
+tito module test 03 --unit-only
+
+# Skip integration tests (faster feedback)
+tito module test 03 --no-integration
+
+# Verbose output with details
+tito module test 03 -v
+```
+
+### Why Integration Tests Matter
+
+A common mistake is implementing a module that passes its own tests but breaks when combined with others. For example:
+- Your Layer might compute forward passes correctly but have wrong gradient shapes
+- Your Optimizer might update weights but break the computation graph
+- Your Attention might work for one head but fail with multiple heads
+
+Integration tests catch these issues early, before you spend hours debugging in milestones.
 
 ## Module Progression
 
@@ -208,7 +263,7 @@ tito community profile
 tito community update
 ```
 
-**Privacy:** All information is optional. Data is stored locally in `.tinytorch/` directory. See [Community Guide](community.html) for details.
+**Privacy:** All information is optional. Data is stored locally in `.tinytorch/` directory. See [Community Guide](community.md) for details.
 
 ### Benchmark Your Progress
 
@@ -226,7 +281,7 @@ tito benchmark capstone --track all
 
 **Capstone Benchmark:** Full performance evaluation across speed, compression, accuracy, and efficiency tracks.
 
-See [Community Guide](community.html) for complete community and benchmarking features.
+See [Community Guide](community.md) for complete community and benchmarking features.
 
 ## Instructor Integration
 

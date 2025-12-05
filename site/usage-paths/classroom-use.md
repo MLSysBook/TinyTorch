@@ -34,7 +34,7 @@
 </div>
 <div>
 <ul style="margin: 0; padding-left: 1rem;">
-<li><strong>Complete instructor guide</strong> with setup & grading ([available now](../instructor-guide.html))</li>
+<li><strong>Complete instructor guide</strong> with setup & grading ([available now](../instructor-guide.md))</li>
 <li><strong>Flexible pacing</strong> (14-18 weeks depending on depth)</li>
 <li><strong>Industry practices</strong> (Git, testing, documentation)</li>
 <li><strong>Academic foundation</strong> from university research</li>
@@ -46,7 +46,7 @@
 **Planned Course Duration:** 14-16 weeks (flexible pacing)
 **Student Outcome:** Complete ML framework supporting vision AND language models
 
-**Current Status:** Complete NBGrader integration available! See the [Instructor Guide](../instructor-guide.html) for setup, grading workflows, and sample solutions.
+**Current Status:** Complete NBGrader integration available! See the [Instructor Guide](../instructor-guide.md) for setup, grading workflows, and sample solutions.
 
 ---
 

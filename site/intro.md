@@ -1,5 +1,4 @@
-<!-- Updated main heading: Changed from "TinyTorch: Tensors to Systems" to "Build Your Own ML Framework"
-     for clearer value proposition and action-oriented messaging -->
+<!-- Main heading -->
 <h1 style="text-align: center; font-size: 3rem; margin: 0rem 0 0.5rem 0; font-weight: 700;">
 Build Your Own ML Framework
 </h1>
@@ -11,7 +10,7 @@ Hands-on labs for the <span style="font-weight: 600; color: #475569;">Machine Le
 </p>
 
 <h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 1.5rem 0 1rem 0; font-weight: 700;">
-Don't just import it. Build it.
+Don't import it. Build it.
 </h2>
 
 <!-- Enhanced description: Added "machine learning (ML)" clarification and "under the hood"
@@ -106,7 +105,7 @@ Capstone: Vision • Language • Speed • Compression tracks
 
 </div>
 
-**[Complete course structure](chapters/00-introduction)** • **[Daily workflow guide](student-workflow)** • **[Join the community](community)**
+**[Complete course structure](chapters/00-introduction)** • **[Getting started guide](getting-started)** • **[Join the community](community)**
 
 ## Recreate ML History
 
@@ -247,4 +246,44 @@ Perfect if you want to **debug ML systems**, **implement custom operations**, or
 
 ---
 
+## 🌍 Join the Community
+
+<div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #f1f5f9; font-size: 1.25rem; margin: 0 0 0.5rem 0; font-weight: 600;">
+    See learners building ML systems worldwide
+  </p>
+  <p style="color: #94a3b8; margin: 0 0 1.5rem 0;">
+    Add yourself to the map • Share your progress • Connect with builders
+  </p>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+  <a href="https://tinytorch.ai/join" target="_blank" 
+     style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); 
+            color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; 
+            text-decoration: none; font-weight: 600; font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+    Join the Map →
+  </a>
+    <a href="#" onclick="event.preventDefault(); if(window.openSubscribeModal) openSubscribeModal();" 
+       style="display: inline-block; background: rgba(255,255,255,0.1); 
+              border: 1px solid rgba(255,255,255,0.2);
+              color: #f1f5f9; padding: 0.75rem 2rem; border-radius: 0.5rem; 
+              text-decoration: none; font-weight: 600; font-size: 1rem;
+              transition: all 0.2s ease;">
+      ✉️ Subscribe
+    </a>
+  </div>
+</div>
+
+---
+
 **Next Steps**: **[Quick Start Guide](quickstart-guide)** (15 min) • **[Course Structure](chapters/00-introduction)** • **[FAQ](faq.md)**
+
+<div style="text-align: center; padding: 1.5rem 0; margin-top: 2rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">
+  <span style="color: #f97316;">🔥</span> <strong>TinyTorch</strong> 
+  <span style="margin: 0 0.75rem;">•</span> 
+  <a href="https://mlsysbook.ai" style="color: #64748b; text-decoration: none;">MLSysBook</a>
+  <span style="margin: 0 0.75rem;">•</span>
+  <a href="https://github.com/mlsysbook/TinyTorch" style="color: #64748b; text-decoration: none;">GitHub</a>
+  <span style="margin: 0 0.75rem;">•</span>
+  <a href="https://tinytorch.ai/leaderboard" style="color: #64748b; text-decoration: none;">Leaderboard</a>
+</div>
