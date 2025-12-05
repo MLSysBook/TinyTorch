@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -60,10 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/11_embeddings_ABOUT';</script>
     <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
-    <script src="../_static/wip-banner.js?v=5357532b"></script>
-    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
     <script src="../_static/sidebar-link.js?v=404b701b"></script>
     <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -712,8 +713,8 @@ document.write(`
 <span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tokenization
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tokenization
 </pre></div>
 </div>
 </section>
@@ -725,7 +726,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <li><p><strong>Build sinusoidal encodings</strong>: Compute sine/cosine position representations using mathematical formula</p></li>
 <li><p><strong>Create learned positions</strong>: Add trainable position embedding table with proper initialization</p></li>
 <li><p><strong>Integrate complete system</strong>: Combine token and position embeddings with flexible encoding strategies</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">11</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">embeddings</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">11</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">embeddings</span></code></p></li>
 </ol>
 </section>
 </section>
@@ -735,7 +736,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify embedding functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>embeddings
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>embeddings
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>embeddings<span class="w"> </span>-v
@@ -788,7 +789,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <section id="manual-testing-examples">
 <h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Link to this heading">#</a></h3>
 <p>Test your embedding implementation interactively:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.text.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">PositionalEncoding</span><span class="p">,</span> <span class="n">create_sinusoidal_embeddings</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">PositionalEncoding</span><span class="p">,</span> <span class="n">create_sinusoidal_embeddings</span>
 
 <span class="c1"># Create embedding layer</span>
 <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">256</span>

@@ -351,12 +351,12 @@ Ensure you have completed all Foundation tier modules:
 source scripts/activate-tinytorch
 
 # Verify all prerequisites (Training is the Foundation capstone!)
-tito test --module tensor      # Module 01: Tensor operations
-tito test --module activations # Module 02: Activation functions
-tito test --module layers      # Module 03: Neural network layers
-tito test --module losses      # Module 04: Loss functions
-tito test --module autograd    # Module 05: Automatic differentiation
-tito test --module optimizers  # Module 06: Parameter update algorithms
+tito test tensor      # Module 01: Tensor operations
+tito test activations # Module 02: Activation functions
+tito test layers      # Module 03: Neural network layers
+tito test losses      # Module 04: Loss functions
+tito test autograd    # Module 05: Automatic differentiation
+tito test optimizers  # Module 06: Parameter update algorithms
 ```
 
 ### Development Workflow
@@ -367,7 +367,7 @@ tito test --module optimizers  # Module 06: Parameter update algorithms
 4. **Build Trainer class**: Orchestrate complete training loop with train_epoch(), evaluate(), and checkpointing
 5. **Add gradient accumulation**: Support effective larger batch sizes with limited memory
 6. **Test end-to-end training**: Validate complete pipeline with real models and data
-7. **Export and verify**: `tito module complete 07 && tito test --module training`
+7. **Export and verify**: `tito module complete 07 && tito test training`
 
 ## Testing
 
@@ -377,7 +377,7 @@ Run the full test suite to verify complete training infrastructure:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module training
+tito test training
 
 # Direct pytest execution
 python -m pytest tests/ -k training -v

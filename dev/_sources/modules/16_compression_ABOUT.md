@@ -260,7 +260,7 @@ Ensure you understand compression foundations:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module quantization
+tito test quantization
 ```
 
 **Required knowledge**:
@@ -282,7 +282,7 @@ tito test --module quantization
 5. **Implement knowledge distillation**: Build teacher-student training with temperature scaling
 6. **Add low-rank approximation**: Factor large matrices using truncated SVD
 7. **Build compression pipeline**: Combine techniques sequentially
-8. **Export and verify**: `tito module complete 16 && tito test --module compression`
+8. **Export and verify**: `tito module complete 16 && tito test compression`
 
 ## Testing
 
@@ -292,7 +292,7 @@ Run the full test suite to verify compression functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module compression
+tito test compression
 
 # Direct pytest execution
 python -m pytest tests/ -k compression -v

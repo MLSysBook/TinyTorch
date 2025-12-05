@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -425,10 +425,11 @@ window.addEventListener("load", load);
 </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/05_autograd_ABOUT';</script>
     <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
-    <script src="../_static/wip-banner.js?v=5357532b"></script>
-    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
     <script src="../_static/sidebar-link.js?v=404b701b"></script>
     <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -1099,10 +1100,10 @@ document.write(`
 <span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>losses
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>activations
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>layers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>losses
 </pre></div>
 </div>
 </section>
@@ -1115,7 +1116,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <li><p><strong>Add backward() to Tensor</strong>: Implement reverse-mode differentiation with gradient accumulation and graph traversal</p></li>
 <li><p><strong>Create enable_autograd()</strong>: Monkey-patch Tensor operations to track gradients and build computation graphs</p></li>
 <li><p><strong>Extend to activations and losses</strong>: Add ReLUBackward, SigmoidBackward, MSEBackward, CrossEntropyBackward gradient functions</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">05</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">autograd</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">05</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">autograd</span></code></p></li>
 </ol>
 </section>
 </section>
@@ -1125,7 +1126,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify mathematical correctness:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>autograd
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>autograd
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/05_autograd/<span class="w"> </span>-v
@@ -1341,7 +1342,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </ul>
 <div class="tip admonition">
 <p class="admonition-title">Systems Reality Check</p>
-<p><strong>Production Context</strong>: PyTorch’s autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph optimization. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.</p>
+<p><strong>Production Context</strong>: PyTorch’s autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph perf. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.</p>
 <p><strong>Performance Note</strong>: For ResNet-50 (25M parameters), the computational graph stores ~100MB of intermediate activations during forward pass. Gradient checkpointing reduces this to ~10MB by recomputing activations, trading 30% extra computation for 90% memory savings - critical for training larger models on limited GPU memory.</p>
 <p><strong>Architecture Evolution</strong>: PyTorch originally used separate Variable wrapper but merged it into Tensor in v0.4.0 (2018) for cleaner API. Your implementation follows this modern enhanced-Tensor approach, not the deprecated Variable pattern.</p>
 </div>

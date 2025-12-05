@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -60,10 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/03_layers_ABOUT';</script>
     <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
-    <script src="../_static/wip-banner.js?v=5357532b"></script>
-    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
     <script src="../_static/sidebar-link.js?v=404b701b"></script>
     <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -552,10 +553,10 @@ During training, surviving elements are scaled by <code class="docutils literal 
 <span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify Module 01 (Tensor) is complete</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>tensor
 
 <span class="c1"># Verify Module 02 (Activations) is complete</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>activations
 </pre></div>
 </div>
 </section>
@@ -567,7 +568,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <li><p><strong>Add Dropout layer</strong>: Implement training/inference mode switching with proper mask generation and scaling</p></li>
 <li><p><strong>Test layer composition</strong>: Verify manual composition of multi-layer networks with mixed layer types</p></li>
 <li><p><strong>Analyze systems behavior</strong>: Run memory analysis to understand parameter scaling with network size</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">03</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">layers</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">03</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">layers</span></code></p></li>
 </ol>
 </section>
 </section>
@@ -577,7 +578,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify layer functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>layers
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>layers<span class="w"> </span>-v

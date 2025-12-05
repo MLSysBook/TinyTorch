@@ -367,8 +367,8 @@ Ensure you understand the foundations from previous modules:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module embeddings
-tito test --module attention
+tito test embeddings
+tito test attention
 ```
 
 **Required Background:**
@@ -384,7 +384,7 @@ tito test --module attention
 3. **Build MLP**: Two linear layers with 4x expansion ratio and GELU activation (position-wise transformation)
 4. **Create TransformerBlock**: Combine attention and MLP with pre-norm residual connections (LayerNorm before sub-layers)
 5. **Add GPT model**: Stack transformer blocks with token+positional embeddings, causal masking, and generation
-6. **Export and verify**: `tito module complete 13 && tito test --module transformers`
+6. **Export and verify**: `tito module complete 13 && tito test transformers`
 
 ## Testing
 
@@ -394,7 +394,7 @@ Run the full test suite to verify transformer functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module transformers
+tito test transformers
 
 # Direct pytest execution
 python -m pytest tests/ -k transformers -v
@@ -476,11 +476,11 @@ print(f"Generated {generated.shape[1] - prompt.shape[1]} new tokens")
 
 ```python
 # When students install tinytorch, they import your work like this:
-from tinytorch.models.transformer import GPT, TransformerBlock
+from tinytorch.core.transformer import GPT, TransformerBlock
 from tinytorch.nn import LayerNorm, MLP  # Your normalization and feed-forward implementations
 from tinytorch.core.tensor import Tensor  # Foundation from Module 01
 from tinytorch.core.attention import MultiHeadAttention  # From Module 12
-from tinytorch.text.embeddings import Embedding  # From Module 11
+from tinytorch.core.embeddings import Embedding  # From Module 11
 
 # Example: Build a GPT-2 scale model
 gpt2 = GPT(

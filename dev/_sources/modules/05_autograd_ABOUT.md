@@ -319,10 +319,10 @@ Ensure you understand the mathematical building blocks:
 source scripts/activate-tinytorch
 
 # Verify prerequisite modules
-tito test --module tensor
-tito test --module activations
-tito test --module layers
-tito test --module losses
+tito test tensor
+tito test activations
+tito test layers
+tito test losses
 ```
 
 ### Development Workflow
@@ -332,7 +332,7 @@ tito test --module losses
 4. **Add backward() to Tensor**: Implement reverse-mode differentiation with gradient accumulation and graph traversal
 5. **Create enable_autograd()**: Monkey-patch Tensor operations to track gradients and build computation graphs
 6. **Extend to activations and losses**: Add ReLUBackward, SigmoidBackward, MSEBackward, CrossEntropyBackward gradient functions
-7. **Export and verify**: `tito module complete 05 && tito test --module autograd`
+7. **Export and verify**: `tito module complete 05 && tito test autograd`
 
 ## Testing
 
@@ -341,7 +341,7 @@ Run the full test suite to verify mathematical correctness:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module autograd
+tito test autograd
 
 # Direct pytest execution
 python -m pytest tests/05_autograd/ -v
@@ -537,7 +537,7 @@ After implementing autograd yourself, you understand that `loss.backward()` trav
 ```{admonition} Systems Reality Check
 :class: tip
 
-**Production Context**: PyTorch's autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph optimization. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.
+**Production Context**: PyTorch's autograd engine processes billions of gradient computations per second using optimized C++ gradient functions, memory pooling, and compiled graph perf. Your Python implementation demonstrates the mathematical principles but runs ~100-1000x slower.
 
 **Performance Note**: For ResNet-50 (25M parameters), the computational graph stores ~100MB of intermediate activations during forward pass. Gradient checkpointing reduces this to ~10MB by recomputing activations, trading 30% extra computation for 90% memory savings - critical for training larger models on limited GPU memory.
 

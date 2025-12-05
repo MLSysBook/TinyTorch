@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=afcf7c3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=009d37f4" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -60,10 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/13_transformers_ABOUT';</script>
     <script src="../_static/ml-timeline.js?v=76e9b3e3"></script>
-    <script src="../_static/wip-banner.js?v=5357532b"></script>
-    <script src="../_static/marimo-badges.js?v=1e5d2842"></script>
+    <script src="../_static/wip-banner.js?v=04a7e74d"></script>
+    <script src="../_static/marimo-badges.js?v=e6289128"></script>
     <script src="../_static/sidebar-link.js?v=404b701b"></script>
     <script src="../_static/hero-carousel.js?v=10341d2a"></script>
+    <script src="../_static/subscribe-modal.js?v=42919b64"></script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -807,8 +808,8 @@ After softmax: -∞ → probability 0
 <span class="nb">source</span><span class="w"> </span>scripts/activate-tinytorch
 
 <span class="c1"># Verify prerequisite modules</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>embeddings
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>attention
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>embeddings
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>attention
 </pre></div>
 </div>
 <p><strong>Required Background:</strong></p>
@@ -827,7 +828,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <li><p><strong>Build MLP</strong>: Two linear layers with 4x expansion ratio and GELU activation (position-wise transformation)</p></li>
 <li><p><strong>Create TransformerBlock</strong>: Combine attention and MLP with pre-norm residual connections (LayerNorm before sub-layers)</p></li>
 <li><p><strong>Add GPT model</strong>: Stack transformer blocks with token+positional embeddings, causal masking, and generation</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">13</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">transformers</span></code></p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span> <span class="pre">13</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">transformers</span></code></p></li>
 </ol>
 </section>
 </section>
@@ -837,7 +838,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Link to this heading">#</a></h3>
 <p>Run the full test suite to verify transformer functionality:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>transformers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>transformers
 
 <span class="c1"># Direct pytest execution</span>
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>transformers<span class="w"> </span>-v
@@ -920,11 +921,11 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <h2>Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Link to this heading">#</a></h2>
 <p><strong>Package Export:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.models.transformer</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When students install tinytorch, they import your work like this:</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.models.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span><span class="p">,</span> <span class="n">TransformerBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPT</span><span class="p">,</span> <span class="n">TransformerBlock</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">LayerNorm</span><span class="p">,</span> <span class="n">MLP</span>  <span class="c1"># Your normalization and feed-forward implementations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>  <span class="c1"># Foundation from Module 01</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.attention</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiHeadAttention</span>  <span class="c1"># From Module 12</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.text.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span>  <span class="c1"># From Module 11</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">Embedding</span>  <span class="c1"># From Module 11</span>
 
 <span class="c1"># Example: Build a GPT-2 scale model</span>
 <span class="n">gpt2</span> <span class="o">=</span> <span class="n">GPT</span><span class="p">(</span>

@@ -21,7 +21,7 @@ learning_objectives:
 
 The Acceleration module teaches you to extract maximum performance from modern CPUs through hardware-aware optimization techniques. You'll learn to leverage optimized BLAS libraries for vectorized matrix operations, implement cache-friendly algorithms that exploit memory hierarchy, and apply kernel fusion to eliminate memory bandwidth bottlenecks. By mastering the roofline model and arithmetic intensity analysis, you'll develop the systematic thinking needed to accelerate real ML systems from research prototypes to production deployments.
 
-This is CPU-focused acceleration—the foundation for understanding GPU optimization. You'll work with NumPy's BLAS backend (MKL, OpenBLAS) to achieve 10-100x speedups over naive Python, understand why most operations are memory-bound rather than compute-bound, and learn the measurement-driven optimization workflow used by PyTorch, TensorFlow, and production ML systems.
+This is CPU-focused acceleration—the foundation for understanding GPU perf. You'll work with NumPy's BLAS backend (MKL, OpenBLAS) to achieve 10-100x speedups over naive Python, understand why most operations are memory-bound rather than compute-bound, and learn the measurement-driven optimization workflow used by PyTorch, TensorFlow, and production ML systems.
 
 ## Learning Objectives
 
@@ -349,8 +349,8 @@ python -c "import numpy as np; np.show_config()"
 
 Verify prerequisite modules work:
 ```bash
-tito test --module tensor
-tito test --module profiling
+tito test tensor
+tito test profiling
 ```
 
 ### Development Workflow
@@ -384,7 +384,7 @@ tito test --module profiling
 6. **Export and verify**:
    ```bash
    tito module complete 18
-   tito test --module acceleration
+   tito test acceleration
    ```
 
 ## Testing
@@ -395,7 +395,7 @@ Run the full test suite to verify acceleration functionality:
 
 ```bash
 # TinyTorch CLI (recommended)
-tito test --module acceleration
+tito test acceleration
 
 # Direct pytest execution
 python -m pytest tests/ -k acceleration -v
@@ -494,7 +494,7 @@ print(f"Speedup: {unfused_time/fused_time:.2f}x")
 print(f"Numerically equivalent: {np.allclose(y_fused.data, y_unfused.data)}")
 
 # Measure with profiler
-from tinytorch.profiling.profiler import Profiler
+from tinytorch.perf.profiling import Profiler
 
 profiler = Profiler()
 
