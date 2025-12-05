@@ -25,7 +25,9 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import box
 
 from .base import BaseCommand
+from .login import LoginCommand
 from ..core.console import get_console
+from ..core.auth import is_logged_in
 
 def _print_file_update(console, file_path: Path) -> None:
     """Print a notification when a file is created or updated."""
@@ -357,33 +359,65 @@ class SetupCommand(BaseCommand):
         ))
 
     def prompt_community_registration(self) -> None:
-        """Prompt user to join the TinyTorch community map."""
+        """Prompt user to join the TinyTorch community."""
+        # Check if already logged in
+        if is_logged_in():
+             self.console.print("\n[green]✅ You are already connected to the TinyTorch community.[/green]")
+             return
+
         self.console.print()
         self.console.print(Panel.fit(
             "[bold cyan]🌍 Join the TinyTorch Community[/bold cyan]\n\n"
-            "Add yourself to the map at [link=https://tinytorch.ai/map]tinytorch.ai/map[/link]\n\n"
+            "Connect at [link=https://tinytorch.ai/community/?action=join]tinytorch.ai/community/?action=join[/link]\n\n"
             "[dim]• See learners worldwide\n"
-            "• Country & institution (optional)\n"
-            "• No account required[/dim]",
+            "• Leaderboard submissions\n"
+            "• Progress syncing[/dim]",
             border_style="cyan",
             box=box.ROUNDED
         ))
         
-        join = Confirm.ask("\n[bold]Join the community map?[/bold]", default=True)
+        join = Confirm.ask("\n[bold]Join the community?[/bold]", default=True)
         
         if join:
-            url = "https://tinytorch.ai/join"
-            self.console.print(f"\n[cyan]Opening registration...[/cyan]")
+            self.console.print("\n[cyan]Starting community login process...[/cyan]")
+            login_cmd = LoginCommand(self.config)
+            
+            # Create a dummy Namespace for login command arguments
+            login_args = Namespace(force=False) 
+            
             try:
-                webbrowser.open(url)
-                self.console.print(f"[green]✓[/green] Browser opened")
-                self.console.print(f"[dim]  {url}[/dim]")
-            except Exception:
-                self.console.print(f"[yellow]Could not open browser.[/yellow]")
-                self.console.print(f"Please visit: [cyan]{url}[/cyan]")
-            self.console.print("\n[green]Welcome to the community! 🎉[/green]")
+                login_result = login_cmd.run(login_args)
+                
+                if login_result == 0:
+                    self.console.print("[green]✅ Successfully connected to the TinyTorch community![/green]")
+                else:
+                    self.console.print("[yellow]⚠️  Community connection failed or was cancelled. You can try again later with 'tito login'.[/yellow]")
+            except Exception as e:
+                 self.console.print(f"[yellow]⚠️  Error during login: {e}[/yellow]")
         else:
-            self.console.print("[dim]No problem! You can join anytime at tinytorch.ai/join[/dim]")
+            self.console.print("[dim]No problem! You can join anytime at tinytorch.ai/community[/dim]")
+
+    def prompt_community_login(self) -> None:
+        """Prompt user to log in to the TinyTorch community via CLI."""
+        self.console.print()
+        if Confirm.ask("[bold]Would you like to connect your TinyTorch CLI to the community now (for leaderboard submissions, progress syncing, etc.)?[/bold]", default=True):
+            self.console.print("\n[cyan]Starting community login process...[/cyan]")
+            login_cmd = LoginCommand(self.config)
+            
+            # Create a dummy Namespace for login command arguments
+            login_args = Namespace(force=False) 
+            
+            try:
+                login_result = login_cmd.run(login_args)
+                
+                if login_result == 0:
+                    self.console.print("[green]✅ Successfully connected to the TinyTorch community![/green]")
+                else:
+                    self.console.print("[yellow]⚠️  Community connection failed or was cancelled. You can try again later with 'tito community login'.[/yellow]")
+            except Exception as e:
+                 self.console.print(f"[yellow]⚠️  Error during login: {e}[/yellow]")
+        else:
+            self.console.print("[dim]You can connect to the community anytime with 'tito community login'.[/dim]")
     
     def run(self, args: Namespace) -> int:
         """Execute the setup command."""
@@ -431,6 +465,9 @@ class SetupCommand(BaseCommand):
             
             # Prompt to join community
             self.prompt_community_registration()
+
+            # Prompt to login to CLI
+            # self.prompt_community_login()
             
             return 0
             
