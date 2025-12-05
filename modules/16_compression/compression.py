@@ -1629,9 +1629,37 @@ def test_module():
 
     print(f"✅ Low-rank: {compression_ratio:.2f}x compression, {error:.3f} error")
 
+    # ✨ VERIFICATION: Actual Optimization Effects
+    print("\n🔬 VERIFICATION: Actual Optimization Effects...")
+    print("=" * 50)
+
+    print("\n✓ Verifying pruning sparsity...")
+    # Count actual zeros in pruned model
+    zeros = sum(np.sum(p.data == 0) for p in model.parameters())
+    total = sum(p.data.size for p in model.parameters())
+    sparsity = zeros / total
+    memory_bytes = sum(p.data.nbytes for p in model.parameters())
+
+    print(f"   Total parameters: {total:,}")
+    print(f"   Zero parameters: {zeros:,}")
+    print(f"   Sparsity achieved: {sparsity*100:.1f}%")
+    print(f"   Memory footprint: {memory_bytes / MB_TO_BYTES:.2f} MB (unchanged - dense storage)")
+
+    target_sparsity = compression_config['magnitude_prune']
+    assert abs(sparsity - target_sparsity) < 0.15, f"Sparsity target not met: {sparsity:.2f} vs {target_sparsity:.2f}"
+
+    print(f"\n✅ VERIFIED: {sparsity*100:.1f}% sparsity achieved")
+    print(f"⚠️  Memory saved: 0 MB (dense numpy arrays)")
+    print(f"💡 LEARNING: Compute savings ~{sparsity*100:.1f}% (skip zero multiplications)")
+    print(f"   In production: Use sparse formats (scipy.sparse.csr_matrix) for memory savings")
+
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
-    print("Run: tito module complete 18")
+    print("📈 Compression system provides:")
+    print(f"   • {sparsity*100:.1f}% sparsity")
+    print(f"   • ✓ VERIFIED with actual zero-counting")
+    print(f"   • Honest: Dense storage = no memory savings (educational limitation)")
+    print("Run: tito module complete 16")
 
 # Call the integration test
 test_module()
