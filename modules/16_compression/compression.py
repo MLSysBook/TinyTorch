@@ -338,7 +338,7 @@ Reconstruction Error:
 
 # %% [markdown]
 """
-## 3. Sparsity Measurement - Understanding Model Density
+## 3. Sparsity Measurement: Understanding Model Density
 
 Before we can compress models, we need to understand how dense they are. Sparsity measurement tells us what percentage of weights are zero (or effectively zero).
 
@@ -436,7 +436,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 4. Magnitude-Based Pruning - Removing Small Weights
+## 4. Magnitude-Based Pruning: Removing Small Weights
 
 Magnitude pruning is the simplest and most intuitive compression technique. It's based on the observation that weights with small magnitudes contribute little to the model's output.
 
@@ -593,7 +593,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Structured Pruning - Hardware-Friendly Compression
+## 5. Structured Pruning: Hardware-Friendly Compression
 
 While magnitude pruning creates scattered zeros throughout the network, structured pruning removes entire computational units (channels, neurons, heads). This creates sparsity patterns that modern hardware can actually accelerate.
 
@@ -766,7 +766,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 6. Low-Rank Approximation - Matrix Compression Through Factorization
+## 6. Low-Rank Approximation: Matrix Compression Through Factorization
 
 Low-rank approximation discovers that large weight matrices often contain redundant information that can be captured with much smaller matrices through mathematical decomposition.
 
@@ -914,7 +914,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 7. Knowledge Distillation - Learning from Teacher Models
+## 7. Knowledge Distillation: Learning from Teacher Models
 
 Knowledge distillation is like having an expert teacher simplify complex concepts for a student. The large "teacher" model shares its knowledge with a smaller "student" model, achieving similar performance with far fewer parameters.
 
@@ -1332,7 +1332,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Verification - Proving Pruning Works
+## 5. Verification: Proving Pruning Works
 
 Before analyzing compression in production, let's verify that our pruning actually achieves sparsity using real measurements.
 """
@@ -1403,7 +1403,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 6. Systems Analysis - Compression Techniques
+## 6. Systems Analysis: Compression Techniques
 
 Understanding the real-world effectiveness of different compression techniques through systematic measurement and comparison.
 

@@ -165,7 +165,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 1. Introduction - The Memory Wall Problem
+## 1. Introduction: The Memory Wall Problem
 
 Imagine trying to fit a library in your backpack. Neural networks face the same challenge - models are getting huge, but devices have limited memory!
 
@@ -241,7 +241,7 @@ Today you'll build the production-quality quantization system that makes all thi
 
 # %% [markdown]
 """
-## 2. Foundations - The Mathematics of Compression
+## 2. Foundations: The Mathematics of Compression
 
 ### Understanding the Core Challenge
 
@@ -354,7 +354,7 @@ INT8 gives us 4× memory reduction with <1% accuracy loss - the perfect balance 
 
 # %% [markdown]
 """
-## 3. Implementation - Building the Quantization Engine
+## 3. Implementation: Building the Quantization Engine
 
 ### Our Implementation Strategy
 
@@ -932,7 +932,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 4. Integration - Scaling to Full Neural Networks
+## 4. Integration: Scaling to Full Neural Networks
 
 ### The Model Quantization Challenge
 
@@ -1331,7 +1331,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Verification - Proving Optimization Works
+## 5. Verification: Proving Optimization Works
 
 Before analyzing quantization in production, let's verify that our optimization actually works using real measurements.
 """
@@ -1413,7 +1413,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 6. Systems Analysis - Quantization in Production
+## 6. Systems Analysis: Quantization in Production
 
 Now let's measure the real-world impact of quantization through systematic analysis.
 """

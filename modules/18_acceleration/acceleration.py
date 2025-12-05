@@ -91,7 +91,7 @@ We'll fix these issues with vectorization and kernel fusion, achieving 2-5× spe
 
 # %% [markdown]
 """
-## 1. Introduction - The Performance Challenge
+## 1. Introduction: The Performance Challenge
 
 Modern neural networks face two fundamental bottlenecks that limit their speed:
 
@@ -153,7 +153,7 @@ from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
-## 2. Foundations - Vectorization: From Loops to Lightning
+## 2. Foundations: Vectorization: From Loops to Lightning
 
 ### The SIMD Revolution
 
@@ -328,7 +328,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 3. Implementation - Kernel Fusion: Eliminating Memory Bottlenecks
+## 3. Implementation: Kernel Fusion: Eliminating Memory Bottlenecks
 
 ### The Memory Bandwidth Crisis
 
@@ -754,7 +754,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 4. Verification - Proving Vectorization Speedup
+## 4. Verification: Proving Vectorization Speedup
 
 Before analyzing acceleration performance, let's verify that vectorization actually provides significant speedup using real timing measurements.
 """
@@ -849,7 +849,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Systems Analysis - Performance Scaling Patterns
+## 5. Systems Analysis: Performance Scaling Patterns
 
 Let's analyze how our acceleration techniques perform across different scenarios and understand their scaling characteristics.
 """
@@ -1062,7 +1062,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 5. Optimization Insights - Production Acceleration Strategy
+## 5. Optimization Insights: Production Acceleration Strategy
 
 Understanding when and how to apply different acceleration techniques in real-world scenarios.
 """
