@@ -37,7 +37,14 @@ class LoginCommand(BaseCommand):
         receiver = AuthReceiver()
         try:
             port = receiver.start()
-            target_url = f"{ENDPOINTS['cli_login']}?redirect_port={port}"
+            
+            # Construct the full redirect_to URL using constants
+            from tito.core.auth import LOCAL_SERVER_HOST, AUTH_CALLBACK_PATH
+            redirect_to_url = f"http://{LOCAL_SERVER_HOST}:{port}{AUTH_CALLBACK_PATH}"
+            
+            # Update target_url to include the explicit redirect_to parameter
+            target_url = f"{ENDPOINTS['cli_login']}?redirect_to={redirect_to_url}&redirect_port={port}"
+            
             self.console.print(f"Opening browser to: [cyan]{target_url}[/cyan]")
             self.console.print("Waiting for authentication...")
             webbrowser.open(target_url)

@@ -25,6 +25,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import box
 
 from .base import BaseCommand
+from .login import LoginCommand
 from ..core.console import get_console
 
 def _print_file_update(console, file_path: Path) -> None:
@@ -384,6 +385,28 @@ class SetupCommand(BaseCommand):
             self.console.print("\n[green]Welcome to the community! 🎉[/green]")
         else:
             self.console.print("[dim]No problem! You can join anytime at tinytorch.ai/join[/dim]")
+
+    def prompt_community_login(self) -> None:
+        """Prompt user to log in to the TinyTorch community via CLI."""
+        self.console.print()
+        if Confirm.ask("[bold]Would you like to connect your TinyTorch CLI to the community now (for leaderboard submissions, progress syncing, etc.)?[/bold]", default=True):
+            self.console.print("\n[cyan]Starting community login process...[/cyan]")
+            login_cmd = LoginCommand(self.config)
+            
+            # Create a dummy Namespace for login command arguments
+            login_args = Namespace(force=False) 
+            
+            try:
+                login_result = login_cmd.run(login_args)
+                
+                if login_result == 0:
+                    self.console.print("[green]✅ Successfully connected to the TinyTorch community![/green]")
+                else:
+                    self.console.print("[yellow]⚠️  Community connection failed or was cancelled. You can try again later with 'tito community login'.[/yellow]")
+            except Exception as e:
+                 self.console.print(f"[yellow]⚠️  Error during login: {e}[/yellow]")
+        else:
+            self.console.print("[dim]You can connect to the community anytime with 'tito community login'.[/dim]")
     
     def run(self, args: Namespace) -> int:
         """Execute the setup command."""
@@ -431,6 +454,9 @@ class SetupCommand(BaseCommand):
             
             # Prompt to join community
             self.prompt_community_registration()
+
+            # Prompt to login to CLI
+            self.prompt_community_login()
             
             return 0
             
