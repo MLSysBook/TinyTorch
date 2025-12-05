@@ -1361,18 +1361,17 @@ def verify_quantization_works(original_model, quantized_model):
     print("🔬 Verifying actual memory reduction with .nbytes...")
 
     # Collect actual bytes from original FP32 model
-    original_bytes = 0
-    for param in original_model.parameters():
-        if hasattr(param, 'data') and hasattr(param.data, 'nbytes'):
-            original_bytes += param.data.nbytes
+    original_bytes = sum(
+        param.data.nbytes for param in original_model.parameters()
+        if hasattr(param, 'data') and hasattr(param.data, 'nbytes')
+    )
 
     # Collect actual bytes from quantized INT8 model
-    quantized_bytes = 0
-    for layer in quantized_model.layers:
-        if isinstance(layer, QuantizedLinear):
-            quantized_bytes += layer.q_weight.data.nbytes
-            if layer.q_bias is not None:
-                quantized_bytes += layer.q_bias.data.nbytes
+    quantized_bytes = sum(
+        layer.q_weight.data.nbytes + (layer.q_bias.data.nbytes if layer.q_bias is not None else 0)
+        for layer in quantized_model.layers
+        if isinstance(layer, QuantizedLinear)
+    )
 
     # Calculate actual reduction
     actual_reduction = original_bytes / max(quantized_bytes, 1)

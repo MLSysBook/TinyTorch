@@ -1437,16 +1437,16 @@ def verify_kv_cache_speedup(sequence_lengths=[10, 25, 50, 100]):
     # Verify speedup grows with sequence length (O(n²) → O(n) characteristic)
     speedup_growing = speedups[-1] > speedups[0]
     long_seq_speedup = speedups[-1] > 10  # Should achieve >10× for 100-token sequences
-
     verified = speedup_growing and long_seq_speedup
+
+    # Assert early to fail fast if verification doesn't pass
+    assert verified, f"KV cache speedup verification failed: growing={speedup_growing}, long={long_seq_speedup}"
 
     print(f"\n✅ VERIFIED: Cache achieves {speedups[-1]:.1f}× speedup for {sequence_lengths[-1]}-token generation")
     print(f"{'✓' if speedup_growing else '✗'} Speedup grows with length (O(n²) → O(n) reduction)")
     print(f"{'✓' if long_seq_speedup else '✗'} Achieves >10× speedup for long sequences")
     print(f"\n💡 Notice: Speedup increases from {speedups[0]:.1f}× to {speedups[-1]:.1f}× as length grows")
     print(f"   This demonstrates O(n²) → O(n) complexity reduction")
-
-    assert verified, f"KV cache speedup verification failed: growing={speedup_growing}, long={long_seq_speedup}"
 
     return {
         'speedups': speedups,

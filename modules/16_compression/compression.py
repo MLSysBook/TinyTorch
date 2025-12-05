@@ -1381,7 +1381,7 @@ def verify_pruning_works(model, target_sparsity=0.8):
     assert verified, f"Sparsity target not met: {sparsity:.2f} vs {target_sparsity:.2f}"
 
     print(f"\n✅ VERIFIED: {sparsity*100:.1f}% sparsity achieved")
-    print(f"⚠️  Memory saved: 0 MB (dense numpy arrays)")
+    print(f"⚠️ Memory saved: 0 MB (dense numpy arrays)")
     print(f"💡 LEARNING: Compute savings ~{sparsity*100:.1f}% (skip zero multiplications)")
     print(f"   In production: Use sparse formats (scipy.sparse.csr_matrix) for memory savings")
 
