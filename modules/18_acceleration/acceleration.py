@@ -754,7 +754,102 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 4. Systems Analysis - Performance Scaling Patterns
+## 4. Verification - Proving Vectorization Speedup
+
+Before analyzing acceleration performance, let's verify that vectorization actually provides significant speedup using real timing measurements.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "verify_vectorization", "solution": false}
+def verify_vectorization_speedup(size=1000, iterations=100):
+    """
+    Verify vectorization provides significant speedup using real timing measurements.
+
+    This measures ACTUAL execution time of loop-based vs vectorized operations
+    to prove numpy/BLAS acceleration works.
+
+    Args:
+        size: Array size to test (default 1000)
+        iterations: Number of iterations for timing (default 100)
+
+    Returns:
+        dict: Verification results with speedup, times, and verified status
+
+    Example:
+        >>> results = verify_vectorization_speedup(size=1000, iterations=100)
+        >>> assert results['verified']  # Speedup > 10×
+        >>> assert results['speedup'] > 10
+    """
+    import time
+
+    print("🔬 Verifying vectorization speedup...")
+
+    # Loop-based element-wise operation (slow)
+    def loop_based_add(a, b, size):
+        """Element-wise addition using Python loops."""
+        result = np.zeros(size)
+        for i in range(size):
+            result[i] = a[i] + b[i]
+        return result
+
+    # Vectorized operation (fast)
+    def vectorized_add(a, b):
+        """Element-wise addition using NumPy vectorization."""
+        return a + b
+
+    # Create test arrays
+    a = np.random.randn(size)
+    b = np.random.randn(size)
+
+    # Measure loop-based (with warmup)
+    loop_based_add(a, b, size)  # Warmup
+    start = time.perf_counter()
+    for _ in range(iterations):
+        result_loop = loop_based_add(a, b, size)
+    time_loop = (time.perf_counter() - start) * 1000  # Convert to ms
+
+    # Measure vectorized (with warmup)
+    vectorized_add(a, b)  # Warmup
+    start = time.perf_counter()
+    for _ in range(iterations):
+        result_vec = vectorized_add(a, b)
+    time_vec = (time.perf_counter() - start) * 1000
+
+    # Calculate speedup
+    speedup = time_loop / max(time_vec, 0.001)  # Avoid division by zero
+
+    # Display results
+    print(f"   Array size: {size:,} elements")
+    print(f"   Iterations: {iterations}")
+    print(f"   Loop-based: {time_loop:.2f}ms")
+    print(f"   Vectorized: {time_vec:.2f}ms")
+    print(f"   Actual speedup: {speedup:.1f}×")
+
+    # Verify speedup meets target (>10× for NumPy/BLAS)
+    verified = speedup > 10
+    status = '✓' if verified else '✗'
+    print(f"   {status} Meets >10× speedup target")
+
+    assert verified, f"Vectorization speedup too low: {speedup:.1f}× (expected >10×)"
+
+    print(f"\n✅ VERIFIED: {speedup:.1f}× speedup from vectorization")
+    print(f"💡 NumPy/BLAS achieves {speedup:.0f}× speedup through SIMD parallelization")
+
+    return {
+        'speedup': speedup,
+        'time_loop_ms': time_loop,
+        'time_vectorized_ms': time_vec,
+        'size': size,
+        'iterations': iterations,
+        'verified': verified
+    }
+
+# Run verification example when developing
+if __name__ == "__main__":
+    verify_vectorization_speedup()
+
+# %% [markdown]
+"""
+## 5. Systems Analysis - Performance Scaling Patterns
 
 Let's analyze how our acceleration techniques perform across different scenarios and understand their scaling characteristics.
 """
@@ -1369,8 +1464,15 @@ def test_module():
 
     print("✅ End-to-end acceleration pipeline works!")
 
+    # Verify vectorization speedup actually works
+    print()
+    verification_results = verify_vectorization_speedup(size=1000, iterations=100)
+
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("📈 Acceleration system provides:")
+    print(f"   • {verification_results['speedup']:.1f}× speedup from vectorization")
+    print(f"   • ✓ VERIFIED: Actual timing measurements")
     print("Run: tito module complete 18")
 
 # Run comprehensive module test when executed directly
