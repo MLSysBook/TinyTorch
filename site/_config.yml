@@ -81,6 +81,7 @@ sphinx:
   extra_extensions:
     - sphinxcontrib.mermaid
   config:
+    html_extra_path: ["extra"]
     mermaid_version: "10.6.1"
     # Sidebar collapsible sections configuration
     html_theme_options:
