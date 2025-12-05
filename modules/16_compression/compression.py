@@ -1332,7 +1332,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 8.5 Verification - Proving Pruning Works
+## 5. Verification - Proving Pruning Works
 
 Before analyzing compression in production, let's verify that our pruning actually achieves sparsity using real measurements.
 """
@@ -1403,7 +1403,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 8.6 Systems Analysis - Compression Techniques
+## 6. Systems Analysis - Compression Techniques
 
 Understanding the real-world effectiveness of different compression techniques through systematic measurement and comparison.
 

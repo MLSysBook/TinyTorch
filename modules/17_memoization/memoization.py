@@ -1367,7 +1367,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## Part 5: Verification - Proving KV Cache Speedup
+## 5. Verification - Proving KV Cache Speedup
 
 Before analyzing KV cache performance, let's verify that caching actually provides the dramatic speedup we expect using real timing measurements.
 """
@@ -1463,7 +1463,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## Part 6: Systems Analysis - KV Cache Performance
+## 6. Systems Analysis - KV Cache Performance
 
 Now let's analyze the performance characteristics and trade-offs of KV caching.
 """
