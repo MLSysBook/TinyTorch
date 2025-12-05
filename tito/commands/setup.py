@@ -42,15 +42,15 @@ def _print_file_update(console, file_path: Path) -> None:
 
 class SetupCommand(BaseCommand):
     """First-time setup command for Tiny🔥Torch development environment."""
-    
+
     @property
     def name(self) -> str:
         return "setup"
-    
+
     @property
     def description(self) -> str:
         return "First-time setup: install packages, create profile, initialize workspace"
-    
+
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add setup command arguments."""
         parser.add_argument(
@@ -60,7 +60,7 @@ class SetupCommand(BaseCommand):
         )
         parser.add_argument(
             '--skip-packages',
-            action='store_true', 
+            action='store_true',
             help='Skip package installation'
         )
         parser.add_argument(
@@ -73,7 +73,7 @@ class SetupCommand(BaseCommand):
             action='store_true',
             help='Force setup even if already configured'
         )
-    
+
     def check_existing_setup(self) -> bool:
         """Check if Tiny🔥Torch is already set up."""
         # Check for profile file in .tinytorch (flat structure)
@@ -90,15 +90,15 @@ class SetupCommand(BaseCommand):
         has_venv = any(venv_path.exists() for venv_path in venv_paths)
 
         return has_profile and has_venv
-    
+
     def install_packages(self) -> bool:
         """Install required packages for Tiny🔥Torch development."""
         self.console.print("📦 Installing Tiny🔥Torch dependencies...")
-        
+
         # Essential packages for TinyTorch
         packages = [
             "numpy>=1.21.0",
-            "matplotlib>=3.5.0", 
+            "matplotlib>=3.5.0",
             "jupyter>=1.0.0",
             "jupyterlab>=3.0.0",
             "jupytext>=1.13.0",
@@ -106,28 +106,28 @@ class SetupCommand(BaseCommand):
             "pyyaml>=6.0",
             "psutil>=5.8.0"
         ]
-        
+
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=self.console
         ) as progress:
-            
+
             for package in packages:
                 task = progress.add_task(f"Installing {package.split('>=')[0]}...", total=None)
-                
+
                 try:
                     result = subprocess.run([
                         sys.executable, "-m", "pip", "install", package
                     ], capture_output=True, text=True, timeout=120)
-                    
+
                     if result.returncode == 0:
                         progress.update(task, description=f"✅ {package.split('>=')[0]} installed")
                     else:
                         progress.update(task, description=f"❌ {package.split('>=')[0]} failed")
                         self.console.print(f"[red]Error installing {package}: {result.stderr}[/red]")
                         return False
-                        
+
                 except subprocess.TimeoutExpired:
                     progress.update(task, description=f"⏰ {package.split('>=')[0]} timed out")
                     self.console.print(f"[yellow]Warning: {package} installation timed out[/yellow]")
@@ -135,7 +135,7 @@ class SetupCommand(BaseCommand):
                     progress.update(task, description=f"❌ {package.split('>=')[0]} error")
                     self.console.print(f"[red]Error installing {package}: {e}[/red]")
                     return False
-        
+
         # Install Tiny🔥Torch in development mode
         try:
             self.console.print("🔧 Installing Tiny🔥Torch in development mode...")
@@ -153,7 +153,7 @@ class SetupCommand(BaseCommand):
         except Exception as e:
             self.console.print(f"[red]Error installing Tiny🔥Torch: {e}[/red]")
             return False
-    
+
     def create_virtual_environment(self) -> bool:
         """Create a virtual environment for Tiny🔥Torch development."""
         venv_path = self.config.project_root / ".venv"
@@ -168,12 +168,12 @@ class SetupCommand(BaseCommand):
             shutil.rmtree(venv_path)
         else:
             self.console.print("🐍 Setting up virtual environment...")
-        
+
         try:
             # Detect Apple Silicon and force arm64 if needed
             arch = platform.machine()
             python_exe = sys.executable
-            
+
             if platform.system() == "Darwin" and arch == "x86_64":
                 # Check if we're on Apple Silicon but running Rosetta
                 import subprocess as sp
@@ -190,7 +190,7 @@ class SetupCommand(BaseCommand):
                         python_exe = f"arch -arm64 {python_exe}"
                 except:
                     pass
-            
+
             # Create virtual environment (potentially with arch prefix)
             if "arch -arm64" in python_exe:
                 result = subprocess.run(
@@ -202,13 +202,13 @@ class SetupCommand(BaseCommand):
                 result = subprocess.run([
                     python_exe, "-m", "venv", str(venv_path)
                 ], capture_output=True, text=True)
-            
+
             if result.returncode != 0:
                 self.console.print(f"[red]Failed to create virtual environment: {result.stderr}[/red]")
                 return False
-            
+
             self.console.print(f"✅ Virtual environment created at {venv_path}")
-            
+
             # Verify architecture
             venv_python = venv_path / "bin" / "python3"
             if venv_python.exists():
@@ -219,14 +219,14 @@ class SetupCommand(BaseCommand):
                 if arch_check.returncode == 0:
                     venv_arch = arch_check.stdout.strip()
                     self.console.print(f"📐 Virtual environment architecture: {venv_arch}")
-            
+
             return True
-            
+
         except Exception as e:
             self.console.print(f"[red]Error creating virtual environment: {e}[/red]")
             return False
-    
-    
+
+
     def create_user_profile(self) -> Dict[str, Any]:
         """Create user profile for development tracking."""
         self.console.print("👋 Creating your Tiny🔥Torch development profile...")
@@ -268,20 +268,20 @@ class SetupCommand(BaseCommand):
         _print_file_update(self.console, profile_path)
         self.console.print(f"✅ Profile created for {profile['name']}")
         return profile
-    
+
     def validate_environment(self) -> bool:
         """Validate the development environment setup."""
         self.console.print("🔍 Validating environment...")
-        
+
         checks = [
             ("Python version", self.check_python_version),
             ("NumPy installation", self.check_numpy),
             ("Jupyter installation", self.check_jupyter),
             ("TinyTorch package", self.check_tinytorch_package)
         ]
-        
+
         all_passed = True
-        
+
         for check_name, check_func in checks:
             try:
                 if check_func():
@@ -292,13 +292,13 @@ class SetupCommand(BaseCommand):
             except Exception as e:
                 self.console.print(f"  ❌ {check_name}: {e}")
                 all_passed = False
-        
+
         return all_passed
-    
+
     def check_python_version(self) -> bool:
         """Check if Python version is compatible."""
         return sys.version_info >= (3, 8)
-    
+
     def check_numpy(self) -> bool:
         """Check if NumPy is installed and working."""
         try:
@@ -308,7 +308,7 @@ class SetupCommand(BaseCommand):
             return len(arr) == 3
         except ImportError:
             return False
-    
+
     def check_jupyter(self) -> bool:
         """Check if Jupyter is installed."""
         try:
@@ -317,7 +317,7 @@ class SetupCommand(BaseCommand):
             return True
         except ImportError:
             return False
-    
+
     def check_tinytorch_package(self) -> bool:
         """Check if Tiny🔥Torch package is installed."""
         try:
@@ -325,7 +325,7 @@ class SetupCommand(BaseCommand):
             return True
         except ImportError:
             return False
-    
+
     def print_success_message(self, profile: Dict[str, Any]) -> None:
         """Print success message with next steps."""
         success_text = Text()
@@ -335,15 +335,15 @@ class SetupCommand(BaseCommand):
         success_text.append(f"🏢 Affiliation: {profile['affiliation']}\n", style="dim")
         success_text.append(f"💻 Platform: {profile['platform']}\n", style="dim")
         success_text.append(f"🐍 Python: {profile['python_version']}\n\n", style="dim")
-        
+
         success_text.append("🔥 Activate your environment:\n\n", style="bold yellow")
         success_text.append("  source .venv/bin/activate", style="bold cyan")
         success_text.append("  # On Windows: .venv\\Scripts\\activate\n\n", style="dim")
-        
+
         success_text.append("🚀 Start building ML systems:\n\n", style="bold green")
         success_text.append("  tito module start 01", style="bold green")
         success_text.append("  # Begin with tensor foundations\n\n", style="dim")
-        
+
         success_text.append("💡 Essential commands:\n", style="bold")
         success_text.append("  • ", style="dim")
         success_text.append("tito system health", style="green")
@@ -351,7 +351,7 @@ class SetupCommand(BaseCommand):
         success_text.append("  • ", style="dim")
         success_text.append("tito module status", style="green")
         success_text.append(" - Track progress\n", style="dim")
-        
+
         self.console.print(Panel(
             success_text,
             title="🔥 Tiny🔥Torch Setup Complete!",
@@ -375,19 +375,19 @@ class SetupCommand(BaseCommand):
             border_style="cyan",
             box=box.ROUNDED
         ))
-        
+
         join = Confirm.ask("\n[bold]Join the community?[/bold]", default=True)
-        
+
         if join:
             self.console.print("\n[cyan]Starting community login process...[/cyan]")
             login_cmd = LoginCommand(self.config)
-            
+
             # Create a dummy Namespace for login command arguments
-            login_args = Namespace(force=False) 
-            
+            login_args = Namespace(force=False)
+
             try:
                 login_result = login_cmd.run(login_args)
-                
+
                 if login_result == 0:
                     self.console.print("[green]✅ Successfully connected to the TinyTorch community![/green]")
                 else:
@@ -403,13 +403,13 @@ class SetupCommand(BaseCommand):
         if Confirm.ask("[bold]Would you like to connect your TinyTorch CLI to the community now (for leaderboard submissions, progress syncing, etc.)?[/bold]", default=True):
             self.console.print("\n[cyan]Starting community login process...[/cyan]")
             login_cmd = LoginCommand(self.config)
-            
+
             # Create a dummy Namespace for login command arguments
-            login_args = Namespace(force=False) 
-            
+            login_args = Namespace(force=False)
+
             try:
                 login_result = login_cmd.run(login_args)
-                
+
                 if login_result == 0:
                     self.console.print("[green]✅ Successfully connected to the TinyTorch community![/green]")
                 else:
@@ -418,7 +418,7 @@ class SetupCommand(BaseCommand):
                  self.console.print(f"[yellow]⚠️  Error during login: {e}[/yellow]")
         else:
             self.console.print("[dim]You can connect to the community anytime with 'tito community login'.[/dim]")
-    
+
     def run(self, args: Namespace) -> int:
         """Execute the setup command."""
         self.console.print(Panel(
@@ -427,50 +427,50 @@ class SetupCommand(BaseCommand):
             title="Welcome to Tiny🔥Torch!",
             border_style="bright_green"
         ))
-        
+
         # Check if already set up
         if not args.force and self.check_existing_setup():
             if not Confirm.ask("Tiny🔥Torch appears to be already set up. Continue anyway?"):
                 self.console.print("✅ Setup cancelled. You're ready to go!")
                 self.console.print("💡 Try: tito module start 01")
                 return 0
-        
+
         try:
             # Step 1: Virtual environment (optional)
             if not args.skip_venv:
                 if not self.create_virtual_environment():
                     self.console.print("[yellow]⚠️  Virtual environment setup failed, but continuing...[/yellow]")
-            
+
             # Step 2: Install packages
             if not args.skip_packages:
                 if not self.install_packages():
                     self.console.print("[red]❌ Package installation failed[/red]")
                     return 1
-            
+
             # Step 3: Create user profile
             profile = {}
             if not args.skip_profile:
                 profile = self.create_user_profile()
-            
+
             # Step 4: Validate environment
             if not self.validate_environment():
                 self.console.print("[yellow]⚠️  Some validation checks failed, but setup completed[/yellow]")
-            
+
             # Success!
             if profile:  # Only print if profile was created
                 self.print_success_message(profile)
             else:
                 self.console.print("✅ Setup completed successfully!")
                 self.console.print("💡 Try: tito module start 01")
-            
+
             # Prompt to join community
             self.prompt_community_registration()
 
             # Prompt to login to CLI
             # self.prompt_community_login()
-            
+
             return 0
-            
+
         except KeyboardInterrupt:
             self.console.print("\n[yellow]Setup cancelled by user[/yellow]")
             return 130
