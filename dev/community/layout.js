@@ -662,7 +662,7 @@
             <a href="${basePath}/dashboard.html" class="nav-icon-btn" id="navDashboardBtn" style="display: ${displayExtras};" title="Dashboard">
                 ${footprintsIcon}
             </a>
-            
+
             <a href="${basePath}/community.html" class="nav-icon-btn" id="navCommunityBtn" style="display: ${displayExtras};" title="Community">
                 ${globeIcon}
             </a>
