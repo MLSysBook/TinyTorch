@@ -2,15 +2,11 @@
 
 **Build ML Systems From First Principles**
 
-<!-- CI & Status Badges -->
-[![CI](https://github.com/MLSysBook/TinyTorch/actions/workflows/ci.yml/badge.svg)](https://github.com/MLSysBook/TinyTorch/actions/workflows/ci.yml)
-[![Documentation](https://github.com/MLSysBook/TinyTorch/actions/workflows/publish-live.yml/badge.svg)](https://mlsysbook.github.io/TinyTorch/)
+<!-- Status Badges -->
+[![CI](https://github.com/harvard-edge/cs249r_book/actions/workflows/ci.yml/badge.svg)](https://github.com/harvard-edge/cs249r_book/actions/workflows/ci.yml)
+[![Documentation](https://github.com/harvard-edge/cs249r_book/actions/workflows/publish-live.yml/badge.svg)](https://mlsysbook.ai/tinytorch)
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-
-<!-- Community Badges -->
-![GitHub Stars](https://img.shields.io/github/stars/MLSysBook/TinyTorch?style=social)
-![Last Commit](https://img.shields.io/github/last-commit/MLSysBook/TinyTorch)
 
 > 📢 **December 2025 Pre-Release** - TinyTorch CLI and educational framework are undergoing final refinements before public release! All 20 modules (Tensor → Transformers → Optimization → Capstone) are implemented with complete solutions and interactive CLI tooling. The `tito` command-line interface provides streamlined workflows for setup, module management, testing, and progress tracking.
 >
@@ -135,8 +131,8 @@ TinyTorch/
 
 ```bash
 # Clone repository
-git clone https://github.com/mlsysbook/TinyTorch.git
-cd TinyTorch
+git clone https://github.com/harvard-edge/cs249r_book.git
+cd cs249r_book/tinytorch
 
 # One-command setup (interactive CLI handles everything)
 tito setup
@@ -436,7 +432,7 @@ pytest tests/
 ## 📚 Documentation & Resources
 
 ### 🎓 For Students
-- **[Interactive Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete learning platform
+- **[Interactive Course Website](https://mlsysbook.ai/tinytorch)** - Complete learning platform
 - **[Getting Started Guide](site/README.md)** - Installation and first steps
 - **[CIFAR-10 Training Guide](site/cifar10-training-guide.md)** - Achieving the north star goal
 - **[Module READMEs](/modules/)** - Individual module documentation
@@ -474,7 +470,7 @@ tito benchmark submit --event cnn_marathon
 - **Efficiency**: Best accuracy/resource ratio
 - **Innovation**: Novel optimization techniques
 
-📊 **View Leaderboard**: [TinyMLPerf Competition](https://mlsysbook.github.io/TinyTorch/leaderboard.html) | Future: `tinytorch.org/leaderboard`
+📊 **View Leaderboard**: [TinyMLPerf Competition](https://mlsysbook.ai/tinytorch/leaderboard) | Future: `tinytorch.org/leaderboard`
 
 ## Academic Integrity & Solutions Philosophy
 
@@ -524,7 +520,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Related Projects & Name Disambiguation
 
-**Note**: "TinyTorch" is a popular name for educational ML frameworks. This project (MLSysBook/TinyTorch) is the Harvard University course focused on ML systems engineering, part of the [ML Systems Book](https://mlsysbook.ai/tinytorch) ecosystem. We acknowledge and respect other excellent projects with similar names:
+**Note**: "TinyTorch" is a popular name for educational ML frameworks. This project is the Harvard University course focused on ML systems engineering, part of the [ML Systems Book](https://mlsysbook.ai) ecosystem. We acknowledge and respect other excellent projects with similar names:
 
 ### Educational ML Frameworks:
 - [tinygrad](https://github.com/tinygrad/tinygrad) - George Hotz's minimalist deep learning framework
@@ -577,8 +573,8 @@ Special thanks to students and contributors who helped refine this educational f
 
 ### Getting Started
 ```bash
-git clone https://github.com/mlsysbook/TinyTorch.git
-cd TinyTorch
+git clone https://github.com/harvard-edge/cs249r_book.git
+cd cs249r_book/tinytorch
 tito setup
 source .venv/bin/activate
 tito module start 01
