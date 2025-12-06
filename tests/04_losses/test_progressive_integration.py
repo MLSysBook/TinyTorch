@@ -94,8 +94,8 @@ class TestDenseNetworkCapability:
             layer = Linear(10, 5)
             
             # Should have proper weights and bias
-            assert hasattr(layer, 'weights'), "Dense broken: No weights"
-            assert layer.weights.shape == (10, 5), "Dense broken: Wrong weight shape"
+            assert hasattr(layer, 'weight'), "Dense broken: No weights"
+            assert layer.weight.shape == (10, 5), "Dense broken: Wrong weight shape"
             
             # Should work with tensor input
             x = Tensor(np.random.randn(32, 10))
@@ -114,8 +114,8 @@ class TestDenseNetworkCapability:
             from tinytorch.core.tensor import Tensor
             
             # Build 3-layer network for XOR
-            hidden = Linear(2, 4, use_bias=True)
-            output = Linear(4, 1, use_bias=True)
+            hidden = Linear(2, 4, bias=True)
+            output = Linear(4, 1, bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -151,8 +151,8 @@ class TestXORProblemSolution:
             y_target = np.array([[0], [1], [1], [0]], dtype=np.float32)
             
             # Network: 2 -> 4 -> 1 (sufficient for XOR)
-            hidden = Linear(2, 4, use_bias=True)
-            output = Linear(4, 1, use_bias=True)
+            hidden = Linear(2, 4, bias=True)
+            output = Linear(4, 1, bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -309,9 +309,9 @@ class TestCompleteStackValidation:
             assert np.all(output.data <= 1), "Network output invalid"
             
             # 6. Network should be trainable (parameters exist)
-            assert hasattr(layer1, 'weights'), "Layer 1 not trainable"
-            assert hasattr(layer2, 'weights'), "Layer 2 not trainable"
-            assert hasattr(layer3, 'weights'), "Layer 3 not trainable"
+            assert hasattr(layer1, 'weight'), "Layer 1 not trainable"
+            assert hasattr(layer2, 'weight'), "Layer 2 not trainable"
+            assert hasattr(layer3, 'weight'), "Layer 3 not trainable"
             
         except ImportError:
             assert True, "End-to-end neural network not ready yet"

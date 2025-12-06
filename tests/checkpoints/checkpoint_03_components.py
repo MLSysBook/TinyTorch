@@ -28,11 +28,11 @@ def test_checkpoint_03_components():
     print("🔧 Testing Dense layer creation...")
     layer = Linear(input_size=10, output_size=5)
     
-    assert hasattr(layer, 'weights'), "Dense layer should have weights"
+    assert hasattr(layer, 'weight'), "Dense layer should have weights"
     assert hasattr(layer, 'bias'), "Dense layer should have bias"
-    assert layer.weights.shape == (10, 5), f"Weights shape should be (10, 5), got {layer.weights.shape}"
+    assert layer.weight.shape == (10, 5), f"Weights shape should be (10, 5), got {layer.weight.shape}"
     assert layer.bias.shape == (5,), f"Bias shape should be (5,), got {layer.bias.shape}"
-    print(f"✅ Dense layer created: {layer.weights.shape} weights, {layer.bias.shape} bias")
+    print(f"✅ Dense layer created: {layer.weight.shape} weights, {layer.bias.shape} bias")
     
     # Test 2: Forward pass through layer
     print("➡️ Testing forward pass...")
@@ -52,14 +52,14 @@ def test_checkpoint_03_components():
     
     # Test 4: Parameter learning capability
     print("📚 Testing parameter access for learning...")
-    original_weights = layer.weights.data.copy()
+    original_weights = layer.weight.data.copy()
     original_bias = layer.bias.data.copy()
     
     # Simulate parameter update (what optimizers will do)
-    layer.weights.data += 0.1
+    layer.weight.data += 0.1
     layer.bias.data += 0.01
     
-    assert not np.array_equal(layer.weights.data, original_weights), "Weights should be modifiable for learning"
+    assert not np.array_equal(layer.weight.data, original_weights), "Weights should be modifiable for learning"
     assert not np.array_equal(layer.bias.data, original_bias), "Bias should be modifiable for learning"
     print(f"✅ Parameters are learnable: weights and bias can be updated")
     
@@ -93,7 +93,7 @@ def test_checkpoint_03_components():
     
     # Test 7: Parameter count calculation
     print("📊 Testing parameter counting...")
-    param_count = layer.weights.data.size + layer.bias.data.size
+    param_count = layer.weight.data.size + layer.bias.data.size
     expected_count = 10 * 5 + 5  # weights + bias = 55
     
     assert param_count == expected_count, f"Parameter count should be {expected_count}, got {param_count}"

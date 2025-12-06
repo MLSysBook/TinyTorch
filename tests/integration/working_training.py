@@ -210,7 +210,7 @@ def train_linear_regression_working():
     
     # Model
     model = WorkingLinear(1, 1)
-    print(f"Initial: weight={model.weights.data[0,0]:.3f}, bias={model.bias.data[0]:.3f}")
+    print(f"Initial: weight={model.weight.data[0,0]:.3f}, bias={model.bias.data[0]:.3f}")
     
     optimizer = WorkingSGD(model.parameters(), lr=0.01)
     criterion = WorkingMSE()
@@ -228,11 +228,11 @@ def train_linear_regression_working():
             loss_val = float(loss.data.data)
             print(f"Epoch {epoch:3d}: Loss = {loss_val:.4f}")
     
-    print(f"Final: weight={model.weights.data[0,0]:.3f}, bias={model.bias.data[0]:.3f}")
+    print(f"Final: weight={model.weight.data[0,0]:.3f}, bias={model.bias.data[0]:.3f}")
     print(f"Target: weight=2.000, bias=1.000")
     
     # Check
-    w_err = abs(model.weights.data[0,0] - 2.0)
+    w_err = abs(model.weight.data[0,0] - 2.0)
     b_err = abs(model.bias.data[0] - 1.0)
     
     if w_err < 0.1 and b_err < 0.1:

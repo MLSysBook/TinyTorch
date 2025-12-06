@@ -82,12 +82,12 @@ def test_layers_integration():
     try:
         layer = Linear(5, 3)
         
-        assert hasattr(layer, 'weights'), "Layer missing weights"
+        assert hasattr(layer, 'weight'), "Layer missing weights"
         assert hasattr(layer, 'bias'), "Layer missing bias"
-        assert layer.weights.shape == (5, 3), f"Wrong weight shape: {layer.weights.shape}"
+        assert layer.weight.shape == (5, 3), f"Wrong weight shape: {layer.weight.shape}"
         assert layer.bias.shape == (3,), f"Wrong bias shape: {layer.bias.shape}"
         
-        total_params = layer.weights.size + layer.bias.size
+        total_params = layer.weight.size + layer.bias.size
         assert total_params == 18, f"Expected 18 parameters, got {total_params}"
         print("✅ Parameter management works")
     except Exception as e:

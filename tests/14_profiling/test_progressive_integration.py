@@ -113,7 +113,7 @@ class TestCompleteTinyTorchSystemStillWorks:
                     for layer in layers:
                         if hasattr(layer, 'parameters'):
                             params.extend(layer.parameters())
-                        elif hasattr(layer, 'weights'):
+                        elif hasattr(layer, 'weight'):
                             params.append(layer.weights)
                             if hasattr(layer, 'bias') and layer.bias is not None:
                                 params.append(layer.bias)
@@ -138,7 +138,7 @@ class TestCompleteTinyTorchSystemStillWorks:
             
             # Test compression
             if 'prune_weights' in locals():
-                original_weights = system.vision_conv.weights.data.copy()
+                original_weights = system.vision_conv.weight.data.copy()
                 pruned = prune_weights(system.vision_conv.weights, sparsity=0.2)
                 assert pruned.shape == original_weights.shape, "❌ Compression broken"
             

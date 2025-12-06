@@ -109,7 +109,7 @@ class TestFoundationStackStillWorks:
             
             💡 DEBUG STEPS:
             1. Test each component separately
-            2. Check Dense layer: dense = Linear(5, 3); print(linear.weights.shape)
+            2. Check Dense layer: dense = Linear(5, 3); print(linear.weight.shape)
             3. Check ReLU: relu = ReLU(); print(relu(Tensor([-1, 1])).data)
             4. Run foundation tests: python tests/run_all_modules.py --module module_05
             """
@@ -132,8 +132,8 @@ class TestFoundationStackStillWorks:
             from tinytorch.core.activations import ReLU, Sigmoid
             
             # Build 3-layer network for XOR problem
-            layer1 = Linear(2, 4, use_bias=True)
-            layer2 = Linear(4, 1, use_bias=True)
+            layer1 = Linear(2, 4, bias=True)
+            layer2 = Linear(4, 1, bias=True)
             relu = ReLU()
             sigmoid = Sigmoid()
             
@@ -152,8 +152,8 @@ class TestFoundationStackStillWorks:
                 "❌ Neural network output not in valid range [0, 1]"
             
             # Network should have capacity for XOR (non-linear problem)
-            param_count = layer1.weights.data.size + layer1.bias.data.size + \
-                         layer2.weights.data.size + layer2.bias.data.size
+            param_count = layer1.weight.data.size + layer1.bias.data.size + \
+                         layer2.weight.data.size + layer2.bias.data.size
             
             assert param_count >= 9, \
                 f"❌ Network has insufficient parameters for XOR. Need ≥9, got {param_count}"
@@ -218,7 +218,7 @@ class TestModule06SpatialCore:
             conv = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
             
             # Should have convolutional parameters
-            assert hasattr(conv, 'weights') or hasattr(conv, 'kernel'), \
+            assert hasattr(conv, 'weight') or hasattr(conv, 'kernel'), \
                 "❌ Conv2D missing convolution weights/kernel"
             
             # Should be callable (inherits from Layer)
@@ -226,7 +226,7 @@ class TestModule06SpatialCore:
                 "❌ Conv2D should be callable (inherit __call__ from Layer)"
             
             # Check parameter shapes (basic validation)
-            if hasattr(conv, 'weights'):
+            if hasattr(conv, 'weight'):
                 weights = conv.weights
                 expected_shape = (16, 3, 3, 3)  # (out_channels, in_channels, kernel_h, kernel_w)
                 assert weights.shape == expected_shape, \

@@ -201,8 +201,9 @@ class TestCommand(BaseCommand):
     def _run_single_module_test(self, args: Namespace) -> int:
         """Run tests for a single module with detailed output."""
         console = self.console
-        
-        module_name = args.module
+
+        # Resolve module number to full name (e.g., "15" -> "15_quantization")
+        module_name = self._resolve_module_name(args.module)
         
         console.print(Panel(f"🧪 Running tests for module: [bold cyan]{module_name}[/bold cyan]", 
                           title="Single Module Test", border_style="bright_cyan"))
@@ -257,19 +258,49 @@ class TestCommand(BaseCommand):
     def _run_inline_tests(self, dev_file: Path) -> List[TestResult]:
         """Run inline tests using the module's standardized testing framework."""
         inline_tests = []
-        
+
         # Set up environment to include current directory in PYTHONPATH
         import os
+        import tempfile
         env = os.environ.copy()
         project_root = Path.cwd()
         if 'PYTHONPATH' in env:
             env['PYTHONPATH'] = f"{project_root}:{env['PYTHONPATH']}"
         else:
             env['PYTHONPATH'] = str(project_root)
-        
+
+        # Handle .ipynb files by converting to Python first
+        if dev_file.suffix == '.ipynb':
+            try:
+                # Create temporary Python file
+                with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
+                    tmp_path = Path(tmp.name)
+
+                # Convert notebook to Python using jupytext
+                convert_result = subprocess.run(
+                    ['jupytext', '--to', 'py:percent', '--output', str(tmp_path), str(dev_file)],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+
+                if convert_result.returncode != 0:
+                    inline_tests.append(TestResult("notebook_conversion", False,
+                                                  convert_result.stdout,
+                                                  f"Failed to convert notebook: {convert_result.stderr}"))
+                    return inline_tests
+
+                # Use the converted Python file for execution
+                exec_file = tmp_path
+            except Exception as e:
+                inline_tests.append(TestResult("notebook_conversion", False, "", str(e)))
+                return inline_tests
+        else:
+            exec_file = dev_file
+
         try:
             result = subprocess.run(
-                [sys.executable, str(dev_file)],
+                [sys.executable, str(exec_file)],
                 capture_output=True,
                 text=True,
                 timeout=60,  # 1 minute timeout
@@ -282,112 +313,23 @@ class TestCommand(BaseCommand):
             # Check return code - this is the definitive test of success
             if result.returncode != 0:
                 inline_tests.append(TestResult("script_execution", False, output, error))
-                return inline_tests
-            
-            # Module executed successfully (return code 0)
-            # This is the correct indicator of success, not output parsing
-            inline_tests.append(TestResult("inline_tests", True, output))
-            return inline_tests
-            
-            # OLD COMPLEX PARSING (keeping for reference but not used)
-            # Parse the auto-discovery output to extract individual test names  
-            if False and "🧪 Running" in output and "Module Tests" in output:
-                # Parse the auto-discovery section
-                lines = output.split('\n')
-                test_results = []
-                
-                # Look for the test results section
-                in_results_section = False
-                seen_start_marker = False
-                
-                for line in lines:
-                    line = line.strip()
-                    
-                    # Start of results section
-                    if "🧪 Running" in line and "Module Tests" in line:
-                        in_results_section = True
-                        continue
-                    
-                    # Handle equals markers
-                    if in_results_section and line.startswith("=="):
-                        if not seen_start_marker:
-                            # This is the start marker, continue parsing
-                            seen_start_marker = True
-                            continue
-                        else:
-                            # This is the end marker, stop parsing
-                            break
-                    
-                    # Parse individual test results
-                    if in_results_section and seen_start_marker and (line.startswith("✅") or line.startswith("❌")):
-                        parts = line.split(":", 1)
-                        if len(parts) == 2:
-                            status_part = parts[0].strip()
-                            result_part = parts[1].strip()
-                            
-                            success = status_part.startswith("✅")
-                            
-                            # Extract test name and function name from status part (after the emoji)
-                            if status_part.startswith("✅"):
-                                full_name = status_part[2:].strip()  # Remove ✅ and space
-                            elif status_part.startswith("❌"):
-                                full_name = status_part[2:].strip()  # Remove ❌ and space
-                            else:
-                                full_name = status_part.strip()
-                            
-                            # Extract function name if present (format: "Test Name (function_name)")
-                            if "(" in full_name and ")" in full_name:
-                                readable_name = full_name.split("(")[0].strip()
-                                function_name = full_name.split("(")[1].split(")")[0].strip()
-                                display_name = f"{function_name}"
-                            else:
-                                display_name = full_name
-                            
-                            test_results.append(TestResult(display_name, success, line))
-                
-                # If we found individual test results, use them
-                if test_results:
-                    inline_tests = test_results
-                else:
-                    # Fallback: Check if tests overall passed or failed
-                    overall_success = "🎉 All tests passed!" in output or "✅ All tests passed!" in output
-                    if overall_success:
-                        inline_tests.append(TestResult("module_tests", True, output))
-                    else:
-                        # Look for specific error in output
-                        error_msg = ""
-                        for line in output.split('\n'):
-                            line = line.strip()
-                            if any(keyword in line.lower() for keyword in ['error:', 'failed:', 'exception:', 'traceback', 'warning:']):
-                                error_msg = line
-                                break
-                        
-                        inline_tests.append(TestResult("module_tests", False, output, error_msg))
             else:
-                # No auto-discovery output, check for overall success
-                if "🎉 All tests passed!" in output or "✅ All tests passed!" in output:
-                    inline_tests.append(TestResult("inline_tests", True, output))
-                elif "❌" in output or "FAILED" in output or error:
-                    # Extract meaningful error from output
-                    error_msg = ""
-                    for line in output.split('\n'):
-                        line = line.strip()
-                        if any(keyword in line.lower() for keyword in ['error:', 'failed:', 'exception:', 'traceback', 'warning:']):
-                            error_msg = line
-                            break
-                    
-                    inline_tests.append(TestResult("inline_tests", False, output, error_msg))
-                elif "✅" in output:
-                    inline_tests.append(TestResult("inline_tests", True, output))
-                else:
-                    inline_tests.append(TestResult("inline_tests", False, output, 
-                                             "No clear test result indicator found"))
-                    
+                # Module executed successfully (return code 0)
+                # This is the correct indicator of success, not output parsing
+                inline_tests.append(TestResult("inline_tests", True, output))
+
         except subprocess.TimeoutExpired:
             inline_tests.append(TestResult("timeout", False, "", "Test execution timed out"))
         except Exception as e:
             inline_tests.append(TestResult("subprocess_error", False, "", str(e)))
-        
+        finally:
+            # Clean up temporary file if we created one
+            if dev_file.suffix == '.ipynb' and 'tmp_path' in locals():
+                try:
+                    tmp_path.unlink()
+                except:
+                    pass
+
         return inline_tests
     
     def _run_external_tests(self, module_name: str) -> List[TestResult]:
@@ -529,11 +471,39 @@ class TestCommand(BaseCommand):
         
         return test_results
     
+    def _resolve_module_name(self, module_input: str) -> str:
+        """Resolve module number or partial name to full module name.
+
+        Examples:
+            "15" -> "15_quantization"
+            "01" -> "01_tensor"
+            "tensor" -> "01_tensor"
+            "15_quantization" -> "15_quantization" (unchanged)
+        """
+        # If already a full module name, return as-is
+        if Path("modules").joinpath(module_input).exists():
+            return module_input
+
+        # Try to find by number prefix
+        if module_input.isdigit():
+            padded = f"{int(module_input):02d}"
+            for module_dir in Path("modules").iterdir():
+                if module_dir.is_dir() and module_dir.name.startswith(f"{padded}_"):
+                    return module_dir.name
+
+        # Try to find by name suffix
+        for module_dir in Path("modules").iterdir():
+            if module_dir.is_dir() and module_dir.name.endswith(f"_{module_input}"):
+                return module_dir.name
+
+        # Return as-is if no match found
+        return module_input
+
     def _discover_modules(self) -> List[str]:
         """Discover available modules."""
         modules = []
         source_dir = Path("modules")
-        
+
         if source_dir.exists():
             exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
             for module_dir in source_dir.iterdir():
@@ -542,17 +512,23 @@ class TestCommand(BaseCommand):
                     dev_file = self._get_dev_file_path(module_dir.name)
                     if dev_file.exists():
                         modules.append(module_dir.name)
-        
+
         return sorted(modules)
     
     def _get_dev_file_path(self, module_name: str) -> Path:
         """Get the path to a module's dev file."""
+        # Try .ipynb first (notebook format), then .py
+        ipynb_path = Path("modules") / module_name / f"{module_name}.ipynb"
+        if ipynb_path.exists():
+            return ipynb_path
+
+        # Fallback to .py file
         # Extract short name from module directory name
         if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
             short_name = module_name[3:]  # Remove "00_" prefix
         else:
             short_name = module_name
-        
+
         return Path("modules") / module_name / f"{short_name}.py"
     
     def _generate_summary_report(self, results: List[ModuleTestResult]) -> None:

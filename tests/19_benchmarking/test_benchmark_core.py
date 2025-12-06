@@ -46,7 +46,16 @@ class TestBenchmarkBasics:
         """Verify Benchmark can be created."""
         try:
             from tinytorch.bench import Benchmark
-            bench = Benchmark()
+
+            # Create simple dummy model
+            class DummyModel:
+                def forward(self, x):
+                    return x
+
+            models = [DummyModel()]
+            datasets = [[(Tensor(np.random.randn(10, 10)), Tensor(np.zeros(10)))]]
+
+            bench = Benchmark(models, datasets)
             assert bench is not None
         except ImportError:
             pytest.skip("Benchmark not yet exported")
@@ -54,31 +63,34 @@ class TestBenchmarkBasics:
     def test_measure_throughput(self):
         """
         WHAT: Verify throughput measurement works.
-        
+
         WHY: Throughput (items/second) is a key performance metric.
         """
         try:
             from tinytorch.bench import Benchmark
         except ImportError:
             pytest.skip("Benchmark not yet exported")
-        
+
         # Simple model
         class SimpleModel:
             def __init__(self):
                 self.layer = Linear(10, 10)
-            
+
             def forward(self, x):
                 return self.layer.forward(x)
-        
+
         model = SimpleModel()
-        x = Tensor(np.random.randn(1, 10))
-        
-        bench = Benchmark()
-        throughput = bench.measure_throughput(model, x, iterations=10)
-        
-        assert throughput > 0, (
-            f"Throughput should be positive, got {throughput}"
-        )
+        models = [model]
+        datasets = [[(Tensor(np.random.randn(10, 10)), Tensor(np.zeros(10)))]]
+
+        bench = Benchmark(models, datasets)
+        results = bench.run_latency_benchmark(input_shape=(1, 10))
+
+        assert len(results) > 0, "Benchmark should produce results"
+        for model_name, result in results.items():
+            assert result.mean > 0, (
+                f"Latency should be positive, got {result.mean}"
+            )
 
 
 class TestTinyMLPerf:

@@ -30,18 +30,20 @@ class TestTokenizerBasics:
     def test_tokenizer_encode(self):
         """
         WHAT: Verify tokenizer converts text to IDs.
-        
+
         WHY: encode("hello world") should give [id1, id2]
         where id1 and id2 are integers.
-        
+
         STUDENT LEARNING: Each token gets a unique integer ID.
         "hello" might be 156, "world" might be 234.
         """
         try:
-            from tinytorch.core.tokenization import Tokenizer
-            
-            tokenizer = Tokenizer()
-            
+            from tinytorch.core.tokenization import CharTokenizer
+
+            # Build vocab from test text
+            tokenizer = CharTokenizer()
+            tokenizer.build_vocab(["hello world"])
+
             text = "hello world"
             token_ids = tokenizer.encode(text)
             
@@ -58,18 +60,20 @@ class TestTokenizerBasics:
     def test_tokenizer_decode(self):
         """
         WHAT: Verify tokenizer converts IDs back to text.
-        
+
         WHY: decode(encode(text)) should give back something close
         to the original text.
-        
+
         STUDENT LEARNING: Tokenization should be (mostly) reversible.
         Some normalization may occur (case, whitespace).
         """
         try:
-            from tinytorch.core.tokenization import Tokenizer
-            
-            tokenizer = Tokenizer()
-            
+            from tinytorch.core.tokenization import CharTokenizer
+
+            # Build vocab from test text
+            tokenizer = CharTokenizer()
+            tokenizer.build_vocab(["hello world"])
+
             text = "hello world"
             token_ids = tokenizer.encode(text)
             decoded = tokenizer.decode(token_ids)
@@ -86,17 +90,18 @@ class TestTokenizerBasics:
     def test_vocabulary_size(self):
         """
         WHAT: Verify tokenizer has a defined vocabulary.
-        
+
         WHY: Vocabulary size determines embedding table size.
         GPT-2: ~50k tokens, LLaMA: ~32k tokens.
-        
+
         STUDENT LEARNING: Larger vocab = more precise tokens but
         larger embedding matrix. Trade-off!
         """
         try:
-            from tinytorch.core.tokenization import Tokenizer
-            
-            tokenizer = Tokenizer()
+            from tinytorch.core.tokenization import CharTokenizer
+
+            tokenizer = CharTokenizer()
+            tokenizer.build_vocab(["hello world"])
             
             vocab_size = tokenizer.vocab_size
             assert isinstance(vocab_size, int) and vocab_size > 0, (

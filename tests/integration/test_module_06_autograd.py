@@ -29,7 +29,7 @@ def test_autograd_integration():
         
         # Create simple network
         layer = Linear(2, 1)
-        layer.weights.requires_grad = True
+        layer.weight.requires_grad = True
         layer.bias.requires_grad = True
         
         # Forward pass
@@ -45,7 +45,7 @@ def test_autograd_integration():
         loss.backward()
         
         # Check gradients exist
-        assert layer.weights.grad is not None, "Weights should have gradients"
+        assert layer.weight.grad is not None, "Weights should have gradients"
         assert layer.bias.grad is not None, "Bias should have gradients"
         print("✅ Gradients flow through layers")
     except Exception as e:
@@ -64,7 +64,7 @@ def test_autograd_integration():
         
         # Enable gradients
         for layer in [layer1, layer2]:
-            layer.weights.requires_grad = True
+            layer.weight.requires_grad = True
             layer.bias.requires_grad = True
         
         # Forward pass
@@ -91,7 +91,7 @@ def test_autograd_integration():
         
         # Enable all gradients
         for layer in [layer1, layer2, layer3]:
-            layer.weights.requires_grad = True
+            layer.weight.requires_grad = True
             layer.bias.requires_grad = True
         
         # Forward pass

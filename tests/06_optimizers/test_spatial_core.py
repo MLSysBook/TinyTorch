@@ -37,8 +37,8 @@ class TestConv2DLayer:
             
             # Weights should be (out_channels, in_channels, kernel_height, kernel_width)
             expected_shape = (16, 3, 5, 5)
-            if hasattr(conv, 'weights'):
-                assert conv.weights.shape == expected_shape
+            if hasattr(conv, 'weight'):
+                assert conv.weight.shape == expected_shape
             elif hasattr(conv, 'weight'):
                 assert conv.weight.shape == expected_shape
                 
@@ -75,7 +75,7 @@ class TestConv2DLayer:
             conv = Conv2D(in_channels=1, out_channels=1, kernel_size=3)
             
             # Set known kernel for testing
-            if hasattr(conv, 'weights'):
+            if hasattr(conv, 'weight'):
                 conv.weights = Tensor(np.ones((1, 1, 3, 3)))  # Sum kernel
             elif hasattr(conv, 'weight'):
                 conv.weight = Tensor(np.ones((1, 1, 3, 3)))

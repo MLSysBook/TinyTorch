@@ -79,10 +79,10 @@ def test_checkpoint_20_capstone():
         total_params = 0
         for layer in tinygpt.transformer_layers:
             if hasattr(layer, 'attention') and hasattr(layer.attention, 'query_proj'):
-                total_params += layer.attention.query_proj.weights.data.size
-                total_params += layer.attention.key_proj.weights.data.size
-                total_params += layer.attention.value_proj.weights.data.size
-                total_params += layer.attention.output_proj.weights.data.size
+                total_params += layer.attention.query_proj.weight.data.size
+                total_params += layer.attention.key_proj.weight.data.size
+                total_params += layer.attention.value_proj.weight.data.size
+                total_params += layer.attention.output_proj.weight.data.size
 
         print(f"   Estimated parameters: ~{total_params/1e6:.1f}M")
 
@@ -222,7 +222,7 @@ def test_checkpoint_20_capstone():
         print(f"   🔢 Quantization:")
 
         # Simulate quantized inference
-        original_weights = tinygpt.transformer_layers[0].attention.query_proj.weights.data
+        original_weights = tinygpt.transformer_layers[0].attention.query_proj.weight.data
         quantized_weights = np.round(original_weights * 127) / 127  # Simulate INT8 quantization
 
         quantization_error = np.mean(np.abs(original_weights - quantized_weights))
@@ -346,9 +346,9 @@ def test_checkpoint_20_capstone():
         model_memory = 0
         for layer in tinygpt.transformer_layers:
             if hasattr(layer, 'attention'):
-                model_memory += layer.attention.query_proj.weights.data.nbytes
-                model_memory += layer.attention.key_proj.weights.data.nbytes
-                model_memory += layer.attention.value_proj.weights.data.nbytes
+                model_memory += layer.attention.query_proj.weight.data.nbytes
+                model_memory += layer.attention.key_proj.weight.data.nbytes
+                model_memory += layer.attention.value_proj.weight.data.nbytes
 
         model_memory_mb = model_memory / (1024 * 1024)
 

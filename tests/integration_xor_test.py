@@ -120,7 +120,7 @@ def test_xor_learning_capability():
     
     # Manually adjust some weights (simulate learning)
     # This tests if architecture can represent XOR
-    net.layer1.weights.data += 0.1 * np.random.randn(*net.layer1.weights.shape)
+    net.layer1.weight.data += 0.1 * np.random.randn(*net.layer1.weight.shape)
     
     # Get new outputs
     new_output = net(X_tensor).data

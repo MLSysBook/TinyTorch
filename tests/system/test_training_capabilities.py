@@ -248,8 +248,8 @@ def test_gradient_flow():
         # Check if gradients exist in all layers
         gradients_exist = True
         for layer in model.layers:
-            if hasattr(layer, 'weights'):
-                if layer.weights.grad is None:
+            if hasattr(layer, 'weight'):
+                if layer.weight.grad is None:
                     gradients_exist = False
                     break
         
@@ -264,7 +264,7 @@ def test_optimizer_updates():
     optimizer = SGD(model.parameters(), learning_rate=0.1)
     
     # Get initial weights
-    initial_weights = model.weights.data.copy()
+    initial_weights = model.weight.data.copy()
     
     # Dummy forward pass
     X = Tensor(np.random.randn(2, 5).astype(np.float32))
@@ -283,7 +283,7 @@ def test_optimizer_updates():
         optimizer.step()
         
         # Check if weights changed
-        weights_changed = not np.allclose(initial_weights, model.weights.data)
+        weights_changed = not np.allclose(initial_weights, model.weight.data)
         return weights_changed
     except:
         return False

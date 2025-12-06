@@ -50,7 +50,8 @@ class TestKVCacheBasics:
         """
         try:
             from tinytorch.perf.memoization import KVCache
-            cache = KVCache()
+            # KVCache needs: batch_size, max_seq_len, num_layers, num_heads, head_dim
+            cache = KVCache(batch_size=1, max_seq_len=128, num_layers=2, num_heads=4, head_dim=16)
             assert cache is not None
         except ImportError:
             pytest.skip("KVCache not yet exported")
@@ -58,7 +59,7 @@ class TestKVCacheBasics:
     def test_kv_cache_stores_and_retrieves(self):
         """
         WHAT: Verify cache can store and retrieve K,V tensors.
-        
+
         WHY: The whole point of the cache is to reuse computed values.
         If storage/retrieval doesn't work, there's no speedup.
         """
@@ -66,19 +67,20 @@ class TestKVCacheBasics:
             from tinytorch.perf.memoization import KVCache
         except ImportError:
             pytest.skip("KVCache not yet exported")
-        
-        cache = KVCache()
-        
-        # Store some K,V pairs
+
+        # Create cache with proper dimensions
+        cache = KVCache(batch_size=1, max_seq_len=128, num_layers=2, num_heads=4, head_dim=16)
+
+        # Store some K,V pairs (cache expects one token at a time during generation)
         layer_idx = 0
-        K = Tensor(np.random.randn(1, 4, 8, 16))  # (batch, heads, seq, dim)
-        V = Tensor(np.random.randn(1, 4, 8, 16))
-        
+        K = Tensor(np.random.randn(1, 4, 1, 16))  # (batch, heads, 1, dim) - one new token
+        V = Tensor(np.random.randn(1, 4, 1, 16))
+
         cache.update(layer_idx, K, V)
-        
+
         # Retrieve
         cached_K, cached_V = cache.get(layer_idx)
-        
+
         assert cached_K is not None, "Cache didn't store K"
         assert cached_V is not None, "Cache didn't store V"
         assert np.allclose(cached_K.data, K.data), "Retrieved K doesn't match stored"

@@ -38,7 +38,7 @@ class TestPriorStackStillWorking:
             # Compression should still work
             if 'prune_weights' in locals():
                 pruned_weights = prune_weights(model.weights, sparsity=0.3)
-                assert pruned_weights.shape == model.weights.shape, "Compression broken"
+                assert pruned_weights.shape == model.weight.shape, "Compression broken"
             
             # Basic ML functionality should work
             x = Tensor(np.random.randn(4, 10))
@@ -66,7 +66,7 @@ class TestPriorStackStillWorking:
             # Compression should work
             if 'quantize_weights' in locals():
                 quantized = quantize_weights(model.weights, bits=8)
-                assert quantized.shape == model.weights.shape, "Quantization broken"
+                assert quantized.shape == model.weight.shape, "Quantization broken"
             
         except ImportError:
             assert True, "Efficiency features not implemented yet"
@@ -553,7 +553,7 @@ class TestRegressionPrevention:
             # Compression should still work
             if 'prune_weights' in locals():
                 pruned = prune_weights(model.weights, sparsity=0.2)
-                assert pruned.shape == model.weights.shape, "System regression: Compression broken"
+                assert pruned.shape == model.weight.shape, "System regression: Compression broken"
                 
         except ImportError:
             import numpy as np
@@ -577,7 +577,7 @@ class TestRegressionPrevention:
             # Compression should still work
             if 'quantize_weights' in locals():
                 quantized = quantize_weights(model.weights, bits=8)
-                assert quantized.shape == model.weights.shape, "Efficiency regression: Quantization broken"
+                assert quantized.shape == model.weight.shape, "Efficiency regression: Quantization broken"
                 
         except ImportError:
             # Basic functionality should work

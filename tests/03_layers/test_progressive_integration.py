@@ -654,17 +654,17 @@ class TestNeuralNetworkReadiness:
                 def forward(self, x):
                     # Simple linear transformation: y = x @ W + b
                     # Note: Using numpy for now, will use Tensor ops later
-                    output_data = np.dot(x.data, self.weights.data) + self.bias.data
+                    output_data = np.dot(x.data, self.weight.data) + self.bias.data
                     return Tensor(output_data)
             
             # Test parameterized layer
             layer = ParameterizedLayer(3, 2)  # 3 inputs -> 2 outputs
             
             # Check parameters exist and have correct shapes
-            assert hasattr(layer, 'weights'), "❌ Layer missing weights parameter"
+            assert hasattr(layer, 'weight'), "❌ Layer missing weights parameter"
             assert hasattr(layer, 'bias'), "❌ Layer missing bias parameter"
-            assert layer.weights.shape == (3, 2), \
-                f"❌ Wrong weight shape. Expected (3, 2), got {layer.weights.shape}"
+            assert layer.weight.shape == (3, 2), \
+                f"❌ Wrong weight shape. Expected (3, 2), got {layer.weight.shape}"
             assert layer.bias.shape == (2,), \
                 f"❌ Wrong bias shape. Expected (2,), got {layer.bias.shape}"
             
@@ -790,7 +790,7 @@ class TestNeuralNetworkReadiness:
                 
                 def forward(self, x):
                     # Dense layer: y = x @ W + b
-                    output = np.dot(x.data, self.weights.data) + self.bias.data
+                    output = np.dot(x.data, self.weight.data) + self.bias.data
                     return Tensor(output)
             
             # Build mini neural network: 784 -> 128 -> 64 -> 10 (like MNIST)

@@ -81,7 +81,7 @@ class TestConv2DLayer:
             
             # Weights: (out_channels, in_channels, kH, kW)
             expected_shape = (16, 3, 5, 5)
-            weight = conv.weights if hasattr(conv, 'weights') else conv.weight
+            weight = conv.weights if hasattr(conv, 'weight') else conv.weight
             
             assert weight.shape == expected_shape, (
                 f"Conv2D weight shape wrong.\n"
@@ -146,7 +146,7 @@ class TestConv2DLayer:
             conv = Conv2D(in_channels=1, out_channels=1, kernel_size=3)
             
             # Set kernel to all ones (sum kernel)
-            weight = conv.weights if hasattr(conv, 'weights') else conv.weight
+            weight = conv.weights if hasattr(conv, 'weight') else conv.weight
             weight.data = np.ones((1, 1, 3, 3))
             
             # All-ones input
@@ -408,7 +408,7 @@ class TestConvGradientFlow:
             loss = output.sum()
             loss.backward()
             
-            weight = conv.weights if hasattr(conv, 'weights') else conv.weight
+            weight = conv.weights if hasattr(conv, 'weight') else conv.weight
             assert weight.grad is not None, (
                 "Conv weights didn't receive gradients.\n"
                 "This means the conv layer cannot learn."

@@ -42,8 +42,9 @@ class TestDataLoaderBasics:
             # Simple dataset
             X = np.random.randn(100, 10)
             y = np.random.randint(0, 2, 100)
-            
-            loader = DataLoader((X, y), batch_size=16)
+
+            dataset = list(zip(X, y))
+            loader = DataLoader(dataset, batch_size=16)
             
             batches = list(loader)
             assert len(batches) > 0, "DataLoader should yield batches"
@@ -54,22 +55,23 @@ class TestDataLoaderBasics:
     def test_batch_sizes(self):
         """
         WHAT: Verify batch_size controls batch dimensions.
-        
+
         WHY: Batch size affects:
         - Memory usage (bigger = more memory)
         - Gradient quality (bigger = smoother)
         - Training speed (bigger = faster epochs)
-        
+
         STUDENT LEARNING: Common batch sizes: 16, 32, 64, 128.
         Start small if memory is limited.
         """
         try:
             from tinytorch.core.dataloader import DataLoader
-            
+
             X = np.random.randn(100, 10)
             y = np.random.randint(0, 2, 100)
-            
-            loader = DataLoader((X, y), batch_size=32)
+
+            dataset = list(zip(X, y))
+            loader = DataLoader(dataset, batch_size=32)
             
             first_batch = next(iter(loader))
             batch_x, batch_y = first_batch
@@ -85,24 +87,26 @@ class TestDataLoaderBasics:
     def test_shuffling(self):
         """
         WHAT: Verify shuffle=True randomizes order.
-        
+
         WHY: Without shuffling:
         - Model may learn order instead of patterns
         - Similar samples grouped together cause issues
-        
+
         STUDENT LEARNING: Always shuffle=True for training,
         shuffle=False for evaluation (reproducibility).
         """
         try:
             from tinytorch.core.dataloader import DataLoader
-            
+
             # Data with clear order
             X = np.arange(100).reshape(100, 1)
             y = np.arange(100)
-            
+
             # Two loaders with shuffle
-            loader1 = DataLoader((X, y), batch_size=10, shuffle=True)
-            loader2 = DataLoader((X, y), batch_size=10, shuffle=True)
+            dataset1 = list(zip(X, y))
+            dataset2 = list(zip(X, y))
+            loader1 = DataLoader(dataset1, batch_size=10, shuffle=True)
+            loader2 = DataLoader(dataset2, batch_size=10, shuffle=True)
             
             # Get first batches
             batch1 = next(iter(loader1))[0]

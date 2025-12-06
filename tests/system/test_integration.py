@@ -258,8 +258,8 @@ def test_model_save_load():
         import pickle
         weights = {}
         for i, layer in enumerate(model.layers):
-            if hasattr(layer, 'weights'):
-                weights[f'layer_{i}_weights'] = layer.weights.data
+            if hasattr(layer, 'weight'):
+                weights[f'layer_{i}_weights'] = layer.weight.data
                 if hasattr(layer, 'bias') and layer.bias is not None:
                     weights[f'layer_{i}_bias'] = layer.bias.data
         
@@ -268,16 +268,16 @@ def test_model_save_load():
         
         # Modify model (to ensure load works)
         for layer in model.layers:
-            if hasattr(layer, 'weights'):
-                layer.weights.data = np.random.randn(*layer.weights.shape)
+            if hasattr(layer, 'weight'):
+                layer.weight.data = np.random.randn(*layer.weight.shape)
         
         # Load weights
         with open(temp_path, 'rb') as f:
             loaded_weights = pickle.load(f)
         
         for i, layer in enumerate(model.layers):
-            if hasattr(layer, 'weights'):
-                layer.weights.data = loaded_weights[f'layer_{i}_weights']
+            if hasattr(layer, 'weight'):
+                layer.weight.data = loaded_weights[f'layer_{i}_weights']
                 if f'layer_{i}_bias' in loaded_weights:
                     layer.bias.data = loaded_weights[f'layer_{i}_bias']
         
@@ -317,7 +317,7 @@ def test_checkpoint_resume_training():
     
     # Save checkpoint
     checkpoint = {
-        'model_weights': model.weights.data.copy(),
+        'model_weights': model.weight.data.copy(),
         'model_bias': model.bias.data.copy() if model.bias is not None else None,
         'optimizer_state': {'step': 3},  # Simplified
         'losses': losses_before
@@ -335,7 +335,7 @@ def test_checkpoint_resume_training():
             pass
     
     # Restore checkpoint
-    model.weights.data = checkpoint['model_weights']
+    model.weight.data = checkpoint['model_weights']
     if checkpoint['model_bias'] is not None:
         model.bias.data = checkpoint['model_bias']
     

@@ -51,7 +51,7 @@ class TestEntireTinyTorchSystemStable:
             # Production features
             if 'prune_weights' in locals():
                 pruned = prune_weights(model.weights, sparsity=0.3)
-                assert pruned.shape == model.weights.shape, "Compression broken"
+                assert pruned.shape == model.weight.shape, "Compression broken"
             
             if 'optimized_matmul' in locals():
                 A = Tensor(np.random.randn(10, 8))
@@ -490,7 +490,7 @@ class TestCapstoneSystemValidation:
             
             if 'quantize_weights' in locals():
                 quantized = quantize_weights(model.weights, bits=8)
-                assert quantized.shape == model.weights.shape, "Quantization understanding broken"
+                assert quantized.shape == model.weight.shape, "Quantization understanding broken"
             
             # 2. Performance optimization
             if 'optimized_matmul' in locals():
@@ -762,7 +762,7 @@ class TestRegressionPrevention:
             # All advanced features should work
             if 'prune_weights' in locals():
                 pruned = prune_weights(model.weights, sparsity=0.3)
-                assert pruned.shape == model.weights.shape, "Advanced features broken"
+                assert pruned.shape == model.weight.shape, "Advanced features broken"
                 
         except ImportError:
             pass  # Not implemented yet

@@ -128,10 +128,10 @@ def test_checkpoint_17_compression():
         # Simulate model weights
         model_weights = {}
         for i, layer in enumerate(test_model.layers):
-            if hasattr(layer, 'weights'):
-                layer.weights = Tensor(np.random.randn(*layer.weights.shape).astype(np.float32) * 0.3)
+            if hasattr(layer, 'weight'):
+                layer.weights = Tensor(np.random.randn(*layer.weight.shape).astype(np.float32) * 0.3)
                 layer.bias = Tensor(np.random.randn(*layer.bias.shape).astype(np.float32) * 0.1)
-                model_weights[f'layer_{i}_weight'] = layer.weights.data
+                model_weights[f'layer_{i}_weight'] = layer.weight.data
                 model_weights[f'layer_{i}_bias'] = layer.bias.data
 
         # Analyze model for compression

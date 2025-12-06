@@ -189,7 +189,7 @@ class TestArchitectureCheckpoint:
         # Test layer exists and is usable
         layer = Linear(10, 5)
         assert hasattr(layer, 'forward')
-        assert hasattr(layer, 'weights')
+        assert hasattr(layer, 'weight')
         assert hasattr(layer, 'bias')
     
     def test_dense_networks(self):

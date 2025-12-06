@@ -28,11 +28,13 @@ class TestPriorStackStillWorking:
             from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
-            
+            from tinytorch.core.losses import MSELoss
+
             # All training components should be available
             model = Linear(8, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
-            trainer = Trainer(model, optimizer)
+            loss_fn = MSELoss()
+            trainer = Trainer(model, optimizer, loss_fn)
             
             # Basic training functionality should work
             x = Tensor(np.random.randn(4, 8))
@@ -81,10 +83,10 @@ class TestModule12CompressionCore:
                 quantized_weights = quantize_weights(layer.weights, bits=8)
                 
                 # Quantized weights should have different range
-                assert quantized_weights.shape == layer.weights.shape, "Quantization shape broken"
+                assert quantized_weights.shape == layer.weight.shape, "Quantization shape broken"
                 
                 # Should reduce precision
-                unique_orig = len(np.unique(layer.weights.data.flatten()))
+                unique_orig = len(np.unique(layer.weight.data.flatten()))
                 unique_quant = len(np.unique(quantized_weights.data.flatten()))
                 
                 # Quantized should have fewer unique values (unless already very sparse)
@@ -109,7 +111,7 @@ class TestModule12CompressionCore:
             
             # Create model to prune
             layer = Linear(20, 10)
-            original_weights = layer.weights.data.copy()
+            original_weights = layer.weight.data.copy()
             
             # Test magnitude-based pruning
             if 'prune_weights' in locals():
@@ -231,7 +233,7 @@ class TestProgressiveStackIntegration:
             fc = Linear(16 * 30 * 30, 10)  # Approximate size
             
             # Apply compression to CNN
-            if 'prune_weights' in locals() and hasattr(conv1, 'weights'):
+            if 'prune_weights' in locals() and hasattr(conv1, 'weight'):
                 conv1.weights = prune_weights(conv1.weights, sparsity=0.4)
             
             if 'quantize_weights' in locals():
@@ -259,7 +261,7 @@ class TestProgressiveStackIntegration:
             attention = MultiHeadAttention(embed_dim=64, num_heads=8)
             
             # Apply compression to attention weights
-            if hasattr(attention, 'query_proj') and hasattr(attention.query_proj, 'weights'):
+            if hasattr(attention, 'query_proj') and hasattr(attention.query_proj, 'weight'):
                 if 'prune_weights' in locals():
                     attention.query_proj.weights = prune_weights(attention.query_proj.weights, sparsity=0.2)
                 
@@ -289,7 +291,7 @@ class TestEfficiencyAndPerformance:
             
             # Large model for memory testing
             large_model = Linear(1000, 500)
-            original_size = large_model.weights.data.nbytes
+            original_size = large_model.weight.data.nbytes
             
             # Test pruning memory reduction
             if 'prune_weights' in locals():
@@ -305,7 +307,7 @@ class TestEfficiencyAndPerformance:
                 quantized_weights = quantize_weights(large_model.weights, bits=8)
                 
                 # 8-bit should use less memory than 32-bit (if properly implemented)
-                assert quantized_weights.shape == large_model.weights.shape, "Quantization shape changed"
+                assert quantized_weights.shape == large_model.weight.shape, "Quantization shape changed"
                 
                 # Check if data type changed
                 if hasattr(quantized_weights, 'dtype'):
@@ -360,7 +362,7 @@ class TestEfficiencyAndPerformance:
             
             # Model to compress
             model = Linear(100, 50)
-            original_param_count = model.weights.data.size
+            original_param_count = model.weight.data.size
             if hasattr(model, 'bias') and model.bias is not None:
                 original_param_count += model.bias.data.size
             
@@ -481,20 +483,23 @@ class TestRegressionPrevention:
         
         # Training pipeline should still work
         try:
+            import numpy as np
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
-            
+            from tinytorch.core.losses import MSELoss
+
             # Complete training pipeline should work
             model = Linear(5, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
-            trainer = Trainer(model, optimizer)
-            
+            loss_fn = MSELoss()
+            trainer = Trainer(model, optimizer, loss_fn)
+
             x = Tensor(np.random.randn(2, 5))
             output = model(x)
             assert output.shape == (2, 3), "Training regression: Forward pass broken"
-            
+
         except ImportError:
             import numpy as np
             assert np.random is not None, "Training regression: Basic functionality broken"
@@ -545,11 +550,13 @@ class TestRegressionPrevention:
             from tinytorch.core.layers import Linear
             from tinytorch.core.optimizers import SGD
             from tinytorch.core.training import Trainer
-            
+            from tinytorch.core.losses import MSELoss
+
             # Complete training system should work
             model = Linear(8, 4)
             optimizer = SGD(model.parameters(), lr=0.01)
-            trainer = Trainer(model, optimizer)
+            loss_fn = MSELoss()
+            trainer = Trainer(model, optimizer, loss_fn)
             
             x = Tensor(np.random.randn(3, 8))
             output = model(x)

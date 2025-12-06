@@ -31,7 +31,7 @@ def test_checkpoint_09_optimization():
     
     # Create simple model and data
     model = Linear(2, 1)
-    model.weights.requires_grad = True
+    model.weight.requires_grad = True
     model.bias.requires_grad = True
     
     sgd = SGD([model.weights, model.bias], lr=0.01)
@@ -42,7 +42,7 @@ def test_checkpoint_09_optimization():
     y = Tensor([[2*1 + 3*2 + 1], [2*2 + 3*3 + 1], [2*3 + 3*4 + 1]])  # [9, 17, 25]
     
     # Store initial parameters
-    initial_weights = model.weights.data.copy()
+    initial_weights = model.weight.data.copy()
     initial_bias = model.bias.data.copy()
     
     # Training step
@@ -54,7 +54,7 @@ def test_checkpoint_09_optimization():
     sgd.zero_grad()
     
     # Check that parameters changed
-    assert not np.allclose(model.weights.data, initial_weights), "SGD should update weights"
+    assert not np.allclose(model.weight.data, initial_weights), "SGD should update weights"
     assert not np.allclose(model.bias.data, initial_bias), "SGD should update bias"
     print(f"✅ SGD: parameters updated from loss={loss.data:.4f}")
     
@@ -63,13 +63,13 @@ def test_checkpoint_09_optimization():
     
     # Reset model
     model_adam = Linear(2, 1)
-    model_adam.weights.requires_grad = True
+    model_adam.weight.requires_grad = True
     model_adam.bias.requires_grad = True
     
     adam = Adam([model_adam.weights, model_adam.bias], lr=0.01)
     
     # Store initial parameters
-    initial_weights_adam = model_adam.weights.data.copy()
+    initial_weights_adam = model_adam.weight.data.copy()
     initial_bias_adam = model_adam.bias.data.copy()
     
     # Multiple training steps to see momentum effect
@@ -84,7 +84,7 @@ def test_checkpoint_09_optimization():
         adam.zero_grad()
     
     # Check parameter updates and loss reduction
-    assert not np.allclose(model_adam.weights.data, initial_weights_adam), "Adam should update weights"
+    assert not np.allclose(model_adam.weight.data, initial_weights_adam), "Adam should update weights"
     assert not np.allclose(model_adam.bias.data, initial_bias_adam), "Adam should update bias"
     assert losses[-1] < losses[0], f"Adam should reduce loss: {losses[0]:.4f} → {losses[-1]:.4f}"
     print(f"✅ Adam: loss reduction {losses[0]:.4f} → {losses[-1]:.4f}")
@@ -93,7 +93,7 @@ def test_checkpoint_09_optimization():
     print("📊 Testing RMSprop optimizer...")
     
     model_rms = Linear(2, 1)
-    model_rms.weights.requires_grad = True
+    model_rms.weight.requires_grad = True
     model_rms.bias.requires_grad = True
     
     rmsprop = RMSprop([model_rms.weights, model_rms.bias], lr=0.01)
@@ -103,10 +103,10 @@ def test_checkpoint_09_optimization():
     loss = loss_fn(predictions, y)
     loss.backward()
     
-    initial_weights_rms = model_rms.weights.data.copy()
+    initial_weights_rms = model_rms.weight.data.copy()
     rmsprop.step()
     
-    assert not np.allclose(model_rms.weights.data, initial_weights_rms), "RMSprop should update parameters"
+    assert not np.allclose(model_rms.weight.data, initial_weights_rms), "RMSprop should update parameters"
     print(f"✅ RMSprop: parameters updated successfully")
     
     # Test 4: Learning rate effects
@@ -120,12 +120,12 @@ def test_checkpoint_09_optimization():
     model_large = Linear(2, 1)
     
     # Make models identical initially
-    model_large.weights.data = model_small.weights.data.copy()
+    model_large.weight.data = model_small.weight.data.copy()
     model_large.bias.data = model_small.bias.data.copy()
     
-    model_small.weights.requires_grad = True
+    model_small.weight.requires_grad = True
     model_small.bias.requires_grad = True
-    model_large.weights.requires_grad = True
+    model_large.weight.requires_grad = True
     model_large.bias.requires_grad = True
     
     sgd_small = SGD([model_small.weights, model_small.bias], lr=lr_small)
@@ -138,14 +138,14 @@ def test_checkpoint_09_optimization():
     loss_small.backward()
     loss_large.backward()
     
-    weight_change_small = np.abs(model_small.weights.grad.data).mean()
-    weight_change_large = np.abs(model_large.weights.grad.data).mean()
+    weight_change_small = np.abs(model_small.weight.grad.data).mean()
+    weight_change_large = np.abs(model_large.weight.grad.data).mean()
     
     sgd_small.step()
     sgd_large.step()
     
     # Large LR should cause bigger parameter changes
-    actual_change_small = np.abs(model_small.weights.data - model_large.weights.data).mean()
+    actual_change_small = np.abs(model_small.weight.data - model_large.weight.data).mean()
     print(f"✅ Learning rates: small LR vs large LR parameter difference = {actual_change_small:.6f}")
     
     # Test 5: Optimizer state persistence
@@ -153,7 +153,7 @@ def test_checkpoint_09_optimization():
     
     # Adam maintains moving averages
     model_state = Linear(1, 1)
-    model_state.weights.requires_grad = True
+    model_state.weight.requires_grad = True
     model_state.bias.requires_grad = True
     
     adam_state = Adam([model_state.weights, model_state.bias], lr=0.01)
@@ -182,9 +182,9 @@ def test_checkpoint_09_optimization():
     layer1 = Linear(3, 4)
     layer2 = Linear(4, 1)
     
-    layer1.weights.requires_grad = True
+    layer1.weight.requires_grad = True
     layer1.bias.requires_grad = True
-    layer2.weights.requires_grad = True
+    layer2.weight.requires_grad = True
     layer2.bias.requires_grad = True
     
     # Different learning rates for different layers
@@ -203,8 +203,8 @@ def test_checkpoint_09_optimization():
     loss.backward()
     
     # Check gradients exist for all parameters
-    assert layer1.weights.grad is not None, "Layer 1 weights should have gradients"
-    assert layer2.weights.grad is not None, "Layer 2 weights should have gradients"
+    assert layer1.weight.grad is not None, "Layer 1 weights should have gradients"
+    assert layer2.weight.grad is not None, "Layer 2 weights should have gradients"
     
     optimizer_groups.step()
     print(f"✅ Parameter groups: all layers optimized together")
@@ -214,7 +214,7 @@ def test_checkpoint_09_optimization():
     
     # Simple linear regression: learn y = 2x + 1
     model_conv = Linear(1, 1)
-    model_conv.weights.requires_grad = True
+    model_conv.weight.requires_grad = True
     model_conv.bias.requires_grad = True
     
     optimizer_conv = Adam([model_conv.weights, model_conv.bias], lr=0.1)
@@ -241,7 +241,7 @@ def test_checkpoint_09_optimization():
         optimizer_conv.zero_grad()
     
     # Should converge to approximately correct weights
-    learned_weight = model_conv.weights.data[0, 0]
+    learned_weight = model_conv.weight.data[0, 0]
     learned_bias = model_conv.bias.data[0]
     
     assert abs(learned_weight - 2.0) < 0.5, f"Should learn weight≈2, got {learned_weight}"

@@ -198,7 +198,7 @@ def train_linear_regression_minimal():
     optimizer = SimpleSGD(model.parameters(), lr=0.01)
     criterion = SimpleMSE()
     
-    print(f"Initial weight: {model.weights.data[0,0]:.3f}")
+    print(f"Initial weight: {model.weight.data[0,0]:.3f}")
     print(f"Initial bias:   {model.bias.data[0]:.3f}")
     
     # Training
@@ -214,7 +214,7 @@ def train_linear_regression_minimal():
             loss_val = float(loss.data.data) if hasattr(loss.data, 'data') else float(loss.data)
             print(f"Epoch {epoch:3d}: Loss = {loss_val:.4f}")
     
-    print(f"\nFinal weight: {model.weights.data[0,0]:.3f} (should be ≈2.0)")
+    print(f"\nFinal weight: {model.weight.data[0,0]:.3f} (should be ≈2.0)")
     print(f"Final bias:   {model.bias.data[0]:.3f} (should be ≈1.0)")
     
     # Test prediction
@@ -223,7 +223,7 @@ def train_linear_regression_minimal():
     pred_val = float(pred.data.data[0,0]) if hasattr(pred.data, 'data') else float(pred.data[0,0])
     print(f"\nTest: x=5 → prediction={pred_val:.3f} (should be ≈11.0)")
     
-    if abs(model.weights.data[0,0] - 2.0) < 0.5 and abs(model.bias.data[0] - 1.0) < 0.5:
+    if abs(model.weight.data[0,0] - 2.0) < 0.5 and abs(model.bias.data[0] - 1.0) < 0.5:
         print("✅ Linear regression learned successfully!")
 
 

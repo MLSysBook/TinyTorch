@@ -133,11 +133,11 @@ def check_layer_initialization(helper: DiagnosticHelper):
         # Linear layer
         linear = Linear(10, 5)
         
-        if hasattr(linear, 'weights'):
-            if linear.weights.shape == (10, 5):
+        if hasattr(linear, 'weight'):
+            if linear.weight.shape == (10, 5):
                 helper.print_success("Linear layer weights initialized correctly")
             else:
-                helper.print_error(f"Linear weights wrong shape: {linear.weights.shape}")
+                helper.print_error(f"Linear weights wrong shape: {linear.weight.shape}")
                 helper.suggest("Weights should be (input_size, output_size)")
         else:
             helper.print_error("Linear layer has no 'weights' attribute")
@@ -254,9 +254,9 @@ def check_gradient_flow(helper: DiagnosticHelper):
         try:
             loss.backward()
             
-            if hasattr(model.weights, 'grad') and model.weights.grad is not None:
+            if hasattr(model.weights, 'grad') and model.weight.grad is not None:
                 helper.print_success("Gradients computed for weights")
-                grad_mag = np.abs(model.weights.grad.data).mean()
+                grad_mag = np.abs(model.weight.grad.data).mean()
                 if grad_mag > 1e-8:
                     helper.print_success(f"Gradient magnitude reasonable: {grad_mag:.6f}")
                 else:
@@ -284,7 +284,7 @@ def check_optimizer_updates(helper: DiagnosticHelper):
         optimizer = SGD(model.parameters(), learning_rate=0.1)
         
         # Save initial weights
-        initial_weights = model.weights.data.copy()
+        initial_weights = model.weight.data.copy()
         
         x = Tensor(np.random.randn(2, 5))
         y_true = Tensor(np.random.randn(2, 3))
@@ -299,9 +299,9 @@ def check_optimizer_updates(helper: DiagnosticHelper):
             optimizer.step()
             
             # Check if weights changed
-            if not np.allclose(initial_weights, model.weights.data):
+            if not np.allclose(initial_weights, model.weight.data):
                 helper.print_success("SGD updates weights")
-                update_size = np.abs(model.weights.data - initial_weights).mean()
+                update_size = np.abs(model.weight.data - initial_weights).mean()
                 helper.print_success(f"Average weight update: {update_size:.6f}")
             else:
                 helper.print_error("Weights didn't change after optimizer.step()")
@@ -418,8 +418,8 @@ def check_common_mistakes(helper: DiagnosticHelper):
     # Check 3: Uninitialized parameters
     try:
         linear = Linear(10, 5)
-        if hasattr(linear, 'weights'):
-            if np.all(linear.weights.data == 0):
+        if hasattr(linear, 'weight'):
+            if np.all(linear.weight.data == 0):
                 helper.print_error("Weights initialized to all zeros")
                 helper.suggest("Use random initialization to break symmetry")
             else:

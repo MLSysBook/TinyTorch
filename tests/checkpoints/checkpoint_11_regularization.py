@@ -69,9 +69,9 @@ def test_checkpoint_11_regularization():
     
     # Create model with large weights
     model = Linear(5, 3)
-    model.weights.data = np.random.randn(5, 3) * 2  # Larger weights
+    model.weight.data = np.random.randn(5, 3) * 2  # Larger weights
     model.bias.data = np.random.randn(3) * 2
-    model.weights.requires_grad = True
+    model.weight.requires_grad = True
     model.bias.requires_grad = True
     
     l2_reg = L2Regularization(lambda_reg=0.01)
@@ -123,8 +123,8 @@ def test_checkpoint_11_regularization():
     
     # Set requires_grad for all layers
     for layer in model_reg:
-        if hasattr(layer, 'weights'):
-            layer.weights.requires_grad = True
+        if hasattr(layer, 'weight'):
+            layer.weight.requires_grad = True
             layer.bias.requires_grad = True
         if hasattr(layer, 'training'):
             layer.training = True
@@ -132,7 +132,7 @@ def test_checkpoint_11_regularization():
     # Collect parameters
     params = []
     for layer in model_reg:
-        if hasattr(layer, 'weights'):
+        if hasattr(layer, 'weight'):
             params.extend([layer.weights, layer.bias])
     
     optimizer = Adam(params, lr=0.01)
@@ -151,7 +151,7 @@ def test_checkpoint_11_regularization():
         
         # Loss with regularization
         base_loss = loss_fn(x, y_tensor)
-        reg_penalty = sum(l2_regularizer(layer.weights) for layer in model_reg if hasattr(layer, 'weights'))
+        reg_penalty = sum(l2_regularizer(layer.weights) for layer in model_reg if hasattr(layer, 'weight'))
         total_loss = base_loss + reg_penalty
         
         reg_losses.append(total_loss.data.item() if hasattr(total_loss.data, 'item') else float(total_loss.data))
@@ -177,7 +177,7 @@ def test_checkpoint_11_regularization():
     
     # Train regularized model
     gen_model = Linear(8, 1)
-    gen_model.weights.requires_grad = True
+    gen_model.weight.requires_grad = True
     gen_model.bias.requires_grad = True
     
     gen_optimizer = Adam([gen_model.weights, gen_model.bias], lr=0.01)
@@ -241,12 +241,12 @@ def test_checkpoint_11_regularization():
     ]
     
     # Set requires_grad
-    simple_model.weights.requires_grad = True
+    simple_model.weight.requires_grad = True
     simple_model.bias.requires_grad = True
     
     for layer in complex_model:
-        if hasattr(layer, 'weights'):
-            layer.weights.requires_grad = True
+        if hasattr(layer, 'weight'):
+            layer.weight.requires_grad = True
             layer.bias.requires_grad = True
     
     # Train simple model
@@ -277,7 +277,7 @@ def test_checkpoint_11_regularization():
     
     for strength in strengths:
         temp_model = Linear(5, 1)
-        temp_model.weights.requires_grad = True
+        temp_model.weight.requires_grad = True
         temp_model.bias.requires_grad = True
         
         temp_opt = Adam([temp_model.weights, temp_model.bias], lr=0.01)
@@ -295,7 +295,7 @@ def test_checkpoint_11_regularization():
             temp_opt.zero_grad()
         
         # Check weight magnitude
-        weight_norm = np.linalg.norm(temp_model.weights.data)
+        weight_norm = np.linalg.norm(temp_model.weight.data)
         strength_results.append(weight_norm)
     
     # Higher regularization should lead to smaller weights

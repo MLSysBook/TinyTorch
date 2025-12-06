@@ -89,7 +89,7 @@ class TestCompleteMLSystemStillWorks:
                     for layer in [self.conv1, self.conv2, self.fc]:
                         if hasattr(layer, 'parameters'):
                             params.extend(layer.parameters())
-                        elif hasattr(layer, 'weights'):
+                        elif hasattr(layer, 'weight'):
                             params.append(layer.weights)
                             if hasattr(layer, 'bias') and layer.bias is not None:
                                 params.append(layer.bias)

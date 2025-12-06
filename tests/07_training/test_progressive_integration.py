@@ -124,11 +124,11 @@ class TestModule10OptimizersCore:
             optimizer = SGD(layer.parameters(), lr=0.1)
             
             # Get initial weights
-            initial_weights = layer.weights.data.copy()
+            initial_weights = layer.weight.data.copy()
             
             # Create dummy gradients
             if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
+                layer.weight.grad = Tensor(np.random.randn(*layer.weight.shape))
             elif hasattr(layer, 'zero_grad'):
                 # Simulate backward pass
                 x = Variable(Tensor(np.random.randn(1, 2)))
@@ -140,8 +140,8 @@ class TestModule10OptimizersCore:
             optimizer.step()
             
             # Weights should have changed (if gradients exist)
-            if hasattr(layer.weights, 'grad') and layer.weights.grad is not None:
-                updated_weights = layer.weights.data
+            if hasattr(layer.weights, 'grad') and layer.weight.grad is not None:
+                updated_weights = layer.weight.data
                 # Check if weights actually updated
                 weight_changed = not np.array_equal(initial_weights, updated_weights)
                 assert weight_changed, "Optimizer didn't update parameters"
@@ -236,7 +236,7 @@ class TestProgressiveStackIntegration:
             for module in [conv1, fc]:
                 if hasattr(module, 'parameters'):
                     params.extend(module.parameters())
-                elif hasattr(module, 'weights'):
+                elif hasattr(module, 'weight'):
                     params.append(module.weights)
                     if hasattr(module, 'bias') and module.bias is not None:
                         params.append(module.bias)
@@ -273,7 +273,7 @@ class TestOptimizationAlgorithms:
             model_adam = Linear(10, 1)
             
             # Make weights identical
-            model_adam.weights.data = model_sgd.weights.data.copy()
+            model_adam.weight.data = model_sgd.weight.data.copy()
             if hasattr(model_sgd, 'bias') and model_sgd.bias is not None:
                 model_adam.bias.data = model_sgd.bias.data.copy()
             
@@ -369,15 +369,15 @@ class TestProductionOptimization:
             
             # Simulate large gradients
             if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape) * 100)  # Large gradients
+                layer.weight.grad = Tensor(np.random.randn(*layer.weight.shape) * 100)  # Large gradients
             
             # Test gradient clipping if available
             if hasattr(optimizer, 'clip_gradients'):
                 optimizer.clip_gradients(max_norm=1.0)
                 
                 # Gradients should be clipped
-                if layer.weights.grad is not None:
-                    grad_norm = np.linalg.norm(layer.weights.grad.data)
+                if layer.weight.grad is not None:
+                    grad_norm = np.linalg.norm(layer.weight.grad.data)
                     assert grad_norm <= 1.1, "Gradient clipping not working"  # Allow small numerical error
             
         except ImportError:
@@ -394,7 +394,7 @@ class TestProductionOptimization:
             
             # Take some steps to build state
             if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
+                layer.weight.grad = Tensor(np.random.randn(*layer.weight.shape))
                 
                 for _ in range(3):
                     optimizer.step()

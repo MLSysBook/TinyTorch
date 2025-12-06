@@ -55,7 +55,7 @@ def test_checkpoint_08_differentiation():
     loss_fn = MeanSquaredError()
     
     # Set network to require gradients
-    layer.weights.requires_grad = True
+    layer.weight.requires_grad = True
     layer.bias.requires_grad = True
     
     # Forward pass
@@ -70,11 +70,11 @@ def test_checkpoint_08_differentiation():
     loss.backward()
     
     # Check that all parameters have gradients
-    assert layer.weights.grad is not None, "Weights should have gradients"
+    assert layer.weight.grad is not None, "Weights should have gradients"
     assert layer.bias.grad is not None, "Bias should have gradients"
     assert input_data.grad is not None, "Input should have gradients"
     
-    print(f"✅ Network gradients: weights{layer.weights.grad.shape}, bias{layer.bias.grad.shape}, input{input_data.grad.shape}")
+    print(f"✅ Network gradients: weights{layer.weight.grad.shape}, bias{layer.bias.grad.shape}, input{input_data.grad.shape}")
     
     # Test 3: Chain rule verification
     print("🔗 Testing chain rule...")
@@ -103,7 +103,7 @@ def test_checkpoint_08_differentiation():
     
     # Enable gradients for all parameters
     for layer in [layer1, layer2, layer3]:
-        layer.weights.requires_grad = True
+        layer.weight.requires_grad = True
         layer.bias.requires_grad = True
     
     # Forward and backward pass
@@ -120,9 +120,9 @@ def test_checkpoint_08_differentiation():
     # Verify all layers have gradients
     gradient_shapes = []
     for i, layer in enumerate([layer1, layer2, layer3], 1):
-        assert layer.weights.grad is not None, f"Layer {i} weights should have gradients"
+        assert layer.weight.grad is not None, f"Layer {i} weights should have gradients"
         assert layer.bias.grad is not None, f"Layer {i} bias should have gradients"
-        gradient_shapes.append(f"L{i}_w{layer.weights.grad.shape}")
+        gradient_shapes.append(f"L{i}_w{layer.weight.grad.shape}")
     
     print(f"✅ Multi-layer gradients: {', '.join(gradient_shapes)}")
     

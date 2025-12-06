@@ -259,16 +259,16 @@ def test_checkpoint_14_deployment():
         ])
         
         # Original model size
-        original_params = sum(layer.weights.data.size + layer.bias.data.size 
+        original_params = sum(layer.weight.data.size + layer.bias.data.size 
                             for layer in production_model.layers 
-                            if hasattr(layer, 'weights'))
+                            if hasattr(layer, 'weight'))
         
         # Test quantization
         quantized_layers = 0
         for layer in production_model.layers:
-            if hasattr(layer, 'weights'):
+            if hasattr(layer, 'weight'):
                 try:
-                    quantized_weights = quantize_layer_weights(layer.weights.data, bits=8)
+                    quantized_weights = quantize_layer_weights(layer.weight.data, bits=8)
                     quantized_layers += 1
                 except Exception:
                     pass
@@ -276,9 +276,9 @@ def test_checkpoint_14_deployment():
         # Test pruning
         pruned_layers = 0
         for layer in production_model.layers:
-            if hasattr(layer, 'weights'):
+            if hasattr(layer, 'weight'):
                 try:
-                    pruned_weights = prune_weights_by_magnitude(layer.weights.data, sparsity=0.2)
+                    pruned_weights = prune_weights_by_magnitude(layer.weight.data, sparsity=0.2)
                     pruned_layers += 1
                 except Exception:
                     pass

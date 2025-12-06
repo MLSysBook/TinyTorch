@@ -58,23 +58,25 @@ class TestTrainingLoopIntegration:
             from tinytorch.core.tensor import Tensor
             
             layer = Linear(10, 5)
-            optimizer = SGD(learning_rate=0.01)
-            
+
             # Get parameters
-            params = [layer.weights]
+            params = [layer.weight]
             if layer.bias is not None:
                 params.append(layer.bias)
-            
+
+            optimizer = SGD(params, lr=0.01)
+
             # Simulate gradients (normally from autograd)
-            gradients = [Tensor(np.random.randn(*p.shape)) for p in params]
-            
+            for p in params:
+                p.grad = Tensor(np.random.randn(*p.shape))
+
             # Store old parameter values
             old_params = [p.data.copy() for p in params]
-            
+
             # Optimizer step (if implemented)
             if hasattr(optimizer, 'step'):
-                optimizer.step(params, gradients)
-                
+                optimizer.step()
+
                 # Parameters should change
                 for old, new in zip(old_params, params):
                     assert not np.array_equal(old, new.data)
@@ -125,11 +127,13 @@ class TestDataLoaderIntegration:
             
             # Process one batch
             for batch_X, batch_y in dataloader:
-                batch_X_tensor = Tensor(np.array(batch_X))
-                batch_y_tensor = Tensor(np.array(batch_y))
-                
-                output = model(batch_X_tensor)
-                
+                # DataLoader already returns Tensors
+                if not isinstance(batch_X, Tensor):
+                    batch_X = Tensor(np.array(batch_X))
+                    batch_y = Tensor(np.array(batch_y))
+
+                output = model(batch_X)
+
                 assert output.shape[0] <= 16  # Batch size
                 assert output.shape[1] == 1   # Output dimension
                 break  # Just test one batch
@@ -160,14 +164,14 @@ class TestDataLoaderIntegration:
                 losses.append(loss.data)
                 
                 # Simple parameter update (manual SGD)
-                if hasattr(model, 'weights'):
+                if hasattr(model, 'weight'):
                     # Compute simple gradient
                     error = predictions.data - y.data
                     grad = (X.data.T @ error) / X.shape[0]
                     
                     # Update weights
                     learning_rate = 0.01
-                    new_weights = model.weights.data - learning_rate * grad
+                    new_weights = model.weight.data - learning_rate * grad
                     model.weights = Tensor(new_weights)
             
             assert len(losses) == 3
@@ -241,9 +245,9 @@ class TestCompleteMLPipeline:
             y = Tensor(np.array([[0], [1], [1], [0]], dtype=np.float32))
             
             # Build network
-            hidden = Linear(2, 4, use_bias=True)
+            hidden = Linear(2, 4, bias=True)
             relu = ReLU()
-            output = Linear(4, 1, use_bias=True)
+            output = Linear(4, 1, bias=True)
             sigmoid = Sigmoid()
             
             loss_fn = MSELoss()
@@ -259,7 +263,8 @@ class TestCompleteMLPipeline:
             # Should produce valid predictions
             assert predictions.shape == (4, 1)
             assert np.all(predictions.data >= 0) and np.all(predictions.data <= 1)
-            assert isinstance(loss.data, (float, np.floating))
+            # Loss can be float, numpy scalar, or 0-d array
+            assert isinstance(loss.data, (float, np.floating, np.ndarray))
             
         except ImportError:
             assert True, "Training pipeline components not ready"

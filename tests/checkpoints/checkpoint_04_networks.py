@@ -105,8 +105,8 @@ def test_checkpoint_04_networks():
     # Test 4: Parameter counting across network
     print("📊 Testing network parameter counting...")
     total_params = (
-        input_layer.weights.data.size + input_layer.bias.data.size +
-        output_layer.weights.data.size + output_layer.bias.data.size
+        input_layer.weight.data.size + input_layer.bias.data.size +
+        output_layer.weight.data.size + output_layer.bias.data.size
     )
     
     expected_params = (4*8 + 8) + (8*3 + 3)  # (weights + bias) for each layer

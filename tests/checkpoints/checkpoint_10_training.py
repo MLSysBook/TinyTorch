@@ -38,7 +38,7 @@ def test_checkpoint_10_training():
     
     # Create model
     model = Linear(2, 1)
-    model.weights.requires_grad = True
+    model.weight.requires_grad = True
     model.bias.requires_grad = True
     
     optimizer = Adam([model.weights, model.bias], lr=0.01)
@@ -74,7 +74,7 @@ def test_checkpoint_10_training():
         
         # Batch training
         model_batch = Linear(2, 1)
-        model_batch.weights.requires_grad = True
+        model_batch.weight.requires_grad = True
         model_batch.bias.requires_grad = True
         optimizer_batch = SGD([model_batch.weights, model_batch.bias], lr=0.01)
         
@@ -142,11 +142,11 @@ def test_checkpoint_10_training():
     
     # Set requires_grad for all parameters
     for layer in classifier:
-        if hasattr(layer, 'weights'):
-            layer.weights.requires_grad = True
+        if hasattr(layer, 'weight'):
+            layer.weight.requires_grad = True
             layer.bias.requires_grad = True
     
-    optimizer_class = Adam([layer.weights for layer in classifier if hasattr(layer, 'weights')] + 
+    optimizer_class = Adam([layer.weights for layer in classifier if hasattr(layer, 'weight')] + 
                           [layer.bias for layer in classifier if hasattr(layer, 'bias')], lr=0.01)
     
     bce_loss = BinaryCrossEntropy()
@@ -183,7 +183,7 @@ def test_checkpoint_10_training():
     
     # Fresh model for validation testing
     model_val = Linear(2, 1)
-    model_val.weights.requires_grad = True
+    model_val.weight.requires_grad = True
     model_val.bias.requires_grad = True
     optimizer_val = Adam([model_val.weights, model_val.bias], lr=0.01)
     
@@ -229,7 +229,7 @@ def test_checkpoint_10_training():
     
     # Demonstrate learning progress
     model_curve = Linear(2, 1)
-    model_curve.weights.requires_grad = True
+    model_curve.weight.requires_grad = True
     model_curve.bias.requires_grad = True
     optimizer_curve = SGD([model_curve.weights, model_curve.bias], lr=0.1)
     
@@ -270,7 +270,7 @@ def test_checkpoint_10_training():
         )
         
         # Set up for training
-        trainer.model.weights.requires_grad = True
+        trainer.model.weight.requires_grad = True
         trainer.model.bias.requires_grad = True
         
         # Train (simplified interface)
@@ -289,7 +289,7 @@ def test_checkpoint_10_training():
         
         # Manual pipeline demonstration
         pipeline_model = Linear(2, 1)
-        pipeline_model.weights.requires_grad = True
+        pipeline_model.weight.requires_grad = True
         pipeline_model.bias.requires_grad = True
         
         pipeline_optimizer = Adam([pipeline_model.weights, pipeline_model.bias], lr=0.01)

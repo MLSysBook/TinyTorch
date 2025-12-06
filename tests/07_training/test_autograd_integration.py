@@ -191,7 +191,7 @@ class TestAutogradOptimizationIntegration:
             
             # Convert layer parameters to Variables if needed
             if not isinstance(layer.weights, Variable):
-                layer.weights = Variable(layer.weights.data, requires_grad=True)
+                layer.weights = Variable(layer.weight.data, requires_grad=True)
             
             # Simple forward pass
             x = Variable(np.array([[1.0]]), requires_grad=True)
@@ -199,14 +199,14 @@ class TestAutogradOptimizationIntegration:
             loss = output * output
             
             if hasattr(loss, 'backward'):
-                old_weights = layer.weights.data.copy()
+                old_weights = layer.weight.data.copy()
                 
                 loss.backward()
                 
                 # Update weights
                 learning_rate = 0.01
-                if layer.weights.grad is not None:
-                    new_weights = old_weights - learning_rate * layer.weights.grad
+                if layer.weight.grad is not None:
+                    new_weights = old_weights - learning_rate * layer.weight.grad
                     assert not np.array_equal(old_weights, new_weights)
                     
         except (ImportError, AttributeError):

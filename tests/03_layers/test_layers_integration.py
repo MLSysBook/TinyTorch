@@ -181,7 +181,7 @@ class TestLayerParameterManagement:
                 self.bias = Tensor(np.zeros(output_size))
             
             def forward(self, x):
-                output = x.data @ self.weights.data + self.bias.data
+                output = x.data @ self.weight.data + self.bias.data
                 return Tensor(output)
         
         layer = ParameterizedLayer(10, 5)
@@ -189,7 +189,7 @@ class TestLayerParameterManagement:
         output = layer(x)
         
         assert output.shape == (3, 5)
-        assert hasattr(layer, 'weights')
+        assert hasattr(layer, 'weight')
         assert hasattr(layer, 'bias')
         assert isinstance(layer.weights, Tensor)
         assert isinstance(layer.bias, Tensor)
@@ -207,11 +207,11 @@ class TestLayerParameterManagement:
                 self.bias = Tensor(np.zeros(out_features))
             
             def forward(self, x):
-                return Tensor(x.data @ self.weights.data + self.bias.data)
+                return Tensor(x.data @ self.weight.data + self.bias.data)
         
         layer = LinearLayer(128, 64)
         
-        assert layer.weights.shape == (128, 64)
+        assert layer.weight.shape == (128, 64)
         assert layer.bias.shape == (64,)
         
         # Test with input

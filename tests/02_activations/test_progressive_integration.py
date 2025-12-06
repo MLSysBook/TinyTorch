@@ -88,7 +88,7 @@ class TestModule03ActivationsCore:
             assert True, "Module 02: Sigmoid not implemented yet"
 
 
-class TestProgressive StackIntegration:
+class TestProgressiveStackIntegration:
     """Test that the full stack (01→02→03) works together."""
     
     def test_tensor_activation_pipeline(self):
